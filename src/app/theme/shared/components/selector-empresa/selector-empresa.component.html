@@ -1,0 +1,9 @@
+<div class="selector-empresa-wrapper">
+    <select class="form-input" [(ngModel)]="empresaSeleccionada" (change)="onCambioEmpresa()">
+
+        <option *ngFor="let emp of empresasDisponibles" [value]="emp.codigoEmpresaSC">
+            {{ emp.empresa?.nombreEmpresa || emp.codigoEmpresaSC }}
+        </option>
+
+    </select>
+</div>

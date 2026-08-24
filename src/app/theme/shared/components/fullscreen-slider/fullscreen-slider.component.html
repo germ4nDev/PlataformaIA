@@ -1,0 +1,15 @@
+<div class="slider-container">
+
+    <div class="image-wrapper">
+        <img *ngFor="let imageUrl of images; let i = index" [ngSrc]="imageUrl.imageSlider?? ''" [fill]="true"
+            [priority]="i === 0" [attr.alt]="imageUrl.nombreSlider + ' ' + (i + 1)"
+            [ngClass]="{ 'active': i === currentIndex }" class="slider-image" (error)="onImageError($event, i)">
+    </div>
+
+    <div class="indicators" *ngIf="images.length > 1">
+        <button *ngFor="let image of images; let i = index" [ngClass]="{ 'active': i === currentIndex }"
+            (click)="goToImage(i)" class="indicator-dot" [attr.aria-label]="'Ir a la imagen ' + (i + 1)">
+        </button>
+    </div>
+
+</div>

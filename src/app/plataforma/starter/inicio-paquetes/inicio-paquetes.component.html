@@ -1,0 +1,42 @@
+<div class="PORTTOS-list-screen">
+
+    <app-full-screen-slider [tipoSlider]="2" class="PORTTOS-list-bg"></app-full-screen-slider>
+
+    <nav class="navbar fixed-top navbar-expand-lg">
+        <div class="container-fluid panel-overlay">
+            <a class="navbar-brand" href="#"></a>
+            <div class="nav-right">
+                <app-language-selector></app-language-selector>
+            </div>
+        </div>
+    </nav>
+
+    <div class="PORTTOS-apps-layout">
+
+        <div class="PORTTOS-apps-header text-center">
+            <h2 class="apps-main-title">{{ 'PLATAFORMA.TITULO_GRID_APLICACIONES' | translate }}</h2>
+            <p class="apps-subtitle">{{ 'PLATAFORMA.SUBTITULO_GRID_APLICACIONES' | translate }}</p>
+        </div>
+
+        <div class="PORTTOS-apps-grid">
+            <div class="PORTTOS-app-item-card" *ngFor="let pak of paquetesSC"
+                [style.backgroundImage]="'url(' + pak.imagenPaquete + ')'">
+
+                <div class="app-card-overlay">
+                    <div class="app-card-info">
+                        <h3 class="app-name">{{ pak.nombrePaquete }}</h3>
+                        <p class="app-description" [innerHTML]="pak.descripcionPaquete"></p>
+                    </div>
+
+                    <div class="app-card-actions"><br>
+                        <button (click)="ingresarPlataforma(pak)" class="PORTTOS-enter-btn">
+                            {{ 'PLATAFORMA.ENTRAR' | translate }} <i class="feather icon-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,205 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom"><button>{{ 'PLATAFORMA.MENU' | translate }}</button></div>
+            <ng-container><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></ng-container>
+        </div>
+    </aside>
+    <div class="form-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title">{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.NEW' |
+                            translate }}</h4>
+                    </div>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
+                            {{ 'SUSCRIPTOR.PAQUETESSC.GESTION.CREATE' | translate }}
+                            <i class="feather ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body form-scroll-wrapper">
+                <form #validationForm="ngForm" class="editForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoPaquete"> {{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.CODEPAQUETE'
+                                    | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoPaquete"
+                                    id="codigoPaquete"
+                                    [ngClass]="{ 'is-invalid': !codigoPaquete.valid && (codigoPaquete.dirty || codigoPaquete.touched || isSubmit) }"
+                                    #codigoPaquete="ngModel" required [(ngModel)]="FormRegistro.codigoPaquete"
+                                    (change)="onPaqueteChangeClick($event)">
+                                    <option value="" disabled>{{
+                                        'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERCODEPAQUETE' | translate }}
+                                    </option>
+                                    <option [value]="pqts.codigoPaquete" *ngFor="let pqts of paquetes"> {{
+                                        pqts.nombrePaquete }}</option>
+                                </select>
+                                <label
+                                    *ngIf="!codigoPaquete.valid && (codigoPaquete.dirty || codigoPaquete.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'SUSCRIPTOR.PAQUETESSC.GESTION.REQUERIDOCODEPAQUETE' | translate }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoTipoPaquete"> {{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.TIPOPAQUETE'
+                                    | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoTipoPaquete"
+                                    id="codigoTipoPaquete"
+                                    [ngClass]="{ 'is-invalid': !codigoTipoPaquete.valid && (codigoTipoPaquete.dirty || codigoTipoPaquete.touched || isSubmit) }"
+                                    #codigoTipoPaquete="ngModel" required [(ngModel)]="FormRegistro.codigoTipoPaquete"
+                                    (change)="onTipoPaqueteChangeClick($event)">
+                                    <option value="" disabled>{{
+                                        'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERTIPOPAQUETE' | translate }}
+                                    </option>
+                                    <option [value]="tpsp.codigoTipoPaquete" *ngFor="let tpsp of tiposPaquete"> {{
+                                        tpsp.nombreTipoPaquete }}</option>
+                                </select>
+                                <label
+                                    *ngIf="!codigoTipoPaquete.valid && (codigoTipoPaquete.dirty || codigoTipoPaquete.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'SUSCRIPTOR.PAQUETESSC.GESTION.REQUERIDOTIPOPAQUETE' | translate }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.CODELICENCIA' | translate
+                                    }}</label>
+                                <input type="text" class="form-control form-input" name="codigoLicencia"
+                                    placeholder="{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERCODELICENCIA' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !codigoLicencia.valid && (codigoLicencia.dirty || codigoLicencia.touched || isSubmit) }"
+                                    #codigoLicencia="ngModel" required [(ngModel)]="FormRegistro.codigoLicencia"
+                                    readonly />
+                                <label
+                                    *ngIf="!codigoLicencia.valid && (codigoLicencia.dirty || codigoLicencia.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoTipoPago"> {{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.TIPOPAGO'
+                                    | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoTipoPago"
+                                    id="codigoTipoPago"
+                                    [ngClass]="{ 'is-invalid': !codigoTipoPago.valid && (codigoTipoPago.dirty || codigoTipoPago.touched || isSubmit) }"
+                                    #codigoTipoPago="ngModel" required [(ngModel)]="FormRegistro.codigoTipoPago"
+                                    (change)="onTipoPagoChangeClick($event)">
+                                    <option value="" disabled>{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERTIPOPAGO'
+                                        | translate }}
+                                    </option>
+                                    <option [value]="tpsp.codigoTipoPago" *ngFor="let tpsp of tiposPago"> {{
+                                        tpsp.nombreTipoPago }}</option>
+                                </select>
+                                <label
+                                    *ngIf="!codigoTipoPago.valid && (codigoTipoPago.dirty || codigoTipoPago.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'SUSCRIPTOR.PAQUETESSC.GESTION.REQUERIDOTIPOPAGO' | translate }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="precioPaquete">{{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.PRECIO' | translate }}</label>
+                                <input class="form-control form-input" id="precioPaquete" name="precioPaquete"
+                                    type="text" readonly
+                                    placeholder="{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERPRECIO' | translate }}"
+                                    #precioPaquete="ngModel" required [(ngModel)]="FormRegistro.precioPaquete" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="mesesCobertura">{{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.MESISCOBERTURA' | translate }}</label>
+                                <input class="form-control form-input" id="mesesCobertura" name="mesesCobertura"
+                                    type="text" readonly
+                                    placeholder="{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERMESISCOBERTURA' | translate }}"
+                                    #mesesCobertura="ngModel" required [(ngModel)]="FormRegistro.mesesCobertura" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="valorMes">{{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.VALORMES' | translate }}</label>
+                                <input class="form-control form-input" id="valorMes" name="valorMes" type="text"
+                                    readonly
+                                    placeholder="{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERVALORMES' | translate }}"
+                                    #valorMes="ngModel" required [(ngModel)]="FormRegistro.valorMes" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="descuentoMeses">{{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.DESCUENTOMES' | translate }}</label>
+                                <input class="form-control form-input" id="descuentoMeses" name="descuentoMeses"
+                                    type="text" readonly
+                                    placeholder="{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERDESCUENTOMES' | translate }}"
+                                    #descuentoMeses="ngModel" required [(ngModel)]="FormRegistro.descuentoMeses" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="valorPago">{{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.VALORFACTURA' | translate }}</label>
+                                <input class="form-control form-input" id="valorPago" name="valorPago" type="text"
+                                    readonly
+                                    placeholder="{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERVALORFACTURA' | translate }}"
+                                    #valorPago="ngModel" required [(ngModel)]="FormRegistro.valorPago" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="fechaProximoPagoDate">{{
+                                    'SUSCRIPTOR.PAQUETESSC.GESTION.FECHAPROXIMOPAGO' | translate }}</label>
+                                <input class="form-control form-input" id="fechaProximoPagoDate"
+                                    name="fechaProximoPagoDate" type="text" readonly
+                                    placeholder="{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.PLACEHOLDERFECHAPROXIMOPAGO' | translate }}"
+                                    #fechaProximoPagoDate="ngModel" required
+                                    [(ngModel)]="FormRegistro.fechaProximoPagoDate" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTOR.PAQUETESSC.GESTION.DESCRIPTION' | translate
+                                    }}</label>
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="FormRegistro.descripcionPaquete ?? ''" name="descripcionPaquete"
+                                    rows="5">
+                                </app-text-editor>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

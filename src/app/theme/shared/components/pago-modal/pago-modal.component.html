@@ -1,0 +1,22 @@
+<div class="modal-overlay" *ngIf="mostrarModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h3>Completar Transacción</h3>
+            <button class="close-btn" (click)="cerrar()">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+            <div *ngIf="cargandoBrick" class="loader-container">
+                <div class="spinner"></div>
+                <p>Cargando pasarela segura...</p>
+            </div>
+
+            <div id="paymentBrick_container" [class.oculto]="cargandoBrick"></div>
+
+        </div>
+    </div>
+
+</div>

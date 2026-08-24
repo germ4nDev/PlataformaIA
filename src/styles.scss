@@ -1,0 +1,1409 @@
+/* ==========================================================================
+   TABLA DE CONTENIDO
+   ==========================================================================
+   00. IMPORTS
+   01. VARIABLES Y TEMAS (Claro / Oscuro)
+   02. BASE Y LAYOUT (Corrección de Scroll)
+   03. SCROLLBARS PERSONALIZADOS
+   04. TIPOGRAFÍA Y UTILIDADES
+   05. BOTONES Y FABs
+   06. FORMULARIOS, RADIOS Y CHECKBOXES
+   07. TABLAS Y DATATABLES
+   08. MODALES Y SWEETALERT2
+   09. NAVEGACIÓN, MENÚS Y TABS
+   10. TARJETAS (CARDS), GRIDS E IMÁGENES
+   11. LIBRERÍAS DE TERCEROS (Quill Editor)
+   ========================================================================== */
+
+/* ==========================================================================
+   00. IMPORTS
+   ========================================================================== */
+@import '~maplibre-gl/dist/maplibre-gl.css';
+@import 'scss/core/primitives';
+@import 'scss/core/theme';
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'scss/themes/font/theme-font';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'scss/settings/custom-variables';
+@import 'scss/settings/theme-variables';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/utilities';
+@import 'node_modules/bootstrap/scss/utilities/api';
+@import '../node_modules/bootstrap/dist/css/bootstrap.css';
+@import 'scss/themes/general';
+@import 'scss/themes/generic';
+@import 'scss/themes/minixs/function';
+@import 'scss/ng-module/ng-module';
+@import 'scss/themes/font/datta-icon';
+@import 'scss/themes/font/feather';
+@import 'scss/themes/font/fontawesome';
+@import 'scss/themes/font/flaticon';
+@import 'scss/themes/component/component';
+@import 'scss/themes/plugin/animate';
+@import 'scss/themes/layouts/menu-lite';
+@import 'scss/themes/layouts/menu-ng';
+@import 'scss/themes/dashboard/widget';
+@import 'scss/themes/plugin/plugin';
+@import 'scss/themes/pages/page';
+@import 'scss/themes/chat/chat';
+@import 'scss/themes/custom';
+@import 'scss/layout-rtl';
+@import 'scss/layout';
+@import 'scss/navbar';
+@import 'scss/tabs-aside';
+@import 'scss/swal_dark.scss';
+@import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
+@import '../node_modules/angular-calendar/css/angular-calendar.css';
+@import './datatables_buttons.scss';
+@import 'video.js/dist/video-js.css';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+@import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+
+/* ==========================================================================
+   01. VARIABLES Y TEMAS (Claro / Oscuro)
+   ========================================================================== */
+:root {
+    --background-color: #f8f9fa;
+    --text-color: #212529;
+    --text-subtitle-color: #464e57;
+    --text-selected-color: #dadada;
+    --border-color: #cecdcd;
+    --header-color: #f5f5f5;
+    --color-fin-gradiente: #ffffff;
+    --card-background: #ffffff;
+    --skeleton-background: rgba(255, 255, 255, 0.05);
+    --skeleton-shine: rgba(255, 255, 255, 0.08);
+    --app-dashboard-bg: #e4e3e3;
+    --app-table-header: #d6d6d6;
+    --app-btn-secondary: #b4b4b4;
+    --app-btn-secondary-texto: #333;
+    --app-btn-inactive: #f8f9fa;
+    --app-btn-border: #dee2e6;
+    --app-titulo-color: #333;
+    --app-form-object-bg: #fff;
+    --radio-border-color: #afaeae;
+    --radio-fill-color: #007bff;
+    --radio-fill-shadow: rgba(0, 123, 255, 0.5);
+    --panel-bg: #fff;
+    --panel-text: #333;
+    --panel-user-bg: #dadada;
+    --panel-hover-bg: #dadada;
+    --panel-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --scrollbar-track-color: #f1f1f1;
+    --scrollbar-thumb-color: #c1c1c1;
+    --scrollbar-thumb-hover: #5f5f5f;
+    --data-table-detail-row: #dfdfdf;
+    --card-trend-color: #94a3b8;
+    --texto-color: #333333;
+    --primary-color: #0d6efd;
+    --aside-tab-active: #007bff;
+    --aside-tab-bg: #f8f9fa;
+    --app-iconos-color: #464e57;
+    --custom-navbar-background: #ffffff;
+    --custom-navbar-text-color: #333333;
+    --app-dashboard-gap: 12px;
+
+    /* Variables de Widgets */
+    --grid-widget-min-width: 220px;
+    --tablero-background: #e6e6e6;
+    --widget-background: #ffffff;
+    --widget-bg: #fcfcfc;
+    --widget-bg-lg: #dfdfdf;
+    --widget-text: #212529;
+    --widget-border: #cecdcd;
+    --widget-subtitle: #464e57;
+    --navbar-height: 100px;
+    --map-icon-filter: invert(0) brightness(1);
+}
+
+body.dark-theme {
+    --background-color: #202325;
+    --text-color: #b4b4b4;
+    --text-subtitle-color: #a7a7a7;
+    --text-selected-color: #444444;
+    --border-color: #474747;
+    --header-color: #292828;
+    --card-background: #222222;
+    --skeleton-background: rgba(255, 255, 255, 0.05);
+    --skeleton-shine: rgba(255, 255, 255, 0.08);
+    --app-dashboard-bg: #0e0e0e;
+    --color-fin-gradiente: #000000;
+    --app-table-header: #313131;
+    --app-btn-secondary: #313131;
+    --app-btn-secondary-texto: #ccc;
+    --app-btn-inactive: #212529;
+    --app-btn-border: #474747;
+    --app-titulo-color: #ccc;
+    --app-form-object-bg: #222121;
+    --radio-border-color: #ccc;
+    --radio-fill-color: #007bff;
+    --radio-fill-shadow: rgba(0, 123, 255, 0.5);
+    --panel-bg: #1e1e2d;
+    --panel-text: #fff;
+    --panel-user-bg: #363636;
+    --panel-hover-bg: #363636;
+    --panel-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    --scrollbar-track-color: #2c2c3d;
+    --scrollbar-thumb-color: #555;
+    --scrollbar-thumb-hover: #777;
+    --data-table-detail-row: #3d3d3d;
+    --card-trend-color: #616b79;
+    --texto-color: #ffffff;
+    --primary-color: #375a7f;
+    --aside-tab-active: #375a7f;
+    --aside-tab-bg: #1e1e2d;
+    --app-iconos-color: #b4b4b4;
+    --custom-navbar-background: #1e1e2d;
+    --custom-navbar-text-color: #ffffff;
+
+    /* Variables de Widgets */
+    --tablero-background: #242424;
+    --widget-background: #1b1b1b;
+    --widget-bg: #2b2b2b;
+    --widget-bg-lg: #383838;
+    --widget-text: #b4b4b4;
+    --widget-border: #474747;
+    --widget-subtitle: #9c9c9c;
+    --map-icon-filter: invert(0.8) brightness(1);
+}
+
+body.gradient-dark {
+    background-color: #121212 !important;
+}
+
+/* ==========================================================================
+   02. BASE Y LAYOUT (Corrección de Scroll)
+   ========================================================================== */
+body,
+html {
+    overflow: hidden !important;
+    /* Previene el scroll nativo de Windows (doble scroll) */
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--card-background);
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+    scrollbar-width: thin;
+}
+
+.main-wrapper {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+}
+
+.layout-wrapper {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: auto;
+    overflow: hidden;
+}
+
+.aside-left {
+    width: 250px;
+}
+
+.content-area,
+.form-area {
+    min-height: 0;
+    overflow-y: hidden;
+}
+
+.content-area {
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+    height: calc(100vh - 80px);
+}
+
+.form-area {
+    padding: 0rem 0.5rem 0.5rem 0.5rem;
+    height: calc(100vh - 77px);
+}
+
+/* Áreas con scroll interno permitido */
+.content-g67 {
+    position: relative;
+    height: 66vh !important;
+    overflow: auto;
+}
+
+.filtros-scroll-wrapper,
+.nav-scroll-wrapper {
+    height: calc(100vh - 135px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.content-scroll-wrapper {
+    height: calc(100vh - 90px);
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.form-scroll-wrapper {
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   03. SCROLLBARS PERSONALIZADOS
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 10px;
+    border: 2px solid var(--panel-bg);
+
+    &:hover {
+        background-color: var(--scrollbar-thumb-hover);
+    }
+}
+
+.custom-nested-scrollbar {
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    }
+}
+
+/* ==========================================================================
+   04. TIPOGRAFÍA Y UTILIDADES
+   ========================================================================== */
+.page-title {
+    text-align: center;
+    width: 100%;
+    font-size: 1.6em;
+    color: var(--app-titulo-color);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.titulo-panel {
+    font-size: 1.4em;
+    color: var(--text-color);
+}
+
+.texto-panel {
+    font-size: 0.6em;
+    color: var(--text-subtitle-color);
+}
+
+.sr-only {
+    color: var(--text-color) !important;
+}
+
+.icon-style {
+    color: var(--app-iconos-color) !important;
+}
+
+.oculto {
+    display: none !important;
+    opacity: 0;
+}
+
+.titulo-container {
+    color: var(--text-color);
+}
+
+.subtitulo-container {
+    color: var(--text-subtitle-color);
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-top-color: #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================================
+   05. BOTONES Y FABs
+   ========================================================================== */
+.btn {
+    &.btn-NuevoRegistro {
+        background-color: var(--app-btn-inactive) !important;
+        color: var(--app-btn-secondary-texto) !important;
+        border: 1px solid var(--app-navbar-color) !important;
+        border-radius: 10px !important;
+        transition: all 0.6s ease !important;
+        height: 38px !important;
+        padding: 0 20px !important;
+        white-space: nowrap !important;
+        margin-left: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        &:hover {
+            background-color: var(--app-navbar-color) !important;
+            color: var(--app-iconos-color) !important;
+            cursor: pointer;
+        }
+
+        &:active {
+            transform: scale(0.95) !important;
+        }
+    }
+
+    &.btn-NuevoRegistroGroup {
+        background-color: var(--app-btn-inactive) !important;
+        color: var(--app-btn-secondary-texto) !important;
+        transition: all 0.6s ease !important;
+        padding: 0 20px !important;
+        white-space: nowrap !important;
+
+        &:hover {
+            background-color: var(--app-navbar-color) !important;
+            color: var(--app-texto-color) !important;
+            cursor: pointer;
+        }
+    }
+
+    &.btn-unlock,
+    &.btn-cancel {
+        cursor: pointer;
+        height: 2.9em !important;
+        border: var(--app-navbar-color) !important;
+        border-radius: 11px !important;
+        transition: all 0.6s ease !important;
+        padding: 0 20px !important;
+        white-space: nowrap !important;
+        margin-left: 0.5rem;
+    }
+
+    &.btn-unlock {
+        background-color: var(--app-navbar-color) !important;
+        color: var(--text-color) !important;
+    }
+
+    &.btn-cancel {
+        background-color: var(--app-btn-secondary) !important;
+        color: var(--app-btn-secondary-texto) !important;
+    }
+}
+
+.btn-animacion {
+    height: 2.9em;
+    border-radius: 11px;
+    transition: all 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    gap: 0.5em;
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    i {
+        transition: all 0.6s ease;
+    }
+
+    &:hover i {
+        transform: translateX(-5px);
+    }
+}
+
+/* Botón cerrar modal con color variable (Máscara SCSS) */
+.btn-close-custom {
+    background-image: none !important;
+    background-color: var(--app-navbar-color) !important;
+    -webkit-mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center / 1em auto no-repeat;
+    mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center / 1em auto no-repeat;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+
+/* Floating Action Button */
+.fab-container-bottom {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+}
+
+.fab-label,
+.link-label {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.fab-label {
+    color: var(--text-color) !important;
+}
+
+.link-label {
+    color: var(--texto-color) !important;
+}
+
+.fab-center-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--app-navbar-color) !important;
+    color: var(--text-color) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* ==========================================================================
+   06. FORMULARIOS, RADIOS Y CHECKBOXES
+   ========================================================================== */
+.form-select,
+.form-input {
+    background-color: var(--app-form-object-bg) !important;
+    color: var(--texto-color) !important;
+    border-color: var(--border-color) !important;
+    border-radius: 5px !important;
+}
+
+.filtro {
+    margin-bottom: 1rem;
+}
+
+/* Custom Checkbox */
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    padding: 8px 0;
+
+    .custom-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+        margin-right: 12px;
+        flex-shrink: 0;
+        background-color: transparent;
+        border: 2px solid var(--border-color);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:checked {
+            background-color: var(--app-navbar-color);
+            border-color: var(--border-color);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+            background-size: 75%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--app-navbar-color);
+            outline-offset: 2px;
+        }
+    }
+
+    .text-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        .main-label {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .sub-label {
+            color: #9ca3af;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+    }
+
+    &:hover .custom-checkbox:not(:checked) {
+        border-color: #9ca3af;
+    }
+}
+
+/* Custom Radio */
+.radio-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 5px;
+
+    input[type='radio'] {
+        display: none;
+    }
+
+    .radio-circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--text-color);
+        transition: all 0.2s ease-in-out;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    input[type='radio']:checked+.radio-circle {
+        border-color: var(--primary-color);
+
+        &::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--app-navbar-color);
+            box-shadow: 0 0 5px var(--radio-fill-shadow);
+            transition: all 0.2s ease-in-out;
+        }
+    }
+
+    &:hover .radio-circle {
+        border-color: var(--primary-color);
+    }
+}
+
+.radio-label {
+    margin-left: 8px;
+    font-size: 16px;
+    color: var(--text-color);
+    transition: color 0.2s ease-in-out;
+}
+
+/* ==========================================================================
+   07. TABLAS Y DATATABLES
+   ========================================================================== */
+.tableFixHead {
+    overflow: auto;
+    height: 100%;
+
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: #fff;
+        color: #464545;
+        text-align: center;
+    }
+}
+
+table,
+table td,
+table tr {
+    border-collapse: collapse;
+}
+
+table {
+    width: 100%;
+    padding: 5px;
+    border-collapse: collapse;
+
+    thead tr th {
+        border-bottom: 1px solid #5f5f5f;
+        border-top: none;
+    }
+
+    tbody td {
+        border-bottom: none !important;
+    }
+
+    tbody tr td {
+        padding: 0.5rem;
+    }
+}
+
+th,
+td {
+    padding: 8px;
+}
+
+/* Override principal DataTables / Bootstrap */
+.dataTables_wrapper,
+.card,
+.dropdown-menu {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+.table {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+    border-radius: 16px !important;
+
+    thead th {
+        background-color: var(--header-color) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    tbody td {
+        background-color: var(--card-background) !important;
+        color: var(--text-color) !important;
+        border-color: var(var(--border-color)) !important;
+    }
+}
+
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input,
+.table input {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+}
+
+.dt-buttons .dt-button,
+.dataTables_paginate .paginate_button {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+}
+
+.dataTables_paginate {
+    .paginate_button.current {
+        background-color: #1ffc02 !important;
+        color: var(--text-color) !important;
+    }
+
+    .paginate_button.active {
+        border-color: var(--border-color) !important;
+    }
+}
+
+.dataTables_info,
+.dataTables_length label,
+.dataTables_filter label,
+.filtros-title,
+.datatable-title {
+    color: var(--text-color) !important;
+}
+
+table.dataTable.row-border tbody tr th,
+table.dataTable.row-border tbody tr td,
+.table tbody tr,
+.table tbody td {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.dt-toolbar {
+    margin-bottom: 1rem;
+}
+
+.dt-length select {
+    padding: 0.25rem;
+    margin-right: 1rem;
+}
+
+#datatable-component td {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+hr.detail-separator {
+    margin-top: -10px;
+    margin-bottom: -10px;
+    border: none;
+    height: 1px;
+    background-color: var(--scrollbar-thumb-hover) !important;
+    padding: 20px;
+}
+
+/* Tablas Anidadas (JSON) */
+.nested-table {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+
+    td {
+        font-size: 0.85rem;
+        color: #adb5bd;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        white-space: nowrap;
+    }
+}
+
+.nested-thead th {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    color: #8a98ac;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   08. MODALES Y SWEETALERT2
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(var(--background-color), 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s ease-out forwards;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+
+    h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        color: var(--text-color);
+        font-weight: 600;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        line-height: 1;
+        cursor: pointer;
+        color: #95a5a6;
+        transition: color 0.2s;
+
+        &:hover {
+            color: #e74c3c;
+        }
+    }
+}
+
+.modal-footer {
+    display: flex;
+    align-items: end;
+    border-top: 1px solid var(--border-color);
+}
+
+.modal-title,
+.modal-label {
+    color: var(--text-color);
+}
+
+.modal-body {
+    padding: 24px;
+    position: relative;
+    min-height: 250px;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* SweetAlert2 Temas */
+.swal2-light-theme-container {
+    .swal2-popup {
+        background: var(--panel-bg, #fff);
+        color: var(--panel-text, #333);
+    }
+
+    .swal2-title,
+    .swal2-html-container {
+        color: var(--panel-text, #333);
+    }
+
+    .swal2-actions button {
+        color: #fff;
+    }
+}
+
+.swal2-dark-theme-container {
+    .swal2-popup {
+        background: var(--panel-bg, #1e1e2d);
+        color: var(--panel-text, #fff);
+    }
+
+    .swal2-title,
+    .swal2-html-container {
+        color: var(--panel-text, #fff);
+    }
+}
+
+/* ==========================================================================
+   09. NAVEGACIÓN, MENÚS Y TABS
+   ========================================================================== */
+.pcoded-header {
+    background-color: #1f1f2e !important;
+}
+
+.pcoded-inner-navbar {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.pcoded-mtext,
+.pcoded-micon {
+    color: #8a8f94 !important;
+}
+
+.nav-item {
+    width: 100%;
+}
+
+#nav-ps-gradient-able.collapsed {
+    width: 60px !important;
+}
+
+.navbar-content {
+    padding: 0 0.5rem;
+}
+
+.navbar-container {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-custom {
+    background-color: var(--custom-navbar-background);
+    color: var(--custom-navbar-text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.drop-menu {
+    background-color: #161718 !important;
+}
+
+.nav-tabs-custom {
+    display: flex;
+    border-bottom: 1px solid #495057;
+
+    button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--text-color) !important;
+        transition: all 0.6s ease;
+
+        &:hover {
+            background-color: var(--app-navbar-color);
+            color: var(--app-texto-color) !important;
+        }
+
+        &:active {
+            transform: scale(0.95) !important;
+            color: var(--app-texto-color) !important;
+        }
+
+        &.active {
+            background-color: var(--app-navbar-color);
+            border-bottom: 2px solid var(--aside-tab-active);
+            color: var(--app-texto-color) !important;
+        }
+    }
+}
+
+.tab-pane {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: none;
+}
+
+.tab-pane.ng-star-inserted {
+    display: block;
+}
+
+.tab-pane[hidden] {
+    display: none !important;
+}
+
+/* Paginación */
+.page-link-a {
+    background-color: var(--app-navbar-color) !important;
+    color: var(--text-color) !important;
+}
+
+.page-link-b {
+    background-color: #2c3138 !important;
+    color: #8a8f94 !important;
+    border-color: #495057 !important;
+    border-radius: 5px !important;
+}
+
+/* Menú Dropdown y Perfil */
+.dropdown-menu {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0 !important;
+    box-shadow: 0 4px 8px var(--panel-shadow);
+    z-index: 1050;
+
+    .dropdown-item {
+        color: var(--text-color);
+
+        &:hover {
+            background-color: var(--header-color);
+        }
+    }
+}
+
+.profile-notification {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    box-shadow: var(--panel-shadow);
+    border-radius: 12px;
+    min-width: 250px;
+    padding: 1rem;
+    margin-top: 10px;
+
+    .pro-head {
+        margin: 0 !important;
+        padding: 16px !important;
+        background-image: linear-gradient(to bottom, var(--app-navbar-color), var(--color-fin-gradiente));
+        color: var(--text-color);
+
+        span {
+            display: block;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .dud-logout {
+            color: var(--text-color);
+
+            &:hover {
+                color: #dc3545;
+            }
+        }
+    }
+
+    .header-texto {
+        background-color: var(--card-background);
+        color: var(--text-color);
+    }
+
+    .pro-body {
+        list-style: none;
+        padding: 12px !important;
+        background-color: var(--card-background);
+        color: var(--text-color);
+
+        li a {
+            color: var(--text-color);
+
+            &:hover {
+                background-color: var(--header-color);
+            }
+        }
+    }
+}
+
+/* ==========================================================================
+   10. TARJETAS (CARDS), GRIDS E IMÁGENES
+   ========================================================================== */
+.card {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+}
+
+.card-header h5 {
+    color: var(--text-color) !important;
+}
+
+.card-header .btn {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+}
+
+.card-table {
+    margin-top: -1rem !important;
+}
+
+/* Grid Apps */
+.card-grid-apps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .card-grid-apps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .card-grid-apps {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.card-grd {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 500px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1010;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.card-grd-content {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    margin: 0;
+    color: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0) 100%);
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        font-size: 1.6em;
+        color: #ccc;
+    }
+
+    p {
+        margin-bottom: 15px;
+        font-size: 0.9em;
+        opacity: 0.9;
+        color: #ccc;
+    }
+}
+
+.card-grd-actions {
+    width: 100%;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.card-grd-button {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: var(--app-navbar-color);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+
+    &:hover {
+        background-color: var(--app-navbar-color);
+        color: var(--text-color);
+    }
+}
+
+/* Tarjeta Login */
+.login-card {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cardlogin.card-body {
+    width: 400px;
+    min-height: 350px;
+    margin-bottom: 10px;
+    padding: 20px !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent !important;
+    z-index: 2;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: var(--card-background);
+        opacity: 0.95;
+        z-index: -1;
+        backdrop-filter: blur(4px);
+        border-radius: inherit;
+    }
+}
+
+/* Media y Chips */
+.avatar-panel {
+    width: 100px !important;
+    height: 100px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.nombre-user-panel {
+    text-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-table {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.image-table {
+    width: 60px;
+    object-fit: cover;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo-table {
+    width: 300px;
+    object-fit: cover;
+    margin-bottom: 16px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.capture-table {
+    width: 500px;
+    object-fit: cover;
+    margin-bottom: 16px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-preview-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+}
+
+.image-preview-container {
+    width: 200px;
+    overflow: hidden;
+}
+
+.avatar-preview {
+    display: block;
+    width: 200px;
+    border-radius: 50%;
+    margin: 1rem;
+}
+
+.image-preview {
+    display: block;
+    width: 500px;
+    margin: 1rem;
+}
+
+.image-preview-ui {
+    display: block;
+    width: 300px;
+    margin: 1rem;
+}
+
+.color-chip {
+    width: 50px;
+    height: 25px;
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+.tag-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    color: #fff;
+    background-color: #0d6efd;
+}
+
+/* ==========================================================================
+   11. LIBRERÍAS DE TERCEROS (Quill Editor)
+   ========================================================================== */
+.ql-container,
+.ql-toolbar {
+    background-color: var(--card-background) !important;
+    border-color: var(--border-color) !important;
+}
+
+.ql-editor {
+    color: var(--text-color) !important;
+}
+
+.ql-toolbar button {
+    background-color: transparent !important;
+}
+
+.ql-toolbar svg {
+    fill: var(--text-color) !important;
+    stroke: var(--text-color) !important;
+    color: var(--text-color) !important;
+}
+
+.ql-picker-label {
+    color: var(--text-color) !important;
+}
+
+.ql-picker-options {
+    background-color: var(--card-background) !important;
+    border-color: var(--border-color) !important;
+}
+
+.ql-picker-options span {
+    color: var(--text-color) !important;
+}
+
+.ql-editor::before {
+    color: #999999 !important;
+}
+
+/* Tema Oscuro Específico */
+body.dark-theme {
+    .ql-toolbar.ql-snow button {
+        background-color: transparent !important;
+    }
+
+    .ql-toolbar.ql-snow button svg {
+        fill: var(--text-color) !important;
+        stroke: var(--text-color) !important;
+        color: var(--text-color) !important;
+    }
+
+    .ql-toolbar.ql-snow .ql-stroke {
+        stroke: var(--text-color) !important;
+    }
+
+    .ql-toolbar.ql-snow .ql-fill {
+        fill: var(--text-color) !important;
+    }
+
+    .ql-toolbar.ql-snow .ql-picker-label {
+        background-color: transparent !important;
+        color: var(--text-color) !important;
+    }
+
+    .ql-editor::before {
+        color: var(--text-color) !important;
+    }
+}
