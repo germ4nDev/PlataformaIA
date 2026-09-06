@@ -55,28 +55,21 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-data-table
-                        [data]="dataFiltrada"
-                        [idField]="'codigoEmpresaSC'"
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoEmpresaSC'"
                         [tableTitle]="'SUSCRIPTOR.EMPRESAS.TITLE' | translate"
                         [newButtonLabel]="'SUSCRIPTOR.EMPRESAS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros"
-                        [showDetail]="true"
-                        [showActions]="true"
-                        [showNewButton]="true"
-                        [showViewButton]="false"
-                        [showEditButton]="true"
-                        [showDeleteButton]="true"
-                        [showOption1Button]="false"
-                        [showBackButton]="true"
-                        (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (backRecord)="OnRegresarClick($event)">
-                    </app-data-table>
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
+                        [showDeleteButton]="false" [showBackButton]="true" [showSearchBox]="false"
+                        (newRecord)="OnNuevoRegistroClick()" (backRecord)="OnRegresarClick($event)"
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_SUSCEMP_CREAR">
+                    </app-table-data>
                 </ng-container>
+
+                <ng-template #loading>
+                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
+                </ng-template>
             </div>
         </div>
     </div>

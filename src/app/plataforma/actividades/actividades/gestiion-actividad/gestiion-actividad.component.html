@@ -49,7 +49,8 @@
                                 <input type="text" class="form-control form-input" name="codigoActividad"
                                     placeholder="{{ 'ACTIVIDADES.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{'is-invalid': !codigoActividad.valid && (codigoActividad.dirty || codigoActividad.touched || isSubmit) }"
-                                    #codigoActividad="ngModel" required [(ngModel)]="FormRegistro.codigoActividad" readonly />
+                                    #codigoActividad="ngModel" required [(ngModel)]="FormRegistro.codigoActividad"
+                                    readonly />
                                 <label
                                     *ngIf="!codigoActividad.valid && (codigoActividad.dirty || codigoActividad.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -67,7 +68,8 @@
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled>{{ 'ACTIVIDADES.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    <option value="" disabled>{{ 'ACTIVIDADES.GESTION.PLACEHOLDERAPLICACION' | translate
+                                        }}
                                     </option>
                                     <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{
                                         app.nombreAplicacion }}</option>
@@ -90,7 +92,7 @@
                                     (change)="onSuiteChangeClick($event)">
                                     <option value="">{{ 'ACTIVIDADES.GESTION.PLACEHOLDERSUITE' | translate }}
                                     </option>
-                                    <option [value]="sui.codigoSuite" *ngFor="let sui of suites">
+                                    <option [value]="sui.codigoSuite" *ngFor="let sui of suitesFiltro">
                                         {{ sui.nombreSuite }}</option>
                                 </select>
                                 <label
@@ -111,7 +113,7 @@
                                     (change)="onModuloChangeClick($event)">
                                     <option value="">{{ 'ACTIVIDADES.GESTION.PLACEHOLDERMODULO' | translate }}
                                     </option>
-                                    <option [value]="mod.codigoModulo" *ngFor="let mod of modulos">
+                                    <option [value]="mod.codigoModulo" *ngFor="let mod of modulosFiltro">
                                         {{ mod.nombreModulo }}</option>
                                 </select>
                                 <label
@@ -121,33 +123,67 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="actividad">{{ 'ACTIVIDADES.NAME' | translate }}</label>
-                                <input class="form-control form-input" id="actividad" name="actividad"
-                                    type="text" placeholder="{{ 'ACTIVIDADES.NAME' | translate }}"
+                                <label class="form-control-label" for="codigoTipoActividad">
+                                    {{ 'ACTIVIDADES.GESTION.TIPOACTIVIDAD' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer;"
+                                    name="codigoTipoActividad" id="codigoTipoActividad"
+                                    [ngClass]="{ 'is-invalid': !codigoTipoActividad.valid && (codigoTipoActividad.dirty || codigoTipoActividad.touched || isSubmit) }"
+                                    #codigoTipoActividad="ngModel" required
+                                    [(ngModel)]="FormRegistro.codigoTipoActividad"
+                                    (change)="onModuloChangeClick($event)">
+                                    <option value="">{{ 'ACTIVIDADES.GESTION.PLACEHOLDERTIPOACTIVIDAD' | translate }}
+                                    </option>
+                                    <option [value]="mod.codigoTipoActividad" *ngFor="let mod of tiposActividad">
+                                        {{ mod.nombreTipoActividad }}</option>
+                                </select>
+                                <label
+                                    *ngIf="!codigoTipoActividad.valid && (codigoTipoActividad.dirty || codigoTipoActividad.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="actividad">{{ 'ACTIVIDADES.NAME' | translate
+                                    }}</label>
+                                <input class="form-control form-input" id="actividad" name="actividad" type="text"
+                                    placeholder="{{ 'ACTIVIDADES.NAME' | translate }}"
                                     [ngClass]="{'is-invalid': !actividad.valid && (actividad.dirty || actividad.touched || isSubmit)}"
                                     #actividad="ngModel" required [(ngModel)]="FormRegistro.actividad" />
-                                <label
-                                    *ngIf="!actividad.valid && (actividad.dirty || actividad.touched || isSubmit)"
+                                <label *ngIf="!actividad.valid && (actividad.dirty || actividad.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'ACTIVIDADES.NAMEHOLDER' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="llavePermiso">{{ 'ACTIVIDADES.LLAVEPERMISO' |
+                                    translate
+                                    }}</label>
+                                <input class="form-control form-input" id="llavePermiso" name="llavePermiso" type="text"
+                                    placeholder="{{ 'ACTIVIDADES.LLAVEPERMISO' | translate }}"
+                                    [ngClass]="{'is-invalid': !llavePermiso.valid && (llavePermiso.dirty || llavePermiso.touched || isSubmit)}"
+                                    #llavePermiso="ngModel" required [(ngModel)]="FormRegistro.llavePermiso" />
+                                <label
+                                    *ngIf="!llavePermiso.valid && (llavePermiso.dirty || llavePermiso.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'ACTIVIDADES.LLAVEPERMISOHOLDER' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'ACTIVIDADES.DESCRIPTION' | translate }}</label>
-                                <app-text-editor
-                                    [toolbarType]="tipoEditorTexto"
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcion ?? ''"
-                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
-                                    name="descripcion"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcion"
                                     [(ngModel)]="FormRegistro.descripcion"
                                     [ngClass]="{'is-invalid': !descripcion.valid && (descripcion.dirty || descripcion.touched || isSubmit)}"
-                                    #descripcion="ngModel"
-                                    required
-                                    rows="5">
+                                    #descripcion="ngModel" required rows="5">
                                 </app-text-editor>
                                 <label
                                     *ngIf="!descripcion.valid && (descripcion.dirty || descripcion.touched || isSubmit)"
@@ -181,4 +217,3 @@
         </div>
     </div>
 </div>
-

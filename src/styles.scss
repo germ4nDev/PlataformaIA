@@ -517,6 +517,10 @@ html {
     border-radius: 5px !important;
 }
 
+.form-label {
+    color: var(--texto-color) !important;
+}
+
 .filtro {
     margin-bottom: 1rem;
 }
@@ -982,18 +986,18 @@ hr.detail-separator {
 
         &:hover {
             background-color: var(--app-navbar-color);
-            color: var(--app-texto-color) !important;
+            color: var(--app-iconos-color) !important;
         }
 
         &:active {
             transform: scale(0.95) !important;
-            color: var(--app-texto-color) !important;
+            color: var(--app-iconos-color) !important;
         }
 
         &.active {
             background-color: var(--app-navbar-color);
             border-bottom: 2px solid var(--aside-tab-active);
-            color: var(--app-texto-color) !important;
+            color: var(--app-iconos-color) !important;
         }
     }
 }
@@ -1016,13 +1020,13 @@ hr.detail-separator {
 /* Paginación */
 .page-link-a {
     background-color: var(--app-navbar-color) !important;
-    color: var(--text-color) !important;
+    color: var(--app-iconos-color) !important;
 }
 
 .page-link-b {
-    background-color: #2c3138 !important;
-    color: #8a8f94 !important;
-    border-color: #495057 !important;
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
     border-radius: 5px !important;
 }
 

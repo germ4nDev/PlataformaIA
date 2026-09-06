@@ -166,10 +166,22 @@ export class NavigationService implements OnInit, OnDestroy {
             return;
         }
 
+        // const navSett = this._localStorageService.getObject<any>('navsettings');
+
+        // const navsettings = {
+        //     aplicacion: navSett.aplicacion,
+        //     suite: navSett.suite,
+        //     modulo: modulo,
+        //     contexto: navSett.contexto,
+        //     suscriptor: navSett.suscriptor,
+        //     aplicaciones: navSett.aplicaciones
+        // }
+
         this._localStorageService.setModuloLocalStorage(modulo);
+        this._localStorageService.removeObject('regId')
+        this._localStorageService.removeObject('reqId')
 
         if (modulo.codigoModulo !== undefined) {
-            this._localStorageService.setObject('regId', modulo.codigoModulo)
             this.router.navigate([modulo.rutaModulo]);
         } else {
             this.router.navigate([modulo.rutaModulo]);

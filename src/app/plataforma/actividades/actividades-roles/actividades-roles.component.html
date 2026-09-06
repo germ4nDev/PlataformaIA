@@ -1,1 +1,67 @@
-<p>actividades-roles works!</p>
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'ACTIVIDADES.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'ACTIVIDADES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
+                        <select (change)="onFiltroCodigoActividadChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <!-- Las opciones se cargan del array local 'aplicaciones' -->
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of actividades">
+                                {{ app.actividad }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'ACTIVIDADES.FILTROS.FILTROSUITES' | translate }}</small>
+                        <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
+                        <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <!-- Las opciones se cargan del array local 'aplicaciones' -->
+                            <option [value]="sui.codigoSuite" *ngFor="let sui of roles">
+                                {{ sui.nombreRole }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <ng-container *ngIf="actividadesRolesFiltradas$ | async as dataFiltrada">
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoActividadRole'"
+                        [tableTitle]="'ACTIVIDADES.TITLE' | translate" [newButtonLabel]="'ACTIVIDADES.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasAplicaciopnes"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false" [showSearchBox]="false"
+                        [showBackButton]="true" (newRecord)="OnNuevoRegistroClick()"
+                        (backRecord)="OnRegresarClick($event)" (accionPrincipalClick)="onAccionPrincipal($event)">>
+                    </app-table-data>
+                </ng-container>
+
+                <ng-template #loading>
+                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

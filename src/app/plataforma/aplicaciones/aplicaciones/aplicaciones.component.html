@@ -64,24 +64,17 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="aplicacionesFiltradas$ | async as dataFiltrada;">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoAplicacion'"
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoAplicacion'"
                         [tableTitle]="'APLICACIONES.TITLE' | translate" [metadataColumns]="columnasAplicaciopnes"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
+                        permisoNew="ACT_APP_CREAR" permisoEdit="ACT_APP_MODIFICAR" permisoDelete="ACT_APP_ELIMINAR"
                         [showDeleteButton]="true" [showSearchBox]="false"
                         [newButtonLabel]="'APLICACIONES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         (newRecord)="OnNuevaAplicaicionClick()" (editRecord)="OnEditarAplicaicionClick($event)"
                         (deleteRecord)="OnEliminarAplicaicionClick($event)">
-                    </app-data-table>
+                    </app-table-data>
                 </ng-container>
-                <!-- <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando aplicaciones ..."> </app-data-loader>
-                </ng-template>
-
-                <h3>Importar Usuarios Masivos</h3>
-                <app-excel-uploader [apiUrl]="urlSubidaUsuarios" [columnsMap]="mapeoColumnasExcel"
-                    [extraData]="datosAdicionales">
-                </app-excel-uploader> -->
             </div>
         </div>
     </div>

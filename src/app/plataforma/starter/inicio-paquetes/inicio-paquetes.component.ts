@@ -16,9 +16,8 @@ import {
     PTLPaquetesService
 } from 'src/app/theme/shared/service';
 import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUser.model';
-import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
 import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
-import { PtlPermisosService } from 'src/app/theme/shared/service/ptl-permisos.service';
+import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
 
 @Component({
     selector: 'app-inicio-suscriptores',
@@ -78,9 +77,9 @@ export class InicioPaquetesComponent implements OnInit, OnDestroy {
         };
 
         this._localStorageService.setObject('contexto', contexto)
-        this._permisosService.cargarPermisosUsuario(current.usuariosSC[0]?.codigoUsuarioSC)
-            .subscribe(() => {
-                this.router.navigate(['/starter/inicio-aplicaciones']);
-            });
+        // this._permisosService.cargarPermisosUsuario(current.usuariosSC[0]?.codigoUsuarioSC)
+        //     .subscribe(() => {
+        //         this.router.navigate(['/starter/inicio-aplicaciones']);
+        //     });
     }
 }

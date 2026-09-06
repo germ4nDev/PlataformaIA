@@ -14,15 +14,10 @@ import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuar
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import {
-    PTLSuscriptoresService,
     UploadFilesService,
-    LocalStorageService,
-    PtlusuariosScService,
-    PtlusuariosEmpresasScService,
-    PtlEmpresasScService
+    LocalStorageService
 } from 'src/app/theme/shared/service';
 import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUser.model';
-import { forEach } from 'lodash';
 
 @Component({
     selector: 'app-inicio-suscriptores',
@@ -45,22 +40,12 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
     usuarioEmpresaSC: PTLUsuaioEmpresasSCModel = {} as PTLUsuaioEmpresasSCModel;
 
     constructor(
-        private _suscriptoresService: PTLSuscriptoresService,
-        private _usuariosSCService: PtlusuariosScService,
-        private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
-        private _empresasSCService: PtlEmpresasScService,
         private _uploadService: UploadFilesService,
         private _localStorageService: LocalStorageService,
         private router: Router
     ) {
-        // const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
-        // if (suscriptor) {
-        //   this.suscriptor = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '';
-        //   console.log('datos del suscriptor', suscriptor);
-        // } else {
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
         console.log('no hay suscriptor suscriptor');
-        // }
     }
 
     ngOnInit(): void {
@@ -70,7 +55,6 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
         console.log('currentUser', this.currentUser);
         const usuariosSC = this.currentUser.usuariosSC;
         usuariosSC.forEach((user: any) => {
-            // this.suscriptores.push(...user.suscriptores)
             user.suscriptores.forEach((susc: any) => {
                 susc.logo = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSuscriptor)
                 this.suscriptores.push(susc)
@@ -87,7 +71,6 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
     ingresarPlataforma(susc: PTLSuscriptorModel) {
         const current = this._localStorageService.getCurrentUserLocalStorage();
         this._localStorageService.setObject('suscriptor', susc)
-        //TODO Validar las suscriptores y la vigencia de la licencia
-        this.router.navigate(['/starter/inicio-paquetes']);
+        this.router.navigate(['/starter/inicio-aplicaciones']);
     }
 }

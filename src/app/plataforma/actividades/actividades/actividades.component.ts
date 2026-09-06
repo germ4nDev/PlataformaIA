@@ -21,7 +21,8 @@ import {
     PtlAplicacionesService,
     PtllogActividadesService,
     PtlmodulosApService,
-    PtlSuitesAPService
+    PtlSuitesAPService,
+    SwalAlertService
 } from 'src/app/theme/shared/service'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
@@ -30,11 +31,17 @@ import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActiv
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
+import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model'
+import { PtlactividadesRolesService } from '../../../theme/shared/service/ptlactividades-roles.service';
+import { PTLActividadRoleModel } from 'src/app/theme/shared/_helpers/models/PTLActividadesRoles.model'
+import { PTLRolesAPService } from '../../../theme/shared/service/ptlroles-ap.service';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component'
+import { DataLoaderComponent } from "src/app/theme/shared/components/data-loader/data-loader.component";
 
 @Component({
     selector: 'app-actividades',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TableDataComponent, DataLoaderComponent],
     templateUrl: './actividades.component.html',
     styleUrl: './actividades.component.scss'
 })
@@ -60,9 +67,12 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     actividadesTransformadas$: Observable<PTLActividadModel[]> = of([])
     actividadesFiltradas$: Observable<PTLActividadModel[]> = of([])
     actividades: PTLActividadModel[] = []
+    registros: PTLActividadModel[] = []
     aplicaciones: PTLAplicacionModel[] = []
     suites: PTLSuiteAPModel[] = []
     modulos: PTLModuloAP[] = []
+    roles: PTLRoleAPModel[] = []
+    actividadesRoles: PTLActividadRoleModel[] = []
 
     colorOpcion1 = '#28a745'
     letraOpcion1 = 'R'
@@ -76,7 +86,10 @@ export class ActividadesComponent implements OnInit, OnDestroy {
         private _modulosService: PtlmodulosApService,
         private _logActividadesService: PtllogActividadesService,
         private _localStorageService: LocalStorageService,
-        private _actividadesService: PtlActividadesService
+        private _swalAlertService: SwalAlertService,
+        private _actividadesService: PtlActividadesService,
+        private _actividadesRolesService: PtlactividadesRolesService,
+        private _rolesService: PTLRolesAPService
     ) {
         this.gradientConfig = GradientConfig
     }
@@ -85,9 +98,13 @@ export class ActividadesComponent implements OnInit, OnDestroy {
         this._navigationService.getNavigationItems()
         this.menuItems$ = this._navigationService.menuItems$
         this.hasFiltersSlot = true
-        this.consultarAplicaciones()
-        this.consultarSuites()
-        this.consultarModulos()
+        this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
+        this.suites = this._suitesService.getSuitesActuales();
+        this.modulos = this._modulosService.getModulosActuales();
+        this.subscriptions.add(this._actividadesService.cargarRegistros().subscribe());
+        this.subscriptions.add(this._actividadesRolesService.cargarRegistros().subscribe());
+        this.subscriptions.add(this._rolesService.cargarRegistros().subscribe());
+
         setTimeout(() => {
             this.setupActividadesStream()
         }, 500)
@@ -103,61 +120,67 @@ export class ActividadesComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe()
     }
 
-    consultarAplicaciones() {
-        this.subscriptions.add(
-            this._aplicacionesService.cargarAplicaciones().subscribe((resp: any) => {
-                if (resp.length >= 0) {
-                    this.aplicaciones = resp
-                    console.log('Todos las aplicaciones', this.aplicaciones)
-                    return
-                }
-            })
-        )
-    }
-
-    consultarSuites() {
-        this.subscriptions.add(
-            this._suitesService.cargarRegistros().subscribe((resp: any) => {
-                if (resp.length >= 0) {
-                    this.suites = resp
-                    console.log('Todos las suites', this.suites)
-                    return
-                }
-            })
-        )
-    }
-
-    consultarModulos() {
-        this.subscriptions.add(
-            this._modulosService.cargarRegistros().subscribe((resp: any) => {
-                if (resp.length >= 0) {
-                    this.modulos = resp.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0')
-                    console.log('************todos los modulos hijos', this.modulos)
-                    return
-                }
-            })
-        )
-    }
-
     setupActividadesStream(): void {
-        this.actividadesTransformadas$ = this._actividadesService.actividades$.pipe(
-            switchMap((acts: PTLActividadModel[]) => {
-                if (!acts) return of([])
-                const transformedActs = acts.map((act: any) => {
-                    act.nomEstado = act.estadoActividad ? 'Activo' : 'Inactivo'
-                    act.nomAplicacion = this.aplicaciones.find(app => app.codigoAplicacion === act.codigoAplicacion)?.nombreAplicacion || ''
-                    act.nomSuite = this.suites.find(suite => suite.codigoSuite === act.codigoSuite)?.nombreSuite || ''
-                    act.nomModulo = this.modulos.find(mod => mod.codigoModulo === act.codigoModulo)?.nombreModulo || ''
-                    return act as PTLActividadModel
-                })
-                this.actividades = transformedActs
-                return of(transformedActs)
+        this.actividadesTransformadas$ = combineLatest([
+            this._actividadesService.actividades$,
+            this._actividadesRolesService.actividadesRoles$ // Escuchamos la tabla puente
+        ]).pipe(
+            switchMap(([actividades, actividadesRoles]) => {
+                if (!actividades || actividades.length === 0) return of([]);
+
+                this.actividades = actividades;
+                this.actividadesRoles = actividadesRoles || [];
+                this.roles = this._rolesService.getRolesActuales();
+
+
+                const transformedActividades = actividades.map((actividad: any) => {
+                    // 1. Tus mapeos actuales (estados, botones dinámicos, aplicación, suite, etc.)
+                    actividad.nomEstado = actividad.estadoActividad ? 'Activo' : 'Inactivo';
+                    actividad.nomAplicacion = actividad && actividad.codigoAplicacion
+                        ? this.aplicaciones.find(t => t.codigoAplicacion === actividad.codigoAplicacion)?.nombreAplicacion || 'N/A'
+                        : 'N/A';
+                    actividad.nomSuite = actividad && actividad.codigoSuite
+                        ? this.suites.find(t => t.codigoSuite === actividad.codigoSuite)?.nombreSuite || 'N/A'
+                        : 'N/A';
+                    actividad.nomModulo = actividad && actividad.codigoModulo
+                        ? this.modulos.find(t => t.codigoModulo === actividad.codigoModulo)?.nombreModulo || 'N/A'
+                        : 'N/A';
+
+                    const asignacionesDeLaActividad = this.actividadesRoles.filter(
+                        ar => ar.codigoActividad === actividad.codigoActividad
+                    );
+
+                    actividad.roles = asignacionesDeLaActividad.map(ar => {
+                        const rolInfo = this.roles.find(r => r.codigoRole === ar.codigoRole);
+
+                        return {
+                            '_idRelacion': ar.codigoActividadRole,
+                            'Nombre Rol': rolInfo ? rolInfo.nombreRole : 'Rol Desconocido',
+                            'Permiso Otorgado': ar.permiso ? 'Sí' : 'No',
+                            'Fecha Asignación': ar.fechaCreacion ? new Date(ar.fechaCreacion).toLocaleDateString() : 'N/A',
+                            '_acciones': [
+                                { accion: 'EDITAR', letra: 'E', color: '#dc3545', tooltip: 'Editar' }, // Rojo
+                                { accion: 'REMOVER', letra: 'R', color: '#28a745', tooltip: 'Remover' } // Verde
+                            ]
+                        };
+                    });
+
+                    return {
+                        ...actividad,
+                        '_acciones': [
+                            { accion: 'ROLES', letra: 'R', color: '#28a745', tooltip: (this.translate.instant('ACTIVIDADES.ROLES')) }
+                        ],
+                    };
+                });
+
+                this.registros = transformedActividades;
+                return of(transformedActividades);
             }),
             catchError(err => {
-                console.error('Error en el stream de actividades:', err)
-                return of([])
+                console.error('Error en el stream de actividades:', err);
+                return of([]);
             })
-        )
+        );
 
         this.actividadesFiltradas$ = combineLatest([
             this.actividadesTransformadas$.pipe(startWith([])),
@@ -257,6 +280,11 @@ export class ActividadesComponent implements OnInit, OnDestroy {
             type: 'text'
         },
         {
+            name: 'llavePermiso',
+            header: 'ACTIVIDADES.LLAVEPERMISO',
+            type: 'text'
+        },
+        {
             name: 'nomEstado',
             header: 'ACTIVIDADES.NOMESTADO',
             type: 'text'
@@ -265,6 +293,11 @@ export class ActividadesComponent implements OnInit, OnDestroy {
             name: 'descripcion',
             header: 'ACTIVIDADES.DESCRIPCION',
             type: 'text'
+        },
+        {
+            name: 'roles',
+            header: 'ACTIVIDADES.ROLES_ASIGNADOS',
+            type: 'json-tabla'
         }
     ]
 
@@ -278,39 +311,56 @@ export class ActividadesComponent implements OnInit, OnDestroy {
         this.router.navigate(['actividades/gestion-actividad'])
     }
 
-    OnEliminarRegistroClick(id: string): void {
+    OnEliminarRegistroClick(id: any): void {
         console.log('id aplicacion', id)
-        Swal.fire({
-            title: this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
-            text: this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-        }).then(result => {
-            if (result.isConfirmed) {
-                this._actividadesService.deleteEliminarRegistro(id).subscribe({
+        this._swalAlertService.getAlertQuestionRequest(
+            this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
+            this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
+            this.translate.instant('PLATAFORMA.DELETE'),
+            this.translate.instant('PLATAFORMA.CANCEL')
+        ).subscribe(result => {
+            if (result) {
+                const actividad = this.actividades.filter(x => x.codigoActividad == id.id)[0];
+                const acti: any = {};
+                //acti.actividadId = actividad.actividadId;
+                acti.codigoActividad = actividad.codigoActividad;
+                acti.codigoAplicacion = actividad.codigoAplicacion;
+                acti.codigoSuite = actividad.codigoSuite;
+                acti.codigoModulo = actividad.codigoModulo;
+                acti.codigoTipoActividad = actividad.codigoTipoActividad;
+                acti.llavePermiso = actividad.llavePermiso;
+                acti.actividad = actividad.actividad;
+                acti.descripcion = actividad.descripcion;
+                acti.codigoUsuarioCreacion = actividad.codigoUsuarioCreacion;
+                acti.fechaCreacion = actividad.fechaCreacion;
+                acti.estadoActividad = false;
+                acti.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+                acti.fechaModificacion = new Date().toISOString();
+                console.log('inactivar actividad', acti);
+                this._actividadesService.putModificarRegistro(acti).subscribe({
                     next: (resp: any) => {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA')
+                        console.log('respuesta', resp);
+                        if (resp.ok) {
+                            const logData = {
+                                codigoTipoLog: '',
+                                codigoRespuesta: '201',
+                                descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
+                            };
+                            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                            this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
                         }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA'), resp.mensaje, 'success')
-                        // Nota: Aquí el servicio PtlAplicacionesService debería emitir el nuevo listado actualizado
-                        // Asumiendo que el servicio hace esto, el stream se actualizará automáticamente.
                     },
-                    error: () => {
+                    error: (err: any) => {
+                        console.error(err);
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINARERROR')
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('Error', this.translate.instant('ACTIVIDADES.ELIMINARERROR'), 'error')
+                            descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
+                        };
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                        this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
                     }
-                })
+                });
             }
         })
     }
@@ -320,10 +370,52 @@ export class ActividadesComponent implements OnInit, OnDestroy {
         this.router.navigate(['actividades/gestion-actividad'])
     }
 
-    OnOption1Click(id: any) {
-        console.log('ejecutando opcion 1 Seguimientos', event)
-        this._localStorageService.setObject('regId', id)
-        this.router.navigate(['actividades/gestion-actividad'])
+    abrirModalEditar(row: any) {
+        console.log('Abriendo modal de edición para:', row);
+        // Tu lógica para abrir el modal o navegar a la vista de edición
+    }
+
+    confirmarEliminacion(id: any) {
+        // Tu lógica de alerta (ej. usando _swalService) para borrar el registro
+    }
+
+    onAccionPrincipal(evento: { accion: string, row: any }) {
+        const { accion, row } = evento;
+        const idRegistro = row.codigoActividad || row.id;
+
+        console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, idRegistro);
+
+        switch (accion) {
+            case 'ROLES':
+                console.log('abrir roles');
+                console.log('ejecutando actividades roles', event)
+                this._localStorageService.setObject('regId', idRegistro)
+                this.router.navigate(['actividades/actividades-roles'])
+                break;
+
+            default:
+                console.warn(`Acción no reconocida: ${accion}`);
+                break;
+        }
+    }
+
+    onAccionSubtabla(evento: { accion: string, filaSubtabla: any, filaPadre: any }) {
+        const accion = evento.accion;
+        const idRelacion = evento.filaSubtabla._idRelacion;
+        const codigo = evento.filaPadre.codigoActividad;
+
+        switch (accion) {
+            case 'EDITAR':
+                console.log('abrir enlace subtabla detalle registro', idRelacion);
+                console.log('abrir enlace subtabla detalle padre', codigo);
+                break;
+            case 'REMOVER':
+                console.log('abrir enlace subtabla detalle registro', idRelacion);
+                console.log('abrir enlace subtabla detalle padre', codigo);
+                break;
+            default:
+                break;
+        }
     }
 
     toggleNav(): void {

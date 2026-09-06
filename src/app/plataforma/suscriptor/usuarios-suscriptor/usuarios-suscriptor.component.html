@@ -48,33 +48,21 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-data-table
-                        [data]="dataFiltrada"
-                        [idField]="'codigoUsuarioSC'"
-                        [tableTitle]="'SUSCRIPTOR.USUARIOSSUSCRIPTOR.TITLE' | translate"
-                        [newButtonLabel]="'SUSCRIPTOR.USUARIOSSUSCRIPTOR.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros"
-                        [showDetail]="true"
-                        [showActions]="true"
-                        [showNewButton]="true"
-                        [showViewButton]="false"
-                        [showEditButton]="true"
-                        [showDeleteButton]="true"
-                        [showOption1Button]="false"
-                        [showBackButton]="true"
-                        (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (backRecord)="OnRegresarClick($event)">
-                    </app-data-table>
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoUsuarioSC'"
+                        [tableTitle]="'USUARIOS.USUARIOS.TITLE' | translate" [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
+                        [showUploadButton]="true" [showDeleteButton]="false" [showSearchBox]="false"
+                        [showBackButton]="true" [newButtonLabel]="'USUARIOS.USUARIOS.NEW' | translate"
+                        [cargandoExcel]="cargandoExcel" (excelUpload)="procesarArchivoExcel($event)"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
+                        (backRecord)="OnBackButtonClic($event)" (accionPrincipalClick)="onAccionPrincipal($event)">
+                    </app-table-data>
                 </ng-container>
 
                 <ng-template #loading>
-                    <div class="d-flex justify-content-center p-5">
-                        <div class="spinner-border text-primary" role="status"></div>
-                    </div>
+                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
                 </ng-template>
             </div>
         </div>

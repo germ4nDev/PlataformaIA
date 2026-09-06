@@ -1,0 +1,112 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="form-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title">{{ tituloPagina }}</h4>
+                    </div>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro"
+                            [disabled]="usuariosMostrados.length === 0" (click)="btnGestionarRegistroClick()">
+                            {{ 'USUARIOS.USUARIOSROLES.GESTION.CREATE' | translate }}
+                            <i class="feather icon-plus ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body form-scroll-wrapper">
+                <form #validationForm="ngForm" class="editForm" novalidate>
+                    <div class="row">
+                        <!-- Suscriptor -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoSuscriptor">{{
+                                    'USUARIOS.USUARIOSROLES.GESTION.SUSCRIPTOR' | translate }}</label>
+                                <select class="form-control input-md form-select" style="cursor: pointer"
+                                    name="codigoSuscriptor" id="codigoSuscriptor" required
+                                    [(ngModel)]="codigoSuscriptor" (change)="onSuscriptorChangeClick($event)">
+                                    <option value="" disabled>{{ 'USUARIOS.USUARIOSROLES.GESTION.SUSCRIPTORHOLDER' |
+                                        translate }}</option>
+                                    <option [value]="sus.codigoSuscriptor" *ngFor="let sus of suscriptores">{{
+                                        sus.nombreSuscriptor }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Empresas SC -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoEmpresaSC">{{
+                                    'USUARIOS.USUARIOSROLES.GESTION.EMPRESASC' | translate }}</label>
+                                <select class="form-control input-md form-select" style="cursor: pointer"
+                                    name="codigoEmpresaSC" id="codigoEmpresaSC" [(ngModel)]="codigoEmpresaSC"
+                                    (change)="onEmpresaSCChangeClick($event)">
+                                    <option value="">{{ 'USUARIOS.USUARIOSROLES.GESTION.EMPRESASCHOLDER' | translate }}
+                                    </option>
+                                    <option [value]="emp.codigoEmpresaSC" *ngFor="let emp of empresasSC">{{
+                                        emp.nombreEmpresa }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Header Usuarios -->
+                        <div class="col-md-12" *ngIf="usuariosMostrados.length > 0">
+                            <div class="text-center flex flex-col justify-center"><br />
+                                <h4 class="titulo-container">Usuarios Filtrados</h4>
+                                <h6 class="subtitulo-container">Seleccione los usuarios para asignarles el rol</h6><br>
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
+                                    (click)="btnAsociarTodosClick()">
+                                    {{ 'PLATAFORMA.ALLDATA' | translate }}
+                                </button><br /><br />
+                            </div>
+                        </div>
+
+                        <!-- Lista de Usuarios en Formato Checkbox -->
+                        <div class="col-md-12" *ngIf="usuariosMostrados.length > 0">
+                            <div class="col-md-12" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                                <div class="row mx-0">
+                                    <div class="col-md-6 mb-3" *ngFor="let usu of usuariosMostrados; let i = index">
+                                        <label class="checkbox-container custom-check-form" [for]="'usu_' + i">
+                                            <input class="custom-checkbox" type="checkbox" [(ngModel)]="usu.checked"
+                                                [name]="'usuCheck_' + i" [id]="'usu_' + i"
+                                                (change)="onUsuarioCheckChange($event, usu)" />
+                                            <div class="text-wrapper ml-2">
+                                                <span class="titulo-container">{{ usu.nombreUsuario }}</span>
+                                                <span class="subtitulo-container">{{ usu.correoElectronico }}</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje Vacio -->
+                        <div class="col-md-12" *ngIf="usuariosMostrados.length === 0 && codigoSuscriptor !== ''">
+                            <div class="alert alert-warning text-center mt-3">
+                                No se encontraron usuarios con los parámetros seleccionados.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

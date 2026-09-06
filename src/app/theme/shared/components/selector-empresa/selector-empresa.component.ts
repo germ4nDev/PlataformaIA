@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from '../../service/local-storage.service';
-import { PtlPermisosService } from '../../service/ptl-permisos.service';
+import { PtlPermisosService } from '../../service/ptlpermisos.service';
 
 @Component({
     selector: 'app-selector-empresa',
@@ -50,8 +50,11 @@ export class SelectorEmpresaComponent implements OnInit {
         const contexto = this._localStorage.getObject<any>('contexto');
         if (!contexto || !this.empresaSeleccionada) return;
 
-        contexto.codigoEmpresaSC = this.empresaSeleccionada;
-        this._localStorage.getObject<any>('contexto');
+        const cont = {
+            codigoEmpresaSC: this.empresaSeleccionada,
+            codigoUsuarioSC: contexto.codigoUsuarioSC
+        }
+        this._localStorage.setContextoLocalStorage(cont);
 
         this._permisosService.cargarPermisosUsuarioYEmpresa(contexto.codigoUsuarioSC, this.empresaSeleccionada)
             .subscribe(() => {

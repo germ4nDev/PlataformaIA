@@ -34,6 +34,9 @@ import { JwtInterceptor } from './theme/shared/_helpers/jwt-interceptor.intercep
 import { ErrorInterceptor } from './theme/shared/_helpers/error.interceptor';
 import { IaChatFlotanteComponent } from "./theme/shared/components/ia-chat-flotante/ia-chat-flotante.component";
 import { NgChartsModule } from 'ng2-charts';
+import { APP_INITIALIZER } from '@angular/core';
+import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
+import { lastValueFrom } from 'rxjs';
 
 const config: SocketIoConfig = {
     url: environment.sctUrl,
@@ -43,6 +46,12 @@ const config: SocketIoConfig = {
         reconnection: true
     }
 };
+
+export function inicializarSeguridadApp(permisosService: PtlPermisosService) {
+    return () => {
+        return permisosService.inicializarPermisosPorDefecto();
+    };
+}
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -102,7 +111,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: inicializarSeguridadApp,
+            deps: [PtlPermisosService],
+            multi: true
+        }
     ],
     bootstrap: [AppComponent]
 })

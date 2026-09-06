@@ -488,7 +488,7 @@
 // }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
@@ -503,7 +503,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { LanguageService, LocalStorageService, PTLHistorialFacturacionService, PTLPaquetesSCService, PTLPaquetesService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
+import { LanguageService, LocalStorageService, PTLHistorialFacturacionService, PTLPaquetesSCService, PTLPaquetesService, SwalAlertService, UploadFilesService, UtilidadesService } from 'src/app/theme/shared/service';
 import Swal from 'sweetalert2';
 import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
 import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
@@ -513,11 +513,14 @@ import { PTLTiposPaqueteService } from 'src/app/theme/shared/service/ptltipos-pa
 import { PTLHistorialFacturacionModel } from 'src/app/theme/shared/_helpers/models/PTLHistorialFacturacion.model';
 import { PTLTiposPagoService } from 'src/app/theme/shared/service/ptltipos-pago.service';
 import { PTLTipoPagoModel } from 'src/app/theme/shared/_helpers/models/PTLTiposPago.model';
+import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
+import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
+import { DataLoaderComponent } from "src/app/theme/shared/components/data-loader/data-loader.component";
 
 @Component({
     selector: 'app-paquetes-suscriptor',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent, DataLoaderComponent],
     templateUrl: './paquetes-suscriptor.component.html',
     styleUrl: './paquetes-suscriptor.component.scss'
 })
@@ -568,6 +571,7 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private translate: TranslateService,
+        private cdr: ChangeDetectorRef,
         private _suscriptoresService: PTLSuscriptoresService,
         private _navigationService: NavigationService,
         private _localStorageService: LocalStorageService,
@@ -577,7 +581,9 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         private _tiposPaqueteService: PTLTiposPaqueteService,
         private _tiposPagoService: PTLTiposPagoService,
         private _historialFacturacionService: PTLHistorialFacturacionService,
-        private _swalService: SwalAlertService
+        private _utilidaddesService: UtilidadesService,
+        private _swalService: SwalAlertService,
+        private _permisosService: PtlPermisosService
     ) {
         this.gradientConfig = GradientConfig;
         this.codigoSuscriptor = this._localStorageService.getObject<string>('regId') || '';
@@ -649,15 +655,67 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         });
     }
 
-    // =========================================================================
-    // STREAMS DE DATOS
-    // =========================================================================
     setupRegistrosStream(): void {
-        this.registrosTransformadas$ = this._paquetesSCService.paquetesSC$.pipe(
-            map((paqs: PTLPaquetesSCModel[]) => paqs ? paqs.filter(x => x.codigoSuscriptor == this.codigoSuscriptor) : []),
-            map(pqsSuscriptor => pqsSuscriptor.map(reg => this._estructurarPaqueteConHistorial(reg))),
-            catchError(err => {
-                console.error('Error en el stream de aplicaciones:', err);
+        this.registrosTransformadas$ = combineLatest([
+            this._paquetesSCService.paquetesSC$,
+            this._permisosService.actividadesAutorizadas$
+        ]).pipe(
+            map(([paqs, permisos]: [PTLPaquetesSCModel[], string[]]) => {
+                if (!paqs || paqs.length === 0) return [];
+
+                console.log('paquetes', paqs);
+                const pqsSuscriptor = paqs.filter(x => x.codigoSuscriptor == this.codigoSuscriptor);
+                console.log('paquetes suscriptor', pqsSuscriptor);
+
+                return pqsSuscriptor.map((reg: any) => {
+
+                    const newReg = this._estructurarPaqueteConHistorial(reg);
+
+                    const accionesPermitidas: any[] = [];
+
+                    const puedeModificar = permisos.includes('ACT_SUSCPAQ_MODIFICAR');
+                    if (puedeModificar) {
+                        accionesPermitidas.push({
+                            accion: 'MODIFICAR',
+                            letra: 'M',
+                            color: '#007bff',
+                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETESSC.MODIFICAR'))
+                        });
+                    }
+
+                    const puedeEliminar = permisos.includes('ACT_SUSCPAQ_ELIMINAR');
+                    if (puedeEliminar) {
+                        accionesPermitidas.push({
+                            accion: 'ELIMINAR',
+                            letra: 'E',
+                            color: '#dc3545',
+                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINAR'))
+                        });
+                    }
+
+                    const puedeRenovar = permisos.includes('ACT_SUSCPAQ_RENOVAR');
+                    if (puedeRenovar) {
+                        accionesPermitidas.push({
+                            accion: 'RENOVAR',
+                            letra: 'R',
+                            color: '#ec5914',
+                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETESSC.RENOVAR'))
+                        });
+                    }
+
+                    return {
+                        ...newReg,
+                        '_acciones': accionesPermitidas
+                    } as PTLPaquetesSCModel;
+                });
+            }),
+            tap((regs) => {
+                this.registros = regs;
+                console.log('todos los registros', this.registros);
+                this.cdr.detectChanges();
+            }),
+            catchError((err) => {
+                console.error('Error en el stream de datos:', err);
                 return of([]);
             })
         );
@@ -698,7 +756,7 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
             fechaPago: new Date(histo.fechaPago).toLocaleDateString(),
             numFactura: histo.numFactura,
             tipoPago: this.tiposPago.find(x => x.codigoTipoPago == histo.codigoTipoPago)?.nombreTipoPago,
-            montoPagado: histo.montoPagado,
+            montoPagado: this._utilidaddesService.formatearMoneda(histo.montoPagado, 2),
             numeroCuota: histo.numeroCuota,
             estadoPago: histo.estadoPago == true ? 'Pagado' : 'Pendiente'
         }));
@@ -762,12 +820,6 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         this.router.navigate(['/suscriptor/suscriptores']);
     }
 
-    OnEditarRegistroClick(id: number) {
-        this._localStorageService.setObject('regId', this.codigoSuscriptor);
-        this._localStorageService.setObject('paqId', id); // Corregido: antes decía 'event'
-        this.router.navigate(['/suscriptor/gestion-suscriptor'], { queryParams: { regId: id } });
-    }
-
     toggleNav(): void {
         this.toggleSidebar.emit();
     }
@@ -777,14 +829,86 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         this.registroSeleccionado = null;
     }
 
-    // =========================================================================
-    // LÓGICA DE RENOVACIÓN DE PAQUETES Y ELIMINACIÓN
-    // =========================================================================
-    OnOption1Click(event: any) {
-        console.log('ejecutando opcion 1 empresas Suscriptor', event);
-        this.registroSeleccionado = event;
-        this._prepararDatosDeRenovacion(event);
-        this.mostrarModalRenovacion = true;
+    onAccionPrincipal(evento: { accion: string, row: any }) {
+        const { accion, row } = evento;
+        const id = row.codigoSuscriptorPaquete || row.id;
+
+        console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
+
+        switch (accion) {
+            case 'MODIFICAR':
+                console.log('inactivar usuario codigo', id);
+                console.log('ejecutando opcion 1 empresas Suscriptor', id);
+                this._localStorageService.setObject('regId', id);
+                this.router.navigate(['/suscriptor/gestion-suscriptor']);
+                break;
+            case 'ELIMINAR':
+                const value = id;
+                console.log('opcion 1 click', value);
+                console.log('ejecutando opcion 2 UsuariosSuscriptor', id);
+                console.log('cancelar el paquete', value);
+
+                const paqueteToCancel = this.paquetesSC.find(x => x.codigoSuscriptorPaquete == value);
+
+                if (!paqueteToCancel) {
+                    console.error('No se encontró el paquete a cancelar');
+                    return;
+                }
+
+                const paqueteInfo = this.paquetes.find(x => x.codigoPaquete == paqueteToCancel.codigoPaquete);
+
+                const titulo = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINARTITULO');
+                const confirmText = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ACCEPTTEXT');
+                const cancelText = this.translate.instant('SUSCRIPTOR.PAQUETESSC.CANCEL');
+                const placeholder = this.translate.instant('SUSCRIPTOR.PAQUETESSC.PLACEHOLDERCANCEL');
+                const errorobs = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ERROROBSERVACION');
+
+                const htmlBody = `
+                    <div style="margin-bottom: 10px;">
+                        ${this.translate.instant('SUSCRIPTOR.PAQUETESSC.CONFIRMTEXT')}
+                    </div>
+                    <small><b>"${paqueteInfo?.nombrePaquete || paqueteToCancel.codigoPaquete}"</b></small>
+                    `;
+
+                this._swalService.getAlertConfirmWithTextarea(titulo, htmlBody, placeholder, confirmText, cancelText, errorobs)
+                    .then((resultado) => {
+
+                        if (resultado.isConfirmed) {
+
+                            const paqueteActualizado: PTLPaquetesSCModel = {
+                                ...paqueteToCancel,
+                                estadoLicencia: false,
+                                observaciones: resultado.value,
+                                fechaCancelacion: new Date().toISOString(),
+                                codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '',
+                                fechaModificacion: new Date().toISOString()
+                            };
+
+                            this.subscriptions.add(
+                                this._paquetesSCService.putModificarRegistro(paqueteActualizado).subscribe({
+                                    next: (resp: any) => {
+                                        this._swalService.getAlertConfirmSuccess(this.translate.instant('SUSCRIPTOR.PAQUETESSC.SUCCESSTEXT'));
+                                    },
+                                    error: (err: any) => {
+                                        this._swalService.getAlertConfirmError(this.translate.instant('SUSCRIPTOR.PAQUETESSC.ERRORTEXT'));
+                                        console.error('Error cancelando paquete', err);
+                                    }
+                                })
+                            );
+                        }
+                    });
+
+                break;
+            case 'RENOVAR':
+                console.log('ejecutando opcion 3 paquetesSuscriptor', id);
+                this.registroSeleccionado = event;
+                this._prepararDatosDeRenovacion(id);
+                this.mostrarModalRenovacion = true;
+                break;
+            default:
+                console.warn(`Acción no reconocida: ${accion}`);
+                break;
+        }
     }
 
     private _prepararDatosDeRenovacion(codigoSuscriptorPaquete: string): void {
@@ -896,62 +1020,5 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         });
 
         this.cerrarModal();
-    }
-
-    // =========================================================================
-    // CANCELACIÓN DE PAQUETE (BOTÓN ROJO 'E')
-    // =========================================================================
-    OnEliminarRegistroClick(event: any) {
-        console.log('cancelar el paquete', event.id);
-
-        const paqueteToCancel = this.paquetesSC.find(x => x.codigoSuscriptorPaquete == event.id);
-
-        if (!paqueteToCancel) {
-            console.error('No se encontró el paquete a cancelar');
-            return;
-        }
-
-        const paqueteInfo = this.paquetes.find(x => x.codigoPaquete == paqueteToCancel.codigoPaquete);
-
-        const titulo = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINARTITULO');
-        const confirmText = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ACCEPTTEXT');
-        const cancelText = this.translate.instant('SUSCRIPTOR.PAQUETESSC.CANCEL');
-        const placeholder = this.translate.instant('SUSCRIPTOR.PAQUETESSC.PLACEHOLDERCANCEL');
-        const errorobs = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ERROROBSERVACION');
-
-        const htmlBody = `
-        <div style="margin-bottom: 10px;">
-            ${this.translate.instant('SUSCRIPTOR.PAQUETESSC.CONFIRMTEXT')}
-        </div>
-        <small><b>"${paqueteInfo?.nombrePaquete || paqueteToCancel.codigoPaquete}"</b></small>
-        `;
-
-        this._swalService.getAlertConfirmWithTextarea(titulo, htmlBody, placeholder, confirmText, cancelText, errorobs)
-            .then((resultado) => {
-
-                if (resultado.isConfirmed) {
-
-                    const paqueteActualizado: PTLPaquetesSCModel = {
-                        ...paqueteToCancel,
-                        estadoLicencia: false,
-                        observaciones: resultado.value,
-                        fechaCancelacion: new Date().toISOString(),
-                        codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '',
-                        fechaModificacion: new Date().toISOString()
-                    };
-
-                    this.subscriptions.add(
-                        this._paquetesSCService.putModificarRegistro(paqueteActualizado).subscribe({
-                            next: (resp: any) => {
-                                this._swalService.getAlertConfirmSuccess(this.translate.instant('SUSCRIPTOR.PAQUETESSC.SUCCESSTEXT'));
-                            },
-                            error: (err: any) => {
-                                this._swalService.getAlertConfirmError(this.translate.instant('SUSCRIPTOR.PAQUETESSC.ERRORTEXT'));
-                                console.error('Error cancelando paquete', err);
-                            }
-                        })
-                    );
-                }
-            });
     }
 }

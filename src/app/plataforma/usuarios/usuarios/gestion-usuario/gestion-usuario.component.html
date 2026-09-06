@@ -164,20 +164,21 @@
                                 </label>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.FOTO' | translate }}</label>
-                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview" />
-                                <div class="file-input-wrapper">
-                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                                        {{ 'PLATAFORMA.SELECTFILE' | translate }}
-                                    </label>
-                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
-                                        id="fileUploadInput" class="form-control form-input d-none"
-                                        name="fotoUsuario" />
-                                </div><br>
+                                <label class="form-label">Foto Usuario</label>
+                                <br>
+                                <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"
+                                    (change)="onFileSelectedClick($event)">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInput.click()">
+                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    {{ 'PLATAFORMA.SELECTFILE' | translate }}
+                                </button>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.STATUS' | translate }}</label>

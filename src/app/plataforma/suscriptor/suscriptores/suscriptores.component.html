@@ -47,31 +47,19 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrados$ | async as dataFiltrada; else loading">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoSuscriptor'"
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoSuscriptor'"
                         [tableTitle]="'SUSCRIPTOR.SUSCRIPTORES.TITLE' | translate"
                         [newButtonLabel]="'SUSCRIPTOR.SUSCRIPTORES.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        [tooltipOption1]="'SUSCRIPTOR.SUSCRIPTORES.EMPRESAS' | translate"
-                        [tooltipOption2]="'SUSCRIPTOR.SUSCRIPTORES.USUARIOS' | translate"
-                        [tooltipOption3]="'SUSCRIPTOR.SUSCRIPTORES.PAQUETES' | translate" [colorOpcion1]="colorOpcion1"
-                        [letraOpcion1]="letraOpcion1" [colorOpcion2]="colorOpcion2" [colorOpcion3]="colorOpcion3"
-                        [letraOpcion2]="letraOpcion2" [letraOpcion3]="letraOpcion3"
-                        [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
-                        [showActions]="true" [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [showDetail]="true" [showOption1Button]="true"
-                        [showOption2Button]="true" [showOption3Button]="true" [showSearchBox]="false"
-                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)" (option1Record)="OnOption1Click($event)"
-                        (option2Record)="OnOption2Click($event)" (option3Record)="OnOption3Click($event)">
-                    </app-data-table>
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true" [showNewButton]="true"
+                        [showViewButton]="false" [showSearchBox]="false" (newRecord)="OnNuevoRegistroClick()"
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_SUSC_CREAR"
+                        permisoEdit="ACT_SUSC_MODIFICAR" permisoDelete="ACT_SUSC_ELIMINAR">
+                    </app-table-data>
                 </ng-container>
 
                 <ng-template #loading>
-                    <div class="d-flex justify-content-center align-items-center p-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="sr-only">Cargando datos...</span>
-                        </div>
-                    </div>
+                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
                 </ng-template>
             </div>
         </div>

@@ -16,6 +16,21 @@ export class SwalAlertService implements OnDestroy {
     private isDarkTheme: boolean = false;
     private themeSub: Subscription;
 
+    // ========================================================================
+    // 🟢 CONFIGURACIÓN BASE PARA TOASTS (Notificaciones no bloqueantes)
+    // ========================================================================
+    private Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
+
     constructor(
         private themeService: ThemeService,
         private translate: TranslateService
@@ -65,6 +80,45 @@ export class SwalAlertService implements OnDestroy {
             buttonsStyling: false,
             target: 'body',
             ...options
+        });
+    }
+
+    // ==========================================
+    // MÉTODOS PARA TOASTS (Notificaciones sutiles)
+    // ==========================================
+    getToastSuccess(titulo: string, timer: number = 3500): void {
+        this.Toast.fire({
+            icon: 'success',
+            title: titulo,
+            timer: timer,
+            customClass: { popup: this.isDarkTheme ? 'swal2-dark-mode-custom' : '' }
+        });
+    }
+
+    getToastInfo(titulo: string, timer: number = 3500): void {
+        this.Toast.fire({
+            icon: 'info',
+            title: titulo,
+            timer: timer,
+            customClass: { popup: this.isDarkTheme ? 'swal2-dark-mode-custom' : '' }
+        });
+    }
+
+    getToastWarning(titulo: string, timer: number = 3500): void {
+        this.Toast.fire({
+            icon: 'warning',
+            title: titulo,
+            timer: timer,
+            customClass: { popup: this.isDarkTheme ? 'swal2-dark-mode-custom' : '' }
+        });
+    }
+
+    getToastError(titulo: string, timer: number = 3500): void {
+        this.Toast.fire({
+            icon: 'error',
+            title: titulo,
+            timer: timer,
+            customClass: { popup: this.isDarkTheme ? 'swal2-dark-mode-custom' : '' }
         });
     }
 
@@ -143,7 +197,7 @@ export class SwalAlertService implements OnDestroy {
             title,
             text,
             timer: 9000,
-            timerProgressBar: true // Agrega una barra de progreso visual (opcional pero buena UX)
+            timerProgressBar: true
         });
     }
 

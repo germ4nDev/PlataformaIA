@@ -25,6 +25,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-player/video-player.component'
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
 import { ExcelUploaderComponent } from 'src/app/theme/shared/components/excel-loader/excel-loader.component'
+import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
 
 @Component({
     selector: 'app-aplicaciones',
@@ -36,9 +37,8 @@ import { ExcelUploaderComponent } from 'src/app/theme/shared/components/excel-lo
         TranslateModule,
         NavBarComponent,
         NavContentComponent,
-        DatatableComponent,
-        DataLoaderComponent,
-        ExcelUploaderComponent
+        ExcelUploaderComponent,
+        TableDataComponent
     ],
     templateUrl: './aplicaciones.component.html',
     styleUrl: './aplicaciones.component.scss'

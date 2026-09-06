@@ -5,6 +5,8 @@ export class PTLActividadRoleModel {
         public codigoActividadRole?: string,
         public codigoActividad?: string,
         public codigoRole?: string,
+        public nomActividad?: string,
+        public nomRole?: string,
         public permiso?: boolean,
         public codigoUsuarioCreacion?: string,
         public fechaCreacion?: string,

@@ -1,1 +1,74 @@
-<p>gestion-actividad-role works!</p>
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="form-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <!-- <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'ACTIVIDADES.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'ACTIVIDADES.UPDATE' | translate }}</h4> -->
+                    </div>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
+                            (click)="btnGestionarActividadClick()">
+                            {{ 'ACTIVIDADES.CREATE' | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
+                            (click)="btnGestionarActividadClick()">
+                            {{ 'ACTIVIDADES.UPDATE' | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body form-scroll-wrapper">
+                <div class="col-md-12" *ngIf="rolesConCheck.length > 0">
+                    <div class="text-center flex flex-col justify-center"><br />
+                        <h4 class="titulo-container">{{ 'ACTIVIDADESROLES.GESTION.TITLE' | translate }} Roles asociados
+                            a la Actividad</h4>
+                        <h6 class="subtitulo-container"> {{ actividad.actividad }}</h6><br>
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
+                            (click)="btnAsociarTodosClick()">
+                            {{ 'PLATAFORMA.ALLDATA' | translate }} </button><br /><br />
+                    </div>
+                </div>
+                <div class="col-md-12" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                    <div class="row mx-0">
+                        <div class="col-md-6 mb-3" *ngFor="let paque of rolesConCheck; let i = index">
+                            <label class="checkbox-container custom-check-form" [for]="'modu_' + i">
+                                <input class="custom-checkbox" type="checkbox" [(ngModel)]="paque.checked"
+                                    [name]="'modCheck_' + i" [id]="'modu_' + i"
+                                    (change)="onRoleCheckChange($event, paque)" />
+                                <div class="text-wrapper ml-2">
+                                    <span class="titulo-container">{{ paque.nombreRole }}</span>
+                                    <span class="subtitulo-container"
+                                        [innerHTML]="paque.descripcionRole || 'Habilita este role para ejecutar la actividad.'">
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

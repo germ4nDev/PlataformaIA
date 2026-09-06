@@ -5,10 +5,12 @@ import { PTLSuscriptorModel } from "./PTLSuscriptor.model"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class NavSettings {
-    constructor (
+    constructor(
         public aplicacion?: PTLAplicacionModel,
         public suite?: PTLSuiteAPModel,
         public modulo?: PTLModuloAP,
-        public suscriptor?: PTLSuscriptorModel
-    ) {}
- }
+        public contexto?: any,
+        public suscriptor?: PTLSuscriptorModel,
+        public aplicaciones?: PTLAplicacionModel[],
+    ) { }
+}

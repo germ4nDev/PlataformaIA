@@ -26,6 +26,9 @@ import {
 } from 'src/app/theme/shared/service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
+import { PTLTiposRolesService } from 'src/app/theme/shared/service/ptltipos-roles.service';
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { PTLTiposRoleModel } from 'src/app/theme/shared/_helpers/models/PTLTiposRole.model';
 //#endregion IMPORTS
 
 @Component({
@@ -42,17 +45,20 @@ export class GestionRolesComponent implements OnInit {
     isLocked: boolean = false;
     lockMessage: string = '';
     tipoRolSeleccionado: string = '';
+    codigoRole: string = '';
 
     FormRegistro: PTLRoleAPModel = new PTLRoleAPModel();
     usuarios: PTLUsuarioModel[] = [];
     aplicaciones: PTLAplicacionModel[] = [];
     registrosSub?: Subscription;
     suitesSub?: Subscription;
-    suites: any[] = [];
-    suitesApp: any[] = [];
+    suites: PTLSuiteAPModel[] = [];
+    suitesApp: PTLSuiteAPModel[] = [];
+    tiposRole: PTLTiposRoleModel[] = [];
     form: undefined;
     isSubmit: boolean = false;
     modoEdicion: boolean = false;
+    isTipoRole: boolean = false;
     codeRole = uuidv4();
     tipoEditorTexto = 'basica';
 
@@ -67,57 +73,42 @@ export class GestionRolesComponent implements OnInit {
         private _suitesService: PtlSuitesAPService,
         private _usuariosService: PTLUsuariosService,
         private _usuariosRolesService: PtlusuariosRolesApService,
+        private _tiposRolesService: PTLTiposRolesService,
         private _localStorageService: LocalStorageService,
         private _swalAlertService: SwalAlertService
     ) {
         this.isSubmit = false;
-        this.route.queryParams.subscribe((params) => {
-            const registroId = params['regId'];
-            if (registroId) {
-                // console.log('me llena el Id', registroId);
-                this.modoEdicion = true;
-                this._registrosService.getRegistroById(registroId).subscribe({
-                    next: (resp: any) => {
-                        // console.log('resp', resp);
-                        this.FormRegistro = resp.role;
-                        if (this.FormRegistro.codigoAplicacion) {
-                            this.tipoRolSeleccionado = 'suscriptor';
-                            this.filtrarSuitesPorApp(this.FormRegistro.codigoAplicacion);
-                        } else {
-                            this.tipoRolSeleccionado = 'plataforma';
-                        }
-
-                        // console.log('Modo edición detectado para:', this.tipoRolSeleccionado);
-                        // console.log('datos del FormRegistro', this.FormRegistro);
-                    },
-                    error: (err) => {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + err.mensaje
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOEXISTE') + err);
-                    }
-                });
-            } else {
-                this.modoEdicion = false;
-            }
-        });
-    }
-
-    filtrarSuitesPorApp(codigoApp: string) {
-        const app = this.aplicaciones.find((x) => x.codigoAplicacion === codigoApp);
-        if (app) {
-            this.suitesApp = this.suites.filter((x) => x.aplicacionId === app.aplicacionId);
+        const registroId = this._localStorageService.getObject<string>('regId') || ''
+        if (registroId != 'nuevo') {
+            this.modoEdicion = true
+            this._registrosService.getRegistroById(registroId).subscribe({
+                next: (resp: any) => {
+                    console.log('resp', resp);
+                    this.FormRegistro = resp.role;
+                    this.codigoRole = resp.role.codigoRole;
+                },
+                error: (err) => {
+                    const logData = {
+                        codigoTipoLog: '',
+                        codigoRespuesta: '501',
+                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + err.mensaje
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOEXISTE') + err);
+                }
+            });
+        } else {
+            // console.log('no llena el Id', registroId);
+            this.modoEdicion = false
         }
     }
+
     ngOnInit() {
         this._navigationService.getNavigationItems();
         this.menuItems = this._navigationService.menuItems$;
-        this.consultarAplicaciones();
-        this.consultarSuites();
-        this.consultarUsuarios();
+        this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
+        this.usuarios = this._usuariosService.getUsuariosActuales();
+        this.tiposRole = this._tiposRolesService.getTiposRolesActuales();
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
                 this._localStorageService.setFormRegistro(this.FormRegistro);
@@ -132,6 +123,7 @@ export class GestionRolesComponent implements OnInit {
             this._localStorageService.removeFormRegistro();
         }
         if (!this.modoEdicion) {
+            this.FormRegistro.codigoTipoRole = '';
             this.FormRegistro.codigoAplicacion = '';
             this.FormRegistro.codigoSuite = '';
             this.FormRegistro.codigoRole = uuidv4();
@@ -139,84 +131,17 @@ export class GestionRolesComponent implements OnInit {
         }
     }
 
-    consultarAplicaciones() {
-        this.registrosSub = this._aplicacionesService
-            .getAplicaciones()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.aplicaciones = resp.aplicaciones;
-                        return;
-                    }
-                }),
-                catchError((err) => {
-                    console.log('Ha ocurrido un error', err);
-                    return of(null);
-                })
-            )
-            .subscribe();
-    }
-
-    consultarSuites() {
-        this.suitesSub = this._suitesService
-            .geSuitesAP()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.suites = resp.suites;
-                        // console.log('Todos las suites', this.suites);
-                        return;
-                    }
-                }),
-                catchError((err) => {
-                    console.log('Ha ocurrido un error', err);
-                    return of(null);
-                })
-            )
-            .subscribe();
-    }
-
-    consultarUsuarios() {
-        this._usuariosService.getUsuarios().subscribe((resp: any) => {
-            if (resp.ok) {
-                // 1. Cargamos la lista completa de usuarios
-                this.usuarios = resp.usuarios.map((u: any) => ({
-                    ...u,
-                    checked: false
-                }));
-
-                if (this.modoEdicion && this.FormRegistro.codigoRole) {
-                    this.cargarUsuariosAsociados(this.FormRegistro.codigoRole);
-                }
-            }
-        });
-    }
-
-    cargarUsuariosAsociados(codigoRole: string) {
-        this._usuariosRolesService.getRegistroByCodigoRol(codigoRole).subscribe({
-            next: (resp: any) => {
-                if (resp.ok && Array.isArray(resp.usuarioRole)) {
-                    this.usuarios.forEach((u) => {
-                        u.checked = resp.usuarioRole.some((asociado: any) => asociado.codigoUsuarioSC === u.codigoUsuario);
-                    });
-                }
-            }
-        });
-    }
-
-    btnAsociarTodosUsuariosClick() {
-        // Verificamos si todos los usuarios actuales ya están marcados
-        const todosSeleccionados = this.usuarios.every((u: any) => u.checked);
-
-        // Si todos están marcados, los desmarcamos. Si no, los marcamos todos.
-        this.usuarios.forEach((u: any) => (u.checked = !todosSeleccionados));
-    }
-
     onAplicacionchangeClick(event: any) {
         const value = event.target.value;
         const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
         this.FormRegistro.codigoAplicacion = value;
-        this.suitesApp = this.suites.filter((x) => x.codigoAplicacion == app.codigoAplicacion);
+        const suites = this._suitesService.getSuitesActuales();
+        this.suites = suites.filter((x) => x.codigoAplicacion == app.codigoAplicacion);
+    }
+
+    onTipoRoleChangeClick(event: any) {
+        const value = event.target.value;
+        this.isTipoRole = value != '661b4eff-c9e6-43ad-b6bb-c47db2b26rn8' ? true : false;
     }
 
     onSuiteChangeClick(event: any) {
@@ -234,97 +159,102 @@ export class GestionRolesComponent implements OnInit {
         this.isSubmit = true;
 
         // const usuariosSeleccionados = this.usuarios.filter((u) => u.checked);
-        const usuariosAProcesar = this.usuarios.filter((u) => u.checked);
+        // const usuariosAProcesar = this.usuarios.filter((u) => u.checked);
         // console.log('------------QUE ME TRAE USUARIO A PROCESAR------', usuariosAProcesar);
 
         if (!form.valid) return;
 
-        if (usuariosAProcesar.length === 0) {
-            this._swalAlertService.getAlertError('Debe seleccionar al menos un usuario.');
-            return;
-        }
+        // if (usuariosAProcesar.length === 0) {
+        //     this._swalAlertService.getAlertError('Debe seleccionar al menos un usuario.');
+        //     return;
+        // }
 
         const registroData = form.value as PTLRoleAPModel;
 
-        if (this.tipoRolSeleccionado === 'plataforma') {
+        if (!this.isTipoRole) {
             registroData.codigoAplicacion = '';
             registroData.codigoSuite = '';
         }
-        const datosParaRelacion = {
-            ...registroData,
-            tipoRol: this.tipoRolSeleccionado // <-- Aquí garantizamos que no sea null
-        };
-        console.log('usuariosAProcesar', usuariosAProcesar);
-        console.log('registroData', registroData);
-        console.log('datosParaRelacion', datosParaRelacion);
+        // const datosParaRelacion = {
+        //     ...registroData,
+        //     codigoTipoRole: this.FormRegistro.codigoTipoRole
+        // };
+        // console.log('usuariosAProcesar', usuariosAProcesar);
+        // console.log('datosParaRelacion', datosParaRelacion);
 
-        // if (this.modoEdicion) {
-        //     registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-        //     registroData.fechaModificacion = new Date().toISOString();
+        if (this.modoEdicion) {
+            registroData.codigoRole = this.codigoRole;
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+            registroData.fechaModificacion = new Date().toISOString();
 
-        //     this._registrosService.putModificarRegistro(registroData).subscribe({
-        //         next: (resp: any) => {
-        //             if (resp.ok) {
-        //                 // this.procesarRelaciones(registroData.codigoRole!);
-        //                 this.procesarRelaciones(registroData.codigoRole!, usuariosAProcesar, datosParaRelacion);
-        //                 const logData = {
-        //                     codigoTipoLog: '',
-        //                     codigoRespuesta: '201',
-        //                     descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
-        //                 };
-        //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-        //                 this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-        //                 this.router.navigate(['/usuarios/roles']);
-        //             }
-        //         },
-        //         error: (err: any) => {
-        //             console.error(err);
-        //             const logData = {
-        //                 codigoTipoLog: '',
-        //                 codigoRespuesta: '501',
-        //                 descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + err.mensaje
-        //             };
-        //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-        //             this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
-        //         }
-        //     });
-        // } else {
-        //     // --- LÓGICA DE CREACIÓN ---
-        //     registroData.codigoRole = uuidv4();
-        //     registroData.nombreRole = this.FormRegistro.nombreRole;
-        //     registroData.descripcionRole = this.FormRegistro.descripcionRole;
-        //     registroData.estadoRole = this.FormRegistro.estadoRole;
-        //     registroData.fechaCreacion = new Date().toISOString();
-        //     registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+            console.log('registroData', registroData);
+            this._registrosService.putModificarRegistro(registroData).subscribe({
+                next: (resp: any) => {
+                    if (resp.ok) {
+                        // this.procesarRelaciones(registroData.codigoRole!);
+                        // this.procesarRelaciones(registroData.codigoRole!, usuariosAProcesar, datosParaRelacion);
+                        const logData = {
+                            codigoTipoLog: '',
+                            codigoRespuesta: '201',
+                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                        };
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                        this.router.navigate(['/usuarios/roles']);
+                    }
+                },
+                error: (err: any) => {
+                    console.error(err);
+                    const logData = {
+                        codigoTipoLog: '',
+                        codigoRespuesta: '501',
+                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + err.mensaje
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
+                }
+            });
+        } else {
+            // --- LÓGICA DE CREACIÓN ---
+            registroData.codigoRole = uuidv4();
+            registroData.codigoTipoRole = this.FormRegistro.codigoTipoRole;
+            registroData.codigoAplicacion = this.FormRegistro.codigoAplicacion;
+            registroData.codigoSuite = this.FormRegistro.codigoSuite;
+            registroData.nombreRole = this.FormRegistro.nombreRole;
+            registroData.descripcionRole = this.FormRegistro.descripcionRole;
+            registroData.estadoRole = this.FormRegistro.estadoRole;
+            registroData.fechaCreacion = new Date().toISOString();
+            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+            console.log('datos para insertar', registroData);
 
-        //     this._registrosService.postCrearRegistro(registroData).subscribe({
-        //         next: (resp: any) => {
-        //             if (resp.ok) {
-        //                 // this.procesarRelaciones(registroData.codigoRole || '');
-        //                 this.procesarRelaciones(registroData.codigoRole || '', usuariosAProcesar, datosParaRelacion);
-        //                 const logData = {
-        //                     codigoTipoLog: '',
-        //                     codigoRespuesta: '201',
-        //                     descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-        //                 };
-        //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-        //                 this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-        //                 form.resetForm();
-        //                 this.isSubmit = false;
-        //                 this.router.navigate(['/usuarios/roles']);
-        //             }
-        //         },
-        //         error: (err: any) => {
-        //             const logData = {
-        //                 codigoTipoLog: '',
-        //                 codigoRespuesta: '501',
-        //                 descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
-        //             };
-        //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'));
-        //             this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
-        //         }
-        //     });
-        // }
+            this._registrosService.postCrearRegistro(registroData).subscribe({
+                next: (resp: any) => {
+                    if (resp.ok) {
+                        // this.procesarRelaciones(registroData.codigoRole || '');
+                        // this.procesarRelaciones(registroData.codigoRole || '', usuariosAProcesar, datosParaRelacion);
+                        const logData = {
+                            codigoTipoLog: '',
+                            codigoRespuesta: '201',
+                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                        };
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                        form.resetForm();
+                        this.isSubmit = false;
+                        this.router.navigate(['/usuarios/roles']);
+                    }
+                },
+                error: (err: any) => {
+                    const logData = {
+                        codigoTipoLog: '',
+                        codigoRespuesta: '501',
+                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'));
+                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
+                }
+            });
+        }
     }
 
     procesarRelaciones(codigoRole: string, usuariosSeleccionados: any[], datosCompletos: any) {

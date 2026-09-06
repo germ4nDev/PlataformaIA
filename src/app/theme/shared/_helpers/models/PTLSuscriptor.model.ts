@@ -23,6 +23,7 @@ export class PTLSuscriptorModel {
         public nomEstado?: string,
         public paquete?: string,
         public logo?: string,
+        public _acciones?: any,
         public codigoUsuarioCreacion?: string,
         public fechaCreacion?: string,
         public codigoUsuarioModificacion?: string,

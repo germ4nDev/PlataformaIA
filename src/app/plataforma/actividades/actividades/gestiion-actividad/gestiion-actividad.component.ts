@@ -21,13 +21,15 @@ import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTL
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { Observable, Subscription } from 'rxjs';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActividades.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { PtltiposActividadService } from 'src/app/theme/shared/service/ptltipos-actividad.service';
+import { PTLTipoActividadModel } from 'src/app/theme/shared/_helpers/models/PTLTipoActividad.model';
 // import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 // import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 
@@ -61,11 +63,16 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
     lockMessage: string = '';
+    registrosSub?: Subscription
 
     subscriptions = new Subscription();
+    tiposActividad: PTLTipoActividadModel[] = [];
     aplicaciones: PTLAplicacionModel[] = [];
     suites: PTLSuiteAPModel[] = [];
+    suitesFiltro: PTLSuiteAPModel[] = [];
     modulos: PTLModuloAP[] = [];
+    modulosPadre: PTLModuloAP[] = [];
+    modulosFiltro: PTLModuloAP[] = [];
 
     constructor(
         private router: Router,
@@ -78,6 +85,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
         private _aplicacionesService: PtlAplicacionesService,
         private _suitesService: PtlSuitesAPService,
         private _modulosService: PtlmodulosApService,
+        private _tiposActividadService: PtltiposActividadService,
         private _swalService: SwalAlertService,
         private _translate: TranslateService,
         private _uploadService: UploadFilesService
@@ -90,13 +98,20 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
         const registroId = this._localStorageService.getObject<string>('regId') || 'nuevo'
         if (registroId !== 'nuevo') {
             this.modoEdicion = true;
+            console.log('consultar registro', registroId);
             this._actividadesService.getRegistroById(registroId).subscribe({
                 next: (resp: any) => {
+                    console.log('respuesta load', resp);
+
                     this.FormRegistro = resp.actividad;
+                    this.suitesFiltro = this.suites.filter(x => x.codigoAplicacion == resp.actividad.codigoAplicacion)
+                    this.modulosPadre = this.modulos.filter(x => x.codigoPadre != '0')
+                    this.modulosFiltro = this.modulosPadre.filter(x => x.codigoSuite == resp.actividad.codigoSuite)
+
                     this.codeActividad = resp.actividad.codigoActividad;
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error');
+                    this._swalService.getAlertConfirmError('No se pudo obtener la Aplicación')
                 }
             });
         }
@@ -104,7 +119,11 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._navigationService.getNavigationItems();
+        this.consultarTiposActividad();
         this.menuItems$ = this._navigationService.menuItems$;
+        this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
+        this.suites = this._suitesService.getSuitesActuales();
+        this.modulos = this._modulosService.getModulosActuales();
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
                 this._localStorageService.setFormRegistro(this.FormRegistro);
@@ -118,14 +137,12 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
             this.FormRegistro = form;
             this._localStorageService.removeFormRegistro();
         }
-        this.consultarAplicaciones();
-        this.consultarSuites();
-        this.consultarModulos();
         if (this.modoEdicion == false) {
             this.FormRegistro.codigoActividad = uuidv4();
             this.FormRegistro.codigoAplicacion = '';
             this.FormRegistro.codigoSuite = '';
             this.FormRegistro.codigoModulo = '';
+            this.FormRegistro.codigoTipoActividad = '';
             console.log('FormRegistro loading', this.FormRegistro);
         }
         console.log('Inicial formregistro', this.FormRegistro);
@@ -135,40 +152,23 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    consultarAplicaciones() {
-        this.subscriptions.add(
-            this._aplicacionesService.cargarAplicaciones().subscribe((resp: any) => {
-                if (resp.length >= 0) {
-                    this.aplicaciones = resp;
-                    console.log('Todos las aplicaciones', this.aplicaciones);
-                    return;
-                }
-            })
-        );
-    }
-
-    consultarSuites() {
-        this.subscriptions.add(
-            this._suitesService.cargarRegistros().subscribe((resp: any) => {
-                if (resp.length >= 0) {
-                    this.suites = resp;
-                    console.log('Todos las suites', this.suites);
-                    return;
-                }
-            })
-        );
-    }
-
-    consultarModulos() {
-        this.subscriptions.add(
-            this._modulosService.cargarRegistros().subscribe((resp: any) => {
-                if (resp.length >= 0) {
-                    this.modulos = resp.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0');
-                    console.log('************todos los modulos hijos', this.modulos);
-                    return;
-                }
-            })
-        );
+    consultarTiposActividad() {
+        this.registrosSub = this._tiposActividadService
+            .getRegistros()
+            .pipe(
+                tap((resp: any) => {
+                    if (resp.ok) {
+                        this.tiposActividad = resp.tiposActividades
+                        console.log('Todos las tiposActividad', this.tiposActividad)
+                        return
+                    }
+                }),
+                catchError(err => {
+                    console.log('Ha ocurrido un error', err)
+                    return of(null)
+                })
+            )
+            .subscribe()
     }
 
     actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -179,11 +179,21 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
     }
 
     onAplicacionchangeClick(evento: any) {
-        console.log('evento', evento);
+        if (evento.target.value != '') {
+            this.suitesFiltro = this.suites.filter(x => x.codigoAplicacion == evento.target.value)
+        } else {
+            this.suitesFiltro = [];
+            this.modulosFiltro = [];
+        }
     }
 
     onSuiteChangeClick(evento: any) {
-        console.log('evento', evento);
+        this.modulosPadre = this.modulos.filter(x => x.codigoPadre != '0')
+        if (evento.target.value != '') {
+            this.modulosFiltro = this.modulosPadre.filter(x => x.codigoSuite == evento.target.value)
+        } else {
+            this.modulosFiltro = [];
+        }
     }
 
     onModuloChangeClick(evento: any) {
@@ -192,11 +202,22 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
 
     btnGestionarActividadClick(form: any) {
         // this.isSubmit = true;
+        this.isSubmit = true;
+        if (!form.valid) return;
+        this.FormRegistro = form.value as PTLActividadModel
+        const registroData = form.value as PTLActividadModel;
+        registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+        registroData.fechaCreacion = new Date().toISOString();
+
         if (this.modoEdicion) {
-            this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            this.FormRegistro.fechaModificacion = new Date().toISOString();
-            this._actividadesService.putModificarRegistro(this.FormRegistro).subscribe({
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+            registroData.fechaModificacion = new Date().toISOString();
+            console.log('modificar registro', registroData);
+
+            this._actividadesService.putModificarRegistro(registroData).subscribe({
                 next: (resp: any) => {
+                    console.log('respuesta', resp);
+
                     if (resp.ok) {
                         const logData = {
                             codigoTipoLog: '',
@@ -206,7 +227,6 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                         this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
                         form.resetForm();
-                        // this.isSubmit = false;
                         this.router.navigate(['/actividades/actividades']);
                     }
                 },
@@ -223,12 +243,9 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
             });
         } else {
             form.actividadId = 0;
-            const registroData = form.value as PTLActividadModel;
             registroData.codigoActividad = uuidv4();
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaCreacion = new Date().toISOString();
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaModificacion = new Date().toISOString();
+            console.log('crear registro', registroData);
+
             this._actividadesService.postCrearRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     console.log('resp', resp);
@@ -241,7 +258,6 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                         this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.CREATESUCCESSFULLY'));
                         form.resetForm();
-                        // this.isSubmit = false;
                         this.router.navigate(['/actividades/actividades']);
                     }
                 },

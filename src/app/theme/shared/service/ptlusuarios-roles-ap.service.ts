@@ -21,7 +21,7 @@ export class PtlusuariosRolesApService {
 
     constructor(private http: HttpClient, private _socketService: SocketService, private _localStorageService: LocalStorageService) {
         console.log('******* Servicio de usuariosRoles iniciado correctamente')
-        this._socketService.listen('usuarios-roles-actualizadas').subscribe({
+        this._socketService.listen('usuarios-roles-actualizados').subscribe({
             next: payload => {
                 console.log('Evento de Socket.IO recibido:', payload.msg)
                 this._usuariosRolesChange.next(payload)
@@ -131,9 +131,37 @@ export class PtlusuariosRolesApService {
         )
     }
 
+    postSincronizarRoles(payloadSync: any): Observable<any> {
+        // Ajusta la URL base según cómo tengas configurado tu environment
+        // y el nombre exacto de la ruta en tu backend Node.js
+        const url = `${base_url}/usuarios-roles/sincronizar`;
+        return this.http.post(url, payloadSync).pipe(
+            map((resp: any) => {
+                console.log('respuesta servicio usuarioRoles', resp)
+                return {
+                    ok: true,
+                    usuarioRole: resp.usuarioRole
+                }
+            })
+        )
+    }
+
+    postSincronizarUsuariosRol(payloadSync: any): Observable<any> {
+        const url = `${base_url}/usuarios-roles/sincronizar-usuarios`;
+        return this.http.post(url, payloadSync).pipe(
+            map((resp: any) => {
+                console.log('respuesta servicio usuarioRoles', resp)
+                return {
+                    ok: true,
+                    usuarioRole: resp.usuarioRole
+                }
+            })
+        )
+    }
+
     putModificarRegistro(role: PTLUsuarioRoleAPModel) {
         console.log('data usuRole', role)
-        const url = `${base_url}/usuarios-roles/${role.usuarioRoleId}`
+        const url = `${base_url}/usuarios-roles/${role.codigoUsuarioRole}`
         return this.http.put(url, role).pipe(
             map((resp: any) => {
                 console.log('data de role modificacda', resp)
@@ -160,7 +188,7 @@ export class PtlusuariosRolesApService {
     }
 
     deleteTodosUsuarioRole(codigoRole: string) {
-        const url = `${base_url}/usuarios-roles/clean/${codigoRole}`
+        const url = `${base_url}/usuarios-roles/${codigoRole}`
         return this.http.delete(url).pipe(
             map((resp: any) => {
                 return resp

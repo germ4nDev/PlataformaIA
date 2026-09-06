@@ -7,12 +7,16 @@ export class PTLUsuarioRoleAPModel {
         public codigoRole?: string,
         public codigoAplicacion?: string,
         public codigoSuite?: string,
-        public tipoRol?: string,
+        public codigoTipoRole?: string,
         public estadoUsuarioRole?: boolean,
         public checked?: boolean,
+        public nomSuscriptor?: string,
+        public nomAplicacion?: string,
+        public _acciones?: any,
         public codigoUsuarioCreacion?: string,
         public fechaCreacion?: string,
         public codigoUsuarioModificacion?: string,
+        public codigoSuscriptor?: string,
         public fechaModificacion?: string
     ) { }
 }

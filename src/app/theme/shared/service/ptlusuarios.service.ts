@@ -34,11 +34,11 @@ export class PTLUsuariosService {
     ) {
         console.log('******* Servicio de usuarios iniciado correctamente')
         this.usuario = this._localStorageService.getUsuarioLocalStorage()
-        this.socketService.listen('usuarios-actualizada=os').subscribe({
+        this.socketService.listen('usuarios-actualizados').subscribe({
             next: payload => {
                 console.log('Evento de Socket.IO recibido:', payload.msg)
                 this._registrosChange.next(payload)
-                this.cargarRegistros().subscribe()
+                this.cargarRegistros().subscribe() // Esto actualiza el BehaviorSubject
             },
             error: err => console.error('Error en la escucha de sockets:', err)
         })
@@ -173,29 +173,42 @@ export class PTLUsuariosService {
         )
     }
 
+    cargueMasivoExcel(archivo: File, usuarioLogueado: string): Observable<any> {
+        const formData = new FormData();
+        formData.append('archivoExcel', archivo);
+        formData.append('usuarioLogueado', usuarioLogueado);
+
+        // 🟢 CORRECTO: Solo envía la URL y el formData, NADA de headers.
+        return this.http.post(`${base_url}/usuarios/cargue-masivo`, formData);
+
+        // 🔴 INCORRECTO (Si tienes algo así, bórralo, es lo que causa el error):
+        // const headers = new HttpHeaders({ 'Content-Type': 'multipart/form-data' });
+        // return this.http.post(..., formData, { headers });
+    }
+
     actualizarUsuario(usuario: PTLUsuarioModel) {
-        const codigoUser = usuario.codigoUsuario || ''
-        this.getUsuarioById(codigoUser).subscribe((usu: any) => {
-            let imagenUsuario = ''
-            if (usu.fotoUsuario !== '') {
-                imagenUsuario = usu.fotoUsuario
-                if (imagenUsuario !== usuario.fotoUsuario) {
-                    const fotoUsuario = this.usuario.fotoUsuario || ''
-                    const tipo = 'usuarios'
-                    const objUpload = {
-                        susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '',
-                        tipo: 'usuarios',
-                        file: fotoUsuario
-                    }
-                    this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'))
-                }
-            }
-        })
+        // const codigoUser = usuario.codigoUsuario || ''
+        // this.getUsuarioById(codigoUser).subscribe((usu: any) => {
+        //     let imagenUsuario = ''
+        //     if (usu.fotoUsuario !== '') {
+        //         imagenUsuario = usu.fotoUsuario
+        //         if (imagenUsuario !== usuario.fotoUsuario) {
+        //             const fotoUsuario = this.usuario.fotoUsuario || ''
+        //             const tipo = 'usuarios'
+        //             const objUpload = {
+        //                 susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '',
+        //                 tipo: 'usuarios',
+        //                 file: fotoUsuario
+        //             }
+        //             this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'))
+        //         }
+        //     }
+        // })
         const url = `${base_url}/usuarios/${usuario.codigoUsuario}`
         return this.http.put(url, usuario).pipe(
             map((resp: any) => {
                 console.log('data de usuario modificacda', resp)
-                this._localStorageService.setUsuarioLocalStorage(usuario)
+                // this._localStorageService.setUsuarioLocalStorage(usuario)
                 return {
                     ok: true,
                     usuario: resp.usuario
@@ -234,7 +247,7 @@ export class PTLUsuariosService {
     }
 
     actualizarUsuarioClave(usuario: PTLUsuarioModel) {
-        const url = `${base_url}/usuarios/clave/${usuario.usuarioId}`
+        const url = `${base_url}/usuarios/password/${usuario.codigoUsuario}`
         return this.http.put(url, usuario).pipe(
             map((resp: any) => {
                 console.log('data de usuario modificacda', resp)

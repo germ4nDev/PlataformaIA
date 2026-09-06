@@ -20,6 +20,7 @@ export class PTLUsuarioModel {
         public codigoSuscriptor?: string,
         public codigoEmpresaSC?: string,
         public rolesUsuario?: any,
+        public _acciones?: any,
         public codigoUsuarioCreacion?: string,
         public fechaCreacion?: string,
         public codigoUsuarioModificacion?: string,

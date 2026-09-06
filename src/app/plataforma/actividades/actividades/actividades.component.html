@@ -24,7 +24,7 @@
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.nombreAplicacion  }}
+                                {{ app.nombreAplicacion }}
                             </option>
                         </select>
                     </div>
@@ -35,7 +35,7 @@
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="sui.codigoSuite" *ngFor="let sui of suites">
-                                {{ sui.nombreSuite  }}
+                                {{ sui.nombreSuite }}
                             </option>
                         </select>
                     </div>
@@ -53,12 +53,15 @@
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input" placeholder="{{ 'ACTIVIDADES.FILTROS.NOMBRECHOLDER' | translate }}" />
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'ACTIVIDADES.FILTROS.NOMBRECHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTRODESCRIPCION' | translate }}</small>
                         <!-- El cambio en el input ahora solo notifica al BehaviorSubject -->
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input" placeholder="{{ 'ACTIVIDADES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
+                            class="form-control form-input"
+                            placeholder="{{ 'ACTIVIDADES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTROESTADO' | translate }}</small>
@@ -77,18 +80,22 @@
     <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <!-- CRÍTICO: Se usa el async pipe con el Observable aplicacionesFiltradas$ -->
                 <ng-container *ngIf="actividadesFiltradas$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoActividad'" [tableTitle]="'ACTIVIDADES.TITLE' | translate" [newButtonLabel]="'ACTIVIDADES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasAplicaciopnes"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showOption1Button]="true" [colorOpcion1]="colorOpcion1"
-                        [tooltipOption1]="'ACTIVIDADES.ROLES' | translate" [letraOpcion1]="letraOpcion1" (viewRecord)="OnViewRegistroClick($event)" (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (option1Record)="OnOption1Click($event)">
-                    </app-data-table>
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoActividad'"
+                        [tableTitle]="'ACTIVIDADES.TITLE' | translate" [newButtonLabel]="'ACTIVIDADES.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasAplicaciopnes"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showSearchBox]="false"
+                        [showDeleteButton]="true" (viewRecord)="OnViewRegistroClick($event)"
+                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
+                        (deleteRecord)="OnEliminarRegistroClick($event)"
+                        (accionSubtablaClick)="onAccionSubtabla($event)"
+                        (accionPrincipalClick)="onAccionPrincipal($event)">
+                    </app-table-data>
                 </ng-container>
 
-                <!-- Opcional: Manejo de estado de carga/vacío -->
                 <ng-template #loading>
-                    <!-- Podrías mostrar un indicador de carga si lo deseas -->
+                    <app-data-loader [isLoading]="true" message="Cargando Actividades ..."> </app-data-loader>
                 </ng-template>
 
             </div>

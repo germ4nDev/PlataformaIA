@@ -18,7 +18,8 @@ textarea:disabled,
     cursor: not-allowed !important;
     opacity: 0.65;
     filter: grayscale(0.4);
-    pointer-events: all !important; /* Permitir eventos de mouse para que el cursor cambie */
+    pointer-events: all !important;
+    /* Permitir eventos de mouse para que el cursor cambie */
 }
 
 .cursor-blocked {

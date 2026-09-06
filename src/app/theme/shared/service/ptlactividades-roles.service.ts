@@ -56,6 +56,8 @@ export class PtlactividadesRolesService {
         return this.http.get(url).pipe(
             map((resp: any) => resp.actividadesRoles as PTLActividadRoleModel[]),
             tap((RolesOrdenadas) => {
+                console.log('actividades roles servicio', RolesOrdenadas);
+
                 this._actividadesRoles.next(RolesOrdenadas);
             })
         );
@@ -75,16 +77,14 @@ export class PtlactividadesRolesService {
         );
     }
 
-    getRegistroByCodeRole(id: string) {
-        const url = `${base_url}/actividades-roles/role/${id}`;
+    getRegistroByCodeRole(codigoRole: string) {
+        const url = `${base_url}/actividades-roles/role/${codigoRole}`;
 
         return this.http.get(url).pipe(
             map((resp: any) => {
                 console.log('data de actividadesRoles role', resp);
-                return {
-                    ok: true,
-                    actividadesRoles: resp.actividadesRoles
-                };
+
+                return resp.data || [];
             })
         );
     }
@@ -103,9 +103,22 @@ export class PtlactividadesRolesService {
         );
     }
 
-    putModificarRegistro(actividad: PTLActividadRoleModel) {
-        const url = `${base_url}/actividades-roles/${actividad.codigoActividad}`;
+    postCrearBulkRegistro(codigoActividad: string, data: PTLActividadRoleModel[]) {
+        const url = `${base_url}/actividades-roles/bulk/${codigoActividad}`;
+        console.log('servicio actividadesRoles', data);
+        return this.http.post(url, data).pipe(
+            map((resp: any) => {
+                return {
+                    ok: true,
+                    actividadRole: resp.actividadRole
+                };
+            })
+        );
+    }
 
+    putModificarRegistro(actividad: PTLActividadRoleModel) {
+        console.log('modificar actividadesRoles', actividad);
+        const url = `${base_url}/actividades-roles/${actividad.codigoActividadRole}`;
         return this.http.put(url, actividad).pipe(
             map((resp: any) => {
                 console.log('data de actividad modificada', resp);

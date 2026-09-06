@@ -24,6 +24,7 @@ export class PTLPaquetesSCModel {
         public valorMes?: number,
         public valorPago?: number,
         public observaciones?: string,
+        public _acciones?: any,
         public codigoUsuarioModificacion?: string,
         public fechaCancelacion?: string,
         public fechaProximoPagoDate?: string,

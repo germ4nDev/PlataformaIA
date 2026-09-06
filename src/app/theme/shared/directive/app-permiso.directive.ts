@@ -1,6 +1,6 @@
 import { Directive, Input, OnInit, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PtlPermisosService } from '../service/ptl-permisos.service'; // Ajusta la ruta a tu servicio
+import { PtlPermisosService } from '../service/ptlpermisos.service'; // Ajusta la ruta a tu servicio
 
 @Directive({
     selector: '[appPermiso]',
@@ -33,6 +33,16 @@ export class AppPermisoDirective implements OnInit, OnDestroy {
     }
 
     private actualizarVista() {
+        // 🟢 NUEVO: Si el componente padre no envía un permiso, el botón se muestra por defecto.
+        // Esto evita que se rompan las tablas viejas que aún no usan seguridad.
+        if (!this.permisoRequerido) {
+            if (!this.hasView) {
+                this.viewContainer.createEmbeddedView(this.templateRef);
+                this.hasView = true;
+            }
+            return;
+        }
+
         const autorizado = this._permisosService.tienePermiso(this.permisoRequerido);
 
         if (autorizado && !this.hasView) {

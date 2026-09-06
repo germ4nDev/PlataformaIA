@@ -7,7 +7,7 @@
 }
 
 /* CONTENEDOR PRINCIPAL Y FONDO */
-.PORTTOS-list-screen {
+.plataforma-list-screen {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -15,7 +15,7 @@
     background-color: var(--background-color, #0b0c0e);
 }
 
-.PORTTOS-list-bg {
+.plataforma-list-bg {
     position: absolute;
     top: 0;
     left: 0;
@@ -34,7 +34,7 @@
 }
 
 /* LAYOUT DE LA GRILLA */
-.PORTTOS-apps-layout {
+.plataforma-apps-layout {
     position: relative;
     width: 100%;
     max-width: 1240px;
@@ -59,7 +59,7 @@
 }
 
 /* ENCABEZADOS Y TÍTULOS */
-.PORTTOS-apps-header {
+.plataforma-apps-header {
     margin-bottom: 3rem;
 
     .apps-main-title {
@@ -88,23 +88,23 @@
 }
 
 /* RESPONSIVIDAD DE LA GRILLA */
-.PORTTOS-apps-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+/* RESPONSIVIDAD DE LA GRILLA (Cambiada a Flexbox) */
+.plataforma-apps-grid {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que las tarjetas bajen de línea si no caben */
+    justify-content: center;
+    /* 🟢 ¡La magia! Centra el contenido si hay 1, 2 o más tarjetas */
     gap: 2rem;
     padding-bottom: 3rem;
-
-    @media (max-width: 1024px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 680px) {
-        grid-template-columns: 1fr;
-    }
 }
 
-/* TARJETAS DE SUITE */
-.PORTTOS-app-item-card {
+/* TARJETAS DE APLICACIÓN */
+.plataforma-app-item-card {
+    /* 🟢 NUEVO: Calculamos el ancho exacto para 3 columnas.
+       (100% de la pantalla menos el espacio de 2 gaps de 2rem) dividido entre 3 */
+    width: calc((100% - 4rem) / 3);
+
     position: relative;
     height: 380px;
     border-radius: 16px;
@@ -116,6 +116,17 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 
+    /* 🟢 Mantenemos el diseño responsive ajustando el flex-basis/width */
+    @media (max-width: 1024px) {
+        width: calc((100% - 2rem) / 2);
+        /* 2 columnas */
+    }
+
+    @media (max-width: 680px) {
+        width: 100%;
+        /* 1 columna */
+    }
+
     &:hover {
         transform: translateY(-8px);
         border-color: var(--app-navbar-color, #007bff);
@@ -125,7 +136,7 @@
             background: linear-gradient(to top, rgba(11, 12, 14, 0.95) 0%, rgba(11, 12, 14, 0.4) 60%, rgba(11, 12, 14, 0) 100%);
         }
 
-        .PORTTOS-enter-btn {
+        .plataforma-enter-btn {
             background-color: var(--app-navbar-color, #007bff);
             border-color: var(--app-navbar-color, #007bff);
             color: #ffffff;
@@ -170,7 +181,6 @@
             -webkit-box-orient: vertical;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 
-            /* Regla esencial para [innerHTML] */
             ::ng-deep * {
                 color: inherit !important;
                 margin: 0 !important;
@@ -185,7 +195,7 @@
         width: 100%;
         text-align: right;
 
-        .PORTTOS-enter-btn {
+        .plataforma-enter-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;

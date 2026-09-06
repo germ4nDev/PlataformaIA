@@ -38,7 +38,9 @@ import { PtlItemsPaqueteService } from './theme/shared/service/ptlitems-paquete.
 import { PTLTiposPagoService } from './theme/shared/service/ptltipos-pago.service'
 import { PTLTiposPaqueteService } from './theme/shared/service/ptltipos-paquete.service';
 import { PTLModulosPaqueteService } from './theme/shared/service/ptlmodulos-paquete.service'
-
+import { PTLTiposRolesService } from './theme/shared/service/ptltipos-roles.service'
+import { PTLUsuariosService } from './theme/shared/service/ptlusuarios.service';
+import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit {
     constructor(
         private router: Router,
         private _themeService: ThemeService,
+        private _permisosService: PtlPermisosService,
         private _authenticationService: AuthenticationService,
         private _localStorageService: LocalStorageService,
         private _actividadesService: PtlActividadesService,
@@ -58,6 +61,7 @@ export class AppComponent implements OnInit {
         private _modulosService: PtlmodulosApService,
         private _suitesService: PtlSuitesAPService,
         private _usuariosRolesService: PtlusuariosRolesApService,
+        private _usuariosService: PTLUsuariosService,
         private _usuariosSCService: PtlusuariosScService,
         private _usuariosEmpresasService: PtlusuariosEmpresasScService,
         private _bibliotecasService: PtlBibliotecasService,
@@ -74,6 +78,7 @@ export class AppComponent implements OnInit {
         private _historialFacturacionService: PTLHistorialFacturacionService,
         private _tiposPaqueteService: PTLTiposPaqueteService,
         private _tiposPagoService: PTLTiposPagoService,
+        private _tiposRolesService: PTLTiposRolesService,
         private _modulosPaqueteService: PTLModulosPaqueteService
     ) { }
 
@@ -129,6 +134,10 @@ export class AppComponent implements OnInit {
             () => console.log('** Roles cargadas y guardadas en el servicio'),
             err => console.error('Error al cargar roles:', err)
         )
+        this._usuariosService.cargarRegistros().subscribe(
+            () => console.log('** Usuarios cargadas y guardadas en el servicio'),
+            err => console.error('Error al cargar usuarios:', err)
+        )
         this._usuariosRolesService.cargarRegistros().subscribe(
             () => console.log('** Usuarios Roles cargadas y guardadas en el servicio'),
             err => console.error('Error al cargar roles:', err)
@@ -145,10 +154,6 @@ export class AppComponent implements OnInit {
             () => console.log('** UsuariosSC cargadas y guardadas en el servicio'),
             err => console.error('Error al cargar UsuariosSC:', err)
         )
-        // this._usuariosEmpresasService.cargarRegistros().subscribe(
-        //     () => console.log('** UsuariosEmpresasSC cargadas y guardadas en el servicio'),
-        //     err => console.error('Error al cargar UsuariosEmpresasSC:', err)
-        // )
         this._bibliotecasService.cargarBibliotecas().subscribe(
             () => console.log('** bibliotecas cargadas y guardadas en el servicio'),
             err => console.error('Error al cargar bibliotecas:', err)
@@ -197,7 +202,14 @@ export class AppComponent implements OnInit {
             () => console.log('** modulos paquete cargados y guardados en el servicio'),
             err => console.error('Error al cargar modulos paquete:', err)
         )
-
+        this._tiposRolesService.cargarRegistros().subscribe(
+            () => console.log('** tipos de roles cargados y guardados en el servicio'),
+            err => console.error('Error al cargar tipos de roles:', err)
+        )
+        this._usuariosEmpresasService.cargarRegistros().subscribe(
+            () => console.log('** Usuarios Empresas SC cargados y guardados en el servicio'),
+            err => console.error('Error al cargar Usuarios Empresas SC:', err)
+        )
         // this._puertosService.cargarPuertos().subscribe(
         //     () => console.log('** puertos cargados y guardados en el servicio'),
         //     err => console.error('Error al cargar puertos:', err)

@@ -44,5 +44,143 @@
     align-content: center;
     align-items: center;
     text-align: center;
-    text-shadow:1px 1px 4px rgba(0, 0, 0, 1)
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 1)
+}
+
+
+/* RESPONSIVIDAD DE LA GRILLA (Cambiada a Flexbox) */
+.plataforma-apps-grid {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que las tarjetas bajen de línea si no caben */
+    justify-content: center;
+    /* 🟢 ¡La magia! Centra el contenido si hay 1, 2 o más tarjetas */
+    gap: 2rem;
+    padding-bottom: 3rem;
+}
+
+/* TARJETAS DE APLICACIÓN */
+.plataforma-app-item-card {
+    /* 🟢 NUEVO: Calculamos el ancho exacto para 3 columnas.
+       (100% de la pantalla menos el espacio de 2 gaps de 2rem) dividido entre 3 */
+    width: calc((100% - 4rem) / 3);
+
+    position: relative;
+    height: 380px;
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+
+    /* 🟢 Mantenemos el diseño responsive ajustando el flex-basis/width */
+    @media (max-width: 1024px) {
+        width: calc((100% - 2rem) / 2);
+        /* 2 columnas */
+    }
+
+    @media (max-width: 680px) {
+        width: 100%;
+        /* 1 columna */
+    }
+
+    &:hover {
+        transform: translateY(-8px);
+        border-color: var(--app-navbar-color, #007bff);
+        box-shadow: 0 30px 60px color-mix(in srgb, var(--app-navbar-color) 25%, transparent);
+
+        .app-card-overlay {
+            background: linear-gradient(to top, rgba(11, 12, 14, 0.95) 0%, rgba(11, 12, 14, 0.4) 60%, rgba(11, 12, 14, 0) 100%);
+        }
+
+        .plataforma-enter-btn {
+            background-color: var(--app-navbar-color, #007bff);
+            border-color: var(--app-navbar-color, #007bff);
+            color: #ffffff;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--app-navbar-color) 30%, transparent);
+        }
+    }
+
+    .app-card-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background: linear-gradient(to top, rgba(11, 12, 14, 0.9) 0%, rgba(11, 12, 14, 0.3) 45%, rgba(11, 12, 14, 0) 100%);
+        transition: background 0.3s ease;
+    }
+
+    /* CONTENIDO INTERNO DE LA TARJETA */
+    .app-card-info {
+        .app-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+            background: transparent;
+        }
+
+        .app-description {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #cbd5e1;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+
+            ::ng-deep * {
+                color: inherit !important;
+                margin: 0 !important;
+                background-color: transparent !important;
+                background: none !important;
+            }
+        }
+    }
+
+    /* ACCIONES */
+    .app-card-actions {
+        width: 100%;
+        text-align: right;
+
+        .plataforma-enter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+            i {
+                font-size: 12px;
+            }
+
+            &:hover {
+                transform: scale(1.05);
+                filter: brightness(1.1);
+            }
+
+            &:active {
+                transform: scale(0.98);
+            }
+        }
+    }
 }

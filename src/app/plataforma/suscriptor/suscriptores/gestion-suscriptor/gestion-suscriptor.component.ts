@@ -67,6 +67,7 @@ export class GestionSuscriptorComponent implements OnInit {
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
     usuarios: PTLUsuarioModel[] = [];
+    suscriptores: PTLSuscriptorModel[] = [];
     paquetes: PTLPaqueteModel[] = [];
     tiposPaquete: PTLTipoPaqueteModel[] = [];
     tiposPago: PTLTipoPagoModel[] = [];
@@ -101,60 +102,39 @@ export class GestionSuscriptorComponent implements OnInit {
     ) {
         this.isSubmit = false;
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        const id = this._localStorageService.getObject<string>('regId') || ''
+        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales();
+        if (id != 'nuevo') {
+            this.modoEdicion = true;
+            this.verificarHabilitado = false;
+            const susc = this.suscriptores.find(x => x.codigoSuscriptor == id) || new PTLSuscriptorModel();
+            this.FormRegistro = susc;
+            this.dataSuscriptor = susc;
+
+            const pqtsSuscriptor = this.paquetesSC.filter(x => x.codigoSuscriptor == this.dataSuscriptor.codigoSuscriptor);
+
+            this.paquetes.forEach(paqueteGlobal => {
+                const tieneElPaquete = pqtsSuscriptor.some(miPqt => miPqt.codigoPaquete === paqueteGlobal.codigoPaquete);
+                paqueteGlobal.checked = tieneElPaquete;
+            });
+
+            this.paquetesSC = pqtsSuscriptor;
+            this.userPhotoUrl = susc.logoSuscriptor || '';
+            this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSuscriptor || '')
+
+            console.log('respuesta componente', this.FormRegistro);
+            console.log('paquetes SC del suscriptor', pqtsSuscriptor);
+            console.log('paquetes globales listos para HTML', this.paquetes);
+        } else {
+            this.verificarHabilitado = true;
+            this.modoEdicion = false;
+            this.FormRegistro.codigoSuscriptor = uuidv4();
+            this.paquetes.forEach(p => p.checked = false);
+        }
         this.route.queryParams.subscribe((params) => {
             const id = params['regId'];
             console.log('me llena el Id', id);
-            if (id != 'nuevo') {
-                this.modoEdicion = true;
-                this.verificarHabilitado = false;
-                // this._suscriptoresService.getSuscriptorById(id).subscribe({
-                //     next: (resp: any) => {
-                //         this.FormRegistro = resp.suscriptor;
-                //         this.dataSuscriptor = resp.suscriptor;
 
-                //         const pqtsSuscriptor = this.paquetesSC.filter(x => x.codigoSuscriptor == this.dataSuscriptor.codigoSuscriptor);
-
-
-                //         this.userPhotoUrl = resp.suscriptor.logoSuscriptor;
-                //         this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', resp.suscriptor.logoSuscriptor)
-
-                //         console.log('respuesta componente', this.FormRegistro);
-                //         console.log('paquetes SC', this.paquetesSC);
-                //     },
-                //     error: () => {
-                //         Swal.fire('Error', 'No se pudo obtener el suscriptor', 'error');
-                //     }
-                // });
-                this._suscriptoresService.getSuscriptorById(id).subscribe({
-                    next: (resp: any) => {
-                        this.FormRegistro = resp.suscriptor;
-                        this.dataSuscriptor = resp.suscriptor;
-
-                        const pqtsSuscriptor = this.paquetesSC.filter(x => x.codigoSuscriptor == this.dataSuscriptor.codigoSuscriptor);
-
-                        this.paquetes.forEach(paqueteGlobal => {
-                            const tieneElPaquete = pqtsSuscriptor.some(miPqt => miPqt.codigoPaquete === paqueteGlobal.codigoPaquete);
-                            paqueteGlobal.checked = tieneElPaquete;
-                        });
-
-                        this.paquetesSC = pqtsSuscriptor;
-                        this.userPhotoUrl = resp.suscriptor.logoSuscriptor;
-                        this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', resp.suscriptor.logoSuscriptor)
-
-                        console.log('respuesta componente', this.FormRegistro);
-                        console.log('paquetes SC del suscriptor', pqtsSuscriptor);
-                        console.log('paquetes globales listos para HTML', this.paquetes);
-                    },
-                    error: () => {
-                        Swal.fire('Error', 'No se pudo obtener el suscriptor', 'error');
-                    }
-                });
-            } else {
-                this.verificarHabilitado = true;
-                this.modoEdicion = false;
-                this.FormRegistro.codigoSuscriptor = uuidv4();
-                this.paquetes.forEach(p => p.checked = false);
-            }
         });
     }
 
