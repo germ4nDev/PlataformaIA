@@ -19,10 +19,8 @@
                     <h6 class="filtros-title">{{ 'ACTIVIDADES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.nombreAplicacion }}
                             </option>
@@ -30,10 +28,8 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTROSUITES' | translate }}</small>
-                        <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="sui.codigoSuite" *ngFor="let sui of suites">
                                 {{ sui.nombreSuite }}
                             </option>
@@ -41,31 +37,26 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTROMODULO' | translate }}</small>
-                        <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroCodigoModuloChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODLOS' | translate }}</option>
-                            <!-- Las opciones se cargan del array local 'aplicaciones' -->
-                            <option [value]="mod.codigoModulo" *ngFor="let mod of modulos">
+                            <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre">
                                 {{ mod.nombreModulo }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'ACTIVIDADES.FILTROS.NOMBRECHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTRODESCRIPCION' | translate }}</small>
-                        <!-- El cambio en el input ahora solo notifica al BehaviorSubject -->
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
                             placeholder="{{ 'ACTIVIDADES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
@@ -85,10 +76,9 @@
                         [tableTitle]="'ACTIVIDADES.TITLE' | translate" [newButtonLabel]="'ACTIVIDADES.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasAplicaciopnes"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showSearchBox]="false"
-                        [showDeleteButton]="true" (viewRecord)="OnViewRegistroClick($event)"
-                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false" [showSearchBox]="false"
+                        [showDeleteButton]="false" (viewRecord)="OnViewRegistroClick($event)"
+                        [showDetailActions]="false" (newRecord)="OnNuevoRegistroClick()"
                         (accionSubtablaClick)="onAccionSubtabla($event)"
                         (accionPrincipalClick)="onAccionPrincipal($event)">
                     </app-table-data>

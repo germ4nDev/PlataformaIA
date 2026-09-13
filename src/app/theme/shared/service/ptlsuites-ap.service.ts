@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { LocalStorageService } from './local-storage.service';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { SocketService } from './sockets.service';
+import { SocketManagerService } from './socket-manager.service';
 
 const base_url = environment.apiUrl;
 
@@ -23,15 +24,17 @@ export class PtlSuitesAPService {
     constructor(
         private http: HttpClient,
         private socketService: SocketService,
+        private _socketManager: SocketManagerService,
         private _localStorageService: LocalStorageService
     ) {
-        this.socketService.listen('aplicaciones-actualizadas').subscribe({
+        console.log('******* Servicio de ssuites iniciado correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
             next: (payload) => {
-                console.log('Evento de Socket.IO recibido:', payload.msg);
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
                 this._suitesChange.next(payload);
-                this.cargarRegistros().subscribe();
+                this.geSuitesAP().subscribe();
             },
-            error: (err) => console.error('Error en la escucha de sockets:', err)
+            error: (err) => console.error('Error escuchando al manager:', err)
         });
     }
 

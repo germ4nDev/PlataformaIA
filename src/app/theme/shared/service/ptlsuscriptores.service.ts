@@ -7,6 +7,7 @@ import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model'
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model'
 import { SocketService } from './sockets.service'
 import { LocalStorageService } from './local-storage.service'
+import { SocketManagerService } from './socket-manager.service'
 
 const base_url = environment.apiUrl
 @Injectable({
@@ -19,15 +20,20 @@ export class PTLSuscriptoresService {
     _suscriptoresChange = new Subject<any>()
     suscriptoresChange$ = this._suscriptoresChange.asObservable()
 
-    constructor(private http: HttpClient, private socketService: SocketService, private _localStorageService: LocalStorageService) {
-        this.socketService.listen('suscriptores-actualizados').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._suscriptoresChange.next(payload)
-                this.getRegistros().subscribe()
+    constructor(
+        private http: HttpClient,
+        private socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._suscriptoresChange.next(payload);
+                this.getRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get suscriptores$(): Observable<PTLSuscriptorModel[]> {

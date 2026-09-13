@@ -1,0 +1,24 @@
+<app-kpi-shell class="titulo-container" titulo="TOTAL APLICACIONES" icono="feather icon-grid" colorHex="#ffc107"
+    [valor]="total" [cargando]="isLoading" [widgetId]="widgetId" [data]="data">
+
+    <!-- Vista Detallada al expandir -->
+    <p class="subtitulo-container">Estado actual de las aplicaciones desplegadas.</p>
+    <table class="table table-dark table-borderless table-sm small">
+        <thead class="subtitulo-container text-uppercase" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <tr>
+                <th class="texto-panel">Aplicación</th>
+                <th class="text-end">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="texto-panel">Módulo Dashboard QPLUS</td>
+                <td class="text-end"><span class="badge bg-warning text-dark px-2 py-1">Operativa</span></td>
+            </tr>
+            <tr>
+                <td class="texto-panel">Motor de Sincronización</td>
+                <td class="text-end"><span class="badge bg-warning text-dark px-2 py-1">Operativa</span></td>
+            </tr>
+        </tbody>
+    </table>
+</app-kpi-shell>

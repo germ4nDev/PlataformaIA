@@ -126,8 +126,8 @@ export class GestionSuscriptorComponent implements OnInit {
             console.log('paquetes SC del suscriptor', pqtsSuscriptor);
             console.log('paquetes globales listos para HTML', this.paquetes);
         } else {
-            this.verificarHabilitado = true;
             this.modoEdicion = false;
+            this.verificarHabilitado = true;
             this.FormRegistro.codigoSuscriptor = uuidv4();
             this.paquetes.forEach(p => p.checked = false);
         }

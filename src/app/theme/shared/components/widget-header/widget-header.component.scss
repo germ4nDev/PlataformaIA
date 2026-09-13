@@ -1,0 +1,29 @@
+.btn-enfoque {
+    background-color: color-mix(in srgb, var(--card-background) 4%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border-color) 8%, transparent);
+    color: var(--text-color);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    padding: 0;
+    flex-shrink: 0;
+
+    i {
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--card-background) 10%, transparent);
+        color: var(--text-color);
+        border-color: color-mix(in srgb, var(--border-color) 20%, transparent);
+    }
+}

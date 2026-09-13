@@ -8,6 +8,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
 import { LocalStorageService } from './local-storage.service'
+import { SocketManagerService } from './socket-manager.service'
 
 const base_url = environment.apiUrl
 
@@ -20,16 +21,21 @@ export class PTLRolesAPService {
     private _rolesChange = new Subject<any>()
     rolesChange$ = this._rolesChange.asObservable()
 
-    constructor(private http: HttpClient, private _socketService: SocketService, private _localStorageService: LocalStorageService) {
+    constructor(
+        private http: HttpClient,
+        private _socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
         console.log('******* Servicio de roles iniciado correctamente')
-        this._socketService.listen('roles-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._rolesChange.next(payload)
-                this.cargarRegistros().subscribe()
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._rolesChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get roles$(): Observable<PTLRoleAPModel[]> {

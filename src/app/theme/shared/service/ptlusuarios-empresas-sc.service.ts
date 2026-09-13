@@ -7,6 +7,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLUsuaioEmpresasSCModel } from '../_helpers/models/PTLUsuarioEmpresaSC.model';
 import { LocalStorageService } from './local-storage.service';
 import { SocketService } from './sockets.service';
+import { SocketManagerService } from './socket-manager.service';
 
 const base_url = environment.apiUrl;
 
@@ -22,16 +23,17 @@ export class PtlusuariosEmpresasScService {
     constructor(
         private http: HttpClient,
         private _socketService: SocketService,
+        private _socketManager: SocketManagerService,
         private _localStorageService: LocalStorageService
     ) {
         console.log('******* Servicio de usuariosEmpresas iniciado correctamente');
-        this._socketService.listen('usuarios-empresas-actualizadas').subscribe({
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
             next: (payload) => {
-                console.log('Evento de Socket.IO recibido:', payload.msg);
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
                 this._usuariosEmpresasChange.next(payload);
                 this.cargarRegistros().subscribe();
             },
-            error: (err) => console.error('Error en la escucha de sockets:', err)
+            error: (err) => console.error('Error escuchando al manager:', err)
         });
     }
 

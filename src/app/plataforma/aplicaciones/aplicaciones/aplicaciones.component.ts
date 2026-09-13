@@ -115,11 +115,6 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     }
 
     setupAplicacionesStream(): void {
-        // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
-        // if (!suscriptor || !suscriptor.codigoSuscriptor) {
-        //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
-        //   return;
-        // }
         this.aplicacionesTransformadas$ = this._aplicacionesService.aplicaciones$.pipe(
             switchMap((apps: PTLAplicacionModel[]) => {
                 if (!apps) return of([])

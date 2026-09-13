@@ -7,6 +7,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { LocalStorageService } from './local-storage.service';
 import { SocketService } from './sockets.service';
 import { PTLHistorialFacturacionModel } from '../_helpers/models/PTLHistorialFacturacion.model';
+import { SocketManagerService } from './socket-manager.service';
 
 const base_url = environment.apiUrl;
 
@@ -22,16 +23,17 @@ export class PTLHistorialFacturacionService {
     constructor(
         private http: HttpClient,
         private socketService: SocketService,
+        private _socketManager: SocketManagerService,
         private _localStorageService: LocalStorageService
     ) {
-        // 🟢 AJUSTE: El evento que emite nuestro backend en Node.js se llama 'facturacion-actualizada'
-        this.socketService.listen('facturacion-actualizada').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg);
+        console.log('******* Servicio de historiales facturacion correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
                 this._historialesChange.next(payload);
                 this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
+            error: (err) => console.error('Error escuchando al manager:', err)
         });
     }
 

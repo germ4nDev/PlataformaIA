@@ -9,7 +9,7 @@ import { map, tap } from 'rxjs/operators';
 import { PTLActividadRoleModel } from '../_helpers/models/PTLActividadesRoles.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { SocketService } from './sockets.service';
+import { SocketManagerService } from './socket-manager.service';
 import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
@@ -26,18 +26,28 @@ export class PtlactividadesRolesService {
 
     constructor(
         private http: HttpClient,
-        private _socketService: SocketService,
+        private _socketManager: SocketManagerService,
         private _localStorageService: LocalStorageService
     ) {
         console.log('******* Servicio de actividadesRoles iniciado correctamente');
 
-        this._socketService.listen('actividades-roles-actualizadas').subscribe({
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
             next: (payload) => {
-                console.log('Evento de Socket.IO recibido:', payload.msg);
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+
                 this._actividadesRolesChange.next(payload);
-                this.cargarRegistros().subscribe();
+
+                if (payload.action === 'delete') {
+                    this.cargarRegistros().subscribe();
+                    this.actualizarMemoriaDelUsuario(payload.action, payload.id);
+                }
+                else if (payload.action === 'update' || payload.action === 'create') {
+                    this.cargarRegistros().subscribe(() => {
+                        this.actualizarMemoriaDelUsuario(payload.action, payload.id);
+                    });
+                }
             },
-            error: (err) => console.error('Error en la escucha de sockets:', err)
+            error: (err) => console.error('Error escuchando al manager:', err)
         });
     }
 
@@ -47,6 +57,30 @@ export class PtlactividadesRolesService {
 
     getActividadesRolesActuales(): PTLActividadRoleModel[] {
         return this._actividadesRoles.getValue();
+    }
+
+    private actualizarMemoriaDelUsuario(accion: string, registroId: string) {
+        const currentUser = this._localStorageService.getCurrentUserLocalStorage();
+
+        // Verificamos si hay alguien logueado
+        if (!currentUser || !currentUser.usuario) return;
+
+        // Aquí aplicas tu regla de negocio:
+        // ¿Este cambio en las Actividades-Roles afecta al usuario actual?
+        // (Por ejemplo, verificando si el ID del rol modificado pertenece a su lista de roles)
+
+        const misRoles = this._localStorageService.roles || [];
+        // Supongamos que el payload trae el codigoRole afectado
+        // const meAfecta = misRoles.some(rol => rol.codigoRole === payload.codigoRole);
+
+        // Si me afecta (o si prefieres actualizar siempre por seguridad):
+        console.log('🔄 Actualizando permisos del usuario en sesión...');
+
+        // Petición rápida para traer los nuevos permisos del usuario logueado
+        // (Asumiendo que tienes un endpoint que te devuelve los roles de un usuario)
+        // this.http.get(`${base_url}/usuarios/${currentUser.usuario.codigoUsuario}/roles`).subscribe(nuevosRoles => {
+        //     this._localStorageService.setRolesLocalStorage(nuevosRoles);
+        // });
     }
 
     cargarRegistros() {

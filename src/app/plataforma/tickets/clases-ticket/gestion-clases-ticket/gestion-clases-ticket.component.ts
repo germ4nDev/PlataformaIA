@@ -9,7 +9,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { NavigationService, LocalStorageService, UploadFilesService, PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service';
-import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesticket.service';
+import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclases-ticket.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { v4 as uuidv4 } from 'uuid';
 

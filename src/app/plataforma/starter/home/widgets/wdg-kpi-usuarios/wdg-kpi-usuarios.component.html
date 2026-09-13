@@ -1,0 +1,27 @@
+<app-kpi-shell titulo="TOTAL USUARIOS" icono="feather icon-users" colorHex="#0d6efd" [valor]="total"
+    [cargando]="isLoading" [widgetId]="widgetId" [data]="data">
+
+    <!-- Vista Detallada al expandir -->
+    <p class="text-muted mb-4 small">Últimos usuarios registrados en la plataforma QPLUS.</p>
+    <table class="table table-dark table-borderless table-sm small">
+        <thead class="text-muted text-uppercase" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <tr>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th class="text-end">Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>German Valencia</td>
+                <td>Administrador</td>
+                <td class="text-end text-muted">Hoy</td>
+            </tr>
+            <tr>
+                <td>Claudia Ortiz</td>
+                <td>Suscriptor</td>
+                <td class="text-end text-muted">Ayer</td>
+            </tr>
+        </tbody>
+    </table>
+</app-kpi-shell>

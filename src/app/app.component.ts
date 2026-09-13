@@ -41,6 +41,11 @@ import { PTLModulosPaqueteService } from './theme/shared/service/ptlmodulos-paqu
 import { PTLTiposRolesService } from './theme/shared/service/ptltipos-roles.service'
 import { PTLUsuariosService } from './theme/shared/service/ptlusuarios.service';
 import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
+
+import { SocketManagerService } from './theme/shared/service/socket-manager.service';
+import { PTLWidgetsMaestroService } from './theme/shared/service/ptlwidgets-maestro.service'
+import { PtlWidgetsRolesService } from './theme/shared/service/ptlwidgets-roles.service'
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -66,6 +71,7 @@ export class AppComponent implements OnInit {
         private _usuariosEmpresasService: PtlusuariosEmpresasScService,
         private _bibliotecasService: PtlBibliotecasService,
         private _galeriasService: PtlGaleriasService,
+        private _socketManager: SocketManagerService,
         private _formatosGaleriaService: PtlformatosGaleriaService,
         private _tiposGaleriaService: PtlTiposGaleriaService,
         private _empresasSCService: PtlEmpresasScService,
@@ -79,6 +85,8 @@ export class AppComponent implements OnInit {
         private _tiposPaqueteService: PTLTiposPaqueteService,
         private _tiposPagoService: PTLTiposPagoService,
         private _tiposRolesService: PTLTiposRolesService,
+        private _widgetsService: PTLWidgetsMaestroService,
+        private _widgetsRolesService: PtlWidgetsRolesService,
         private _modulosPaqueteService: PTLModulosPaqueteService
     ) { }
 
@@ -209,6 +217,14 @@ export class AppComponent implements OnInit {
         this._usuariosEmpresasService.cargarRegistros().subscribe(
             () => console.log('** Usuarios Empresas SC cargados y guardados en el servicio'),
             err => console.error('Error al cargar Usuarios Empresas SC:', err)
+        )
+        this._widgetsService.cargarRegistros().subscribe(
+            () => console.log('** Widgets cargados y guardados en el servicio'),
+            err => console.error('Error al cargar Widgets:', err)
+        )
+        this._widgetsRolesService.cargarRegistros().subscribe(
+            () => console.log('** Widgets Roles cargados y guardados en el servicio'),
+            err => console.error('Error al cargar Widgets Roles', err)
         )
         // this._puertosService.cargarPuertos().subscribe(
         //     () => console.log('** puertos cargados y guardados en el servicio'),

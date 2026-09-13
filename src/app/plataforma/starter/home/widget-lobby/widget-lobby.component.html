@@ -1,0 +1,48 @@
+<div *ngIf="visible" class="plataforma-backdrop-blur" (click)="cerrarModal()">
+    <div class="plataforma-modal-lg p-4" (click)="$event.stopPropagation()">
+
+        <!-- Cabecera del Modal -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="text-white mb-1 fw-bold">Catálogo de Widgets</h3>
+                <p class="text-muted small mb-0">Personaliza tu tablero seleccionando las métricas que deseas mostrar en
+                    esta sección.</p>
+            </div>
+            <button type="button" class="btn-cerrar-modal" (click)="cerrarModal()">
+                <i class="feather icon-x"></i>
+            </button>
+        </div>
+
+        <!-- Contenedor de Tarjetas en Cuadrícula -->
+        <div class="widgets-grid-container overflow-auto pe-2" style="max-height: 65vh;">
+            <div class="row g-3">
+                <div class="col-xl-4 col-md-6 col-sm-12" *ngFor="let widget of widgetsProcesados">
+
+                    <!-- Tarjeta con imagen de fondo completo -->
+                    <div class="widget-catalog-card" [class.card-active]="widget.activo"
+                        [style.background-image]="'url(' + (widget.imagenWidget || 'assets/images/widget-default.png') + ')'">
+
+                        <!-- Degradado inferior superpuesto para legibilidad -->
+                        <div class="widget-card-overlay">
+                            <div class="widget-info-text text-truncate pe-2">
+                                <h6 class="text-white mb-1 text-truncate fw-bold" [title]="widget.nombreWidget">{{
+                                    widget.nombreWidget }}</h6>
+                                <span class="widget-code-badge">{{ widget.codigoWidget }}</span>
+                            </div>
+
+                            <!-- Switch de Activación -->
+                            <div class="form-check form-switch m-0 flex-shrink-0">
+                                <input class="form-check-input custom-switch" type="checkbox" role="switch"
+                                    [id]="'switch-' + widget.codigoWidget" [checked]="widget.activo"
+                                    (change)="onCheckboxChange(widget.codigoWidget, $event)">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

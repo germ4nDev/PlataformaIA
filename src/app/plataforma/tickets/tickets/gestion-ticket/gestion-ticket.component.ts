@@ -30,7 +30,7 @@ import { PtlusuariosScService } from 'src/app/theme/shared/service/ptlusuarios-s
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
-import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesticket.service';
+import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclases-ticket.service';
 import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';

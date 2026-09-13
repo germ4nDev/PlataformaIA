@@ -127,6 +127,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                 next: (resp: any) => {
                     this.usuario = resp.usuario
                     this.FormRegistro = resp.usuario
+
                     this.claveUsuario = resp.usuario.claveUsuario
                     this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'usuarios', resp.usuario.fotoUsuario)
                     this.FormRegistro.claveUsuario = ''

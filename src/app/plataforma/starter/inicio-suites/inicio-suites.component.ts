@@ -63,16 +63,6 @@ export class InicioSuitesComponent implements OnInit {
     }
 
     ingresaSuiteaplicacion(suite: PTLSuiteAPModel) {
-        // const navSett = this._localStorageService.getObject<any>('navsettings');
-
-        // const navsettings = {
-        //     aplicacion: navSett.aplicacion,
-        //     suite: suite,
-        //     modulo: {},
-        //     contexto: navSett.contexto,
-        //     suscriptor: navSett.suscriptor,
-        //     aplicaciones: navSett.aplicaciones
-        // }
         this._permisosService.inicializarPermisosPorDefecto().subscribe({
             next: (permisosCargados) => {
 

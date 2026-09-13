@@ -1,0 +1,46 @@
+/* Contenedor principal que ocupa toda la celda del Gridster */
+.widget-chart-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+/* Cabecera del gráfico con insignia técnica */
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+
+    h5 {
+        font-weight: 600;
+        font-size: 1.1rem;
+        letter-spacing: 0.3px;
+    }
+
+    .badge-tech {
+        font-size: 0.7rem;
+        font-family: monospace;
+        color: #0ea5e9;
+        background: rgba(14, 165, 233, 0.1);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        padding: 4px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+    }
+}
+
+/* 🟢 Contenedor reactivo del Canvas (VITAL para Gridster) */
+.chart-wrapper {
+    position: relative;
+    flex-grow: 1;
+    /* Toma todo el espacio sobrante debajo del título */
+    width: 100%;
+    min-height: 0;
+    /* Previene desbordamiento en flexbox */
+}

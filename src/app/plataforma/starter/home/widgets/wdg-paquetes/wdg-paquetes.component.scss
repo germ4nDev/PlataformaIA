@@ -1,0 +1,15 @@
+.custom-progress {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+}

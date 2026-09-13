@@ -298,11 +298,13 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     ];
 
     OnNuevoRegistroClick() {
+        this._localStorageService.setObject('regId', 'nuevo')
         this.router.navigate(['/suscriptor/gestion-suscriptor'], { queryParams: { regId: 'nuevo' } });
     }
 
-    OnEditarRegistroClick(id: number) {
-        this.router.navigate(['/suscriptor/gestion-suscriptor'], { queryParams: { regId: id } });
+    OnEditarRegistroClick(id: string) {
+        this._localStorageService.setObject('regId', id)
+        this.router.navigate(['/suscriptor/gestion-suscriptor']);
     }
 
     onAccionPrincipal(evento: { accion: string, row: any }) {

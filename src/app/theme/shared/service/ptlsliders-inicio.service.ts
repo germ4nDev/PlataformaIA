@@ -10,6 +10,7 @@ import { LocalStorageService } from './local-storage.service';
 import { SocketService } from './sockets.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { PTLPaqueteModel } from '../_helpers/models/PTLPaquete.model';
+import { SocketManagerService } from './socket-manager.service';
 
 const base_url = environment.apiUrl;
 
@@ -25,17 +26,18 @@ export class PtlSlidersInicioService {
     constructor(
         private http: HttpClient,
         private socketService: SocketService,
+        private _socketManager: SocketManagerService,
         private _localStorageService: LocalStorageService
     ) {
         console.log('******* Servicio de sliders iniciado correctamente')
-        this.socketService.listen('sliders-actualizados').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._slidersChange.next(payload)
-                this.cargarSliders().subscribe()
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._slidersChange.next(payload);
+                this.getRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get slider$(): Observable<PTLSliderInicioModel[]> {

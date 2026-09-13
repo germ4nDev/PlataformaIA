@@ -7,6 +7,7 @@ import { PTLPaquetesSCModel } from '../_helpers/models/PTLPaquetesSC.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { LocalStorageService } from './local-storage.service';
 import { SocketService } from './sockets.service';
+import { SocketManagerService } from './socket-manager.service';
 
 const base_url = environment.apiUrl;
 
@@ -22,16 +23,18 @@ export class PTLPaquetesSCService {
     constructor(
         private http: HttpClient,
         private socketService: SocketService,
+        private _socketManager: SocketManagerService,
         private _localStorageService: LocalStorageService
     ) {
-        this.socketService.listen('paquetes-sc-actualizados').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._paquetesSCChange.next(payload)
-                this.cargarRegistros()
+        console.log('******* Servicio de p0aquetes suscriptor iniciado correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._paquetesSCChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     getRegistros() {

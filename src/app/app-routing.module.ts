@@ -75,7 +75,7 @@ const routes: Routes = [
             {
                 path: 'autenticacion',
                 loadChildren: () => import('./plataforma/autenticacion/autenticacion.module').then((module) => module.AutenticacionModule)
-            },
+            }
         ]
     },
     {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { DashboardService } from './dashboard.service';
-import { WIDGET_MAP } from './../../../../tablero-control/torre-control/widget-registry';
+import { WIDGET_MAP } from './../../../../plataforma/tablero-control/torre-control/widget-registry';
 
 @Injectable({
     providedIn: 'root'

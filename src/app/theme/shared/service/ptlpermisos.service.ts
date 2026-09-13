@@ -6,6 +6,7 @@ import { LocalStorageService } from './local-storage.service';
 import { SocketService } from './../service/sockets.service';
 import { NavigationService } from './navigation.service';
 import { SwalAlertService } from './swal-alert.service';
+import { SocketManagerService } from './socket-manager.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,32 +25,37 @@ export class PtlPermisosService {
         private _localStorageService: LocalStorageService,
         private _navigationService: NavigationService,
         private _swalService: SwalAlertService,
-        private _socketService: SocketService
+        private _socketService: SocketService,
+        private _socketManager: SocketManagerService
     ) {
         this.inicializarEscuchaSockets();
     }
 
     private inicializarEscuchaSockets(): void {
-        this._socketService.listen<{ codigoRole?: string, mensaje?: string }>('permisos_actualizados')
-            .subscribe((data) => {
-                console.log('📡 Alerta Socket Recibida:', data?.mensaje);
+        this._socketManager.permisosActualizados$.subscribe((data) => {
+            console.log('📡 Alerta desde Manager Recibida:', data?.mensaje);
 
-                const elRolMeAfecta = data.codigoRole ? this._codigosRolesActuales.includes(data.codigoRole) : true;
+            const elRolMeAfecta = data.codigoRole ? this._codigosRolesActuales.includes(data.codigoRole) : true;
 
-                if (elRolMeAfecta) {
-                    // 🟢 1. LOG DE DIAGNÓSTICO PARA EL TOAST
-                    console.log(`⚡ El rol [${data.codigoRole}] te afecta. 🚀 LANZANDO TOAST...`);
+            if (elRolMeAfecta) {
+                console.log(`⚡ El rol [${data.codigoRole}] te afecta. 🚀 LANZANDO TOAST...`);
+                this._swalService.getToastInfo('Tus permisos han sido actualizados.');
 
-                    this._swalService.getToastInfo('Tus permisos han sido actualizados.');
-                    this.inicializarPermisosPorDefecto().pipe(take(1)).subscribe();
-                } else {
-                    console.log(`💤 Cambio en el rol [${data.codigoRole}] ignorado. No pertenece a este usuario.`);
-                }
-            });
+                this.inicializarPermisosPorDefecto().pipe(take(1)).subscribe();
+            } else {
+                console.log(`💤 Cambio en el rol [${data.codigoRole}] ignorado. No pertenece a este usuario.`);
+            }
+        });
     }
 
     inicializarPermisosPorDefecto(): Observable<string[]> {
         const currentUser = this._localStorageService.getCurrentUserLocalStorage();
+
+        const aplicacionActual = this._localStorageService.getObject<any>('aplicacion');
+        if (!currentUser || !currentUser.usuariosSC) {
+            this.limpiarPermisos();
+            return of([]);
+        }
 
         const usuarioSCDefecto = currentUser?.usuariosSC?.[0];
         const suscriptorDefecto = usuarioSCDefecto?.suscriptores?.[0];
@@ -59,7 +65,7 @@ export class PtlPermisosService {
             console.log(`🚀 Auto-arranque: Iniciando con la empresa por defecto [${empresaDefecto.codigoEmpresaSC}]`);
             return this.cargarPermisosUsuarioYEmpresa(usuarioSCDefecto.codigoUsuarioSC, empresaDefecto.codigoEmpresaSC);
         } else {
-            console.warn('⚠️ No se encontró una empresa por defecto para inicializar los permisos.');
+            console.warn('⚠️ Contexto incompleto: Esperando selección de aplicación/empresa.');
             this.limpiarPermisos();
             return of([]);
         }
@@ -117,7 +123,6 @@ export class PtlPermisosService {
                     actividades.forEach((ar: any) => {
                         const actividadMaestraActiva = ar.actividad ? ar.actividad.estadoActividad === true : true;
 
-                        // 🟢 Tu payload usa 'permiso' para saber si está activo o inactivo
                         if (ar.permiso === true && actividadMaestraActiva) {
                             const permisoLegible = ar.actividad?.llavePermiso || ar.codigoActividad;
                             actividadesSet.add(permisoLegible);
@@ -132,57 +137,58 @@ export class PtlPermisosService {
                 this._actividadesAutorizadas.next(actividadesFinales);
                 this._navigationService.getNavigationItems();
 
-                // 🟢 2. NUEVO: Guarda físicamente en el Local/Session Storage.
-                // ¡OJO! Reemplaza 'permisos_usuario' por la llave exacta que uses en tu app
-                this._localStorageService.setObject('permisos_usuario', actividadesFinales);
+                currentUser.usuario.permisos = actividadesFinales;
+                this._localStorageService.setCurrentUserLocalStorage(currentUser);
             })
         );
-
-        // return forkJoin(peticionesActividades).pipe(
-        //     map((respuestasActividades: any) => {
-        //         const actividadesSet = new Set<string>();
-        //         console.group('%c2. Cruce de Actividades desde el Backend', 'color: #28a745; font-weight: bold;');
-
-        //         respuestasActividades.forEach((resp: any, index: number) => {
-        //             const actividades = Array.isArray(resp) ? resp : (resp.data || []);
-        //             const nombreRol = rolesDeEstaEmpresa[index].codigoRole;
-
-        //             console.log(`🔹 Rol [${nombreRol}] otorgó ${actividades.length} permisos:`, actividades);
-
-        //             actividades.forEach((ar: any) => {
-        //                 const actividadMaestraActiva = ar.actividad ? ar.actividad.estadoActividad === true : true;
-
-        //                 const asignacionActiva = ar.estadoActividad !== false;
-
-        //                 if (ar.permiso === true && actividadMaestraActiva && asignacionActiva) {
-        //                     const permisoLegible = ar.actividad?.llavePermiso || ar.codigoActividad;
-        //                     actividadesSet.add(permisoLegible);
-        //                 }
-        //             });
-        //         });
-
-        //         console.groupEnd();
-        //         return Array.from(actividadesSet);
-        //     }),
-        //     tap((actividadesFinales: string[]) => {
-        //         console.group('%c3. RAM Actualizada (Listo para UI)', 'color: #ffc107; font-weight: bold; background: #333;');
-        //         console.log(`✅ Actividades únicas (${actividadesFinales.length}):`, actividadesFinales);
-        //         console.groupEnd();
-
-        //         this._actividadesAutorizadas.next(actividadesFinales);
-        //         this._navigationService.getNavigationItems();
-        //     })
-        // );
     }
 
     tienePermiso(codigoPermiso: string): boolean {
-        const permisosActuales = this._actividadesAutorizadas.getValue();
-        return permisosActuales.includes(codigoPermiso);
+        // 1. Verificamos la caché en memoria (rápida y reactiva)
+        const permisosMemoria = this._actividadesAutorizadas.getValue();
+        if (permisosMemoria.length > 0) {
+            return permisosMemoria.includes(codigoPermiso);
+        }
+
+        // 2. Fallback (Si presionaron F5): Leemos directamente del sessionStorage
+        const currentUser = this._localStorageService.getCurrentUserLocalStorage();
+        const permisosStorage = currentUser?.usuario?.permisos || [];
+
+        // Autorecuperación: Si estaban en storage pero no en memoria, restauramos la memoria
+        if (permisosStorage.length > 0 && permisosMemoria.length === 0) {
+            this._actividadesAutorizadas.next(permisosStorage);
+        }
+
+        return permisosStorage.includes(codigoPermiso);
     }
 
-    tieneRole(nombreRolRequerido: string): boolean {
-        const rolesActuales = this._rolesAutorizados.getValue();
-        return rolesActuales.includes(nombreRolRequerido);
+    tieneRole(criterioRol: string): boolean {
+        // 1. Verificamos la caché de nombres en memoria
+        const rolesMemoria = this._rolesAutorizados.getValue();
+        if (rolesMemoria.length > 0) {
+            return rolesMemoria.includes(criterioRol);
+        }
+
+        // 2. Fallback: Buscamos en los objetos del sessionStorage
+        const currentUser = this._localStorageService.getCurrentUserLocalStorage();
+        const rolesStorage = currentUser?.usuario?.roles || [];
+
+        // 3. Evaluamos buscando en la raíz y en el objeto anidado 'role'
+        return rolesStorage.some((relacion: any) => {
+            // Coincidencia rápida en la tabla pivote (si pasas el ID de la relación o el ID del rol)
+            if (relacion.codigoUsuarioRole === criterioRol || relacion.codigoRole === criterioRol) {
+                return true;
+            }
+
+            // Coincidencia en el objeto anidado completo que agregaste
+            if (relacion.role) {
+                return relacion.role.codigoRole === criterioRol ||
+                    relacion.role.nombreRole === criterioRol ||
+                    relacion.role.nombreRolLegible === criterioRol;
+            }
+
+            return false;
+        });
     }
 
     limpiarPermisos() {

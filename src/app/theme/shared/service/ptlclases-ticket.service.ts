@@ -10,6 +10,7 @@ import { LocalStorageService } from './local-storage.service'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
 import { ClasesTicketComponent } from '../../../plataforma/tickets/clases-ticket/clases-ticket.component'
+import { SocketManagerService } from './socket-manager.service'
 
 const base_url = environment.apiUrl
 
@@ -22,16 +23,23 @@ export class PtlclasesticketService {
     private _registrosChange = new Subject<any>()
     _registrosChange$ = this._registrosChange.asObservable()
 
-    constructor(private http: HttpClient, private socketService: SocketService, private _localStorageService: LocalStorageService) {
-        this.socketService.listen('clasesTickets-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._registrosChange.next(payload)
-                this.cargarRegistros().subscribe()
+    constructor(
+        private http: HttpClient,
+        private socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
+        console.log('******* Servicio de clases de ticket correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._registrosChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
+
     get clasesTicket$(): Observable<PTLClaseTicketModel[]> {
         return this._registros.asObservable()
     }

@@ -24,6 +24,7 @@ import { PTLUsuaioEmpresasSCModel } from '../_helpers/models/PTLUsuarioEmpresaSC
 import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from './ptlsuscriptores.service';
+import { SocketService } from './sockets.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService implements OnDestroy {
@@ -55,6 +56,7 @@ export class AuthenticationService implements OnDestroy {
         private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
         private _empresasSCService: PtlEmpresasScService,
         private _rolesService: PTLRolesAPService,
+        private _socketService: SocketService,
         private _usuarioRolesService: PtlusuariosRolesApService
     ) {
         console.log('************ SERVICIO DE AUTENTICACION ACTIVO');
@@ -83,6 +85,10 @@ export class AuthenticationService implements OnDestroy {
 
     public get currentUserValue() {
         return this.currentUserSubject.value;
+    }
+
+    getCurrentUserActual() {
+        return this.currentUserSubject.getValue();
     }
 
     public getToken(): string | null {
@@ -218,7 +224,13 @@ export class AuthenticationService implements OnDestroy {
         this.loggedInSubject.next(true);
     }
 
-    logout() {
+    public logout() {
+        const currentUser = this._localstorageService.getCurrentUserLocalStorage();
+        const codigoUsuario = currentUser.usuario.codigoUsuario;
+
+        this._socketService.emit('usuario-logout', { codigoUsuario });
+        this._socketService.disconnect();
+
         this._localstorageService.setLogOut();
         this.currentUserSubject.next(null);
         this.loggedInSubject.next(false);

@@ -21,6 +21,8 @@ import { PTLActividadModel } from '../_helpers/models/PTLActividades.model';
 import { Puerto } from '../_helpers/models/tablero-control/puerto.model';
 import { CurrentTableroModel } from '../_helpers/models/CurrentTableroSettings.model';
 import { BehaviorSubject } from 'rxjs';
+import { LayoutService } from './tablero-control/layout.service';
+import { PuertosService } from './tablero-control/puertos.service';
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +47,19 @@ export class LocalStorageService {
     contexto: any;
     aplicaciones: PTLAplicacionModel[] = []
 
+    // TABLERO VARIABLES
+    tableroSettings: CurrentTableroModel = new CurrentTableroModel();
+    public tableroSubject = new BehaviorSubject<CurrentTableroModel>(this.getTableroLocalStorage());
+    public currentTablero: any;
+    public puertos: Puerto[] = [];
+    public puerto: any;
+    public layout: any;
+    public pestana: string = '';
+
+
     constructor(
+        private _layoutService: LayoutService,
+        private _puertosService: PuertosService
     ) { }
 
     // ====================================================================
@@ -273,7 +287,83 @@ export class LocalStorageService {
         this.removeObject('currentUser');
         this.removeObject('navsettings');
         this.removeObject('FormRegistro');
+        this.removeObject('susId');
+        this.removeObject('regId');
         localStorage.removeItem('currentTablero'); // Opcional: limpiar settings al salir
+    }
+    // #endregion
+
+    // ====================================================================
+    // #region MÉTODOS DEL TABLERO DE CONTROL (SYNC STATE)
+    // ====================================================================
+    getTableroLocalStorage(): CurrentTableroModel {
+        const localTablero = localStorage.getItem('currentTablero');
+        if (localTablero) {
+            console.log('aca');
+            this.currentTablero = JSON.parse(localTablero);
+        } else {
+            console.log('alla');
+            // Valor por defecto
+            this.currentTablero = {
+                puerto: {},
+                pestana: 'TLC_MARITIMO_001',
+                layout: []
+            };
+            this.setPuertoLocalStorage('BUENAVENTURA')
+            this.setTableroLocalStorage(this.currentTablero);
+            this.setLayoutLocalStorage('SISTEMA_DEFAULT', this.currentTablero.pestana || '');
+        }
+        this.puerto = this.currentTablero.puerto;
+        this.pestana = this.currentTablero.pestana || '';
+        // this.setLocalObject('currentTablero', this.currentTablero);
+        return this.currentTablero;
+    }
+
+    setTableroLocalStorage(data: CurrentTableroModel): void {
+        this.setLocalObject('currentTablero', data);
+        this.currentTablero = data;
+        this.tableroSettings = data;
+        this.puerto = data.puerto;
+        this.pestana = data.pestana || '';
+
+        // 🟢 Emitimos el cambio a todos los componentes suscritos
+        this.tableroSubject.next(data);
+    }
+
+    setLayoutLocalStorage(usuario: string, pestana: string) {
+        this._layoutService.obtenerLayoutPorUsuario(usuario, pestana).subscribe({
+            next: (res: any) => {
+                const updated = { ...this.currentTablero, layout: res.data || [] };
+                this.setTableroLocalStorage(updated);
+            },
+            error: (err) => console.error("Error sincronizando layout:", err)
+        });
+    }
+
+    setPuertoLocalStorage(idPuerto: string): void {
+        this.puertos = this._puertosService.getPuertosActuales()
+        const index = this.puertos.findIndex(x => x.id_puerto == idPuerto)
+        console.log('puerto seleccionado localstorage', idPuerto, this.puertos[index]);
+        const updated = { ...this.currentTablero, puerto: this.puertos[index] };
+        this.setTableroLocalStorage(updated);
+    }
+
+    setPestanaLocalStorage(nuevaPestana: string, usuario: string = 'SISTEMA_DEFAULT'): void {
+        const updated = { ...this.currentTablero, pestana: nuevaPestana };
+        this.setTableroLocalStorage(updated);
+        this.setLayoutLocalStorage(usuario, nuevaPestana);
+    }
+
+    getPuertoLocalStorage(): Puerto {
+        return this.currentTablero?.puerto || { id_puerto: 'BUENAVENTURA', nombre_puerto: 'Buenaventura' } as Puerto;
+    }
+
+    getPestanaLocalStorage(): string {
+        return this.currentTablero?.pestana || 'TLC_MARITIMO_001';
+    }
+
+    getLayoutLocalStorage(): string {
+        return this.currentTablero?.layout || [];
     }
     // #endregion
 }

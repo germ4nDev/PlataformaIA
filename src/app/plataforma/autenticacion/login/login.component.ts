@@ -25,6 +25,7 @@ import {
     PTLSuscriptoresService,
     PtlusuariosEmpresasScService,
     PtlusuariosScService,
+    SocketService,
     SwalAlertService,
     ThemeService
 } from 'src/app/theme/shared/service'
@@ -41,6 +42,9 @@ import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModulo
 import { PTLModulosPaqueteService } from 'src/app/theme/shared/service/ptlmodulos-paquete.service'
 import { PtlusuariosRolesApService } from '../../../theme/shared/service/ptlusuarios-roles-ap.service';
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service'
+import { LayoutService } from 'src/app/theme/shared/service/layout.service'
+import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
+import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
 
 @Component({
     selector: 'app-login',
@@ -104,7 +108,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         private _themeService: ThemeService,
         private _suscriptoresService: PTLSuscriptoresService,
         private _localStorageService: LocalStorageService,
-        private _actividadesService: PtlActividadesService,
+        private _layoutService: LayoutService,
         private _usuariosSCService: PtlusuariosScService,
         private _empresasSCService: PtlEmpresasScService,
         private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
@@ -113,7 +117,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         private _paquetesSCService: PTLPaquetesSCService,
         private _modulosPaqueteService: PTLModulosPaqueteService,
         private _permisosService: PtlPermisosService,
+        private _widgetsMaestroService: PTLWidgetsMaestroService,
+        private _widgetsRolesService: PtlWidgetsRolesService,
         private _languagesService: LanguageService,
+        private _socketService: SocketService,
         private _authenticationService: AuthenticationService
     ) {
         this.translate.use(localStorage.getItem('lang') || 'es')
@@ -152,6 +159,175 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.showPassword = !this.showPassword;
     }
 
+    // onLoginUserClick(): void {
+    //     this.submitted = true;
+
+    //     if (this.loginForm.invalid) {
+    //         return;
+    //     }
+
+    //     this.error = '';
+    //     this.loading = true;
+    //     const userName = this.formValues?.['username']?.value;
+    //     const password = this.formValues?.['password']?.value;
+
+    //     this.loginSub = this._authenticationService.login(userName, password)
+    //         .pipe(
+    //             switchMap((respLogin: any) => {
+
+    //                 if (!respLogin.ok) {
+    //                     this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'));
+    //                     return of(null);
+    //                 }
+
+    //                 this._localstorageService.setTokenLocalStorage(respLogin.token);
+    //                 this.currentUser = this._localstorageService.getCurrentUserLocalStorage();
+    //                 console.log('++++++++ usuario activo', this.currentUser);
+
+    //                 return forkJoin({
+    //                     respLogin: of(respLogin),
+    //                     currentUser: of(this.currentUser),
+    //                     usuariosSC: this._usuariosSCService.cargarRegistros().pipe(take(1)),
+    //                     usuariosEmpresasSC: this._usuariosEmpresasSCService.cargarRegistros().pipe(take(1)),
+    //                     empresasSC: this._empresasSCService.cargarRegistros().pipe(take(1)),
+    //                     suscriptores: this._suscriptoresService.getRegistros().pipe(take(1)),
+    //                     paquetesSC: this._paquetesSCService.cargarRegistros().pipe(take(1)),
+    //                     modulosPQ: this._modulosPaqueteService.cargarRegistros().pipe(take(1)),
+    //                     usuariosRoles: this._usuariosRolesService.cargarRegistros().pipe(take(1)),
+    //                     rolesMaestros: this._rolesService.cargarRegistros().pipe(take(1)),
+
+    //                     // 🟢 1. Agregamos las llamadas a los catálogos de widgets
+    //                     widgetsMaestros: this._widgetsMaestroService.getWidgetsActivos().pipe(take(1)),
+    //                     widgetsRoles: this._widgetsRolesService.getAsignaciones().pipe(take(1)) || []
+    //                 });
+    //             }),
+    //             tap((data: any) => {
+    //                 this.loading = false;
+    //                 console.log('++++++++ datos forkjoin', data);
+
+    //                 if (!data) return;
+
+    //                 const listaUsuariosSC = data.usuariosSC.usuariosSC || data.usuariosSC.usuarios || data.usuariosSC || [];
+    //                 const listaUsuariosEmpresasSC = data.usuariosEmpresasSC.usuariosEmpresasSC || data.usuariosEmpresasSC || [];
+    //                 const listaEmpresasSC = data.empresasSC.empresasSC || data.empresasSC.empresas || data.empresasSC || [];
+    //                 const listaSuscriptores = data.suscriptores.suscriptores || data.suscriptores || [];
+    //                 const listaPaquetesSC = data.paquetesSC.paquetesSC || data.paquetesSC || [];
+    //                 const listaModulosPQ = data.modulosPQ.modulosPQ || data.modulosPQ || [];
+    //                 const listaUsuarioRoles = data.usuariosRoles.usuariosRoles || data.usuariosRoles.usuarioRole || data.usuariosRoles || [];
+    //                 const listaRolesMaestros = data.rolesMaestros.roles || data.rolesMaestros.data || data.rolesMaestros || [];
+    //                 const listaWidgetsMaestros = data.widgetsMaestros.widgets || data.widgetsMaestros || [];
+    //                 const listaWidgetsRoles = data.widgetsRoles.widgetsRoles || [];
+
+    //                 const suscUsu = listaUsuariosSC.filter((x: any) => x.codigoUsuario === data.currentUser.usuario?.codigoUsuario);
+
+    //                 const widgetsPermitidosGlobales = new Map();
+
+    //                 if (suscUsu.length > 0) {
+    //                     suscUsu.forEach((usuSC: any) => {
+
+    //                         const suscs = listaSuscriptores.filter((x: any) => x.codigoSuscriptor === usuSC.codigoSuscriptor);
+
+    //                         suscs.forEach((susc: any) => {
+
+    //                             const usuEmps = listaUsuariosEmpresasSC.filter((x: any) => x.codigoUsuarioSC === usuSC.codigoUsuarioSC);
+    //                             const empresasDeEsteSuscriptor: any[] = [];
+
+    //                             usuEmps.forEach((usuEmp: any) => {
+    //                                 const emp = listaEmpresasSC.find((x: any) => x.codigoEmpresaSC === usuEmp.codigoEmpresaSC);
+
+    //                                 if (emp && emp.codigoSuscriptor === susc.codigoSuscriptor) {
+    //                                     usuEmp.empresa = emp;
+
+    //                                     const rolesDeEstaEmpresa = listaUsuarioRoles.filter((rol: any) =>
+    //                                         rol.codigoUsuarioSC === usuSC.codigoUsuarioSC &&
+    //                                         rol.codigoEmpresaSC === emp.codigoEmpresaSC &&
+    //                                         rol.estadoUsuarioRole === true
+    //                                     );
+
+    //                                     const rolesEnriquecidos = rolesDeEstaEmpresa.map((rolUsuario: any) => {
+    //                                         const detalleRol = listaRolesMaestros.find((r: any) => r.codigoRole === rolUsuario.codigoRole);
+
+    //                                         const asignacionesDeEsteRol = listaWidgetsRoles.filter((wr: any) =>
+    //                                             wr.codigoRol === rolUsuario.codigoRole && wr.estadoRelacion === true
+    //                                         );
+
+    //                                         if (asignacionesDeEsteRol.lenght > 0) { }
+
+    //                                         const widgetsDelRol = asignacionesDeEsteRol.map((asignacion: any) => {
+    //                                             const widgetMaestro = listaWidgetsMaestros.find((w: any) => w.codigoWidget === asignacion.codigoWidget);
+
+    //                                             if (widgetMaestro) {
+    //                                                 widgetsPermitidosGlobales.set(widgetMaestro.codigoWidget, widgetMaestro);
+    //                                             }
+    //                                             return widgetMaestro;
+    //                                         }).filter((w: any) => w !== undefined);
+
+    //                                         return {
+    //                                             ...rolUsuario,
+    //                                             detalleRole: detalleRol || null,
+    //                                             nombreRolLegible: detalleRol ? detalleRol.nombreRole : 'DESCONOCIDO',
+    //                                             widgetsAsignados: widgetsDelRol // 🟢 Guardamos los widgets en el nivel del rol
+    //                                         };
+    //                                     });
+
+    //                                     usuEmp.rolesAsignados = rolesEnriquecidos;
+    //                                     empresasDeEsteSuscriptor.push(usuEmp);
+    //                                 }
+    //                             });
+
+    //                             susc.empresasAsignadas = empresasDeEsteSuscriptor;
+
+    //                             susc.paquetesActivos = listaPaquetesSC.filter((paq: any) =>
+    //                                 paq.codigoSuscriptor === susc.codigoSuscriptor &&
+    //                                 paq.estadoLicencia === true
+    //                             );
+
+    //                             susc.paquetesActivos.forEach((paq: any) => {
+    //                                 const mods = listaModulosPQ.filter((mod: any) =>
+    //                                     mod.codigoPaquete === paq.codigoPaquete
+    //                                 );
+    //                                 paq.modulosPaquete = mods;
+    //                             });
+    //                         });
+
+    //                         usuSC.suscriptores = suscs;
+    //                     });
+    //                 }
+
+    //                 this.currentUser.usuariosSC = suscUsu;
+
+    //                 if (this.currentUser.usuario) {
+    //                     this.currentUser.usuario.widgets = Array.from(widgetsPermitidosGlobales.values());
+    //                 }
+
+    //                 this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
+    //                 const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
+    //                 this._socketService.conectarConUsuario(codigoUsuario);
+    //                 this.cargarYGuardarLayoutUsuario(this.currentUser);
+
+    //                 console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes/Widgets) armada exitosamente!', this.currentUser);
+
+    //                 this._permisosService.inicializarPermisosPorDefecto().subscribe({
+    //                     next: (actividades) => {
+    //                         console.log('🛡️ Permisos (UI/Rutas) cacheados exitosamente. Actividades:', actividades.length);
+    //                         this.router.navigate(['/starter/inicio-suscriptores']);
+    //                     },
+    //                     error: (err) => {
+    //                         console.error('⚠️ Error al cachear permisos, navegando con modo restringido.', err);
+    //                         this.router.navigate(['/starter/inicio-suscriptores']);
+    //                     }
+    //                 });
+    //             }),
+    //             catchError(err => {
+    //                 this.loading = false;
+    //                 this.error = err;
+    //                 console.error('Error en el Login:', err);
+    //                 this._swalService.getAlertError(this.translate.instant('PLATAFORMA.LOGINFAILED'));
+    //                 return of(null);
+    //             })
+    //         )
+    //         .subscribe();
+    // }
     onLoginUserClick(): void {
         this.submitted = true;
 
@@ -252,9 +428,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                                 );
 
                                 susc.paquetesActivos.forEach((paq: any) => {
-                                    const mods = listaModulosPQ.filter((mod: any) =>
-                                        mod.codigoPaquete === paq.codigoPaquete
-                                    );
+                                    const mods = listaModulosPQ.filter((mod: any) => mod.codigoPaquete === paq.codigoPaquete);
                                     paq.modulosPaquete = mods;
                                 });
                             });
@@ -264,7 +438,13 @@ export class LoginComponent implements OnInit, OnDestroy {
                     }
 
                     this.currentUser.usuariosSC = suscUsu;
+
                     this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
+                    const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
+                    this._socketService.conectarConUsuario(codigoUsuario);
+
+                    // 🟢 Se mantiene para cargar la base del Gridster si es necesario luego
+                    this.cargarYGuardarLayoutUsuario(this.currentUser);
 
                     console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes) armada exitosamente!', this.currentUser);
 
@@ -288,6 +468,30 @@ export class LoginComponent implements OnInit, OnDestroy {
                 })
             )
             .subscribe();
+    }
+
+    private async cargarYGuardarLayoutUsuario(codigoUsuario: any): Promise<void> {
+        return new Promise((resolve) => {
+            this._layoutService.getLayoutByUsuario(codigoUsuario.usuario.codigoUsuario).subscribe({
+                next: (res) => {
+                    if (res.ok && res.layout) {
+                        // Si el usuario ya tiene un layout personalizado en BD, lo guardamos en sessionStorage
+                        codigoUsuario.usuario.layout = JSON.stringify(res.layout);
+                        this._localstorageService.setCurrentUserLocalStorage(codigoUsuario);
+                        console.log('☁️ Layout personalizado cargado desde BD en el Login.');
+                    } else {
+                        codigoUsuario.usuario.layout = [];
+                        this._localstorageService.setCurrentUserLocalStorage(codigoUsuario);
+                        console.log('ℹ️ El usuario no tiene layout en BD, se usará el por defecto.');
+                    }
+                    resolve();
+                },
+                error: (err) => {
+                    console.warn('⚠️ Error al consultar el layout en el login, se usará el por defecto.', err);
+                    resolve();
+                }
+            });
+        });
     }
 
     onChangePasswordClick() {

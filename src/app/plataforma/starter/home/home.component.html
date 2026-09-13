@@ -11,16 +11,58 @@
         </div>
     </aside>
 
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <h1 class="page-title text-center">{{ 'PLATAFORMA.TEXTO_HOME' | translate }}</h1>
-                <div class="card-grd-actions">
-                        <a (click)="ingresarQplusWeb()" class="card-grd-button">
-                            {{ 'PLATAFORMA.ENTRAR' | translate }}
-                        </a>
-                    </div>
+    <div class="content-area d-flex flex-column overflow-hidden">
+        <div class="content-scroll-wrapper bg-transparent border-0 d-flex flex-column flex-grow-1 overflow-hidden">
+
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-shrink-0 px-1">
+                <div style="width: 110px;" class="d-none d-md-block"></div>
+
+                <h1 class="page-title text-center mb-0 flex-grow-1">{{ 'PLATAFORMA.TEXTO_HOME' | translate }}</h1>
+
+                <div class="d-flex align-items-center gap-2" style="justify-content: flex-end;">
+                    <button class="btn-accion-dashboard" (click)="toggleBloqueoGridster()"
+                        [class.editing-mode]="!tableroBloqueado"
+                        [title]="tableroBloqueado ? 'Tablero bloqueado (Haz clic para desbloquear)' : 'Tablero desbloqueado para edición (Haz clic para bloquear)'">
+                        <i class="feather" [ngClass]="tableroBloqueado ? 'icon-lock' : 'icon-unlock'"></i>
+                    </button>
+
+                    <button type="button" class="btn-accion-dashboard" (click)="abrirLobby()" title="Agregar Widget">
+                        <i class="feather icon-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <nav class="tc-nav-tabs mb-3 flex-shrink-0">
+                <button class="tc-tab-btn" [class.active]="pestanaActiva === 'TAB_PLAT_PRINCIPAL'"
+                    (click)="cambiarPestana('TAB_PLAT_PRINCIPAL')">
+                    <span class="icon">📊</span> Principal
+                </button>
+                <button class="tc-tab-btn" [class.active]="pestanaActiva === 'TAB_PLAT_SISTEMA'"
+                    (click)="cambiarPestana('TAB_PLAT_SISTEMA')">
+                    <span class="icon">⚙️</span> Sistema
+                </button>
+            </nav>
+
+            <div class="tc-dashboard-container flex-grow-1 position-relative overflow-hidden">
+                <div *ngIf="cargando" class="cargador-flotante">
+                </div>
+                <gridster class="gridster" [options]="options">
+                    <gridster-item *ngFor="let widget of dashboard; trackBy: trackByWidget" [item]="widget">
+                        <app-widget-selector [type]="widget.type" [data]="widget.data"></app-widget-selector>
+                    </gridster-item>
+                </gridster>
             </div>
         </div>
+    </div>
+</div>
+
+<app-widget-lobby [visible]="mostrarLobby" [widgetsMaster]="lsWidgets" [layoutActual]="lsLayout"
+    [pestanaActual]="pestanaActiva" (cerrar)="mostrarLobby = false" (toggleWidget)="actualizarWidgetDesdeLobby($event)">
+</app-widget-lobby>
+
+<div *ngIf="widgetEnfoque" class="modal-enfoque-backdrop" (click)="cerrarModalEnfoque()">
+    <div class="modal-enfoque-content" (click)="$event.stopPropagation()">
+        <app-widget-selector [type]="widgetEnfoque.type" [data]="widgetEnfoque.data">
+        </app-widget-selector>
     </div>
 </div>

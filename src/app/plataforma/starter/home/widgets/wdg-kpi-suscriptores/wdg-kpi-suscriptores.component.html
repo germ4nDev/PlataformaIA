@@ -1,0 +1,18 @@
+<app-kpi-shell titulo="TOTAL SUSCRIPTORES" icono="feather icon-briefcase" colorHex="#0dcaf0" [valor]="total"
+    [cargando]="isLoading" [widgetId]="widgetId" [data]="data">
+
+    <!-- Vista Detallada al expandir -->
+    <p class="text-muted mb-4 small">Nuevos suscriptores en el periodo actual.</p>
+    <ul class="list-unstyled">
+        <li class="d-flex align-items-center mb-3">
+            <div class="bg-info bg-opacity-10 text-info rounded-circle d-flex justify-content-center align-items-center me-3"
+                style="width: 32px; height: 32px;">
+                <i class="feather icon-user"></i>
+            </div>
+            <div class="d-flex flex-column">
+                <span class="text-white fw-bold small">Empresa QPLUS SAS</span>
+                <span class="text-muted" style="font-size: 0.65rem;">Plan Premium</span>
+            </div>
+        </li>
+    </ul>
+</app-kpi-shell>

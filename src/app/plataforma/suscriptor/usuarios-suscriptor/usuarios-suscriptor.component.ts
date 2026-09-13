@@ -19,11 +19,12 @@ import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuar
 import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { PTLSuscriptoresService, PtlusuariosScService, UploadFilesService } from 'src/app/theme/shared/service';
+import { AuthenticationService, PTLSuscriptoresService, PtlusuariosScService, UploadFilesService, UtilidadesService } from 'src/app/theme/shared/service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { DataLoaderComponent } from "src/app/theme/shared/components/data-loader/data-loader.component";
 import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
+import { EmailService } from 'src/app/theme/shared/service/email.service';
 
 @Component({
     selector: 'app-usuarios-suscriptor',
@@ -35,6 +36,8 @@ import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.ser
 export class UsuariosSuscriptorComponent implements OnInit {
 
     @Output() toggleSidebar = new EventEmitter<void>();
+    FormRegistro: PTLUsuarioModel = new PTLUsuarioModel()
+
     // Estado de la UI
     gradientConfig;
     hasFiltersSlot: boolean = false;
@@ -67,6 +70,14 @@ export class UsuariosSuscriptorComponent implements OnInit {
     usuarios: PTLUsuarioModel[] = [];
     stId: string = '';
     cargandoExcel: boolean = false;
+    mostrarModalPassword: boolean = false;
+    registroSeleccionado: string = ''
+
+    claveActual: string = '';
+    claveNueva: string = '';
+    confirmarClave: string = '';
+    usuarioSeleccionadoParaClave: any = null;
+
 
     //#endregion VARIABLES
 
@@ -76,13 +87,16 @@ export class UsuariosSuscriptorComponent implements OnInit {
         private cdr: ChangeDetectorRef,
         private translate: TranslateService,
         private _swalService: SwalAlertService,
+        private _authService: AuthenticationService,
         private _logActividadesService: PtllogActividadesService,
         private _usuariosService: PTLUsuariosService,
         private _usuariosSCService: PtlusuariosScService,
         private _suscriptoresService: PTLSuscriptoresService,
         private _navigationService: NavigationService,
+        private _utilidadesService: UtilidadesService,
         private _localStorageService: LocalStorageService,
         private _permisosService: PtlPermisosService,
+        private _emailService: EmailService,
         private _uploadService: UploadFilesService
     ) {
         this.gradientConfig = GradientConfig;
@@ -162,13 +176,10 @@ export class UsuariosSuscriptorComponent implements OnInit {
         this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
         let codigo = this.suscPlataforma;
 
-        // =========================================================================
-        // 1. STREAM TRANSFORMADO (Cruza Usuarios, UsuariosSC y Permisos)
-        // =========================================================================
         this.registrosTransformadas$ = combineLatest([
-            this._usuariosService.usuarios$,          // [0] Catálogo maestro de usuarios (PTLUsuarioModel[])
-            this._usuariosSCService.usuariosSC$,      // [1] Tabla puente de relación
-            this._permisosService.actividadesAutorizadas$ // [2] Permisos en tiempo real por socket
+            this._usuariosService.usuarios$,
+            this._usuariosSCService.usuariosSC$,
+            this._permisosService.actividadesAutorizadas$
         ]).pipe(
             map(([usuariosMaster, usuariosSC, permisos]: [PTLUsuarioModel[], any[], string[]]) => {
                 if (!usuariosMaster || usuariosMaster.length === 0 || !usuariosSC || usuariosSC.length === 0) return [];
@@ -176,20 +187,18 @@ export class UsuariosSuscriptorComponent implements OnInit {
                 this.usuarios = usuariosMaster;
                 this.usuariosSC = usuariosSC;
 
-                // Filtramos la tabla puente por el suscriptor actual
                 const relacionesDeEsteSuscriptor = usuariosSC.filter(x => x.codigoSuscriptor === this.stId);
 
-                // Mapeamos para retornar estrictamente PTLUsuarioModel[]
                 const transformedUsuarios: PTLUsuarioModel[] = relacionesDeEsteSuscriptor.map((relacionSC: any) => {
                     const user = usuariosMaster.find(u => u.codigoUsuario === relacionSC.codigoUsuario);
                     if (!user) return null;
 
-                    // 🟢 Solución: Casteamos a 'any' para asignarle propiedades visuales dinámicas
+                    const userSC = usuariosSC.find(u => u.codigoUsuario === relacionSC.codigoUsuario);
+
                     const newReg: any = { ...user };
 
-                    console.log('********usuario sc fila', newReg);
-
-
+                    newReg.codigoUsuarioSC = userSC.codigoUsuarioSC;
+                    newReg.codigoSuscriptor = userSC.codigoSuscriptor;
                     newReg.nomEstado = newReg.estadoUsuario ? 'Activo' : 'Inactivo';
                     newReg.avatarUsuario = this._uploadService.getFilePath(codigo, 'usuarios', newReg.fotoUsuario);
 
@@ -197,10 +206,9 @@ export class UsuariosSuscriptorComponent implements OnInit {
                     newReg.colorDinamico1 = newReg.estadoUsuario ? '#ff0000' : '#28a745';
                     newReg.tooltipDinamico1 = newReg.estadoUsuario ? 'Inactivar Usuario' : 'Activar Usuario';
 
-                    // Construcción dinámica de acciones basadas en permisos en tiempo real
                     const accionesPermitidas: any[] = [];
 
-                    if (permisos.includes('ACT_USUARIOS_INACTIVAR')) {
+                    if (permisos.includes('ACT_USUSC_INACTIVAR')) {
                         accionesPermitidas.push({
                             accion: 'INACTIVAR',
                             letra: 'I',
@@ -208,7 +216,7 @@ export class UsuariosSuscriptorComponent implements OnInit {
                             tooltip: this.translate.instant('USUARIOS.INACTIVAR')
                         });
                     }
-                    if (permisos.includes('ACT_USUARIOS_CAMBIAR')) {
+                    if (permisos.includes('ACT_USUSC_CAMBIAR')) {
                         accionesPermitidas.push({
                             accion: 'CAMBIAR',
                             letra: 'C',
@@ -216,7 +224,7 @@ export class UsuariosSuscriptorComponent implements OnInit {
                             tooltip: this.translate.instant('USUARIOS.CAMBIAR')
                         });
                     }
-                    if (permisos.includes('ACT_USUARIOS_RESETEAR')) {
+                    if (permisos.includes('ACT_USUSC_RESETEAR')) {
                         accionesPermitidas.push({
                             accion: 'RESETEAR',
                             letra: 'R',
@@ -224,7 +232,7 @@ export class UsuariosSuscriptorComponent implements OnInit {
                             tooltip: this.translate.instant('USUARIOS.RESERTEAR')
                         });
                     }
-                    if (permisos.includes('ACT_USUARIOS_ROLES')) {
+                    if (permisos.includes('ACT_USUSC_ROLES')) {
                         accionesPermitidas.push({
                             accion: 'ROLES',
                             letra: 'R',
@@ -239,13 +247,12 @@ export class UsuariosSuscriptorComponent implements OnInit {
                     } as PTLUsuarioModel;
 
                 }).filter((item): item is PTLUsuarioModel => item !== null);
-                console.log('*******USUARIOS SC', transformedUsuarios);
 
                 return transformedUsuarios;
             }),
             tap((regs) => {
                 this.registros = regs;
-                this.cdr.detectChanges(); // Repinta la UI en vivo al recibir eventos de sockets
+                this.cdr.detectChanges();
             }),
             catchError(err => {
                 console.error('Error en el stream de usuarios:', err);
@@ -253,9 +260,6 @@ export class UsuariosSuscriptorComponent implements OnInit {
             })
         );
 
-        // =========================================================================
-        // 2. STREAM DE FILTRADO VISUAL (Para los inputs del Datatable)
-        // =========================================================================
         this.registrosFiltrado$ = combineLatest([
             this.registrosTransformadas$.pipe(startWith([])),
             this.filtroIdentificacionSubject,
@@ -302,7 +306,6 @@ export class UsuariosSuscriptorComponent implements OnInit {
                         (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro)
                     );
                 }
-
                 return filteredRegistros;
             })
         );
@@ -324,7 +327,9 @@ export class UsuariosSuscriptorComponent implements OnInit {
     }
 
     OnNuevoRegistroClick() {
-        this.router.navigate(['suscriptor/gestion-usuario-suscriptor'], { queryParams: { regId: 'nuevo', stId: this.stId } });
+        this._localStorageService.setObject('regId', 'nuevo')
+        this._localStorageService.setObject('stId', this.stId)
+        this.router.navigate(['/suscriptor/gestion-usuario-suscriptor']);
     }
 
     onAccionPrincipal(evento: { accion: string, row: any }) {
@@ -333,73 +338,74 @@ export class UsuariosSuscriptorComponent implements OnInit {
 
         console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
 
-        // switch (accion) {
-        //     case 'INACTIVAR':
-        //         console.log('inactivar usuario codigo', id);
-        //         const usuario = this.usuarios.find(x => x.codigoUsuario === id);
-        //         if (!usuario) return;
-        //         this._swalService.getAlertQuestionRequest(
-        //             this.translate.instant('USUARIOS.INACTIVAR'),
-        //             this.translate.instant('USUARIOS.INACTIVARTITULO'),
-        //             this.translate.instant('USUARIOS.INACTIVARBTN'),
-        //             this.translate.instant('PLATAFORMA.CANCEL')
-        //         ).subscribe(result => {
-        //             if (result) {
-        //                 usuario.estadoUsuario = usuario.estadoUsuario == true ? false : true;
-        //                 console.log('usuario a inactivar', usuario);
-        //                 this._usuariosService.actualizarUsuario(usuario).subscribe({
-        //                     next: (resp: any) => {
-        //                         const logData = {
-        //                             codigoTipoLog: '',
-        //                             codigoRespuesta: '201',
-        //                             descripcionLog: this.translate.instant('USUARIOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
-        //                         }
-        //                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-        //                         this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR'));
-        //                         this.setupRegistrosStream()
-        //                     },
-        //                     error: (err: any) => {
-        //                         // const logData = {
-        //                         //     codigoTipoLog: '',
-        //                         //     codigoRespuesta: '201',
-        //                         //     descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje
-        //                         // }
-        //                         // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-        //                         this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje)
-        //                         // this.setupRegistrosStream()
-        //                         console.error('Error eliminando', err)
-        //                     }
-        //                 })
-        //             }
-        //         });
-        //         break;
-        //     case 'CAMBIAR':
-        //         const value = id;
-        //         console.log('opcion 1 click', value);
-        //         this.registroSeleccionado = id;
-        //         //this._prepararDatosDeRenovacion(event);
-        //         this.mostrarModalPassword = true;
-        //         this.FormRegistro = {}
-        //         this.usuarioSeleccionadoParaClave = this.usuarios.find(x => x.codigoUsuario === id);
-        //         this.claveActual = '';
-        //         this.claveNueva = '';
-        //         this.confirmarClave = '';
-        //         break;
-        //     case 'RESETEAR':
-        //         this.registroSeleccionado = id;
-        //         const nuevaClave = this._utilidadesService.generarClaveSegura();
-        //         console.log('La nueva clave generada es:', nuevaClave);
-        //         this.procesarCambioClave(id, nuevaClave);
-        //         break;
-        //     case 'ROLES':
-        //         console.log('Redirigirse a la pagina de roles:', id);
-        //         this._localStorageService.setObject('regId', id)
-        //         this.router.navigate(['usuarios/roles-usuario'])
-        //         break;
-        //     default:
-        //         console.warn(`Acción no reconocida: ${accion}`);
-        //         break;
-        // }
+        switch (accion) {
+            case 'INACTIVAR':
+                console.log('inactivar usuario codigo', id);
+                const usuario = this.usuarios.find(x => x.codigoUsuario === id);
+                if (!usuario) return;
+                this._swalService.getAlertQuestionRequest(
+                    this.translate.instant('USUARIOS.INACTIVAR'),
+                    this.translate.instant('USUARIOS.INACTIVARTITULO'),
+                    this.translate.instant('USUARIOS.INACTIVARBTN'),
+                    this.translate.instant('PLATAFORMA.CANCEL')
+                ).subscribe(result => {
+                    if (result) {
+                        usuario.estadoUsuario = usuario.estadoUsuario == true ? false : true;
+                        console.log('usuario a inactivar', usuario);
+                        this._usuariosService.actualizarUsuario(usuario).subscribe({
+                            next: (resp: any) => {
+                                const logData = {
+                                    codigoTipoLog: '',
+                                    codigoRespuesta: '201',
+                                    descripcionLog: this.translate.instant('USUARIOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                                }
+                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                                this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR'));
+                                this.setupRegistrosStream()
+                            },
+                            error: (err: any) => {
+                                const logData = {
+                                    codigoTipoLog: '',
+                                    codigoRespuesta: '201',
+                                    descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje
+                                }
+                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                                this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje)
+                                // this.setupRegistrosStream()
+                                console.error('Error eliminando', err)
+                            }
+                        })
+                    }
+                });
+                break;
+            case 'CAMBIAR':
+                const value = id;
+                console.log('opcion 1 click', value);
+                this.registroSeleccionado = id;
+                //this._prepararDatosDeRenovacion(event);
+                this.mostrarModalPassword = true;
+                this.FormRegistro = {}
+                this.usuarioSeleccionadoParaClave = this.usuarios.find(x => x.codigoUsuario === id);
+                this.claveActual = '';
+                this.claveNueva = '';
+                this.confirmarClave = '';
+                break;
+            case 'RESETEAR':
+                this.registroSeleccionado = id;
+                const nuevaClave = this._utilidadesService.generarClaveSegura();
+                console.log('La nueva clave generada es:', nuevaClave);
+                this.procesarCambioClave(id, nuevaClave);
+                break;
+            case 'ROLES':
+                console.log('Redirigirse a la pagina de roles:', id);
+                this._localStorageService.setObject('regId', id)
+                this._localStorageService.setObject('susId', this.stId)
+                this.router.navigate(['/suscriptor/usuarios-roles'])
+                break;
+            default:
+                console.warn(`Acción no reconocida: ${accion}`);
+                break;
+        }
     }
 
     onFileExcelSelected(event: any) {
@@ -452,28 +458,36 @@ export class UsuariosSuscriptorComponent implements OnInit {
         const extension = file.name.split('.').pop()?.toLowerCase();
         if (extension !== 'xlsx' && extension !== 'xls') {
             console.error('Por favor, selecciona un archivo de Excel válido.');
+            // Opcional: muestra una alerta con tu _swalService
             return;
         }
 
         this.cargandoExcel = true;
 
-        const usuarioLogueado = 'ADMIN_SISTEMA';
+        // Obtenemos el código del usuario logueado actualmente de forma dinámica
+        const usuarioLogueado = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || 'ADMIN_SISTEMA';
 
-        this._usuariosService.cargueMasivoExcel(file, usuarioLogueado).subscribe({
+        // Obtenemos también el código del suscriptor activo por si el Excel no lo trae explícitamente en cada fila
+        const codigoSuscriptorActual = this._localStorageService.getObject<string>('regId') || this.stId;
+
+        // Llamamos al servicio de usuariosSC pasándole el archivo, el suscriptor por defecto y el usuario creador
+        this._usuariosSCService.cargueMasivoExcel(file, codigoSuscriptorActual, usuarioLogueado).subscribe({
             next: (resp: any) => {
                 this.cargandoExcel = false;
 
-                console.log('✅ Éxito:', resp.msg);
+                console.log('✅ Éxito:', resp.msg || 'Cargue masivo completado.');
+
+                // Recargamos el stream para que el Datatable se actualice y pinte los usuarios nuevos en vivo
                 this.setupRegistrosStream();
             },
             error: (err: any) => {
                 this.cargandoExcel = false;
 
-                const mensajePrincipal = err.error?.msg || 'Error interno al procesar el archivo.';
+                const mensajePrincipal = err.error?.msg || 'Error interno al procesar el archivo de usuarios SC.';
                 console.error('❌ Error de cargue:', mensajePrincipal);
 
                 if (err.error?.errores) {
-                    console.warn('Detalle de validación de Joi:', err.error.errores);
+                    console.warn('Detalle de validación de Joi en filas:', err.error.errores);
                 }
             }
         });
@@ -484,12 +498,106 @@ export class UsuariosSuscriptorComponent implements OnInit {
     }
 
     OnEditarRegistroClick(event: any) {
+        console.log('event codigoUsuarioSC', event);
+
         const id = event.id || event;
-        this.router.navigate(['/suscriptor/gestion-usuario-suscriptor'], { queryParams: { regId: id } });
+        this._localStorageService.setObject('regId', id)
+        this._localStorageService.setObject('stId', this.stId)
+        this.router.navigate(['/suscriptor/gestion-usuario-suscriptor']);
     }
 
     OnEliminarRegistroClick(event: any) {
         console.log('Eliminar usuario:', event.id || event);
+    }
+
+    getCambiarClave(form: any) {
+
+        console.log(form);
+        const registroData = form.value
+        console.log('registroData', registroData);
+
+        if (!registroData.claveUsuario || !registroData.claveNew || !registroData.claveConfirm) {
+            console.warn('Todos los campos son obligatorios.');
+            return;
+        }
+
+        if (registroData.claveNew !== registroData.claveConfirm) {
+            console.warn('La confirmación no coincide con la nueva clave.');
+            return;
+        }
+
+        const username = this.usuarioSeleccionadoParaClave.userNameUsuario;
+        const correo = this.usuarioSeleccionadoParaClave.correoUsuario;
+
+        this._authService.verificarClaveActual(username, registroData.claveUsuario).subscribe({
+            next: (respValidacion) => {
+                const usuarioActualizado = {
+                    ...this.usuarioSeleccionadoParaClave,
+                    claveUsuario: registroData.claveNew
+                };
+
+                this._usuariosService.actualizarUsuarioClave(usuarioActualizado).subscribe({
+                    next: (respUpdate) => {
+                        console.log('✅ Cambio de clave exitoso', respUpdate);
+                        this.registroSeleccionado = '';
+                        this.mostrarModalPassword = false;
+
+                        this._emailService.enviarClaveUsuario(correo, registroData.claveNew).subscribe({
+                            next: (respEmail) => {
+                                console.log('📧 Correo enviado con éxito', respEmail);
+                            },
+                            error: (errEmail) => {
+                                console.error('❌ La clave se actualizó, pero falló el envío del correo', errEmail);
+                            }
+                        });
+
+                        this._swalService.getAlertConfirmSuccess(this.translate.instant('USUARIOS.USUARIOS.CAMBIOCLACESUCCESS'));
+                    },
+                    error: (errUpdate) => {
+                        console.error('❌ Error guardando la nueva clave', errUpdate);
+                    }
+                });
+
+            },
+            error: (errValidacion) => {
+                console.error('❌ La clave actual ingresada no es correcta', errValidacion);
+            }
+        });
+    }
+
+    procesarCambioClave(id: string, nuevaClave: string) {
+        const usuario = this.usuarios.find(x => x.codigoUsuario === id);
+        if (!usuario) {
+            console.error('Usuario no encontrado en la tabla');
+            return;
+        }
+
+        const correo = usuario.correoUsuario || 'german.valencia10@gmail.com';
+        const usuarioActualizado = { ...usuario, claveUsuario: nuevaClave };
+
+        this._usuariosService.actualizarUsuarioClave(usuarioActualizado).subscribe({
+            next: (respUpdate) => {
+                console.log('✅ Clave actualizada en BD correctamente', respUpdate);
+
+                this._emailService.enviarClaveUsuario(correo, nuevaClave).subscribe({
+                    next: (respEmail) => {
+                        console.log('📧 Correo enviado con éxito', respEmail);
+                    },
+                    error: (errEmail) => {
+                        console.error('❌ La clave se actualizó, pero falló el envío del correo', errEmail);
+                    }
+                });
+            },
+            error: (errUpdate) => {
+                console.error('❌ Error actualizando la clave en la base de datos', errUpdate);
+            }
+        });
+
+    }
+
+    cerrarModal() {
+        this.mostrarModalPassword = false;
+        //this.registroSeleccionado = null;
     }
 
     toggleNav(): void {

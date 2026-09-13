@@ -1,0 +1,44 @@
+<div class="card text-white h-100 w-100 mb-0 p-3 d-flex flex-column justify-content-between kpi-card-colored"
+    [style.--kpi-color]="colorHex">
+
+    <app-widget-header [titulo]="titulo" [icono]="icono" variante="kpi" [mostrarEnfoque]="true" [widgetId]="widgetId"
+        [data]="data">
+    </app-widget-header>
+
+    <ng-container *ngIf="!enModoEnfoque">
+
+        <ng-container *ngIf="cargando; else loadedContent">
+            <div class="my-auto">
+                <div class="skeleton-box skeleton-number mb-2"></div>
+            </div>
+            <div class="d-flex align-items-center mt-2">
+                <div class="skeleton-box skeleton-badge me-2"></div>
+                <div class="skeleton-box" style="width: 100px; height: 16px;"></div>
+            </div>
+        </ng-container>
+
+        <ng-template #loadedContent>
+            <div class="my-auto">
+                <h2 class="titulo-container display-4 fw-bold mb-0 animate__animated animate__fadeIn">
+                    {{ valor | number }}
+                </h2>
+            </div>
+            <div class="d-flex align-items-center text-muted mt-2 animate__animated animate__fadeIn">
+                <span class="badge text-white px-2 py-1 rounded me-2 d-flex align-items-center shadow-sm"
+                    [style.backgroundColor]="colorHex" style="font-size: 0.7rem;">
+                    <span class="spinner-grow spinner-grow-sm me-1" role="status"
+                        style="width: 0.5rem; height: 0.5rem;"></span>
+                    En vivo
+                </span>
+                <span class="opacity-75 text-truncate" style="font-size: 0.75rem;">
+                    Sincronizado con BD
+                </span>
+            </div>
+        </ng-template>
+
+    </ng-container>
+
+    <div *ngIf="enModoEnfoque" class="flex-grow-1 d-flex flex-column mt-3 overflow-auto">
+        <ng-content></ng-content>
+    </div>
+</div>

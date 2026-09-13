@@ -7,6 +7,7 @@ import { PTLPaqueteModel } from '../_helpers/models/PTLPaquete.model'
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model'
 import { LocalStorageService } from './local-storage.service'
 import { SocketService } from './sockets.service'
+import { SocketManagerService } from './socket-manager.service'
 
 const base_url = environment.apiUrl
 
@@ -19,15 +20,21 @@ export class PTLPaquetesService {
     private _paquetesChange = new Subject<any>()
     paquetesChange$ = this._paquetesChange.asObservable()
 
-    constructor(private http: HttpClient, private socketService: SocketService, private _localStorageService: LocalStorageService) {
-        this.socketService.listen('aplicaciones-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._paquetesChange.next(payload)
-                this.cargarRegistros().subscribe()
+    constructor(
+        private http: HttpClient,
+        private socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
+        console.log('******* Servicio de p0aquetes iniciado correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._paquetesChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     getRegistros() {

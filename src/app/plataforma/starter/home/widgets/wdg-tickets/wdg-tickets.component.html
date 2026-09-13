@@ -1,0 +1,31 @@
+<div class="card bg-transparent text-white h-100 w-100 mb-0 border-0 p-3 d-flex flex-column">
+
+    <!-- 🟢 Nuevo Header Centralizado -->
+    <app-widget-header titulo="Tickets de Soporte" icono="feather icon-life-buoy" [widgetId]="widgetId" [data]="data">
+    </app-widget-header>
+
+    <!-- 🟢 Contenido Central: Estadísticas de Tickets -->
+    <div class="flex-grow-1 d-flex align-items-center">
+        <div class="row text-center w-100 m-0">
+            <!-- Abiertos -->
+            <div class="col-4 border-end border-secondary">
+                <h2 class="text-danger m-0 fw-bold">{{ ticketsAbiertos }}</h2>
+                <small class="text-muted text-uppercase"
+                    style="font-size: 0.7rem; letter-spacing: 0.5px;">Abiertos</small>
+            </div>
+            <!-- Proceso -->
+            <div class="col-4 border-end border-secondary">
+                <h2 class="text-warning m-0 fw-bold">{{ ticketsEnProceso }}</h2>
+                <small class="text-muted text-uppercase"
+                    style="font-size: 0.7rem; letter-spacing: 0.5px;">Proceso</small>
+            </div>
+            <!-- Resueltos -->
+            <div class="col-4">
+                <h2 class="text-success m-0 fw-bold">{{ ticketsResueltos }}</h2>
+                <small class="text-muted text-uppercase"
+                    style="font-size: 0.7rem; letter-spacing: 0.5px;">Resueltos</small>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,91 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'WIDGETS.FILTROS.CODIGO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.CODIGO' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroCodigoChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'WIDGETS.FILTROS.CODIGOHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'WIDGETS.FILTROS.NOMBREHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.FILTROCOLUMNAS' | translate }}</small>
+                        <input type="number" (keyup)="onFiltroColumnasChangeClick($event)"
+                            class="form-control form-input"
+                            placeholder="{{ 'WIDGETS.FILTROS.COLUMNASHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.FILTROFILAS' | translate }}</small>
+                        <input type="number" (keyup)="onFiltroFilasChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'WIDGETS.FILTROS.FILASHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.FILTROPESTANA' | translate }}</small>
+                        <input type="number" (keyup)="onFiltroPestanaChangeClick($event)"
+                            class="form-control form-input"
+                            placeholder="{{ 'WIDGETS.FILTROS.PESTANAHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
+                            class="form-control form-input"
+                            placeholder="{{ 'WIDGETS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <ng-container *ngIf="widgetssFiltradas$ | async as dataFiltrada; else loading">
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoWidget'"
+                        [tableTitle]="'WIDGETS.TITLE' | translate" [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
+                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'WIDGETS.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaWidgetClick()"
+                        (editRecord)="OnEditarWidgetClick($event)" (deleteRecord)="OnEliminarWidgetClick($event)"
+                        (accionPrincipalClick)="onAccionPrincipal($event)">
+                    </app-table-data>
+                </ng-container>
+                <ng-template #loading>
+                    <app-data-loader [isLoading]="true" message="Cargando aplicaciones ..."> </app-data-loader>
+                </ng-template>
+
+                <!-- <h3>Importar Usuarios Masivos</h3>
+                <app-excel-uploader [apiUrl]="urlSubidaUsuarios" [columnsMap]="mapeoColumnasExcel"
+                    [extraData]="datosAdicionales">
+                </app-excel-uploader> -->
+            </div>
+        </div>
+    </div>
+</div>

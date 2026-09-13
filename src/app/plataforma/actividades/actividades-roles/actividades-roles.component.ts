@@ -15,7 +15,7 @@ import { PTLActividadRoleModel } from 'src/app/theme/shared/_helpers/models/PTLA
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
-import { LocalStorageService, NavigationService, PtlactividadesRolesService, PtlActividadesService, PtllogActividadesService, PTLRolesAPService, SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, NavigationService, PtlactividadesRolesService, PtlActividadesService, PtllogActividadesService, PTLRolesAPService, SocketManagerService, SwalAlertService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
 import { DataLoaderComponent } from "src/app/theme/shared/components/data-loader/data-loader.component";
@@ -34,11 +34,12 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
     moduloTituloExcel: string = ''
     codigoActividad: string = ''
     hasFiltersSlot: boolean = false
-    gradientConfig: any
+    gradientConfig: any = GradientConfig
     lang = localStorage.getItem('lang')
     menuItems$!: Observable<NavigationItem[]>
     activeTab: 'menu' | 'filters' | 'main' = 'menu'
 
+    socketSubscription = new Subscription()
     subscriptions = new Subscription()
     filtroCodigoActividadSubject = new BehaviorSubject<string>('todos')
     filtroCodigoRoleSubject = new BehaviorSubject<string>('todos')
@@ -50,8 +51,15 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
     actividades: PTLActividadModel[] = []
     roles: PTLRoleAPModel[] = []
 
-    colorOpcion1 = '#269740'
-    letraOpcion1 = 'R'
+    columnasAplicaciopnes: ColumnMetadata[] = [
+        { name: 'nomActividad', header: 'ACTIVIDADES.NOMMODULO', type: 'text' },
+        { name: 'nomRole', header: 'ACTIVIDADES.NOMSUITE', type: 'text' },
+        { name: 'nomEstado', header: 'ACTIVIDADES.NOMAPLICACION', type: 'estado' }
+    ]
+
+    columnasDetailRegistros: ColumnMetadata[] = [
+        { name: 'codigoActividadRole', header: 'ACTIVIDADES.CODIGOACTIVIDAD', type: 'text' }
+    ]
 
     constructor(
         private router: Router,
@@ -62,61 +70,62 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
         private _rolesService: PTLRolesAPService,
         private _logActividadesService: PtllogActividadesService,
         private _localStorageService: LocalStorageService,
+        private _socketManager: SocketManagerService,
         private _swalAlertService: SwalAlertService
     ) {
-        this.gradientConfig = GradientConfig
-        this.codigoActividad = this._localStorageService.getObject<string>('regId') || 'nuevo'
+        this.codigoActividad = this._localStorageService.getObject<string>('regId') || 'nuevo';
+
+        this.socketSubscription = this._socketManager.actividadesRolesActualizadas$.subscribe(() => {
+            console.log('Actualización detectada, refrescando tabla...');
+            this.setupActividadesRolesStream();
+        });
     }
 
     ngOnInit(): void {
         this._navigationService.getNavigationItems()
         this.menuItems$ = this._navigationService.menuItems$
         this.hasFiltersSlot = true
+
         this.actividades = this._actividadesService.getActividadesActuales();
-        this.actividadesRoles = this._actividadesRolesService.getActividadesRolesActuales();
-        this.roles = this._rolesService.getRolesActuales()
-        this.setupActividadesRolesStream()
+        this.roles = this._rolesService.getRolesActuales();
+
+        this.setupActividadesRolesStream();
+
         this.subscriptions.add(
-            this._actividadesRolesService.cargarRegistros().subscribe(
-                () => console.log('ActividadesRoles cargadas y guardadas en el servicio'),
-                err => console.error('Error al cargar ActividadesRoles:', err)
-            )
+            this._actividadesRolesService.cargarRegistros().subscribe()
         )
     }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe()
+        if (this.socketSubscription) {
+            this.socketSubscription.unsubscribe();
+        }
     }
 
     setupActividadesRolesStream(): void {
         this.actividadesRolesTransformadas$ = this._actividadesRolesService.actividadesRoles$.pipe(
             switchMap((actsRole: PTLActividadRoleModel[]) => {
                 if (!actsRole) return of([])
+
                 const filtradas = actsRole.filter(x => x.codigoActividad == this.codigoActividad);
+                this.actividadesRoles = filtradas; // Mantener copia limpia para búsquedas por ID
+
                 const transformedActs = filtradas.map((actRole: any) => {
-                    actRole.nomEstado = actRole.permiso ? 'Activo' : 'Inactivo'
-                    actRole.nomActividad = this.actividades.find(app => app.codigoActividad === actRole.codigoActividad)?.actividad || ''
-                    actRole.nomRole = this.roles.find(role => role.codigoRole === actRole.codigoRole)?.nombreRole || ''
-
-                    const estadoActividadRole = actRole.permiso ? 'I' : 'A';
-                    const colorActividadRole = actRole.permiso ? '#dc3545' : '#13af2d';
-                    const tooltipActividadRole = actRole.permiso ? this.translate.instant('ACTIVIDADESROLES.INACTIVAR') : this.translate.instant('ACTIVIDADESROLES.ACTIVAR');
-
+                    const isActivo = actRole.permiso;
                     return {
                         ...actRole,
-                        '_acciones': [
-                            {
-                                accion: 'ESTADO',
-                                letra: estadoActividadRole,
-                                color: colorActividadRole,
-                                tooltip: tooltipActividadRole
-                            }
-                        ],
+                        nomEstado: isActivo ? 'Activo' : 'Inactivo',
+                        nomActividad: this.actividades.find(app => app.codigoActividad === actRole.codigoActividad)?.actividad || '',
+                        nomRole: this.roles.find(role => role.codigoRole === actRole.codigoRole)?.nombreRole || '',
+                        '_acciones': [{
+                            accion: 'ESTADO',
+                            letra: isActivo ? 'I' : 'A',
+                            color: isActivo ? '#dc3545' : '#13af2d',
+                            tooltip: isActivo ? this.translate.instant('ACTIVIDADESROLES.INACTIVAR') : this.translate.instant('ACTIVIDADESROLES.ACTIVAR')
+                        }],
                     };
                 })
-
-                this.actividadesRoles = transformedActs;
-                console.log('*** actividades roles', this.actividadesRoles);
 
                 return of(transformedActs);
             }),
@@ -134,67 +143,28 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
         ]).pipe(
             map(([actsRole, codigoActividad, codigoRole, estado]) => {
                 let filteredActs = actsRole
-                if (codigoActividad !== 'todos') {
-                    filteredActs = filteredActs.filter(act => act.codigoActividad === codigoActividad)
-                }
-
-                if (codigoRole !== 'todos') {
-                    filteredActs = filteredActs.filter(act => act.codigoRole === codigoRole)
-                }
-
-                if (estado) {
-                    const estadoBoolean = estado === 'true'
-                    filteredActs = filteredActs.filter(act => act.permiso === estadoBoolean)
-                }
-
+                if (codigoActividad !== 'todos') filteredActs = filteredActs.filter(act => act.codigoActividad === codigoActividad)
+                if (codigoRole !== 'todos') filteredActs = filteredActs.filter(act => act.codigoRole === codigoRole)
+                if (estado) filteredActs = filteredActs.filter(act => act.permiso === (estado === 'true'))
                 return filteredActs
             })
         )
     }
 
     onFiltroCodigoActividadChangeClick(evento: any): void {
-        const value = evento.target.value
-        this.filtroCodigoActividadSubject.next(value)
+        this.filtroCodigoActividadSubject.next(evento.target.value)
     }
 
     onFiltroCodigoRoleChangeClick(evento: any): void {
-        const value = evento.target.value
-        this.filtroCodigoRoleSubject.next(value)
+        this.filtroCodigoRoleSubject.next(evento.target.value)
     }
-
-    columnasAplicaciopnes: ColumnMetadata[] = [
-        {
-            name: 'nomActividad',
-            header: 'ACTIVIDADES.NOMMODULO',
-            type: 'text'
-        },
-        {
-            name: 'nomRole',
-            header: 'ACTIVIDADES.NOMSUITE',
-            type: 'text'
-        },
-        {
-            name: 'nomEstado',
-            header: 'ACTIVIDADES.NOMAPLICACION',
-            type: 'estado'
-        }
-    ]
-
-    columnasDetailRegistros: ColumnMetadata[] = [
-        {
-            name: 'codigoActividadRole',
-            header: 'ACTIVIDADES.CODIGOACTIVIDAD',
-            type: 'text'
-        }
-    ]
 
     OnNuevoRegistroClick(): void {
         this._localStorageService.setObject('regId', this.codigoActividad)
         this.router.navigate(['actividades/gestion-actividad-roles'])
     }
 
-    OnEliminarRegistroClick(id: any): void {
-        console.log('id actividad role', id.id)
+    OnEliminarRegistroClick(idData: any): void {
         this._swalAlertService.getAlertQuestionRequest(
             this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
             this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
@@ -202,28 +172,16 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
             this.translate.instant('PLATAFORMA.CANCEL')
         ).subscribe(result => {
             if (result) {
-                this._actividadesRolesService.deleteEliminarRegistro(id.id).subscribe({
+                this._actividadesRolesService.deleteEliminarRegistro(idData.id).subscribe({
                     next: (resp: any) => {
-                        console.log('respuesta', resp);
                         if (resp.ok) {
-                            const logData = {
-                                codigoTipoLog: '',
-                                codigoRespuesta: '201',
-                                descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
-                            };
-                            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                            this.registrarLog('201', 'ACTIVIDADES.UPDATESUCCSESSFULLY');
                             this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
                         }
                     },
                     error: (err: any) => {
-                        console.error(err);
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
+                        this.registrarLog('501', 'ACTIVIDADES.UPDATEERROR');
+                        this._swalAlertService.getAlertError('No se pudo eliminar la Actividad');
                     }
                 });
             }
@@ -231,115 +189,55 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
     }
 
     onAccionPrincipal(evento: { accion: string, row: any }) {
-        const { accion, row } = evento;
-        const idRegistro = row.codigoActividadRole || row.id;
+        const idRegistro = evento.row.codigoActividadRole || evento.row.id;
 
-        console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, idRegistro);
+        if (evento.accion === 'ESTADO') {
+            this._swalAlertService.getAlertQuestionRequest(
+                this.translate.instant('ACTIVIDADES.REVOCARTEXTO'),
+                this.translate.instant('ACTIVIDADES.REVOCARTITULO'),
+                this.translate.instant('PLATAFORMA.DELETE'),
+                this.translate.instant('PLATAFORMA.CANCEL')
+            ).subscribe(result => {
+                if (result) {
+                    const actividad = this.actividadesRoles.find(x => x.codigoActividadRole == idRegistro);
+                    if (!actividad) return;
 
-        switch (accion) {
-            case 'ESTADO':
-                console.log('gestionar estado', idRegistro)
-                console.log('ejecutando opcion Regresar Actividades', idRegistro);
-                this._swalAlertService.getAlertQuestionRequest(
-                    this.translate.instant('ACTIVIDADES.REVOCARTEXTO'),
-                    this.translate.instant('ACTIVIDADES.REVOCARTITULO'),
-                    this.translate.instant('PLATAFORMA.DELETE'),
-                    this.translate.instant('PLATAFORMA.CANCEL')
-                ).subscribe(result => {
-                    if (result) {
-                        const actividad = this.actividadesRoles.filter(x => x.codigoActividadRole == idRegistro)[0];
-                        const actRole = {
-                            codigoActividadRole: actividad.codigoActividadRole,
-                            codigoActividad: actividad.codigoActividad,
-                            codigoRole: actividad.codigoRole,
-                            permiso: actividad.permiso ? false : true,
-                            codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
-                            fechaModificacion: new Date().toISOString()
-                        }
-                        console.log('inactivar actividad', actRole);
-                        this._actividadesRolesService.putModificarRegistro(actRole).subscribe({
-                            next: (resp: any) => {
-                                console.log('respuesta', resp);
-                                if (resp.ok) {
-                                    const logData = {
-                                        codigoTipoLog: '',
-                                        codigoRespuesta: '201',
-                                        descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
-                                    };
-                                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                    this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
-                                }
-                            },
-                            error: (err: any) => {
-                                console.error(err);
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '501',
-                                    descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
-                                };
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
-                            }
-                        });
+                    const actRole = {
+                        codigoActividadRole: actividad.codigoActividadRole,
+                        codigoActividad: actividad.codigoActividad,
+                        codigoRole: actividad.codigoRole,
+                        permiso: !actividad.permiso,
+                        codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || '',
+                        fechaModificacion: new Date().toISOString()
                     }
-                })
-                break;
 
-            default:
-                console.warn(`Acción no reconocida: ${accion}`);
-                break;
+                    this._actividadesRolesService.putModificarRegistro(actRole).subscribe({
+                        next: (resp: any) => {
+                            if (resp.ok) {
+                                this.registrarLog('201', 'ACTIVIDADES.UPDATESUCCSESSFULLY');
+                                this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+                            }
+                        },
+                        error: (err: any) => {
+                            this.registrarLog('501', 'ACTIVIDADES.UPDATEERROR');
+                            this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
+                        }
+                    });
+                }
+            })
         }
     }
 
-    OnOption1Click(event: any) {
-        console.log('ejecutando opcion Regresar Actividades', event);
-        this._swalAlertService.getAlertQuestionRequest(
-            this.translate.instant('ACTIVIDADES.REVOCARTEXTO'),
-            this.translate.instant('ACTIVIDADES.REVOCARTITULO'),
-            this.translate.instant('PLATAFORMA.DELETE'),
-            this.translate.instant('PLATAFORMA.CANCEL')
-        ).subscribe(result => {
-            if (result) {
-                const actividad = this.actividadesRoles.filter(x => x.codigoActividadRole == event)[0];
-                const actRole = {
-                    codigoActividadRole: actividad.codigoActividadRole,
-                    codigoActividad: actividad.codigoActividad,
-                    codigoRole: actividad.codigoRole,
-                    permiso: actividad.permiso ? false : true,
-                    codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
-                    fechaModificacion: new Date().toISOString()
-                }
-                console.log('inactivar actividad', actRole);
-                this._actividadesRolesService.putModificarRegistro(actRole).subscribe({
-                    next: (resp: any) => {
-                        console.log('respuesta', resp);
-                        if (resp.ok) {
-                            const logData = {
-                                codigoTipoLog: '',
-                                codigoRespuesta: '201',
-                                descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
-                            };
-                            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                            this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
-                        }
-                    },
-                    error: (err: any) => {
-                        console.error(err);
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
-                    }
-                });
-            }
-        })
+    private registrarLog(codigoRespuesta: string, descripcionTranslateKey: string) {
+        const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: codigoRespuesta,
+            descripcionLog: this.translate.instant(descripcionTranslateKey)
+        };
+        this._logActividadesService.postCrearRegistro(logData).subscribe();
     }
 
     OnRegresarClick(event: any) {
-        console.log('ejecutando opcion Regresar Actividades', event);
         this._localStorageService.removeObject('regId');
         this.router.navigate(['actividades/actividades'])
     }
@@ -348,5 +246,3 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
         this.toggleSidebar.emit()
     }
 }
-
-

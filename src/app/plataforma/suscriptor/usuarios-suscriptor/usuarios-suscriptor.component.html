@@ -49,11 +49,12 @@
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoUsuarioSC'"
-                        [tableTitle]="'USUARIOS.USUARIOS.TITLE' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showUploadButton]="true" [showDeleteButton]="false" [showSearchBox]="false"
-                        [showBackButton]="true" [newButtonLabel]="'USUARIOS.USUARIOS.NEW' | translate"
+                        [tableTitle]="'SUSCRIPTOR.USUARIOSSUSCRIPTOR.TITLE' | translate"
+                        [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
+                        [showEditButton]="true" [showUploadButton]="true" [showDeleteButton]="false"
+                        [showSearchBox]="false" [showBackButton]="true" permisoNew="ACT_USUSC_CREAR"
+                        [newButtonLabel]="'SUSCRIPTOR.USUARIOSSUSCRIPTOR.NEW' | translate"
                         [cargandoExcel]="cargandoExcel" (excelUpload)="procesarArchivoExcel($event)"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
@@ -65,6 +66,68 @@
                     <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
                 </ng-template>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- MODAL DE CAMBIO DE CLAVE (Controlado por *ngIf) procesarArchivoExcel($event) -->
+<!-- ========================================================================= -->
+<div class="modal fade" [ngClass]="{'show d-block': mostrarModalPassword}" tabindex="-1" *ngIf="mostrarModalPassword"
+    style="background-color: rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ 'USUARIOS.CAMBIOCLAVE.TITULO' | translate }}</h5>
+                <button type="button" class="btn-close btn-close-custom" aria-label="Close"
+                    (click)="cerrarModal()"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <form #validationForm="ngForm" class="editForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVEACTUAL' | translate
+                                    }}</label>
+                                <input type="password" class="form-control form-input" name="claveUsuario"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    #claveUsuario="ngModel" required [(ngModel)]="FormRegistro.claveUsuario" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEW' | translate }}</label>
+                                <input type="password" class="form-control form-input" name="claveNew"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEWHOLDER' | translate }}"
+                                    #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRM' | translate
+                                    }}</label>
+                                <input type="password" class="form-control form-input" name="claveConfirm"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRMHOLDER' | translate }}"
+                                    #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModal()">
+                    {{ 'PLATAFORMA.CANCELAR' | translate }}
+                </button>
+                <button type="button" class="btn btn-primary btn-NuevoRegistro"
+                    (click)="getCambiarClave(validationForm)">
+                    {{ 'PLATAFORMA.GUARDAR' | translate }}
+                </button>
+            </div>
+
         </div>
     </div>
 </div>

@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
 import { LocalStorageService } from './local-storage.service'
+import { SocketManagerService } from './socket-manager.service'
 
 const base_url = environment.apiUrl
 
@@ -19,15 +20,21 @@ export class PtlformatosGaleriaService {
     private _formatosGaleriaChange = new Subject<any>()
     formatosGaleriaChange$ = this._formatosGaleriaChange.asObservable()
 
-    constructor(private http: HttpClient, private socketService: SocketService, private _localstorageService: LocalStorageService) {
-        this.socketService.listen('formatos-formatosGaleria-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._formatosGaleriaChange.next(payload)
-                this.cargarFormatosGaleria().subscribe()
+    constructor(
+        private http: HttpClient,
+        private socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
+        console.log('******* Servicio de formatos de galeria correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._formatosGaleriaChange.next(payload);
+                this.cargarFormatosGaleria().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get formatosGaleria$(): Observable<PTLFormatoGaleria[]> {

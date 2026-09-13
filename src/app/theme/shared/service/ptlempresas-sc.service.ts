@@ -8,6 +8,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model'
 import { LocalStorageService } from './local-storage.service'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
+import { SocketManagerService } from './socket-manager.service'
 
 const base_url = environment.apiUrl
 
@@ -20,16 +21,21 @@ export class PtlEmpresasScService {
     private _registrosChange = new Subject<any>()
     registrosChange$ = this._registrosChange.asObservable()
 
-    constructor(private http: HttpClient, private _socketService: SocketService, private _localStorageService: LocalStorageService) {
-        console.log('******* Servicio de empresasSC iniciado correctamente')
-        this._socketService.listen('empresas-sc-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._registrosChange.next(payload)
-                this.cargarRegistros().subscribe()
+    constructor(
+        private http: HttpClient,
+        private _socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
+        console.log('******* Servicio de empresas suscriptor correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._registrosChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get empresasSC$(): Observable<PTLEmpresaSCModel[]> {

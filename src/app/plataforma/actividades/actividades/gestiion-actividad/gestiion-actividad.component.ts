@@ -105,7 +105,6 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
 
                     this.FormRegistro = resp.actividad;
                     this.suitesFiltro = this.suites.filter(x => x.codigoAplicacion == resp.actividad.codigoAplicacion)
-                    this.modulosPadre = this.modulos.filter(x => x.codigoPadre != '0')
                     this.modulosFiltro = this.modulosPadre.filter(x => x.codigoSuite == resp.actividad.codigoSuite)
 
                     this.codeActividad = resp.actividad.codigoActividad;
@@ -124,6 +123,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
         this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
         this.suites = this._suitesService.getSuitesActuales();
         this.modulos = this._modulosService.getModulosActuales();
+        this.modulosPadre = this.modulos.filter(x => x.codigoPadre == '0');
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
                 this._localStorageService.setFormRegistro(this.FormRegistro);

@@ -113,7 +113,7 @@
                                     (change)="onModuloChangeClick($event)">
                                     <option value="">{{ 'ACTIVIDADES.GESTION.PLACEHOLDERMODULO' | translate }}
                                     </option>
-                                    <option [value]="mod.codigoModulo" *ngFor="let mod of modulosFiltro">
+                                    <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre">
                                         {{ mod.nombreModulo }}</option>
                                 </select>
                                 <label

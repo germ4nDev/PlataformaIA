@@ -62,6 +62,8 @@ export class RolesUsuariosComponent implements OnInit {
     activeTab: 'menu' | 'filters' | 'main' = 'menu'
     tituloPagina: string = ''
     codigoUsuario: string = ''
+    codigoSuscriptor: string = ''
+    fuente: string = ''
 
     subscriptions = new Subscription()
     filtroCodigoRoleSubject = new BehaviorSubject<string>('todos')
@@ -98,6 +100,8 @@ export class RolesUsuariosComponent implements OnInit {
     ) {
         this.gradientConfig = GradientConfig
         this.codigoUsuario = this._localStorageService.getObject<string>('regId') || '';
+        this.codigoSuscriptor = this._localStorageService.getObject<string>('susId') || '';
+        this.fuente = this._localStorageService.getObject<string>('fueId') || ''
     }
 
     ngOnInit() {
@@ -294,12 +298,19 @@ export class RolesUsuariosComponent implements OnInit {
 
     OnNuevoRegistroClick() {
         this._localStorageService.setObject('regId', this.codigoUsuario);
+        this._localStorageService.setObject('susId', this.codigoSuscriptor);
         this.router.navigate(['usuarios/gestion-roles-usuario'])
     }
 
     OnRegresarClick(id: any) {
-        this._localStorageService.removeObject('regId');
-        this.router.navigate(['usuarios/usuarios'])
+        if (this.fuente == 'us') {
+            this._localStorageService.removeObject('regId');
+            this.router.navigate(['usuarios/usuarios'])
+        } else if (this.fuente == 'sc') {
+            this._localStorageService.setObject('regId', this.codigoSuscriptor)
+            this._localStorageService.setObject('fueId', 'sc')
+            this.router.navigate(['/suscriptor/usuarios-suscriptor']);
+        }
     }
 
     onAccionPrincipal(evento: { accion: string, row: any }) {

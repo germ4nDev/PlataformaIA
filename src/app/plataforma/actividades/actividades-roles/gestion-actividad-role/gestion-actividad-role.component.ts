@@ -98,8 +98,6 @@ export class GestiionActividadRoleComponent implements OnInit, OnDestroy {
             },
             error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
         });
-
-        //console.log('Inicial formregistro', this.FormRegistro);
     }
 
     ngOnDestroy(): void {
@@ -132,49 +130,16 @@ export class GestiionActividadRoleComponent implements OnInit, OnDestroy {
         console.log('✅ Roles procesados para los checkboxes:', this.rolesConCheck);
     }
 
-    // btnGestionarActividadClick() {
-    //     console.log('gestionar roles', this.actividadesRolesGestion);
-    //     this._actividadesRolesService.postCrearBulkRegistro(this.codeActividad, this.actividadesRolesGestion).subscribe({
-    //         next: (resp: any) => {
-    //             console.log('resp', resp);
-    //             if (resp.ok) {
-    //                 // const logData = {
-    //                 //     codigoTipoLog: '',
-    //                 //     codigoRespuesta: '201',
-    //                 //     descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA')
-    //                 // };
-    //                 // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-    //                 this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.CREATESUCCESSFULLY'));
-    //                 this.router.navigate(['/actividades/actividades-roles']);
-    //             }
-    //         },
-    //         error: (err: any) => {
-    //             console.error(err);
-    //             // const logData = {
-    //             //     codigoTipoLog: '',
-    //             //     codigoRespuesta: '500',
-    //             //     descripcionLog: this.translate.instant('ACTIVIDADES.CREATEERROR')
-    //             // };
-    //             // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-    //             this._swalAlertService.getAlertError('No se pudo crear la Actividad');
-    //         }
-    //     });
-    //     // }
-    // }
     btnGestionarActividadClick() {
-        // 1. Filtramos en tiempo real la lista principal para saber cuáles están marcados AHORA
         const rolesSeleccionados = this.rolesConCheck.filter(rol => rol.checked === true);
 
-        // 2. Mapeamos esos roles al formato exacto que tu Backend (ActividadRoleDTO) está esperando
         const payloadSincronizacion = rolesSeleccionados.map(rol => {
             return {
-                // Asegúrate de usar tu método para generar UUIDs o enviar un string vacío si lo genera el backend
                 codigoActividadRole: crypto.randomUUID(),
                 codigoActividad: this.actividad.codigoActividad,
                 codigoRole: rol.codigoRole,
-                permiso: true, // Como pasaron el filtro de checked === true, todos llevan permiso true
+                permiso: true,
 
-                // Reemplaza esto con tu variable global de usuario autenticado
                 codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
                 fechaCreacion: new Date().toISOString()
             };
@@ -182,7 +147,6 @@ export class GestiionActividadRoleComponent implements OnInit, OnDestroy {
 
         console.log('📦 Payload a enviar al backend:', payloadSincronizacion);
 
-        // 3. Consumimos el endpoint de Sincronización que creamos en Node.js
         this._actividadesRolesService.postCrearBulkRegistro(this.codeActividad, payloadSincronizacion)
             .subscribe({
                 next: (resp) => {

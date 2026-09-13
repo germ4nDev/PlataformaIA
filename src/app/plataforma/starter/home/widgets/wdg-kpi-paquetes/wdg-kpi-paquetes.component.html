@@ -1,0 +1,15 @@
+<app-kpi-shell class="titulo-container" titulo="TOTAL PAQUETES" icono="feather icon-package" colorHex="#198754"
+    [valor]="total" [cargando]="isLoading" [widgetId]="widgetId" [data]="data">
+
+    <p class="subtitulo-container">Distribución de paquetes activos.</p>
+    <div class="d-flex flex-column gap-2">
+        <div class="d-flex justify-content-between text-white p-2 rounded">
+            <span class="texto-panel">Paquete Básico</span>
+            <span class="fw-bold text-success">0 Activos</span>
+        </div>
+        <div class="d-flex justify-content-between text-white p-2 rounded">
+            <span class="texto-panel">Paquete Premium</span>
+            <span class="fw-bold text-success">{{ total }} Activos</span>
+        </div>
+    </div>
+</app-kpi-shell>

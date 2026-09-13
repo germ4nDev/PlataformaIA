@@ -13,6 +13,7 @@ import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model'
 import { v4 as uuidv4 } from 'uuid'
 import { PtlusuariosScService } from './ptlusuarios-sc.service'
 import { PTLUsuarioRoleAPModel } from '../_helpers/models/PTLUsuarioRole.model'
+import { SocketManagerService } from './socket-manager.service'
 const base_url = environment.apiUrl
 
 @Injectable({
@@ -30,18 +31,19 @@ export class PTLUsuariosService {
         private _localStorageService: LocalStorageService,
         private _usuairosRolesService: PtlusuariosRolesApService,
         private _usuairosSCService: PtlusuariosScService,
+        private _socketManager: SocketManagerService,
         private _uploadService: UploadFilesService
     ) {
         console.log('******* Servicio de usuarios iniciado correctamente')
         this.usuario = this._localStorageService.getUsuarioLocalStorage()
-        this.socketService.listen('usuarios-actualizados').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._registrosChange.next(payload)
-                this.cargarRegistros().subscribe() // Esto actualiza el BehaviorSubject
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._registrosChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get usuarios$(): Observable<PTLUsuarioModel[]> {

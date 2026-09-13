@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
 import { LocalStorageService } from './local-storage.service'
 import { environment } from 'src/environments/environment'
+import { SocketManagerService } from './socket-manager.service'
 const base_url = environment.apiUrl
 
 @Injectable({
@@ -18,15 +19,21 @@ export class PtlAplicacionesService {
     private _aplicacionesChange = new Subject<any>()
     aplicacionesChange$ = this._aplicacionesChange.asObservable()
 
-    constructor(private http: HttpClient, private socketService: SocketService, private _localstorageService: LocalStorageService) {
-        this.socketService.listen('aplicaciones-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._aplicacionesChange.next(payload)
-                this.cargarAplicaciones().subscribe()
+    constructor(
+        private http: HttpClient,
+        private socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
+        console.log('******* Servicio de aplicaciones correctamente')
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._aplicacionesChange.next(payload);
+                this.cargarAplicaciones().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get aplicaciones$(): Observable<PTLAplicacionModel[]> {

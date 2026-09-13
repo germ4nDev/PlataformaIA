@@ -8,6 +8,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model'
 import { LocalStorageService } from './local-storage.service'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
+import { SocketManagerService } from './socket-manager.service'
 
 const base_url = environment.apiUrl
 
@@ -20,16 +21,21 @@ export class PtlusuariosScService {
     private _usuariosSCChange = new Subject<any>()
     usuariosSCChange$ = this._usuariosSCChange.asObservable()
 
-    constructor(private http: HttpClient, private _socketService: SocketService, private _localStorageService: LocalStorageService) {
+    constructor(
+        private http: HttpClient,
+        private _socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
         console.log('******* Servicio de usuariosSC iniciado correctamente')
-        this._socketService.listen('usuarios-roles-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._usuariosSCChange.next(payload)
-                this.cargarRegistros().subscribe()
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._usuariosSCChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get usuariosSC$(): Observable<PTLUsuarioSCModel[]> {
@@ -66,13 +72,13 @@ export class PtlusuariosScService {
     }
 
     getUsuariosByCode(code: string) {
-        const url = `${base_url}/usuarios-sc/code/${code}`
+        const url = `${base_url}/usuarios-sc/${code}`
         return this.http.get(url).pipe(
             map((resp: any) => {
                 console.log('data del usuario', resp)
                 return {
                     ok: true,
-                    usuariosSC: resp.usuariosSC
+                    usuarioSC: resp.usuarioSC
                 }
             })
         )
@@ -89,6 +95,20 @@ export class PtlusuariosScService {
                 };
             })
         );
+    }
+
+    cargueMasivoExcel(file: File, codigoSuscriptor: string, usuarioCreador: string): Observable<any> {
+        const formData = new FormData();
+
+        // Adjuntamos el archivo físico
+        formData.append('file', file, file.name);
+
+        // Adjuntamos los metadatos necesarios para que el backend sepa a qué suscriptor asociarlos
+        formData.append('codigoSuscriptor', codigoSuscriptor);
+        formData.append('usuarioCreador', usuarioCreador);
+
+        // Hacemos la petición POST al endpoint del backend
+        return this.http.post<any>(`${base_url}/usuarios-sc/cargue-masivo`, formData);
     }
 
     postCrearUsuario(data: PTLUsuarioSCModel) {

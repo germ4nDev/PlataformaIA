@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
-import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesticket.service';
+import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclases-ticket.service';
 
 
 @Component({

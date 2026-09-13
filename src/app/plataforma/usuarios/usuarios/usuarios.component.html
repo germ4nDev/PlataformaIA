@@ -69,8 +69,9 @@
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         [showUploadButton]="true" [showDeleteButton]="false" [showSearchBox]="false"
-                        [newButtonLabel]="'USUARIOS.USUARIOS.NEW' | translate" [cargandoExcel]="cargandoExcel"
-                        (excelUpload)="procesarArchivoExcel($event)" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        [newButtonLabel]="'USUARIOS.USUARIOS.NEW' | translate" [showUploadButton]="false"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [showUploadModalButton]="true"
+                        [uploadModalLabel]="'Cargar Excel' | translate" (uploadModalClick)="abrirModalCargueMasivo()"
                         (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                         (deleteRecord)="OnEliminarRegistroClick($event)"
                         (accionPrincipalClick)="onAccionPrincipal($event)">
@@ -85,7 +86,7 @@
 </div>
 
 <!-- ========================================================================= -->
-<!-- MODAL DE CAMBIO DE CLAVE (Controlado por *ngIf) -->
+<!-- MODAL DE CAMBIO DE CLAVE (Controlado por *ngIf) procesarArchivoExcel($event) -->
 <!-- ========================================================================= -->
 <div class="modal fade" [ngClass]="{'show d-block': mostrarModalPassword}" tabindex="-1" *ngIf="mostrarModalPassword"
     style="background-color: rgba(0,0,0,0.6);">
@@ -138,6 +139,88 @@
                 </button>
                 <button type="button" class="btn btn-primary btn-NuevoRegistro"
                     (click)="getCambiarClave(validationForm)">
+                    {{ 'PLATAFORMA.GUARDAR' | translate }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" [ngClass]="{'show d-block': mostrarModalCargueMasivo}" tabindex="-1"
+    *ngIf="mostrarModalCargueMasivo" style="background-color: rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ 'USUARIOS.CARGUEMASIVO.TITULO' | translate }}</h5>
+                <button type="button" class="btn-close btn-close-custom" aria-label="Close"
+                    (click)="cerrarModalCargueMasivo()"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <form #cargueForm="ngForm" class="editForm" novalidate>
+                    <div class="row">
+                        <!-- Combo de Suscriptores -->
+                        <div class="col-md-12 mb-3">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.CARGUEMASIVO.SUSCRIPTOR' | translate }}</label>
+                                <select class="form-control form-input" name="codigoSuscriptor"
+                                    #codigoSuscriptor="ngModel" required [(ngModel)]="suscriptorSeleccionadoParaCargue">
+                                    <option value="" disabled selected>{{ 'USUARIOS.CARGUEMASIVO.SUSCRIPTORHOLDER' |
+                                        translate }}</option>
+                                    <option *ngFor="let susc of suscriptores" [value]="susc.codigoSuscriptor">
+                                        {{ susc.nombreSuscriptor }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Selector de Archivo Excel -->
+                        <div class="col-md-12 mb-3">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.CARGUEMASIVO.ARCHIVOLABEL' | translate }}</label>
+
+                                <!-- Contenedor Flex para alinear el botón y el nombre del archivo -->
+                                <div class="d-flex align-items-center">
+
+                                    <!-- 1. El Input Oculto -->
+                                    <input type="file" #fileInputModal style="display: none;" accept=".xlsx, .xls"
+                                        (change)="onFileSelected($event)" required />
+
+                                    <!-- 2. El Botón Estilizado -->
+                                    <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                        (click)="fileInputModal.click()">
+                                        Seleccionar Archivo
+                                    </button>
+
+                                    <!-- 3. Indicador Visual del Archivo Seleccionado -->
+                                    <span class="ms-3 text-light" *ngIf="archivoExcelSeleccionado">
+                                        📄 {{ archivoExcelSeleccionado.name }}
+                                    </span>
+                                    <span class="ms-3 text-muted" *ngIf="!archivoExcelSeleccionado">
+                                        No se ha seleccionado archivo
+                                    </span>
+
+                                </div>
+
+                                <small class="text-muted mt-2 d-block">
+                                    {{ 'USUARIOS.CARGUEMASIVO.ARCHIVOHOLDER' | translate }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModalCargueMasivo()">
+                    {{ 'PLATAFORMA.CANCELAR' | translate }}
+                </button>
+                <button type="button" class="btn btn-primary btn-NuevoRegistro"
+                    [disabled]="cargandoCargueMasivo || !suscriptorSeleccionadoParaCargue || !archivoExcelSeleccionado"
+                    (click)="ejecutarCargueMasivo()">
+                    <span *ngIf="cargandoCargueMasivo" class="spinner-border spinner-border-sm me-1"></span>
                     {{ 'PLATAFORMA.GUARDAR' | translate }}
                 </button>
             </div>

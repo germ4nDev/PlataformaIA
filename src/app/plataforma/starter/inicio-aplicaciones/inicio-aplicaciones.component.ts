@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router'
 import { Router, ActivatedRoute } from '@angular/router'
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap'
 import { ColorPickerModule } from 'ngx-color-picker';
-import { PtlAplicacionesService, UploadFilesService, UtilidadesService } from 'src/app/theme/shared/service';
+import { PtlAplicacionesService, PTLRolesAPService, PtlusuariosRolesApService, PtlusuariosScService, UploadFilesService, UtilidadesService } from 'src/app/theme/shared/service';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
@@ -22,6 +22,8 @@ import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModulo
 import { PtlmodulosApService } from '../../../theme/shared/service/ptlmodulos-ap.service';
 import { Subscription } from 'rxjs';
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service'
+import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
+import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
 
 const base_url = environment.apiUrl
 
@@ -54,6 +56,11 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private _aplicacionesService: PtlAplicacionesService,
         private _modulosService: PtlmodulosApService,
+        private _rolesService: PTLRolesAPService,
+        private _usuariosRolesService: PtlusuariosRolesApService,
+        private _usuariosSCRolesService: PtlusuariosScService,
+        private _widgetsMaestroService: PTLWidgetsMaestroService,
+        private _widgetsRolesService: PtlWidgetsRolesService,
         private _permisosService: PtlPermisosService,
         private _localStorageService: LocalStorageService,
         private _uploadService: UploadFilesService
@@ -75,6 +82,9 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         let aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
         this.ModulosPQ = modulosPaquete
         this.modulos = this._modulosService.getModulosActuales()
+        this.roles = this._rolesService.getRolesActuales()
+        this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales()
+        this.usuariosSC = this._usuariosSCRolesService.getUsuariosSCActuales()
         let apps: any[] = [];
         modulosPaquete.forEach((item: any) => {
             if (item.codigoAplicacion) {
@@ -104,39 +114,79 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     }
 
     ingresarPlataforma(app: PTLAplicacionModel) {
+        const current = this._localStorageService.getCurrentUserLocalStorage();
         const apps = this._localStorageService.getObject<any>('aplicaciones');
         const suscriptor = this._localStorageService.getObject<any>('suscriptor');
         const aplicaciones = this._localStorageService.getObject<any>('aplicaciones');
-        const appSeleccionada = apps.find((x: { codigoAplicacion: string | undefined }) => x.codigoAplicacion == app.codigoAplicacion)
+
+        const appSeleccionada = apps.find((x: { codigoAplicacion: string | undefined }) => x.codigoAplicacion == app.codigoAplicacion);
         console.log('aplicacion seleccionada', appSeleccionada);
 
-        const current = this._localStorageService.getCurrentUserLocalStorage();
+        const usuSC = this.usuariosSC.find((x: any) => x.codigoUsuario == current.usuario.codigoUsuario);
+        const rolesApp = this.roles.filter((x: any) => x.codigoAplicacion == appSeleccionada.codigoAplicacion);
+        const usuarioRoles = this.usuariosRoles.filter((x: any) => x.codigoUsuarioSC == usuSC?.codigoUsuarioSC);
+
+        // 🟢 1. Inicializamos el mapa para los widgets permitidos de ESTA aplicación
+        const widgetsPermitidosGlobales = new Map();
+
+        // 🟢 2. Traemos los catálogos desde los BehaviorSubjects (Asegúrate de inyectar estos servicios en el constructor)
+        const listaWidgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
+        const listaWidgetsRoles = this._widgetsRolesService.getActividadesRolesActuales() || [];
+
+        usuarioRoles.forEach((usuRole: any) => {
+            const role = rolesApp.find((x: any) => x.codigoRole == usuRole.codigoRole);
+            usuRole.role = role;
+
+            if (role) {
+                // 🟢 3. Buscamos qué widgets tiene asignados este rol
+                const asignacionesDeEsteRol = listaWidgetsRoles.filter((wr: any) =>
+                    wr.codigoRol === role.codigoRole && wr.estadoRelacion === true
+                );
+
+                // 🟢 4. Agregamos la metadata del widget al mapa (el Map evita duplicados si tiene varios roles)
+                asignacionesDeEsteRol.forEach((asignacion: any) => {
+                    const widgetMaestro = listaWidgetsMaestros.find((w: any) => w.codigoWidget === asignacion.codigoWidget);
+                    if (widgetMaestro) {
+                        widgetsPermitidosGlobales.set(widgetMaestro.codigoWidget, widgetMaestro);
+                    }
+                });
+            }
+        });
+
+        current.usuario.roles = usuarioRoles;
+
+        // 🟢 5. Guardamos la lista de widgets específica para esta App en la sesión
+        current.usuario.widgetsPermitidos = Array.from(widgetsPermitidosGlobales.values());
+
+        this._localStorageService.setCurrentUserLocalStorage(current);
+
+        const contexto = {
+            codigoEmpresaSC: current?.usuariosSC?.[0]?.suscriptores?.[0]?.empresasAsignadas?.[0]?.codigoEmpresaSC || '',
+            codigoUsuarioSC: current?.usuariosSC?.[0]?.codigoUsuarioSC || ''
+        };
+
+        const navsettings = {
+            aplicacion: appSeleccionada,
+            suite: {},
+            modulo: {},
+            contexto: contexto,
+            suscriptor: suscriptor,
+            aplicaciones: aplicaciones
+        };
+        this._localStorageService.setNavSettingsLocalStorage(navsettings);
 
         this._permisosService.inicializarPermisosPorDefecto().subscribe({
             next: (permisos) => {
-                console.log('✅ Motor de permisos encendido. Navegando a la app...', permisos);
-                const contexto = {
-                    codigoEmpresaSC: current.usuariosSC[0].suscriptores[0].empresasAsignadas[0]?.codigoEmpresaSC,
-                    codigoUsuarioSC: current.usuariosSC[0]?.codigoUsuarioSC
-                };
+                console.log('✅ Motor de permisos encendido y sockets activos. Navegando a la app...', permisos);
 
-                this._localStorageService.removeObject('suscriptor')
-                this._localStorageService.removeObject('contexto')
-                this._localStorageService.removeObject('aplicaciones')
+                this._localStorageService.removeObject('suscriptor');
+                this._localStorageService.removeObject('contexto');
+                this._localStorageService.removeObject('aplicaciones');
 
-                const navsettings = {
-                    aplicacion: appSeleccionada,
-                    suite: {},
-                    modulo: {},
-                    contexto: contexto,
-                    suscriptor: suscriptor,
-                    aplicaciones: aplicaciones
-                }
-                this._localStorageService.setNavSettingsLocalStorage(navsettings);
                 this.router.navigate([`/starter/inicio-suites`]);
             },
             error: (err) => {
-                console.error('Error inicializando permisos', err);
+                console.error('❌ Error inicializando permisos', err);
             }
         });
     }

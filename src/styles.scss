@@ -66,7 +66,7 @@
 :root {
     --background-color: #f8f9fa;
     --text-color: #212529;
-    --text-subtitle-color: #464e57;
+    --text-subtitle-color: #6e6e6e;
     --text-selected-color: #dadada;
     --border-color: #cecdcd;
     --header-color: #f5f5f5;
@@ -115,12 +115,16 @@
     --widget-subtitle: #464e57;
     --navbar-height: 100px;
     --map-icon-filter: invert(0) brightness(1);
+
+    --widget-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --widget-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.10);
+    --widget-border-hover: rgba(148, 163, 184, 0.4);
 }
 
 body.dark-theme {
     --background-color: #202325;
     --text-color: #b4b4b4;
-    --text-subtitle-color: #a7a7a7;
+    --text-subtitle-color: #666666;
     --text-selected-color: #444444;
     --border-color: #474747;
     --header-color: #292828;
@@ -166,6 +170,10 @@ body.dark-theme {
     --widget-border: #474747;
     --widget-subtitle: #9c9c9c;
     --map-icon-filter: invert(0.8) brightness(1);
+
+    --widget-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --widget-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(255, 255, 255, 0.08);
+    --widget-border-hover: rgba(255, 255, 255, 0.2);
 }
 
 body.gradient-dark {
@@ -291,6 +299,25 @@ html {
         &:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+    }
+}
+
+.tabla-custom-scroll {
+    max-height: 600px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-track-color);
+        border-radius: 8px;
     }
 }
 
@@ -748,6 +775,14 @@ td {
 .filtros-title,
 .datatable-title {
     color: var(--text-color) !important;
+}
+
+.datatable-subtitle {
+    color: var(--text-subtitle-color);
+    font-size: 0.875rem;
+    font-weight: 400;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
 }
 
 table.dataTable.row-border tbody tr th,
@@ -1409,5 +1444,39 @@ body.dark-theme {
 
     .ql-editor::before {
         color: var(--text-color) !important;
+    }
+}
+
+.btn-enfoque {
+    background-color: rgba(255, 255, 255, 0.04);
+    /* Fondo oscuro sutil */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Borde apenas visible */
+    border-radius: 8px;
+    /* Curvatura exacta de la captura */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8b9bb4;
+    /* Tono azul/grisáceo del ícono en Porttos */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    padding: 0;
+
+    /* Evita que el botón se encoja si el título es muy largo */
+    flex-shrink: 0;
+    margin-left: 10px;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    i {
+        font-size: 14px;
+        /* Si usas Phosphor icons en lugar de Feather, asegúrate de que el peso del ícono coincida */
     }
 }

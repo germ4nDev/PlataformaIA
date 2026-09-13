@@ -10,14 +10,34 @@ import { Socket } from 'ngx-socket-io';
     providedIn: 'root'
 })
 export class SocketService {
-    // Estado reactivo para que el Dashboard pueda mostrar un indicador de "Online/Offline"
     private connectedSubject = new BehaviorSubject<boolean>(false);
     public connected$ = this.connectedSubject.asObservable();
 
     constructor(private socket: Socket) {
         console.log('🔌 SocketService inicializado.');
+        this.inicializarConexion();
+    }
 
-        // 🟢 AJUSTE: Usar fromEvent().subscribe() nativo de ngx-socket-io
+    private inicializarConexion() {
+        const codigoUsuario = this.obtenerCodigoUsuarioGuardado();
+
+        if (codigoUsuario) {
+            // Si hay usuario, configuramos la autenticación antes de conectar
+            const ioSocket = (this.socket as any).ioSocket;
+            if (ioSocket) {
+                ioSocket.auth = { codigoUsuario };
+            }
+            // Conectamos solo si hay usuario logueado
+            if (!this.socket.ioSocket?.connected) {
+                this.socket.connect();
+                console.log(`🔑 Socket conectándose con sesión de: ${codigoUsuario}`);
+            }
+        } else {
+            console.warn('⚠️ No hay usuario en sesión. El socket se omite hasta el Login.');
+            return; // No conectamos si no hay usuario
+        }
+
+        // Listeners
         this.socket.fromEvent('connect').subscribe(() => {
             console.log('✅ Socket.IO conectado al servidor.');
             this.connectedSubject.next(true);
@@ -28,7 +48,6 @@ export class SocketService {
             this.connectedSubject.next(false);
         });
 
-        // Intercepción de errores para evitar que la plataforma falle silenciosamente
         this.socket.fromEvent('connect_error').subscribe((error: any) => {
             console.error('⚠️ Error de conexión Socket.IO:', error);
             this.connectedSubject.next(false);
@@ -36,30 +55,53 @@ export class SocketService {
     }
 
     /**
-     * Escucha un evento del servidor.
-     * Se usa <T = any> para no romper el código legado de la plataforma.
+     * Llamar EXCLUSIVAMENTE tras un Login exitoso
      */
+    public conectarConUsuario(codigoUsuario: string) {
+        if (!codigoUsuario) return;
+
+        localStorage.setItem('codigoUsuario', codigoUsuario); // Aseguramos que se guarde
+
+        const ioSocket = (this.socket as any).ioSocket;
+        if (ioSocket) {
+            ioSocket.auth = { codigoUsuario };
+        }
+
+        // Si ya está conectado, no lo matamos. Solo actualizamos el auth o reconectamos limpiamente una sola vez.
+        if (this.socket.ioSocket?.connected) {
+            console.log('🔄 Socket ya activo, actualizando contexto para:', codigoUsuario);
+            return;
+        }
+
+        console.log(`🚀 Iniciando socket post-login para: ${codigoUsuario}`);
+        this.socket.connect();
+    }
+
+    private obtenerCodigoUsuarioGuardado(): string | null {
+        try {
+            const rawUser = localStorage.getItem('currentUser') || localStorage.getItem('usuario');
+            if (rawUser) {
+                const parsed = JSON.parse(rawUser);
+                return parsed?.codigoUsuario || parsed?.usuario?.codigoUsuario || null;
+            }
+            return localStorage.getItem('codigoUsuario');
+        } catch (e) {
+            return localStorage.getItem('codigoUsuario');
+        }
+    }
+
     public fromEvent<T = any>(eventName: string): Observable<T> {
         return this.socket.fromEvent<T>(eventName);
     }
 
-    /**
-     * Alias por compatibilidad con tu código existente
-     */
     public listen<T = any>(eventName: string): Observable<T> {
         return this.fromEvent<T>(eventName);
     }
 
-    /**
-     * Emite un evento hacia el servidor.
-     */
     public emit(eventName: string, data?: any): void {
         this.socket.emit(eventName, data);
     }
 
-    /**
-     * Fuerza la desconexión manual (útil si el usuario cierra sesión o cambia de módulo)
-     */
     public disconnect(): void {
         this.socket.disconnect();
     }

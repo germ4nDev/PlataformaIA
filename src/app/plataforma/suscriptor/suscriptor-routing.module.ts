@@ -15,8 +15,7 @@ const routes: Routes = [
             },
             {
                 path: 'gestion-suscriptor',
-                loadComponent: () =>
-                    import('./suscriptores/gestion-suscriptor/gestion-suscriptor.component').then((m) => m.GestionSuscriptorComponent),
+                loadComponent: () => import('./suscriptores/gestion-suscriptor/gestion-suscriptor.component').then((m) => m.GestionSuscriptorComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
@@ -59,8 +58,19 @@ const routes: Routes = [
             },
             {
                 path: 'gestion-usuario-suscriptor',
-                loadComponent: () =>
-                    import('./usuarios-suscriptor/gestion-usuario-suscrptor/gestion-usuario-suscrptor.component').then((m) => m.GestionUsuarioSuscrptorComponent),
+                loadComponent: () => import('./usuarios-suscriptor/gestion-usuario-suscrptor/gestion-usuario-suscrptor.component').then((m) => m.GestionUsuarioSuscrptorComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'usuarios-roles',
+                loadComponent: () => import('./usuarios-roles/usuarios-roles.component').then((m) => m.UsuariosRolesComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-usuario-roles',
+                loadComponent: () => import('./usuarios-roles/gestion-usuario-roles/gestion-usuario-roles.component').then((m) => m.GestionUsuarioRolesComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },

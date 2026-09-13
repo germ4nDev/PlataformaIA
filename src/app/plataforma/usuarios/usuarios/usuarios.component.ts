@@ -33,6 +33,7 @@ import {
     PtllogActividadesService,
     PtlusuariosScService,
     PTLSuscriptoresService,
+    SocketManagerService,
 } from 'src/app/theme/shared/service'
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
 import { of, Subscription } from 'rxjs'
@@ -87,6 +88,10 @@ export class UsuariosComponent implements OnInit {
     isClaveActual: boolean = true
     registroSeleccionado: string = ''
     cargandoExcel: boolean = false;
+    mostrarModalCargueMasivo: boolean = false;
+    suscriptorSeleccionadoParaCargue: string = '';
+    archivoExcelSeleccionado: File | null = null;
+    cargandoCargueMasivo: boolean = false;
 
     claveActual: string = '';
     claveNueva: string = '';
@@ -94,6 +99,7 @@ export class UsuariosComponent implements OnInit {
     usuarioSeleccionadoParaClave: any = null;
 
     subscriptions = new Subscription()
+    socketSubscription = new Subscription()
     filtroIdentificacionSubject = new BehaviorSubject<string>('')
     filtroNombreSubject = new BehaviorSubject<string>('')
     filtroCorreoSubject = new BehaviorSubject<string>('')
@@ -150,23 +156,28 @@ export class UsuariosComponent implements OnInit {
         // private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
         private _localStorageService: LocalStorageService,
         private _logActividadesService: PtllogActividadesService,
+        private _socketManager: SocketManagerService,
         private _uploadService: UploadFilesService
     ) {
         this.gradientConfig = GradientConfig
 
+        this.socketSubscription = this._socketManager.usuariosActualizados$.subscribe(() => {
+            console.log('Actualización detectada, refrescando tabla...');
+            this.setupRegistrosStream();
+        });
     }
 
     ngOnInit() {
+        this._localStorageService.removeObject('susId');
         this._navigationService.getNavigationItems();
         this.menuItems$ = this._navigationService.menuItems$;
         this.hasFiltersSlot = true;
-        this.rolesUsuario = this._rolesService.getRolesActuales(); // 🟢 Retenido de tu lógica original
-
+        this.rolesUsuario = this._rolesService.getRolesActuales();
         this.actividadesRoles = this._actividadesRolesService.getActividadesRolesActuales();
         this.usuarios = this._usuariosService.getUsuariosActuales();
         this.usuariosRoles = this._rolesUsuariosService.getUsuairosRolesActuales();
         this.tiposRoles = this._tiposRolesService.getTiposRolesActuales();
-        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales(); // Asumiendo que está inyectado
+        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales();
 
         this.subscriptions.add(this._usuariosService.cargarRegistros().subscribe(
             () => console.log('Usuarios cargados'),
@@ -180,7 +191,10 @@ export class UsuariosComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.unsubscribe()
+        this.subscriptions.unsubscribe();
+        if (this.socketSubscription) {
+            this.socketSubscription.unsubscribe();
+        }
     }
 
     setupRegistrosStream(): void {
@@ -567,19 +581,6 @@ export class UsuariosComponent implements OnInit {
     OnEliminarRegistroClick(id: any) {
     }
 
-    OnOption2Click(id: any) {
-
-    }
-
-    OnOption3Click(id: any) {
-
-    }
-
-    OnOption4Click(id: any) {
-
-        // this.procesarCambioClave(id, nuevaClave);
-    }
-
     onAccionPrincipal(evento: { accion: string, row: any }) {
         const { accion, row } = evento;
         const id = row.codigoUsuario || row.id;
@@ -647,6 +648,7 @@ export class UsuariosComponent implements OnInit {
             case 'ROLES':
                 console.log('Redirigirse a la pagina de roles:', id);
                 this._localStorageService.setObject('regId', id)
+                this._localStorageService.setObject('fueId', 'us')
                 this.router.navigate(['usuarios/roles-usuario'])
                 break;
             default:
@@ -839,6 +841,62 @@ export class UsuariosComponent implements OnInit {
     cerrarModal() {
         this.mostrarModalPassword = false;
         //this.registroSeleccionado = null;
+    }
+
+    abrirModalCargueMasivo(): void {
+        this.mostrarModalCargueMasivo = true;
+        this.suscriptorSeleccionadoParaCargue = '';
+        this.archivoExcelSeleccionado = null;
+    }
+
+    // 3. Cerrar el modal
+    cerrarModalCargueMasivo(): void {
+        this.mostrarModalCargueMasivo = false;
+        this.suscriptorSeleccionadoParaCargue = '';
+        this.archivoExcelSeleccionado = null;
+    }
+
+    onFileSelected(event: any): void {
+        const file = event.target.files[0];
+        if (file) {
+            const extension = file.name.split('.').pop()?.toLowerCase();
+            if (extension !== 'xlsx' && extension !== 'xls') {
+                console.error('Por favor, selecciona un archivo de Excel válido.');
+                return;
+            }
+            this.archivoExcelSeleccionado = file;
+        }
+    }
+
+    ejecutarCargueMasivo(): void {
+        if (!this.suscriptorSeleccionadoParaCargue) {
+            console.warn('Debe seleccionar un suscriptor.');
+            return;
+        }
+        if (!this.archivoExcelSeleccionado) {
+            console.warn('Debe seleccionar un archivo Excel.');
+            return;
+        }
+
+        this.cargandoCargueMasivo = true;
+        const usuarioLogueado = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || 'ADMIN_SISTEMA';
+
+        this._usuariosSCService.cargueMasivoExcel(
+            this.archivoExcelSeleccionado,
+            this.suscriptorSeleccionadoParaCargue,
+            usuarioLogueado
+        ).subscribe({
+            next: (resp: any) => {
+                this.cargandoCargueMasivo = false;
+                console.log('✅ Éxito:', resp.msg || 'Cargue masivo completado.');
+                this.cerrarModalCargueMasivo();
+                this.setupRegistrosStream(); // Refresca la tabla
+            },
+            error: (err: any) => {
+                this.cargandoCargueMasivo = false;
+                console.error('❌ Error de cargue masivo:', err.error?.msg || err);
+            }
+        });
     }
 
     toggleNav(): void {

@@ -161,7 +161,7 @@ export class DashboardService implements OnInit, OnDestroy {
     private _puertoSeleccionadoSource = new BehaviorSubject<string>('TODOS');
     public puertoSeleccionado$ = this._puertoSeleccionadoSource.asObservable();
 
-    public widgetFocus$ = this._widgetFocusSource.asObservable();
+    public widgetEnfoque$ = this._widgetFocusSource.asObservable();
     private socketSub: Subscription = new Subscription;
     public climaPortuario: any;
     public mapaPortuario: any[] = [];

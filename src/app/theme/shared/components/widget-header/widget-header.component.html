@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between align-items-center"
+    [ngClass]="{'mb-3 pb-2 border-bottom border-secondary': variante === 'normal', 'mb-2': variante === 'kpi'}">
+
+    <div class="d-flex align-items-center">
+
+        <i *ngIf="icono" [class]="icono + ' me-2 text-muted'"
+            [ngStyle]="{'font-size': variante === 'kpi' ? '0.9rem' : '1.1rem'}"></i>
+
+        <div class="d-flex flex-column justify-content-center">
+            <span class="titulo-panel fw-bold text-uppercase"
+                [ngStyle]="{'font-size': variante === 'kpi' ? '0.75rem' : '0.85rem', 'letter-spacing': '0.5px', 'line-height': '1'}">
+                {{ titulo }}
+            </span>
+            <span *ngIf="subtitulo" class="subtitulo-panel text-uppercase"
+                style="font-size: 0.65rem; margin-top: 4px; line-height: 1;">
+                {{ subtitulo }}
+            </span>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+        <ng-content select="[acciones-extra]"></ng-content>
+        <button *ngIf="mostrarEnfoque" class="btn-enfoque m-0" (click)="toggleEnfoque()"
+            [title]="enModoEnfoque ? 'Contraer vista' : 'Expandir vista'">
+            <i class="feather" [ngClass]="enModoEnfoque ? 'icon-minimize' : 'icon-maximize'"></i>
+        </button>
+    </div>
+</div>

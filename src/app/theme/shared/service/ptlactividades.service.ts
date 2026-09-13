@@ -8,6 +8,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
 import { LocalStorageService } from './local-storage.service'
+import { SocketManagerService } from './socket-manager.service'
 const base_url = environment.apiUrl
 
 @Injectable({
@@ -19,16 +20,21 @@ export class PtlActividadesService {
     private _actividadesChange = new Subject<any>()
     actividadesChange$ = this._actividadesChange.asObservable()
 
-    constructor(private http: HttpClient, private _socketService: SocketService, private _localStorageService: LocalStorageService) {
+    constructor(
+        private http: HttpClient,
+        private _socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
         console.log('******* Servicio de actividades iniciado correctamente')
-        this._socketService.listen('actividades-actualizadas').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._actividadesChange.next(payload)
-                this.cargarRegistros().subscribe()
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._actividadesChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get actividades$(): Observable<PTLActividadModel[]> {

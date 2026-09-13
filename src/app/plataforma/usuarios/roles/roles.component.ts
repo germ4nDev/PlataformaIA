@@ -18,7 +18,7 @@ import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTL
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
-import { NavigationService, PtlAplicacionesService, PtlSuitesAPService, LocalStorageService, PTLUsuariosService, PtlusuariosScService, PTLSuscriptoresService, PtlusuariosRolesApService } from 'src/app/theme/shared/service'
+import { NavigationService, PtlAplicacionesService, PtlSuitesAPService, LocalStorageService, PTLUsuariosService, PtlusuariosScService, PTLSuscriptoresService, PtlusuariosRolesApService, SocketManagerService } from 'src/app/theme/shared/service'
 import { of, Subscription } from 'rxjs'
 import { PtllogActividadesService, PTLRolesAPService, SwalAlertService } from 'src/app/theme/shared/service'
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
@@ -50,6 +50,7 @@ export class RolesComponent implements OnInit {
     activeTab: 'menu' | 'filters' | 'main' = 'menu'
     tituloPagina: string = ''
 
+    socketSubscription = new Subscription()
     subscriptions = new Subscription()
     filtroTipoRolSubject = new BehaviorSubject<string>('todos')
     filtroCodigoRoleSubject = new BehaviorSubject<string>('todos')
@@ -84,9 +85,15 @@ export class RolesComponent implements OnInit {
         private _suscriptoresService: PTLSuscriptoresService,
         private _logActividadesService: PtllogActividadesService,
         private _localStorageService: LocalStorageService,
+        private _socketManager: SocketManagerService,
         private _swalService: SwalAlertService
     ) {
         this.gradientConfig = GradientConfig
+
+        this.socketSubscription = this._socketManager.rolesActualizados$.subscribe(() => {
+            console.log('Actualización detectada, refrescando tabla...');
+            this.setupRolesStream();
+        });
     }
 
     ngOnInit() {
@@ -119,6 +126,9 @@ export class RolesComponent implements OnInit {
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe()
+        if (this.socketSubscription) {
+            this.socketSubscription.unsubscribe();
+        }
     }
 
     columnasRegistros: ColumnMetadata[] = [

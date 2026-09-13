@@ -167,7 +167,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
     }
 
     iniciarForm() {
-        this.FormRegistro.codigoSuscriptor = '';
+        this.FormRegistro.codigoSuscriptor = this.codigoSuscriptor || '';
         this.FormRegistro.codigoEmpresaSC = '';
         this.FormRegistro.codigoTipoRole = '';
         this.FormRegistro.codigoAplicacion = '';

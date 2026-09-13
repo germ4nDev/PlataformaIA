@@ -137,10 +137,10 @@ export class NavigationService implements OnInit, OnDestroy {
     }
 
     getNavigationItems(): void {
-        const navSettings = this._localStorageService.getObject<any>('navsettings');
+        const navSettings = this._localStorageService.getObject<any>('navsettings') || {};
 
-        this.aplicacion = navSettings.aplicacion;
-        this.suite = navSettings.suite;
+        this.aplicacion = navSettings.aplicacion || '';
+        this.suite = navSettings.suite || '';
 
         const mods: any[] = []
 

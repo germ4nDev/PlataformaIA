@@ -8,6 +8,7 @@ import { LocalStorageService } from './local-storage.service'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { SocketService } from './sockets.service'
 import { PTLUsuarioRoleAPModel } from '../_helpers/models/PTLUsuarioRole.model'
+import { SocketManagerService } from './socket-manager.service'
 const base_url = environment.apiUrl
 
 @Injectable({
@@ -19,16 +20,21 @@ export class PtlusuariosRolesApService {
     private _usuariosRolesChange = new Subject<any>()
     _usuariosRolesChange$ = this._usuariosRolesChange.asObservable()
 
-    constructor(private http: HttpClient, private _socketService: SocketService, private _localStorageService: LocalStorageService) {
+    constructor(
+        private http: HttpClient,
+        private _socketService: SocketService,
+        private _socketManager: SocketManagerService,
+        private _localStorageService: LocalStorageService
+    ) {
         console.log('******* Servicio de usuariosRoles iniciado correctamente')
-        this._socketService.listen('usuarios-roles-actualizados').subscribe({
-            next: payload => {
-                console.log('Evento de Socket.IO recibido:', payload.msg)
-                this._usuariosRolesChange.next(payload)
-                this.cargarRegistros().subscribe()
+        this._socketManager.actividadesRolesActualizadas$.subscribe({
+            next: (payload) => {
+                console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                this._usuariosRolesChange.next(payload);
+                this.cargarRegistros().subscribe();
             },
-            error: err => console.error('Error en la escucha de sockets:', err)
-        })
+            error: (err) => console.error('Error escuchando al manager:', err)
+        });
     }
 
     get _usuariosRoles$(): Observable<PTLUsuarioRoleAPModel[]> {
@@ -77,7 +83,7 @@ export class PtlusuariosRolesApService {
         )
     }
 
-    getRegistroById(id: number) {
+    getRegistroById(id: StreamPipeOptions) {
         const url = `${base_url}/usuarios-roles/${id}`
         return this.http.get(url).pipe(
             map((resp: any) => {

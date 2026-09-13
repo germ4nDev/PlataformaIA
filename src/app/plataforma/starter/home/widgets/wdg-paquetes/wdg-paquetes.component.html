@@ -1,0 +1,63 @@
+<div class="card bg-transparent text-white h-100 w-100 mb-0 border-0 p-3 d-flex flex-column">
+
+    <app-widget-header titulo="Paquetes por Suscriptor" subtitulo="Plataforma" icono="feather icon-package"
+        [widgetId]="widgetId" [data]="data">
+
+        <div acciones-extra class="d-flex gap-2">
+
+            <!-- Botón de Recargar -->
+            <!-- <button class="btn-enfoque m-0" (click)="cargarMetricasReales()" title="Recargar datos">
+                <i class="feather icon-refresh-cw"></i>
+            </button> -->
+
+            <!-- Botón de Filtro o Menú -->
+            <!-- <button class="btn-enfoque m-0" title="Filtrar">
+                <i class="feather icon-filter"></i>
+            </button> -->
+
+        </div>
+    </app-widget-header>
+
+    <!-- Contenedor de la lista unificada -->
+    <div class="flex-grow-1 overflow-auto pe-2">
+
+        <div *ngIf="paquetesUnificados.length === 0" class="text-center text-muted py-4 small">
+            No hay paquetes registrados.
+        </div>
+
+        <div *ngFor="let item of paquetesUnificados" class="mb-4">
+
+            <!-- Nombre del Suscriptor -->
+            <div class="fw-semibold text-truncate small mb-2 text-white">
+                {{ item.suscriptor }}
+            </div>
+
+            <!-- 🟢 Barra de Activos (Verde) -->
+            <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-success text-white me-2 d-flex justify-content-center align-items-center"
+                    style="width: 35px; height: 20px;">
+                    {{ item.activos }}
+                </span>
+                <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05);">
+                    <div class="progress-bar bg-success rounded-pill" role="progressbar"
+                        [style.width.%]="item.pctActivos">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🔴 Barra de Inactivos (Roja) -->
+            <div class="d-flex align-items-center">
+                <span class="badge bg-danger text-white me-2 d-flex justify-content-center align-items-center"
+                    style="width: 35px; height: 20px;">
+                    {{ item.inactivos }}
+                </span>
+                <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05);">
+                    <div class="progress-bar bg-danger rounded-pill" role="progressbar"
+                        [style.width.%]="item.pctInactivos">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

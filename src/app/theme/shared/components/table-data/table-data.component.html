@@ -1,5 +1,9 @@
 <div class="datatables-wrapper">
-    <h5 *ngIf="tableTitle" class="datatable-title text-center">{{ tableTitle }}</h5><br>
+
+    <h5 *ngIf="tableTitle" class="datatable-title text-center">{{ tableTitle }}</h5>
+    <p *ngIf="tableSubtitle" class="datatable-subtitle text-center">{{ tableSubtitle }}
+    </p><br>
+
     <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
         <div class="d-flex align-items-center">
             <span>{{ 'PLATAFORMA.DATATABLE.SHOW' | translate }}</span>
@@ -12,6 +16,10 @@
             <span>{{ 'PLATAFORMA.DATATABLE.ENTRIES' | translate }}</span>
         </div>
         <div class="d-flex">
+
+            <!-- ===================================================================== -->
+            <!-- 1. BOTÓN CLÁSICO (Usa input file directo para otros módulos)          -->
+            <!-- ===================================================================== -->
             <ng-container *ngIf="showUploadButton">
                 <input type="file" #fileInputExcel style="display: none;" accept=".xlsx, .xls"
                     (change)="onFileExcelSelected($event)">
@@ -21,6 +29,17 @@
                     {{ cargandoExcel ? 'Procesando...' : 'Cargar Excel ↑' }}
                 </button>
             </ng-container>
+
+            <!-- ===================================================================== -->
+            <!-- 2. NUEVO BOTÓN PARA MODAL (No tiene input file, solo emite el evento) -->
+            <!-- ===================================================================== -->
+            <ng-container *ngIf="showUploadModalButton">
+                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                    (click)="onUploadModalClick()">
+                    {{ uploadModalLabel }} ↑
+                </button>
+            </ng-container>
+
             <button class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="onExcelExport()">
                 {{ exportLabel | translate }}
                 <i class="feather ms-2 icon-download"></i>
@@ -40,7 +59,7 @@
         </div>
     </div>
     <div class="content-g67">
-        <div class="tableFixHead">
+        <div class="tableFixHead tabla-custom-scroll">
             <table id="datatable-component" class="row-border hover table nowrap w-100">
                 <thead *ngIf="paginatedData.length > 0">
                     <tr>
@@ -309,7 +328,7 @@
                                                                                     {{ $any(kv.key) | uppercase }}
                                                                                 </th>
                                                                             </ng-container>
-                                                                            <th *ngIf="row[detailColumn.name][0]['_acciones']"
+                                                                            <th *ngIf="row[detailColumn.name][0]['_acciones'] && showDetailActions"
                                                                                 class="px-3 py-2 text-center text-nowrap">
                                                                                 OPCIONES
                                                                             </th>
@@ -327,7 +346,7 @@
                                                                             </ng-container>
 
                                                                             <!-- Subtabla Botones por Arreglo -->
-                                                                            <td *ngIf="dataRow['_acciones']"
+                                                                            <td *ngIf="dataRow['_acciones'] && showDetailActions"
                                                                                 class="px-3 py-2 text-center align-middle"
                                                                                 style="white-space: nowrap;">
                                                                                 <button
