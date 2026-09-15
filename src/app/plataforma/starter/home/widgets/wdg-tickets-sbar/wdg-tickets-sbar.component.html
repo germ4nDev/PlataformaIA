@@ -1,10 +1,15 @@
-<div class="widget-chart-container">
-    <div class="chart-header">
-        <h5 class="text-white mb-0">Estado de Tickets</h5>
-        <span class="badge-tech">Operaciones</span>
+<app-widget-shell titulo="Estado de Tickets" icono="feather icon-bar-chart-2" variante="normal" colorBordeTop="#ef4444"
+    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+
+    <div acciones-extra class="ms-2">
+        <span class="badge bg-light text-dark border">Operaciones</span>
     </div>
-    <div class="chart-wrapper">
-        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType">
-        </canvas>
+
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
     </div>
-</div>
+
+    <div modo-enfoque class="w-100 h-100 position-relative p-4">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+    </div>
+</app-widget-shell>

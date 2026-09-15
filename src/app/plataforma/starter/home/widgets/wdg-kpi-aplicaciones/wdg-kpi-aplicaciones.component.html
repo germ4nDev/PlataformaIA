@@ -1,24 +1,49 @@
-<app-kpi-shell class="titulo-container" titulo="TOTAL APLICACIONES" icono="feather icon-grid" colorHex="#ffc107"
-    [valor]="total" [cargando]="isLoading" [widgetId]="widgetId" [data]="data">
+<app-widget-shell titulo="TOTAL APLICACIONES" icono="feather icon-grid" variante="kpi" colorBordeTop="#ffc107"
+    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
 
-    <!-- Vista Detallada al expandir -->
-    <p class="subtitulo-container">Estado actual de las aplicaciones desplegadas.</p>
-    <table class="table table-dark table-borderless table-sm small">
-        <thead class="subtitulo-container text-uppercase" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <tr>
-                <th class="texto-panel">Aplicación</th>
-                <th class="text-end">Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="texto-panel">Módulo Dashboard QPLUS</td>
-                <td class="text-end"><span class="badge bg-warning text-dark px-2 py-1">Operativa</span></td>
-            </tr>
-            <tr>
-                <td class="texto-panel">Motor de Sincronización</td>
-                <td class="text-end"><span class="badge bg-warning text-dark px-2 py-1">Operativa</span></td>
-            </tr>
-        </tbody>
-    </table>
-</app-kpi-shell>
+    <ng-container *ngIf="isLoading; else loadedContent">
+        <div class="my-auto">
+            <div class="skeleton-box skeleton-number mb-2"></div>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+            <div class="skeleton-box skeleton-badge me-2"></div>
+            <div class="skeleton-box" style="width: 100px; height: 16px;"></div>
+        </div>
+    </ng-container>
+
+    <ng-template #loadedContent>
+        <div class="text-center">
+            <h2 class="valor-kpi">{{ total | number }}</h2>
+        </div>
+        <div class="d-flex align-items-center text-muted mt-2 animate__animated animate__fadeIn">
+            <span class="badge text-dark px-2 py-1 rounded me-2 d-flex align-items-center shadow-sm"
+                style="background-color: #ffc107; font-size: 0.7rem;">
+                <span class="spinner-grow spinner-grow-sm me-1" role="status"
+                    style="width: 0.5rem; height: 0.5rem;"></span> En vivo
+            </span>
+            <span class="opacity-75 text-truncate" style="font-size: 0.75rem;">Sincronizado con BD</span>
+        </div>
+    </ng-template>
+
+    <div modo-enfoque class="w-100 h-100 p-1">
+        <p class="text-muted mb-3 small">Estado actual de las aplicaciones desplegadas.</p>
+        <table class="table table-borderless table-sm small">
+            <thead class="text-muted text-uppercase" style="border-bottom: 1px solid #e0e0e0;">
+                <tr>
+                    <th class="text-dark">Aplicación</th>
+                    <th class="text-end text-dark">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-dark fw-medium">Módulo Dashboard QPLUS</td>
+                    <td class="text-end"><span class="badge bg-warning text-dark px-2 py-1">Operativa</span></td>
+                </tr>
+                <tr>
+                    <td class="text-dark fw-medium">Motor de Sincronización</td>
+                    <td class="text-end"><span class="badge bg-warning text-dark px-2 py-1">Operativa</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</app-widget-shell>

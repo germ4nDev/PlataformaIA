@@ -344,6 +344,16 @@ html {
     color: var(--text-subtitle-color);
 }
 
+.titulo-tabla {
+    font-size: 1em;
+    color: var(--text-color);
+}
+
+.texto-tabla {
+    font-size: 0.9em;
+    color: var(--text-subtitle-color);
+}
+
 .sr-only {
     color: var(--text-color) !important;
 }
@@ -363,6 +373,18 @@ html {
 
 .subtitulo-container {
     color: var(--text-subtitle-color);
+}
+
+.valor-kpi {
+    color: var(--text-color);
+    font-size: 3.2em;
+    font-weight: bold;
+}
+
+.valor-contador {
+    color: var(--text-color);
+    font-size: 7.2em;
+    font-weight: bold;
 }
 
 .loader-container {

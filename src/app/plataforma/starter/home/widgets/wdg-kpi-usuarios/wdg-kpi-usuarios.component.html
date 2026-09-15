@@ -1,27 +1,52 @@
-<app-kpi-shell titulo="TOTAL USUARIOS" icono="feather icon-users" colorHex="#0d6efd" [valor]="total"
-    [cargando]="isLoading" [widgetId]="widgetId" [data]="data">
+<app-widget-shell titulo="TOTAL USUARIOS" icono="feather icon-users" variante="kpi" colorBordeTop="#0d6efd"
+    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
 
-    <!-- Vista Detallada al expandir -->
-    <p class="text-muted mb-4 small">Últimos usuarios registrados en la plataforma QPLUS.</p>
-    <table class="table table-dark table-borderless table-sm small">
-        <thead class="text-muted text-uppercase" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <tr>
-                <th>Nombre</th>
-                <th>Rol</th>
-                <th class="text-end">Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>German Valencia</td>
-                <td>Administrador</td>
-                <td class="text-end text-muted">Hoy</td>
-            </tr>
-            <tr>
-                <td>Claudia Ortiz</td>
-                <td>Suscriptor</td>
-                <td class="text-end text-muted">Ayer</td>
-            </tr>
-        </tbody>
-    </table>
-</app-kpi-shell>
+    <ng-container *ngIf="isLoading; else loadedContent">
+        <div class="my-auto">
+            <div class="skeleton-box skeleton-number mb-2"></div>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+            <div class="skeleton-box skeleton-badge me-2"></div>
+            <div class="skeleton-box" style="width: 100px; height: 16px;"></div>
+        </div>
+    </ng-container>
+
+    <ng-template #loadedContent>
+        <div class="text-center">
+            <h2 class="valor-kpi">{{ total | number }}</h2>
+        </div>
+        <div class="d-flex align-items-center text-muted mt-2 animate__animated animate__fadeIn">
+            <span class="badge text-white px-2 py-1 rounded me-2 d-flex align-items-center shadow-sm"
+                style="background-color: #0d6efd; font-size: 0.7rem;">
+                <span class="spinner-grow spinner-grow-sm me-1" role="status"
+                    style="width: 0.5rem; height: 0.5rem;"></span> En vivo
+            </span>
+            <span class="opacity-75 text-truncate" style="font-size: 0.75rem;">Sincronizado con BD</span>
+        </div>
+    </ng-template>
+
+    <div modo-enfoque class="w-100 h-100 p-1">
+        <p class="text-muted mb-4 small">Últimos usuarios registrados en la plataforma QPLUS.</p>
+        <table class="table table-borderless table-sm small">
+            <thead class="text-muted text-uppercase" style="border-bottom: 1px solid #e0e0e0;">
+                <tr>
+                    <th class="text-dark">Nombre</th>
+                    <th class="text-dark">Rol</th>
+                    <th class="text-end text-dark">Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-dark fw-medium">German Valencia</td>
+                    <td class="text-dark">Administrador</td>
+                    <td class="text-end text-muted">Hoy</td>
+                </tr>
+                <tr>
+                    <td class="text-dark fw-medium">Claudia Ortiz</td>
+                    <td class="text-dark">Suscriptor</td>
+                    <td class="text-end text-muted">Ayer</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</app-widget-shell>

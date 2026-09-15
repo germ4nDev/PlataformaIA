@@ -45,6 +45,8 @@ import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.ser
 import { LayoutService } from 'src/app/theme/shared/service/layout.service'
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
 import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
+import { v4 as uuidv4 } from 'uuid';
+import { PtlSesionesService } from 'src/app/theme/shared/service/ptlsesiones.service'
 
 @Component({
     selector: 'app-login',
@@ -117,6 +119,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         private _paquetesSCService: PTLPaquetesSCService,
         private _modulosPaqueteService: PTLModulosPaqueteService,
         private _permisosService: PtlPermisosService,
+        private _ptlSesionesService: PtlSesionesService,
         private _widgetsMaestroService: PTLWidgetsMaestroService,
         private _widgetsRolesService: PtlWidgetsRolesService,
         private _languagesService: LanguageService,
@@ -194,11 +197,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     //                     paquetesSC: this._paquetesSCService.cargarRegistros().pipe(take(1)),
     //                     modulosPQ: this._modulosPaqueteService.cargarRegistros().pipe(take(1)),
     //                     usuariosRoles: this._usuariosRolesService.cargarRegistros().pipe(take(1)),
-    //                     rolesMaestros: this._rolesService.cargarRegistros().pipe(take(1)),
-
-    //                     // 🟢 1. Agregamos las llamadas a los catálogos de widgets
-    //                     widgetsMaestros: this._widgetsMaestroService.getWidgetsActivos().pipe(take(1)),
-    //                     widgetsRoles: this._widgetsRolesService.getAsignaciones().pipe(take(1)) || []
+    //                     rolesMaestros: this._rolesService.cargarRegistros().pipe(take(1))
     //                 });
     //             }),
     //             tap((data: any) => {
@@ -215,12 +214,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     //                 const listaModulosPQ = data.modulosPQ.modulosPQ || data.modulosPQ || [];
     //                 const listaUsuarioRoles = data.usuariosRoles.usuariosRoles || data.usuariosRoles.usuarioRole || data.usuariosRoles || [];
     //                 const listaRolesMaestros = data.rolesMaestros.roles || data.rolesMaestros.data || data.rolesMaestros || [];
-    //                 const listaWidgetsMaestros = data.widgetsMaestros.widgets || data.widgetsMaestros || [];
-    //                 const listaWidgetsRoles = data.widgetsRoles.widgetsRoles || [];
 
     //                 const suscUsu = listaUsuariosSC.filter((x: any) => x.codigoUsuario === data.currentUser.usuario?.codigoUsuario);
-
-    //                 const widgetsPermitidosGlobales = new Map();
 
     //                 if (suscUsu.length > 0) {
     //                     suscUsu.forEach((usuSC: any) => {
@@ -247,26 +242,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     //                                     const rolesEnriquecidos = rolesDeEstaEmpresa.map((rolUsuario: any) => {
     //                                         const detalleRol = listaRolesMaestros.find((r: any) => r.codigoRole === rolUsuario.codigoRole);
 
-    //                                         const asignacionesDeEsteRol = listaWidgetsRoles.filter((wr: any) =>
-    //                                             wr.codigoRol === rolUsuario.codigoRole && wr.estadoRelacion === true
-    //                                         );
-
-    //                                         if (asignacionesDeEsteRol.lenght > 0) { }
-
-    //                                         const widgetsDelRol = asignacionesDeEsteRol.map((asignacion: any) => {
-    //                                             const widgetMaestro = listaWidgetsMaestros.find((w: any) => w.codigoWidget === asignacion.codigoWidget);
-
-    //                                             if (widgetMaestro) {
-    //                                                 widgetsPermitidosGlobales.set(widgetMaestro.codigoWidget, widgetMaestro);
-    //                                             }
-    //                                             return widgetMaestro;
-    //                                         }).filter((w: any) => w !== undefined);
-
     //                                         return {
     //                                             ...rolUsuario,
     //                                             detalleRole: detalleRol || null,
-    //                                             nombreRolLegible: detalleRol ? detalleRol.nombreRole : 'DESCONOCIDO',
-    //                                             widgetsAsignados: widgetsDelRol // 🟢 Guardamos los widgets en el nivel del rol
+    //                                             nombreRolLegible: detalleRol ? detalleRol.nombreRole : 'DESCONOCIDO'
     //                                         };
     //                                     });
 
@@ -283,9 +262,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     //                             );
 
     //                             susc.paquetesActivos.forEach((paq: any) => {
-    //                                 const mods = listaModulosPQ.filter((mod: any) =>
-    //                                     mod.codigoPaquete === paq.codigoPaquete
-    //                                 );
+    //                                 const mods = listaModulosPQ.filter((mod: any) => mod.codigoPaquete === paq.codigoPaquete);
     //                                 paq.modulosPaquete = mods;
     //                             });
     //                         });
@@ -296,16 +273,14 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     //                 this.currentUser.usuariosSC = suscUsu;
 
-    //                 if (this.currentUser.usuario) {
-    //                     this.currentUser.usuario.widgets = Array.from(widgetsPermitidosGlobales.values());
-    //                 }
-
     //                 this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
     //                 const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
     //                 this._socketService.conectarConUsuario(codigoUsuario);
+
+    //                 // 🟢 Se mantiene para cargar la base del Gridster si es necesario luego
     //                 this.cargarYGuardarLayoutUsuario(this.currentUser);
 
-    //                 console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes/Widgets) armada exitosamente!', this.currentUser);
+    //                 console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes) armada exitosamente!', this.currentUser);
 
     //                 this._permisosService.inicializarPermisosPorDefecto().subscribe({
     //                     next: (actividades) => {
@@ -440,11 +415,46 @@ export class LoginComponent implements OnInit, OnDestroy {
                     this.currentUser.usuariosSC = suscUsu;
 
                     this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
+
+                    const nuevoCodigoSesion = uuidv4();
+                    sessionStorage.setItem('codigoSesionActiva', nuevoCodigoSesion);
+
                     const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
                     this._socketService.conectarConUsuario(codigoUsuario);
 
-                    // 🟢 Se mantiene para cargar la base del Gridster si es necesario luego
-                    this.cargarYGuardarLayoutUsuario(this.currentUser);
+                    const navSettingsActual = JSON.parse(sessionStorage.getItem('navsettings') || '{}');
+
+                    const usuarioObj = this.currentUser.usuario || {};
+                    const codigoSesionUnico = uuidv4();
+
+                    // 🟢 2. Armamos el payload exacto
+                    const payloadSesion = {
+                        codigoSesion: codigoSesionUnico,
+                        codigoUsuario: usuarioObj.codigoUsuario,
+                        nombreUsuario: usuarioObj.nombreUsuario || 'Usuario QPLUS',
+                        rol: '',
+                        correo: usuarioObj.correoUsuario || '',
+                        codigoModulo: 'Dashboard Principal',
+                        dispositivo: navigator.userAgent.includes('Mobile') ? 'Móvil' : 'Desktop'
+                    };
+
+                    this._ptlSesionesService.registrarSesion(payloadSesion).subscribe({
+                        next: (resp) => {
+                            // 🟢 LOG 2: ¡El backend respondió OK!
+                            console.log('✅ [LOGIN] Respuesta exitosa del Backend al guardar sesión:', resp);
+
+                            this._socketService.conectarConUsuario(codigoUsuario, codigoSesionUnico);
+                            this.cargarYGuardarLayoutUsuario(this.currentUser);
+                            this._permisosService.inicializarPermisosPorDefecto().subscribe(() => {
+                                this.router.navigate(['/starter/inicio-suscriptores']);
+                            });
+                        },
+                        error: (err) => {
+                            // 🔴 LOG 3: El backend rechazó la petición o hubo un error de red
+                            console.error('❌ [LOGIN] Error del Backend al intentar guardar sesión:', err);
+                            this.router.navigate(['/starter/inicio-suscriptores']);
+                        }
+                    });
 
                     console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes) armada exitosamente!', this.currentUser);
 

@@ -26,7 +26,11 @@ export class WidgetLobbyComponent implements OnChanges {
         private _uploadService: UploadFilesService
     ) {
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    }
 
+    get isDarkMode(): boolean {
+        const mode = this._localStorageService.getThemeSettings();
+        return mode.isDarkTheme;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -36,14 +40,18 @@ export class WidgetLobbyComponent implements OnChanges {
     }
 
     procesarWidgets() {
-        const filtrados = (this.widgetsMaster || []).filter(w => w.pestana === this.pestanaActual);
+        const filtrados = (this.widgetsMaster || []).filter(w => w.pestana === this.pestanaActual && w.estadoWidget == true);
 
         this.widgetsProcesados = filtrados.map(widget => {
             const item = this.layoutActual.find(
                 l => (l.type === widget.codigoWidget || l.codigoWidget === widget.codigoWidget) && l.pestana === this.pestanaActual
             );
             const activo = item ? (item.visible === true || item.visible === 'true' || item.visible === 1) : false;
-            widget.imagenWidget = this._uploadService.getFilePath(this.suscriptor, 'widgets', 'no-imagen.jpg')
+
+            widget.imagenWidget = this.isDarkMode ?
+                this._uploadService.getFilePath(this.suscriptor, 'widgets', widget.imagenWidget_dark) :
+                this._uploadService.getFilePath(this.suscriptor, 'widgets', widget.imagenWidget_light);
+
             return {
                 ...widget,
                 activo: activo

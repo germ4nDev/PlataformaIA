@@ -1,15 +1,40 @@
-<app-kpi-shell class="titulo-container" titulo="TOTAL PAQUETES" icono="feather icon-package" colorHex="#198754"
-    [valor]="total" [cargando]="isLoading" [widgetId]="widgetId" [data]="data">
+<app-widget-shell titulo="TOTAL PAQUETES" icono="feather icon-package" variante="kpi" colorBordeTop="#198754"
+    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
 
-    <p class="subtitulo-container">Distribución de paquetes activos.</p>
-    <div class="d-flex flex-column gap-2">
-        <div class="d-flex justify-content-between text-white p-2 rounded">
-            <span class="texto-panel">Paquete Básico</span>
-            <span class="fw-bold text-success">0 Activos</span>
+    <ng-container *ngIf="isLoading; else loadedContent">
+        <div class="my-auto">
+            <div class="skeleton-box skeleton-number mb-2"></div>
         </div>
-        <div class="d-flex justify-content-between text-white p-2 rounded">
-            <span class="texto-panel">Paquete Premium</span>
-            <span class="fw-bold text-success">{{ total }} Activos</span>
+        <div class="d-flex align-items-center mt-2">
+            <div class="skeleton-box skeleton-badge me-2"></div>
+            <div class="skeleton-box" style="width: 100px; height: 16px;"></div>
+        </div>
+    </ng-container>
+
+    <ng-template #loadedContent>
+        <div class="text-center">
+            <h2 class="valor-kpi">{{ total | number }}</h2>
+        </div>
+        <div class="d-flex align-items-center text-muted mt-2 animate__animated animate__fadeIn">
+            <span class="badge text-white px-2 py-1 rounded me-2 d-flex align-items-center shadow-sm"
+                style="background-color: #198754; font-size: 0.7rem;">
+                <span class="spinner-grow spinner-grow-sm me-1" role="status"
+                    style="width: 0.5rem; height: 0.5rem;"></span> En vivo
+            </span>
+            <span class="opacity-75 text-truncate" style="font-size: 0.75rem;">Sincronizado con BD</span>
+        </div>
+    </ng-template>
+
+    <div modo-enfoque class="w-100 h-100 p-1">
+        <p class="text-muted mb-3 small">Distribución de paquetes activos.</p>
+        <div class="d-flex flex-column gap-2">
+            <div class="d-flex justify-content-between p-3 rounded bg-light border">
+                <span class="fw-bold text-dark">Paquete Básico</span><span class="fw-bold text-success">0 Activos</span>
+            </div>
+            <div class="d-flex justify-content-between p-3 rounded bg-light border">
+                <span class="fw-bold text-dark">Paquete Premium</span><span class="fw-bold text-success">{{ total }}
+                    Activos</span>
+            </div>
         </div>
     </div>
-</app-kpi-shell>
+</app-widget-shell>

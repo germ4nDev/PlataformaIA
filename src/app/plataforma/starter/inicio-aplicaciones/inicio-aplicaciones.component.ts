@@ -113,6 +113,80 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe()
     }
 
+    // ingresarPlataforma(app: PTLAplicacionModel) {
+    //     const current = this._localStorageService.getCurrentUserLocalStorage();
+    //     const apps = this._localStorageService.getObject<any>('aplicaciones');
+    //     const suscriptor = this._localStorageService.getObject<any>('suscriptor');
+    //     const aplicaciones = this._localStorageService.getObject<any>('aplicaciones');
+
+    //     const appSeleccionada = apps.find((x: { codigoAplicacion: string | undefined }) => x.codigoAplicacion == app.codigoAplicacion);
+    //     console.log('aplicacion seleccionada', appSeleccionada);
+
+    //     const usuSC = this.usuariosSC.find((x: any) => x.codigoUsuario == current.usuario.codigoUsuario);
+    //     const rolesApp = this.roles.filter((x: any) => x.codigoAplicacion == appSeleccionada.codigoAplicacion);
+    //     const usuarioRoles = this.usuariosRoles.filter((x: any) => x.codigoUsuarioSC == usuSC?.codigoUsuarioSC);
+
+    //     // 🟢 1. Inicializamos el mapa para los widgets permitidos de ESTA aplicación
+    //     const widgetsPermitidosGlobales = new Map();
+
+    //     // 🟢 2. Traemos los catálogos desde los BehaviorSubjects (Asegúrate de inyectar estos servicios en el constructor)
+    //     const listaWidgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
+    //     const listaWidgetsRoles = this._widgetsRolesService.getActividadesRolesActuales() || [];
+
+    //     usuarioRoles.forEach((usuRole: any) => {
+    //         const role = rolesApp.find((x: any) => x.codigoRole == usuRole.codigoRole);
+    //         usuRole.role = role;
+
+    //         if (role) {
+    //             const asignacionesDeEsteRol = listaWidgetsRoles.filter((wr: any) =>
+    //                 wr.codigoRole === role.codigoRole && wr.estadoRelacion === true
+    //             );
+
+    //             asignacionesDeEsteRol.forEach((asignacion: any) => {
+    //                 const widgetMaestro = listaWidgetsMaestros.find((w: any) => w.codigoWidget === asignacion.codigoWidget);
+    //                 if (widgetMaestro) {
+    //                     widgetsPermitidosGlobales.set(widgetMaestro.codigoWidget, widgetMaestro);
+    //                 }
+    //             });
+    //         }
+    //     });
+
+    //     current.usuario.roles = usuarioRoles;
+
+    //     current.usuario.widgets = Array.from(widgetsPermitidosGlobales.values());
+
+    //     this._localStorageService.setCurrentUserLocalStorage(current);
+
+    //     const contexto = {
+    //         codigoEmpresaSC: current?.usuariosSC?.[0]?.suscriptores?.[0]?.empresasAsignadas?.[0]?.codigoEmpresaSC || '',
+    //         codigoUsuarioSC: current?.usuariosSC?.[0]?.codigoUsuarioSC || ''
+    //     };
+
+    //     const navsettings = {
+    //         aplicacion: appSeleccionada,
+    //         suite: {},
+    //         modulo: {},
+    //         contexto: contexto,
+    //         suscriptor: suscriptor,
+    //         aplicaciones: aplicaciones
+    //     };
+    //     this._localStorageService.setNavSettingsLocalStorage(navsettings);
+
+    //     this._permisosService.inicializarPermisosPorDefecto().subscribe({
+    //         next: (permisos) => {
+    //             console.log('✅ Motor de permisos encendido y sockets activos. Navegando a la app...', permisos);
+
+    //             this._localStorageService.removeObject('suscriptor');
+    //             this._localStorageService.removeObject('contexto');
+    //             this._localStorageService.removeObject('aplicaciones');
+
+    //             this.router.navigate([`/starter/inicio-suites`]);
+    //         },
+    //         error: (err) => {
+    //             console.error('❌ Error inicializando permisos', err);
+    //         }
+    //     });
+    // }
     ingresarPlataforma(app: PTLAplicacionModel) {
         const current = this._localStorageService.getCurrentUserLocalStorage();
         const apps = this._localStorageService.getObject<any>('aplicaciones');
@@ -126,10 +200,8 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         const rolesApp = this.roles.filter((x: any) => x.codigoAplicacion == appSeleccionada.codigoAplicacion);
         const usuarioRoles = this.usuariosRoles.filter((x: any) => x.codigoUsuarioSC == usuSC?.codigoUsuarioSC);
 
-        // 🟢 1. Inicializamos el mapa para los widgets permitidos de ESTA aplicación
+        // 1. Inicializamos el mapa para los widgets permitidos de ESTA aplicación
         const widgetsPermitidosGlobales = new Map();
-
-        // 🟢 2. Traemos los catálogos desde los BehaviorSubjects (Asegúrate de inyectar estos servicios en el constructor)
         const listaWidgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
         const listaWidgetsRoles = this._widgetsRolesService.getActividadesRolesActuales() || [];
 
@@ -138,12 +210,10 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
             usuRole.role = role;
 
             if (role) {
-                // 🟢 3. Buscamos qué widgets tiene asignados este rol
                 const asignacionesDeEsteRol = listaWidgetsRoles.filter((wr: any) =>
-                    wr.codigoRol === role.codigoRole && wr.estadoRelacion === true
+                    wr.codigoRole === role.codigoRole && wr.estadoRelacion === true
                 );
 
-                // 🟢 4. Agregamos la metadata del widget al mapa (el Map evita duplicados si tiene varios roles)
                 asignacionesDeEsteRol.forEach((asignacion: any) => {
                     const widgetMaestro = listaWidgetsMaestros.find((w: any) => w.codigoWidget === asignacion.codigoWidget);
                     if (widgetMaestro) {
@@ -154,9 +224,17 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         });
 
         current.usuario.roles = usuarioRoles;
+        current.usuario.widgets = Array.from(widgetsPermitidosGlobales.values());
 
-        // 🟢 5. Guardamos la lista de widgets específica para esta App en la sesión
-        current.usuario.widgetsPermitidos = Array.from(widgetsPermitidosGlobales.values());
+        // 🟢 LIMPIEZA DE LAYOUT: Si el backend envió el JSON viejo como texto, lo convertimos a arreglo nativo
+        if (current.usuario.layout && typeof current.usuario.layout === 'string') {
+            try {
+                current.usuario.layout = JSON.parse(current.usuario.layout);
+            } catch (e) {
+                console.warn('⚠️ No se pudo parsear el layout antiguo. Se asignó un arreglo vacío.');
+                current.usuario.layout = [];
+            }
+        }
 
         this._localStorageService.setCurrentUserLocalStorage(current);
 

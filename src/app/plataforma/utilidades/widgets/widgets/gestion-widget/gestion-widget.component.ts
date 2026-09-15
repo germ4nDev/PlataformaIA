@@ -44,11 +44,19 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
     isAsociarRoles: boolean = false
     codeRegistro = uuidv4()
     claveUsuario: string = ''
+
     selectedFile: File | null = null
     previewUrl: string | ArrayBuffer | null = null
     userPhotoUrl: string = ''
     fileName: string = ''
     selectedFileUrl: string | null = null
+
+    selectedFileDark: File | null = null
+    previewUrlDark: string | ArrayBuffer | null = null
+    userPhotoUrlDark: string = ''
+    fileNameDark: string = ''
+    selectedFileUrlDark: string | null = null
+
     isClaveActual: boolean = true
     claveActual: string = ''
     tipoEditorTexto = 'basica'
@@ -91,8 +99,10 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                     // console.log('respuesta carga widget', resp);
                     this.usuario = resp.widget
                     this.FormRegistro = resp.widget
-                    this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'widgets', resp.widget.imagenWidget)
-                    this.fileName = resp.widget.imagenWidget;
+                    this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'widgets', resp.widget.imagenWidget_light)
+                    this.selectedFileUrlDark = this._uploadService.getFilePath(this.suscPlataforma, 'widgets', resp.widget.imagenWidget_dark)
+                    this.fileName = resp.widget.imagenWidget_light;
+                    this.fileNameDark = resp.widget.imagenWidget_dark;
                 },
                 error: () => {
                     Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
@@ -152,7 +162,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                 next: (path: any) => {
                     //   console.log('resultado++++++++++++++++', path);
                     this.fileName = path.nombreArchivo
-                    this.FormRegistro.imagenWidget = path.nombreArchivo
+                    this.FormRegistro.imagenWidget_light = path.nombreArchivo
                 },
                 error: () => {
                     this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
@@ -164,6 +174,38 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
         }
     }
 
+    onFileSelectedDarkClick(event: any) {
+        const file: File = event.target.files[0]
+        const codigo =
+            this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor ||
+            this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        const objUpload = {
+            susc: codigo,
+            tipo: 'widgets',
+            id: '0'
+        }
+        // console.log('objUpload', objUpload);
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+                this.selectedFileUrl = e.target.result
+            }
+            reader.readAsDataURL(file)
+            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+                next: (path: any) => {
+                    //   console.log('resultado++++++++++++++++', path);
+                    this.fileNameDark = path.nombreArchivo
+                    this.FormRegistro.imagenWidget_dark = path.nombreArchivo
+                },
+                error: () => {
+                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                }
+            })
+        } else {
+            this.selectedFileUrl = null
+            this.userPhotoUrl = ''
+        }
+    }
     btnGestionarRegistroClick(form: any) {
         this.isSubmit = true
         // if (!form.valid) {
@@ -171,10 +213,11 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
         // }
         const registroData = form.value as PTLWidgetMaestroModel
         // console.log('gestionar widget', registroData);
+        registroData.imagenWidget_light = this.fileName !== '' ? this.fileName : 'no-imagen.png'
+        registroData.imagenWidget_dark = this.fileNameDark !== '' ? this.fileNameDark : 'no-imagen.png'
 
         if (this.modoEdicion) {
             // MODIFICAR REGISTRO
-            registroData.imagenWidget = this.fileName
             registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
             registroData.fechaModificacion = new Date().toISOString()
             this._registrosService.actualizarWidget(registroData.codigoWidget || '', registroData).subscribe({
@@ -211,7 +254,6 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
             })
         } else {
             // INSERTAR REGISTRO
-            registroData.imagenWidget = this.fileName !== '' ? this.fileName : 'no-imagen.png'
             registroData.fechaCreacion = new Date().toISOString()
             registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
             this._registrosService.crearWidget(registroData).subscribe({

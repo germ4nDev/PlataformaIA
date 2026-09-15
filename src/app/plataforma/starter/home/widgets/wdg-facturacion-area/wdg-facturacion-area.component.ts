@@ -3,17 +3,20 @@ import { CommonModule } from '@angular/common';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboard-plataforma.service';
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
     selector: 'app-wdg-facturacion-area',
     standalone: true,
-    imports: [CommonModule, NgChartsModule],
+    imports: [CommonModule, NgChartsModule, WidgetShellComponent],
     templateUrl: './wdg-facturacion-area.component.html',
     styleUrl: './wdg-facturacion-area.component.scss'
 })
 export class WdgFacturacionAreaComponent implements OnInit {
     @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-    @Input() widgetId: any;
+
+    // 🟢 Le damos un valor por defecto por si Angular tarda en pasar el Input
+    @Input() widgetId: string = 'WDG_PLAT_FACTURACION_AREA';
     @Input() data: any;
 
     public lineChartType: 'line' = 'line';
@@ -85,7 +88,6 @@ export class WdgFacturacionAreaComponent implements OnInit {
                     this.lineChartData.datasets[0].data = data.anuales;
                     this.lineChartData.datasets[1].data = data.intermedios;
                     this.lineChartData.datasets[2].data = data.mensuales;
-
                     this.chart?.update();
                 }
             },

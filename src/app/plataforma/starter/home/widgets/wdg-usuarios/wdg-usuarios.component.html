@@ -1,94 +1,200 @@
-<div class="card bg-transparent text-white h-100 w-100 mb-0 border-0 p-3 d-flex flex-column">
+<!-- <app-widget-shell titulo="Usuarios Conectados" icono="feather icon-users" variante="normal" colorBordeTop="#10b981"
+    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
 
-    <!-- Header Centralizado -->
-    <app-widget-header titulo="Usuarios Conectados" icono="feather icon-users" [widgetId]="widgetId" [data]="data">
-        <div acciones-extra class="d-flex align-items-center me-2">
-            <span class="badge bg-success shadow-sm d-flex align-items-center px-2 py-1">
-                <span class="spinner-grow spinner-grow-sm me-1" role="status"
-                    style="width: 0.6rem; height: 0.6rem;"></span>
-                En vivo
-            </span>
-        </div>
-    </app-widget-header>
-
-    <!-- 🔴 VISTA RESUMEN: Solo se muestra en la tarjeta pequeña -->
-    <div *ngIf="!enModoEnfoque" class="flex-grow-1 d-flex justify-content-center align-items-center">
-        <h1 class="display-3 fw-bold text-white m-0">
-            {{ totalConectados }}
-        </h1>
+    <div acciones-extra class="d-flex align-items-center me-2">
+        <span class="badge bg-success shadow-sm d-flex align-items-center px-2 py-1">
+            <span class="spinner-grow spinner-grow-sm me-1" role="status" style="width: 0.6rem; height: 0.6rem;"></span>
+            En vivo
+        </span>
     </div>
 
-    <!-- 🟢 VISTA DETALLADA: Solo se muestra al expandir el widget -->
-    <div *ngIf="enModoEnfoque" class="flex-grow-1 overflow-auto mt-3">
+    <div class="text-center">
+        <h1 class="valor-contador">{{ totalConectados }}</h1>
+    </div>
 
+    <div modo-enfoque class="w-100 h-100 p-2 overflow-auto">
         <p class="text-muted mb-4 small">Listado en tiempo real de los usuarios actualmente autenticados en el sistema.
         </p>
-
         <div class="table-responsive">
-            <table class="table table-dark table-hover table-borderless align-middle">
+            <table class="table table-hover table-borderless align-middle">
                 <thead>
-                    <tr class="text-muted text-uppercase small"
-                        style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <th class="fw-bold ps-2">Usuario</th>
+                    <tr class="text-muted text-uppercase" style="border-bottom: 1px solid #e0e0e0; font-size: 0.8rem;">
+                        <th class="fw-bold">Usuario</th>
                         <th class="fw-bold">Identificación / Correo</th>
-                        <th class="fw-bold text-center">Estado</th>
+                        <th class="text-center fw-bold">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Ejemplo de maquetación: Aquí luego iterarías un *ngFor con la lista real -->
                     <tr>
                         <td class="ps-2">
                             <div class="d-flex align-items-center">
-                                <div class="bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
-                                    style="width: 36px; height: 36px; font-size: 0.9rem;">
-                                    GV
-                                </div>
+                                <div class="bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                                    style="width: 36px; height: 36px; font-size: 0.9rem;">GV</div>
                                 <div class="d-flex flex-column">
-                                    <span class="fw-bold text-white">German Valencia</span>
-                                    <span class="text-muted small">Administrador</span>
+                                    <span class="text-dark fw-bold small">German Valencia</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Administrador</span>
                                 </div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex flex-column">
-                                <span class="text-white">1110543298</span>
-                                <span class="text-muted small">german.valencia&#64;qplus.com</span>
+                                <span class="text-dark fw-medium small">1110543298</span>
+                                <span class="text-muted"
+                                    style="font-size: 0.75rem;">german.valencia&#64;qplus.com</span>
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="badge bg-success bg-opacity-25 text-success border border-success px-3 py-1">En
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-1">En
                                 Línea</span>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="ps-2">
                             <div class="d-flex align-items-center">
-                                <div class="bg-info text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold"
-                                    style="width: 36px; height: 36px; font-size: 0.9rem;">
-                                    CO
-                                </div>
+                                <div class="bg-info text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                                    style="width: 36px; height: 36px; font-size: 0.9rem;">CO</div>
                                 <div class="d-flex flex-column">
-                                    <span class="fw-bold text-white">Claudia Ortiz</span>
-                                    <span class="text-muted small">Suscriptor</span>
+                                    <span class="text-dark fw-bold small">Claudia Ortiz</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Suscriptor</span>
                                 </div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex flex-column">
-                                <span class="text-white">25489632</span>
-                                <span class="text-muted small">claudia.ortiz&#64;qplus.com</span>
+                                <span class="text-dark fw-medium small">25489632</span>
+                                <span class="text-muted" style="font-size: 0.75rem;">claudia.ortiz&#64;qplus.com</span>
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="badge bg-success bg-opacity-25 text-success border border-success px-3 py-1">En
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-1">En
                                 Línea</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+    </div>
+</app-widget-shell> -->
+
+<app-widget-shell titulo="Usuarios Conectados" icono="feather icon-users" variante="normal" colorBordeTop="#10b981"
+    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+
+    <!-- Badge de estado "En vivo" en la cabecera -->
+    <div acciones-extra class="d-flex align-items-center me-2">
+        <span class="badge bg-success shadow-sm d-flex align-items-center px-2 py-1">
+            <span class="spinner-grow spinner-grow-sm me-1" role="status" style="width: 0.6rem; height: 0.6rem;"></span>
+            En vivo
+        </span>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 1. VISTA NORMAL (Tablero con Mini Avatares)    -->
+    <!-- ============================================== -->
+    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center w-100 h-100 pb-2">
+
+        <h1 class="display-3 fw-bold mb-1 text-dark animate__animated animate__fadeIn">
+            {{ totalConectados }}
+        </h1>
+        <span class="text-muted small text-uppercase mb-3" style="font-size: 0.65rem; letter-spacing: 1px;">Activos
+            ahora</span>
+
+        <!-- Pila visual de avatares rápidos -->
+        <div class="d-flex align-items-center justify-content-center mt-1">
+            <div class="d-flex align-items-center">
+                <ng-container *ngFor="let user of usuariosConectados | slice:0:3; let i = index">
+                    <div [class]="user.colorAvatar + ' text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm border border-white'"
+                        [style.margin-left.px]="i > 0 ? -8 : 0" style="width: 26px; height: 26px; font-size: 0.65rem;"
+                        [title]="user.nombre">
+                        {{ user.iniciales }}
+                    </div>
+                </ng-container>
+                <div *ngIf="usuariosConectados.length > 3"
+                    class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm border border-white ms-n2"
+                    style="width: 26px; height: 26px; font-size: 0.6rem;">
+                    +{{ usuariosConectados.length - 3 }}
+                </div>
+            </div>
+            <span class="text-muted ms-2 small" style="font-size: 0.75rem;">
+                {{ usuariosConectados.length === 1 ? '1 sesión activa' : usuariosConectados.length + ' sesiones activas'
+                }}
+            </span>
+        </div>
 
     </div>
 
-</div>
+    <!-- ============================================== -->
+    <!-- 2. VISTA MAXIMIZADA (Auditoría de Sesiones)    -->
+    <!-- ============================================== -->
+    <div modo-enfoque class="w-100 h-100 p-2 overflow-auto">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <p class="text-muted mb-0 small">Auditoría en tiempo real de las sesiones activas, ubicación de navegación y
+                tiempo de permanencia.</p>
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-1">
+                Total Activos: {{ totalConectados }}
+            </span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-borderless align-middle">
+                <thead>
+                    <tr class="text-muted text-uppercase" style="border-bottom: 1px solid #e0e0e0; font-size: 0.75rem;">
+                        <th class="fw-bold">Usuario & Rol</th>
+                        <th class="fw-bold">Identificación / Correo</th>
+                        <th class="fw-bold">Módulo / Aplicación</th>
+                        <th class="fw-bold text-center">Tiempo de Sesión</th>
+                        <th class="text-center fw-bold">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of usuariosConectados">
+                        <!-- Usuario y Rol -->
+                        <td class="ps-2">
+                            <div class="d-flex align-items-center">
+                                <div [class]="user.colorAvatar + ' text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold shadow-sm'"
+                                    style="width: 36px; height: 36px; font-size: 0.9rem;">
+                                    {{ user.iniciales }}
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <span class="text-dark fw-bold small">{{ user.nombre }}</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">{{ user.rol }}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Identificación y Correo -->
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="text-dark fw-medium small">{{ user.identificacion }}</span>
+                                <span class="text-muted" style="font-size: 0.75rem;" [innerHTML]="user.correo"></span>
+                            </div>
+                        </td>
+
+                        <!-- Módulo Activo -->
+                        <td>
+                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 0.75rem;">
+                                <i class="feather icon-compass me-1 text-primary"></i> {{ user.aplicacionActual }}
+                            </span>
+                        </td>
+
+                        <!-- Tiempo de Sesión -->
+                        <td class="text-center">
+                            <span class="text-dark fw-medium small d-flex align-items-center justify-content-center">
+                                <i class="feather icon-clock me-1 text-muted"></i> {{ user.tiempoConexion }}
+                            </span>
+                            <span class="text-muted d-block" style="font-size: 0.65rem;">{{ user.dispositivo }}</span>
+                        </td>
+
+                        <!-- Estado -->
+                        <td class="text-center">
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-1">
+                                En Línea
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</app-widget-shell>

@@ -1,0 +1,51 @@
+.widget-shell-container {
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background: var(--card-background);
+    border: none;
+    box-sizing: border-box;
+}
+
+/* Efecto heredado de tu clase original kpi-card-colored */
+.widget-colored {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        /* Opcional: Puedes usar var(--widget-color) aquí si deseas algún efecto extra al hacer hover */
+    }
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 30px;
+    flex-shrink: 0;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    color: var(--text-color);
+}
+
+.widget-divider {
+    margin: 12px 0;
+    border-top: 1px solid var(--border-color);
+    opacity: 1;
+    flex-shrink: 0;
+}
+
+.widget-body {
+    flex-grow: 1;
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.widget-shell-container.borde-kpi {
+    /* Leemos la variable que inyectó el HTML y forzamos el renderizado */
+    border-top: 4px solid var(--color-borde) !important;
+}

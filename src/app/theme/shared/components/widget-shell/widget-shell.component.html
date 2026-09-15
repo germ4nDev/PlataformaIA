@@ -1,0 +1,26 @@
+<div class="widget-shell-container card h-100 w-100 mb-0 p-3 d-flex flex-column justify-content-between"
+    [class.borde-kpi]="variante === 'kpi' && colorBordeTop" [style.--color-borde]="colorBordeTop">
+
+    <!-- 🟢 Delegamos toda la cabecera a tu componente unificado -->
+    <app-widget-header [titulo]="titulo" [subtitulo]="subtitulo" [icono]="icono" [variante]="variante"
+        [widgetId]="widgetId" [data]="data">
+
+        <!-- 🟢 Puente: Recibimos [acciones-extra] del widget y se las pasamos al header -->
+        <div acciones-extra>
+            <ng-content select="[acciones-extra]"></ng-content>
+        </div>
+    </app-widget-header>
+
+    <hr class="widget-divider" *ngIf="mostrarLinea && !enModoEnfoque" />
+
+    <!-- 🟢 CUERPO NORMAL (Tablero) -->
+    <div class="widget-body flex-grow-1" *ngIf="!enModoEnfoque">
+        <ng-content></ng-content>
+    </div>
+
+    <!-- 🟢 CUERPO MAXIMIZADO (Modo Enfoque) -->
+    <div class="widget-body-enfoque flex-grow-1 d-flex flex-column overflow-auto" *ngIf="enModoEnfoque">
+        <ng-content select="[modo-enfoque]"></ng-content>
+    </div>
+
+</div>

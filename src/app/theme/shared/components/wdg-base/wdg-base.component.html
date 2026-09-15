@@ -1,0 +1,46 @@
+<app-widget-shell titulo="TÍTULO DEL WIDGET" icono="feather icon-box" variante="normal" colorBordeTop="#6c757d"
+    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+
+    <!-- ============================================== -->
+    <!-- 🟢 1. ACCIONES EXTRA DEL HEADER (Opcional)     -->
+    <!-- ============================================== -->
+    <!-- Todo lo que pongas aquí aparecerá al lado del botón maximizar -->
+    <div acciones-extra class="ms-2 d-flex gap-2">
+        <span class="badge bg-light text-dark border shadow-sm">Etiqueta</span>
+        <!-- <button class="btn btn-sm btn-light p-1 m-0"><i class="feather icon-refresh-cw"></i></button> -->
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 🟢 2. ESTADO DE CARGA (Skeletons)              -->
+    <!-- ============================================== -->
+    <ng-container *ngIf="isLoading; else loadedContent">
+        <!-- Reemplaza esto con la forma de tu skeleton ideal (tabla, kpi, gráfica) -->
+        <div class="w-100 h-100 d-flex flex-column justify-content-center p-3">
+            <div class="skeleton-box w-100 mb-3" style="height: 120px;"></div>
+            <div class="skeleton-box w-75" style="height: 20px;"></div>
+        </div>
+    </ng-container>
+
+    <!-- ============================================== -->
+    <!-- 🟢 3. VISTA NORMAL (Tablero)                   -->
+    <!-- ============================================== -->
+    <ng-template #loadedContent>
+        <div class="w-100 h-100 position-relative p-2">
+            <!-- AQUÍ VA TU GRÁFICA, TABLA O INDICADOR -->
+            <p class="text-dark fw-medium">Contenido principal del widget.</p>
+        </div>
+    </ng-template>
+
+    <!-- ============================================== -->
+    <!-- 🟢 4. VISTA MAXIMIZADA (Modo Enfoque)          -->
+    <!-- ============================================== -->
+    <!-- La directiva "modo-enfoque" oculta esto en el tablero y lo muestra solo al expandir -->
+    <div modo-enfoque class="w-100 h-100 position-relative p-3 overflow-auto">
+        <p class="text-muted small mb-3">Descripción detallada que el usuario ve al expandir el widget a pantalla
+            completa.</p>
+
+        <!-- AQUÍ VA LA VISTA DETALLADA O DATATABLE -->
+
+    </div>
+
+</app-widget-shell>

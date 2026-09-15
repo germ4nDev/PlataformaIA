@@ -1,10 +1,17 @@
-<div class="widget-chart-container">
-    <div class="chart-header">
-        <h5 class="text-white mb-0">Distribución de Paquetes</h5>
-        <span class="badge-tech">Market Share</span>
+<app-widget-shell titulo="Distribución de Paquetes" icono="feather icon-pie-chart" variante="normal"
+    colorBordeTop="#8b5cf6" [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+
+    <div acciones-extra class="ms-2">
+        <span class="badge bg-light text-dark border">Market Share</span>
     </div>
-    <div class="chart-wrapper">
-        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions" [type]="doughnutChartType">
-        </canvas>
+
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2">
+        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
+            [type]="doughnutChartType"></canvas>
     </div>
-</div>
+
+    <div modo-enfoque class="w-100 h-100 position-relative p-4">
+        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
+            [type]="doughnutChartType"></canvas>
+    </div>
+</app-widget-shell>

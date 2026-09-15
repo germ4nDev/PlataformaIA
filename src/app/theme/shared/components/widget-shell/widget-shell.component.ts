@@ -1,25 +1,25 @@
-import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+
+// 🟢 Importamos tu Header unificado
 import { WidgetHeaderComponent } from '../widget-header/widget-header.component';
 
 @Component({
-    selector: 'app-kpi-shell',
+    selector: 'app-widget-shell',
     standalone: true,
-    imports: [CommonModule, WidgetHeaderComponent],
-    templateUrl: './kpi-shell.component.html',
-    styleUrl: './kpi-shell.component.scss'
+    imports: [CommonModule, WidgetHeaderComponent], // 🟢 Lo inyectamos aquí
+    templateUrl: './widget-shell.component.html',
+    styleUrl: './widget-shell.component.scss'
 })
-export class KpiShellComponent implements OnInit, OnDestroy {
-
-    @Input() titulo: string = 'INDICADOR';
-    @Input() icono: string = 'feather icon-pie-chart';
-    @Input() valor: number | string = 0;
-    @Input() colorHex: string = '#6c757d';
-
-    // 🟢 Nueva variable para controlar el estado de carga
-    @Input() cargando: boolean = true;
+export class WidgetShellComponent implements OnInit, OnDestroy {
+    @Input() titulo: string = '';
+    @Input() subtitulo: string = '';
+    @Input() icono: string = '';
+    @Input() variante: 'normal' | 'kpi' = 'normal'; // 🟢 Nuevo Input
+    @Input() mostrarLinea: boolean = true;
+    @Input() colorBordeTop: string = '';
 
     @Input() widgetId: string = '';
     @Input() data: any = null;

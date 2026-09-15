@@ -20,6 +20,11 @@
                 <h1 class="page-title text-center mb-0 flex-grow-1">{{ 'PLATAFORMA.TEXTO_HOME' | translate }}</h1>
 
                 <div class="d-flex align-items-center gap-2" style="justify-content: flex-end;">
+                    <button class="btn-accion-dashboard" (click)="resetearLayout()"
+                        title="Restablecer tablero por defecto">
+                        <i class="feather icon-rotate-ccw"></i>
+                    </button>
+
                     <button class="btn-accion-dashboard" (click)="toggleBloqueoGridster()"
                         [class.editing-mode]="!tableroBloqueado"
                         [title]="tableroBloqueado ? 'Tablero bloqueado (Haz clic para desbloquear)' : 'Tablero desbloqueado para edición (Haz clic para bloquear)'">

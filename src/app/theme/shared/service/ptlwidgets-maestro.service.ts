@@ -96,6 +96,9 @@ export class PTLWidgetsMaestroService {
     }
 
     actualizarWidget(codigoWidget: string, data: PTLWidgetMaestroModel) {
+        console.log('actualizar el widget codigo', codigoWidget);
+        console.log('actualizar el widget', data);
+
         const url = `${base_url}/widgets/${codigoWidget}`;
         return this.http.put(url, data).pipe(
             map((resp: any) => {

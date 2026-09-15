@@ -136,11 +136,27 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">Foto Usuario</label>
+                                <label class="form-label">{{ 'WIDGETS.GESTION.IMAGENLIGHT' | translate
+                                    }}</label>
                                 <br>
                                 <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview" />
-                                <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"
-                                    (change)="onFileSelectedClick($event)">
+                                <input type="file" #fileInput id="imagenWidget_light" style="display: none;"
+                                    accept="image/*" (change)="onFileSelectedClick($event)">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInput.click()">
+                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    {{ 'PLATAFORMA.SELECTFILE' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'WIDGETS.GESTION.IMAGENDARK' | translate
+                                    }}</label>
+                                <br>
+                                <img *ngIf="selectedFileUrlDark" [src]="selectedFileUrlDark" class="image-preview" />
+                                <input type="file" #fileInput id="imagenWidget_dark" style="display: none;"
+                                    accept="image/*" (change)="onFileSelectedDarkClick($event)">
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                                     (click)="fileInput.click()">
                                     <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->

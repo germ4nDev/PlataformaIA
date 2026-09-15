@@ -1,20 +1,24 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SocketManagerService } from 'src/app/theme/shared/service';
 import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboard-plataforma.service';
-import { WidgetHeaderComponent } from "src/app/theme/shared/components/widget-header/widget-header.component";
+
+// 🟢 Importamos el contenedor maestro universal
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
     selector: 'app-wdg-tickets',
     standalone: true,
-    imports: [CommonModule, WidgetHeaderComponent],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Actualizamos el import
     templateUrl: './wdg-tickets.component.html',
     styleUrl: './wdg-tickets.component.scss'
 })
 export class WdgTicketsComponent implements OnInit, OnDestroy {
     @Input() data: any;
-    @Input() widgetId: string = '';
+
+    // 🟢 Fallback de seguridad
+    @Input() widgetId: string = 'WDG_PLAT_TICKETS';
 
     public ticketsAbiertos: number = 0;
     public ticketsEnProceso: number = 0;
@@ -24,7 +28,8 @@ export class WdgTicketsComponent implements OnInit, OnDestroy {
 
     constructor(
         private _socketManager: SocketManagerService,
-        private _dashboardService: DashboardPlataformaService
+        private _dashboardService: DashboardPlataformaService,
+        private cdr: ChangeDetectorRef // 🟢 Inyectado para asegurar la actualización visual
     ) { }
 
     ngOnInit() {
@@ -41,6 +46,7 @@ export class WdgTicketsComponent implements OnInit, OnDestroy {
                 this.ticketsAbiertos = res.abiertos || 0;
                 this.ticketsEnProceso = res.enProceso || 0;
                 this.ticketsResueltos = res.resueltos || 0;
+                this.cdr.detectChanges(); // 🟢 Obligamos a renderizar los nuevos datos
             },
             error: (err) => console.error('Error al cargar resumen de tickets:', err)
         });

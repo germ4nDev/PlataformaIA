@@ -241,6 +241,21 @@
                                                         </ng-container>
                                                     </ng-container>
 
+                                                    <ng-container *ngSwitchCase="'capture2'">
+                                                        <ng-container [ngSwitch]="row.tipo">
+                                                            <img *ngSwitchCase="'capture'" [src]="row.capture"
+                                                                [alt]="'Capture'" class="capture-table" />
+                                                            <div *ngSwitchCase="'video'" class="video-table">
+                                                                <app-video-player
+                                                                    [src]="row.capture"></app-video-player>
+                                                            </div>
+                                                            <div *ngSwitchDefault>
+                                                                <a [href]="row[detailColumn.capture]" target="_blank"
+                                                                    style="color: cyan"> Ver archivo </a>
+                                                            </div>
+                                                        </ng-container>
+                                                    </ng-container>
+
                                                     <ng-container *ngSwitchCase="'number'">
                                                         <span style="display: block; text-align: left">
                                                             {{ row[detailColumn.name] | number: '1.2-2' }}

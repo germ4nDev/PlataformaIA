@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core'
+import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef, isDevMode } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { DataTablesModule } from 'angular-datatables'
 import { Router } from '@angular/router'
@@ -108,6 +108,11 @@ export class WidgetsComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe()
     }
 
+    get isDarkMode(): boolean {
+        const mode = this._localStorageService.getThemeSettings();
+        return mode.isDarkTheme;
+    }
+
     getFileType(url: string): 'capture' | 'video' | 'documento' | 'desconocido' {
         if (!url) return 'desconocido'
         const cleanUrl = url.split(/[#?]/)[0]
@@ -123,17 +128,18 @@ export class WidgetsComponent implements OnInit, OnDestroy {
             this._permisosService.actividadesAutorizadas$
         ]).pipe(
             map(([wdgts, permisos]: [PTLWidgetMaestroModel[], string[]]) => {
-                console.log('**********widgets ', wdgts);
 
                 if (!wdgts || wdgts.length === 0) return [];
 
                 return wdgts.map((wdgt: any) => {
                     const newWdgt: any = { ...wdgt };
 
-                    // Transformaciones base
-                    newWdgt.nomEstado = newWdgt.activo ? 'Activo' : 'Inactivo';
-                    newWdgt.capture = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget);
-                    newWdgt.imagen = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget);
+                    newWdgt.nomEstado = newWdgt.estadoWidget ? 'Activo' : 'Inactivo';
+                    newWdgt.capture = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_light);
+                    newWdgt.capture2 = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_dark);
+                    newWdgt.imagen = this.isDarkMode ?
+                        this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_dark) :
+                        this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_loght)
                     newWdgt.tipo = 'capture';
 
                     const accionesPermitidas: any[] = [];
@@ -157,8 +163,8 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     if (permisos.includes('ACT_WDGT_INACTIVAR')) {
                         accionesPermitidas.push({
                             accion: 'INACTIVAR',
-                            letra: newWdgt.activo ? 'I' : 'A',
-                            color: newWdgt.activo ? '#00ffdd' : '#3ca014',
+                            letra: newWdgt.estadoWidget ? 'I' : 'A',
+                            color: newWdgt.estadoWidget ? '#00ffdd' : '#3ca014',
                             tooltip: this.translate.instant('WIDGETS.INACTIVAR')
                         });
                     }
@@ -172,7 +178,6 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     }
 
                     newWdgt._acciones = accionesPermitidas;
-                    console.log('**********widget', newWdgt);
 
                     return newWdgt as PTLWidgetMaestroModel;
                 });
@@ -187,7 +192,6 @@ export class WidgetsComponent implements OnInit, OnDestroy {
             })
         );
 
-        // 2. Stream de Filtros Dinámicos
         this.widgetssFiltradas$ = combineLatest([
             this.widgetssTransformados$.pipe(startWith([])),
             this.filtroCodigoSubject,
@@ -230,7 +234,6 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     const textoFiltro = descripcion.toLowerCase();
                     filteredWidgets = filteredWidgets.filter(app => (app.descripcionWidget || '').toLowerCase().includes(textoFiltro));
                 }
-                console.log('**********widget', filteredWidgets);
 
                 return filteredWidgets;
             })
@@ -304,7 +307,12 @@ export class WidgetsComponent implements OnInit, OnDestroy {
         },
         {
             name: 'capture',
-            header: 'WIDGETS.IMAGENINICIO',
+            header: 'WIDGETS.IMAGENLIGHT',
+            type: 'capture'
+        },
+        {
+            name: 'capture2',
+            header: 'WIDGETS.IMAGENDARK',
             type: 'capture'
         }
     ]
@@ -378,10 +386,25 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     this.translate.instant('PLATAFORMA.CANCEL')
                 ).subscribe(result => {
                     if (result) {
-                        widget.estadoWidget = widget.estadoWidget == true ? false : true;
-                        console.log('widget a inactivar', widget);
-                        this._widgetsService.actualizarWidget(id, widget).subscribe({
+                        const widgt = {
+                            widgetId: widget.widgetId,
+                            codigoWidget: widget.codigoWidget,
+                            nombreWidget: widget.nombreWidget,
+                            descripcionWidget: widget.descripcionWidget,
+                            imagenWidget_light: widget.imagenWidget_light,
+                            imagenWidget_dark: widget.imagenWidget_dark,
+                            defaultCols: widget.defaultCols,
+                            defaultRows: widget.defaultRows,
+                            pestana: widget.pestana,
+                            estadoWidget: widget.estadoWidget == true ? false : true,
+                            codigoUsuarioModificacion: this._localStorageService.getCurrentUserLocalStorage().usuario.codigoUsuario,
+                            fechaModificacion: new Date().toISOString(),
+                            layoutVersion: Number(widget.layoutVersion) + 1
+                        }
+                        console.log('widget a inactivar', widgt);
+                        this._widgetsService.actualizarWidget(id, widgt).subscribe({
                             next: (resp: any) => {
+                                console.log('actualizado', resp);
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
@@ -399,13 +422,12 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                                 this._swalService.getAlertSuccess(this.translate.instant('WIDGETS.ELIMINARERROR') + ' ' + err.mensaje)
-                                // this.setupRegistrosStream()
+                                this.setupWidgetsStream()
                                 console.error('Error eliminando', err)
                             }
                         })
                     }
                 });
-
                 break;
             case 'ROLES':
                 console.log('Redirigirse a la pagina de roles:', id);
@@ -470,100 +492,3 @@ export class WidgetsComponent implements OnInit, OnDestroy {
         this.toggleSidebar.emit()
     }
 }
-
-
-// {
-//     id: 'viales-clusters',
-//     type: 'circle',
-//     source: 'alertas-viales-source',
-//     filter: ['has', 'point_count'],
-//     paint: {
-//         'circle-color': '#ef4444',
-//         'circle-radius': 15,
-//         'circle-stroke-width': 2,
-//         'circle-stroke-color': '#ffffff'
-//     }
-// },
-// // 2. Segundo el Texto (Debe ir después para que no quede tapado)
-// {
-//     id: 'viales-cluster-count',
-//     type: 'symbol',
-//     source: 'alertas-viales-source',
-//     filter: ['has', 'point_count'],
-//     layout: {
-//         // Usamos una expresión para convertir el número a string de forma segura
-//         'text-field': ['to-string', ['get', 'point_count']],
-//         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-//         'text-size': 12,
-//         'text-allow-overlap': true
-//     },
-//     paint: {
-//         'text-color': '#ffffff'
-//     }
-// },
-// // 3. Puntos individuales
-// {
-//     id: 'viales-individual',
-//     type: 'circle',
-//     source: 'alertas-viales-source',
-//     filter: ['!', ['has', 'point_count']],
-//     paint: {
-//         'circle-color': ['case', ['==', ['get', 'afectaPeaje'], true], '#b91c1c', '#ef4444'],
-//         'circle-radius': 6,
-//         'circle-stroke-width': 2,
-//         'circle-stroke-color': '#fee2e2'
-//     }
-// },
-
-
-
-
-//             private suscribirseADatos() {
-//     this.subs.add(this._mapaService.gemeloDigital$.subscribe(data => {
-//         if (!data) return;
-//         if (data.CAPA_INFRAESTRUCTURA) this.actualizarFuente('infra-source', this.procesarInfraestructuraWkt(data.CAPA_INFRAESTRUCTURA));
-//         if (data.CAPA_TERRESTRE) this.actualizarFuente('terrestre-source', data.CAPA_TERRESTRE);
-//         if (data.CAPA_CLIMA) this.actualizarFuente('clima-source', data.CAPA_CLIMA);
-//         if (data.CAPA_VIAS) this.actualizarFuente('vias-source', data.CAPA_VIAS);
-//     }));
-
-//     this.subs.add(this._mapaService.naves$.subscribe(data => { if (data) this.actualizarFuente('naves-source', data); }));
-
-//     // Aquí ya estamos llamando a procesarRelacionIncidentePeaje()
-//     this.subs.add(this._mapaService.accidentes$.subscribe(data => {
-//         this.ultimosIncidentes = data;
-//         this.procesarRelacionIncidentePeaje();
-//     }));
-
-//     // 🟢 AJUSTE AQUÍ: Mapear la visibilidad de los clusters
-//     this.subs.add(this._mapaService.visibilidad$.subscribe(vis => {
-//         if (!this.map || !this.map.isStyleLoaded()) return;
-
-//         const mapping = [
-//             { id: 'vias-layer', visible: vis['vias'] },
-//             { id: 'naves-layer', visible: vis['naves'] },
-//             { id: 'capa-infra-fill', visible: vis['infra'] },
-//             { id: 'capa-infra-line', visible: vis['infra'] },
-//             { id: 'capa-infra-point', visible: vis['infra'] },
-//             { id: 'terrestre-clusters', visible: vis['terrestre'] },
-//             { id: 'terrestre-cluster-count', visible: vis['terrestre'] },
-//             { id: 'terrestre-individual', visible: vis['terrestre'] },
-//             { id: 'clima-layer', visible: vis['clima'] },
-//             // 🟢 AJUSTE: Mapear las 3 capas nuevas de los clusters de accidentes
-//             { id: 'viales-clusters', visible: vis['accidentes'] },
-//             { id: 'viales-cluster-count', visible: vis['accidentes'] },
-//             { id: 'viales-individual', visible: vis['accidentes'] },
-//             { id: 'puerto-fill', visible: vis['infra'] },
-//             { id: 'puerto-line', visible: vis['infra'] },
-//             { id: 'peajes-layer', visible: vis['peajes'] !== false },
-//             { id: 'geocercas-layer', visible: vis['peajes'] !== false },
-//             { id: 'geocercas-line-layer', visible: vis['peajes'] !== false }
-//         ];
-
-//         mapping.forEach(m => {
-//             if (this.map.getLayer(m.id)) {
-//                 this.map.setLayoutProperty(m.id, 'visibility', m.visible ? 'visible' : 'none');
-//             }
-//         });
-//     }));
-// }
