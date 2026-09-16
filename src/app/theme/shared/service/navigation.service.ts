@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from './lenguage.service';
 import { Router } from '@angular/router';
 import { NavigationItem } from '../_helpers/models/Navigation.model';
+import { SocketManagerService } from './socket-manager.service';
 
 @Injectable({
     providedIn: 'root'
@@ -32,6 +33,7 @@ export class NavigationService implements OnInit, OnDestroy {
         private router: Router,
         private _modulosService: PtlmodulosApService,
         private _localStorageService: LocalStorageService,
+        private _socketManagerService: SocketManagerService,
         private _languageService: LanguageService,
         private translate: TranslateService
     ) {
@@ -166,15 +168,8 @@ export class NavigationService implements OnInit, OnDestroy {
             return;
         }
 
-        // const navSett = this._localStorageService.getObject<any>('navsettings');
-
-        // const navsettings = {
-        //     aplicacion: navSett.aplicacion,
-        //     suite: navSett.suite,
-        //     modulo: modulo,
-        //     contexto: navSett.contexto,
-        //     suscriptor: navSett.suscriptor,
-        //     aplicaciones: navSett.aplicaciones
+        // if (modulo.codigoModulo) {
+        //     this._socketManagerService.actualizarContextoSesion(modulo.codigoModulo);
         // }
 
         this._localStorageService.setModuloLocalStorage(modulo);

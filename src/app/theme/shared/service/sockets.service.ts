@@ -1,7 +1,7 @@
 /*
     Author: German Valencia
     Refactored for: PORTTOS Architecture & TCL Multi-Agent
-    Responsibility: Pure Socket.io connection management and real-time event tunneling.
+    Responsibility: Pure Socket.io connection and real-time event tunneling.
 */
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -14,20 +14,18 @@ export class SocketService {
     private connectedSubject = new BehaviorSubject<boolean>(false);
     public connected$ = this.connectedSubject.asObservable();
 
-    constructor(private socket: Socket) {
+    constructor(
+        private socket: Socket
+    ) {
         console.log('🔌 SocketService inicializado.');
         this.inicializarConexion();
     }
 
-    /**
-     * 🟢 Inicialización automática (Ej: cuando el usuario recarga la página con F5)
-     */
     private inicializarConexion() {
         const codigoUsuario = this.obtenerCodigoUsuarioGuardado();
         const codigoSesion = sessionStorage.getItem('codigoSesionActiva');
 
         if (codigoUsuario && codigoSesion) {
-            // Configuramos los metadatos de autenticación antes de conectar
             this.configurarAuthSocket(codigoUsuario, codigoSesion);
 
             if (!this.socket.ioSocket?.connected) {
@@ -41,9 +39,6 @@ export class SocketService {
         this.configurarListenersGlobales();
     }
 
-    /**
-     * 🟢 Configuración centralizada de los eventos nativos del Socket
-     */
     private configurarListenersGlobales() {
         this.socket.fromEvent('connect').subscribe(() => {
             console.log('✅ Socket.IO conectado al servidor.');
@@ -61,19 +56,14 @@ export class SocketService {
         });
     }
 
-    /**
-     * 🟢 Llamado EXCLUSIVAMENTE desde el Login después de guardar la sesión vía HTTP
-     */
     public conectarConUsuario(codigoUsuario: string, codigoSesion?: string) {
         if (!codigoUsuario) return;
 
         const sessionActual = codigoSesion || sessionStorage.getItem('codigoSesionActiva');
 
-        // Inyectamos las credenciales al handshake
         this.configurarAuthSocket(codigoUsuario, sessionActual);
 
         if (this.socket.ioSocket?.connected) {
-            // Si ya estaba conectado, le decimos al backend que re-vincule esta nueva sesión
             console.log('🔄 Socket ya activo, vinculando nueva sesión:', sessionActual);
             this.emit('vincular_socket_sesion', { codigoSesion: sessionActual });
             return;
@@ -83,9 +73,6 @@ export class SocketService {
         this.socket.connect();
     }
 
-    /**
-     * 🟢 Centraliza la inyección de parámetros en el handshake del socket
-     */
     private configurarAuthSocket(codigoUsuario: string, codigoSesion: string | null) {
         const ioSocket = (this.socket as any).ioSocket;
         if (ioSocket) {
@@ -96,16 +83,10 @@ export class SocketService {
         }
     }
 
-    /**
-     * 🟢 Notifica al servidor el cambio dinámico de módulo (Rutas)
-     */
     public notificarCambioModulo(codigoModulo: string): void {
         this.emit('actualizar_contexto_sesion', { codigoModulo });
     }
 
-    /**
-     * 🟢 Notifica cambios en el contexto corporativo (Suscriptor, Suite, Aplicación)
-     */
     public notificarCambioContexto(contexto: {
         codigoSuscriptor?: string;
         codigoSuite?: string;
@@ -115,9 +96,6 @@ export class SocketService {
         this.emit('actualizar_contexto_sesion', contexto);
     }
 
-    /**
-     * 🟢 Utilidad interna para rescatar el usuario en caso de F5
-     */
     private obtenerCodigoUsuarioGuardado(): string | null {
         try {
             const rawUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');

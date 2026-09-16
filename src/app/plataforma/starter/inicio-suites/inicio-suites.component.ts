@@ -69,6 +69,9 @@ export class InicioSuitesComponent implements OnInit {
                 console.log('✅ Permisos listos para la aplicación. Navegando...');
 
                 this._localStorageService.setSuiteLocalStorage(suite);
+                // if (suite.codigoSuite) {
+                //     this._socketManagerService.actualizarContextoSesion(suite.codigoSuite);
+                // }
                 this._themeStorage.saveThemeSettings()
                 this.router.navigate([suite.rutaInicio])
             }

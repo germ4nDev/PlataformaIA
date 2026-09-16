@@ -133,6 +133,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        const alertaExpiracion = localStorage.getItem('alerta_expiracion');
+
+        if (alertaExpiracion) {
+            // Usamos el Toast Info o el Warning según prefieras de tu servicio
+            this._swalService.getAlertInfo(alertaExpiracion);
+
+            // Borramos la nota para no crear un bucle infinito al refrescar la página
+            localStorage.removeItem('alerta_expiracion');
+        }
+
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
@@ -162,147 +172,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.showPassword = !this.showPassword;
     }
 
-    // onLoginUserClick(): void {
-    //     this.submitted = true;
-
-    //     if (this.loginForm.invalid) {
-    //         return;
-    //     }
-
-    //     this.error = '';
-    //     this.loading = true;
-    //     const userName = this.formValues?.['username']?.value;
-    //     const password = this.formValues?.['password']?.value;
-
-    //     this.loginSub = this._authenticationService.login(userName, password)
-    //         .pipe(
-    //             switchMap((respLogin: any) => {
-
-    //                 if (!respLogin.ok) {
-    //                     this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'));
-    //                     return of(null);
-    //                 }
-
-    //                 this._localstorageService.setTokenLocalStorage(respLogin.token);
-    //                 this.currentUser = this._localstorageService.getCurrentUserLocalStorage();
-    //                 console.log('++++++++ usuario activo', this.currentUser);
-
-    //                 return forkJoin({
-    //                     respLogin: of(respLogin),
-    //                     currentUser: of(this.currentUser),
-    //                     usuariosSC: this._usuariosSCService.cargarRegistros().pipe(take(1)),
-    //                     usuariosEmpresasSC: this._usuariosEmpresasSCService.cargarRegistros().pipe(take(1)),
-    //                     empresasSC: this._empresasSCService.cargarRegistros().pipe(take(1)),
-    //                     suscriptores: this._suscriptoresService.getRegistros().pipe(take(1)),
-    //                     paquetesSC: this._paquetesSCService.cargarRegistros().pipe(take(1)),
-    //                     modulosPQ: this._modulosPaqueteService.cargarRegistros().pipe(take(1)),
-    //                     usuariosRoles: this._usuariosRolesService.cargarRegistros().pipe(take(1)),
-    //                     rolesMaestros: this._rolesService.cargarRegistros().pipe(take(1))
-    //                 });
-    //             }),
-    //             tap((data: any) => {
-    //                 this.loading = false;
-    //                 console.log('++++++++ datos forkjoin', data);
-
-    //                 if (!data) return;
-
-    //                 const listaUsuariosSC = data.usuariosSC.usuariosSC || data.usuariosSC.usuarios || data.usuariosSC || [];
-    //                 const listaUsuariosEmpresasSC = data.usuariosEmpresasSC.usuariosEmpresasSC || data.usuariosEmpresasSC || [];
-    //                 const listaEmpresasSC = data.empresasSC.empresasSC || data.empresasSC.empresas || data.empresasSC || [];
-    //                 const listaSuscriptores = data.suscriptores.suscriptores || data.suscriptores || [];
-    //                 const listaPaquetesSC = data.paquetesSC.paquetesSC || data.paquetesSC || [];
-    //                 const listaModulosPQ = data.modulosPQ.modulosPQ || data.modulosPQ || [];
-    //                 const listaUsuarioRoles = data.usuariosRoles.usuariosRoles || data.usuariosRoles.usuarioRole || data.usuariosRoles || [];
-    //                 const listaRolesMaestros = data.rolesMaestros.roles || data.rolesMaestros.data || data.rolesMaestros || [];
-
-    //                 const suscUsu = listaUsuariosSC.filter((x: any) => x.codigoUsuario === data.currentUser.usuario?.codigoUsuario);
-
-    //                 if (suscUsu.length > 0) {
-    //                     suscUsu.forEach((usuSC: any) => {
-
-    //                         const suscs = listaSuscriptores.filter((x: any) => x.codigoSuscriptor === usuSC.codigoSuscriptor);
-
-    //                         suscs.forEach((susc: any) => {
-
-    //                             const usuEmps = listaUsuariosEmpresasSC.filter((x: any) => x.codigoUsuarioSC === usuSC.codigoUsuarioSC);
-    //                             const empresasDeEsteSuscriptor: any[] = [];
-
-    //                             usuEmps.forEach((usuEmp: any) => {
-    //                                 const emp = listaEmpresasSC.find((x: any) => x.codigoEmpresaSC === usuEmp.codigoEmpresaSC);
-
-    //                                 if (emp && emp.codigoSuscriptor === susc.codigoSuscriptor) {
-    //                                     usuEmp.empresa = emp;
-
-    //                                     const rolesDeEstaEmpresa = listaUsuarioRoles.filter((rol: any) =>
-    //                                         rol.codigoUsuarioSC === usuSC.codigoUsuarioSC &&
-    //                                         rol.codigoEmpresaSC === emp.codigoEmpresaSC &&
-    //                                         rol.estadoUsuarioRole === true
-    //                                     );
-
-    //                                     const rolesEnriquecidos = rolesDeEstaEmpresa.map((rolUsuario: any) => {
-    //                                         const detalleRol = listaRolesMaestros.find((r: any) => r.codigoRole === rolUsuario.codigoRole);
-
-    //                                         return {
-    //                                             ...rolUsuario,
-    //                                             detalleRole: detalleRol || null,
-    //                                             nombreRolLegible: detalleRol ? detalleRol.nombreRole : 'DESCONOCIDO'
-    //                                         };
-    //                                     });
-
-    //                                     usuEmp.rolesAsignados = rolesEnriquecidos;
-    //                                     empresasDeEsteSuscriptor.push(usuEmp);
-    //                                 }
-    //                             });
-
-    //                             susc.empresasAsignadas = empresasDeEsteSuscriptor;
-
-    //                             susc.paquetesActivos = listaPaquetesSC.filter((paq: any) =>
-    //                                 paq.codigoSuscriptor === susc.codigoSuscriptor &&
-    //                                 paq.estadoLicencia === true
-    //                             );
-
-    //                             susc.paquetesActivos.forEach((paq: any) => {
-    //                                 const mods = listaModulosPQ.filter((mod: any) => mod.codigoPaquete === paq.codigoPaquete);
-    //                                 paq.modulosPaquete = mods;
-    //                             });
-    //                         });
-
-    //                         usuSC.suscriptores = suscs;
-    //                     });
-    //                 }
-
-    //                 this.currentUser.usuariosSC = suscUsu;
-
-    //                 this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
-    //                 const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
-    //                 this._socketService.conectarConUsuario(codigoUsuario);
-
-    //                 // 🟢 Se mantiene para cargar la base del Gridster si es necesario luego
-    //                 this.cargarYGuardarLayoutUsuario(this.currentUser);
-
-    //                 console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes) armada exitosamente!', this.currentUser);
-
-    //                 this._permisosService.inicializarPermisosPorDefecto().subscribe({
-    //                     next: (actividades) => {
-    //                         console.log('🛡️ Permisos (UI/Rutas) cacheados exitosamente. Actividades:', actividades.length);
-    //                         this.router.navigate(['/starter/inicio-suscriptores']);
-    //                     },
-    //                     error: (err) => {
-    //                         console.error('⚠️ Error al cachear permisos, navegando con modo restringido.', err);
-    //                         this.router.navigate(['/starter/inicio-suscriptores']);
-    //                     }
-    //                 });
-    //             }),
-    //             catchError(err => {
-    //                 this.loading = false;
-    //                 this.error = err;
-    //                 console.error('Error en el Login:', err);
-    //                 this._swalService.getAlertError(this.translate.instant('PLATAFORMA.LOGINFAILED'));
-    //                 return of(null);
-    //             })
-    //         )
-    //         .subscribe();
-    // }
     onLoginUserClick(): void {
         this.submitted = true;
 
@@ -414,11 +283,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
                     this.currentUser.usuariosSC = suscUsu;
 
-                    this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
-
-                    const nuevoCodigoSesion = uuidv4();
-                    sessionStorage.setItem('codigoSesionActiva', nuevoCodigoSesion);
-
+                    // const nuevoCodigoSesion = uuidv4();
                     const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
                     this._socketService.conectarConUsuario(codigoUsuario);
 
@@ -426,6 +291,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
                     const usuarioObj = this.currentUser.usuario || {};
                     const codigoSesionUnico = uuidv4();
+                    usuarioObj.codigoSesion = codigoSesionUnico;
+                    this.currentUser.usuario = usuarioObj;
+
+                    this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
 
                     // 🟢 2. Armamos el payload exacto
                     const payloadSesion = {
@@ -434,7 +303,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                         nombreUsuario: usuarioObj.nombreUsuario || 'Usuario QPLUS',
                         rol: '',
                         correo: usuarioObj.correoUsuario || '',
-                        codigoModulo: 'Dashboard Principal',
+                        codigoModulo: '19dbd560-5ace-4386-865a-17605dd9bca4',
                         dispositivo: navigator.userAgent.includes('Mobile') ? 'Móvil' : 'Desktop'
                     };
 

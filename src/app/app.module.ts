@@ -30,13 +30,13 @@ import { NavContentComponent } from './theme/layout/admin/navigation/nav-content
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { AuthInterceptor } from './theme/shared/_helpers/auth.interceptor';
 import { environment } from '../environments/environment';
-import { JwtInterceptor } from './theme/shared/_helpers/jwt-interceptor.interceptor';
 import { ErrorInterceptor } from './theme/shared/_helpers/error.interceptor';
 import { IaChatFlotanteComponent } from "./theme/shared/components/ia-chat-flotante/ia-chat-flotante.component";
 import { NgChartsModule } from 'ng2-charts';
 import { APP_INITIALIZER } from '@angular/core';
 import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
 import { lastValueFrom } from 'rxjs';
+import { SessionInterceptor } from './theme/shared/_helpers/session.interceptor';
 
 const config: SocketIoConfig = {
     url: environment.sctUrl,
@@ -110,12 +110,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         {
             provide: APP_INITIALIZER,
             useFactory: inicializarSeguridadApp,
             deps: [PtlPermisosService],
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: SessionInterceptor,
             multi: true
         }
     ],
