@@ -134,6 +134,7 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                 return wdgts.map((wdgt: any) => {
                     const newWdgt: any = { ...wdgt };
 
+                    newWdgt.nomInicial = newWdgt.inicial ? 'Por Defecto' : 'Seleccion';
                     newWdgt.nomEstado = newWdgt.estadoWidget ? 'Activo' : 'Inactivo';
                     newWdgt.capture = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_light);
                     newWdgt.capture2 = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_dark);
@@ -293,6 +294,11 @@ export class WidgetsComponent implements OnInit, OnDestroy {
             type: 'text'
         },
         {
+            name: 'nomInicial',
+            header: 'WIDGETS.INICIAL',
+            type: 'estado'
+        },
+        {
             name: 'nomEstado',
             header: 'WIDGETS.STATUS',
             type: 'estado'
@@ -303,6 +309,31 @@ export class WidgetsComponent implements OnInit, OnDestroy {
         {
             name: 'descripcionWidget',
             header: 'WIDGETS.DESCRIPTION',
+            type: 'text'
+        },
+        {
+            name: 'defaultCols',
+            header: 'WIDGETS.DEFAULTCOLS',
+            type: 'text'
+        },
+        {
+            name: 'defaultRows',
+            header: 'WIDGETS.DEFAULTROWS',
+            type: 'text'
+        },
+        {
+            name: 'pos_x',
+            header: 'WIDGETS.POSX',
+            type: 'text'
+        },
+        {
+            name: 'pos_y',
+            header: 'WIDGETS.POSY',
+            type: 'text'
+        },
+        {
+            name: 'tipo',
+            header: 'WIDGETS.TIPO',
             type: 'text'
         },
         {

@@ -1,0 +1,108 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="form-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PRECIOS.GESTION.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PRECIOS.GESTION.UPDATE' | translate }}</h4>
+                    </div>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
+                            {{ 'PRECIOS.GESTION.CREATE' | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
+                            {{ 'PLATAFORMA.MODIFICAR' | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body form-scroll-wrapper">
+                <form #validationForm="ngForm" class="editForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-12 mb-4">
+                            <h4 class="titulo-container text-primary">Configuración Financiera del Paquete</h4>
+                            <h6 class="subtitulo-container">Ingrese el Costo Interno y el Valor de Venta mensual. Los
+                                planes trimestrales, semestrales y anuales se calcularán automáticamente basados en
+                                estos valores.</h6>
+                            <hr>
+                        </div>
+
+                        <!-- 🟢 COSTO INTERNO (PIVOTE PARA RENTABILIDAD) -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="costoBaseMensual"> Costo Base Mensual
+                                    (Interno)</label>
+                                <input type="number" step="0.01" min="0" class="form-control form-input"
+                                    name="costoBaseMensual" id="costoBaseMensual"
+                                    [ngClass]="{ 'is-invalid': !costoBaseMensual.valid && (costoBaseMensual.dirty || costoBaseMensual.touched || isSubmit) }"
+                                    #costoBaseMensual="ngModel" required [(ngModel)]="FormRegistro.costoBaseMensual"
+                                    placeholder="Ej: 20000.00" />
+                                <small class="text-muted">Costo operativo mensual para mantener este paquete.</small>
+                                <label
+                                    *ngIf="!costoBaseMensual.valid && (costoBaseMensual.dirty || costoBaseMensual.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    El costo base es requerido.
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 🟢 VALOR DE VENTA (LO QUE PAGA EL CLIENTE) -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="valorBaseMensual"> Valor Base Mensual
+                                    (Venta)</label>
+                                <input type="number" step="0.01" min="0" class="form-control form-input"
+                                    name="valorBaseMensual" id="valorBaseMensual"
+                                    [ngClass]="{ 'is-invalid': !valorBaseMensual.valid && (valorBaseMensual.dirty || valorBaseMensual.touched || isSubmit) }"
+                                    #valorBaseMensual="ngModel" required [(ngModel)]="FormRegistro.valorBaseMensual"
+                                    placeholder="Ej: 100000.00" />
+                                <small class="text-muted">Valor a cobrar al cliente por 1 mes de uso.</small>
+                                <label
+                                    *ngIf="!valorBaseMensual.valid && (valorBaseMensual.dirty || valorBaseMensual.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    El valor de venta es requerido.
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 🟢 PRECIO SETUP (COBRO ÚNICO) -->
+                        <div class="col-md-6 mt-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="precioSetup"> {{ 'PRECIOS.GESTION.SETUP' |
+                                    translate }}</label>
+                                <input type="number" step="0.01" min="0" class="form-control form-input"
+                                    name="precioSetup" id="precioSetup" #precioSetup="ngModel"
+                                    [(ngModel)]="FormRegistro.precioSetup" placeholder="Ej: 50000.00 (Opcional)" />
+                                <small class="text-muted">Costo único de instalación o setup inicial.</small>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

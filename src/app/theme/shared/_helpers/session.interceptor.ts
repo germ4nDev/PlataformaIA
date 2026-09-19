@@ -4,11 +4,15 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../service';
 
 @Injectable()
 export class SessionInterceptor implements HttpInterceptor {
 
-    constructor(private injector: Injector) { }
+    constructor(
+        private injector: Injector,
+        private _localStorage: LocalStorageService
+    ) { }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(request).pipe(
@@ -21,8 +25,8 @@ export class SessionInterceptor implements HttpInterceptor {
                         return throwError(() => error);
                     }
 
-                    localStorage.setItem('alerta_expiracion', 'Tu sesión ha expirado por inactividad o seguridad. Por favor ingresa nuevamente.');
-                    localStorage.clear();
+                    this._localStorage.setObject('alerta_expiracion', 'Tu sesión ha expirado por inactividad o seguridad. Por favor ingresa nuevamente.');
+                    this._localStorage.localClear();
 
                     window.location.href = '/autenticacion/login';
                 }

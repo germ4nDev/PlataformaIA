@@ -1,0 +1,71 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'PRECIOS.FILTROS.TITULO' | translate }}</h6>
+
+                    <div class="filtro">
+                        <small>{{ 'PRECIOS.FILTROS.NOMBRE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'PRECIOS.FILTROS.NOMBREHOLDER' | translate }}" />
+                    </div>
+
+                    <div class="filtro">
+                        <small>{{ 'PRECIOS.FILTROS.MONEDA' | translate }}</small>
+                        <select (change)="onFiltroMonedaChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="COP">COP</option>
+                            <option value="USD">USD</option>
+                            <option value="MXN">MXN</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro">
+                        <small>{{ 'PRECIOS.FILTROS.ESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoPrecioChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">Configurado</option>
+                            <option value="false">Sin Configurar</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <ng-container *ngIf="listasFiltradas$ | async as dataFiltrada; else loading">
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoLista'"
+                        [tableTitle]="'PRECIOS.TITLE' | translate" [metadataColumns]="columnasPrecios"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showBackButton]="true" [showViewButton]="false"
+                        [showEditButton]="false" [showDeleteButton]="false" [showSearchBox]="false"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (backRecord)="OnRegresarClick()" (newRecord)="OnNuevoRegistroClick()"
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_PRECIO_CREAR">
+                    </app-table-data>
+                </ng-container>
+
+                <ng-template #loading>
+                    <app-data-loader [isLoading]="true" message="Calculando matrices de precios ..."></app-data-loader>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

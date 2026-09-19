@@ -63,6 +63,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
     lockMessage: string = '';
+    codigoApp: string = '';
     registrosSub?: Subscription
 
     subscriptions = new Subscription();
@@ -180,8 +181,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
 
     onAplicacionchangeClick(evento: any) {
         if (evento.target.value != '') {
+            this.codigoApp = evento.target.value;
             this.suitesFiltro = this.suites.filter(x => x.codigoAplicacion == evento.target.value)
         } else {
+            this.codigoApp = '';
             this.suitesFiltro = [];
             this.modulosFiltro = [];
         }
@@ -204,7 +207,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
         // this.isSubmit = true;
         this.isSubmit = true;
         if (!form.valid) return;
-        this.FormRegistro = form.value as PTLActividadModel
+        // this.FormRegistro = form.value as PTLActividadModel
         const registroData = form.value as PTLActividadModel;
         registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
         registroData.fechaCreacion = new Date().toISOString();
@@ -244,6 +247,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
         } else {
             form.actividadId = 0;
             registroData.codigoActividad = uuidv4();
+            registroData.codigoAplicacion = this.codigoApp;
             console.log('crear registro', registroData);
 
             this._actividadesService.postCrearRegistro(registroData).subscribe({

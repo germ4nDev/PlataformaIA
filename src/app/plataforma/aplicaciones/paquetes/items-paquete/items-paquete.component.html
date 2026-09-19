@@ -16,34 +16,41 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <h6 class="filtros-title">{{ 'ITEMSPAQUETES.FILTROS.TITULO' | translate }}</h6>
+
                     <div class="filtro">
                         <label class="form-control-label" for="tipoValorId"> {{ 'MODULOS.GESTION.TIPOVALOR' | translate
                             }}</label>
                         <select (change)="onTipoValorChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="tipo.codigoTipoItem" *ngFor="let tipo of tiposValor"> {{ tipo.nombreTipo }}
+                            <option [value]="tipo.codigoTipoItem" *ngFor="let tipo of tiposValor">
+                                {{ tipo.nombreTipo }}
                             </option>
                         </select>
                     </div>
+
                     <div class="filtro">
                         <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <select (change)="onFiltroValorChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="valor.codigoItem" *ngFor="let valor of listaPrecios"> {{ valor.nombreItem
-                                }}</option>
+                            <option [value]="valor.codigoItem" *ngFor="let valor of listaPrecios">
+                                {{ valor.nombreItem }}
+                            </option>
                         </select>
                     </div>
+
                     <div class="filtro">
                         <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'ITEMSPAQUETES.FILTROS.NOMBRECHOLDER' | translate }}" />
+                    </div>
+
+                    <div class="filtro">
+                        <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
                             placeholder="{{ 'ITEMSPAQUETES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
-                    <div class="filtro">
-                        <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreCodigoClick($event)" class="form-control form-input"
-                            placeholder="{{ 'ITEMSPAQUETES.FILTROS.NOMBRECHOLDER' | translate }}" />
-                    </div>
+
                     <div class="filtro">
                         <small>{{ 'ITEMSPAQUETES.FILTROS.FILTROESTADO' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
@@ -56,20 +63,25 @@
             </ng-container>
         </div>
     </aside>
+
     <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <ng-container *ngIf="itemsPaqueteFiltrados$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoItem'"
+                <ng-container *ngIf="itemsPaqueteFiltrados$ | async as dataFiltrada; else loading">
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoItem'"
                         [tableTitle]="'ITEMSPAQUETES.TITLE' | translate" [metadataColumns]="columnasPaquetes"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showBackButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'ITEMS.NEW' | translate"
+                        [showNewButton]="true" [showBackButton]="true" [showViewButton]="false" [showEditButton]="false"
+                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'ITEMS.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (backRecord)="OnRegresarClick()"
-                        (deleteRecord)="OnEliminarRegistroClick($event)">
-                    </app-data-table>
+                        (backRecord)="OnRegresarClick()" (accionPrincipalClick)="onAccionPrincipal($event)"
+                        permisoNew="ACT_ITEMPQ_CREAR">
+                    </app-table-data>
                 </ng-container>
+
+                <ng-template #loading>
+                    <app-data-loader [isLoading]="true" message="Cargando ítems ..."></app-data-loader>
+                </ng-template>
             </div>
         </div>
     </div>

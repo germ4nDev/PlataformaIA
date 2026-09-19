@@ -129,7 +129,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         // 1. Inicializamos el mapa para los widgets permitidos de ESTA aplicación
         const widgetsPermitidosGlobales = new Map();
         const listaWidgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
-        const listaWidgetsRoles = this._widgetsRolesService.getActividadesRolesActuales() || [];
+        const listaWidgetsRoles = this._widgetsRolesService.getWidgetRolesActuales() || [];
 
         usuarioRoles.forEach((usuRole: any) => {
             const role = rolesApp.find((x: any) => x.codigoRole == usuRole.codigoRole);
@@ -168,10 +168,6 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
             codigoEmpresaSC: current?.usuariosSC?.[0]?.suscriptores?.[0]?.empresasAsignadas?.[0]?.codigoEmpresaSC || '',
             codigoUsuarioSC: current?.usuariosSC?.[0]?.codigoUsuarioSC || ''
         };
-
-        // if (app.codigoAplicacion) {
-        //     this._socketManagerService.actualizarContextoSesion(app.codigoAplicacion);
-        // }
 
         const navsettings = {
             aplicacion: appSeleccionada,

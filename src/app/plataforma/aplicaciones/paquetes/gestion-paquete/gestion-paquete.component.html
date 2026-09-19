@@ -139,31 +139,32 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+
                                 <label class="form-label">{{ 'PAQUETES.GESTION.ICONO' | translate }}</label>
+                                <br>
                                 <img *ngIf="selectedFileIconoUrl" [src]="selectedFileIconoUrl" class="image-preview" />
-                                <div class="file-input-wrapper">
-                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                                        {{ 'Seleccionar archivo' | translate }}
-                                    </label>
-                                    <input type="file" (change)="onFileSelectedClick($event, 'icono')" accept="image/*"
-                                        id="fileUploadInput" class="form-control form-input d-none"
-                                        name="iconoPaquete" />
-                                </div>
+                                <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"
+                                    (change)="onFileSelectedClick($event, 'imagen')">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInput.click()">
+                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    {{ 'PLATAFORMA.SELECTFILE' | translate }}
+                                </button>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'PAQUETES.GESTION.IMAGEN' | translate }}</label>
+                                <br>
                                 <img *ngIf="selectedFileImagenUrl" [src]="selectedFileImagenUrl"
                                     class="image-preview" />
-                                <div class="file-input-wrapper">
-                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                                        {{ 'Seleccionar archivo' | translate }}
-                                    </label>
-                                    <input type="file" (change)="onFileSelectedClick($event, 'imagen')" accept="image/*"
-                                        id="fileUploadInput" class="form-control form-input d-none"
-                                        name="imagenPaquete" />
-                                </div>
+                                <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"
+                                    (change)="onFileSelectedClick($event, 'imagen')">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInput.click()">
+                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    {{ 'PLATAFORMA.SELECTFILE' | translate }}
+                                </button>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -221,7 +222,7 @@
                         </div>
                     </div>
                 </form>
-                <div class="row col-md-12">
+                <!-- <div class="row col-md-12">
                     <div class="col-md-6 text-center">
                         <h4>{{ 'PAQUETES.MODULOSTITLE' | translate }}</h4>
                     </div>
@@ -240,7 +241,7 @@
                             {{ 'PAQUETES.UPDATE' | translate }}
                         </button>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

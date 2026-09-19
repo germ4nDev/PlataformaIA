@@ -16,9 +16,6 @@ export class PtlSesionesService {
         console.log('******* Servicio de Sesiones (Auditoría y En Vivo) iniciado correctamente');
     }
 
-    /**
-     * Obtiene la lista de todas las sesiones activas en el sistema
-     */
     getSesionesActivas(): Observable<any[]> {
         const url = `${base_url}/sesiones`;
 
@@ -30,9 +27,6 @@ export class PtlSesionesService {
         );
     }
 
-    /**
-     * Obtiene una sesión específica por su código UUID
-     */
     getSesionById(codigoSesion: string): Observable<any> {
         const url = `${base_url}/sesiones/${codigoSesion}`;
 
@@ -44,9 +38,6 @@ export class PtlSesionesService {
         );
     }
 
-    /**
-     * Registra una nueva sesión en la base de datos tras el login
-     */
     registrarSesion(payload: any): Observable<any> {
         const url = `${base_url}/sesiones`;
 
@@ -60,9 +51,6 @@ export class PtlSesionesService {
         );
     }
 
-    /**
-     * Actualiza el contexto de navegación en tiempo real (suscriptor, suite, app, módulo)
-     */
     actualizarContextoNavegacion(codigoSesion: string, datosContexto: {
         codigoSuscriptor?: string;
         codigoSuite?: string;
@@ -81,9 +69,6 @@ export class PtlSesionesService {
         );
     }
 
-    /**
-     * Cierra formalmente una sesión actualizando su estado y fecha de salida
-     */
     cerrarSesion(codigoSesion: string): Observable<any> {
         const url = `${base_url}/sesiones/${codigoSesion}`;
 

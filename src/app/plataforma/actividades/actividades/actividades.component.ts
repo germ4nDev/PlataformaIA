@@ -11,7 +11,6 @@ import { GradientConfig } from 'src/app/app-config'
 
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component'
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
 import { PtlActividadesService } from 'src/app/theme/shared/service/ptlactividades.service'
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
@@ -27,7 +26,6 @@ import {
 } from 'src/app/theme/shared/service'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
-import Swal from 'sweetalert2'
 import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActividades.model'
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
@@ -76,9 +74,6 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     modulosPadre: PTLModuloAP[] = []
     roles: PTLRoleAPModel[] = []
     actividadesRoles: PTLActividadRoleModel[] = []
-
-    colorOpcion1 = '#28a745'
-    letraOpcion1 = 'R'
 
     constructor(
         private router: Router,
@@ -340,6 +335,7 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     }
 
     confirmarEliminacion(id: any) {
+        console.log(`Confirmando eliminación para el registro con ID: ${id}`);
         // Tu lógica de alerta (ej. usando _swalService) para borrar el registro
     }
 

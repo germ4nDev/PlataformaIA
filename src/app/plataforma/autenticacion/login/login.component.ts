@@ -301,7 +301,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                         codigoSesion: codigoSesionUnico,
                         codigoUsuario: usuarioObj.codigoUsuario,
                         nombreUsuario: usuarioObj.nombreUsuario || 'Usuario QPLUS',
-                        rol: '',
                         correo: usuarioObj.correoUsuario || '',
                         codigoModulo: '19dbd560-5ace-4386-865a-17605dd9bca4',
                         dispositivo: navigator.userAgent.includes('Mobile') ? 'Móvil' : 'Desktop'

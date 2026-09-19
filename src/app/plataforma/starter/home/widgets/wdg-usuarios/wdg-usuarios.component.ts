@@ -1,149 +1,9 @@
-// // import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-// // import { CommonModule } from '@angular/common';
-// // import { Subscription } from 'rxjs';
-// // import { SocketManagerService } from 'src/app/theme/shared/service';
-// // import { DashboardPlataformaService } from '../../../../../theme/shared/service/dashboard-plataforma.service';
-
-// // // 🟢 Importamos el contenedor maestro universal
-// // import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// // @Component({
-// //     selector: 'app-wdg-usuarios',
-// //     standalone: true,
-// //     imports: [CommonModule, WidgetShellComponent], // 🟢 Actualizamos el import
-// //     templateUrl: './wdg-usuarios.component.html'
-// // })
-// // export class WdgUsuariosComponent implements OnInit, OnDestroy {
-// //     @Input() data: any;
-
-// //     // 🟢 Fallback de seguridad
-// //     @Input() widgetId: string = 'WDG_PLAT_USUARIOS_CONECTADOS';
-
-// //     public totalConectados: number = 0;
-// //     private socketSub!: Subscription;
-
-// //     constructor(
-// //         private _socketManager: SocketManagerService,
-// //         private _dashboardService: DashboardPlataformaService,
-// //         private cdr: ChangeDetectorRef
-// //     ) { }
-
-// //     ngOnInit() {
-// //         this.cargarDataReal();
-
-// //         this.socketSub = this._socketManager.usuariosActualizados$.subscribe(() => {
-// //             this.cargarDataReal();
-// //         });
-// //     }
-
-// //     cargarDataReal() {
-// //         this._dashboardService.getUsuariosConectados().subscribe({
-// //             next: (res: any) => {
-// //                 this.totalConectados = res || 0;
-// //                 this.cdr.detectChanges(); // 🟢 Aseguramos el renderizado
-// //             },
-// //             error: (err) => console.error('Error al cargar usuarios conectados:', err)
-// //         });
-// //     }
-
-// //     ngOnDestroy() {
-// //         if (this.socketSub) this.socketSub.unsubscribe();
-// //     }
-// // }
-// import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { Subscription } from 'rxjs';
-// import { SocketManagerService } from 'src/app/theme/shared/service';
-// import { DashboardPlataformaService } from '../../../../../theme/shared/service/dashboard-plataforma.service';
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-wdg-usuarios',
-//     standalone: true,
-//     imports: [CommonModule, WidgetShellComponent],
-//     templateUrl: './wdg-usuarios.component.html'
-// })
-// export class WdgUsuariosComponent implements OnInit, OnDestroy {
-//     @Input() data: any;
-//     @Input() widgetId: string = 'WDG_PLAT_USUARIOS_CONECTADOS';
-
-//     public totalConectados: number = 0;
-//     public usuariosConectados: Array<{
-//         nombre: string;
-//         rol: string;
-//         identificacion: string;
-//         correo: string;
-//         iniciales: string;
-//         colorAvatar: string;
-//         aplicacionActual: string;
-//         tiempoConexion: string;
-//         dispositivo: string;
-//     }> = [];
-
-//     private socketSub!: Subscription;
-
-//     constructor(
-//         private _socketManager: SocketManagerService,
-//         private _dashboardService: DashboardPlataformaService,
-//         private cdr: ChangeDetectorRef
-//     ) { }
-
-//     ngOnInit() {
-//         this.cargarDataReal();
-
-//         this.socketSub = this._socketManager.usuariosActualizados$.subscribe(() => {
-//             this.cargarDataReal();
-//         });
-//     }
-
-//     cargarDataReal() {
-//         this._dashboardService.getUsuariosConectados().subscribe({
-//             next: (res: any) => {
-//                 // Si tu servicio devuelve un objeto con el total y la lista: { total: 2, sesiones: [...] }
-//                 // O si devuelve directamente la lista, ajústalo según tu backend:
-//                 this.totalConectados = res?.total || res?.length || 0;
-
-//                 // Mapeo de ejemplo (puedes adaptarlo a la estructura de tu API)
-//                 this.usuariosConectados = res?.sesiones || [
-//                     {
-//                         nombre: 'German Valencia',
-//                         rol: 'Administrador',
-//                         identificacion: '1110543298',
-//                         correo: 'german.valencia&#64;qplus.com',
-//                         iniciales: 'GV',
-//                         colorAvatar: 'bg-primary',
-//                         aplicacionActual: 'Dashboard Principal',
-//                         tiempoConexion: '3h 45m',
-//                         dispositivo: 'Desktop (Chrome)'
-//                     },
-//                     {
-//                         nombre: 'Claudia Ortiz',
-//                         rol: 'Suscriptor',
-//                         identificacion: '25489632',
-//                         correo: 'claudia.ortiz&#64;qplus.com',
-//                         iniciales: 'CO',
-//                         colorAvatar: 'bg-info',
-//                         aplicacionActual: 'Módulo de Paquetes',
-//                         tiempoConexion: '42m',
-//                         dispositivo: 'Desktop (Edge)'
-//                     }
-//                 ];
-
-//                 this.cdr.detectChanges();
-//             },
-//             error: (err) => console.error('Error al cargar usuarios conectados:', err)
-//         });
-//     }
-
-//     ngOnDestroy() {
-//         if (this.socketSub) this.socketSub.unsubscribe();
-//     }
-// }
 import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { SocketManagerService } from 'src/app/theme/shared/service';
+import { SocketManagerService } from 'src/app/theme/shared/service/socket-manager.service';
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+import { PtlSesionesService } from 'src/app/theme/shared/service/ptlsesiones.service';
 
 @Component({
     selector: 'app-wdg-usuarios',
@@ -161,30 +21,51 @@ export class WdgUsuariosComponent implements OnInit, OnDestroy {
 
     constructor(
         private _socketManager: SocketManagerService,
+        private _sesionesService: PtlSesionesService, // 🟢 Inyectamos el servicio HTTP
         private cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit() {
-        // 🟢 Nos suscribimos al canal centralizado del manager
+        // 🟢 1. Carga Inicial: Pedimos la foto actual por HTTP (Arranque en caliente)
+        this.cargarEstadoInicial();
+
+        // 🟢 2. Tiempo Real: Nos suscribimos al canal centralizado para actualizaciones futuras
         this.sub = this._socketManager.sesionesActualizadas$.subscribe((res: any) => {
             if (res && res.sesiones) {
-                this.totalConectados = res.total;
-
-                this.usuariosConectados = res.sesiones.map((s: any) => ({
-                    nombre: s.nombreUsuario,
-                    rol: s.rol || 'Suscriptor',
-                    identificacion: s.codigoUsuario,
-                    correo: s.correo || 'N/A',
-                    iniciales: this.calcularIniciales(s.nombreUsuario),
-                    colorAvatar: s.rol === 'Administrador' ? 'bg-primary' : 'bg-info',
-                    aplicacionActual: s.aplicacionActual || 'Dashboard Principal',
-                    tiempoConexion: this.calcularTiempoTranscurrido(s.fechaLogin),
-                    dispositivo: s.dispositivo || 'Desktop'
-                }));
-
-                this.cdr.detectChanges();
+                this.mapearDatos(res.total, res.sesiones);
             }
         });
+    }
+
+    // 🟢 Método para traer los datos apenas carga el componente
+    private cargarEstadoInicial() {
+        this._sesionesService.getSesionesActivas().subscribe({
+            next: (res: any) => {
+                // Asumiendo que tu endpoint devuelve un arreglo de sesiones
+                const sesiones = res.data || res.sesiones || res;
+                this.mapearDatos(sesiones.length, sesiones);
+            },
+            error: (err) => console.warn('No se pudo cargar la lista inicial de usuarios', err)
+        });
+    }
+
+    // 🟢 Centralizamos el mapeo para no repetir código
+    private mapearDatos(total: number, sesionesBD: any[]) {
+        this.totalConectados = total;
+
+        this.usuariosConectados = sesionesBD.map((s: any) => ({
+            nombre: s.nombreUsuario,
+            rol: s.rol || 'Suscriptor',
+            identificacion: s.codigoUsuario,
+            correo: s.correo || 'N/A',
+            iniciales: this.calcularIniciales(s.nombreUsuario),
+            colorAvatar: s.rol === 'Administrador' ? 'bg-primary' : 'bg-info',
+            aplicacionActual: s.aplicacionActual || s.codigoModulo || 'Dashboard Principal',
+            tiempoConexion: this.calcularTiempoTranscurrido(s.fechaLogin),
+            dispositivo: s.dispositivo || 'Desktop'
+        }));
+
+        this.cdr.detectChanges();
     }
 
     private calcularIniciales(nombre: string): string {

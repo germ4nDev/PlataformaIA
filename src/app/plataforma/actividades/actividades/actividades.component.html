@@ -78,7 +78,7 @@
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="false" [showSearchBox]="false"
                         [showDeleteButton]="false" (viewRecord)="OnViewRegistroClick($event)"
-                        [showDetailActions]="false" (newRecord)="OnNuevoRegistroClick()"
+                        [showDetailActions]="true" (newRecord)="OnNuevoRegistroClick()"
                         (accionSubtablaClick)="onAccionSubtabla($event)"
                         (accionPrincipalClick)="onAccionPrincipal($event)">
                     </app-table-data>

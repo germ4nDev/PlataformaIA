@@ -41,7 +41,7 @@ export class PtlWidgetsRolesService {
         return this._widgetsRoles.asObservable();
     }
 
-    getActividadesRolesActuales(): PTLWidgetRoleModel[] {
+    getWidgetRolesActuales(): PTLWidgetRoleModel[] {
         return this._widgetsRoles.getValue();
     }
 

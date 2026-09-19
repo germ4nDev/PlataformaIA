@@ -90,7 +90,7 @@ export class GestionWidgetRolesComponent implements OnInit, OnDestroy {
         this.roles = this._rolesService.getRolesActuales();
         this.widgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
         this.widgetMaestro = this.widgetsMaestros.find(x => x.codigoWidget === this.codigoWidget) || new PTLWidgetMaestroModel();
-        this.widgetsRoles = this._widgetsRolesService.getActividadesRolesActuales() || [];
+        this.widgetsRoles = this._widgetsRolesService.getWidgetRolesActuales() || [];
 
         this.cargarRegistros(this.codigoWidget);
 
@@ -116,17 +116,30 @@ export class GestionWidgetRolesComponent implements OnInit, OnDestroy {
         if (!this.roles?.length || !codigoWidgetActual || !this.widgetMaestro) return;
 
         this.rolesConCheck = this.roles
-            // 🟢 Filtramos solo por roles activos. (Se quitó el filtro de Suite/Aplicación ya que los widgets suelen ser globales)
+            // 🟢 1. Soporte para booleanos (true) y bits de SQL (1)
             .filter(rol => rol.estadoRole === true)
             .map(rol => {
+
+                // 🟢 2. Búsqueda flexible (usamos == para ignorar conflictos de string/number)
                 const relacionPuente = this.widgetsRoles.find(wr =>
-                    wr.codigoRol === rol.codigoRole &&
-                    wr.codigoWidget === codigoWidgetActual
+                    // Validamos ambos nombres por si el backend lo devuelve diferente
+                    (wr.codigoRol == rol.codigoRole || wr.codigoRole == rol.codigoRole) &&
+                    wr.codigoWidget == codigoWidgetActual
                 );
+
+                // 🟢 3. Asignación segura del checkbox
+                let isChecked = false;
+                if (relacionPuente) {
+                    // Si la relación existe, verificamos que esté activa (true o 1).
+                    // Si el backend no envía el 'estadoRelacion', asumimos true solo porque la relación existe.
+                    if (relacionPuente.estadoRelacion === true || relacionPuente.estadoRelacion === 1 || relacionPuente.estadoRelacion === undefined) {
+                        isChecked = true;
+                    }
+                }
 
                 return {
                     ...rol,
-                    checked: relacionPuente?.estadoRelacion === true
+                    checked: isChecked
                 };
             });
 

@@ -168,10 +168,6 @@ export class NavigationService implements OnInit, OnDestroy {
             return;
         }
 
-        // if (modulo.codigoModulo) {
-        //     this._socketManagerService.actualizarContextoSesion(modulo.codigoModulo);
-        // }
-
         this._localStorageService.setModuloLocalStorage(modulo);
         this._localStorageService.removeObject('regId')
         this._localStorageService.removeObject('reqId')

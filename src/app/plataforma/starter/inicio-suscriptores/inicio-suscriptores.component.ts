@@ -71,9 +71,6 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
     ingresarPlataforma(susc: PTLSuscriptorModel) {
         const current = this._localStorageService.getCurrentUserLocalStorage();
         this._localStorageService.setObject('suscriptor', susc)
-        // if (susc.codigoSuscriptor) {
-        //     this._socketManagerService.actualizarContextoSesion(susc.codigoSuscriptor);
-        // }
         this.router.navigate(['/starter/inicio-aplicaciones']);
     }
 }

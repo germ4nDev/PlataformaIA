@@ -212,9 +212,11 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
         //   return;
         // }
         const registroData = form.value as PTLWidgetMaestroModel
-        // console.log('gestionar widget', registroData);
         registroData.imagenWidget_light = this.fileName !== '' ? this.fileName : 'no-imagen.png'
         registroData.imagenWidget_dark = this.fileNameDark !== '' ? this.fileNameDark : 'no-imagen.png'
+        const version = registroData.layoutVersion || 0;
+        registroData.layoutVersion = version + 1;
+        console.log('gestionar widget', registroData);
 
         if (this.modoEdicion) {
             // MODIFICAR REGISTRO

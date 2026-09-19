@@ -1,7 +1,6 @@
 // Angular Import
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PermisoGuard } from '../../guards/permiso.guard';
 import { RoleGuard } from '../../guards/role.guard';
 
 const routes: Routes = [
@@ -91,6 +90,18 @@ const routes: Routes = [
             {
                 path: 'gestion-modulopq',
                 loadComponent: () => import('./paquetes/modulos-paquete/gestion-modulopq/gestion-modulopq.component').then((m) => m.GestionModulopqComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'precios-paquete',
+                loadComponent: () => import('./paquetes/precios-paquete/precios-paquete.component').then((m) => m.PreciosPaqueteComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-precio-paquete',
+                loadComponent: () => import('./paquetes/precios-paquete/gestion-precio-paquete/gestion-precio-paquete.component').then((m) => m.GestionPrecioPaqueteComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },

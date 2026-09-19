@@ -45,6 +45,7 @@ import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
 import { SocketManagerService } from './theme/shared/service/socket-manager.service';
 import { PTLWidgetsMaestroService } from './theme/shared/service/ptlwidgets-maestro.service'
 import { PtlWidgetsRolesService } from './theme/shared/service/ptlwidgets-roles.service'
+import { PTLListasPreciosService } from './theme/shared/service/ptllistas-precios.service'
 
 @Component({
     selector: 'app-root',
@@ -87,6 +88,7 @@ export class AppComponent implements OnInit {
         private _tiposRolesService: PTLTiposRolesService,
         private _widgetsService: PTLWidgetsMaestroService,
         private _widgetsRolesService: PtlWidgetsRolesService,
+        private _listasPreciosService: PTLListasPreciosService,
         private _modulosPaqueteService: PTLModulosPaqueteService
     ) { }
 
@@ -225,6 +227,10 @@ export class AppComponent implements OnInit {
         this._widgetsRolesService.cargarRegistros().subscribe(
             () => console.log('** Widgets Roles cargados y guardados en el servicio'),
             err => console.error('Error al cargar Widgets Roles', err)
+        )
+        this._listasPreciosService.cargarRegistros().subscribe(
+            () => console.log('** Listas precios cargados y guardados en el servicio'),
+            err => console.error('Error al cargar Listas precios', err)
         )
         // this._puertosService.cargarPuertos().subscribe(
         //     () => console.log('** puertos cargados y guardados en el servicio'),

@@ -365,6 +365,15 @@ export class LocalStorageService {
     getLayoutLocalStorage(): string {
         return this.currentTablero?.layout || [];
     }
+
+    localClear() {
+        localStorage.clear();
+    }
+
+    sesionClear() {
+        sessionStorage.clear();
+    }
+
     // #endregion
 }
 

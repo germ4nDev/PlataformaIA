@@ -10,12 +10,17 @@ export class PTLWidgetMaestroModel {
         public imagenWidget_dark?: string,
         public defaultCols?: number,
         public defaultRows?: number,
+        public pos_x?: number,
+        public pos_y?: number,
+        public tipo?: string,
         public pestana?: string,
+        public inicial?: boolean,
         public estadoWidget?: boolean,
         public layoutVersion?: number,
 
         // 🟡 Campos Auxiliares para la UI (Tablas, Modales, Selecciones)
         public checked?: boolean,
+        public nomInicial?: string,
         public nomEstado?: string,
         public _roles?: any,
         public _acciones?: any,

@@ -104,6 +104,48 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label class="form-control-label" for="pos_x">{{
+                                    'WIDGETS.GESTION.POSX' | translate }}</label>
+                                <input class="form-control form-input" id="pos_x" name="pos_x" type="number"
+                                    placeholder="{{ 'WIDGETS.GESTION.POSXHOLDER' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !pos_x.valid && (pos_x.dirty || pos_x.touched || isSubmit) }"
+                                    #pos_x="ngModel" required [(ngModel)]="FormRegistro.pos_x" />
+                                <label *ngIf="!pos_x.valid && (pos_x.dirty || pos_x.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'WIDGETS.GESTION.REQUERIDOPOSX' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="pos_y">{{
+                                    'WIDGETS.GESTION.POSY' | translate }}</label>
+                                <input class="form-control form-input" id="pos_y" name="pos_y" type="number"
+                                    placeholder="{{ 'WIDGETS.GESTION.POSYHOLDER' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !pos_y.valid && (pos_y.dirty || pos_y.touched || isSubmit) }"
+                                    #pos_y="ngModel" required [(ngModel)]="FormRegistro.pos_y" />
+                                <label *ngIf="!pos_y.valid && (pos_y.dirty || pos_y.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'WIDGETS.GESTION.REQUERIDOPOSY' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="tipo">{{
+                                    'WIDGETS.GESTION.TIPO' | translate }}</label>
+                                <input class="form-control form-input" id="tipo" name="tipo" type="text"
+                                    placeholder="{{ 'WIDGETS.GESTION.TIPOHOLDER' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !tipo.valid && (tipo.dirty || tipo.touched || isSubmit) }"
+                                    #tipo="ngModel" required [(ngModel)]="FormRegistro.tipo" />
+                                <label *ngIf="!tipo.valid && (tipo.dirty || tipo.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'WIDGETS.GESTION.REQUERIDOTIPO' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label class="form-control-label" for="pestana">{{
                                     'WIDGETS.GESTION.PESTANA' | translate }}</label>
                                 <input class="form-control form-input" id="pestana" name="pestana" type="text"
@@ -162,6 +204,25 @@
                                     <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
                                     {{ 'PLATAFORMA.SELECTFILE' | translate }}
                                 </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'WIDGETS.GESTION.INICAL' | translate }}</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input name="inicial" type="radio" [value]="true"
+                                            [(ngModel)]="FormRegistro.inicial" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.INICIAL' | translate }}</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="inicial" type="radio" [value]="false"
+                                            [(ngModel)]="FormRegistro.inicial" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.NOINICIAL' | translate }}</label>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
