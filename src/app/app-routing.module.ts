@@ -75,6 +75,18 @@ const routes: Routes = [
             {
                 path: 'autenticacion',
                 loadChildren: () => import('./plataforma/autenticacion/autenticacion.module').then((module) => module.AutenticacionModule)
+            },
+            {
+                path: 'paquetes',
+                loadChildren: () => import('./plataforma/paquetes/paquetes.module').then((module) => module.PaquetesModule)
+            },
+            {
+                path: 'logs',
+                loadChildren: () => import('./plataforma/logs/logs.module').then((module) => module.LogsModule)
+            },
+            {
+                path: 'sistema',
+                loadChildren: () => import('./plataforma/sistema/sistema.module').then((module) => module.SistemaModule)
             }
         ]
     },
@@ -85,10 +97,6 @@ const routes: Routes = [
             {
                 path: 'starter',
                 loadChildren: () => import('./plataforma//starter/starter.module').then((module) => module.StarterModule)
-            },
-            {
-                path: 'logs',
-                loadChildren: () => import('./plataforma/logs/logs.module').then((module) => module.LogsModule)
             },
             {
                 path: 'websites',

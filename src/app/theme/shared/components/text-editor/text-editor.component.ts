@@ -7,98 +7,193 @@ import { QuillModule } from 'ngx-quill';
 
 // 🔑 PROVEEDOR CLAVE: Permite que el componente funcione con ngModel y FormControl
 const CUSTOM_VALUE_ACCESSOR: any = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => TextEditorComponent),
-  multi: true
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => TextEditorComponent),
+    multi: true
 };
 
 @Component({
-  selector: 'app-text-editor',
-  standalone: true,
-  imports: [CommonModule, QuillModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './text-editor.component.html',
-  styleUrl: './text-editor.component.scss',
-  providers: [CUSTOM_VALUE_ACCESSOR]
+    selector: 'app-text-editor',
+    standalone: true,
+    imports: [CommonModule, QuillModule, FormsModule, ReactiveFormsModule],
+    templateUrl: './text-editor.component.html',
+    styleUrl: './text-editor.component.scss',
+    providers: [CUSTOM_VALUE_ACCESSOR]
 })
 export class TextEditorComponent implements ControlValueAccessor, OnInit {
-  @Input() toolbarType: string = 'standard';
-  @Input() contentHtml: string | '' = '';
-  @Output() contentHtmlChange: EventEmitter<string> = new EventEmitter<string>();
+    @Input() toolbarType: string = 'standard';
+    @Input() contentHtml: string | '' = '';
+    @Output() contentHtmlChange: EventEmitter<string> = new EventEmitter<string>();
 
-  disabled: boolean = false;
-  toolbarOptions: any;
-  onChange = (value: string) => {};
-  onTouched = () => {};
+    disabled: boolean = false;
+    toolbarOptions: any;
+    onChange = (value: string) => { };
+    onTouched = () => { };
 
-  toolbarStandard = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ header: [1, 2, false] }],
-      ['link', 'image'],
-      [{ align: [] }]
-    ]
-  };
+    toolbarStandard = {
+        toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ header: [1, 2, false] }],
+            ['link', 'image'],
+            [{ align: [] }]
+        ]
+    };
 
-  configBasica = {
-    toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], [{ align: [] }]]
-  };
+    configBasica = {
+        toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], [{ align: [] }]]
+    };
 
-  configCompleta = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ header: [1, 2, 3, false] }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ color: [] }, { background: [] }],
-      [{ align: [] }],
-      ['link', 'image', 'video'],
-      ['clean']
-    ]
-  };
+    configCompleta = {
+        toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ header: [1, 2, 3, false] }],
+            [{ size: ['small', false, 'large', 'huge'] }],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
+            ['link', 'image', 'video'],
+            ['clean']
+        ]
+    };
 
-  constructor() {}
+    constructor() { }
 
-  ngOnInit(): void {
-    this.setToolbarConfiguration(this.toolbarType);
-  }
-
-  private setToolbarConfiguration(type: string) {
-    switch (type) {
-      case 'standard':
-        this.toolbarOptions = this.toolbarStandard;
-        break;
-      case 'basica':
-        this.toolbarOptions = this.configBasica;
-        break;
-      case 'completa':
-        this.toolbarOptions = this.configCompleta;
-        break;
-      default:
-        this.toolbarOptions = this.configBasica;
-        break;
+    ngOnInit(): void {
+        this.setToolbarConfiguration(this.toolbarType);
     }
-  }
 
-  writeValue(value: any): void {
-    this.contentHtml = value || '';
-  }
+    private setToolbarConfiguration(type: string) {
+        switch (type) {
+            case 'standard':
+                this.toolbarOptions = this.toolbarStandard;
+                break;
+            case 'basica':
+                this.toolbarOptions = this.configBasica;
+                break;
+            case 'completa':
+                this.toolbarOptions = this.configCompleta;
+                break;
+            default:
+                this.toolbarOptions = this.configBasica;
+                break;
+        }
+    }
 
-  registerOnChange(fn: (value: any) => void): void {
-    this.onChange = fn;
-  }
+    writeValue(value: any): void {
+        this.contentHtml = value || '';
+    }
 
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
+    registerOnChange(fn: (value: any) => void): void {
+        this.onChange = fn;
+    }
 
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
+    registerOnTouched(fn: () => void): void {
+        this.onTouched = fn;
+    }
 
-  onContentChange(html: any) {
-    this.onChange(html);
-    this.contentHtml = html;
-    this.contentHtmlChange.emit(html);
-  }
+    setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
+    }
+
+    onContentChange(html: any) {
+        this.onChange(html);
+        this.contentHtml = html;
+        this.contentHtmlChange.emit(html);
+    }
 }
+
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// import { Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+// import { QuillModule } from 'ngx-quill';
+
+// const CUSTOM_VALUE_ACCESSOR: any = {
+//     provide: NG_VALUE_ACCESSOR,
+//     useExisting: forwardRef(() => TextEditorComponent),
+//     multi: true
+// };
+
+// @Component({
+//     selector: 'app-text-editor',
+//     standalone: true,
+//     imports: [CommonModule, QuillModule, FormsModule, ReactiveFormsModule],
+//     templateUrl: './text-editor.component.html',
+//     styleUrl: './text-editor.component.scss',
+//     providers: [CUSTOM_VALUE_ACCESSOR]
+// })
+// export class TextEditorComponent implements ControlValueAccessor, OnChanges {
+//     @Input() toolbarType: string = 'basica';
+//     @Input() editorHeight: string = '250px'; // 🟢 Añadido para solucionar el primer error
+
+//     contentHtml: string = '';
+//     disabled: boolean = false;
+//     toolbarOptions: any;
+
+//     onChange = (value: string) => { };
+//     onTouched = () => { };
+
+//     toolbarStandard = {
+//         toolbar: [
+//             ['bold', 'italic', 'underline', 'strike'],
+//             [{ list: 'ordered' }, { list: 'bullet' }],
+//             [{ header: [1, 2, false] }],
+//             ['link', 'image'],
+//             [{ align: [] }]
+//         ]
+//     };
+
+//     configBasica = {
+//         toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], [{ align: [] }]]
+//     };
+
+//     configCompleta = {
+//         toolbar: [
+//             ['bold', 'italic', 'underline', 'strike'],
+//             [{ list: 'ordered' }, { list: 'bullet' }],
+//             [{ header: [1, 2, 3, false] }],
+//             [{ size: ['small', false, 'large', 'huge'] }],
+//             [{ color: [] }, { background: [] }],
+//             [{ align: [] }],
+//             ['link', 'image', 'video'],
+//             ['clean']
+//         ]
+//     };
+
+//     ngOnChanges(changes: SimpleChanges): void {
+//         if (changes['toolbarType']) {
+//             this.setToolbarConfiguration(this.toolbarType);
+//         }
+//     }
+
+//     private setToolbarConfiguration(type: string) {
+//         switch (type) {
+//             case 'standard': this.toolbarOptions = this.toolbarStandard; break;
+//             case 'completa': this.toolbarOptions = this.configCompleta; break;
+//             default: this.toolbarOptions = this.configBasica; break;
+//         }
+//     }
+
+//     writeValue(value: any): void {
+//         this.contentHtml = value || '';
+//     }
+
+//     registerOnChange(fn: (value: any) => void): void {
+//         this.onChange = fn;
+//     }
+
+//     registerOnTouched(fn: () => void): void {
+//         this.onTouched = fn;
+//     }
+
+//     setDisabledState(isDisabled: boolean): void {
+//         this.disabled = isDisabled;
+//     }
+
+//     onContentChange(event: any) {
+//         const html = event.html || '';
+//         this.contentHtml = html;
+//         this.onChange(html);
+//     }
+// }

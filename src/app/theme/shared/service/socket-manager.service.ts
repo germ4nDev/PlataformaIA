@@ -61,6 +61,7 @@ export class SocketManagerService {
     public layoutActualizado$ = new Subject<any>();
     public datosTablero$ = new Subject<any>();
     public listasPreciosActualizadas$ = new Subject<any>();
+    public parametrosActualizados$ = new Subject<any>();
 
     constructor(
         private socketService: SocketService,
@@ -140,6 +141,7 @@ export class SocketManagerService {
         this.socketService.listen('widgets-roles-actualizados').subscribe(data => this.widgetsRolesActualizados$.next(data));
         this.socketService.listen('layout-actualizado').subscribe(data => this.layoutActualizado$.next(data));
         this.socketService.listen('lista-precios-actualizados').subscribe(data => this.listasPreciosActualizadas$.next(data));
+        this.socketService.listen('parametros-actualizados').subscribe(data => this.parametrosActualizados$.next(data));
         this.socketService.listen('actualizacion-datos-widget').subscribe(data => {
             this.datosTablero$.next(data);
         });

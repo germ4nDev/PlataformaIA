@@ -55,10 +55,11 @@
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoLista'"
                         [tableTitle]="'PRECIOS.TITLE' | translate" [metadataColumns]="columnasPrecios"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showBackButton]="true" [showViewButton]="false"
-                        [showEditButton]="false" [showDeleteButton]="false" [showSearchBox]="false"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (backRecord)="OnRegresarClick()" (newRecord)="OnNuevoRegistroClick()"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_PRECIO_CREAR">
+                        [showNewButton]="true" [showBackButton]="true" [showViewButton]="false" [showEditButton]="false"
+                        [showDeleteButton]="false" [showSearchBox]="false"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (backRecord)="OnRegresarClick()"
+                        (newRecord)="OnNuevoRegistroClick($event)" (accionPrincipalClick)="onAccionPrincipal($event)"
+                        permisoNew="ACT_PRECIO_CREAR">
                     </app-table-data>
                 </ng-container>
 

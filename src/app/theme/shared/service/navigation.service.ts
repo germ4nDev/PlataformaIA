@@ -145,6 +145,7 @@ export class NavigationService implements OnInit, OnDestroy {
         this.suite = navSettings.suite || '';
 
         const mods: any[] = []
+        console.log('************** modulos aplicacion', this.aplicacion.modulos);
 
         this.aplicacion.modulos.forEach((mod: any) => {
             const idx = mods.findIndex(x => x.codigoModulo == mod.codigoModulo);

@@ -1,0 +1,72 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">Filtros de Parámetros</h6>
+
+                    <div class="filtro">
+                        <small>Llave Lógica (ID)</small>
+                        <input type="text" (keyup)="onFiltroLlaveChangeClick($event)" class="form-control form-input"
+                            placeholder="Ej: MARGEN_UTILIDAD..." />
+                    </div>
+
+                    <div class="filtro">
+                        <small>Nombre Visible</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="Ej: Margen Base..." />
+                    </div>
+
+                    <div class="filtro">
+                        <small>Tipo de Dato</small>
+                        <select (change)="onFiltroTipoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="DECIMAL">DECIMAL (Numérico)</option>
+                            <option value="INTEGER">INTEGER (Entero)</option>
+                            <option value="BOOLEAN">BOOLEAN (Lógico)</option>
+                            <option value="STRING">STRING (Texto)</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+
+                <ng-container *ngIf="parametrosFiltrados$ | async as dataFiltrada; else loading">
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoParametro'"
+                        [tableTitle]="'Parámetros del Sistema'" [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
+                        [showDeleteButton]="false" [showSearchBox]="false"
+                        [newButtonLabel]="'PLATAFORMA.ADD' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        (newRecord)="OnNuevoRegistroClick()" (accionPrincipalClick)="onAccionPrincipal($event)"
+                        permisoNew="ACT_SYST_CREAR">
+                    </app-table-data>
+                </ng-container>
+
+                <ng-template #loading>
+                    <app-data-loader [isLoading]="true" message="Cargando parámetros ..."></app-data-loader>
+                </ng-template>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,179 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="form-area">
+        <div class="card">
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'PLATAFORMA.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'PLATAFORMA.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> - Parámetro del Sistema</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            Configure la llave lógica, el valor asignado y el tipo de dato que utilizará el motor del
+                            backend.
+                        </h6>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-secondary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnRegresarClick()" [disabled]="isSaving">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">{{ 'PLATAFORMA.GUARDAR' | translate }} <i
+                                    class="feather icon-save ms-2"></i></span>
+                            <span *ngIf="isSaving">Guardando... <span class="spinner-border spinner-border-sm ms-2"
+                                    role="status"></span></span>
+                        </button>
+
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">{{ 'PLATAFORMA.MODIFICAR' | translate }} <i
+                                    class="feather icon-edit ms-2"></i></span>
+                            <span *ngIf="isSaving">Actualizando... <span class="spinner-border spinner-border-sm ms-2"
+                                    role="status"></span></span>
+                        </button>
+                    </div>
+                </div>
+                <hr class="mb-0">
+            </div>
+
+            <div class="card-body form-scroll-wrapper pt-4">
+                <form [formGroup]="formularioRegistro" class="editForm" novalidate>
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="llaveParametro"> Llave Lógica (ID para
+                                    Backend)</label>
+                                <input type="text" class="form-control form-input" id="llaveParametro"
+                                    formControlName="llaveParametro" style="text-transform: uppercase;"
+                                    [ngClass]="{ 'is-invalid': f['llaveParametro'].invalid && (f['llaveParametro'].dirty || f['llaveParametro'].touched || isSubmit) }"
+                                    placeholder="Ej: MARGEN_UTILIDAD_BASE" />
+                                <small class="text-muted">Debe ser único. Usado por el código fuente para encontrar el
+                                    valor.</small>
+                                <label
+                                    *ngIf="f['llaveParametro'].invalid && (f['llaveParametro'].dirty || f['llaveParametro'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    La llave lógica es obligatoria.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="nombreParametro"> Nombre Visible</label>
+                                <input type="text" class="form-control form-input" id="nombreParametro"
+                                    formControlName="nombreParametro"
+                                    [ngClass]="{ 'is-invalid': f['nombreParametro'].invalid && (f['nombreParametro'].dirty || f['nombreParametro'].touched || isSubmit) }"
+                                    placeholder="Ej: Margen Base Global" />
+                                <small class="text-muted">Nombre descriptivo para identificarlo en las tablas.</small>
+                                <label
+                                    *ngIf="f['nombreParametro'].invalid && (f['nombreParametro'].dirty || f['nombreParametro'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    El nombre es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="valorParametro"> Valor Asignado</label>
+                                <input type="text" class="form-control form-input" id="valorParametro"
+                                    formControlName="valorParametro"
+                                    [ngClass]="{ 'is-invalid': f['valorParametro'].invalid && (f['valorParametro'].dirty || f['valorParametro'].touched || isSubmit) }"
+                                    placeholder="Ej: 40 o true" />
+                                <small class="text-muted">El dato real que consumirá el sistema para realizar
+                                    cálculos.</small>
+                                <label
+                                    *ngIf="f['valorParametro'].invalid && (f['valorParametro'].dirty || f['valorParametro'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    El valor asignado es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="tipoDato"> Tipo de Dato de Retorno</label>
+                                <select class="form-control form-select" id="tipoDato" formControlName="tipoDato"
+                                    [ngClass]="{ 'is-invalid': f['tipoDato'].invalid && (f['tipoDato'].dirty || f['tipoDato'].touched || isSubmit) }">
+                                    <option value="" disabled selected>Seleccione el formato...</option>
+                                    <option value="DECIMAL">DECIMAL (Número para operaciones)</option>
+                                    <option value="INTEGER">INTEGER (Número Entero)</option>
+                                    <option value="BOOLEAN">BOOLEAN (Verdadero / Falso)</option>
+                                    <option value="STRING">STRING (Texto o JSON)</option>
+                                </select>
+                                <small class="text-muted">Instruye al backend cómo debe transformar este valor.</small>
+                                <label
+                                    *ngIf="f['tipoDato'].invalid && (f['tipoDato'].dirty || f['tipoDato'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Debe seleccionar un tipo de dato.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="descripcionParametro">
+                                    Descripción Detallada (Opcional)
+                                </label>
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="f['descripcionParametro'].value || ''"
+                                    (contentHtmlChange)="actualizarDescripcionRegistro($event)">
+                                </app-text-editor>
+                                <input type="hidden" formControlName="descripcionParametro">
+                                <small class="text-muted mt-1 d-block">Puede usar negritas o listas para estructurar
+                                    mejor la instrucción del parámetro.</small>
+                                <label
+                                    *ngIf="f['descripcionParametro'].invalid && (f['descripcionParametro'].dirty || f['descripcionParametro'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    La descripción excede el límite permitido.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'PLATAFORMA.STATUS' | translate }}</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <!-- En formularios reactivos usamos formControlName y el [value] -->
+                                        <input formControlName="estadoParametro" type="radio" [value]="true" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input formControlName="estadoParametro" type="radio" [value]="false" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

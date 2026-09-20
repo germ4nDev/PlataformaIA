@@ -1,0 +1,120 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="form-area">
+        <div class="card">
+
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-container text-primary mb-1">
+                            <span *ngIf="!modoEdicion">{{ 'PRECIOS.GESTION.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'PRECIOS.GESTION.UPDATE' | translate }}</span>
+                            <span class="text-dark fw-bold"> - {{ nombrePaquete }}</span>
+                        </h4>
+                        <h6 class="subtitulo-container mb-0 text-muted">
+                            Ingrese el Costo Interno y el Valor de Venta mensual. Los planes trimestrales, semestrales y
+                            anuales se calcularán automáticamente.
+                        </h6>
+                    </div>
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnRegresarClick()" [disabled]="isSaving">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">{{ 'PRECIOS.GESTION.CREATE' | translate }} <i
+                                    class="feather icon-plus ms-2"></i></span>
+                            <span *ngIf="isSaving">Guardando... <span class="spinner-border spinner-border-sm ms-2"
+                                    role="status"></span></span>
+                        </button>
+
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">{{ 'PLATAFORMA.MODIFICAR' | translate }} <i
+                                    class="feather icon-edit ms-2"></i></span>
+                            <span *ngIf="isSaving">Actualizando... <span class="spinner-border spinner-border-sm ms-2"
+                                    role="status"></span></span>
+                        </button>
+                    </div>
+                </div>
+                <hr class="mb-0">
+            </div>
+
+            <div class="card-body form-scroll-wrapper pt-4">
+
+                <form [formGroup]="formularioRegistro" class="editForm" novalidate>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="costoBaseMensual"> Costo Base Mensual
+                                    (Interno)</label>
+                                <input type="text" class="form-control form-input" id="costoBaseMensual"
+                                    formControlName="costoBaseMensual"
+                                    [ngClass]="{ 'is-invalid': f['costoBaseMensual'].invalid && (f['costoBaseMensual'].dirty || f['costoBaseMensual'].touched || isSubmit) }"
+                                    placeholder="Ej: 20000.00" mask="separator.2" thousandSeparator="," prefix="$ " />
+                                <small class="text-muted">Costo operativo mensual para mantener este paquete.</small>
+
+                                <label
+                                    *ngIf="f['costoBaseMensual'].invalid && (f['costoBaseMensual'].dirty || f['costoBaseMensual'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    El costo base es requerido y debe ser mayor o igual a 0.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="valorBaseMensual"> Valor Base Mensual
+                                    (Venta)</label>
+                                <input type="text" class="form-control form-input" id="valorBaseMensual"
+                                    formControlName="valorBaseMensual"
+                                    [ngClass]="{ 'is-invalid': f['valorBaseMensual'].invalid && (f['valorBaseMensual'].dirty || f['valorBaseMensual'].touched || isSubmit) }"
+                                    placeholder="Ej: 100000.00" mask="separator.2" thousandSeparator="," prefix="$ " />
+                                <small class="text-muted">Valor a cobrar al cliente por 1 mes de uso.</small>
+
+                                <label
+                                    *ngIf="f['valorBaseMensual'].invalid && (f['valorBaseMensual'].dirty || f['valorBaseMensual'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    El valor de venta es requerido y debe ser mayor o igual a 0.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="precioSetup"> {{ 'PRECIOS.GESTION.SETUP' |
+                                    translate }}</label>
+                                <input type="text" class="form-control form-input" id="precioSetup"
+                                    formControlName="precioSetup" placeholder="Ej: 50000.00 (Opcional)"
+                                    mask="separator.2" thousandSeparator="," prefix="$ " />
+                                <small class="text-muted">Costo único de instalación o setup inicial.</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

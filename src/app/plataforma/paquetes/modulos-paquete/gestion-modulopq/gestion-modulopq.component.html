@@ -1,0 +1,132 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="form-area">
+        <div class="card">
+
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span>{{ 'MODULOS.GESTION.NEW' | translate }}</span>
+                            <span class="titulo-container"> - Asignación al Paquete</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            Seleccione la aplicación y suite para asignar sus módulos al paquete comercial.
+                        </h6>
+                    </div>
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-secondary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnRegresarClick()" [disabled]="isSaving">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">{{ 'MODULOS.GESTION.CREATE' | translate }} <i
+                                    class="feather icon-save ms-2"></i></span>
+                            <span *ngIf="isSaving">Asignando... <span class="spinner-border spinner-border-sm ms-2"
+                                    role="status"></span></span>
+                        </button>
+                    </div>
+                </div>
+                <hr class="mb-0">
+            </div>
+
+            <div class="card-body form-scroll-wrapper pt-4">
+                <form [formGroup]="formularioRegistro" class="editForm" novalidate>
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoAplicacion"> {{
+                                    'MODULOS.GESTION.APLICACION' | translate }}</label>
+                                <select class="form-control form-select" id="codigoAplicacion"
+                                    formControlName="codigoAplicacion" (change)="onAplicacionChangeClick($event)"
+                                    [ngClass]="{ 'is-invalid': f['codigoAplicacion'].invalid && (f['codigoAplicacion'].dirty || f['codigoAplicacion'].touched || isSubmit) }">
+                                    <option value="" disabled selected>{{ 'MODULOS.GESTION.PLACEHOLDERAPLICACION' |
+                                        translate }} </option>
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{
+                                        app.nombreAplicacion }}</option>
+                                </select>
+
+                                <label
+                                    *ngIf="f['codigoAplicacion'].invalid && (f['codigoAplicacion'].dirty || f['codigoAplicacion'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'MODULOS.GESTION.REQUERIDOAPLICACION' | translate }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoSuite"> {{ 'MODULOS.GESTION.SUITE' |
+                                    translate }}</label>
+                                <select class="form-control form-select" id="codigoSuite" formControlName="codigoSuite"
+                                    (change)="onSuiteChangeClick($event)"
+                                    [ngClass]="{ 'is-invalid': f['codigoSuite'].invalid && (f['codigoSuite'].dirty || f['codigoSuite'].touched || isSubmit) }">
+                                    <option value="" disabled selected>{{ 'MODULOS.GESTION.PLACEHOLDERSUITE' | translate
+                                        }} </option>
+                                    <option [value]="sui.codigoSuite" *ngFor="let sui of suitesFiltradas"> {{
+                                        sui.nombreSuite }} </option>
+                                </select>
+
+                                <label
+                                    *ngIf="f['codigoSuite'].invalid && (f['codigoSuite'].dirty || f['codigoSuite'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Debe seleccionar una suite.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-3" *ngIf="modulosPadre.length > 0">
+                            <div class="text-center flex flex-col justify-center"><br />
+                                <h4 class="titulo-container">Modulos asociados al Paquete</h4>
+                                <h6 class="subtitulo-container"> Asocie todos los modulos que van a ser incluidos en el
+                                    Paquete
+                                </h6><br />
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
+                                    (click)="btnAsociarTodosClick()">
+                                    <i class="feather me-2"
+                                        [ngClass]="todosSeleccionados ? 'icon-minus-square' : 'icon-check-square'"></i>
+                                    {{ todosSeleccionados ? 'Deseleccionar Todos' : 'Seleccionar Todos' }}
+                                </button>
+                                <br /><br />
+                            </div>
+
+                            <div class="row px-3" style="max-height: 400px; overflow-y: auto">
+                                <div class="col-md-6 mb-3" *ngFor="let modulo of modulosPadre; let i = index">
+                                    <div class="checkbox-container custom-check-form">
+                                        <!-- Sin ngModel, usamos [checked] y evento (change) nativo -->
+                                        <input class="custom-checkbox" type="checkbox" [checked]="modulo.checked"
+                                            [id]="'modu_' + i" (change)="onModuloCheckChange($event, modulo)" />
+                                        <label class="titulo-container" [for]="'modu_' + i" style="cursor: pointer;">
+                                            {{ modulo.nombreModulo }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

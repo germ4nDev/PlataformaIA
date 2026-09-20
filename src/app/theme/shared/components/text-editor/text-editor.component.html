@@ -1,9 +1,7 @@
-<quill-editor
-    [style]="{ height: '250px' }"
-    [readOnly]="disabled"
-    [modules]="toolbarOptions"
-    [ngModel]="contentHtml"
-    (onContentChanged)="onContentChange($event.html)"
-    (onBlur)="onTouched()">
+<quill-editor [style]="{ height: '250px' }" [readOnly]="disabled" [modules]="toolbarOptions" [ngModel]="contentHtml"
+    (onContentChanged)="onContentChange($event.html)" (onBlur)="onTouched()">
 </quill-editor>
 
+<!-- <quill-editor [style]="{ height: editorHeight }" [readOnly]="disabled" [modules]="toolbarOptions"
+    [ngModel]="contentHtml" (onContentChanged)="onContentChange($event)" (onBlur)="onTouched()">
+</quill-editor> -->

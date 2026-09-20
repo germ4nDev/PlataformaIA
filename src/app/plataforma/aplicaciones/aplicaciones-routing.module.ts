@@ -59,49 +59,49 @@ const routes: Routes = [
             },
             {
                 path: 'paquetes',
-                loadComponent: () => import('./paquetes/paquetes.component').then((m) => m.PaquetesComponent),
+                loadComponent: () => import('../paquetes/paquetes/paquetes.component').then((m) => m.PaquetesComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-paquete',
-                loadComponent: () => import('./paquetes/gestion-paquete/gestion-paquete.component').then((m) => m.GestionPaqueteComponent),
+                loadComponent: () => import('../paquetes/paquetes/gestion-paquete/gestion-paquete.component').then((m) => m.GestionPaqueteComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'items-paquete',
-                loadComponent: () => import('./paquetes/items-paquete/items-paquete.component').then((m) => m.ItemsPaqueteComponent),
+                loadComponent: () => import('../paquetes/items-paquete/items-paquete.component').then((m) => m.ItemsPaqueteComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'modulos-paquete',
-                loadComponent: () => import('./paquetes/modulos-paquete/modulos-paquete.component').then((m) => m.ModulosPaqueteComponent),
+                loadComponent: () => import('../paquetes/modulos-paquete/modulos-paquete.component').then((m) => m.ModulosPaqueteComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-itempq',
-                loadComponent: () => import('./paquetes/items-paquete/gestion-itempq/gestion-itempq.component').then((m) => m.GestionItempqComponent),
+                loadComponent: () => import('../paquetes/items-paquete/gestion-itempq/gestion-itempq.component').then((m) => m.GestionItempqComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-modulopq',
-                loadComponent: () => import('./paquetes/modulos-paquete/gestion-modulopq/gestion-modulopq.component').then((m) => m.GestionModulopqComponent),
+                loadComponent: () => import('../paquetes/modulos-paquete/gestion-modulopq/gestion-modulopq.component').then((m) => m.GestionModulopqComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'precios-paquete',
-                loadComponent: () => import('./paquetes/precios-paquete/precios-paquete.component').then((m) => m.PreciosPaqueteComponent),
+                loadComponent: () => import('../paquetes/precios-paquete/precios-paquete.component').then((m) => m.PreciosPaqueteComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-precio-paquete',
-                loadComponent: () => import('./paquetes/precios-paquete/gestion-precio-paquete/gestion-precio-paquete.component').then((m) => m.GestionPrecioPaqueteComponent),
+                loadComponent: () => import('../paquetes/precios-paquete/gestion-precio-paquete/gestion-precio-paquete.component').then((m) => m.GestionPrecioPaqueteComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },

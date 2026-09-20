@@ -20,7 +20,7 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLItemPaquete } from 'src/app/theme/shared/_helpers/models/PTLItemPaquete.model';
-import { PTLTipoItemModel } from '../../../../theme/shared/_helpers/models/PTLTipoItem.model';
+import { PTLTipoItemModel } from '../../../theme/shared/_helpers/models/PTLTipoItem.model';
 import { PTLItems } from 'src/app/theme/shared/_helpers/models/PTLItem.model';
 
 import {

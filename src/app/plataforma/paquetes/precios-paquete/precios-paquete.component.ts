@@ -218,6 +218,12 @@ export class PreciosPaqueteComponent implements OnInit, OnDestroy {
         });
     }
 
+    OnNuevoRegistroClick(event: any) {
+        console.log('nuevo registro', event);
+        this.router.navigate(['aplicaciones/gestion-precio-paquete']);
+
+    }
+
     OnRegresarClick() {
         this.router.navigate(['aplicaciones/paquetes']);
     }

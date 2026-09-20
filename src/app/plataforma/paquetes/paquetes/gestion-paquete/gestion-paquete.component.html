@@ -1,0 +1,203 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <!-- PANEL IZQUIERDO -->
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <!-- ÁREA DEL FORMULARIO -->
+    <div class="form-area">
+        <div class="card">
+
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'PAQUETES.GESTION.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'PAQUETES.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> - Paquete Comercial</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            Configure la información general, descripción y recursos visuales del paquete.
+                        </h6>
+                    </div>
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-secondary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnRegresarClick()" [disabled]="isSaving">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">{{ 'PAQUETES.GESTION.CREATE' | translate }} <i
+                                    class="feather icon-plus ms-2"></i></span>
+                            <span *ngIf="isSaving">Guardando... <span class="spinner-border spinner-border-sm ms-2"
+                                    role="status"></span></span>
+                        </button>
+
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
+                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">{{ 'PAQUETES.UPDATE' | translate }} <i
+                                    class="feather icon-edit ms-2"></i></span>
+                            <span *ngIf="isSaving">Actualizando... <span class="spinner-border spinner-border-sm ms-2"
+                                    role="status"></span></span>
+                        </button>
+                    </div>
+                </div>
+                <hr class="mb-0">
+            </div>
+
+            <div class="card-body form-scroll-wrapper pt-4">
+
+                <form [formGroup]="formularioRegistro" class="editForm" novalidate>
+                    <div class="row">
+
+                        <!-- CÓDIGO PAQUETE (SOLO LECTURA) -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoPaquete">{{ 'PAQUETE.CODE' | translate
+                                    }}</label>
+                                <input type="text" class="form-control form-input bg-light" id="codigoPaquete"
+                                    formControlName="codigoPaquete" readonly
+                                    placeholder="{{ 'PAQUETES.GESTION.PLACEHOLDERCODE' | translate }}" />
+                                <small class="text-muted">Generado automáticamente.</small>
+                            </div>
+                        </div>
+
+                        <!-- NOMBRE COMÚN -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="nombrePaquete">{{ 'PAQUETES.NAME' | translate
+                                    }}</label>
+                                <input type="text" class="form-control form-input" id="nombrePaquete"
+                                    formControlName="nombrePaquete"
+                                    [ngClass]="{ 'is-invalid': f['nombrePaquete'].invalid && (f['nombrePaquete'].dirty || f['nombrePaquete'].touched || isSubmit) }"
+                                    placeholder="{{ 'PAQUETES.GESTION.PLACEHOLDERNAME' | translate }}" />
+                                <small class="text-muted">Nombre comercial del paquete.</small>
+
+                                <label
+                                    *ngIf="f['nombrePaquete'].invalid && (f['nombrePaquete'].dirty || f['nombrePaquete'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PAQUETES.GESTION.REQUERIDONAME' | translate }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- DESCRIPCIÓN (MODIFICADO AL PATRÓN DE PARÁMETROS) -->
+                        <div class="col-md-12 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="descripcionPaquete">{{ 'PAQUETES.DESCRIPTION' |
+                                    translate }}</label>
+
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="f['descripcionPaquete'].value || ''"
+                                    (contentHtmlChange)="actualizarDescripcionPaquete($event)">
+                                </app-text-editor>
+
+                                <!-- 🟢 Input oculto que recibe el valor y mantiene la validación -->
+                                <input type="hidden" formControlName="descripcionPaquete">
+                                <small class="text-muted mt-1 d-block">Puede usar negritas o listas para estructurar
+                                    mejor la instrucción del parámetro.</small>
+                                <label
+                                    *ngIf="f['descripcionPaquete'].invalid && (f['descripcionPaquete'].dirty || f['descripcionPaquete'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback d-block mt-1">
+                                    {{ 'PAQUETES.GESTION.REQUERIDODESCRIPCION' | translate }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ACUERDO DE LICENCIA (MODIFICADO AL PATRÓN DE PARÁMETROS) -->
+                        <div class="col-md-12 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="acuerdoLicencia">{{ 'PAQUETES.ACUERDOLICENCIA' |
+                                    translate }}</label>
+
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="f['acuerdoLicencia'].value || ''"
+                                    (contentHtmlChange)="actualizarAcuerdoLicencia($event)">
+                                </app-text-editor>
+
+                                <!-- 🟢 Input oculto que recibe el valor y mantiene la validación -->
+                                <input type="hidden" formControlName="acuerdoLicencia">
+                                <small class="text-muted mt-1 d-block">Puede usar negritas o listas para estructurar
+                                    mejor la instrucción del parámetro.</small>
+                                <label
+                                    *ngIf="f['acuerdoLicencia'].invalid && (f['acuerdoLicencia'].dirty || f['acuerdoLicencia'].touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback d-block mt-1">
+                                    {{ 'PAQUETES.GESTION.REQUERIDODESCRIPCION' | translate }}
+                                    <!-- Cambia la llave de traducción si tienes una específica -->
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CARGA DE IMÁGENES: ICONO -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'PAQUETES.GESTION.ICONO' | translate }}</label>
+                                <br>
+                                <img *ngIf="selectedFileIconoUrl" [src]="selectedFileIconoUrl"
+                                    class="image-preview mb-2" style="max-height: 80px; object-fit: contain;" />
+                                <input type="file" #fileInputIcono style="display: none;" accept="image/*"
+                                    (change)="onFileSelectedClick($event, 'icono')">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInputIcono.click()">
+                                    <i class="feather icon-upload me-2"></i> {{ 'PLATAFORMA.SELECTFILE' | translate }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- CARGA DE IMÁGENES: IMAGEN PRINCIPAL -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'PAQUETES.GESTION.IMAGEN' | translate }}</label>
+                                <br>
+                                <img *ngIf="selectedFileImagenUrl" [src]="selectedFileImagenUrl"
+                                    class="image-preview mb-2" style="max-height: 80px; object-fit: contain;" />
+                                <input type="file" #fileInputImagen style="display: none;" accept="image/*"
+                                    (change)="onFileSelectedClick($event, 'imagen')">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInputImagen.click()">
+                                    <i class="feather icon-upload me-2"></i> {{ 'PLATAFORMA.SELECTFILE' | translate }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ESTADO (RADIO BUTTONS QPLUS) -->
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'PAQUETES.STATUS' | translate }}</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input formControlName="estadoPaquete" type="radio" [value]="true" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input formControlName="estadoPaquete" type="radio" [value]="false" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

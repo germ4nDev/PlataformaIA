@@ -60,3 +60,4 @@ export * from './ptlbibliotecas.service';
 export * from './ptlgalerias.service';
 export * from './ptltipos-galeria.service';
 export * from './ptlformatos-galeria.service';
+export * from './ptlparametros-sistema.service';

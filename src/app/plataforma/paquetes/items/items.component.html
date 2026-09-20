@@ -1,0 +1,72 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <!-- PANEL IZQUIERDO -->
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">Filtros de Catálogo</h6>
+
+                    <div class="filtro">
+                        <small>Filtrar por Nombre</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="Buscar ítem..." />
+                    </div>
+
+                    <!-- Opcional: Filtro por categoría/tipo si lo necesitas -->
+                    <!-- <div class="filtro">
+                        <small>Categoría</small>
+                        <select (change)="onFiltroTipoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">Todas las categorías</option>
+                        </select>
+                    </div> -->
+
+                    <div class="filtro">
+                        <small>{{ 'PLATAFORMA.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <!-- ZONA CENTRAL DE DATOS -->
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <ng-container *ngIf="itemsFiltrados$ | async as dataFiltrada; else loading">
+                    <!-- Se asume permiso 'ACT_ITEMS_CREAR', ajusta según tu BD -->
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoValor'" [tableTitle]="'Catálogo de Ítems'"
+                        [metadataColumns]="columnasItems" [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
+                        [showEditButton]="false" [showDeleteButton]="false" [showSearchBox]="false"
+                        [newButtonLabel]="'PLATAFORMA.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        (newRecord)="OnNuevoRegistroClick()" (accionPrincipalClick)="onAccionPrincipal($event)"
+                        permisoNew="ACT_ITEMS_CREAR">
+                    </app-table-data>
+                </ng-container>
+
+                <ng-template #loading>
+                    <app-data-loader [isLoading]="true" message="Cargando catálogo de ítems ..."></app-data-loader>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
