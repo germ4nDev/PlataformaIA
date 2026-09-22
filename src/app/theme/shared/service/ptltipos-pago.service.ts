@@ -35,6 +35,14 @@ export class PTLTiposPagoService {
         });
     }
 
+    get tiposPago$(): Observable<PTLTipoPagoModel[]> {
+        return this._tiposPago.asObservable();
+    }
+
+    getTiposPagoActuales(): PTLTipoPagoModel[] {
+        return this._tiposPago.getValue()
+    }
+
     getRegistros() {
         const url = `${base_url}/tipos-pago`;
         return this.http.get(url).pipe(
@@ -47,14 +55,6 @@ export class PTLTiposPagoService {
                 };
             })
         );
-    }
-
-    get tiposPago$(): Observable<PTLTipoPagoModel[]> {
-        return this._tiposPago.asObservable();
-    }
-
-    getTiposPagoActuales(): PTLTipoPagoModel[] {
-        return this._tiposPago.getValue();
     }
 
     cargarRegistros() {

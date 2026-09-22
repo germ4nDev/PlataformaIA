@@ -6,26 +6,21 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription, combineLatest, of } from 'rxjs';
 import { catchError, map, startWith, tap } from 'rxjs/operators';
-
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { GradientConfig } from 'src/app/app-config';
-
-// Componentes QPLUS
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component';
 
-// Servicios y Modelos
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { LocalStorageService, PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService, PtltiposItemsService, SwalAlertService } from 'src/app/theme/shared/service';
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import Swal from 'sweetalert2';
-
-// 🟢 ASUME QUE TIENES ESTE SERVICIO CREADO PARA CONSUMIR LOS ITEMS
-// import { PTLItemsService } from 'src/app/theme/shared/service/ptl-items.service';
+import { PTLItemModel } from 'src/app/theme/shared/_helpers/models/PTLItem.model';
+import { PTLItemsService } from 'src/app/theme/shared/service/ptlitems.service';
+import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoItem.model';
 
 @Component({
     selector: 'app-items',
@@ -53,15 +48,13 @@ export class ItemsComponent implements OnInit, OnDestroy {
     suscriptor: string = '';
 
     subscriptions = new Subscription();
-
-    // Filtros
     filtroNombreSubject = new BehaviorSubject<string>('');
     filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-    // Observables de la tabla
-    itemsTransformados$: Observable<any[]> = of([]);
-    itemsFiltrados$: Observable<any[]> = of([]);
-    itemsCatologo: any[] = []; // Reemplazar 'any' por tu PTLItemsModel si lo tienes
+    _itemsTransformados$: Observable<any[]> = of([]);
+    _itemsFiltrados$: Observable<any[]> = of([]);
+    itemsCatologo: PTLItemModel[] = [];
+    tiposItems: PTLTipoItemModel[] = [];
 
     constructor(
         private router: Router,
@@ -71,28 +64,27 @@ export class ItemsComponent implements OnInit, OnDestroy {
         private _localStorageService: LocalStorageService,
         private _logActividadesService: PtllogActividadesService,
         private _permisosService: PtlPermisosService,
+        private _tiposItemsService: PtltiposItemsService,
         private _swalService: SwalAlertService,
-        // private _registrosService: PTLItemsService // 👈 Descomenta esto
+        private _registrosService: PTLItemsService // 👈 Descomenta esto
     ) {
         this.gradientConfig = GradientConfig;
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
     }
 
     ngOnInit(): void {
+        this._localStorageService.removeObject('regId');
         this._navigationService.getNavigationItems();
         this.menuItems$ = this._navigationService.menuItems$;
-
+        this.tiposItems = this._tiposItemsService.getTiposItemsActuales();
         this.setupItemsStream();
 
-        // 🟢 Carga inicial de datos
-        /*
         this.subscriptions.add(
             this._registrosService.cargarRegistros().subscribe({
                 next: () => console.log('✅ Ítems cargados en el servicio'),
                 error: (err) => console.error('❌ Error al cargar ítems:', err)
             })
         );
-        */
     }
 
     ngOnDestroy(): void {
@@ -100,18 +92,19 @@ export class ItemsComponent implements OnInit, OnDestroy {
     }
 
     setupItemsStream(): void {
-        // 1. Mapeo de datos y cálculo de acciones según permisos
-        this.itemsTransformados$ = combineLatest([of([]), // 👈 Reemplazar 'of([])' por 'this._registrosService.items$'
-        this._permisosService.actividadesAutorizadas$
+        this._itemsTransformados$ = combineLatest([
+            this._registrosService.items$,
+            this._permisosService.actividadesAutorizadas$
         ]).pipe(
             map(([itemsBD, permisos]: [any[], string[]]) => {
                 if (!itemsBD || itemsBD.length === 0) return [];
 
                 return itemsBD.map((item: any) => {
                     const newItem: any = { ...item };
-                    newItem.nomEstado = newItem.estadoValor ? 'Activo' : 'Inactivo';
+                    newItem.nomEstado = newItem.estadoItem ? 'Activo' : 'Inactivo';
+                    const tipo = this.tiposItems.find(x => x.codigoTipoItem == newItem.codigoTipoItem);
+                    newItem.nomTipoItem = tipo?.nombreTipo;
 
-                    // Asignación de botones de acción
                     const accionesPermitidas: any[] = [];
 
                     if (permisos.includes('ACT_ITEMS_MODIFICAR')) {
@@ -142,9 +135,8 @@ export class ItemsComponent implements OnInit, OnDestroy {
             })
         );
 
-        // 2. Aplicación de filtros en tiempo real
-        this.itemsFiltrados$ = combineLatest([
-            this.itemsTransformados$.pipe(startWith([])),
+        this._itemsFiltrados$ = combineLatest([
+            this._itemsTransformados$.pipe(startWith([])),
             this.filtroNombreSubject,
             this.filtroEstadoSubject
         ]).pipe(
@@ -166,15 +158,15 @@ export class ItemsComponent implements OnInit, OnDestroy {
         );
     }
 
-    // 🟢 Manejo centralizado de clics en la tabla
     onAccionPrincipal(evento: { accion: string, row: any }) {
         const { accion, row } = evento;
-        const id = row.codigoValor;
+        const id = row.codigoItem;
 
         switch (accion) {
             case 'MODIFICAR':
+                console.log('modificar registro', id);
                 this._localStorageService.setObject('regId', id);
-                this.router.navigate(['aplicaciones/gestion-item']);
+                this.router.navigate(['paquetes/gestion-item']);
                 break;
 
             case 'ELIMINAR':
@@ -189,7 +181,7 @@ export class ItemsComponent implements OnInit, OnDestroy {
 
     OnNuevoRegistroClick(): void {
         this._localStorageService.setObject('regId', 'nuevo');
-        this.router.navigate(['aplicaciones/gestion-item']);
+        this.router.navigate(['paquetes/gestion-item']);
     }
 
     eliminarRegistro(row: any): void {
@@ -198,34 +190,32 @@ export class ItemsComponent implements OnInit, OnDestroy {
             this.translate.instant('APLICACIONES.ELIMINARTITULO')
         ).subscribe(result => {
             if (result) {
-                /*
                 this._registrosService.deleteEliminarRegistro(row.codigoValor).subscribe({
                     next: (resp: any) => {
                         const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertSuccess(resp.mensaje);
+                        this._registrosService.cargarRegistros().subscribe();
                     },
                     error: (err: any) => {
                         const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + err.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertError(err.mensaje);
+                        this._registrosService.cargarRegistros().subscribe();
                     }
                 });
-                */
-                console.log("Mock eliminar:", row.codigoValor);
             }
         });
     }
 
-    // Eventos de los inputs de filtro
     onFiltroNombreChangeClick(evento: any) { this.filtroNombreSubject.next(evento.target.value); }
     onFiltroEstadoChangeClick(evento: any) { this.filtroEstadoSubject.next(evento.target.value); }
     toggleNav(): void { this.toggleSidebar.emit(); }
 
-    // 🟢 Definición de Columnas para app-table-data
     columnasItems: ColumnMetadata[] = [
-        { name: 'nombreValor', header: 'Nombre del Ítem', type: 'text' },
-        { name: 'costoValor', header: 'Costo', type: 'price' },
+        { name: 'nombreItem', header: 'Nombre del Ítem', type: 'text' },
+        { name: 'nomTipoItem', header: 'Tipo', type: 'text' },
+        { name: 'costoItem', header: 'Costo', type: 'price' },
         { name: 'valorUnitario', header: 'Precio Unitario', type: 'price' },
         { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
     ];

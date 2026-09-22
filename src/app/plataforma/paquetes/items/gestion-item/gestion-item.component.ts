@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-
 import { GradientConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -18,13 +17,13 @@ import {
     PtllogActividadesService,
     SwalAlertService,
     LocalStorageService,
-    NavigationService
+    NavigationService,
+    PtltiposItemsService
 } from 'src/app/theme/shared/service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
-
-// 🟢 ASUME QUE TIENES ESTOS SERVICIOS CREADOS, AJÚSTALOS A TUS NOMBRES REALES
-// import { PTLItemsService } from 'src/app/theme/shared/service/ptl-items.service';
-// import { PTLTiposItemService } from 'src/app/theme/shared/service/ptl-tipos-item.service';
+import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoItem.model';
+import { PTLItemsService } from 'src/app/theme/shared/service/ptlitems.service';
+import { PTLItemModel } from 'src/app/theme/shared/_helpers/models/PTLItem.model';
 
 @Component({
     selector: 'app-gestion-item',
@@ -44,23 +43,18 @@ import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-in
 export class GestionItemComponent implements OnInit, OnDestroy {
     @Output() toggleSidebar = new EventEmitter<void>();
 
-    // Variables de UI
     formularioRegistro!: FormGroup;
+    item: PTLItemModel = new PTLItemModel();
     menuItems$!: Observable<NavigationItem[]>;
     gradientConfig: any;
     navCollapsed: boolean = false;
     windowWidth: number = 0;
-
-    // Estados
     isSubmit: boolean = false;
     isSaving: boolean = false;
     modoEdicion: boolean = false;
     registroId: string = '';
+    tiposItem: PTLTipoItemModel[] = [];
 
-    // Datos Maestros
-    tiposItem: any[] = []; // Se llenará con PTLTiposItem
-
-    // Seguridad
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
 
@@ -69,12 +63,12 @@ export class GestionItemComponent implements OnInit, OnDestroy {
         private translate: TranslateService,
         private fb: FormBuilder,
         private _layoutInitializer: LayoutInitializerService,
+        private _tiposItemService: PtltiposItemsService,
         private _logActividadesService: PtllogActividadesService,
         private _swalAlertService: SwalAlertService,
         private _localStorageService: LocalStorageService,
         private _navigationService: NavigationService,
-        // private _itemsService: PTLItemsService,          // 👈 Descomenta esto con tu servicio real
-        // private _tiposItemService: PTLTiposItemService   // 👈 Descomenta esto con tu servicio real
+        private _itemsService: PTLItemsService
     ) {
         GradientConfig.header_fixed_layout = true;
         this.gradientConfig = GradientConfig;
@@ -82,22 +76,37 @@ export class GestionItemComponent implements OnInit, OnDestroy {
 
         this.inicializarFormulario();
 
-        // 🟢 ID para edición
         this.registroId = this._localStorageService.getObject<string>('regId') || 'nuevo';
         this.modoEdicion = this.registroId !== 'nuevo';
+
+        if (this.modoEdicion) {
+            this._itemsService.getRegistroById(this.registroId).subscribe({
+                next: (resp: any) => {
+                    console.log('resp', resp);
+
+                    if (resp.ok && resp.item) {
+                        this.formularioRegistro.patchValue(resp.item);
+                        this.item = resp.item;
+                    }
+                },
+                error: () => {
+                    this._swalAlertService.getAlertConfirmError('No se pudo obtener el item con ese codigo');
+                }
+            });
+        }
     }
 
     get f() { return this.formularioRegistro.controls; }
 
     inicializarFormulario() {
         this.formularioRegistro = this.fb.group({
-            codigoValor: [uuidv4(), Validators.required],
-            tipoValorId: ['', Validators.required],
-            nombreValor: ['', [Validators.required, Validators.maxLength(100)]],
+            codigoItem: [uuidv4(), Validators.required],
+            codigoTipoItem: ['', Validators.required],
+            nombreItem: ['', [Validators.required, Validators.maxLength(100)]],
             valorUnitario: [0, [Validators.required, Validators.min(0)]],
-            costoValor: [0, [Validators.required, Validators.min(0)]],
-            descripcionValor: [''], // Opcional, con HTML
-            estadoValor: [true, Validators.required]
+            costoItem: [0, [Validators.required, Validators.min(0)]],
+            descripcionItem: [''], // Opcional, con HTML
+            estadoItem: [true, Validators.required]
         });
     }
 
@@ -105,14 +114,8 @@ export class GestionItemComponent implements OnInit, OnDestroy {
         this._layoutInitializer.applyLayout();
         this._navigationService.getNavigationItems();
         this.menuItems$ = this._navigationService.menuItems$;
+        this.tiposItem = this._tiposItemService.getTiposItemsActuales();
 
-        this.cargarTiposItem();
-
-        if (this.modoEdicion) {
-            this.cargarDatosEdicion();
-        }
-
-        // Protección de pantalla bloqueada
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: () => {
                 this._localStorageService.setFormRegistro(this.formularioRegistro.value);
@@ -120,7 +123,6 @@ export class GestionItemComponent implements OnInit, OnDestroy {
             }
         });
 
-        // Restaurar si venimos de un bloqueo
         const savedForm = this._localStorageService.getFormRegistro();
         if (savedForm) {
             this.formularioRegistro.patchValue(savedForm);
@@ -132,28 +134,9 @@ export class GestionItemComponent implements OnInit, OnDestroy {
         if (this.lockScreenSubscription) this.lockScreenSubscription.unsubscribe();
     }
 
-    cargarTiposItem() {
-        // MOCK: Reemplázalo por tu servicio real -> this._tiposItemService.getTiposItem()
-        // this.tiposItem = [{ tipoItemId: 1, nombreTipo: 'Infraestructura' }, { tipoItemId: 2, nombreTipo: 'Soporte' }];
-    }
-
-    cargarDatosEdicion() {
-        /*
-        this._itemsService.getRegistroById(this.registroId).subscribe({
-            next: (resp: any) => {
-                if (resp.item) {
-                    this.formularioRegistro.patchValue(resp.item);
-                }
-            },
-            error: () => this._swalAlertService.getAlertError('No se pudo cargar el ítem.')
-        });
-        */
-    }
-
-    // 🟢 PUENTE TEXT EDITOR -> REACTIVE FORMS
     actualizarDescripcionValor(htmlContent: string) {
-        this.formularioRegistro.get('descripcionValor')?.setValue(htmlContent);
-        this.formularioRegistro.get('descripcionValor')?.markAsDirty();
+        this.formularioRegistro.get('descripcionItem')?.setValue(htmlContent);
+        this.formularioRegistro.get('descripcionItem')?.markAsDirty();
     }
 
     btnGestionarRegistroClick() {
@@ -165,59 +148,69 @@ export class GestionItemComponent implements OnInit, OnDestroy {
         }
 
         this.isSaving = true;
-        const formValues = this.formularioRegistro.getRawValue();
-        const usuarioActual = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || 'SISTEMA';
-
-        // Estructuramos el DTO exactamente como tu base de datos lo requiere
-        const dataGuardar = {
-            ...formValues,
-            // Aseguramos que el ID numérico se asigne limpio (Angular lo puede devolver como string desde el select)
-            tipoValorId: Number(formValues.tipoValorId),
-            codigoUsuarioModificacion: this.modoEdicion ? usuarioActual : '',
-            fechaModificacion: this.modoEdicion ? new Date().toISOString() : '',
-            codigoUsuarioCreacion: !this.modoEdicion ? usuarioActual : undefined,
-            fechaCreacion: !this.modoEdicion ? new Date().toISOString() : undefined
-        };
-
-        /*
-        const peticion$ = this.modoEdicion
-            ? this._itemsService.putModificarRegistro(dataGuardar)
-            : this._itemsService.postCrearRegistro(dataGuardar);
-
-        peticion$.subscribe({
-            next: (resp: any) => this.manejarExito(resp, this.modoEdicion ? 'PLATAFORMA.MODIFICAR' : 'PLATAFORMA.INSERTAR'),
-            error: (err: any) => this.manejarError(err, this.modoEdicion ? 'PLATAFORMA.NOMODIFICO' : 'PLATAFORMA.NOINSERTO')
-        });
-        */
-
-        // MOCK TEMPORAL PARA QUE NO TIRE ERROR HASTA QUE CONECTES EL SERVICIO
-        console.log('Datos listos para la BD:', dataGuardar);
-        setTimeout(() => this.isSaving = false, 1000);
-    }
-
-    private manejarExito(resp: any, mensajeTra: string) {
-        this.isSaving = false;
-        if (resp.ok) {
-            const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant(mensajeTra) };
-            this._logActividadesService.postCrearRegistro(logData).subscribe();
-
-            this._swalAlertService.getAlertConfirmSuccess(this.translate.instant(mensajeTra));
-            this.btnRegresarClick();
+        const registroData = this.formularioRegistro.getRawValue() as PTLItemModel;
+        if (this.modoEdicion) {
+            registroData.codigoUsuarioCreacion = this.item.codigoUsuarioCreacion;
+            registroData.fechaCreacion = this.item.fechaCreacion;
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            registroData.fechaModificacion = new Date().toISOString()
+            console.log('gestionar registro', registroData);
+            this._itemsService.putModificarRegistro(registroData).subscribe({
+                next: (resp: any) => {
+                    if (resp.ok) {
+                        this.registrarLogYSalir('PLATAFORMA.MODIFICAR', '201');
+                    } else {
+                        this.manejarErrorGuardado(resp.mensaje);
+                    }
+                }
+            })
+        } else {
+            registroData.codigoItem = uuidv4()
+            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            registroData.fechaCreacion = new Date().toISOString()
+            registroData.codigoUsuarioModificacion = ''
+            registroData.fechaModificacion = ''
+            console.log('insertar registro', registroData)
+            this._itemsService.postCrearRegistro(registroData).subscribe({
+                next: (resp: any) => {
+                    if (resp.ok) {
+                        this.registrarLogYSalir('PLATAFORMA.CREAR', '201');
+                    } else {
+                        this.manejarErrorGuardado(resp.mensaje);
+                    }
+                }
+            })
         }
     }
 
-    private manejarError(err: any, mensajeTra: string) {
+    private registrarLogYSalir(mensajeTra: string, codigoResp: string) {
         this.isSaving = false;
-        console.error(err);
-
-        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant(mensajeTra) };
+        const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: codigoResp,
+            descripcionLog: this.translate.instant(mensajeTra)
+        };
         this._logActividadesService.postCrearRegistro(logData).subscribe();
 
-        this._swalAlertService.getAlertError(this.translate.instant(mensajeTra));
+        this._swalAlertService.getAlertConfirmSuccess(this.translate.instant(mensajeTra));
+        this.btnRegresarClick();
+    }
+
+    private manejarErrorGuardado(mensaje: string) {
+        this.isSaving = false;
+        const msjCompleto = this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + (mensaje || '');
+
+        const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: msjCompleto
+        };
+        this._logActividadesService.postCrearRegistro(logData).subscribe();
+        this._swalAlertService.getAlertError(msjCompleto);
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/aplicaciones/items']);
+        this.router.navigate(['/paquetes/items']);
     }
 
     toggleNav(): void {

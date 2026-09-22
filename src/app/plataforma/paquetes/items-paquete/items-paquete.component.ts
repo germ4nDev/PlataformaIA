@@ -21,7 +21,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLItemPaquete } from 'src/app/theme/shared/_helpers/models/PTLItemPaquete.model';
 import { PTLTipoItemModel } from '../../../theme/shared/_helpers/models/PTLTipoItem.model';
-import { PTLItems } from 'src/app/theme/shared/_helpers/models/PTLItem.model';
+import { PTLItemModel } from 'src/app/theme/shared/_helpers/models/PTLItem.model';
 
 import {
     NavigationService, SwalAlertService, LocalStorageService,
@@ -54,7 +54,7 @@ export class ItemsPaqueteComponent implements OnInit, OnDestroy {
     activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
     tiposValor: PTLTipoItemModel[] = [];
-    listaPrecios: PTLItems[] = [];
+    listaPrecios: PTLItemModel[] = [];
     suscriptor: string = '';
 
     subscriptions = new Subscription();
@@ -197,9 +197,6 @@ export class ItemsPaqueteComponent implements OnInit, OnDestroy {
         );
     }
 
-    // ==========================================
-    // 🟢 ENRUTADOR CENTRAL DE ACCIONES
-    // ==========================================
     onAccionPrincipal(evento: { accion: string, row: any }) {
         const { accion, row } = evento;
         const id = row.codigoItem;
@@ -207,8 +204,7 @@ export class ItemsPaqueteComponent implements OnInit, OnDestroy {
         switch (accion) {
             case 'MODIFICAR':
                 this._localStorageService.setObject('regId', id);
-                this._localStorageService.setObject('regPQ', this.registroId);
-                this.router.navigate(['aplicaciones/gestion-itempq']);
+                this.router.navigate(['paquetes/gestion-itempq']);
                 break;
             case 'ELIMINAR':
                 this.eliminarItem(row);
@@ -240,12 +236,11 @@ export class ItemsPaqueteComponent implements OnInit, OnDestroy {
 
     OnNuevoRegistroClick(): void {
         this._localStorageService.setObject('regId', 'nuevo');
-        this._localStorageService.setObject('regPQ', this.registroId);
-        this.router.navigate(['aplicaciones/gestion-itempq']);
+        this.router.navigate(['paquetes/gestion-itempq']);
     }
 
     OnRegresarClick() {
-        this.router.navigate(['aplicaciones/paquetes']);
+        this.router.navigate(['paquetes/paquetes']);
     }
 
     onFiltroValorChangeClick(evento: any) { this.filtroValorSubject.next(evento.target.value); }

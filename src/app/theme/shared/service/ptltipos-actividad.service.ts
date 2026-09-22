@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { BehaviorSubject, map, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLTipoActividadModel } from '../_helpers/models/PTLTipoActividad.model';
@@ -14,6 +14,9 @@ const base_url = environment.apiUrl;
 })
 export class PtltiposActividadService {
     user: PTLUsuarioModel = new PTLUsuarioModel();
+    private _registros = new BehaviorSubject<PTLTipoActividadModel[]>([]);
+    private _registrosChange = new Subject<any>();
+    _registrosChange$ = this._registrosChange.asObservable();
 
     constructor(
         private http: HttpClient,

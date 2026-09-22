@@ -72,6 +72,7 @@
     --header-color: #f5f5f5;
     --color-fin-gradiente: #ffffff;
     --card-background: #ffffff;
+    --card-select-background: #d4d4d4;
     --skeleton-background: rgba(255, 255, 255, 0.05);
     --skeleton-shine: rgba(255, 255, 255, 0.08);
     --app-dashboard-bg: #e4e3e3;
@@ -129,6 +130,7 @@ body.dark-theme {
     --border-color: #474747;
     --header-color: #292828;
     --card-background: #222222;
+    --card-select-background: #3f3f3f;
     --skeleton-background: rgba(255, 255, 255, 0.05);
     --skeleton-shine: rgba(255, 255, 255, 0.08);
     --app-dashboard-bg: #0e0e0e;
@@ -814,7 +816,7 @@ td {
 .dataTables_filter label,
 .filtros-title,
 .datatable-title {
-    color: var(--text-color) !important;
+    color: var(--app-navbar-color) !important;
 }
 
 .datatable-subtitle {
@@ -831,6 +833,55 @@ table.dataTable.row-border tbody tr td,
 .table tbody td {
     border-top: none !important;
     border-bottom: none !important;
+}
+
+/* ==========================================
+   PAGINACIÓN CUSTOM ANGULAR
+   ========================================== */
+.pagination {
+
+    .page-item:not(.active) .page-link-a {
+        background-color: transparent !important;
+        color: var(--text-color) !important;
+        /* Gris claro para modo oscuro */
+    }
+
+    /* 2. Estado ACTIVO: Solo el número seleccionado */
+    .page-item.active .page-link-a {
+        background-color: var(--app-navbar-color, #2a5dbd) !important;
+        color: var(--app-iconos-color) !important;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    /* 3. Efecto Hover para los números inactivos */
+    .page-item:not(.active) .page-link-a:hover {
+        background-color: var(--card-select-background) !important;
+        color: var(--text-color) !important;
+    }
+
+    /* 4. Estilos para Anterior / Siguiente (Opcional, para asegurar consistencia) */
+    .page-item .page-link-b {
+        background-color: transparent !important;
+        color: var(--text-color, #a9a9a9) !important;
+    }
+
+    .page-item.disabled .page-link-b {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+    }
+
+    .page-item .page-link-b {
+        background-color: transparent !important;
+        color: var(--text-color, #6c757d) !important;
+        border-color: transparent !important;
+        /* 👈 Esto quita el borde delineado */
+    }
+
+    .page-item.disabled .page-link-b {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+    }
 }
 
 .dt-toolbar {
@@ -1332,6 +1383,12 @@ hr.detail-separator {
 
 .nombre-user-panel {
     text-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.icono-table {
+    color: var(--app-navbar-color);
+    font-size: 1.25rem;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-table {

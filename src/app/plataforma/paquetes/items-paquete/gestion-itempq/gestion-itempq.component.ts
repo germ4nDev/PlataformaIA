@@ -14,7 +14,7 @@ import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.mo
 import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model'
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
 import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoItem.model'
-import { PTLItems } from 'src/app/theme/shared/_helpers/models/PTLItem.model'
+import { PTLItemModel } from 'src/app/theme/shared/_helpers/models/PTLItem.model'
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
 import {
     PtlAplicacionesService,
@@ -56,8 +56,8 @@ export class GestionItempqComponent {
     tiposItemsSub?: Subscription
     tiposItems: PTLTipoItemModel[] = []
     listaPreciosSub?: Subscription
-    listaPrecios: PTLItems[] = []
-    itemsSeleccionados: PTLItems[] = []
+    listaPrecios: PTLItemModel[] = []
+    itemsSeleccionados: PTLItemModel[] = []
     registroId: string = ''
     codigoPaquete: string = ''
     tipoEditorTexto = 'basica'
@@ -200,7 +200,7 @@ export class GestionItempqComponent {
         this.FormRegistro.cantidad = 0
         this.FormRegistro.valoresAdicionales = 0
         this.FormRegistro.valorTotal =
-            this.FormRegistro.cantidad == 0 ? valor.valorUnitario : this.FormRegistro.valorUnitario * this.FormRegistro.cantidad
+            this.FormRegistro.cantidad == 0 ? valor.valorUnitario : this.FormRegistro.valorUnitario || 0 * this.FormRegistro.cantidad
     }
 
     onCantidadChangeClick(evento: any) {

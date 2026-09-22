@@ -18,6 +18,7 @@ import {
     PtlSuitesAPService,
     PTLSuscriptoresService,
     PtlTiposGaleriaService,
+    PtltiposItemsService,
     PtlusuariosEmpresasScService,
     PtlusuariosRolesApService,
     PtlusuariosScService,
@@ -86,6 +87,7 @@ export class AppComponent implements OnInit {
         private _tiposPaqueteService: PTLTiposPaqueteService,
         private _tiposPagoService: PTLTiposPagoService,
         private _tiposRolesService: PTLTiposRolesService,
+        private _tiposItemsService: PtltiposItemsService,
         private _widgetsService: PTLWidgetsMaestroService,
         private _widgetsRolesService: PtlWidgetsRolesService,
         private _listasPreciosService: PTLListasPreciosService,
@@ -215,6 +217,10 @@ export class AppComponent implements OnInit {
         this._tiposRolesService.cargarRegistros().subscribe(
             () => console.log('** tipos de roles cargados y guardados en el servicio'),
             err => console.error('Error al cargar tipos de roles:', err)
+        )
+        this._tiposItemsService.cargarRegistros().subscribe(
+            () => console.log('** tipos de items cargados y guardados en el servicio'),
+            err => console.error('Error al cargar tipos de items:', err)
         )
         this._usuariosEmpresasService.cargarRegistros().subscribe(
             () => console.log('** Usuarios Empresas SC cargados y guardados en el servicio'),

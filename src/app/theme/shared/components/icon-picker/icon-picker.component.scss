@@ -1,0 +1,108 @@
+/* Contenedor principal con scroll */
+.icon-picker-container {
+    overflow-y: auto;
+    background-color: var(--card-background, transparent);
+}
+
+/* Caja individual del ícono */
+.icon-choice-box {
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+
+    /* Variables dinámicas para adaptarse al tema oscuro/claro */
+    background-color: var(--card-background, #ffffff);
+    border: 1px solid var(--border-color, #dee2e6);
+
+    .icon-element {
+        font-size: 24px;
+        color: var(--text-color, #495057);
+        transition: color 0.2s ease-in-out;
+    }
+
+    /* Efecto Hover */
+    &:hover:not(.disabled-box):not(.selected) {
+        background-color: var(--card-select-background, rgba(42, 93, 189, 0.05));
+        border-color: var(--border-color, #2a5dbd);
+    }
+
+    /* Estado Activo / Seleccionado */
+    &.selected {
+        background-color: var(--app-navbar-color, rgba(42, 93, 189, 0.15));
+        border: 2px solid var(--border-color, #2a5dbd);
+
+        .icon-element {
+            color: var(--app-iconos-color, #495057);
+        }
+    }
+
+    /* Estado Deshabilitado */
+    &.disabled-box {
+        cursor: not-allowed;
+        opacity: 0.6;
+        background-color: var(--text-subtitle-color, #e9ecef);
+    }
+}
+
+.icon-picker-input {
+    .form-input {
+        /* Fuerza a los 3 elementos a compartir exactamente la misma línea base */
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .input-group-text {
+        /* Previene que el padding nativo de Bootstrap expanda la altura */
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.custom-close-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Aquí aplicas tu var() para que se adapte al tema */
+    color: var(--text-color, #495057);
+    transition: color 0.2s ease-in-out;
+
+    &:hover {
+        color: var(--text-color, #2a5dbd);
+        /* Resalta al pasar el mouse */
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.footer-status {
+    font-size: 0.85rem;
+}
+
+.icon-picker-title {
+    color: var(--app-navbar-color, #495057);
+
+    .icon-element {
+        color: var(--app-navbar-color, #495057);
+    }
+}
+
+/* Input principal */
+
+
+/* Contenedor del Modal */
+.icon-picker-grid {
+    max-height: 50vh;
+    /* Ocupa hasta la mitad de la pantalla */
+    overflow-y: auto;
+    background-color: var(--card-background, transparent);
+}

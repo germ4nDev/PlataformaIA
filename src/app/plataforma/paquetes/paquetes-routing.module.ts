@@ -45,7 +45,6 @@ const routes: Routes = [
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
-
             {
                 path: 'precios-paquete',
                 loadComponent: () => import('./precios-paquete/precios-paquete.component').then((m) => m.PreciosPaqueteComponent),
@@ -55,6 +54,30 @@ const routes: Routes = [
             {
                 path: 'gestion-precio-paquete',
                 loadComponent: () => import('./precios-paquete/gestion-precio-paquete/gestion-precio-paquete.component').then((m) => m.GestionPrecioPaqueteComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'items',
+                loadComponent: () => import('./items/items.component').then((m) => m.ItemsComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-item',
+                loadComponent: () => import('./items/gestion-item/gestion-item.component').then((m) => m.GestionItemComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'tipos-item',
+                loadComponent: () => import('./tipos-item/tipos-item.component').then((m) => m.TiposItemComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-tipo-item',
+                loadComponent: () => import('./tipos-item/gestion-tipo-item/gestion-tipo-item.component').then((m) => m.GestionTipoItemComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             }

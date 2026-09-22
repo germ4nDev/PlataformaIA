@@ -1,4 +1,4 @@
-export class PTLItems {
+export class PTLItemModel {
     constructor(
         public itemId?: number,
         public codigoItem?: string,
@@ -8,6 +8,8 @@ export class PTLItems {
         public costoItem?: number,
         public descripcionItem?: string,
         public estadoItem?: boolean,
+        public nomTipoItem?: string,
+        public nomEstado?: string,
         public checked?: boolean,
         public codigoUsuarioCreacion?: string,
         public fechaCreacion?: string,

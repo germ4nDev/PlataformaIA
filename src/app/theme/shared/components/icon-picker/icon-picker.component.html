@@ -1,0 +1,56 @@
+<div class="input-group icon-picker-input">
+    <!-- 🟢 El span utiliza la función dinámica para renderizar Feather o Tabler -->
+    <span class="input-group-text form-input d-flex align-items-center justify-content-center" style="width: 46px;">
+        <i
+            [class]="obtenerClaseIcono(valorSeleccionado, valorSeleccionado ? 'icon-picker-title text-primary' : 'text-muted')"></i>
+    </span>
+
+    <input type="text" class="form-control form-input"
+        [value]="valorSeleccionado || ('PLATAFORMA.NINGUNICONOSELECCIONADO' | translate)" readonly
+        [disabled]="isDisabled" (click)="abrirModal()" style="cursor: pointer;" placeholder="Seleccionar ícono...">
+
+    <!-- Los íconos de la UI estática los dejamos en Feather para no romper tu diseño -->
+    <button class="btn btn-primary btn-NuevoRegistro btn-animacion form-input d-flex align-items-center" type="button"
+        [disabled]="isDisabled" (click)="abrirModal()">
+        <i class="feather icon-search me-1"></i> Explorar
+    </button>
+</div>
+
+<div class="modal fade" [class.show]="mostrarModal" [style.display]="mostrarModal ? 'block' : 'none'" tabindex="-1"
+    role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header pb-2 border-bottom-0 align-items-start">
+                <div class="d-flex flex-column">
+                    <h5 class="icon-picker-title m-0 mb-1">
+                        <i class="feather icon-image me-2"></i>{{ 'PLATAFORMA.CATALOGOICONOS' | translate }}
+                    </h5>
+                    <small class="text-muted" style="font-size: 0.8rem;">
+                        <i class="feather icon-info me-1"></i> {{ catalogoIconos.length }} {{
+                        'PLATAFORMA.ICONOSDISPONIBLES' | translate }}
+                    </small>
+                </div>
+                <button type="button" class="custom-close-btn" aria-label="Close" (click)="cerrarModal()">
+                    <i class="feather icon-x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body pt-1">
+                <div class="icon-picker-grid p-3">
+                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+                        <!-- 🟢 Renderizado del Grid mixto (Tabler + Feather) -->
+                        <div *ngFor="let icono of catalogoIconos" class="icon-choice-box"
+                            [class.selected]="valorSeleccionado === icono" (click)="seleccionarIcono(icono)">
+                            <i [class]="obtenerClaseIcono(icono, 'icon-element')"></i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="mostrarModal" class="modal-backdrop fade show"></div>

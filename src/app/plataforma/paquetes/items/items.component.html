@@ -51,9 +51,8 @@
     <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <ng-container *ngIf="itemsFiltrados$ | async as dataFiltrada; else loading">
-                    <!-- Se asume permiso 'ACT_ITEMS_CREAR', ajusta según tu BD -->
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoValor'" [tableTitle]="'Catálogo de Ítems'"
+                <ng-container *ngIf="_itemsFiltrados$ | async as dataFiltrada; else loading">
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoItem'" [tableTitle]="'Catálogo de Ítems'"
                         [metadataColumns]="columnasItems" [metadataDetailColumns]="columnasDetailRegistros"
                         [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
                         [showEditButton]="false" [showDeleteButton]="false" [showSearchBox]="false"

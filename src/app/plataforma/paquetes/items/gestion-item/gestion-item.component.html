@@ -20,19 +20,18 @@
 
                     <!-- Bloque Izquierdo: Título y Subtítulo -->
                     <div class="d-flex flex-column pe-3">
-                        <h4 class="titulo-container text-primary mb-1">
+                        <h4 class="titulo-formulario mb-1">
                             <span *ngIf="!modoEdicion">Nuevo Ítem de Catálogo</span>
                             <span *ngIf="modoEdicion">Modificar Ítem</span>
                         </h4>
-                        <h6 class="subtitulo-container mb-0 text-muted">
+                        <h6 class="subtitulo-formulario mb-0 text-muted">
                             Configure el valor unitario, costo y detalles del recurso.
                         </h6>
                     </div>
 
                     <!-- Bloque Derecho: Botones -->
                     <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-secondary btn-animacion ms-2" (click)="btnRegresarClick()"
-                            [disabled]="isSaving">
+                        <button type="button" class="btn btn-secondary btn-animacion ms-2" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
@@ -55,110 +54,98 @@
             <div class="card-body form-scroll-wrapper pt-4">
                 <form [formGroup]="formularioRegistro" novalidate>
                     <div class="row">
-
-                        <!-- CÓDIGO DEL ÍTEM (SOLO LECTURA) -->
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoValor">Código del Ítem</label>
-                                <input type="text" class="form-control bg-light" id="codigoValor"
-                                    formControlName="codigoValor" readonly />
-                                <small class="text-muted">ID único generado por el sistema.</small>
+                                <label class="form-control-label" for="codigoItem">Código del Ítem</label>
+                                <input type="text" class="form-control form-input" id="codigoItem"
+                                    formControlName="codigoItem" readonly />
+                                <!-- <small class="text-muted">ID único generado por el sistema.</small> -->
                             </div>
                         </div>
-
-                        <!-- TIPO DE ÍTEM (SELECTOR) -->
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="tipoValorId">Categoría / Tipo de Ítem</label>
-                                <select class="form-control form-select" id="tipoValorId" formControlName="tipoValorId"
-                                    [ngClass]="{ 'is-invalid': f['tipoValorId'].invalid && (f['tipoValorId'].dirty || f['tipoValorId'].touched || isSubmit) }">
+                                <label class="form-control-label" for="codigoTipoItem">Categoría / Tipo de Ítem</label>
+                                <select class="form-control form-select" id="codigoTipoItem"
+                                    formControlName="codigoTipoItem"
+                                    [ngClass]="{ 'is-invalid': f['codigoTipoItem'].invalid && (f['codigoTipoItem'].dirty || f['codigoTipoItem'].touched || isSubmit) }">
                                     <option value="" disabled selected>Seleccione el tipo...</option>
-                                    <option [value]="tipo.tipoItemId" *ngFor="let tipo of tiposItem">
+                                    <option [value]="tipo.codigoTipoItem" *ngFor="let tipo of tiposItem">
                                         {{ tipo.nombreTipo }}
                                     </option>
                                 </select>
+                                <!-- <small class="text-muted">ID único generado por el sistema.</small> -->
                                 <label
-                                    *ngIf="f['tipoValorId'].invalid && (f['tipoValorId'].dirty || f['tipoValorId'].touched || isSubmit)"
+                                    *ngIf="f['codigoTipoItem'].invalid && (f['codigoTipoItem'].dirty || f['codigoTipoItem'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    Debe seleccionar una categoría.
+                                    Debe seleccionar una tipo de item.
                                 </label>
                             </div>
                         </div>
-
-                        <!-- NOMBRE DEL ÍTEM -->
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreValor">Nombre Comercial del Ítem</label>
-                                <input type="text" class="form-control" id="nombreValor" formControlName="nombreValor"
-                                    placeholder="Ej: 1GB Almacenamiento Adicional"
-                                    [ngClass]="{ 'is-invalid': f['nombreValor'].invalid && (f['nombreValor'].dirty || f['nombreValor'].touched || isSubmit) }" />
+                                <label class="form-control-label" for="nombreItem">Nombre Comercial del Ítem</label>
+                                <input type="text" class="form-control form-input" id="nombreItem"
+                                    formControlName="nombreItem" placeholder="Ej: 1GB Almacenamiento Adicional"
+                                    [ngClass]="{ 'is-invalid': f['nombreItem'].invalid && (f['nombreItem'].dirty || f['nombreItem'].touched || isSubmit) }" />
+                                <!-- <small class="text-muted">ID único generado por el sistema.</small> -->
                                 <label
-                                    *ngIf="f['nombreValor'].invalid && (f['nombreValor'].dirty || f['nombreValor'].touched || isSubmit)"
+                                    *ngIf="f['nombreItem'].invalid && (f['nombreItem'].dirty || f['nombreItem'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     El nombre es obligatorio.
                                 </label>
                             </div>
                         </div>
-
-                        <!-- COSTO BASE -->
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="costoValor">Costo Interno</label>
+                                <label class="form-control-label" for="costoItem">Costo Interno</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" step="0.01" class="form-control" id="costoValor"
-                                        formControlName="costoValor" placeholder="0.00"
-                                        [ngClass]="{ 'is-invalid': f['costoValor'].invalid && (f['costoValor'].dirty || f['costoValor'].touched || isSubmit) }" />
+                                    <span class="input-group-text form-input">$</span>
+                                    <input type="number" step="0.01" class="form-control form-input" id="costoItem"
+                                        formControlName="costoItem" placeholder="0.00"
+                                        [ngClass]="{ 'is-invalid': f['costoItem'].invalid && (f['costoItem'].dirty || f['costoItem'].touched || isSubmit) }" />
                                 </div>
                             </div>
                         </div>
-
-                        <!-- VALOR UNITARIO (PRECIO DE VENTA) -->
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="valorUnitario">Valor Unitario (Venta)</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" step="0.01" class="form-control" id="valorUnitario"
+                                    <span class="input-group-text  form-input">$</span>
+                                    <input type="number" step="0.01" class="form-control form-input" id="valorUnitario"
                                         formControlName="valorUnitario" placeholder="0.00"
                                         [ngClass]="{ 'is-invalid': f['valorUnitario'].invalid && (f['valorUnitario'].dirty || f['valorUnitario'].touched || isSubmit) }" />
                                 </div>
                             </div>
                         </div>
-
-                        <!-- DESCRIPCIÓN (QPLUS TEXT EDITOR) -->
                         <div class="col-md-12 mb-3">
                             <div class="form-group">
                                 <label class="form-control-label">Descripción Detallada</label>
                                 <app-text-editor [toolbarType]="'completa'"
-                                    [contentHtml]="f['descripcionValor'].value || ''"
+                                    [contentHtml]="f['descripcionItem'].value || ''"
                                     (contentHtmlChange)="actualizarDescripcionValor($event)">
                                 </app-text-editor>
-                                <input type="hidden" formControlName="descripcionValor">
-                                <small class="text-muted mt-1 d-block">Detalle qué incluye exactamente esta
-                                    unidad.</small>
+                                <input type="hidden" formControlName="descripcionItem">
+                                <!-- <small class="text-muted mt-1 d-block">Detalle qué incluye exactamente esta
+                                    unidad.</small> -->
                             </div>
                         </div>
-
-                        <!-- ESTADO (RADIO BUTTONS) -->
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'PLATAFORMA.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
-                                        <input formControlName="estadoValor" type="radio" [value]="true" />
+                                        <input formControlName="estadoItem" type="radio" [value]="true" />
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
                                     </label>
                                     <label class="radio-button">
-                                        <input formControlName="estadoValor" type="radio" [value]="false" />
+                                        <input formControlName="estadoItem" type="radio" [value]="false" />
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
                                     </label>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </form>
             </div>
