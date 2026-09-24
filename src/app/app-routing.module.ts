@@ -83,6 +83,10 @@ const routes: Routes = [
             {
                 path: 'sistema',
                 loadChildren: () => import('./plataforma/sistema/sistema.module').then((module) => module.SistemaModule)
+            },
+            {
+                path: 'porttos',
+                loadChildren: () => import('./porttos/porttos.module').then((module) => module.PorttosModule)
             }
         ]
     },

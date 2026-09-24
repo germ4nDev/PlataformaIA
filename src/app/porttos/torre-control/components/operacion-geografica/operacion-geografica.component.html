@@ -1,0 +1,16 @@
+<div *ngIf="cargando" class="cargador-flotante">
+    <div class="cargador-contenido">
+        <div class="spinner-PORTTOS"></div>
+        <p class="text-white mt-4">Iniciando Tablero Geográfico...</p>
+    </div>
+</div>
+
+<gridster class="gridster" [options]="options">
+    <gridster-item *ngFor="let widget of dashboard; trackBy: trackByWidget" [item]="widget"
+        [class.PORTTOS-fantasma]="widget.type === 'WDG_FANTASMA'">
+
+        <app-widget-selector-tcl [type]="widget.type" [data]="widget.data">
+        </app-widget-selector-tcl>
+
+    </gridster-item>
+</gridster>

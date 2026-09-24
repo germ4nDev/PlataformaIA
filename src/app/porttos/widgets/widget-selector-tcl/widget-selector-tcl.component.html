@@ -1,0 +1,23 @@
+<!-- Pasamos las variables directamente al Shell (Él se encargará de dárselas a su Header interno) -->
+<app-widget-shell [titulo]="metaWidget.titulo" [icono]="metaWidget.icono" [isEnfoque]="isEnfoque"
+    [widgetId]="widgetConfig?.type" [data]="widgetConfig?.data" (clickEnfoque)="accionEnfoque()">
+
+    <!-- CUERPO 100% DINÁMICO (Angular lo inyectará en el <ng-content> de tu shell) -->
+    <div class="w-100 h-100 position-relative" style="overflow: hidden;">
+
+        <ng-container *ngIf="componenteDinamico; else noEncontrado">
+            <ng-container *ngComponentOutlet="componenteDinamico; inputs: { data: widgetConfig?.data }"></ng-container>
+        </ng-container>
+
+        <!-- Fallback de desarrollo -->
+        <ng-template #noEncontrado>
+            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-50">
+                <i class="feather icon-alert-triangle fs-1 mb-2"></i>
+                <small>Falta mapear en WIDGET_MAP:</small>
+                <small class="fw-bold text-danger mt-1">{{ widgetConfig?.type }}</small>
+            </div>
+        </ng-template>
+
+    </div>
+
+</app-widget-shell>

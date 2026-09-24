@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.cargando = false;
         }
 
-        this.subs.add(this._torreService.widgetEnfoque$.subscribe(widget => {
+        this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
             this.widgetEnfoque = widget;
             this.cdr.detectChanges();
         }));

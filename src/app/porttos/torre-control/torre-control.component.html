@@ -1,0 +1,218 @@
+<!-- <app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
+    [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()" (abrirCatalogo)="abrirLobbyModal()">
+</app-tc-header>
+
+<div class="tc-dashboard-container" style="position: relative;">
+    <div class="tc-nav-tabs">
+        <button *ngFor="let pestana of lsPestanas" type="button" class="tc-tab-btn"
+            [class.active]="pestanaActiva === pestana.codigoPestana" (click)="cambiarPestana(pestana.codigoPestana)">
+            <span class="d-flex align-items-center gap-2">
+                <i [class]="obtenerIconoPestana(pestana.codigoPestana)"></i>
+                {{ pestana.nombrePestana }}
+            </span>
+        </button>
+    </div>
+    <div class="d-flex align-items-center gap-2 ms-3 flex-shrink-0">
+        <div class="vr bg-secondary" style="height: 24px; opacity: 0.5;"></div>
+        <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2"
+            (click)="abrirLobbyPestanas()" title="Gestionar Pestañas">
+            <i class="feather icon-folder-plus"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2" (click)="abrirLobbyModal()"
+            title="Agregar Widgets a esta pestaña">
+            <i class="feather icon-grid"></i> <i class="feather icon-plus ms-n1"></i>
+        </button>
+    </div>
+
+    <div *ngIf="cargando" class="cargador-flotante">
+        <div class="cargador-contenido">
+            <div class="spinner-PORTTOS"></div>
+            <p class="text-white mt-4">Actualizando Torre de Control...</p>
+        </div>
+    </div>
+
+    <gridster class="gridster" [options]="options">
+
+        <gridster-item *ngFor="let widget of dashboard; trackBy: trackByWidget" [item]="widget"
+            [class.PORTTOS-fantasma]="widget.type === 'WDG_FANTASMA'">
+            <app-widget-selector-tcl
+                [type]="widget.type && widget.type.startsWith('WDG_DINAMICO_TERM') ? 'WDG_PORT_TERMINAL_INDIVIDUAL' : widget.type"
+                [data]="widget.data">
+            </app-widget-selector-tcl>
+
+        </gridster-item>
+
+    </gridster>
+
+</div>
+
+
+<app-widget-lobby-tcl [visible]="mostrarLobby" [widgetsMaster]="widgetsParaElLobby" [layoutActual]="lsLayout"
+    [pestanaActual]="pestanaActiva" (cerrar)="mostrarLobby = false" (toggleWidget)="actualizarWidgetDesdeLobby($event)">
+</app-widget-lobby-tcl>
+
+<app-pestana-lobby-tcl [visible]="mostrarLobbyPestanas" [catalogoPestanas]="lsPestanas"
+    [pestanasActivas]="obtenerCodigosVisibles()" (cerrar)="mostrarLobbyPestanas = false"
+    (guardar)="guardarPreferenciasPestanas($event)">
+</app-pestana-lobby-tcl>
+
+<div class="PORTTOS-backdrop-blur" *ngIf="widgetEnfoque" (click)="cerrarModalEnfoque()">
+    <div class="PORTTOS-modal-lg" (click)="$event.stopPropagation()">
+        <button class="btn-cerrar-modal" (click)="cerrarModalEnfoque()">
+            <i class="icon-close"></i> Cerrar Vista Enfoque
+        </button>
+        <app-widget-selector-tcl [type]="widgetEnfoque.type" [data]="widgetEnfoque.data">
+        </app-widget-selector-tcl>
+    </div>
+</div> -->
+<app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
+    [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()" (abrirCatalogo)="abrirLobbyModal()">
+</app-tc-header>
+
+<div class="tc-dashboard-container" style="position: relative;">
+
+    <!-- 🟢 CONTENEDOR MAESTRO: Alinea las pestañas y los botones en la misma fila -->
+    <!-- <div class="d-flex justify-content-between align-items-center mb-3 w-100 gap-3">
+
+        <div class="tc-nav-tabs d-flex flex-grow-1 overflow-auto" style="scrollbar-width: none;">
+            <button *ngFor="let pestana of lsPestanas" type="button" class="tc-tab-btn"
+                [class.active]="pestanaActiva === pestana.codigoPestana"
+                (click)="cambiarPestana(pestana.codigoPestana)">
+                <span class="d-flex align-items-center gap-2">
+                    <i [class]="obtenerIconoPestana(pestana.codigoPestana)"></i>
+                    {{ pestana.nombrePestana }}
+                </span>
+            </button>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <div class="vr bg-secondary" style="height: 24px; opacity: 0.5;"></div>
+
+            <button type="button" class="btn d-flex align-items-center justify-content-center"
+                [ngClass]="mostrarLobbyPestanas ? 'btn-primary' : 'btn-outline-secondary'"
+                style="width: 38px; height: 38px; border-radius: 8px;" (click)="abrirLobbyPestanas()"
+                title="Gestionar Pestañas">
+                <i class="feather icon-folder-plus fs-5"></i>
+            </button>
+
+            <button type="button" class="btn d-flex align-items-center justify-content-center"
+                [ngClass]="mostrarLobby ? 'btn-primary' : 'btn-outline-secondary'"
+                style="width: 38px; height: 38px; border-radius: 8px;" (click)="abrirLobbyModal()"
+                title="Agregar Widgets a esta pestaña">
+                <i class="feather icon-plus fs-5"></i>
+            </button>
+        </div>
+
+    </div> -->
+    <!-- 🟢 CONTENEDOR MAESTRO: Alineación vertical estricta -->
+    <div class="d-flex justify-content-between align-items-center mb-3 w-100 gap-3">
+
+        <!-- LADO IZQUIERDO: Pestañas centradas verticalmente -->
+        <!-- <div class="tc-nav-tabs d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0"
+            style="scrollbar-width: none;">
+            <button *ngFor="let pestana of lsPestanas" type="button" class="tc-tab-btn m-0"
+                [class.active]="pestanaActiva === pestana.codigoPestana"
+                (click)="cambiarPestana(pestana.codigoPestana)">
+                <span class="d-flex align-items-center gap-2">
+                    <i [class]="obtenerIconoPestana(pestana.codigoPestana)"></i>
+                    {{ pestana.nombrePestana }}
+                </span>
+            </button>
+        </div> -->
+        <div class="tc-nav-tabs d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0"
+            style="scrollbar-width: none;">
+            <!-- 🟢 CAMBIO: Usar pestanasVisibles en lugar de lsPestanas -->
+            <button *ngFor="let pestana of pestanasVisibles" type="button" class="tc-tab-btn m-0"
+                [class.active]="pestanaActiva === pestana.codigoPestana"
+                (click)="cambiarPestana(pestana.codigoPestana)">
+                <span class="d-flex align-items-center gap-2">
+                    <i [class]="obtenerIconoPestana(pestana.codigoPestana)"></i>
+                    {{ pestana.nombrePestana }}
+                </span>
+            </button>
+        </div>
+
+        <!-- LADO DERECHO: Botones de Acción -->
+        <!-- <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <div class="vr bg-secondary mx-2" style="height: 24px; opacity: 0.5;"></div>
+
+            <button type="button"
+                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-accion"
+                [ngClass]="mostrarLobbyPestanas ? 'selected' : 'no-selected'" (click)="abrirLobbyPestanas()"
+                title="Gestionar Pestañas">
+                <i class="feather icon-layers fs-5"></i>
+            </button>
+
+            <button type="button"
+                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-accion"
+                [ngClass]="mostrarLobby ? 'selected' : 'no-selected'" title="Agregar Widgets a esta pestaña">
+                <i class="feather icon-plus fs-5"></i>
+            </button>
+        </div> -->
+
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <!-- Separador vertical -->
+            <div class="vr bg-secondary mx-2" style="height: 40px; opacity: 0.5;"></div>
+
+            <!-- Botón para el Lobby de Pestañas -->
+            <button type="button"
+                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-icon-accion"
+                [ngClass]="mostrarLobbyPestanas ? 'selected' : 'no-selected'"
+                style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;"
+                (click)="abrirLobbyPestanas()" title="Gestionar Pestañas">
+                <!-- Quitamos text-white o colores forzados aquí -->
+                <i class="feather icon-layers fs-5"></i>
+            </button>
+
+            <!-- Botón para el Lobby de Widgets -->
+            <button type="button"
+                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-icon-accion"
+                [ngClass]="mostrarLobby ? 'selected' : 'no-selected'"
+                style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;" (click)="abrirLobbyModal()"
+                title="Agregar Widgets a esta pestaña">
+                <i class="feather icon-plus fs-5"></i>
+            </button>
+        </div>
+
+    </div>
+    <!-- Cargador Flotante -->
+    <div *ngIf="cargando" class="cargador-flotante">
+        <div class="cargador-contenido">
+            <div class="spinner-PORTTOS"></div>
+            <p class="text-white mt-4">Actualizando Torre de Control...</p>
+        </div>
+    </div>
+
+    <!-- Grilla de Gridster -->
+    <gridster class="gridster" [options]="options">
+        <gridster-item *ngFor="let widget of dashboard; trackBy: trackByWidget" [item]="widget"
+            [class.PORTTOS-fantasma]="widget.type === 'WDG_FANTASMA'">
+
+            <app-widget-selector-tcl [widgetConfig]="widget" [isEnfoque]="false"
+                (toggleEnfoque)="abrirModalEnfoque(widget)">
+            </app-widget-selector-tcl>
+
+        </gridster-item>
+    </gridster>
+
+</div>
+
+<!-- Modales Inferiores -->
+<app-widget-lobby-tcl [visible]="mostrarLobby" [widgetsMaster]="widgetsParaElLobby" [layoutActual]="lsLayout"
+    [pestanaActual]="pestanaActiva" (cerrar)="mostrarLobby = false" (toggleWidget)="actualizarWidgetDesdeLobby($event)">
+</app-widget-lobby-tcl>
+
+<app-pestana-lobby-tcl [visible]="mostrarLobbyPestanas" [catalogoPestanas]="lsPestanas"
+    [pestanasActivas]="obtenerCodigosVisibles()" (cerrar)="mostrarLobbyPestanas = false"
+    (guardar)="guardarPreferenciasPestanas($event)">
+</app-pestana-lobby-tcl>
+
+<div class="PORTTOS-backdrop-blur" *ngIf="widgetEnfoque" (click)="cerrarModalEnfoque()">
+    <div class="PORTTOS-modal-lg" (click)="$event.stopPropagation()">
+        <button class="btn-cerrar-modal" (click)="cerrarModalEnfoque()">
+            <i class="icon-close"></i> Cerrar Vista Enfoque
+        </button>
+        <app-widget-selector-tcl [type]="widgetEnfoque.type" [data]="widgetEnfoque.data">
+        </app-widget-selector-tcl>
+    </div>
+</div>

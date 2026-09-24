@@ -4,6 +4,8 @@ export class PTLWidgetMaestroModel {
         // 🟢 Campos Base de Datos
         public widgetId?: number,
         public codigoWidget?: string,
+        public codigoTipo?: string,
+        public codigoPestana?: string,
         public nombreWidget?: string,
         public descripcionWidget?: string,
         public imagenWidget_light?: string,

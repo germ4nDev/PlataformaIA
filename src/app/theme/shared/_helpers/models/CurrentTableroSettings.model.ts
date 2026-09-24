@@ -5,5 +5,6 @@ export class CurrentTableroModel {
         public puerto?: any,
         public layout?: any,
         public role?: string,
+        public pestanasVisibles?: any,
     ) { }
 }

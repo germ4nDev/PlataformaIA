@@ -143,31 +143,29 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
 
     onFileSelectedClick(event: any) {
         const file: File = event.target.files[0]
-        const codigo =
-            this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor ||
-            this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        const codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         const objUpload = {
             susc: codigo,
             tipo: 'widgets',
             id: '0'
         }
-        // console.log('objUpload', objUpload);
+        console.log('objUpload', objUpload);
         if (file) {
             const reader = new FileReader()
             reader.onload = (e: any) => {
                 this.selectedFileUrl = e.target.result
             }
             reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    //   console.log('resultado++++++++++++++++', path);
-                    this.fileName = path.nombreArchivo
-                    this.FormRegistro.imagenWidget_light = path.nombreArchivo
-                },
-                error: () => {
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
-                }
-            })
+            // this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+            //     next: (path: any) => {
+            //         //   console.log('resultado++++++++++++++++', path);
+            //         this.fileName = path.nombreArchivo
+            //         this.FormRegistro.imagenWidget_light = path.nombreArchivo
+            //     },
+            //     error: () => {
+            //         this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+            //     }
+            // })
         } else {
             this.selectedFileUrl = null
             this.userPhotoUrl = ''
@@ -176,9 +174,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
 
     onFileSelectedDarkClick(event: any) {
         const file: File = event.target.files[0]
-        const codigo =
-            this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor ||
-            this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        const codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         const objUpload = {
             susc: codigo,
             tipo: 'widgets',
@@ -191,16 +187,16 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                 this.selectedFileUrl = e.target.result
             }
             reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    //   console.log('resultado++++++++++++++++', path);
-                    this.fileNameDark = path.nombreArchivo
-                    this.FormRegistro.imagenWidget_dark = path.nombreArchivo
-                },
-                error: () => {
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
-                }
-            })
+            // this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+            //     next: (path: any) => {
+            //         //   console.log('resultado++++++++++++++++', path);
+            //         this.fileNameDark = path.nombreArchivo
+            //         this.FormRegistro.imagenWidget_dark = path.nombreArchivo
+            //     },
+            //     error: () => {
+            //         this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+            //     }
+            // })
         } else {
             this.selectedFileUrl = null
             this.userPhotoUrl = ''

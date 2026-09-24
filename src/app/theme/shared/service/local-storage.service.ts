@@ -21,7 +21,7 @@ import { PTLActividadModel } from '../_helpers/models/PTLActividades.model';
 import { Puerto } from '../_helpers/models/tablero-control/puerto.model';
 import { CurrentTableroModel } from '../_helpers/models/CurrentTableroSettings.model';
 import { BehaviorSubject } from 'rxjs';
-import { LayoutService } from './tablero-control/layout.service';
+import { LayoutTclService } from './tablero-control/layout-tcl.service';
 import { PuertosService } from './tablero-control/puertos.service';
 
 @Injectable({
@@ -58,7 +58,7 @@ export class LocalStorageService {
 
 
     constructor(
-        private _layoutService: LayoutService,
+        private _layoutService: LayoutTclService,
         private _puertosService: PuertosService
     ) { }
 
@@ -375,5 +375,7 @@ export class LocalStorageService {
     }
 
     // #endregion
+
+
 }
 

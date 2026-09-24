@@ -1,0 +1,19 @@
+<div class="PORTTOS-widget widget-etaata">
+    <div class="panel-header">
+        <div class="header-titles">
+            <h3><i class="feather icon-clock mr-1" *ngIf="!data?.icono"></i>
+                {{ data?.titulo || 'REPORTE ETA VS ATA' }}
+            </h3>
+            <p class="subtitle">{{ data?.subtitulo || 'Programación de arribos y atraques' }}</p>
+        </div>
+        <div class="header-actions-container">
+            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
+                <i class="feather icon-maximize" data-feather="maximize"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
+    </div>
+</div>

@@ -1,0 +1,196 @@
+/* ==========================================================================
+   BACKDROP Y MODAL (Capa oscura y difuminada)
+   ========================================================================== */
+.plataforma-backdrop-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: color-mix(in srgb, var(--card-background, #0f172a) 15%, rgba(0, 0, 0, 0.6));
+    /* Tono oscuro profundo */
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    /* Por encima de todo, incluyendo el header superior */
+    opacity: 0;
+    animation: fadeIn 0.2s forwards ease-in-out;
+}
+
+.plataforma-modal-md {
+    width: 100%;
+    /* Fondo base oscuro tipo tarjeta */
+    background-color: var(--card-background, #1e293b) !important;
+    border: 1px solid var(--border-color);
+    transform: translateY(20px);
+    animation: slideUp 0.3s forwards cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* ==========================================================================
+   BOTONES CIRCULARES (Cabecera)
+   ========================================================================== */
+.btn-cerrar-modal {
+    background: transparent;
+    border: 1px solid var(--border-color, #334155);
+    color: var(--text-color, #f8fafc);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.4);
+    }
+}
+
+.titulo-content {
+    color: var(--text-color, #ffffff) !important;
+    margin-bottom: 0.1rem;
+    font-size: 1rem;
+}
+
+.subtitulo-content {
+    color: var(--text-subtitle-color, #94a3b8) !important;
+    margin-bottom: 0;
+    font-size: 0.4rem;
+}
+
+.titulo-modal,
+h3 {
+    color: var(--text-color, #ffffff) !important;
+    margin-bottom: 0.25rem;
+}
+
+.subtitulo-modal,
+p {
+    color: var(--text-subtitle-color, #94a3b8) !important;
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   TARJETAS DE PESTAÑAS (Interacción)
+   ========================================================================== */
+.pestana-card-item {
+    background: var(--card-background) !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px;
+
+    &:hover {
+        background: var(--card-selected-background) !important;
+        border-color: var(--app-navbar-color) !important;
+    }
+}
+
+
+/* ==========================================================================
+   CHECKBOX MINIMALISTA PERSONALIZADO
+   ========================================================================== */
+.checkbox-minimalista-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .minimal-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 22px;
+        height: 22px;
+        background-color: transparent;
+        border: 2px solid var(--border-color);
+        /* Gris medio */
+        border-radius: 6px;
+        /* Bordes ligeramente curvos */
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+        margin: 0;
+
+        /* Estado Marcado */
+        &:checked {
+            background-color: var(--app-navbar-color);
+            /* Azul primario */
+            border-color: var(--border-color);
+
+            /* Generación del "Check" blanco con CSS puro */
+            &::after {
+                content: '';
+                position: absolute;
+                top: 2px;
+                left: 6px;
+                width: 6px;
+                height: 12px;
+                border: solid var(--border-color);
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+            }
+        }
+
+        /* Efectos Hover del Checkbox */
+        &:hover {
+            border-color: var(--border-color);
+        }
+
+        &:checked:hover {
+            background-color: var(--app-navbar-color);
+            border-color: var(--border-color);
+        }
+    }
+}
+
+/* ==========================================================================
+   SCROLLBAR Y ANIMACIONES
+   ========================================================================== */
+.overflow-auto {
+
+    /* Scrollbar minimalista para la lista de pestañas */
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

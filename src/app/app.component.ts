@@ -47,6 +47,17 @@ import { SocketManagerService } from './theme/shared/service/socket-manager.serv
 import { PTLWidgetsMaestroService } from './theme/shared/service/ptlwidgets-maestro.service'
 import { PtlWidgetsRolesService } from './theme/shared/service/ptlwidgets-roles.service'
 import { PTLListasPreciosService } from './theme/shared/service/ptllistas-precios.service'
+import { CronMonitorService } from './theme/shared/service/tablero-control/cron-monitor.service'
+import { FarosService } from './theme/shared/service/tablero-control/faros.service'
+import { MuellesService } from './theme/shared/service/tablero-control/muelles.service'
+import { PuertosService } from './theme/shared/service/tablero-control/puertos.service'
+import { TerminalesService } from './theme/shared/service/tablero-control/terminales.service'
+import { TiposTipoInfraestructuraService } from './theme/shared/service/tablero-control/tipos-infraestructura.service'
+import { WidgetsService } from './theme/shared/service/tablero-control/widgets.service'
+import { LayoutService } from './theme/shared/service/layout.service'
+import { LayoutTclService } from './theme/shared/service/tablero-control/layout-tcl.service'
+import { PtlpestanasService } from './theme/shared/service/ptlpestanas.service'
+import { PtltiposWidgetService } from './theme/shared/service/ptltipos-widget.service'
 
 @Component({
     selector: 'app-root',
@@ -91,7 +102,21 @@ export class AppComponent implements OnInit {
         private _widgetsService: PTLWidgetsMaestroService,
         private _widgetsRolesService: PtlWidgetsRolesService,
         private _listasPreciosService: PTLListasPreciosService,
-        private _modulosPaqueteService: PTLModulosPaqueteService
+        private _pestanasService: PTLModulosPaqueteService,
+        private _tiposWidgetService: PtltiposWidgetService,
+        private _modulosPaqueteService: PTLModulosPaqueteService,
+
+        private _puertosService: PuertosService,
+        private _terminalesService: TerminalesService,
+        private _muellesService: MuellesService,
+        //private _rolesAPService: PTLRolesAPService,
+        // private _widgetsService: WidgetsService,
+        private _farosService: FarosService,
+        private _tiposInfraestructuraService: TiposTipoInfraestructuraService,
+        private _cronMonitorService: CronMonitorService,
+        private _layoutService: LayoutService,
+        private _layoutTclService: LayoutTclService
+
     ) { }
 
     ngOnInit() {
@@ -238,37 +263,45 @@ export class AppComponent implements OnInit {
             () => console.log('** Listas precios cargados y guardados en el servicio'),
             err => console.error('Error al cargar Listas precios', err)
         )
-        // this._puertosService.cargarPuertos().subscribe(
-        //     () => console.log('** puertos cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar puertos:', err)
-        // )
-        // this._terminalesService.cargarTerminals().subscribe(
-        //     () => console.log('** terminales cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar terminales:', err)
-        // )
-        // this._muellesService.cargarMuelles().subscribe(
-        //     () => console.log('** muelles cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar muelles:', err)
-        // )
-        // this._widgetsService.cargarWidgets().subscribe(
-        //     () => console.log('** widgets cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar widgets:', err)
-        // )
-        // this._layoutService.cargarLayout().subscribe(
-        //     () => console.log('** layouts cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar layouts:', err)
-        // )
-        // this._farosService.getAllFaros().subscribe(
-        //     () => console.log('** faros cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar faros:', err)
-        // )
-        // this._tiposInfraestructuraService.cargarTipoInfraestructuras().subscribe(
-        //     () => console.log('** tipos infraestructura cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar tipos infraestructura:', err)
-        // )
-        // this._cronMonitorService.obtenerHistorial().subscribe(
-        //     () => console.log('** ETL Cron Manager cargados y guardados en el servicio'),
-        //     err => console.error('Error al cargar Cron Manager:', err)
-        // )
+        this._pestanasService.cargarRegistros().subscribe(
+            () => console.log('**Pestanas cargados y guardados en el servicio'),
+            err => console.error('Error al cargarPestanas', err)
+        )
+        this._tiposWidgetService.cargarRegistros().subscribe(
+            () => console.log('** tipos de Widget cargados y guardados en el servicio'),
+            err => console.error('Error al cargar tipos de Widget', err)
+        )
+
+        //================================
+        // PORTTOS
+        //================================
+        this._puertosService.cargarPuertos().subscribe(
+            () => console.log('** puertos cargados y guardados en el servicio'),
+            err => console.error('Error al cargar puertos:', err)
+        )
+        this._terminalesService.cargarTerminals().subscribe(
+            () => console.log('** terminales cargados y guardados en el servicio'),
+            err => console.error('Error al cargar terminales:', err)
+        )
+        this._muellesService.cargarMuelles().subscribe(
+            () => console.log('** muelles cargados y guardados en el servicio'),
+            err => console.error('Error al cargar muelles:', err)
+        )
+        this._layoutTclService.cargarLayout().subscribe(
+            () => console.log('** layouts cargados y guardados en el servicio'),
+            err => console.error('Error al cargar layouts:', err)
+        )
+        this._farosService.getAllFaros().subscribe(
+            () => console.log('** faros cargados y guardados en el servicio'),
+            err => console.error('Error al cargar faros:', err)
+        )
+        this._tiposInfraestructuraService.cargarTipoInfraestructuras().subscribe(
+            () => console.log('** tipos infraestructura cargados y guardados en el servicio'),
+            err => console.error('Error al cargar tipos infraestructura:', err)
+        )
+        this._cronMonitorService.obtenerHistorial().subscribe(
+            () => console.log('** ETL Cron Manager cargados y guardados en el servicio'),
+            err => console.error('Error al cargar Cron Manager:', err)
+        )
     }
 }

@@ -18,7 +18,7 @@ interface LayoutResponse {
 @Injectable({
     providedIn: 'root'
 })
-export class LayoutService {
+export class LayoutTclService {
     private _layout = new BehaviorSubject<Puerto[]>([]);
     private _layoutsChange = new Subject<any>();
     layoutsChange$ = this._layoutsChange.asObservable();
