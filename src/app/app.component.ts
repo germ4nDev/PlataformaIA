@@ -264,7 +264,7 @@ export class AppComponent implements OnInit {
             err => console.error('Error al cargar Listas precios', err)
         )
         this._pestanasService.cargarRegistros().subscribe(
-            () => console.log('**Pestanas cargados y guardados en el servicio'),
+            () => console.log('** Pestanas cargados y guardados en el servicio'),
             err => console.error('Error al cargarPestanas', err)
         )
         this._tiposWidgetService.cargarRegistros().subscribe(

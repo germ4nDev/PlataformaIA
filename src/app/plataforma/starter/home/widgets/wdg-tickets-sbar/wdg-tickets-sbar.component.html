@@ -1,15 +1,18 @@
-<app-widget-shell titulo="Estado de Tickets" icono="feather icon-bar-chart-2" variante="normal" colorBordeTop="#ef4444"
-    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'Estado de Tickets'"
+    [subtitulo]="widgetConfig?.subtitulo || 'Operaciones'" [icono]="widgetConfig?.icono || 'feather icon-bar-chart-2'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div acciones-extra class="ms-2">
-        <span class="badge bg-light text-dark border">Operaciones</span>
+    <!-- 🟢 1. PROYECCIÓN AL HEADER: Badge de Operaciones -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-danger text-uppercase">
+            Operaciones
+        </span>
     </div>
 
+    <!-- 🟢 2. CUERPO ÚNICO DEL WIDGET (Chart.js se adapta automáticamente) -->
     <div class="chart-wrapper w-100 h-100 position-relative pb-2">
-        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType">
+        </canvas>
     </div>
 
-    <div modo-enfoque class="w-100 h-100 position-relative p-4">
-        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
-    </div>
 </app-widget-shell>

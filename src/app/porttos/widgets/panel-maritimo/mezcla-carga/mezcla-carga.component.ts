@@ -156,6 +156,8 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
     @Input() data: any;
     @Input() widgetId?: string;
     @Input() config?: any;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     @ViewChild('barChart') barChart!: ElementRef;
 

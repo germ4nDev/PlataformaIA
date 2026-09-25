@@ -2,21 +2,19 @@ import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DashboardPlataformaService } from '../../../../../theme/shared/service/dashboard-plataforma.service';
-
-// 🟢 Importamos el nuevo contenedor universal
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
     selector: 'app-wdg-kpi-suscriptores',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent], // 🟢 Actualizamos el import
-    templateUrl: './wdg-kpi-suscriptores.component.html'
+    imports: [CommonModule, WidgetShellComponent],
+    templateUrl: './wdg-kpi-suscriptores.component.html',
+    styleUrls: ['./wdg-kpi-suscriptores.component.scss']
 })
 export class WdgKpiSuscriptoresComponent implements OnInit, OnDestroy {
-    @Input() data: any;
 
-    // 🟢 Agregamos un fallback de seguridad
-    @Input() widgetId: string = 'WDG_PLAT_KPI_SUSCRIPTORES';
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public isLoading: boolean = true;
     public total: number = 0;
@@ -41,11 +39,17 @@ export class WdgKpiSuscriptoresComponent implements OnInit, OnDestroy {
                 this.cdr.detectChanges();
             },
             error: (err) => {
-                console.error('Error KPI Suscriptores:', err); // 🟢 Mensaje de error corregido
+                console.error('Error KPI Suscriptores:', err);
                 this.isLoading = false;
                 this.cdr.detectChanges();
             }
         });
+    }
+
+    maximizarDesdeShell() {
+        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+            (this._dashboardService as any).abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PLAT_KPI_SUSCRIPTORES', { total: this.total });
+        }
     }
 
     ngOnDestroy() {

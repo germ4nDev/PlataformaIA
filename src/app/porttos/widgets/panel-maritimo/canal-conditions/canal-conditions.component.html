@@ -1,44 +1,53 @@
-<div class="PORTTOS-widget canal-conditions-panel">
+<app-widget-shell [titulo]="data.titulo || 'CONDICIONES DEL CANAL'"
+    [subtitulo]="data.subtitulo || 'Reporte meteorológico y estado DIMAR'" [icono]="data.icono || 'feather icon-wind'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-wind"></i>{{ data.titulo || 'CONDICIONES DEL CANAL' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Reporte meteorológico y estado DIMAR' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase" title="Dirección General Marítima">
+            DIMAR
+        </span>
     </div>
 
-    <div class="panel-body">
+    <!-- CUERPO ÚNICO DEL WIDGET (Grid 2x2 para las condiciones) -->
+    <div class="w-100 h-100 pt-2 animate__animated animate__fadeIn d-flex flex-column justify-content-center">
+
         <div class="condiciones-grid">
+            <!-- Tarjeta 1 -->
             <div class="condicion-card">
                 <span class="c-titulo">MAREA ACTUAL</span>
-                <span class="c-valor">{{ data.marea || '--' }}</span>
-                <span class="c-sub"> -- </span>
+                <span class="c-valor text-white">{{ data.marea || '--' }}</span>
+                <span class="c-sub opacity-0">--</span> <!-- Invisible para alinear -->
             </div>
+
+            <!-- Tarjeta 2 -->
             <div class="condicion-card">
                 <span class="c-titulo">VISIBILIDAD</span>
-                <span class="c-valor">{{ data.visibilidad || 'N/A' }}</span>
-                <span class="c-sub">Viento: {{ data.viento || '0' }}</span>
+                <span class="c-valor text-white">{{ data.visibilidad || 'N/A' }}</span>
+                <span class="c-sub">Viento: <span class="text-white">{{ data.viento || '0' }}</span></span>
             </div>
+
+            <!-- Tarjeta 3 -->
             <div class="condicion-card">
                 <span class="c-titulo">CANAL ACCESO</span>
-                <span class="c-valor" [ngClass]="data.claseEstado">{{ data.estadoCanal || 'Consultando...' }}</span>
+                <span class="c-valor" [ngClass]="data.claseEstado || 'text-success'">
+                    {{ data.estadoCanal || 'Consultando...' }}
+                </span>
                 <span class="c-sub">Pilotaje:
-                    <span [ngClass]="data.pilotaje !== 'Normal' ? 'text-warning font-weight-bold' : ''">
+                    <span [ngClass]="data.pilotaje !== 'Normal' ? 'text-warning fw-bold' : 'text-white'">
                         {{ data.pilotaje || 'Normal' }}
                     </span>
                 </span>
             </div>
+
+            <!-- Tarjeta 4 -->
             <div class="condicion-card">
                 <span class="c-titulo">PLEAMAR</span>
-                <span class="c-valor">{{ data.pleamar || '--' }}</span>
-                <span class="c-sub"> -- </span>
+                <span class="c-valor text-white">{{ data.pleamar || '--' }}</span>
+                <span class="c-sub opacity-0">--</span> <!-- Invisible para alinear -->
             </div>
         </div>
+
     </div>
-</div>
+
+</app-widget-shell>

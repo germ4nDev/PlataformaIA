@@ -1,18 +1,20 @@
-<app-widget-shell titulo="MRR: Ingresos Recurrentes" icono="feather icon-bar-chart-2" variante="normal"
-    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'MRR: Ingresos Recurrentes'"
+    [subtitulo]="widgetConfig?.subtitulo || 'Evolución de facturación'"
+    [icono]="widgetConfig?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- Se inyecta al lado del botón maximizar -->
-    <div acciones-extra class="ms-2">
-        <span class="badge bg-light text-dark border">Financiero</span>
+    <!-- 🟢 1. PROYECCIÓN AL HEADER DEL SHELL -->
+    <div acciones-extra class="d-flex align-items-center">
+        <!-- Reutilizamos la clase tc-badge para mantener consistencia visual -->
+        <span class="tc-badge badge-warning text-uppercase">
+            Financiero
+        </span>
     </div>
 
-    <!-- 1. VISTA NORMAL -->
+    <!-- 🟢 2. CUERPO ÚNICO DEL WIDGET (Chart.js se adapta solo) -->
     <div class="chart-wrapper w-100 h-100 position-relative">
-        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType">
+        </canvas>
     </div>
 
-    <!-- 2. VISTA MODO ENFOQUE -->
-    <div modo-enfoque class="w-100 h-100 position-relative p-4">
-        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
-    </div>
 </app-widget-shell>

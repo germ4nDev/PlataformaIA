@@ -17,6 +17,8 @@ export class TipoOperacionComponent implements AfterViewInit, OnChanges {
     @Input() data: any;
     @ViewChild('opsChart') opsChart!: ElementRef;
     @Input() widgetId?: string;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     public chartInstance: any;
 

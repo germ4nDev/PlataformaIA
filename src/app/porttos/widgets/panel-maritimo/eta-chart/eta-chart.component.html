@@ -1,19 +1,29 @@
-<div class="PORTTOS-widget widget-etaata">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-clock mr-1" *ngIf="!data?.icono"></i>
-                {{ data?.titulo || 'REPORTE ETA VS ATA' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Programación de arribos y atraques' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'REPORTE ETA VS ATA'"
+    [subtitulo]="widgetConfig?.data?.subtitulo || 'Programación de arribos y atraques'"
+    [icono]="widgetConfig?.data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase" title="Estimated Time of Arrival vs Actual Time of Arrival">
+            Atraques
+        </span>
     </div>
 
-    <div class="chart-container">
-        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
+    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor para la gráfica) -->
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
+
+        <!-- Loader mientras responde el backend -->
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top:0; left:0; z-index: 10;">
+            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted" style="font-size: 0.8rem;">Cargando reporte...</span>
+        </div>
+
+        <!-- Gráfica Chart.js -->
+        <canvas *ngIf="!cargando" baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
+        </canvas>
+
     </div>
-</div>
+
+</app-widget-shell>

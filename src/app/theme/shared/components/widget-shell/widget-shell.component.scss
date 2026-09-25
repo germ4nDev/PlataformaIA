@@ -1,51 +1,83 @@
-.widget-shell-container {
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    background: var(--card-background);
-    border: none;
-    box-sizing: border-box;
-}
+/* =========================================================
+   CONTENEDOR PRINCIPAL DEL WIDGET (EL MARCO)
+   ========================================================= */
+.porttos-widget-shell {
+    background-color: var(--widget-bg, #1a1c23);
+    /* Fondo oscuro general */
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
-/* Efecto heredado de tu clase original kpi-card-colored */
-.widget-colored {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* Efecto hover suave al pasar el mouse por la tarjeta */
+    &:not(.modo-enfoque):hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
 
-    &:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        /* Opcional: Puedes usar var(--widget-color) aquí si deseas algún efecto extra al hacer hover */
+    /* Si está maximizado, le quitamos bordes redondeados y le damos más aire */
+    &.modo-enfoque {
+        border-radius: 0;
+        border: none;
+        padding: 24px;
+        background-color: transparent;
+        box-shadow: none;
     }
 }
 
-.widget-header {
+/* =========================================================
+   ESTILOS DEL HEADER Y TEXTOS
+   ========================================================= */
+.shell-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    /* La tenue línea que vimos en el diseño */
+    padding-bottom: 12px;
+}
+
+.shell-icon-box {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shell-titulo {
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+}
+
+.shell-subtitulo {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+/* =========================================================
+   BOTONES CUADRADOS DE ACCIÓN (Compartidos)
+   ========================================================= */
+/* Declaramos el estilo exacto aquí para el botón de maximizar nativo. */
+.tc-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    /* Diseño Squircle */
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    min-height: 30px;
-    flex-shrink: 0;
-}
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
 
-.header-title {
-    display: flex;
-    align-items: center;
-    color: var(--text-color);
-}
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+    }
 
-.widget-divider {
-    margin: 12px 0;
-    border-top: 1px solid var(--border-color);
-    opacity: 1;
-    flex-shrink: 0;
-}
-
-.widget-body {
-    flex-grow: 1;
-    min-height: 0;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.widget-shell-container.borde-kpi {
-    /* Leemos la variable que inyectó el HTML y forzamos el renderizado */
-    border-top: 4px solid var(--color-borde) !important;
+    i {
+        font-size: 1.1rem;
+    }
 }

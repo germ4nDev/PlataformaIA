@@ -15,6 +15,10 @@ export class ReportesOperativosComponent implements IWidget {
     @Input() data: any;
     @Input() title: string = '';
     @Input() widgetId?: string;
+
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
+
     constructor(private _torreService: DashboardService) { }
 
     maximizar() {

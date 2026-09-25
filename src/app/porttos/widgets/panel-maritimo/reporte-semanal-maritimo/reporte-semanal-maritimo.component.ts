@@ -14,6 +14,8 @@ export class ReporteSemanalMaritimoComponent implements OnChanges { // 🔥 Impl
     @Input() data!: any;
     @Input() title: string = '';
     @Input() widgetId?: string;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     metricas: any[] = [];
 

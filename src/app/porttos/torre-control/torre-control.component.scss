@@ -1,11 +1,3 @@
-.tc-dashboard-container {
-    background-color: var(--tablero-background) !important;
-    height: calc(100vh - 140px);
-    /* O el alto que estés manejando */
-    overflow: hidden !important;
-    z-index: 1;
-}
-
 body,
 html {
     background-color: var(--tablero-background) !important;
@@ -13,19 +5,9 @@ html {
     padding: 0 !important;
 }
 
-.gridster {
-    height: 100% !important;
-    margin-bottom: 0px !important;
-}
-
 .tc-nav-tabs {
     background-color: var(--tablero-background) !important;
 }
-
-.btn-accion {}
-
-
-
 
 /* ==========================================================================
    BOTONES DE ACCIÓN (Lobbies) - Adaptabilidad a Temas
@@ -48,17 +30,12 @@ html {
         color: var(--app-iconos-color) !important;
     }
 
-    /*
-       En Bootstrap, .btn-outline-secondary suele gestionar bien el color en ambos temas.
-       Pero si necesitas forzar un color que contraste:
-    */
     &.selected {
         background: var(--app-navbar-color) !important;
         border-color: var(--border-color) !important;
         color: var(--app-iconos-color) !important;
 
         &:hover {
-            /* Un ligero oscurecimiento en claro, aclaramiento en oscuro */
             background-color: var(--app-navbar-color, rgba(0, 0, 0, 0.05)) !important;
             color: var(--app-iconos-color, #212529) !important;
         }
@@ -115,7 +92,7 @@ html {
 }
 
 .tc-dashboard-container {
-    background-color: var(--widget-background) !important;
+    background-color: var(--tablero-background) !important;
     height: calc(100vh - var(--navbar-height));
     display: flex;
     flex-direction: column;
@@ -215,7 +192,9 @@ html {
 
 /* 2. El gridster-item asume el rol de la tarjeta principal (.PORTTOS-widget) */
 .gridster {
-    background-color: var(--widget-background);
+    background-color: var(--tablero-background);
+    height: 100% !important;
+    margin-bottom: 0px !important;
     padding: 0;
 }
 

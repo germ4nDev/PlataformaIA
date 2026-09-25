@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartType } from 'chart.js';
+import { ChartConfiguration } from 'chart.js';
 import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboard-plataforma.service';
 
 // 🟢 Importamos el contenedor maestro universal
@@ -10,16 +10,16 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-tickets-sbar',
     standalone: true,
-    imports: [CommonModule, NgChartsModule, WidgetShellComponent], // 🟢 Agregamos el Shell
+    imports: [CommonModule, NgChartsModule, WidgetShellComponent],
     templateUrl: './wdg-tickets-sbar.component.html',
-    styleUrl: './wdg-tickets-sbar.component.scss'
+    styleUrls: ['./wdg-tickets-sbar.component.scss']
 })
 export class WdgTicketsSbarComponent implements OnInit {
     @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-    // 🟢 Fallback de seguridad
-    @Input() widgetId: string = 'WDG_PLAT_TICKETS_SBAR';
-    @Input() data: any;
+    // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa del selector
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public barChartType: 'bar' = 'bar';
 
@@ -39,20 +39,20 @@ export class WdgTicketsSbarComponent implements OnInit {
             x: {
                 stacked: true,
                 grid: { display: false },
-                // 🟢 Ajustamos el color del texto al tema claro
-                ticks: { color: '#64748b', font: { size: 11 } }
+                // 🟢 Ajustamos el color del texto para el tema oscuro
+                ticks: { color: '#94a3b8', font: { size: 11 } }
             },
             y: {
                 stacked: true,
                 border: { display: false },
-                // 🟢 Ajustamos las líneas de fondo (grilla) a un gris muy sutil
-                grid: { color: 'rgba(0,0,0,0.05)' },
-                ticks: { color: '#64748b' }
+                // 🟢 Líneas de fondo ajustadas a modo oscuro
+                grid: { color: 'rgba(255,255,255,0.05)' },
+                ticks: { color: '#94a3b8' }
             }
         },
         plugins: {
-            // 🟢 Ajustamos el texto de la leyenda al tema claro
-            legend: { position: 'top', align: 'end', labels: { color: '#64748b', usePointStyle: true, boxWidth: 8 } },
+            // 🟢 Ajustamos el texto de la leyenda al tema oscuro
+            legend: { position: 'top', align: 'end', labels: { color: '#e2e8f0', usePointStyle: true, boxWidth: 8 } },
             tooltip: { mode: 'index', intersect: false }
         }
     };
@@ -77,5 +77,15 @@ export class WdgTicketsSbarComponent implements OnInit {
             },
             error: (err: any) => console.error('Error al cargar gráfica de tickets:', err)
         });
+    }
+
+    // 🟢 Función para comunicar el enfoque al padre
+    maximizarDesdeShell() {
+        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+            (this._dashboardService as any).abrirModoEnfoque(
+                this.widgetConfig?.type || 'WDG_PLAT_TICKETS_SBAR',
+                this.barChartData
+            );
+        }
     }
 }

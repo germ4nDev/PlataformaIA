@@ -18,6 +18,8 @@ export class ParticipacionNacionalComponent implements AfterViewInit, OnChanges 
     @Input() widgetId?: string;
 
     @ViewChild('donutChart') donutChart!: ElementRef;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     public chartInstance: any;
     constructor(

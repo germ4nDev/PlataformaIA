@@ -1,25 +1,32 @@
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - KPI Card (Refactorizado con Shell)
+*/
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-import { KpiCardAdapter } from 'src/app/theme/shared/adapters/kpi-card.adapter';
-import { KpiCardModel } from 'src/app/theme/shared/_helpers/models/tablero-control/kpi-card.model';
 import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
     selector: 'app-cont-kpi-card',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './cont-kpi-card.component.html',
-    styleUrl: './cont-kpi-card.component.scss'
+    styleUrls: ['./cont-kpi-card.component.scss'] // 🟢 Corregido a styleUrls
 })
 export class ContKpiCardComponent implements OnInit {
-    @Input() data!: KpiCardModel;
-    @Input() widgetId!: string;
+
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public titulo: string = 'KPI';
     public valor: string | number = '0';
     public subtitulo: string = '';
-    public color: string = '#22d3ee'; // Color por defecto (Cyan)
+    public colorBorde: string = '';
 
     constructor(
         private cdr: ChangeDetectorRef,
@@ -28,19 +35,27 @@ export class ContKpiCardComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        // 🟢 Extraemos la data inyectada desde la configuración del selector
+        if (this.widgetConfig?.data) {
+            this.titulo = this.widgetConfig.data.titulo || this.titulo;
+            this.valor = this.widgetConfig.data.valor || this.valor;
+            this.subtitulo = this.widgetConfig.data.subtitulo || this.subtitulo;
+            this.colorBorde = this.widgetConfig.data.colorBorde || '';
+        }
+
         this.filtroService.ciudad$.subscribe((ciudad) => {
             if (ciudad) {
-                //this.actualizarDatos(ciudad);
+                // this.actualizarDatos(ciudad);
             }
         });
     }
 
-    ngOnChanges(): void {
-        if (this.data) {
-            this.titulo = this.data.titulo || this.titulo;
-            this.valor = this.data.valor || this.valor;
-            this.subtitulo = this.data.subtitulo || this.subtitulo;
-            this.color = this.data.color || this.color;
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_KPI', this.widgetConfig?.data);
         }
     }
 }

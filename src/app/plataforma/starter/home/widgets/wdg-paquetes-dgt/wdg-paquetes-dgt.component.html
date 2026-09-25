@@ -1,17 +1,18 @@
-<app-widget-shell titulo="Distribución de Paquetes" icono="feather icon-pie-chart" variante="normal"
-    colorBordeTop="#8b5cf6" [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'Distribución de Paquetes'"
+    [subtitulo]="widgetConfig?.subtitulo || 'Market Share'" [icono]="widgetConfig?.icono || 'feather icon-pie-chart'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div acciones-extra class="ms-2">
-        <span class="badge bg-light text-dark border">Market Share</span>
+    <!-- 🟢 1. PROYECCIÓN AL HEADER DEL SHELL (Badge Morado) -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-purple text-uppercase">
+            Market Share
+        </span>
     </div>
 
+    <!-- 🟢 2. CUERPO ÚNICO DEL WIDGET (Chart.js se adapta solo) -->
     <div class="chart-wrapper w-100 h-100 position-relative pb-2">
-        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
-            [type]="doughnutChartType"></canvas>
+        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions" [type]="doughnutChartType">
+        </canvas>
     </div>
 
-    <div modo-enfoque class="w-100 h-100 position-relative p-4">
-        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
-            [type]="doughnutChartType"></canvas>
-    </div>
 </app-widget-shell>

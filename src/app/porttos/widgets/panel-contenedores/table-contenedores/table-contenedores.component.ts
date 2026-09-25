@@ -1,62 +1,71 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Tabla Contenedores (Refactorizado con Shell)
+*/
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
     selector: 'app-table-contenedores',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './table-contenedores.component.html',
     styleUrls: ['./table-contenedores.component.scss']
 })
-export class TableContenedoresComponent implements OnChanges {
-    @Input() widgetId!: string;
-    @Input() data: any; // El orquestador inyecta un 'any'
+export class TableContenedoresComponent implements OnInit {
 
-    public movimientos: any[] = []; // Inicializado como array seguro
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
-    constructor(private _torreService: DashboardService) {
-    }
+    public movimientos: any[] = [];
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (this.data) {
-            // 1. Verificamos si la data es directamente un array
-            if (Array.isArray(this.data)) {
-                this.movimientos = this.data;
-            }
-            // 2. O si por alguna razón el backend lo envolvió en un objeto { movimientos: [...] }
-            else if (this.data.movimientos && Array.isArray(this.data.movimientos)) {
-                this.movimientos = this.data.movimientos;
-            }
-            // 3. Si llega un objeto vacío {} temporalmente, lo dejamos vacío para proteger el ngFor
-            else {
-                this.movimientos = [];
+    constructor(private _torreService: DashboardService) { }
+
+    ngOnInit(): void {
+        // 🟢 Inicializamos los datos extrayéndolos de widgetConfig
+        if (this.widgetConfig?.data) {
+            const data = this.widgetConfig.data;
+            if (Array.isArray(data)) {
+                this.movimientos = data;
+            } else if (data.movimientos && Array.isArray(data.movimientos)) {
+                this.movimientos = data.movimientos;
             }
         }
     }
 
+    // 🟢 Actualizamos las clases para que encajen mejor con el modo oscuro
     getEstadoClase(estado: string): string {
-        if (!estado) return 'badge-default';
+        if (!estado) return 'bg-secondary bg-opacity-25 text-light border border-secondary';
 
         const est = estado.toLowerCase();
 
         // Verde: Operaciones en orden
         if (est.includes('programado')) {
-            return 'badge-success';
+            return 'bg-success text-white border-success';
         }
         // Rojo: Problemas o alertas
         else if (est.includes('demora') || est.includes('lleno')) {
-            return 'badge-danger';
+            return 'bg-danger text-white border-danger';
         }
-        // Azul: Tránsitos y esperas
+        // Azul claro: Tránsitos y esperas
         else if (est.includes('ruta') || est.includes('esperando')) {
-            return 'badge-info';
+            return 'bg-info text-dark border-info';
         }
 
-        return 'badge-default';
+        return 'bg-secondary bg-opacity-25 text-light border border-secondary';
     }
 
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_TABLE_CONT', this.widgetConfig?.data);
+        }
     }
 }

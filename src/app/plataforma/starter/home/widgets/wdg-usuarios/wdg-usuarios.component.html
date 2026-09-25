@@ -1,33 +1,38 @@
-<app-widget-shell titulo="Usuarios Conectados" icono="feather icon-users" variante="normal" colorBordeTop="#10b981"
-    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'Usuarios Conectados'"
+    [subtitulo]="widgetConfig?.subtitulo || 'Sesiones Activas'" [icono]="widgetConfig?.icono || 'feather icon-users'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div acciones-extra class="d-flex align-items-center me-2">
-        <span class="badge bg-success shadow-sm d-flex align-items-center px-2 py-1">
-            <span class="spinner-grow spinner-grow-sm me-1" role="status" style="width: 0.6rem; height: 0.6rem;"></span>
+    <!-- PROYECCIÓN AL HEADER: Badge de En Vivo (Verde) -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-success text-uppercase d-flex align-items-center gap-1">
+            <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem;"></span>
             En vivo
         </span>
     </div>
 
-    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center w-100 h-100 pb-2">
+    <!-- VISTA NORMAL EN CUADRÍCULA (Contador gigante y avatares) -->
+    <div *ngIf="!isEnfoque"
+        class="flex-grow-1 d-flex flex-column justify-content-center align-items-center w-100 h-100 pb-2 animate__animated animate__fadeIn">
 
-        <h1 class="valor-contador">
+        <h1 class="valor-contador text-white fw-bold mb-0" style="font-size: 3.5rem; letter-spacing: -2px;">
             {{ totalConectados }}
         </h1>
-        <span class="subtitulo-container" style="font-size: 0.65rem; letter-spacing: 1px;">Activos
+        <span class="text-muted text-uppercase mt-1" style="font-size: 0.65rem; letter-spacing: 1px;">Activos
             ahora</span>
 
-        <div class="d-flex align-items-center justify-content-center mt-1">
+        <div class="d-flex align-items-center justify-content-center mt-3">
             <div class="d-flex align-items-center">
                 <ng-container *ngFor="let user of usuariosConectados | slice:0:3; let i = index">
-                    <div [class]="user.colorAvatar + ' text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm border border-white'"
-                        [style.margin-left.px]="i > 0 ? -8 : 0" style="width: 26px; height: 26px; font-size: 0.65rem;"
-                        [title]="user.nombre">
+                    <div [class]="user.colorAvatar + ' text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm border border-dark'"
+                        [style.margin-left.px]="i > 0 ? -8 : 0" [style.z-index]="3 - i"
+                        style="width: 28px; height: 28px; font-size: 0.65rem;" [title]="user.nombre">
                         {{ user.iniciales }}
                     </div>
                 </ng-container>
+
                 <div *ngIf="usuariosConectados.length > 3"
-                    class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm border border-white ms-n2"
-                    style="width: 26px; height: 26px; font-size: 0.6rem;">
+                    class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm border border-dark ms-n2"
+                    style="width: 28px; height: 28px; font-size: 0.6rem; z-index: 0;">
                     +{{ usuariosConectados.length - 3 }}
                 </div>
             </div>
@@ -39,15 +44,13 @@
 
     </div>
 
-    <!-- ============================================== -->
-    <!-- 2. VISTA MAXIMIZADA (Auditoría de Sesiones)    -->
-    <!-- ============================================== -->
-    <div modo-enfoque class="w-100 h-100 p-2 overflow-auto">
+    <!-- VISTA MAXIMIZADA (Auditoría de Sesiones en Tabla) -->
+    <div *ngIf="isEnfoque" class="w-100 h-100 p-2 overflow-auto animate__animated animate__fadeIn">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <!-- <p class="titulo-tabla">Auditoría en tiempo real de las sesiones activas, ubicación de navegación y
-                tiempo de permanencia.</p> -->
-            <span class="badge-titulo">
+            <p class="text-muted small mb-0">Auditoría en tiempo real de las sesiones activas, ubicación de navegación y
+                tiempo de permanencia.</p>
+            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill">
                 Total Activos: {{ totalConectados }}
             </span>
         </div>
@@ -55,57 +58,64 @@
         <div class="table-responsive">
             <table class="table table-hover table-borderless align-middle">
                 <thead>
-                    <tr class="text-uppercase" style="border-bottom: 1px solid #e0e0e0; font-size: 0.75rem;">
-                        <th class="titulo-tabla">Usuario & Rol</th>
-                        <th class="titulo-tabla">Identificación / Correo</th>
-                        <th class="titulo-tabla">Módulo / Aplicación</th>
-                        <th class="titulo-tabla text-center">Tiempo de Sesión</th>
-                        <th class="titulo-tabla text-center">Estado</th>
+                    <tr class="text-uppercase text-muted"
+                        style="border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.75rem;">
+                        <th class="pb-2">Usuario & Rol</th>
+                        <th class="pb-2">Identificación / Correo</th>
+                        <th class="pb-2">Módulo / Aplicación</th>
+                        <th class="text-center pb-2">Tiempo de Sesión</th>
+                        <th class="text-center pb-2">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let user of usuariosConectados">
+                    <tr *ngFor="let user of usuariosConectados"
+                        style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+
                         <!-- Usuario y Rol -->
-                        <td class="ps-2">
+                        <td class="ps-2 py-3">
                             <div class="d-flex align-items-center">
                                 <div [class]="user.colorAvatar + ' text-white rounded-circle me-3 d-flex align-items-center justify-content-center shadow-sm'"
                                     style="width: 36px; height: 36px; font-size: 0.9rem;">
                                     {{ user.iniciales }}
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <span class="titulo-tabla">{{ user.nombre }}</span>
-                                    <span class="texto-tabla" style="font-size: 0.75rem;">{{ user.rol }}</span>
+                                    <span class="text-white fw-bold">{{ user.nombre }}</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">{{ user.rol }}</span>
                                 </div>
                             </div>
                         </td>
 
                         <!-- Identificación y Correo -->
-                        <td>
+                        <td class="py-3">
                             <div class="d-flex flex-column">
-                                <span class="titulo-tabla">{{ user.identificacion }}</span>
-                                <span class="texto-tabla" style="font-size: 0.75rem;" [innerHTML]="user.correo"></span>
+                                <span class="text-white">{{ user.identificacion }}</span>
+                                <span class="text-muted" style="font-size: 0.75rem;" [innerHTML]="user.correo"></span>
                             </div>
                         </td>
 
                         <!-- Módulo Activo -->
-                        <td>
+                        <td class="py-3">
                             <div class="d-flex flex-column">
-                                <span class="titulo-tabla">{{ user.aplicacionActual }}</span>
-                                <span class="texto-tabla">{{ user.moduloActual }}</span>
+                                <span class="text-white">{{ user.aplicacionActual }}</span>
+                                <span class="text-muted" style="font-size: 0.75rem;">{{ user.moduloActual }}</span>
                             </div>
                         </td>
 
                         <!-- Tiempo de Sesión -->
-                        <td class="text-center">
-                            <span class="texto-tabla fw-medium small d-flex align-items-center justify-content-center">
-                                <i class="feather icon-clock me-1 texto-tabla"></i> {{ user.tiempoConexion }}
-                            </span>
-                            <span class="titulo-tabla">{{ user.dispositivo }}</span>
+                        <td class="text-center py-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <span
+                                    class="text-white fw-medium small d-flex align-items-center justify-content-center">
+                                    <i class="feather icon-clock me-1 text-muted"></i> {{ user.tiempoConexion }}
+                                </span>
+                                <span class="text-muted" style="font-size: 0.7rem;">{{ user.dispositivo }}</span>
+                            </div>
                         </td>
 
                         <!-- Estado -->
-                        <td class="text-center">
-                            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-1">
+                        <td class="text-center py-3">
+                            <span
+                                class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-1 rounded-pill">
                                 En Línea
                             </span>
                         </td>

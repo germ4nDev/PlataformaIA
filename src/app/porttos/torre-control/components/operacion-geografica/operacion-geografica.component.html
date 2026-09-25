@@ -9,7 +9,7 @@
     <gridster-item *ngFor="let widget of dashboard; trackBy: trackByWidget" [item]="widget"
         [class.PORTTOS-fantasma]="widget.type === 'WDG_FANTASMA'">
 
-        <app-widget-selector-tcl [type]="widget.type" [data]="widget.data">
+        <app-widget-selector-tcl [widgetConfig]="widget">
         </app-widget-selector-tcl>
 
     </gridster-item>

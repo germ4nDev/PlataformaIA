@@ -19,6 +19,7 @@ export class GateKpiCardComponent implements OnChanges {
 
     // 👈 Data inyectada dinámicamente desde el backend
     @Input() data: any;
+    @Input() isEnfoque: boolean = false;
 
     // Valores por defecto para que la tarjeta no se vea vacía mientras carga
     public titulo: string = 'KPI';

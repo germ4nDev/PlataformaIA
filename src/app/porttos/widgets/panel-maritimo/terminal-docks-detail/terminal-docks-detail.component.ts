@@ -11,6 +11,8 @@ import { IWidget } from 'src/app/theme/shared/interfaces/torre-control/widget.in
 })
 export class TerminalDocksDetailComponent implements OnChanges {
     @Input() data: any[] = [];
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     // 🚨 ESTA ES LA BANDERA: Si es true, oculta columnas secundarias. Por defecto es true.
     @Input() vistaCompacta: boolean = true;

@@ -21,16 +21,12 @@ import { WIDGET_MAP } from '../../../porttos/torre-control/widget-registry';
     styleUrls: ['./widget-selector-tcl.component.scss']
 })
 export class WidgetSelectorTclComponent {
-
-    // Objeto completo del widget que viene del tablero
     @Input() widgetConfig: any;
-
-    // Bandera para saber si estamos en la vista de modal/enfoque
     @Input() isEnfoque: boolean = false;
-
     @Output() toggleEnfoque = new EventEmitter<void>();
 
-    // 🟢 MAGIA: Busca en tu WIDGET_MAP y devuelve la clase del componente
+    public mostrarTablaTerminal: boolean = false;
+
     get componenteDinamico(): Type<unknown> | null {
         if (!this.widgetConfig || !this.widgetConfig.type) return null;
 
@@ -49,6 +45,10 @@ export class WidgetSelectorTclComponent {
             titulo: this.widgetConfig?.nombreWidget || this.widgetConfig?.titulo || this.widgetConfig?.type,
             icono: this.widgetConfig?.icono || 'feather icon-grid'
         };
+    }
+
+    toggleTablaTerminal() {
+        this.mostrarTablaTerminal = !this.mostrarTablaTerminal;
     }
 
     accionEnfoque() {

@@ -15,9 +15,9 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 export class WdgFacturacionAreaComponent implements OnInit {
     @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-    // 🟢 Le damos un valor por defecto por si Angular tarda en pasar el Input
-    @Input() widgetId: string = 'WDG_PLAT_FACTURACION_AREA';
-    @Input() data: any;
+    // 🟢 NUEVO ESTÁNDAR: Recibimos la configuración completa del selector
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public lineChartType: 'line' = 'line';
 
@@ -93,5 +93,13 @@ export class WdgFacturacionAreaComponent implements OnInit {
             },
             error: (err: any) => console.error('Error al cargar gráfica de facturación MRR:', err)
         });
+    }
+
+    // 🟢 NUEVO: Función para comunicar el enfoque
+    maximizarDesdeShell() {
+        // Asegúrate de que tu servicio tenga este método o cámbialo por el correspondiente
+        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+            (this._dashboardService as any).abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PLAT_FACTURACION_AREA', this.lineChartData);
+        }
     }
 }

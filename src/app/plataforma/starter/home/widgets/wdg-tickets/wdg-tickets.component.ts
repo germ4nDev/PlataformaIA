@@ -10,15 +10,15 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-tickets',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent], // 🟢 Actualizamos el import
+    imports: [CommonModule, WidgetShellComponent],
     templateUrl: './wdg-tickets.component.html',
-    styleUrl: './wdg-tickets.component.scss'
+    styleUrls: ['./wdg-tickets.component.scss'] // 🟢 Aseguramos el styleUrls
 })
 export class WdgTicketsComponent implements OnInit, OnDestroy {
-    @Input() data: any;
 
-    // 🟢 Fallback de seguridad
-    @Input() widgetId: string = 'WDG_PLAT_TICKETS';
+    // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa del selector
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public ticketsAbiertos: number = 0;
     public ticketsEnProceso: number = 0;
@@ -29,7 +29,7 @@ export class WdgTicketsComponent implements OnInit, OnDestroy {
     constructor(
         private _socketManager: SocketManagerService,
         private _dashboardService: DashboardPlataformaService,
-        private cdr: ChangeDetectorRef // 🟢 Inyectado para asegurar la actualización visual
+        private cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit() {
@@ -46,10 +46,24 @@ export class WdgTicketsComponent implements OnInit, OnDestroy {
                 this.ticketsAbiertos = res.abiertos || 0;
                 this.ticketsEnProceso = res.enProceso || 0;
                 this.ticketsResueltos = res.resueltos || 0;
-                this.cdr.detectChanges(); // 🟢 Obligamos a renderizar los nuevos datos
+                this.cdr.detectChanges();
             },
             error: (err) => console.error('Error al cargar resumen de tickets:', err)
         });
+    }
+
+    // 🟢 NUEVO: Función para comunicar el enfoque
+    maximizarDesdeShell() {
+        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+            (this._dashboardService as any).abrirModoEnfoque(
+                this.widgetConfig?.type || 'WDG_PLAT_TICKETS',
+                {
+                    abiertos: this.ticketsAbiertos,
+                    enProceso: this.ticketsEnProceso,
+                    resueltos: this.ticketsResueltos
+                }
+            );
+        }
     }
 
     ngOnDestroy() {

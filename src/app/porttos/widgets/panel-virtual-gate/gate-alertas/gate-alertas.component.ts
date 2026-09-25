@@ -14,6 +14,7 @@ export class GateAlertasComponent implements IWidget {
     @Input() widgetId!: string;
     @Input() title: string = '';
     @Input() data: any;
+    @Input() isEnfoque: boolean = false;
 
     constructor(private _torreService: DashboardService) { }
 

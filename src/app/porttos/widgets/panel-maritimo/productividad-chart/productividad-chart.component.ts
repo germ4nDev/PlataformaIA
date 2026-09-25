@@ -167,6 +167,9 @@ export class ProductividadChartComponent implements OnInit, OnDestroy {
     @Input() title: string = '';
     @Input() widgetId?: string;
     @Input() esModal: boolean = false;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
+
     public _data: any; // La data original que viene del Input
     public legendItems: any[] = []; // Array para dibujar la leyenda custom en HTML
 

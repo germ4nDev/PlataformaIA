@@ -14,6 +14,8 @@ export class MatrizCargaComponent {
     @Input() data: any;
     @Input() widgetId?: string;
     @Input() config?: any;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     constructor(
         private _torreService: DashboardService

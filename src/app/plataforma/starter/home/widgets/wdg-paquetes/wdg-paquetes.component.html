@@ -1,42 +1,58 @@
-<app-widget-shell titulo="Paquetes por Suscriptor" subtitulo="Plataforma" icono="feather icon-package" variante="normal"
-    [mostrarLinea]="false" [widgetId]="widgetId" [data]="data">
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'Paquetes por Suscriptor'"
+    [subtitulo]="widgetConfig?.subtitulo || 'Plataforma'" [icono]="widgetConfig?.icono || 'feather icon-package'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div acciones-extra class="d-flex gap-2">
-        <!-- Botones extra que tenías comentados -->
-        <!-- <button class="btn btn-sm btn-light p-1 m-0" (click)="cargarMetricasReales()" title="Recargar datos"><i class="feather icon-refresh-cw"></i></button> -->
+    <!-- 🟢 1. PROYECCIÓN AL HEADER: Botón de Refresh -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <!-- Reutilizamos tu lógica, pero con el diseño de botón del header -->
+        <button class="tc-action-btn" (click)="cargarMetricasReales()" title="Recargar datos">
+            <i class="feather icon-refresh-cw"></i>
+        </button>
     </div>
 
-    <!-- PLANTILLA MAESTRA -->
+    <!-- 🟢 2. PLANTILLA MAESTRA (Renderiza la lista adaptada a oscuro) -->
     <ng-template #listaDePaquetes>
-        <div class="flex-grow-1 overflow-auto pe-2 w-100 h-100">
-            <div *ngIf="paquetesUnificados.length === 0" class="text-center text-muted py-4 small">No hay paquetes
-                registrados.</div>
+        <div class="flex-grow-1 overflow-auto pe-2 w-100 h-100 mt-2 custom-scrollbar">
+
+            <div *ngIf="paquetesUnificados.length === 0" class="text-center text-muted py-4 small">
+                No hay paquetes registrados.
+            </div>
+
             <div *ngFor="let item of paquetesUnificados" class="mb-4">
-                <div class="fw-semibold text-truncate small mb-2 text-dark">{{ item.suscriptor }}</div>
+                <div class="fw-semibold text-truncate small mb-2 text-white">{{ item.suscriptor }}</div>
+
+                <!-- Barra Activos -->
                 <div class="d-flex align-items-center mb-2">
                     <span class="badge bg-success text-white me-2 d-flex justify-content-center align-items-center"
                         style="width: 35px; height: 20px;">{{ item.activos }}</span>
-                    <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(0, 0, 0, 0.05);">
+                    <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05);">
                         <div class="progress-bar bg-success rounded-pill" role="progressbar"
                             [style.width.%]="item.pctActivos"></div>
                     </div>
                 </div>
+
+                <!-- Barra Inactivos -->
                 <div class="d-flex align-items-center">
                     <span class="badge bg-danger text-white me-2 d-flex justify-content-center align-items-center"
                         style="width: 35px; height: 20px;">{{ item.inactivos }}</span>
-                    <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(0, 0, 0, 0.05);">
+                    <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05);">
                         <div class="progress-bar bg-danger rounded-pill" role="progressbar"
                             [style.width.%]="item.pctInactivos"></div>
                     </div>
                 </div>
             </div>
+
         </div>
     </ng-template>
 
-    <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
+    <!-- 🟢 3. RENDERIZADO SEGÚN VISTA -->
+    <ng-container *ngIf="!isEnfoque">
+        <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
+    </ng-container>
 
-    <div modo-enfoque class="w-100 h-100 p-2">
+    <div *ngIf="isEnfoque" class="w-100 h-100 p-2 d-flex flex-column animate__animated animate__fadeIn">
         <p class="text-muted small mb-3">Distribución proporcional de paquetes activos e inactivos por cliente.</p>
         <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
     </div>
+
 </app-widget-shell>

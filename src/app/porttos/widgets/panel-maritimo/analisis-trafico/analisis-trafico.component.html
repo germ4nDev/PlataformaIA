@@ -1,24 +1,21 @@
-<div class="PORTTOS-widget widget-analisis-trafico">
+<app-widget-shell [titulo]="data?.titulo || 'Análisis de Tráfico Portuario'"
+    [subtitulo]="data?.subtitulo || 'Resumen y Evolución'" [icono]="data?.icono || 'feather icon-trending-up'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="icon-clock" style="margin-right: 6px;"></i> >{{ data?.titulo || 'ANÁLISIS DE TRÁFICO
-                PORTUARIO' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || '--' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-primary text-uppercase">
+            Macro
+        </span>
     </div>
 
-    <div class="panel-body">
-        <div class="kpi-macro-grid" *ngIf="data?.kpisTop">
+    <!-- CUERPO ÚNICO DEL WIDGET (Flexbox column para separar KPIs y Gráfica) -->
+    <div class="w-100 h-100 d-flex flex-column pt-2 animate__animated animate__fadeIn">
 
+        <!-- KPIs Superiores (Grid) -->
+        <div class="kpi-macro-grid mb-3 px-1" *ngIf="data?.kpisTop">
             <div class="kpi-macro-card">
-                <span class="km-label">TONELADAS MOVILIZADAS</span>
+                <span class="km-label">TONELADAS MOV.</span>
                 <span class="km-valor">{{ data.kpisTop.toneladas.valor }}</span>
                 <span class="km-sub">{{ data.kpisTop.toneladas.detalle }}</span>
             </div>
@@ -32,7 +29,7 @@
             </div>
 
             <div class="kpi-macro-card">
-                <span class="km-label">PARTICIPACIÓN NACIONAL</span>
+                <span class="km-label">PARTICIPACIÓN NAL.</span>
                 <span class="km-valor">{{ data.kpisTop.participacion.valor }}</span>
                 <span class="km-sub">{{ data.kpisTop.participacion.detalle }}</span>
             </div>
@@ -44,11 +41,13 @@
                 </span>
                 <span class="km-sub">{{ data.kpisTop.flujo.detalle }}</span>
             </div>
-
         </div>
 
-        <div class="chart-container-macro">
+        <!-- Gráfica (Ocupa el resto del espacio disponible) -->
+        <div class="chart-container-macro flex-grow-1 position-relative pb-2" style="min-height: 0;">
             <canvas #trafficChart></canvas>
         </div>
+
     </div>
-</div>
+
+</app-widget-shell>

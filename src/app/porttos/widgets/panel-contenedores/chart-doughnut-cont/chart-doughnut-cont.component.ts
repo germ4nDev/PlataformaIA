@@ -1,37 +1,43 @@
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Doughnut Chart Contenedores (Refactorizado con Shell)
+*/
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
 
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+
 @Component({
     selector: 'app-chart-doughnut-cont',
     standalone: true,
-    imports: [CommonModule, NgChartsModule],
+    imports: [CommonModule, NgChartsModule, WidgetShellComponent], // 🟢 Agregamos WidgetShellComponent
     templateUrl: './chart-doughnut-cont.component.html',
     styleUrls: ['./chart-doughnut-cont.component.scss']
 })
 export class ChartDoughnutContComponent implements OnInit {
-    @Input() title: string = '';
-    @Input() widgetId?: string;
+
+    // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa del selector
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     private _data: any;
     public cargando: boolean = true;
 
-    // Usamos el Setter (igual que en Virtual Gate) en lugar de ngOnChanges
     @Input() set data(value: any) {
         this._data = value;
 
         if (value) {
             this.cargando = false;
 
-            // Validamos que lleguen los datos requeridos
             if (value.series && value.labels) {
                 this.doughnutChartData = {
                     labels: value.labels,
                     datasets: [{
                         data: value.series,
-                        // Usa los colores que vienen del backend o los predeterminados de contenedores
                         backgroundColor: value.colores || ['#22c55e', '#f59e0b', '#ef4444', '#3b82f6'],
                         borderWidth: 0,
                         hoverOffset: 4
@@ -57,11 +63,23 @@ export class ChartDoughnutContComponent implements OnInit {
 
     constructor(private _torreService: DashboardService) { }
 
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    ngOnInit() {
+        // 🟢 Aseguramos la carga de datos si vienen anidados en la configuración
+        if (this.widgetConfig?.data && !this._data) {
+            this.data = this.widgetConfig.data;
+        }
     }
 
-    // Opciones de configuración de Chart.js calcadas de Virtual Gate
+    // 🟢 Método de Toggle para abrir/cerrar el modal desde el Shell
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_DOUGHNUT_CONT', this.data);
+        }
+    }
+
+    // Opciones de configuración de Chart.js
     public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
         responsive: true,
         maintainAspectRatio: false,
@@ -81,6 +99,4 @@ export class ChartDoughnutContComponent implements OnInit {
     };
 
     public doughnutChartData!: ChartData<'doughnut'>;
-
-    ngOnInit() { }
 }

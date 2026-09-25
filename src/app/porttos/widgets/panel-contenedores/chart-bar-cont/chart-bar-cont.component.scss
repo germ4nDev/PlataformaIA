@@ -1,54 +1,32 @@
-@use 'src/app/theme/shared/styles/components' as porttos;
-@include porttos.widget-header;
-
 :host {
     display: block;
-    height: 100%;
     width: 100%;
-
-    container-type: inline-size;
-    container-name: tarjeta-terminal;
+    height: 100%;
 }
 
-.porttos-widget.widget-cont-bar {
+/* 🟢 Permite que Chart.js se renderice correctamente dentro del Flexbox del Shell */
+.chart-wrapper {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    max-height: 100%;
-    width: 100%;
-    padding: 16px;
-    background-color: var(--widget-bg);
-    border: 1px solid var(--border-color) !important;
-    border-radius: 10px;
-    overflow: hidden;
-
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-}
-
-.panel-body {
     flex: 1;
     min-height: 0;
-    min-width: 0;
-
-    width: 100%;
-    padding: 0 1.2rem 1.2rem 1.2rem;
-    position: relative;
-
-    canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
+    padding-top: 0.5rem;
 }
 
-.chart-container {
-    position: relative;
-    width: 100%;
-    flex: 1;
-    min-height: 0;
+/* 🟢 Estilo unificado para el badge (Morado, haciendo juego con el color de la gráfica) */
+.tc-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.badge-purple {
+        color: #a855f7;
+        border: 1px solid #a855f7;
+        background-color: rgba(168, 85, 247, 0.15);
+    }
 }

@@ -1,22 +1,22 @@
-<div class="porttos-widget kpi-card d-flex flex-column" [ngClass]="data.colorBorde">
+<!-- 🟢 El Shell se encarga de mostrar el título y subtítulo en la cabecera -->
+<app-widget-shell [titulo]="titulo" [subtitulo]="subtitulo"
+    [icono]="widgetConfig?.data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
 
-    <ng-container>
+    <!-- CUERPO ÚNICO DEL WIDGET (El número gigante en el centro) -->
+    <div
+        class="w-100 h-100 d-flex flex-column justify-content-center align-items-center animate__animated animate__fadeIn">
 
-        <div class="kpi-content" [ngClass]="data.colorBorde || ''">
+        <!-- Valor del KPI -->
+        <h1 class="kpi-value text-white fw-bold mb-0 text-center">
+            {{ valor }}
+        </h1>
 
-            <div class="kpi-header">
-                <h3 class="kpi-title">{{ data.titulo }}</h3>
-            </div>
+        <!-- Etiqueta extra (Solo visible en modo enfoque para aprovechar el espacio) -->
+        <span *ngIf="isEnfoque" class="text-muted text-uppercase mt-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+            Métrica Consolidada
+        </span>
 
-            <div class="kpi-body">
-                <h2 class="kpi-value">{{ data.valor }}</h2>
-            </div>
+    </div>
 
-            <div class="kpi-footer">
-                <p class="kpi-trend">{{ data.subtitulo }}</p>
-            </div>
-
-        </div>
-    </ng-container>
-
-</div>
+</app-widget-shell>

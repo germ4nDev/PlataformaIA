@@ -1,17 +1,33 @@
-<!-- Pasamos las variables directamente al Shell (Él se encargará de dárselas a su Header interno) -->
-<app-widget-shell [titulo]="metaWidget.titulo" [icono]="metaWidget.icono" [isEnfoque]="isEnfoque"
-    [widgetId]="widgetConfig?.type" [data]="widgetConfig?.data" (clickEnfoque)="accionEnfoque()">
+<!-- <app-widget-shell [titulo]="widgetConfig?.data?.nombreTerminal || widgetConfig?.data?.nombre || metaWidget.titulo"
+    [subtitulo]="widgetConfig?.data?.descripcionTerminal || widgetConfig?.data?.descripcion || 'Información General'"
+    [icono]="metaWidget.icono" [isEnfoque]="isEnfoque" (clickEnfoque)="accionEnfoque()">
 
-    <!-- CUERPO 100% DINÁMICO (Angular lo inyectará en el <ng-content> de tu shell) -->
+    <div acciones-extra class="d-flex align-items-center gap-2"
+        *ngIf="widgetConfig?.type === 'WDG_PORT_TERMINAL_INDIVIDUAL'">
+
+        <span class="tc-badge badge-danger" *ngIf="widgetConfig?.data?.badgeCount">
+            {{ widgetConfig?.data?.badgeCount }}
+        </span>
+
+        <span class="tc-badge" [ngClass]="widgetConfig?.data?.status === 'warning' ? 'badge-warning' : 'badge-success'">
+            {{ widgetConfig?.data?.status === 'warning' ? 'CONGESTIONADO' : 'OPERATIVO' }}
+        </span>
+
+        <button class="tc-action-btn" (click)="toggleTablaTerminal()" title="Alternar vista">
+            <i class="feather" [ngClass]="mostrarTablaTerminal ? 'icon-bar-chart-2' : 'icon-list'"></i>
+        </button>
+    </div>
+
     <div class="w-100 h-100 position-relative" style="overflow: hidden;">
 
         <ng-container *ngIf="componenteDinamico; else noEncontrado">
-            <ng-container *ngComponentOutlet="componenteDinamico; inputs: { data: widgetConfig?.data }"></ng-container>
+            <ng-container
+                *ngComponentOutlet="componenteDinamico; inputs: { widgetConfig: widgetConfig, isEnfoque: isEnfoque, mostrarTabla: mostrarTablaTerminal }"></ng-container>
         </ng-container>
 
-        <!-- Fallback de desarrollo -->
         <ng-template #noEncontrado>
-            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-50">
+            <div
+                class="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-50 bg-dark rounded border border-secondary">
                 <i class="feather icon-alert-triangle fs-1 mb-2"></i>
                 <small>Falta mapear en WIDGET_MAP:</small>
                 <small class="fw-bold text-danger mt-1">{{ widgetConfig?.type }}</small>
@@ -20,4 +36,24 @@
 
     </div>
 
-</app-widget-shell>
+</app-widget-shell> -->
+<!-- EL SELECTOR YA NO ENVUELVE EN SHELL. Solo inyecta el componente dinámico -->
+<div class="w-100 h-100 position-relative" style="overflow: hidden;">
+
+    <ng-container *ngIf="componenteDinamico; else noEncontrado">
+        <!-- Inyectamos el componente hijo (Terminal, KPI, Gráfica, etc.) -->
+        <ng-container
+            *ngComponentOutlet="componenteDinamico; inputs: { widgetConfig: widgetConfig, isEnfoque: isEnfoque, mostrarTabla: mostrarTablaTerminal }"></ng-container>
+    </ng-container>
+
+    <!-- Fallback por si el tipo de widget no está mapeado -->
+    <ng-template #noEncontrado>
+        <div
+            class="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-50 bg-dark rounded border border-secondary">
+            <i class="feather icon-alert-triangle fs-1 mb-2"></i>
+            <small>Falta mapear en WIDGET_MAP:</small>
+            <small class="fw-bold text-danger mt-1">{{ widgetConfig?.type }}</small>
+        </div>
+    </ng-template>
+
+</div>

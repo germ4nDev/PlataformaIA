@@ -18,7 +18,9 @@ export class ResumenSemanalComponent implements IWidget {
     @Input() data: any;
     @Input() title: string = '';
     @Input() widgetId?: string;
-    public mostrarTabla: boolean = true;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
+
 
     public pestana: 'lista' | 'grafica' = 'lista';
     public listaArribos: any[] = [];

@@ -1,30 +1,28 @@
-<div class="PORTTOS-widget kpi-card d-flex flex-column" [ngClass]="data.colorBorde">
+<app-widget-shell [titulo]="data.titulo || 'Métrica Clave'" [subtitulo]="data.tendencia || 'Calculando tendencia...'"
+    [icono]="'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <ng-container *ngIf="data.cargandoIA">
-        <div class="sk-skeleton-container d-flex flex-column justify-content-center h-100 gap-2">
-            <div class="skeleton-box w-75 sk-kpi-title"></div>
-            <div class="skeleton-box w-50 sk-kpi-value"></div>
-            <div class="skeleton-box w-100 sk-kpi-trend"></div>
-        </div>
-    </ng-container>
+    <!-- 🟢 ESTADO DE CARGA (Skeleton IA o Filtro Activo) -->
+    <div *ngIf="data.cargandoIA || isLoading"
+        class="w-100 h-100 d-flex flex-column justify-content-center align-items-center gap-3">
+        <!-- Recreamos un skeleton centrado que simula la métrica cargando -->
+        <div class="skeleton-box rounded-pill w-25" style="height: 0.75rem; opacity: 0.4;"></div>
+        <div class="skeleton-box rounded w-75" style="height: 4rem; opacity: 0.7;"></div>
+        <div class="skeleton-box rounded-pill w-50" style="height: 0.75rem; opacity: 0.4;"></div>
+    </div>
 
-    <ng-container *ngIf="!data.cargandoIA">
+    <!-- 🟢 ESTADO CARGADO (Valor Gigante Central) -->
+    <div *ngIf="!data.cargandoIA && !isLoading"
+        class="w-100 h-100 d-flex flex-column justify-content-center align-items-center animate__animated animate__fadeIn">
 
-        <div class="kpi-content" [ngClass]="data.colorBorde || ''">
+        <h1 class="kpi-value text-white fw-bold mb-0 text-center" [ngClass]="data.colorBorde || ''">
+            {{ data.valor || '0' }}
+        </h1>
 
-            <div class="kpi-header">
-                <h3 class="kpi-title">{{ data.titulo }}</h3>
-            </div>
+        <!-- Indicador opcional para cuando está en pantalla completa -->
+        <span *ngIf="isEnfoque" class="text-muted text-uppercase mt-2" style="font-size: 0.7rem; letter-spacing: 1px;">
+            KPI Consolidado
+        </span>
 
-            <div class="kpi-body">
-                <h2 class="kpi-value">{{ data.valor }}</h2>
-            </div>
+    </div>
 
-            <div class="kpi-footer">
-                <p class="kpi-trend">{{ data.tendencia }}</p>
-            </div>
-
-        </div>
-    </ng-container>
-
-</div>
+</app-widget-shell>

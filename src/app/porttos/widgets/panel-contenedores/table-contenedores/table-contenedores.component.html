@@ -1,67 +1,64 @@
-<div class="porttos-widget vessel-table-panel w-100 h-100 d-flex flex-column">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="panel-titulo">
-                <i class="icon-ship mr-2" *ngIf="!data.icono"></i>
-                {{ data.titulo || 'Movimientos y Trazabilidad de Contenedores' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Movimientos y Trazabilidad de Contenedores' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'Movimientos y Trazabilidad'"
+    [subtitulo]="widgetConfig?.data?.subtitulo || 'Registro Operativo de Contenedores'"
+    [icono]="widgetConfig?.data?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-success text-uppercase">
+            Operaciones
+        </span>
     </div>
 
-    <div class="panel-body flex-grow-1 d-flex flex-column min-h-0 p-3 pt-0">
-        <div class="table-responsive flex-grow-1 h-100" style="overflow-y: auto;">
+    <!-- CUERPO ÚNICO DEL WIDGET (Tabla con scroll integrado) -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn table-container">
 
-            <table class="porttos-table w-100">
-                <!-- <thead>
-                    <tr class="text-muted font-weight-bold" style="font-size: 0.8rem;">
-                        <th>CONTENEDOR</th>
-                        <th>TIPO</th>
-                        <th>NAVIERA</th>
-                        <th>OPERACIÓN</th>
-                        <th>RUTA</th>
-                        <th>CLIENTE</th>
-                        <th>FREE TIME</th>
-                        <th>ESTADO</th>
-                    </tr>
-                </thead> -->
-                <thead>
-                    <tr class="text-muted font-weight-bold" style="font-size: 0.8rem;">
-                        <th style="width: 14%;">CONTENEDOR</th>
-                        <th style="width: 8%;">TIPO</th>
-                        <th style="width: 12%;">NAVIERA</th>
-                        <th style="width: 15%;">OPERACIÓN</th>
-                        <th style="width: 18%;">RUTA</th>
-                        <th style="width: 12%;">CLIENTE</th>
-                        <th style="width: 9%;">FREE TIME</th>
-                        <th style="width: 12%; text-align: right;">ESTADO</th>
+        <div class="table-responsive h-100">
+            <table class="table table-hover table-borderless align-middle w-100 m-0">
+
+                <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
+                    <tr class="text-muted font-weight-bold text-uppercase"
+                        style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th style="width: 14%;" class="pb-2">Contenedor</th>
+                        <th style="width: 8%;" class="pb-2">Tipo</th>
+                        <th style="width: 12%;" class="pb-2">Naviera</th>
+                        <th style="width: 15%;" class="pb-2">Operación</th>
+                        <th style="width: 18%;" class="pb-2">Ruta</th>
+                        <th style="width: 12%;" class="pb-2">Cliente</th>
+                        <th style="width: 9%;" class="pb-2">Free Time</th>
+                        <th style="width: 12%; text-align: right;" class="pb-2">Estado</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    <tr *ngFor="let m of movimientos" style="font-size: 0.85rem;">
-                        <td class="font-weight-bold text-cyan">{{ m.contenedor }}</td>
-                        <td>{{ m.tipo }}</td>
-                        <td>{{ m.naviera }}</td>
-                        <td>{{ m.operacion }}</td>
-                        <td>{{ m.ruta ? m.ruta.replace('?', '→') : '-' }}</td>
-                        <td>{{ m.cliente }}</td>
-                        <td>{{ m.freeTime }}</td>
-                        <td>
-                            <span class="badge" [ngClass]="getEstadoClase(m.estado)">
+                    <tr *ngFor="let m of movimientos"
+                        style="font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td class="font-weight-bold text-info py-3">{{ m.contenedor }}</td>
+                        <td class="text-white">{{ m.tipo }}</td>
+                        <td class="text-white">{{ m.naviera }}</td>
+                        <td class="text-white">{{ m.operacion }}</td>
+                        <td class="text-muted">{{ m.ruta ? m.ruta.replace('?', '→') : '-' }}</td>
+                        <td class="text-white">{{ m.cliente }}</td>
+                        <td class="text-muted">{{ m.freeTime }}</td>
+                        <td class="text-end">
+                            <span class="badge rounded-pill px-2 py-1 shadow-sm" [ngClass]="getEstadoClase(m.estado)"
+                                style="font-size: 0.65rem; letter-spacing: 0.5px;">
                                 {{ m.estado }}
                             </span>
                         </td>
                     </tr>
+
                     <tr *ngIf="!movimientos || movimientos.length === 0">
-                        <td colspan="8" class="text-center text-muted py-4">No hay movimientos registrados en la base de
-                            datos.</td>
+                        <td colspan="8" class="text-center text-muted py-5">
+                            <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
+                            No hay movimientos registrados en la base de datos.
+                        </td>
                     </tr>
                 </tbody>
+
             </table>
         </div>
+
     </div>
+
+</app-widget-shell>

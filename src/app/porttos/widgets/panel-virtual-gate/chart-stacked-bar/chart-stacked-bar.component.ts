@@ -14,6 +14,7 @@ import { DashboardService } from 'src/app/theme/shared/service/tablero-control/d
 export class ChartStackedBarComponent implements OnInit {
     @Input() title: string = '';
     @Input() widgetId?: string;
+    @Input() isEnfoque: boolean = false;
 
     private _data: any;
     public cargando: boolean = true;

@@ -1,27 +1,50 @@
-<div class="widget-shell-container card h-100 w-100 mb-0 p-0 d-flex flex-column justify-content-between overflow-hidden shadow-sm"
-    [class.borde-kpi]="variante === 'kpi' && colorBordeTop" [style.--color-borde]="colorBordeTop">
+<div class="porttos-widget-shell d-flex flex-column w-100 h-100 position-relative" [class.modo-enfoque]="isEnfoque">
 
-    <!-- 🟢 Delegamos toda la cabecera a tu componente unificado -->
-    <app-widget-header [titulo]="titulo" [subtitulo]="subtitulo" [icono]="icono" [variante]="variante"
-        [widgetId]="widgetId" [data]="data" [isEnfoque]="isEnfoque" (clickEnfoque)="clickEnfoque.emit()">
-        <!-- 👈 El puente emite el evento hacia arriba -->
+    <!-- ==========================================
+         HEADER UNIVERSAL DEL WIDGET
+         ========================================== -->
+    <div class="shell-header d-flex justify-content-between align-items-start w-100">
 
-        <!-- Puente interno: Recibimos [acciones-extra] del widget y se las pasamos al header -->
-        <div acciones-extra>
-            <ng-content select="[acciones-extra]"></ng-content>
+        <!-- Bloque Izquierdo: Título, Subtítulo e Ícono -->
+        <div class="d-flex align-items-center gap-3 overflow-hidden pe-2">
+
+            <!-- Ícono dinámico -->
+            <div class="shell-icon-box d-flex justify-content-center align-items-center rounded-3 flex-shrink-0"
+                *ngIf="icono">
+                <i [class]="icono + ' fs-5 text-muted'"></i>
+            </div>
+
+            <!-- Textos con truncate por si son muy largos -->
+            <div class="d-flex flex-column text-truncate">
+                <h4 class="shell-titulo mb-0 text-white fw-bold text-truncate">{{ titulo }}</h4>
+                <small class="shell-subtitulo text-muted text-uppercase text-truncate">{{ subtitulo }}</small>
+            </div>
         </div>
-    </app-widget-header>
 
-    <hr class="widget-divider m-0" *ngIf="mostrarLinea && !enModoEnfoque" />
+        <!-- Bloque Derecho: Proyección y Botones -->
+        <div class="shell-actions d-flex align-items-center gap-2 flex-shrink-0">
 
-    <!-- 🟢 CUERPO NORMAL (Tablero) -->
-    <div class="widget-body flex-grow-1 position-relative p-3" *ngIf="!enModoEnfoque">
+            <!-- 🟢 AQUÍ ENTRAN LOS BOTONES/BADGES DEL HIJO (ej: Terminal) -->
+            <ng-content select="[acciones-extra]"></ng-content>
+
+            <!-- 🟢 BOTÓN NATIVO DEL SHELL: Maximizar -->
+            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()"
+                [title]="isEnfoque ? 'Cerrar Vista' : 'Expandir Widget'">
+                <i class="feather" [ngClass]="isEnfoque ? 'icon-minimize' : 'icon-maximize'"></i>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- ==========================================
+         CUERPO UNIVERSAL DEL WIDGET
+         ========================================== -->
+    <!-- flex-grow-1 hace que ocupe todo el espacio disponible, y min-height: 0 evita que desborde su contenedor -->
+    <div class="shell-body d-flex flex-column flex-grow-1 position-relative w-100 mt-2"
+        style="min-height: 0; overflow: hidden;">
+
+        <!-- 🟢 AQUÍ ENTRA EL CUERPO DEL HIJO (ej: Grilla de muelles, Tablas, Gráficas) -->
         <ng-content></ng-content>
-    </div>
 
-    <!-- 🟢 CUERPO MAXIMIZADO (Modo Enfoque manejado por el DashboardService) -->
-    <div class="widget-body-enfoque flex-grow-1 d-flex flex-column overflow-auto p-3" *ngIf="enModoEnfoque">
-        <ng-content select="[modo-enfoque]"></ng-content>
     </div>
-
 </div>

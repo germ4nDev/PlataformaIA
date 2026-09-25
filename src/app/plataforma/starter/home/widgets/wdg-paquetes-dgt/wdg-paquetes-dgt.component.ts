@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartType } from 'chart.js';
+import { ChartConfiguration } from 'chart.js';
 import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboard-plataforma.service';
 
 // 🟢 Importamos el contenedor maestro universal
@@ -10,16 +10,16 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-paquetes-dgt',
     standalone: true,
-    imports: [CommonModule, NgChartsModule, WidgetShellComponent], // 🟢 Agregamos el Shell
+    imports: [CommonModule, NgChartsModule, WidgetShellComponent],
     templateUrl: './wdg-paquetes-dgt.component.html',
-    styleUrl: './wdg-paquetes-dgt.component.scss'
+    styleUrls: ['./wdg-paquetes-dgt.component.scss'] // Corregido a styleUrls
 })
 export class WdgPaquetesDgtComponent implements OnInit {
     @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-    // 🟢 Fallback de seguridad
-    @Input() widgetId: string = 'WDG_PLAT_PAQUETES_DGT';
-    @Input() data: any;
+    // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa del selector
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public doughnutChartType: 'doughnut' = 'doughnut';
 
@@ -38,8 +38,8 @@ export class WdgPaquetesDgtComponent implements OnInit {
         maintainAspectRatio: false,
         cutout: '75%',
         plugins: {
-            // 🟢 Ajustamos el color de la leyenda a oscuro (#64748b) para contrastar con el fondo blanco
-            legend: { position: 'bottom', labels: { color: '#64748b', padding: 20, usePointStyle: true } },
+            // 🟢 Ajustado el color a #94a3b8 para que se vea bien en el modo oscuro del Shell
+            legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 20, usePointStyle: true } },
             tooltip: { mode: 'index', intersect: false }
         }
     };
@@ -61,5 +61,15 @@ export class WdgPaquetesDgtComponent implements OnInit {
             },
             error: (err) => console.error('Error al cargar gráfica de paquetes:', err)
         });
+    }
+
+    // 🟢 Función para comunicar el enfoque
+    maximizarDesdeShell() {
+        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+            (this._dashboardService as any).abrirModoEnfoque(
+                this.widgetConfig?.type || 'WDG_PLAT_PAQUETES_DGT',
+                this.doughnutChartData
+            );
+        }
     }
 }

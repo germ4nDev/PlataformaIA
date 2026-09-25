@@ -1,19 +1,28 @@
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Stacked Bar Chart (Refactorizado con Shell)
+*/
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
 
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+
 @Component({
-    selector: 'app-chart-stacked-bar-cont', // 👈 Selector corregido para evitar conflictos
+    selector: 'app-chart-stacked-bar-cont',
     standalone: true,
-    imports: [CommonModule, NgChartsModule],
+    imports: [CommonModule, NgChartsModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './chart-stacked-bar-cont.component.html',
     styleUrls: ['./chart-stacked-bar-cont.component.scss']
 })
 export class ChartStackedBarContComponent implements OnInit {
-    @Input() title: string = '';
-    @Input() widgetId?: string;
+
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     private _data: any;
     public cargando: boolean = true;
@@ -22,25 +31,22 @@ export class ChartStackedBarContComponent implements OnInit {
         this._data = value;
 
         if (value) {
-            this.cargando = false; // Apagamos el loader
+            this.cargando = false;
 
             if (value.series && value.categorias) {
-                // Colores por defecto (Azul, Cyan, Amarillo, Rojo) si el backend no los manda
                 const colors = value.colores || ['#3b82f6', '#22d3ee', '#f59e0b', '#ef4444'];
 
-                // Mapeamos la data al formato de Chart.js
                 this.barChartData = {
                     labels: value.categorias,
                     datasets: value.series.map((serie: any, index: number) => ({
                         label: serie.name || `Serie ${index + 1}`,
                         data: serie.data,
                         backgroundColor: colors[index % colors.length],
-                        stack: 'Stack 0', // Crucial para apilar las barras
+                        stack: 'Stack 0',
                         borderRadius: 2
                     }))
                 };
             } else {
-                // Fallback (Mock) si la API no manda la data completa
                 console.warn('⚠️ Faltan series/categorias en Contenedores, usando Mock.');
                 this.barChartData = {
                     labels: ['Patio A', 'Patio B', 'Patio C'],
@@ -57,17 +63,25 @@ export class ChartStackedBarContComponent implements OnInit {
 
     constructor(private _torreService: DashboardService) { }
 
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    ngOnInit() {
+        // 🟢 Cargamos la data si viene inyectada dentro de la configuración
+        if (this.widgetConfig?.data && !this._data) {
+            this.data = this.widgetConfig.data;
+        }
     }
 
-    // Configuración de Chart.js para barras apiladas
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_STACKED_BAR_CONT', this.data);
+        }
+    }
+
     public barChartOptions: ChartConfiguration['options'] = {
         responsive: true,
         maintainAspectRatio: false,
-        // 💡 TIP: Si quieres que las barras sean HORIZONTALES en vez de verticales,
-        // descomenta la siguiente línea:
-        // indexAxis: 'y',
         scales: {
             x: {
                 stacked: true,
@@ -98,6 +112,4 @@ export class ChartStackedBarContComponent implements OnInit {
     };
 
     public barChartData!: ChartData<'bar'>;
-
-    ngOnInit() { }
 }

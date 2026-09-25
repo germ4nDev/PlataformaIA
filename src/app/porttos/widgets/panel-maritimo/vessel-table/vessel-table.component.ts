@@ -15,6 +15,8 @@ export class VesselTableComponent implements IWidget {
     @Input() title: string = '';
     @Input() config: any = { colspan: 2 };
     @Input() widgetId?: string;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     // 🚨 1. Recibe el modelo directo, sin 'set data' ni lógicas raras.
     @Input() data!: VesselTableModel;

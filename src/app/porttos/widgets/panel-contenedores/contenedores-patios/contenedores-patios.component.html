@@ -1,32 +1,43 @@
-<div class="porttos-widget widget-contenedroes-patios">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-clock mr-1" *ngIf="!data?.icono"></i>
-                {{ data?.titulo || 'Saturación de Patios y Depots' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Saturación de Patios y Depots' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'Saturación de Patios'"
+    [subtitulo]="widgetConfig?.data?.subtitulo || 'Capacidad vs Ocupación'"
+    [icono]="widgetConfig?.data?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-warning text-uppercase">
+            Ocupación
+        </span>
     </div>
 
-    <div class="patios-list">
+    <!-- CUERPO ÚNICO DEL WIDGET (Lista de barras de progreso) -->
+    <div class="patios-list w-100 h-100 overflow-auto pt-2 animate__animated animate__fadeIn pe-2">
+
+        <!-- Mensaje si no hay datos -->
+        <div *ngIf="listadoPatios.length === 0"
+            class="d-flex justify-content-center align-items-center h-100 text-muted small">
+            No hay información de patios disponible.
+        </div>
+
+        <!-- Iteración de patios -->
         <div *ngFor="let patio of listadoPatios" class="mb-3">
-            <div class="d-flex justify-content-between mb-1">
-                <span class="txt-nombre">{{ patio.nombre }}</span>
-                <span class="badge" [ngClass]="getEstadoBadge(patio.estado)">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="text-white fw-medium" style="font-size: 0.8rem;">{{ patio.nombre }}</span>
+                <span class="badge border bg-opacity-10" [ngClass]="getEstadoBadge(patio.estado)"
+                    style="font-size: 0.65rem;">
                     {{ patio.porcentaje }}% - {{ patio.estado }}
                 </span>
             </div>
-            <div class="progress" style="height: 8px; background-color: #334155;">
-                <div class="progress-bar" role="progressbar" [style.width.%]="patio.porcentaje"
-                    [style.background-color]="getColorBarra(patio.porcentaje)" aria-valuenow="patio.porcentaje"
-                    aria-valuemin="0" aria-valuemax="100">
+            <!-- Barra de Progreso -->
+            <div class="progress rounded-pill overflow-hidden shadow-sm"
+                style="height: 6px; background-color: rgba(255,255,255,0.05);">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                    [style.width.%]="patio.porcentaje" [style.background-color]="getColorBarra(patio.porcentaje)"
+                    [attr.aria-valuenow]="patio.porcentaje" aria-valuemin="0" aria-valuemax="100">
                 </div>
             </div>
         </div>
+
     </div>
-</div>
+
+</app-widget-shell>

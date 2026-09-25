@@ -1,0 +1,32 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* 🟢 Permite que Chart.js se renderice correctamente dentro del Flexbox del Shell */
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    padding-top: 0.5rem;
+}
+
+/* 🟢 Estilo unificado para el badge de Operaciones en tono rojo/danger */
+.tc-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.badge-danger {
+        color: #ef4444;
+        border: 1px solid #ef4444;
+        background-color: rgba(239, 68, 68, 0.15);
+    }
+}

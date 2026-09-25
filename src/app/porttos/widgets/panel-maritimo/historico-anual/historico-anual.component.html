@@ -1,19 +1,18 @@
-<div class="PORTTOS-widget widget-historico">
+<app-widget-shell
+    [titulo]="data?.titulo ? '📊 ' + data.titulo + ' ' + (data?.rango || '') : '📊 HISTÓRICO ANUAL 2018-2025'"
+    [subtitulo]="data?.subtitulo || 'Toneladas movilizadas · tendencia de largo plazo'"
+    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="icon-clock" style="margin-right: 6px;"></i> >{{ data?.titulo || '📊 HISTÓRICO ANUAL' }} {{
-                data?.rango || '2018-2025' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Toneladas movilizadas · tendencia de largo plazo' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-cyan text-uppercase">
+            Tendencia
+        </span>
     </div>
-    <div class="panel-body chart-container">
+
+    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor de la Gráfica) -->
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
         <canvas #lineChart></canvas>
     </div>
-</div>
+
+</app-widget-shell>

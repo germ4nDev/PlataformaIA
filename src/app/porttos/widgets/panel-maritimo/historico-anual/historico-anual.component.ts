@@ -1,28 +1,56 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Histórico Anual (Refactorizado con Shell)
+*/
+import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-historico-anual',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './historico-anual.component.html',
-    styleUrl: './historico-anual.component.scss',
+    styleUrls: ['./historico-anual.component.scss'], // Corregido a styleUrls
     encapsulation: ViewEncapsulation.None
 })
-export class HistoricoAnualComponent implements AfterViewInit, OnChanges {
-    @Input() data: any;
-    @Input() widgetId?: string;
-    @Input() config?: any;
+export class HistoricoAnualComponent implements OnInit, AfterViewInit, OnChanges {
+
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
+
+    public data: any;
     @ViewChild('lineChart') lineChart!: ElementRef;
     chartInstance: any;
+
     constructor(private _torreService: DashboardService) { }
 
-    ngAfterViewInit() { this.renderizar(); }
-    ngOnChanges(c: SimpleChanges) { if (c['data'] && !c['data'].firstChange) this.renderizar(); }
+    ngOnInit(): void {
+        // 🟢 Inicializamos la data desde widgetConfig si está disponible
+        if (this.widgetConfig?.data) {
+            this.data = this.widgetConfig.data;
+        }
+    }
+
+    ngAfterViewInit() {
+        this.renderizar();
+    }
+
+    ngOnChanges(c: SimpleChanges) {
+        // 🟢 Reaccionamos a los cambios del widgetConfig que inyecta el selector
+        if (c['widgetConfig'] && !c['widgetConfig'].firstChange) {
+            this.data = this.widgetConfig?.data;
+            this.renderizar();
+        }
+    }
 
     renderizar() {
         if (!this.lineChart) return;
@@ -56,15 +84,27 @@ export class HistoricoAnualComponent implements AfterViewInit, OnChanges {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 }, callback: (v) => v + 'Mt' } }
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#94a3b8', font: { size: 10 } },
+                        border: { display: false }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#94a3b8', font: { size: 10 }, callback: (v) => v + 'Mt' },
+                        border: { display: false }
+                    }
                 }
             }
         });
     }
 
-    maximizar() {
-        // Le pasas tu ID y tu Data al servicio
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_HISTORICO', this.data);
+        }
     }
 }

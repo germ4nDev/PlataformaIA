@@ -12,6 +12,7 @@ import { DashboardService } from 'src/app/theme/shared/service/tablero-control/d
 export class GateValidacionComponent {
     @Input() widgetId!: string;
     @Input() data: any;
+    @Input() isEnfoque: boolean = false;
 
     constructor(private _torreService: DashboardService) { }
 

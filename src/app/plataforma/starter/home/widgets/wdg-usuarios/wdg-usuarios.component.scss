@@ -1,0 +1,29 @@
+/* 🟢 Estilo del badge unificado proyectado al header */
+.tc-badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 50rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.badge-success {
+        color: #10b981;
+        border: 1px solid #10b981;
+        background-color: rgba(16, 185, 129, 0.15);
+    }
+}
+
+/* Evita que los avatares superpuestos en modo oscuro se corten con blanco */
+.border-dark {
+    border-color: #1a1c23 !important;
+    /* Mismo color del fondo del Shell */
+}
+
+/* Tabla transparente para modo oscuro */
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    color: inherit;
+}

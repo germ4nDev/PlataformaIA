@@ -1,3 +1,7 @@
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Reporte ETA vs ATA (Refactorizado con Shell)
+*/
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
@@ -5,29 +9,31 @@ import { ChartConfiguration, ChartData } from 'chart.js';
 import { IWidget } from 'src/app/theme/shared/interfaces/torre-control/widget.interface';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
 
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+
 @Component({
     selector: 'app-eta-chart',
     standalone: true,
-    imports: [CommonModule, NgChartsModule],
+    imports: [CommonModule, NgChartsModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './eta-chart.component.html',
     styleUrls: ['./eta-chart.component.scss']
 })
-export class EtaChartComponent implements IWidget, OnInit {
-    @Input() title: string = '';
-    @Input() widgetId?: string;
+export class EtaChartComponent implements OnInit {
 
-    // 1. Variable privada para almacenar el valor internamente
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
+
     private _data: any;
     public cargando: boolean = true;
 
-    // 2. EL AJUSTE CLAVE: El 'set' intercepta cuando el Padre (Torre de Control)
-    // le inyecta la data al componente. Sin esto, si la data llega tarde,
-    // el gráfico se queda vacío.
+    // Mantenemos tu lógica reactiva del setter
     @Input() set data(value: any) {
         this._data = value;
         if (value && value.labels) {
             this.cargando = false;
-            // Cuando llega la data, actualizamos barChartData inmediatamente
             this.barChartData = {
                 labels: value.labels,
                 datasets: value.datasets
@@ -35,16 +41,27 @@ export class EtaChartComponent implements IWidget, OnInit {
         }
     }
 
-    // Getter necesario para completar el patrón
     get data(): any { return this._data; }
 
     constructor(private _torreService: DashboardService) { }
 
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    ngOnInit() {
+        // 🟢 Aseguramos la carga si la data viene dentro de widgetConfig
+        if (this.widgetConfig?.data && !this._data) {
+            this.data = this.widgetConfig.data;
+        }
     }
 
-    // Configuración visual (El look & feel)
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_ETA_ATA', this.data);
+        }
+    }
+
+    // Configuración visual
     public barChartOptions: ChartConfiguration['options'] = {
         responsive: true,
         maintainAspectRatio: false,
@@ -80,9 +97,4 @@ export class EtaChartComponent implements IWidget, OnInit {
     };
 
     public barChartData!: ChartData<'bar'>;
-
-    ngOnInit() {
-        // El ngOnInit es para inicializaciones iniciales,
-        // pero la reactividad real ocurre en el 'set data' de arriba.
-    }
 }

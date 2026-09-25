@@ -1,31 +1,51 @@
-import { Component, Input, ViewEncapsulation, ElementRef, ViewChild, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Análisis de Tráfico (Refactorizado con Shell)
+*/
+import { Component, Input, ViewEncapsulation, ElementRef, ViewChild, AfterViewInit, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-import Chart from 'chart.js/auto'; // Asegúrate de tener chart.js instalado
+import Chart from 'chart.js/auto';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
     selector: 'app-analisis-trafico',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './analisis-trafico.component.html',
-    styleUrl: './analisis-trafico.component.scss',
+    styleUrls: ['./analisis-trafico.component.scss'], // Corregido a styleUrls
     encapsulation: ViewEncapsulation.None
 })
-export class AnalisisTraficoComponent implements AfterViewInit, OnChanges {
-    @Input() data: any; // Aquí recibimos el JSON que armamos en el backend
-    @Input() widgetId?: string;
+export class AnalisisTraficoComponent implements OnInit, AfterViewInit, OnChanges {
 
-    @ViewChild('trafficChart') trafficChart!: ElementRef;
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
+
+    public data: any; // Mantenemos la variable local para facilidad de uso
     public chartInstance: any;
 
+    @ViewChild('trafficChart') trafficChart!: ElementRef;
+
     constructor(private _torreService: DashboardService) { }
+
+    ngOnInit(): void {
+        if (this.widgetConfig?.data) {
+            this.data = this.widgetConfig.data;
+        }
+    }
 
     ngAfterViewInit() {
         this.renderizarGrafica();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['data'] && !changes['data'].firstChange) {
+        // 🟢 Reaccionamos a los cambios del widgetConfig que inyecta el selector
+        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
+            this.data = this.widgetConfig?.data;
             this.renderizarGrafica();
         }
     }
@@ -33,7 +53,6 @@ export class AnalisisTraficoComponent implements AfterViewInit, OnChanges {
     renderizarGrafica() {
         if (!this.data || !this.data.chartEvolucion || !this.trafficChart) return;
 
-        // Destruir gráfica anterior si existe para evitar superposiciones
         if (this.chartInstance) {
             this.chartInstance.destroy();
         }
@@ -49,23 +68,24 @@ export class AnalisisTraficoComponent implements AfterViewInit, OnChanges {
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { color: '#a0a0a0', usePointStyle: true, boxWidth: 8 }
+                        labels: { color: '#94a3b8', usePointStyle: true, boxWidth: 8, font: { size: 11 } }
                     },
                     tooltip: { mode: 'index', intersect: false }
                 },
                 scales: {
                     x: {
-                        stacked: true, // 🔥 Magia para apilar las barras
-                        grid: { display: false, color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: { color: '#a0a0a0' }
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: { color: '#94a3b8' },
+                        border: { display: false }
                     },
                     y: {
-                        stacked: true, // 🔥 Magia para apilar las barras
+                        stacked: true,
                         grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        border: { display: false },
                         ticks: {
-                            color: '#a0a0a0',
+                            color: '#94a3b8',
                             callback: function (value) {
-                                // Formatear el eje Y para que diga "1M", "500K", etc.
                                 if (Number(value) >= 1000000) return (Number(value) / 1000000) + 'M';
                                 if (Number(value) >= 1000) return (Number(value) / 1000) + 'K';
                                 return value;
@@ -77,7 +97,12 @@ export class AnalisisTraficoComponent implements AfterViewInit, OnChanges {
         });
     }
 
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || 'ANALISIS_TRAFICO', this.data);
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_ANALISIS_TRAFICO', this.data);
+        }
     }
 }

@@ -4,16 +4,20 @@ import { Subscription } from 'rxjs';
 import { SocketManagerService } from 'src/app/theme/shared/service/socket-manager.service';
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 import { PtlSesionesService } from 'src/app/theme/shared/service/ptlsesiones.service';
+import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboard-plataforma.service'; // 🟢 Agregado para el enfoque
 
 @Component({
     selector: 'app-wdg-usuarios',
     standalone: true,
     imports: [CommonModule, WidgetShellComponent],
-    templateUrl: './wdg-usuarios.component.html'
+    templateUrl: './wdg-usuarios.component.html',
+    styleUrls: ['./wdg-usuarios.component.scss'] // 🟢 Asegurado el enlace a los estilos
 })
 export class WdgUsuariosComponent implements OnInit, OnDestroy {
-    @Input() data: any;
-    @Input() widgetId: string = 'WDG_PLAT_USUARIOS_CONECTADOS';
+
+    // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa y el estado de enfoque
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public totalConectados: number = 0;
     public usuariosConectados: Array<any> = [];
@@ -21,15 +25,14 @@ export class WdgUsuariosComponent implements OnInit, OnDestroy {
 
     constructor(
         private _socketManager: SocketManagerService,
-        private _sesionesService: PtlSesionesService, // 🟢 Inyectamos el servicio HTTP
+        private _sesionesService: PtlSesionesService,
+        private _dashboardService: DashboardPlataformaService, // 🟢 Inyectado
         private cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit() {
-        // 🟢 1. Carga Inicial: Pedimos la foto actual por HTTP (Arranque en caliente)
         this.cargarEstadoInicial();
 
-        // 🟢 2. Tiempo Real: Nos suscribimos al canal centralizado para actualizaciones futuras
         this.sub = this._socketManager.sesionesActualizadas$.subscribe((res: any) => {
             if (res && res.sesiones) {
                 this.mapearDatos(res.total, res.sesiones);
@@ -37,11 +40,9 @@ export class WdgUsuariosComponent implements OnInit, OnDestroy {
         });
     }
 
-    // 🟢 Método para traer los datos apenas carga el componente
     private cargarEstadoInicial() {
         this._sesionesService.getSesionesActivas().subscribe({
             next: (res: any) => {
-                // Asumiendo que tu endpoint devuelve un arreglo de sesiones
                 const sesiones = res.data || res.sesiones || res;
                 this.mapearDatos(sesiones.length, sesiones);
             },
@@ -49,7 +50,6 @@ export class WdgUsuariosComponent implements OnInit, OnDestroy {
         });
     }
 
-    // 🟢 Centralizamos el mapeo para no repetir código
     private mapearDatos(total: number, sesionesBD: any[]) {
         this.totalConectados = total;
 
@@ -89,6 +89,16 @@ export class WdgUsuariosComponent implements OnInit, OnDestroy {
             return `${minutos}m`;
         }
         return `${horas}h ${minutos}m`;
+    }
+
+    // 🟢 Función para comunicar el enfoque
+    maximizarDesdeShell() {
+        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+            (this._dashboardService as any).abrirModoEnfoque(
+                this.widgetConfig?.type || 'WDG_PLAT_USUARIOS_CONECTADOS',
+                { conectados: this.usuariosConectados, total: this.totalConectados }
+            );
+        }
     }
 
     ngOnDestroy() {

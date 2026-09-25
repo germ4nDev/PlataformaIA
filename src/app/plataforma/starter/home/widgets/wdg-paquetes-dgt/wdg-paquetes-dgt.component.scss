@@ -1,0 +1,34 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* 🟢 Asegura que el canvas de Chart.js no desborde en el flexbox del Shell */
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    padding-top: 0.5rem;
+}
+
+/* 🟢 Estilo unificado para el badge, usando tono violeta */
+.tc-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.badge-purple {
+        color: #a78bfa;
+        /* Violeta claro */
+        border: 1px solid #8b5cf6;
+        /* Violeta base */
+        background-color: rgba(139, 92, 246, 0.15);
+    }
+}

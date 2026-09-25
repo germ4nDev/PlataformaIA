@@ -17,6 +17,8 @@ import { IWidget } from 'src/app/theme/shared/interfaces/torre-control/widget.in
 export class TerminalCardComponent implements IWidget, OnInit {
     @Input() data: any;
     @Input() title: string = '';
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     ngOnInit(): void {
         // En ngOnInit la data de la factoría ya fue inyectada y mapeada correctamente

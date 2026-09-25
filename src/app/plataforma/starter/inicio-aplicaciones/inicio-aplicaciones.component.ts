@@ -125,11 +125,15 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         const usuSC = this.usuariosSC.find((x: any) => x.codigoUsuario == current.usuario.codigoUsuario);
         const rolesApp = this.roles.filter((x: any) => x.codigoAplicacion == appSeleccionada.codigoAplicacion);
         const usuarioRoles = this.usuariosRoles.filter((x: any) => x.codigoUsuarioSC == usuSC?.codigoUsuarioSC);
+        console.log('============= listado de rolesApp', rolesApp);
 
         // 1. Inicializamos el mapa para los widgets permitidos de ESTA aplicación
         const widgetsPermitidosGlobales = new Map();
         const listaWidgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
+        console.log('============= listado de widgets maestros', listaWidgetsMaestros);
+
         const listaWidgetsRoles = this._widgetsRolesService.getWidgetRolesActuales() || [];
+        console.log('============= listado de widgets roles', listaWidgetsRoles);
 
         usuarioRoles.forEach((usuRole: any) => {
             const role = rolesApp.find((x: any) => x.codigoRole == usuRole.codigoRole);
@@ -151,8 +155,9 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
 
         current.usuario.roles = usuarioRoles;
         current.usuario.widgets = Array.from(widgetsPermitidosGlobales.values());
+        console.log('============= listado de current.usuario.roles', current.usuario.roles);
+        console.log('============= listado de current.usuario.widgets', current.usuario.widgets);
 
-        // 🟢 LIMPIEZA DE LAYOUT: Si el backend envió el JSON viejo como texto, lo convertimos a arreglo nativo
         if (current.usuario.layout && typeof current.usuario.layout === 'string') {
             try {
                 current.usuario.layout = JSON.parse(current.usuario.layout);

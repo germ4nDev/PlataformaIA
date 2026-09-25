@@ -10,15 +10,15 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-paquetes',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent], // 🟢 Actualizamos el import
+    imports: [CommonModule, WidgetShellComponent],
     templateUrl: './wdg-paquetes.component.html',
-    styleUrl: './wdg-paquetes.component.scss'
+    styleUrls: ['./wdg-paquetes.component.scss']
 })
 export class WdgPaquetesComponent implements OnInit, OnDestroy {
-    @Input() data: any;
 
-    // 🟢 Agregamos fallback por seguridad
-    @Input() widgetId: string = 'WDG_PLAT_PAQUETES';
+    // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa y el estado de enfoque
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
 
     public paquetesUnificados: Array<{
         suscriptor: string,
@@ -92,6 +92,16 @@ export class WdgPaquetesComponent implements OnInit, OnDestroy {
             },
             error: (err) => console.error('Error al cargar paquetes por suscriptor:', err)
         });
+    }
+
+    // 🟢 Función para comunicar el enfoque
+    maximizarDesdeShell() {
+        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+            (this._dashboardService as any).abrirModoEnfoque(
+                this.widgetConfig?.type || 'WDG_PLAT_PAQUETES',
+                { paquetes: this.paquetesUnificados }
+            );
+        }
     }
 
     ngOnDestroy() {

@@ -1,29 +1,29 @@
-<div class="porttos-widget widget-stacked-bar-cont">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="porttos-widget-title" style="color: #f8fafc;">
-                <i class="feather icon-clock mr-1" *ngIf="!data?.icono"></i>
-                <i [class]="data?.icono" *ngIf="data?.icono" class="mr-1"></i>
-                {{ data?.titulo || 'RETIROS Y PRIORIZACIÓN' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Retiros y Priorización' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'RETIROS Y PRIORIZACIÓN'"
+    [subtitulo]="widgetConfig?.data?.subtitulo || 'Retiros y Priorización'"
+    [icono]="widgetConfig?.data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador en azul (haciendo juego con tu paleta) -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-primary text-uppercase">
+            Proyecciones
+        </span>
     </div>
 
-    <div class="panel-body flex-grow-1" style="min-height: 250px; position: relative;">
+    <!-- CUERPO ÚNICO DEL WIDGET -->
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
+
         <!-- Loader mientras responde el backend -->
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100"
-            style="position: absolute; top:0; left:0; z-index: 10;">
-            <span style="color: #64748b; font-size: 0.8rem;">Cargando proyecciones...</span>
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top:0; left:0; z-index: 10;">
+            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted" style="font-size: 0.8rem;">Cargando proyecciones...</span>
         </div>
 
-        <!-- Gráfica Chart.js (Se oculta mientras carga) -->
+        <!-- Gráfica Chart.js (Se adapta automáticamente al espacio del Shell) -->
         <canvas *ngIf="!cargando" baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
         </canvas>
+
     </div>
-</div>
+
+</app-widget-shell>

@@ -17,6 +17,8 @@ export class ToneladasChartComponent implements IWidget, OnChanges { // 👈 Cam
     @Input() data: any;
     @Input() title: string = '';
     @Input() widgetId?: string;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     constructor(private _torreService: DashboardService) { }
 

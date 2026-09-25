@@ -1,27 +1,41 @@
-<div class="PORTTOS-widget widget-implicaciones">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="panel-titulo">
-                <i class="feather icon-wind"></i> {{ data.titulo || 'IMPLICACIONES PARA EL CONTROL DE LA OPERACIÓN' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Implicaciones para el control de la operación' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="data.titulo || 'IMPLICACIONES OPERATIVAS'"
+    [subtitulo]="data.subtitulo || 'Impacto en el control de la operación'"
+    [icono]="data.icono || 'feather icon-alert-circle'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-danger text-uppercase">
+            Alertas
+        </span>
     </div>
 
-    <div class="panel-body">
-        <div class="insights-grid">
+    <!-- CUERPO ÚNICO DEL WIDGET (Lista con scroll integrado) -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn custom-scrollbar">
+
+        <div class="insights-grid d-flex flex-column gap-2 pb-2">
+
+            <!-- Estado Vacío por si no hay datos -->
+            <div *ngIf="!data?.insights || data?.insights.length === 0"
+                class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
+                <i class="feather icon-check-circle me-2 text-success"></i> No hay implicaciones u observaciones
+                registradas.
+            </div>
+
+            <!-- Iteración de Implicaciones / Insights -->
             <div class="insight-item" *ngFor="let item of data?.insights">
-                <h4 class="insight-title">
-                    <span class="dot" [ngStyle]="{'background-color': item.color}"></span>
+                <h4 class="insight-title d-flex align-items-center mb-1">
+                    <span class="dot me-2" [ngStyle]="{'background-color': item.color || '#ef4444'}"></span>
                     {{ item.titulo }}
                 </h4>
-                <p class="insight-text">{{ item.descripcion }}</p>
+                <!-- El texto tiene un borde izquierdo dinámico que hace juego con el color del punto -->
+                <p class="insight-text text-muted mb-0 small ps-3 border-start ms-1"
+                    [ngStyle]="{'border-color': item.color || '#ef4444'}">
+                    {{ item.descripcion }}
+                </p>
             </div>
+
         </div>
+
     </div>
-</div>
+
+</app-widget-shell>
