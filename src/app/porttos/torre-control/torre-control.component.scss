@@ -372,3 +372,41 @@ gridster-item {
         background: transparent !important;
     }
 }
+
+/* Contenedor de las pestañas principales (Opcional: agrega una línea base muy sutil) */
+.main-tabs-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--app-navbar-color);
+    padding-bottom: 4px;
+}
+
+.btn-main-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    position: relative;
+    top: 1px;
+
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    min-width: 130px;
+
+    &:hover {
+        color: var(--app-iconos-color);
+        background: var(--app-navbar-color);
+    }
+
+    &.active {
+        color: var(--app-iconos-color);
+        background: var(--app-navbar-color);
+        box-shadow: inset 0 -3px 0 0 #0dc8e9;
+    }
+}

@@ -26,14 +26,6 @@
                 <ul class="tc-toolbar-nav d-flex align-items-center mb-0 list-unstyled gap-2">
 
                     <li class="nav-item">
-                        <button type="button" class="btn-navbar-porttos" [hidden]="isOptionBloqueo"
-                            (click)="$event.stopPropagation(); onBloqueoClick()"
-                            [title]="isBloqueado ? 'Desbloquear Tablero' : 'Bloquear Tablero'">
-                            <i class="feather" [ngClass]="isBloqueado ? 'icon-lock' : 'icon-unlock'"></i>
-                        </button>
-                    </li>
-
-                    <li class="nav-item">
                         <button type="button" class="btn-navbar-porttos" (click)="$event.stopPropagation(); goBack()"
                             title="Menú Principal">
                             <i class="feather icon-home"></i>

@@ -4,10 +4,11 @@
 
 <div class="tc-dashboard-container" style="position: relative;">
     <div class="d-flex justify-content-between align-items-center mb-3 w-100 gap-3">
-        <div class="tc-nav-tabs d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0"
+
+        <div class="main-tabs-wrapper d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0"
             style="scrollbar-width: none;">
-            <!-- 🟢 CAMBIO: Usar pestanasVisibles en lugar de lsPestanas -->
-            <button *ngFor="let pestana of pestanasVisibles" type="button" class="tc-tab-btn m-0"
+
+            <button *ngFor="let pestana of pestanasVisibles" type="button" class="btn-main-tab m-0"
                 [class.active]="pestanaActiva === pestana.codigoPestana"
                 (click)="cambiarPestana(pestana.codigoPestana)">
                 <span class="d-flex align-items-center gap-2">
@@ -15,10 +16,19 @@
                     {{ pestana.nombrePestana }}
                 </span>
             </button>
+
         </div>
 
         <div class="d-flex align-items-center gap-2 flex-shrink-0">
-            <div class="vr bg-secondary mx-2" style="height: 40px; opacity: 0.5;"></div>
+            <!-- <div class="vr bg-secondary mx-2" style="height: 40px; opacity: 0.5;"></div> -->
+
+            <button type="button"
+                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-icon-accion"
+                [hidden]="isOptionBloqueo" style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;"
+                (click)="toggleBloqueoTablero()"
+                [title]="tableroBloqueado ? 'Desbloquear Tablero' : 'Bloquear Tablero'">
+                <i class="feather" [ngClass]="tableroBloqueado ? 'icon-lock' : 'icon-unlock'"></i>
+            </button>
 
             <button type="button"
                 class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-icon-accion"

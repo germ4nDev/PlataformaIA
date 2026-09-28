@@ -85,63 +85,79 @@
 
     </div>
 </div> -->
-<div class="catalogo-container p-4">
+<<div class="plataforma-backdrop-blur" *ngIf="visible" (click)="cerrarModal()">
+    <div class="plataforma-modal-lg p-4" (click)="$event.stopPropagation()">
 
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-start mb-3">
-        <div>
-            <h4 class="text-white fw-bold mb-1">Catálogo de Widgets</h4>
-            <p class="text-muted small mb-0">Personaliza tu tablero seleccionando las métricas que deseas mostrar en
-                esta sección.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary btn-icon rounded-circle"><i
-                    class="feather icon-check-square"></i></button>
-            <button class="btn btn-outline-secondary btn-icon rounded-circle"><i class="feather icon-x"></i></button>
-        </div>
-    </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="titulo-modal">Catálogo de Widgets</h3>
+                <p class="subtitulo-modal">Personaliza tu tablero seleccionando las métricas que deseas mostrar en esta
+                    sección.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn-cerrar-modal" (click)="toggleSeleccionarTodos()"
+                    [title]="todosEstanSeleccionados ? 'Desmarcar todos' : 'Seleccionar todos'">
+                    <i class="feather" [ngClass]="todosEstanSeleccionados ? 'icon-square' : 'icon-check-square'"></i>
+                </button>
 
-    <!-- TABS DE CATEGORÍAS (Reemplaza el agrupador vertical) -->
-    <div class="tabs-scroll-container d-flex gap-2 mb-4 pb-2 border-bottom border-secondary border-opacity-25">
-        <button *ngFor="let cat of categorias" class="btn-categoria" [class.active]="tabActiva === cat"
-            (click)="cambiarTab(cat)">
-            <i class="feather icon-layers me-2"></i> {{ cat }}
-        </button>
-    </div>
-
-    <!-- CUADRÍCULA DE WIDGETS (Solo muestra los de la tab activa) -->
-    <div class="row g-3 overflow-auto" style="max-height: 55vh; overflow-x: hidden;">
-
-        <div class="col-12 col-md-6 col-lg-4" *ngFor="let widget of widgetsFiltrados">
-            <!-- TARJETA WIDGET -->
-            <div class="widget-card p-3 d-flex flex-column justify-content-between h-100"
-                [class.active]="widget.seleccionado" (click)="toggleWidgetCard(widget)">
-
-                <!-- Parte superior: Icono y Subtítulo -->
-                <div class="d-flex align-items-center gap-2 text-muted mb-4">
-                    <div class="icon-sm-box">
-                        <i [class]="widget.icono || 'feather icon-pie-chart'"></i>
-                    </div>
-                    <span style="font-size: 0.75rem; font-weight: 500;">{{ widget.nombreCorto || widget.nombre }}</span>
-                </div>
-
-                <!-- Parte inferior: Título principal, Código y Checkbox -->
-                <div class="d-flex justify-content-between align-items-end">
-                    <div class="d-flex flex-column overflow-hidden pe-2">
-                        <h6 class="text-white fw-bold mb-2 text-truncate" [title]="widget.nombre">{{ widget.nombre }}
-                        </h6>
-                        <!-- Badge del código (Ej: WDG_PORT_GATE_ALERT) -->
-                        <span class="badge-code text-truncate">{{ widget.codigo }}</span>
-                    </div>
-
-                    <!-- Checkbox personalizado -->
-                    <div class="custom-checkbox" [class.checked]="widget.seleccionado">
-                        <i class="feather icon-check" *ngIf="widget.seleccionado"></i>
-                    </div>
-                </div>
-
+                <button type="button" class="btn-cerrar-modal" (click)="cerrarModal()">
+                    <i class="feather icon-x"></i>
+                </button>
             </div>
         </div>
 
+        <div class="widgets-grid-container overflow-auto pe-2" style="max-height: 65vh;">
+
+            <!-- TABS DE CATEGORÍAS -->
+            <div class="tabs-scroll-container d-flex gap-2 mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                <button *ngFor="let cat of categorias" class="btn-categoria" [class.active]="tabActiva === cat"
+                    (click)="cambiarTab(cat)">
+                    <i class="feather icon-layers me-2"></i> {{ cat }}
+                </button>
+            </div>
+
+            <!-- CUADRÍCULA DE WIDGETS -->
+            <div class="row g-3 overflow-auto" style="max-height: 55vh; overflow-x: hidden;">
+                <div class="col-12 col-md-6 col-lg-4" *ngFor="let widget of widgetsFiltrados">
+                    <!-- TARJETA WIDGET -->
+                    <div class="widget-catalog-card" [class.card-active]="widget.activo">
+                        <div class="widget-card-header">
+                            <div class="icon-wrapper">
+                                <i class="feather icon-pie-chart"></i>
+                            </div>
+                            <span class="header-title text-truncate">{{ widget.nombreWidget }}</span>
+                        </div>
+
+                        <div class="card-bg-image"
+                            [ngStyle]="{'background-image': 'url(' + (widget.imagenWidget || 'assets/images/widget-default.png') + ')'}">
+                        </div>
+
+                        <div class="widget-card-overlay">
+                            <div class="widget-footer-content d-flex justify-content-between align-items-center w-100">
+                                <div class="widget-info-text text-truncate pe-2">
+                                    <h6 class="text-white mb-1 text-truncate fw-bold" [title]="widget.nombreWidget">
+                                        {{ widget.nombreWidget }}
+                                    </h6>
+                                    <span class="widget-code-badge">{{ widget.codigoWidget }}</span>
+                                </div>
+
+                                <div class="checkbox-minimalista-wrapper m-0 flex-shrink-0">
+                                    <input class="minimal-checkbox" type="checkbox"
+                                        [id]="'check-' + widget.codigoWidget" [checked]="widget.activo"
+                                        (change)="onCheckboxChange(widget.codigoWidget, $event)">
+                                </div>
+                            </div>
+
+                            <div class="widget-descripcion-expandible">
+                                <p class="desc-texto mt-2 mb-0">
+                                    {{ widget.descripcionWidget || 'Habilita este widget para visualizar sus
+                                    métricas en tu tablero principal.' }}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>

@@ -3,7 +3,7 @@
     Pattern: PORTTOS Orchestrator Component - Multi-Tenant (QPLUS Unified)
     Refactor: Integración de Motor de Layouts Dinámico (Fábricas)
 */
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { GridsterConfig, GridsterItem, GridType, GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
@@ -38,8 +38,12 @@ import { construirLayoutEstatico, construirLayoutMaritimo } from '../../theme/sh
     styleUrls: ['./torre-control.component.scss']
 })
 export class TorreControlComponent implements OnInit, OnDestroy {
+    @Output() toggleBloqueo = new EventEmitter<void>();
+
     public options!: GridsterConfig;
     public dashboard: Array<GridsterItem & { type: string, data: any }> = [];
+    isOptionBloqueo: boolean = false;
+    isBloqueado: boolean = false;
 
     public cargando: boolean = true;
     public tableroBloqueado: boolean = true;
@@ -586,6 +590,11 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
         this.cdr.detectChanges();
         this.persistirEstadoPestanas();
+    }
+
+    onBloqueoClick() {
+        this.isBloqueado = this.isBloqueado == true ? false : true;
+        this.toggleBloqueo.emit();
     }
 
     async persistirEstadoPestanas() {
