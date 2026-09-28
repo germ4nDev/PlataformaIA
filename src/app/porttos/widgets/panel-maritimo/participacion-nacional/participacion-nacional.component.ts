@@ -1,49 +1,67 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Participación Nacional (Refactorizado con Shell)
+*/
+import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-participacion-nacional',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './participacion-nacional.component.html',
-    styleUrl: './participacion-nacional.component.scss',
+    styleUrls: ['./participacion-nacional.component.scss'], // Corregido a styleUrls
     encapsulation: ViewEncapsulation.None
 })
-export class ParticipacionNacionalComponent implements AfterViewInit, OnChanges {
-    @Input() data: any;
-    @Input() widgetId?: string;
+export class ParticipacionNacionalComponent implements OnInit, AfterViewInit, OnChanges {
 
-    @ViewChild('donutChart') donutChart!: ElementRef;
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
 
+    public data: any;
+
+    @ViewChild('donutChart') donutChart!: ElementRef;
     public chartInstance: any;
-    constructor(
-        private _torreService: DashboardService
-    ) { }
+
+    constructor(private _torreService: DashboardService) { }
+
+    ngOnInit(): void {
+        // 🟢 Inicializamos la data desde widgetConfig
+        if (this.widgetConfig?.data) {
+            this.data = this.widgetConfig.data;
+        }
+    }
 
     ngAfterViewInit() {
         this.renderizarGrafica();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['data'] && !changes['data'].firstChange) {
+        // 🟢 Reaccionamos a la data inyectada desde el widgetConfig o directamente
+        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
+            this.data = this.widgetConfig?.data;
+            this.renderizarGrafica();
+        } else if (changes['data'] && !changes['data'].firstChange) {
             this.renderizarGrafica();
         }
     }
 
     renderizarGrafica() {
-        if (!this.donutChart) return;
+        if (!this.donutChart || !this.donutChart.nativeElement) return;
 
         if (this.chartInstance) {
             this.chartInstance.destroy();
         }
 
-        // Si no hay data, usamos un mock visual para que no quede en blanco
         const labels = this.data?.labels || ['TCBUEN', 'SPRBUN', 'AGUADULCE', 'COMPAS', 'OTROS'];
         const valores = this.data?.valores || [35, 30, 20, 10, 5];
 
@@ -53,7 +71,6 @@ export class ParticipacionNacionalComponent implements AfterViewInit, OnChanges 
                 labels: labels,
                 datasets: [{
                     data: valores,
-                    // Paleta de colores idéntica a tu diseño
                     backgroundColor: ['#3b82f6', '#0ea5e9', '#f59e0b', '#ef4444', '#10b981'],
                     borderWidth: 0,
                     hoverOffset: 4
@@ -62,27 +79,25 @@ export class ParticipacionNacionalComponent implements AfterViewInit, OnChanges 
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '45%', // Mantenemos el grosor que te gustó
+                cutout: '45%',
                 plugins: {
                     legend: {
                         display: true,
-                        position: 'bottom', // 🔥 Movemos la leyenda abajo
+                        position: 'bottom',
                         labels: {
-                            color: '#a0a0a0',
+                            color: '#94a3b8', // Color más sutil para texto en modo oscuro
                             usePointStyle: true,
-                            pointStyle: 'rect', // 🔥 Cuadrados en lugar de círculos
-                            padding: 20, // Espacio para que respiren horizontalmente
+                            pointStyle: 'rect',
+                            padding: 20,
                             font: {
                                 size: 10,
-                                weight: 'bold' // Un poco más de peso para que resalten
+                                weight: 'bold'
                             }
                         }
                     },
                     tooltip: {
                         callbacks: {
-                            label: function (context) {
-                                return ` ${context.label}: ${context.raw}%`;
-                            }
+                            label: (context) => ` ${context.label}: ${context.raw}%`
                         }
                     }
                 }
@@ -90,7 +105,12 @@ export class ParticipacionNacionalComponent implements AfterViewInit, OnChanges 
         });
     }
 
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_PARTICIPACION', this.data);
+        }
     }
 }

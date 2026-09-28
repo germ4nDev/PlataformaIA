@@ -10,14 +10,13 @@
         <!-- Textos -->
         <div class="d-flex flex-column justify-content-center">
             <!-- Título -->
-            <h6 class="mb-0 fw-bold text-uppercase text-body"
+            <h6 class="mb-0 fw-bold text-uppercase kpi-shell-title"
                 style="font-size: 0.85rem; letter-spacing: 0.5px; line-height: 1.2;">
                 {{ titulo }}
             </h6>
 
             <!-- Subtítulo (Solo se renderiza si existe) -->
-            <small *ngIf="subtitulo" class="text-muted fw-medium mt-1"
-                style="font-size: 0.68rem; letter-spacing: 0.3px;">
+            <small *ngIf="subtitulo" class="kpi-shell-subtitle" style="font-size: 0.68rem; letter-spacing: 0.3px;">
                 {{ subtitulo }}
             </small>
         </div>

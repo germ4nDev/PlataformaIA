@@ -1,65 +1,50 @@
-<!-- <div class="PORTTOS-widget reportes-operativos">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-wind"></i>{{ data.titulo || 'REPORTES OPERATIVIS' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Reortes Operativos' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
-    </div>
-    <div class="panel-body">
-        <ng-container *ngIf="data?.reportes?.length; else sinReportes">
-            <div *ngFor="let rep of data?.reportes" class="reporte-item" [ngClass]="'border-' + rep.color">
+<app-widget-shell [titulo]="data.titulo || 'REPORTES OPERATIVOS'"
+    [subtitulo]="data.subtitulo || 'Registro de novedades y eventos'" [icono]="data.icono || 'feather icon-file-text'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-                <div class="rep-header">
-                    <p class="rep-titulo">{{ rep.titulo }}</p>
-                    <small class="rep-fecha">{{ rep.fecha }}</small>
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-secondary text-uppercase">
+            Novedades
+        </span>
+    </div>
+
+    <!-- CUERPO ÚNICO DEL WIDGET (Lista de reportes con scroll integrado) -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn custom-scrollbar">
+
+        <div class="d-flex flex-column gap-2 pb-2">
+
+            <!-- Estado Vacío -->
+            <div *ngIf="!data?.reportes || data?.reportes.length === 0"
+                class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
+                <i class="feather icon-check-circle me-2 text-success"></i> No hay reportes operativos recientes.
+            </div>
+
+            <!-- Iteración de Reportes -->
+            <div class="reporte-item d-flex justify-content-between align-items-center shadow-sm"
+                *ngFor="let reporte of data?.reportes"
+                [ngClass]="reporte.tipo_color ? 'border-' + reporte.tipo_color : 'border-secondary'">
+
+                <!-- Contenido (Título y Descripción) -->
+                <div class="reporte-content pe-3">
+                    <h6 class="r-titulo mb-1 text-white fw-bold" style="font-size: 0.85rem;">{{ reporte.titulo }}</h6>
+                    <p class="r-desc text-muted mb-0" style="font-size: 0.75rem; line-height: 1.3;">{{
+                        reporte.descripcion }}</p>
                 </div>
 
-                <p class="rep-desc">{{ rep.descripcion }}</p>
-            </div>
-        </ng-container>
+                <!-- Fecha / Meta -->
+                <div class="reporte-meta text-end" style="min-width: 75px;">
+                    <span
+                        class="badge bg-secondary bg-opacity-25 text-light fw-normal border border-secondary border-opacity-50"
+                        style="font-size: 0.65rem; letter-spacing: 0.3px;">
+                        <i class="feather icon-calendar me-1"></i>{{ reporte.fecha_evento }}
+                    </span>
+                </div>
 
-        <ng-template #sinReportes>
-            <div class="reporte-item text-center">
-                <p class="rep-desc">No hay novedades registradas.</p>
-            </div>
-        </ng-template>
-    </div>
-</div> -->
-
-<div class="PORTTOS-widget reportes-operativos">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-wind"></i>{{ data.titulo || 'REPORTES OPERATIVIS' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Reortes Operativos' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="panel-body">
-
-        <div class="reporte-item" *ngFor="let reporte of data?.reportes" [ngClass]="'border-' + reporte.tipo_color">
-
-            <div class="reporte-content">
-                <h6 class="r-titulo">{{ reporte.titulo }}</h6>
-                <p class="r-desc">{{ reporte.descripcion }}</p>
-            </div>
-
-            <div class="reporte-meta">
-                <span class="r-fecha">{{ reporte.fecha_evento }}</span>
             </div>
 
         </div>
 
     </div>
-</div>
+
+</app-widget-shell>

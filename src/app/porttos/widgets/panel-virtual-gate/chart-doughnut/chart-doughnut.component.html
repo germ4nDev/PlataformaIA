@@ -1,29 +1,29 @@
-<div class="porttos-widget widget-doughnut">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="porttos-widget-title">
-                <i class="feather icon-pie-chart mr-1" *ngIf="!data?.icono"></i>
-                <i [class]="data?.icono" *ngIf="data?.icono" class="mr-1"></i>
-                {{ data?.titulo || '📍 Distribución 10 km' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Distribución 10 km' }}
-            </p>
-        </div>
+<app-widget-shell [titulo]="data?.titulo || '📍 Distribución 10 km'"
+    [subtitulo]="data?.subtitulo || 'Camiones en radio de influencia'" [icono]="data?.icono || 'feather icon-pie-chart'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-primary text-uppercase">
+            Tráfico Terrestre
+        </span>
     </div>
 
-    <div class="panel-body flex-grow-1" style="min-height: 250px; position: relative;">
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100"
-            style="position: absolute; top:0; left:0; z-index: 10;">
-            <span style="color: #64748b; font-size: 0.8rem;">Cargando gráfica...</span>
+    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor flex para la gráfica) -->
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn flex-grow-1 min-h-0">
+
+        <!-- Loader centralizado -->
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top:0; left:0; z-index: 10;">
+            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted" style="font-size: 0.8rem;">Calculando radios...</span>
         </div>
 
-        <canvas *ngIf="!cargando" baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
-            [type]="'doughnut'"></canvas>
+        <!-- Gráfica (Se renderiza solo cuando cargando es false y doughnutChartData existe) -->
+        <canvas *ngIf="!cargando && doughnutChartData" baseChart [data]="doughnutChartData"
+            [options]="doughnutChartOptions" [type]="'doughnut'">
+        </canvas>
+
     </div>
-</div>
+
+</app-widget-shell>

@@ -1,24 +1,38 @@
-<div class="PORTTOS-widget resumen-maritimo-panel">
+<app-widget-shell [titulo]="data?.titulo || 'RESUMEN SEMANAL'"
+    [subtitulo]="data?.subtitulo || 'Resumen Semanal Marítimo'" [icono]="data?.icono || 'feather icon-wind'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-wind"></i>{{ data.titulo || 'RESUMEN SEMANAL' }}</h3>
-            <p class="subtitle">Resúmen Semanal Marítimo</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-primary text-uppercase">
+            Métricas
+        </span>
     </div>
 
-    <div class="panel-body">
-        <div class="resumen-maritimo-grid">
+    <!-- CUERPO ÚNICO DEL WIDGET (Grid flexible con scroll) -->
+    <div
+        class="w-100 h-100 pt-2 animate__animated animate__fadeIn d-flex flex-column overflow-auto custom-scrollbar pe-2">
+
+        <!-- Estado Vacío -->
+        <div *ngIf="!data?.metricas || data?.metricas.length === 0"
+            class="d-flex justify-content-center align-items-center h-100 text-muted small py-3">
+            No hay métricas disponibles en este momento.
+        </div>
+
+        <!-- Grid de Tarjetas -->
+        <div class="resumen-maritimo-grid pb-2" *ngIf="data?.metricas?.length > 0">
             <div class="resumen-maritimo-card" *ngFor="let kpi of data?.metricas">
-                <span class="c-titulo">{{ kpi.label }}</span>
-                <!-- <span class="c-valor">{{ kpi.valor }}</span> -->
-                <span class="c-sub">{{ kpi.tendencia || '--' }}</span>
+                <span class="c-titulo text-uppercase">{{ kpi.label }}</span>
+
+                <!-- 🟢 Descomentado y protegido: Si hay valor, lo muestra con estilo -->
+                <span class="c-valor text-white fw-bold mb-1" *ngIf="kpi.valor">{{ kpi.valor }}</span>
+
+                <span class="c-sub fw-medium" [ngClass]="kpi.claseTendencia || 'text-muted'">
+                    {{ kpi.tendencia || '--' }}
+                </span>
             </div>
         </div>
+
     </div>
-</div>
+
+</app-widget-shell>

@@ -1,0 +1,151 @@
+/* kpi-shell.component.scss */
+
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.kpi-shell-wrapper {
+    /* 1. Fondo idéntico al de las demás tarjetas (Terminales/Gráficas) */
+    background: var(--card-background);
+    /* Color gris oscuro estándar. Si tus tarjetas usan una variable, puedes poner var(--bs-body-bg) */
+
+    /* 2. Borde perimetral estándar (igual al de la terminal COMPAS) */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 8px;
+    /* Mismo radio de las demás tarjetas */
+
+    /* 3. Mantenemos el borde lateral izquierdo dinámico de 4px */
+    border-left-width: 4px !important;
+    border-left-style: solid !important;
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: background 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        background: #2a2e37;
+        /* Efecto hover suave */
+    }
+
+    /* --------------------------------------
+       PALETA DE COLORES PORTTOS (Bordes izquierdos)
+       -------------------------------------- */
+    &.borde-cyan {
+        border-left-color: #0dc8e9 !important;
+    }
+
+    &.borde-amarillo {
+        border-left-color: #eab308 !important;
+    }
+
+    &.borde-naranja {
+        border-left-color: #f97316 !important;
+    }
+
+    &.borde-rojo {
+        border-left-color: #ef4444 !important;
+    }
+
+    &.borde-teal {
+        border-left-color: #14b8a6 !important;
+    }
+
+    &.borde-blue {
+        border-left-color: #3b82f6 !important;
+    }
+
+    &.borde-green {
+        border-left-color: #10b981 !important;
+    }
+
+    &.borde-fucsia {
+        border-left-color: #d946ef !important;
+    }
+
+    &.borde-purple {
+        border-left-color: #8b5cf6 !important;
+    }
+
+    &.borde-indigo {
+        border-left-color: #6366f1 !important;
+    }
+
+    &.borde-gris {
+        border-left-color: #535353 !important;
+    }
+
+    /* Clase de respaldo por si no llega color */
+    &.info {
+        border-left-color: #0dc8e9 !important;
+    }
+}
+
+/* Encabezado adaptado para igualar al de los otros widgets */
+.kpi-shell-header {
+    padding: 0.75rem 1rem;
+    /* Más respiro, igual a la tarjeta Terminal */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    /* Borde sutil inferior */
+
+    .kpi-icon-box {
+        width: 26px;
+        height: 26px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        color: #cbd5e1;
+        font-size: 0.85rem;
+    }
+
+
+}
+
+.kpi-shell-title {
+    font-size: 3.2rem;
+    /* Letra un poco más robusta */
+    font-weight: 700;
+    color: var(--text-color) !important;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+}
+
+.kpi-shell-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-subtitle-color) !important;
+    /* Gris intermedio legible */
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.btn-maximizar-kpi {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    i {
+        font-size: 0.75rem;
+    }
+}
+
+.kpi-shell-body {
+    padding: 0.5rem;
+}
+
+.kpi-shell-footer {
+    padding: 0 0.5rem 0.5rem 0.5rem;
+}

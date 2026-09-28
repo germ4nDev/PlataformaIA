@@ -1,100 +1,46 @@
-<!-- <div class="PORTTOS-widget productividad-chart w-100 h-100 d-flex flex-column">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="panel-title">
-                <i class="feather icon-clock mr-1" *ngIf="!data?.icono"></i>
-                {{ data?.titulo || '🏆 PRODUCTIVIDAD (MOVS/H)' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Programación de Arribos y Atraques' }}</p>
-        </div>
+<app-widget-shell [titulo]="widgetConfig?.data?.titulo || '🏆 PRODUCTIVIDAD (MOVS/H)'"
+    [subtitulo]="widgetConfig?.data?.subtitulo || 'Velocidad de operación por grúa'"
+    [icono]="widgetConfig?.data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
 
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-warning text-uppercase">
+            Rendimiento
+        </span>
     </div>
 
-    <div class="panel-body flex-grow-1" style="min-height: 250px; position: relative;">
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100"
-            style="position: absolute; top:0; left:0; z-index: 10;">
-            <span style="color: #64748b; font-size: 0.8rem;">Cargando curva...</span>
+    <!-- CUERPO ÚNICO DEL WIDGET -->
+    <div class="w-100 h-100 d-flex flex-column animate__animated animate__fadeIn pb-2">
+
+        <!-- Leyenda Personalizada (Alineada arriba, antes de la gráfica) -->
+        <div class="custom-legend d-flex flex-wrap justify-content-center mb-2"
+            [ngClass]="isEnfoque ? 'gap-4 mt-2' : 'gap-3'" *ngIf="!cargando">
+
+            <div class="legend-item d-flex align-items-center gap-1" *ngFor="let item of legendItems">
+                <span class="legend-ring shadow-sm" [style.borderColor]="item.borderColor"></span>
+                <span class="legend-text text-uppercase text-muted"
+                    style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;">
+                    {{ item.label }}
+                </span>
+            </div>
         </div>
 
-        <canvas #productivityCanvas class="w-100 h-100"></canvas>
+        <!-- Contenedor Flex para la Gráfica -->
+        <div class="chart-wrapper flex-grow-1 position-relative min-h-0">
+
+            <!-- Loader nativo estandarizado -->
+            <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+                style="top:0; left:0; z-index: 10;">
+                <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
+                <span class="text-muted" style="font-size: 0.8rem;">Cargando curva...</span>
+            </div>
+
+            <!-- Gráfica Chart.js -->
+            <canvas #productivityCanvas class="w-100 h-100" [ngClass]="{'opacity-0': cargando}"></canvas>
+
+        </div>
+
     </div>
 
-</div>
- -->
-
-<!-- <div class="PORTTOS-widget productividad-chart w-100 h-100 d-flex flex-column">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="panel-title">
-                <i class="feather icon-clock mr-1" *ngIf="!_data?.icono"></i>
-                {{ _data?.titulo || '🏆 PRODUCTIVIDAD (MOVS/H)' }}
-            </h3>
-            <p class="subtitle">{{ _data?.subtitulo || 'Programación de Arribos y Atraques' }}</p>
-        </div>
-
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="custom-legend d-flex flex-wrap justify-content-center gap-3 px-3 pb-2 pt-1"
-        *ngIf="legendItems?.length && !cargando">
-        <div class="legend-item d-flex align-items-center gap-2" *ngFor="let item of legendItems">
-            <span class="legend-ring" [style.borderColor]="item.borderColor"></span>
-            <span class="legend-text text-uppercase">{{ item.label }}</span>
-        </div>
-    </div>
-
-    <div class="panel-body flex-grow-1" style="min-height: 200px; position: relative;">
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100"
-            style="position: absolute; top:0; left:0; z-index: 10;">
-            <span style="color: #64748b; font-size: 0.8rem;">Cargando curva...</span>
-        </div>
-
-        <canvas #productivityCanvas class="w-100 h-100" [ngClass]="{'d-none': cargando}"></canvas>
-    </div>
-</div> -->
-
-<div class="PORTTOS-widget productividad-chart" [ngClass]="{'modo-expandido': esModal, 'modo-compacto': !esModal}">
-
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-clock mr-1" *ngIf="!_data?.icono"></i>
-                {{ _data?.titulo || '🏆 PRODUCTIVIDAD (MOVS/H)' }}
-            </h3>
-            <p class="subtitle">{{ _data?.subtitulo || 'Programación de Arribos y Atraques' }}</p>
-        </div>
-
-        <div class="header-actions-container" *ngIf="!esModal">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="custom-legend d-flex flex-wrap justify-content-center" [ngClass]="esModal ? 'gap-3' : 'gap-2'"
-        *ngIf="!cargando">
-        <div class="legend-item d-flex align-items-center gap-1" *ngFor="let item of legendItems">
-            <span class="legend-ring" [style.borderColor]="item.borderColor"></span>
-            <span class="legend-text text-uppercase">{{ item.label }}</span>
-        </div>
-    </div>
-
-    <div class="panel-body">
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100"
-            style="position: absolute; top:0; left:0; z-index: 10;">
-            <span style="color: #64748b; font-size: 0.8rem;">Cargando curva...</span>
-        </div>
-        <div class="chart-container">
-
-            <canvas #productivityCanvas class="w-100 h-100" [ngClass]="{'d-none': cargando}"></canvas>
-        </div>
-    </div>
-</div>
+</app-widget-shell>

@@ -1,60 +1,69 @@
-<div class="PORTTOS-widget vessel-table-panel w-100 h-100 d-flex flex-column">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="panel-titulo">
-                <i class="icon-ship mr-2" *ngIf="!data.icono"></i>
-                {{ data.titulo || 'REPORTE DE MOTONAVES · 72H' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Programación de arribos y atraques' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="data.titulo || 'REPORTE DE MOTONAVES · 72H'"
+    [subtitulo]="data.subtitulo || 'Programación de arribos y atraques'" [icono]="data.icono || 'feather icon-anchor'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase">
+            Programación
+        </span>
     </div>
 
-    <div class="panel-body flex-grow-1 d-flex flex-column min-h-0 p-3 pt-0">
-        <div class="table-responsive flex-grow-1 h-100" style="overflow-y: auto;">
+    <!-- CUERPO ÚNICO DEL WIDGET (Tabla con scroll integrado) -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn table-container">
 
-            <table class="PORTTOS-table w-100">
-                <thead>
-                    <tr>
-                        <th>MOTONAVE</th>
-                        <th>NAVIERA</th>
-                        <th>TERMINAL</th>
-                        <th>ETA</th>
-                        <th>ATA / ATRAQUE</th>
-                        <th>CARGA</th>
-                        <th>ESTADO</th>
+        <div class="table-responsive h-100">
+            <table class="table table-hover table-borderless align-middle w-100 m-0">
+
+                <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
+                    <tr class="text-muted font-weight-bold text-uppercase"
+                        style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th class="pb-2">Motonave</th>
+                        <th class="pb-2">Naviera</th>
+                        <th class="pb-2">Terminal</th>
+                        <th class="pb-2">ETA</th>
+                        <th class="pb-2">ATA / Atraque</th>
+                        <th class="pb-2">Carga</th>
+                        <th class="pb-2 text-center">Estado</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    <tr *ngFor="let nave of data.motonaves">
-                        <td>{{ nave.motonave }}</td>
-                        <td>{{ nave.naviera }}</td>
-                        <td>{{ nave.terminal }}</td>
+                    <tr *ngFor="let nave of data.motonaves"
+                        style="font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
 
-                        <td>{{ nave.eta || '--' }}</td>
-                        <td>{{ nave.fechaAtraque || '--' }}</td>
+                        <td class="font-weight-bold text-white py-3">{{ nave.motonave }}</td>
+                        <td class="text-muted">{{ nave.naviera }}</td>
+                        <td class="text-light-grey">{{ nave.terminal }}</td>
 
-                        <td>{{ nave.carga }}</td>
+                        <!-- Fechas con color para rápido escaneo visual -->
+                        <td class="text-info">{{ nave.eta || '--' }}</td>
+                        <td class="text-success">{{ nave.fechaAtraque || '--' }}</td>
 
-                        <td>
-                            <span class="status-pill" [ngClass]="nave.estadoClase">
+                        <td class="text-muted">{{ nave.carga }}</td>
+
+                        <!-- Columna: Estado (Soporta clases como 'bg-success', 'bg-warning' enviadas desde backend) -->
+                        <td class="text-center">
+                            <span class="badge rounded-pill px-2 py-1 shadow-sm border"
+                                [ngClass]="nave.estadoClase || 'bg-secondary bg-opacity-25 text-light border-secondary'"
+                                style="font-size: 0.65rem; letter-spacing: 0.5px;">
                                 {{ nave.estadoTexto }}
                             </span>
                         </td>
                     </tr>
 
+                    <!-- Estado Vacío -->
                     <tr *ngIf="!data.motonaves || data.motonaves.length === 0">
-                        <td colspan="7" class="text-center py-4 empty-row text-gray-500">
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
                             Sin motonaves programadas en las próximas 72h para este puerto.
                         </td>
                     </tr>
                 </tbody>
-            </table>
 
+            </table>
         </div>
+
     </div>
-</div>
+
+</app-widget-shell>

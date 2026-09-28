@@ -1,169 +1,40 @@
-// import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { Chart, registerables } from 'chart.js';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-// import { ThemeService } from 'src/app/theme/shared/service';
-
-// Chart.register(...registerables);
-
-// @Component({
-//     selector: 'app-mezcla-carga',
-//     standalone: true,
-//     imports: [CommonModule],
-//     templateUrl: './mezcla-carga.component.html',
-//     styleUrl: './mezcla-carga.component.scss',
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges {
-//     @Input() data: any;
-
-//     // 🔥 Agrega estas dos líneas para satisfacer al motor dinámico de PORTTOS
-//     @Input() widgetId?: string;
-//     @Input() config?: any;
-
-//     @ViewChild('barChart') barChart!: ElementRef;
-//     private subs: any[] = [];
-//     public chartInstance: any;
-//     textoColor: string = '';
-//     subtitleColor: string = '';
-//     borderColor: string = '';
-
-//     constructor(
-//         private _torreService: DashboardService,
-//         private _themeService: ThemeService
-//     ) { }
-
-
-//     ngAfterViewInit() {
-//         this.renderizarGrafica();
-//     }
-
-//     ngOnInit(): void {
-//         // Si ya tienes data inicial, renderiza de una vez
-//         if (this.data) {
-//             this.renderizarGrafica();
-//         }
-
-//         this.subs.push(
-//             this._themeService.isDarkTheme$.subscribe(() => {
-//                 console.log("La torre avisó: Refrescando gráfica...");
-//                 this.renderizarGrafica();
-//             })
-//         );
-//     }
-
-//     ngOnChanges(changes: SimpleChanges) {
-//         // Si la data cambia, vuelve a renderizar
-//         if (changes['data'] && !changes['data'].isFirstChange()) {
-//             this.renderizarGrafica();
-//         }
-//     }
-
-//     renderizarGrafica() {
-
-//         if (!this.barChart) return;
-
-//         if (this.chartInstance) {
-//             this.chartInstance.destroy();
-//         }
-
-//         const colorTexto = this.getCssVariableValue('--text-color') || '#ffffff';
-//         const colorSubtitulo = this.getCssVariableValue('--text-subtitle-color') || '#a0a0a0';
-//         const colorGrid = this.getCssVariableValue('--border-color') || 'rgba(255,255,255,0.1)';
-
-//         // Datos por defecto si el backend no ha respondido aún
-//         const labels = this.data?.labels || ['Contenedores', 'Granel sólido', 'General/vehíc.', 'Granel líquido', 'Carbón'];
-//         const valores = this.data?.valores || [13.5, 5.8, 1.8, 0.8, 0.6];
-//         const colores = ['#3b82f6', '#10b981', '#fab131', '#06b6d4', '#8c6e5c'];
-
-//         this.chartInstance = new Chart(this.barChart.nativeElement, {
-//             type: 'bar',
-//             data: {
-//                 labels: labels,
-//                 datasets: [{
-//                     data: valores,
-//                     backgroundColor: colores,
-//                     borderWidth: 0,
-//                     borderRadius: 2,
-//                     barThickness: 20
-//                 }]
-//             },
-//             options: {
-//                 indexAxis: 'y',
-//                 responsive: true,
-//                 maintainAspectRatio: false,
-//                 plugins: {
-//                     legend: { display: false },
-//                     tooltip: {
-//                         callbacks: {
-//                             label: (context) => ` ${context.raw} Mt`
-//                         }
-//                     }
-//                 },
-//                 scales: {
-//                     x: {
-//                         grid: { color: 'rgba(255, 255, 255, 0.05)' },
-//                         ticks: {
-//                             color: colorSubtitulo,
-//                             font: { size: 10 },
-//                             callback: function (value) {
-//                                 return value + 'Mt';
-//                             }
-//                         }
-//                     },
-//                     y: {
-//                         grid: { display: false },
-//                         ticks: {
-//                             color: colorTexto,
-//                             font: { size: 11, weight: 'bold' }
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     }
-
-//     private getCssVariableValue(variableName: string): string {
-//         // Busca el valor en el elemento raíz (:root)
-//         return getComputedStyle(document.documentElement)
-//             .getPropertyValue(variableName)
-//             .trim();
-//     }
-
-//     maximizar() {
-//         this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
-//     }
-// }
-
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Mezcla de Carga (Refactorizado con Shell)
+*/
 import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
 import { LocalStorageService, ThemeService } from 'src/app/theme/shared/service';
-import { Subscription } from 'rxjs'; // 🔥 Importación necesaria
+import { Subscription } from 'rxjs';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-mezcla-carga',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './mezcla-carga.component.html',
-    styleUrl: './mezcla-carga.component.scss',
+    styleUrls: ['./mezcla-carga.component.scss'], // Corregido a styleUrls
     encapsulation: ViewEncapsulation.None
 })
 export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
-    @Input() data: any;
-    @Input() widgetId?: string;
-    @Input() config?: any;
+
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
 
+    public data: any;
     @ViewChild('barChart') barChart!: ElementRef;
 
-    private themeSub: Subscription = new Subscription(); // 🔥 Gestión de suscripciones
+    private themeSub: Subscription = new Subscription();
     public chartInstance: any;
-    themeSettings: any;
+    public themeSettings: any;
 
     constructor(
         private _torreService: DashboardService,
@@ -172,12 +43,16 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
     ) { }
 
     ngOnInit(): void {
-        // 🔥 Suscripción centralizada al cambio de tema
-        this.themeSettings = this._localStorageService.getThemeSettings();
-        console.log('theme settings', this.themeSettings);
+        // 🟢 Extraemos la data desde la configuración dinámica
+        if (this.widgetConfig?.data) {
+            this.data = this.widgetConfig.data;
+        }
 
+        this.themeSettings = this._localStorageService.getThemeSettings();
+
+        // Suscripción centralizada al cambio de tema
         this.themeSub = this._themeService.isDarkTheme$.subscribe(() => {
-            console.log("Detectado cambio de tema, refrescando gráfica...");
+            this.themeSettings = this._localStorageService.getThemeSettings(); // Actualizamos variables
             this.renderizarGrafica();
         });
     }
@@ -187,18 +62,19 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // Si la data cambia, vuelve a renderizar
-        if (changes['data'] && !changes['data'].isFirstChange()) {
+        // 🟢 Reaccionamos a la data inyectada desde el widgetConfig
+        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
+            this.data = this.widgetConfig?.data;
+            this.renderizarGrafica();
+        } else if (changes['data'] && !changes['data'].firstChange) {
             this.renderizarGrafica();
         }
     }
 
     ngOnDestroy(): void {
-        // 🔥 IMPORTANTE: Evita fugas de memoria limpiando la suscripción
         if (this.themeSub) {
             this.themeSub.unsubscribe();
         }
-        // Destruye el gráfico para liberar memoria
         if (this.chartInstance) {
             this.chartInstance.destroy();
         }
@@ -211,15 +87,14 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
             this.chartInstance.destroy();
         }
 
-        // 🔥 LEEMOS EL VALOR DEL CSS EN EL MOMENTO DEL RENDER
         let colorTexto = '#ffffff';
         let colorSubtitulo = '#a0a0a0';
         let colorGrid = 'rgba(255,255,255,0.1)';
 
-        if (this.themeSettings.isDarkTheme == true) {
+        if (this.themeSettings?.isDarkTheme) {
             colorTexto = '#b4b4b4';
             colorSubtitulo = '#9c9c9c';
-            colorGrid = '#6e6e6e';
+            colorGrid = 'rgba(255,255,255,0.05)'; // 🟢 Ajustado a un color más sutil
         } else {
             colorTexto = '#212529';
             colorSubtitulo = '#464e57';
@@ -239,7 +114,7 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
                     backgroundColor: colores,
                     borderWidth: 0,
                     borderRadius: 2,
-                    barThickness: 30
+                    barThickness: 24 // 🟢 Un poco más finas para estilizar
                 }]
             },
             options: {
@@ -257,6 +132,7 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
                 scales: {
                     x: {
                         grid: { color: colorGrid },
+                        border: { display: false }, // 🟢 Oculta la línea del eje
                         ticks: {
                             color: colorSubtitulo,
                             font: { size: 10 },
@@ -265,6 +141,7 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
                     },
                     y: {
                         grid: { display: false },
+                        border: { display: false }, // 🟢 Oculta la línea del eje
                         ticks: {
                             color: colorTexto,
                             font: { size: 11, weight: 'bold' }
@@ -275,13 +152,12 @@ export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, O
         });
     }
 
-    private getCssVariableValue(variableName: string): string {
-        return getComputedStyle(document.documentElement)
-            .getPropertyValue(variableName)
-            .trim();
-    }
-
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_MEZCLA_CARGA', this.data);
+        }
     }
 }

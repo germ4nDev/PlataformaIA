@@ -1,0 +1,393 @@
+/* ==========================================================================
+   1. CONTENEDOR GENERAL Y LAYOUT
+   ========================================================================== */
+:host {
+    display: block;
+    height: 100%;
+}
+
+body,
+html {
+    background-color: var(--tablero-background) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.layout-wrapper {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: auto;
+}
+
+.content-area {
+    height: calc(100vh - 77px);
+    min-height: 0;
+    overflow-y: hidden;
+    padding: 0rem 0.8rem 0.8rem 0.8rem;
+
+
+}
+
+// .content-scroll-wrapper {
+//     margin-bottom: 18px !important;
+// }
+
+/* ==========================================================================
+   2. TABLERO DE CONTROL Y GRIDSTER
+   ========================================================================== */
+.tc-dashboard-container {
+    background-color: var(--card-background) !important;
+    height: calc(100vh - var(--navbar-height, 120px));
+    display: flex;
+    flex-direction: column;
+    //padding: 0 12px 12px 12px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.gridster {
+    background-color: var(--card-background);
+    padding: 0;
+    height: 100% !important;
+    width: 100% !important;
+
+    /* 🟢 Ocultar scrollbar específicamente en Gridster */
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+
+    &::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+    }
+}
+
+::ng-deep gridster {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+
+    &::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+    }
+}
+
+:host ::ng-deep gridster-item {
+    background-color: transparent !important;
+    border-radius: 10px;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
+    padding: 0;
+
+    // 🟢 Inyecta la sombra base dinámica
+    box-shadow: var(--widget-shadow-base) !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease !important;
+
+    .gridster-item-inner {
+        height: 100%;
+        width: 100%;
+        padding: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        // 🟢 Inyecta el hover dinámico dependiente del tema
+        box-shadow: var(--widget-shadow-hover) !important;
+        border-color: var(--widget-border-hover) !important;
+        z-index: 10 !important;
+
+        .gridster-item-inner {
+            transform: translateY(-4px);
+        }
+    }
+}
+
+// gridster-item {
+//     background-color: transparent !important;
+//     border-radius: 10px;
+//     overflow: hidden;
+//     border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
+//     padding: 0;
+//     box-shadow: 0 1px 10px rgba(78, 78, 78, 0.25);
+//     transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+
+//     .gridster-item-inner {
+//         height: 100%;
+//         width: 100%;
+//         padding: 8px;
+//     }
+
+//     &:hover {
+//         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+
+//         z-index: 10 !important;
+
+//         // (Opcional) Una micro-elevación hacia arriba para dar el efecto de que la tarjeta se acerca
+//         transform: translateY(-2px);
+//     }
+// }
+// gridster-item {
+//     background-color: transparent !important;
+//     border-radius: 10px;
+//     overflow: hidden;
+//     border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
+//     padding: 0;
+
+//     // 🟢 Sombra base ultra sutil (bajada al 4% de opacidad)
+//     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+//     transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+
+//     .gridster-item-inner {
+//         height: 100%;
+//         width: 100%;
+//         padding: 8px;
+//     }
+
+//     &:hover {
+//         // 🟢 La sombra se expande y oscurece ligeramente (al 8%) al elevarse
+//         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+//         z-index: 10 !important;
+//         transform: translateY(-2px);
+//     }
+// }
+
+.tablero-bloqueado gridster-item {
+    cursor: default !important;
+
+    &:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-color: var(--border-color, rgba(255, 255, 255, 0.05));
+    }
+}
+
+/* ==========================================================================
+   3. NAVEGACIÓN POR PESTAÑAS (Modern Chips)
+   ========================================================================== */
+.tc-nav-tabs {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .tc-tab-btn {
+        // display: inline-flex;
+        // flex: 1 1 0px;
+        // padding: 10px 15px;
+        // background-color: var(--widget-bg, rgba(255, 255, 255, 0.02));
+        // border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+        // border-radius: 10px;
+        // color: var(--text-color, #ffffff);
+        // font-weight: 600;
+        // font-size: 0.9rem;
+        // cursor: pointer;
+        // white-space: nowrap;
+        // transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        // flex-shrink: 0;
+
+        // .icon {
+        //     font-size: 1.1rem;
+        //     transition: transform 0.2s ease;
+        // }
+
+        // &:hover {
+        //     transform: translateY(-2px);
+        //     border-color: color-mix(in srgb, var(--app-navbar-color, #0ea5e9) 50%, var(--border-color));
+        //     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        // }
+
+        // &.active {
+        //     background-color: var(--app-navbar-color, #0ea5e9);
+        //     border-color: var(--app-navbar-color, #0ea5e9);
+        //     color: var(--app-texto-color, #ffffff);
+        //     box-shadow: 0 4px 15px color-mix(in srgb, var(--app-navbar-color, #0ea5e9) 40%, transparent);
+
+        //     .icon {
+        //         transform: scale(1.15);
+        //     }
+        // }
+
+        display: inline-flex;
+        flex: 1 1 0px;
+        justify-content: center;
+        min-width: 160px;
+        align-items: center;
+        gap: 8px;
+        background-color: var(--app-btn-inactive) !important;
+        color: var(--app-btn-secondary-texto) !important;
+        border: 1px solid var(--app-navbar-color) !important;
+        border-radius: 10px !important;
+        transition: all 0.6s ease !important;
+        height: 38px !important;
+        padding: 0 20px !important;
+        white-space: nowrap !important;
+        margin-left: 0.5rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        flex-shrink: 0;
+
+
+        &:hover {
+            background-color: var(--app-navbar-color) !important;
+            color: var(--app-iconos-color) !important;
+            cursor: pointer;
+        }
+
+        &:active {
+            transform: scale(0.95) !important;
+        }
+    }
+}
+
+/* ==========================================================================
+   4. MODAL DE ENFOQUE Y BACKDROP
+   ========================================================================== */
+.plataforma-backdrop-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.plataforma-modal-lg {
+    width: 90%;
+    height: 85vh;
+    background: var(--card-background, #1e293b);
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+
+    >* {
+        flex: 1 1 0%;
+        min-height: 0;
+        width: 100%;
+    }
+}
+
+.btn-cerrar-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   5. UTILIDADES (Cargadores y Fantasmas)
+   ========================================================================== */
+.cargador-flotante {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+
+    .cargador-contenido {
+        text-align: center;
+
+        .spinner-plataforma {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(6, 182, 212, 0.3);
+            border-top-color: #06b6d4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+    }
+}
+
+.plataforma-fantasma {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.modal-enfoque-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 15, 20, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+
+    /* 🟢 Centrado absoluto del contenido */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal-enfoque-content {
+        width: 85%;
+        /* Ancho del widget expandido */
+        max-width: 1400px;
+
+        app-widget-selector {
+            display: block;
+            width: 100%;
+            height: 85vh;
+            /* Alto del widget expandido */
+            background: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-color);
+        }
+    }
+}
+
+.btn-accion-dashboard {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: color-mix(in srgb, var(--texto-color) 4%, transparent);
+    border: 1px solid color-mix(in srgb, var(--texto-color) 8%, transparent);
+    border-radius: 8px;
+    color: var(--text-color, #ffffff);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--texto-color) 8%, transparent);
+        border-color: color-mix(in srgb, var(--app-navbar-color, #0ea5e9) 50%, transparent);
+        color: #ffffff;
+    }
+}

@@ -51,11 +51,13 @@ export class PtltiposWidgetService {
         console.log('Consultando y ordenando tiposWidget del servidor...')
         const url = `${base_url}/tipos-widget`
         return this.http.get(url).pipe(
-            map((resp: any) => resp.tiposWidget as PTLPestanaModel[]),
-            map((tiposWidget: PTLPestanaModel[]) => {
+            map((resp: any) => resp.respuesta as PTLPestanaModel[]),
+            map((tiposWidget: PTLTipoWidgetModel[]) => {
                 return tiposWidget.sort((a: any, b: any) => a.nombreTipo.localeCompare(b.nombreTipo))
             }),
             tap(tiposWidgetOrdenadas => {
+                console.log('***************tipos de widget', tiposWidgetOrdenadas);
+
                 this._tiposWidget.next(tiposWidgetOrdenadas)
             })
         )

@@ -1,4 +1,3 @@
-export * from 'src/app/porttos/widgets/panel-maritimo/kpi-card/kpi-card.component';
 export * from 'src/app/porttos/widgets/panel-maritimo/vessel-table/vessel-table.component';
 export * from 'src/app/porttos/widgets/panel-maritimo/eta-chart/eta-chart.component';
 export * from 'src/app/porttos/widgets/panel-maritimo/toneladas-chart/toneladas-chart.component';
@@ -17,6 +16,8 @@ export * from 'src/app/porttos/widgets/panel-maritimo/tipo-operacion/tipo-operac
 export * from 'src/app/porttos/widgets/panel-maritimo/matriz-carga/matriz-carga.component';
 export * from 'src/app/porttos/widgets/panel-maritimo/historico-anual/historico-anual.component';
 export * from 'src/app/porttos/widgets/panel-maritimo/implicaciones-operativas/implicaciones-operativas.component';
+export * from 'src/app/porttos/widgets/panel-maritimo/kpi-card-tcl/kpi-card-tcl.component';
+
 export * from 'src/app/porttos/widgets/mapa-logistico/mapa-logistico.component';
 
 export * from 'src/app/porttos/widgets/panel-contenedores/chart-bar-cont/chart-bar-cont.component';

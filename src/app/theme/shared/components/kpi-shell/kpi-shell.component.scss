@@ -1,0 +1,157 @@
+/* kpi-shell.component.scss */
+
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.kpi-shell-wrapper {
+    background-color: var(--widget-bg, #1a1c23);
+    /* Fondo oscuro general */
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    /* Mismo radio de las demás tarjetas */
+
+    /* 3. Mantenemos el borde lateral izquierdo dinámico de 4px */
+    border-top-width: 4px !important;
+    border-top-style: solid !important;
+
+    /* Efecto hover suave al pasar el mouse por la tarjeta */
+    &:not(.modo-enfoque):hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Si está maximizado, le quitamos bordes redondeados y le damos más aire */
+    &.modo-enfoque {
+        border-radius: 0;
+        border: none;
+        padding: 24px;
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    /* --------------------------------------
+       PALETA DE COLORES PORTTOS (Bordes Superiores)
+       -------------------------------------- */
+    &.borde-cyan {
+        border-top-color: #0dc8e9 !important;
+    }
+
+    &.borde-amarillo {
+        border-top-color: #eab308 !important;
+    }
+
+    &.borde-naranja {
+        border-top-color: #f97316 !important;
+    }
+
+    &.borde-rojo {
+        border-top-color: #ef4444 !important;
+    }
+
+    &.borde-teal {
+        border-top-color: #14b8a6 !important;
+    }
+
+    &.borde-blue {
+        border-top-color: #3b82f6 !important;
+    }
+
+    &.borde-green {
+        border-top-color: #10b981 !important;
+    }
+
+    &.borde-fucsia {
+        border-top-color: #d946ef !important;
+    }
+
+    &.borde-purple {
+        border-top-color: #8b5cf6 !important;
+    }
+
+    &.borde-indigo {
+        border-top-color: #6366f1 !important;
+    }
+
+    &.borde-gris {
+        border-top-color: #535353 !important;
+    }
+
+    &.info {
+        border-top-color: #0dc8e9 !important;
+    }
+}
+
+/* Encabezado adaptado para igualar al de los otros widgets */
+.kpi-shell-header {
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    /* Borde sutil inferior */
+
+    .kpi-icon-box {
+        width: 26px;
+        height: 26px;
+        background: var(--widget-bg);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+        border-radius: 6px;
+        color: var(--text-color);
+        font-size: 0.85rem;
+    }
+
+
+}
+
+.btn-maximizar-kpi {
+    background: transparent;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subtitle-color);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: var(--widget-bg);
+        color: var(--text-color);
+    }
+
+    i {
+        font-size: 0.75rem;
+    }
+}
+
+.kpi-shell-title {
+    font-size: 0.8rem;
+    /* Letra un poco más robusta */
+    font-weight: 700;
+    color: var(--text-color) !important;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+}
+
+.kpi-shell-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-subtitle-color) !important;
+    /* Gris intermedio legible */
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.kpi-shell-body {
+    padding: 0 0.1rem;
+}
+
+.kpi-shell-footer {
+    padding: 0 0.15rem 0 0.15rem;
+}

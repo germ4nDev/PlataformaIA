@@ -1,19 +1,31 @@
-<div class="PORTTOS-widget widget-toneladas">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="icon-clock" style="margin-right: 6px;"></i> >{{ data?.titulo || '📊 TONELADAS MOVIDAS HOY' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Programación de arribos y atraques' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="data?.titulo || '📊 TONELADAS MOVIDAS HOY'"
+    [subtitulo]="data?.subtitulo || 'Volumen de carga apilada / operada'"
+    [icono]="data?.icono || 'feather icon-bar-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase">
+            Volumen
+        </span>
     </div>
 
-    <div class="chart-container">
-        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
+    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor flex para la gráfica) -->
+    <div
+        class="chart-wrapper w-100 h-100 position-relative pb-2 pe-2 animate__animated animate__fadeIn flex-grow-1 min-h-0">
+
+        <!-- Renderiza solo cuando barChartData ya fue construido -->
+        <canvas baseChart *ngIf="barChartData?.datasets?.length" [data]="barChartData" [options]="barChartOptions"
+            [type]="'bar'">
         </canvas>
+
+        <!-- Estado vacío -->
+        <div *ngIf="!barChartData?.datasets?.length"
+            class="w-100 h-100 d-flex justify-content-center align-items-center text-muted small">
+            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status" *ngIf="!data?.labels"></div>
+            <i class="feather icon-inbox me-2 opacity-50" *ngIf="data?.labels"></i>
+            {{ data?.labels ? 'Sin datos de volumen.' : 'Cargando gráfica...' }}
+        </div>
+
     </div>
-</div>
+
+</app-widget-shell>

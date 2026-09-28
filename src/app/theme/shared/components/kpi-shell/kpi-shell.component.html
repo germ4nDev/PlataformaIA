@@ -1,0 +1,39 @@
+<!-- El borde dinámico va estrictamente en el contenedor EXTERNO de la tarjeta -->
+<div class="kpi-shell-wrapper h-100 w-100 d-flex flex-column shadow-sm" [ngClass]="getBordeClase()">
+
+    <div class="kpi-shell-header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-2 overflow-hidden">
+            <div class="kpi-icon-box d-flex justify-content-center align-items-center shadow-sm">
+                <i [class]="icono"></i>
+            </div>
+
+            <div class="d-flex flex-column text-truncate">
+                <span class="kpi-shell-title text-truncate">{{ titulo }}</span>
+                <span class="kpi-shell-subtitle text-truncate" *ngIf="subtitulo">{{ subtitulo }}</span>
+            </div>
+        </div>
+
+        <div class="kpi-shell-actions d-flex align-items-center gap-1">
+            <ng-content select="[acciones-extra]"></ng-content>
+            <button class="btn-maximizar-kpi" (click)="clickEnfoque.emit()" title="Ver análisis detallado">
+                <i class="feather icon-maximize"></i>
+            </button>
+        </div>
+    </div>
+
+    <ng-container *ngIf="!isEnfoque">
+        <div
+            class="kpi-shell-body flex-grow-1 d-flex flex-column align-items-center justify-content-center position-relative">
+            <ng-content></ng-content>
+        </div>
+        <div class="kpi-shell-footer w-100">
+            <ng-content select="[kpi-footer]"></ng-content>
+        </div>
+    </ng-container>
+
+    <div class="kpi-shell-modal-detail flex-grow-1 d-flex flex-column w-100 h-100 overflow-hidden p-3"
+        *ngIf="isEnfoque">
+        <ng-content select="[detalle-enfoque]"></ng-content>
+    </div>
+
+</div>

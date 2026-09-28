@@ -1,43 +1,76 @@
 /*
     Author: German Valencia
-    Pattern: PORTTOS Generic Widget - KPI Card (Standalone)
+    Pattern: PORTTOS Generic Widget - KPI Card (Refactorizado con Shell)
 */
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+import { KpiShellComponent } from 'src/app/theme/shared/components/kpi-shell/kpi-shell.component';
+import { KpiCardModel } from 'src/app/theme/shared/_helpers/models/tablero-control/kpi-card.model';
+import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
 
 @Component({
     selector: 'app-gate-kpi-card',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent, KpiShellComponent],
     templateUrl: './gate-kpi-card.component.html',
-    styleUrls: ['./gate-kpi-card.component.scss']
+    styleUrls: ['./gate-kpi-card.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
-export class GateKpiCardComponent implements OnChanges {
-
-    // 👈 Requerido por el orquestador para no lanzar el error NG0303
-    @Input() widgetId!: string;
-
-    // 👈 Data inyectada dinámicamente desde el backend
-    @Input() data: any;
+export class GateKpiCardComponent implements OnInit, OnChanges {
+    @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
-    // Valores por defecto para que la tarjeta no se vea vacía mientras carga
-    public titulo: string = 'KPI';
-    public valor: string | number = '0';
-    public subtitulo: string = 'Cargando...';
-    public color: string = '#22d3ee'; // Color Cyan por defecto para el borde/texto
+    public data: Partial<KpiCardModel> = {};
+    public isLoading: boolean = false;
+
+    constructor(
+        private cdr: ChangeDetectorRef,
+        private filtroService: FiltroTableroService,
+        private _torreService: DashboardService
+    ) { }
+
+    ngOnInit(): void {
+        this.procesarData();
+
+        // Suscripción al filtro de ciudad
+        this.filtroService.ciudad$.subscribe((ciudad) => {
+            if (ciudad) {
+                this.actualizarDatos(ciudad);
+            }
+        });
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // Cuando el orquestador inyecta la data, actualizamos las variables
-        if (this.data) {
-            this.titulo = this.data.titulo || this.titulo;
-            this.valor = this.data.valor || this.valor;
-            this.subtitulo = this.data.subtitulo || this.subtitulo;
+        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
+            this.procesarData();
+        }
+    }
 
-            // Si el backend envía un color específico (ej. para pintar el borde rojo si es crítico)
-            if (this.data.color) {
-                this.color = this.data.color;
-            }
+    private procesarData(): void {
+        console.log('data del los kpi', this.widgetConfig);
+
+        if (this.widgetConfig?.data) {
+            this.data = this.widgetConfig.data;
+        }
+    }
+
+    private actualizarDatos(ciudad: string): void {
+        this.isLoading = true;
+        // Lógica de actualización hacia el backend/adaptador.
+        // Al resolver: this.isLoading = false;
+    }
+
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell(): void {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_KPI_MAIN', this.data);
         }
     }
 }

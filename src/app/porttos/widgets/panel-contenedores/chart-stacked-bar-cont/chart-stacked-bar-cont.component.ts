@@ -23,6 +23,7 @@ export class ChartStackedBarContComponent implements OnInit {
     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     private _data: any;
     public cargando: boolean = true;

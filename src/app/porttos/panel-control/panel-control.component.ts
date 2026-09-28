@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
-import { KpiCardComponent } from "src/app/porttos/widgets/panel-maritimo/kpi-card/kpi-card.component";
 import { CommonModule } from '@angular/common';
 import { TerminalPanelComponent } from 'src/app/theme/shared/components/tablero-control/terminal-panel/terminal-panel.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
 import { ProfileDrpComponent } from "src/app/theme/shared/components/profile-drp/profile-drp.component";
 import { Router } from '@angular/router';
+import { KpiCardTclComponent } from '../widgets/panel-maritimo/kpi-card-tcl/kpi-card-tcl.component';
 
 @Component({
     selector: 'app-tablero-control',
@@ -17,10 +17,10 @@ import { Router } from '@angular/router';
         CommonModule,
         SharedModule,
         TranslateModule,
-        KpiCardComponent,
         TerminalPanelComponent,
         LanguageSelectorComponent,
-        ProfileDrpComponent
+        ProfileDrpComponent,
+        KpiCardTclComponent
     ],
     templateUrl: './panel-control.component.html',
     styleUrl: './panel-control.component.scss'

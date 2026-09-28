@@ -1,19 +1,17 @@
-<div class="PORTTOS-widget widget-toneladas">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-clock mr-1" *ngIf="!data?.icono"></i>
-                {{ data?.titulo || 'MEZCLA POR TIPO DE CARGA' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Programación de arribos y atraques' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="data?.titulo || 'MEZCLA POR TIPO DE CARGA'"
+    [subtitulo]="data?.subtitulo || 'Distribución de toneladas movilizadas'"
+    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-primary text-uppercase">
+            Volumen
+        </span>
     </div>
 
-    <div class="chart-container">
+    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor de la Gráfica) -->
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2 pe-2 animate__animated animate__fadeIn">
         <canvas #barChart></canvas>
     </div>
-</div>
+
+</app-widget-shell>

@@ -1,51 +1,60 @@
-<div class="PORTTOS-widget widget-matriz">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="panel-titulo">
-                <i [class]="data?.icono" *ngIf="data?.icono" class="mr-1"></i>
-                {{ data?.titulo || '🏆 MATRIZ TERMINAL x TIPO DE CARGA' }} {{ data?.anio || '2025' }}
-            </h3>
-            <p class="subtitle">{{ data?.subtitulo || 'Toneladas movilizadas · revela la especialización operativa' }}
-            </p>
-        </div>
-        <div class="badge-operadores">
-            {{ data?.operadores || 5 }} OPERADORES · 5 TIPOS
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="(data?.titulo || '🏆 MATRIZ TERMINAL x TIPO DE CARGA') + ' ' + (data?.anio || '')"
+    [subtitulo]="data?.subtitulo || 'Toneladas movilizadas · revela la especialización operativa'"
+    [icono]="data?.icono || 'feather icon-grid'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge de Operadores y Tipos -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-warning text-uppercase">
+            {{ data?.operadores || 5 }} OPERADORES
+        </span>
     </div>
 
-    <div class="panel-body matriz-body">
-        <div class="table-responsive flex-grow-1 h-100" style="overflow-y: auto;">
+    <!-- CUERPO ÚNICO DEL WIDGET (Tabla con scroll integrado) -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn table-container">
 
-            <table class="PORTTOS-table w-100">
-                <thead>
-                    <tr>
-                        <th class="col-terminal">TERMINAL</th>
-                        <th><i class="feather icon-box cont-icon"></i> CONTENEDORES</th>
-                        <th><i class="feather icon-package sol-icon"></i> GRANEL SÓLIDO</th>
-                        <th><i class="feather icon-triangle gen-icon"></i> GENERAL</th>
-                        <th><i class="feather icon-droplet liq-icon"></i> GRANEL LÍQ.</th>
-                        <th><i class="feather icon-circle car-icon"></i> CARBÓN</th>
-                        <th class="col-total">TOTAL</th>
+        <div class="table-responsive h-100">
+            <table class="table table-hover table-borderless align-middle w-100 m-0">
+
+                <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
+                    <tr class="text-muted font-weight-bold text-uppercase"
+                        style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th class="col-terminal pb-2">Terminal</th>
+                        <th class="pb-2 text-center"><i class="feather icon-box text-primary me-1"></i> Cont.</th>
+                        <th class="pb-2 text-center"><i class="feather icon-package text-warning me-1"></i> Gr. Sólido
+                        </th>
+                        <th class="pb-2 text-center"><i class="feather icon-triangle text-success me-1"></i> General
+                        </th>
+                        <th class="pb-2 text-center"><i class="feather icon-droplet text-info me-1"></i> Gr. Líq.</th>
+                        <th class="pb-2 text-center"><i class="feather icon-circle text-secondary me-1"></i> Carbón</th>
+                        <th class="col-total pb-2 text-end text-white">Total</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    <tr *ngFor="let f of data?.filas">
-                        <td class="col-terminal">{{ f.terminal }}</td>
-                        <td>{{ formatNum(f.cont) }}</td>
-                        <td>{{ formatNum(f.solido) }}</td>
-                        <td>{{ formatNum(f.general) }}</td>
-                        <td>{{ formatNum(f.liquido) }}</td>
-                        <td>{{ formatNum(f.carbon) }}</td>
-                        <td class="val-total">{{ formatNum(f.total) }} t</td>
+                    <tr *ngFor="let f of data?.filas"
+                        style="font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td class="col-terminal font-weight-bold text-white py-3">{{ f.terminal }}</td>
+                        <td class="text-center text-muted">{{ formatNum(f.cont) }}</td>
+                        <td class="text-center text-muted">{{ formatNum(f.solido) }}</td>
+                        <td class="text-center text-muted">{{ formatNum(f.general) }}</td>
+                        <td class="text-center text-muted">{{ formatNum(f.liquido) }}</td>
+                        <td class="text-center text-muted">{{ formatNum(f.carbon) }}</td>
+                        <td class="val-total text-end font-weight-bold text-info">{{ formatNum(f.total) }} <span
+                                class="small text-muted fw-normal">t</span></td>
+                    </tr>
+
+                    <!-- Estado vacío -->
+                    <tr *ngIf="!data?.filas || data?.filas.length === 0">
+                        <td colspan="7" class="text-center text-muted py-5">
+                            <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
+                            No hay datos de matriz registrados.
+                        </td>
                     </tr>
                 </tbody>
-            </table>
 
+            </table>
         </div>
+
     </div>
-</div>
+
+</app-widget-shell>

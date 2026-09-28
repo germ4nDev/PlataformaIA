@@ -326,8 +326,49 @@ gridster-item {
     box-shadow: none !important;
 }
 
+.contenedor-scroll {
+
+    /* Ocultar barra en Chrome, Safari y Edge */
+    &::-webkit-scrollbar {
+        display: none;
+        width: 0px;
+        background: transparent;
+    }
+
+    /* Ocultar barra en Firefox */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* IE y Edge Legacy */
+
+    /* Eliminar el padding derecho que está sobrando */
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+
+::ng-deep gridster,
+::ng-deep .tc-dashboard-container {
+    /* 1. Comportamiento auto (solo hace scroll si el contenido se sale) */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    /* 2. Ocultar en Firefox e IE/Edge heredado */
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+
+    /* 3. Ocultar la barra gris gruesa en Chrome/Safari/Edge modernos */
+    &::-webkit-scrollbar {
+        display: none !important;
+        width: 0px !important;
+        background: transparent !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: transparent !important;
     }
 }

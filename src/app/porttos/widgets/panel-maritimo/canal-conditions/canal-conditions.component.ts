@@ -23,6 +23,7 @@ export class CanalConditionsComponent implements OnInit {
     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     public data: any = {}; // Usamos any o Partial<CanalModel> para manejar la data inyectada
 

@@ -6,5 +6,6 @@ export interface KpiCardModel {
     icono?: string;     // Clase CSS del icono
     colorBorde?: string;     // Clase CSS del icono
     color?: string;     // Clase CSS del icono
-    cargandoIA?: boolean;     // Clase CSS del icono
+    cargandoIA?: boolean;
+    unidad?: string;
 }

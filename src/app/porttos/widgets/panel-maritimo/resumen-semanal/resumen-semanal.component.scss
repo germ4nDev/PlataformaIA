@@ -1,86 +1,77 @@
-/* chart-toneladas.component.scss, terminal-summary.scss, etc. */
-@use 'src/app/theme/shared/styles/components' as PORTTOS;
-@include PORTTOS.widget-header;
-
 :host {
     display: block;
     width: 100%;
     height: 100%;
-    /* 🚨 Deja que el padre (master-widget-grid) decida la altura. */
 }
 
-.PORTTOS-widget.resumen-semanal {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    max-height: 100%;
-    width: 100%;
-
-    background-color: var(--widget-bg);
-    border: 1px solid var(--border-color) !important;
-    border-radius: 10px;
-
-    /* 🚨 ESTO ES LO QUE ATAJA EL DESBORDE DEL FONDO GRIS */
-    overflow: hidden;
-
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+/* 🟢 Botón Toggle integrado en el Header */
+.btn-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff !important;
     }
 }
 
+/* 🟢 Estilo para las tarjetas individuales de la vista Lista */
 .arribo-item {
-    display: flex;
-    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #3b82f6;
+    /* Borde izquierdo azul primario */
+    transition: background 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.04);
+    }
+}
+
+/* 🟢 Permite que Chart.js ocupe el área correcta en flexbox */
+.chart-wrapper {
+    flex: 1;
+    min-height: 0;
+}
+
+/* 🟢 Barra de desplazamiento sutil para la vista Lista */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+}
+
+/* 🟢 Badge del Header */
+.tc-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: inline-flex;
     align-items: center;
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    justify-content: center;
 
-    /* Quitamos la línea divisoria al último elemento */
-    &:last-child {
-        border-bottom: none;
+    &.badge-primary {
+        color: #60a5fa;
+        border: 1px solid #3b82f6;
+        background-color: rgba(59, 130, 246, 0.15);
     }
-
-    .arribo-info {
-        display: flex;
-        flex-direction: column;
-
-        .arribo-nombre {
-            color: var(--text-color);
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .arribo-terminal {
-            color: var(--text-subtitle-color);
-            font-size: 11px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-            // letter-spacing: 0.5px;
-        }
-    }
-
-    .arribo-fecha {
-        .badge-eta {
-            /* Fondo azul translúcido */
-            color: var(--text-subtitle-color);
-            /* Texto azul claro */
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-    }
-
-    // .chart-wrapper {
-    //     min-height: 200px;
-    //     padding: 0px;
-    //     /* Importante: dale espacio al canvas */
-    //     width: 100%;
-    // }
 }

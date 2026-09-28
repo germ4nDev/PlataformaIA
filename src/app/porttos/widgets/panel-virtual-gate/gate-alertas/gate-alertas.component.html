@@ -1,43 +1,42 @@
-<div class="porttos-widget reportes-operativos">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3><i class="feather icon-wind"></i>{{ data.titulo || '⚠ Alertas Operativas' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Alertas Operativas' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="data?.titulo || '⚠ Alertas Operativas'"
+    [subtitulo]="data?.subtitulo || 'Monitoreo de incidencias en tiempo real'"
+    [icono]="data?.icono || 'feather icon-alert-triangle'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-danger text-uppercase">
+            Crítico
+        </span>
     </div>
 
-    <div class="panel-body">
+    <!-- CUERPO ÚNICO DEL WIDGET (Lista de alertas con scroll integrado) -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn custom-scrollbar">
 
-        <div class="reporte-item"
-            style="background-color: rgba(239,68,68,0.1); border-left: 3px solid #ef4444; padding: 10px; border-radius: 4px;">
-            <div style="color: #f8fafc; font-size: 12px; font-weight: bold;">🛑 Cola crítica gate TCBUEN</div>
-            <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">22 camiones esperando - ETA m/v EVERGREEN
-                HARMONY
-                +2h</div>
-        </div>
+        <div class="d-flex flex-column gap-2 pb-2">
 
-        <div class="reporte-item"
-            style="background-color: rgba(245,158,11,0.1); border-left: 3px solid #f59e0b; padding: 10px; border-radius: 4px;">
-            <div style="color: #f8fafc; font-size: 12px; font-weight: bold;">⚠️ Camión LMR-013 retenido</div>
-            <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">SICE no validado - Naviera MSC - acción
-                manual
+            <!-- Estado Vacío -->
+            <div *ngIf="alertas.length === 0"
+                class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
+                <i class="feather icon-check-circle me-2 text-success"></i> Sistema operando con normalidad.
             </div>
-        </div>
 
-        <div class="reporte-item"
-            style="background-color: rgba(56,189,248,0.1); border-left: 3px solid #38bdf8; padding: 10px; border-radius: 4px;">
-            <div style="color: #f8fafc; font-size: 12px; font-weight: bold;">ℹ️ Patio NORTE TCBUEN al 94%</div>
-            <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Reasignando devoluciones MAERSK a BUEN-LOG
+            <!-- Iteración de Alertas dinámicas -->
+            <div class="reporte-item d-flex flex-column shadow-sm" *ngFor="let alerta of alertas"
+                [ngClass]="'tipo-' + alerta.tipo">
+
+                <div class="r-titulo mb-1 text-white fw-bold d-flex align-items-center gap-1"
+                    style="font-size: 0.75rem;">
+                    <span>{{ alerta.icono }}</span> {{ alerta.titulo }}
+                </div>
+                <div class="r-desc text-muted mb-0" style="font-size: 0.70rem; line-height: 1.3;">
+                    {{ alerta.descripcion }}
+                </div>
+
             </div>
+
         </div>
 
     </div>
 
-
-</div>
+</app-widget-shell>

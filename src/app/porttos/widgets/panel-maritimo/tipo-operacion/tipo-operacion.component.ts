@@ -1,35 +1,62 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Tipo de Operación (Refactorizado con Shell)
+*/
+import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+
+// 🟢 Importamos el Shell maestro
+import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-tipo-operacion',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
     templateUrl: './tipo-operacion.component.html',
-    styleUrl: './tipo-operacion.component.scss',
+    styleUrls: ['./tipo-operacion.component.scss'], // Corregido a styleUrls
     encapsulation: ViewEncapsulation.None
 })
-export class TipoOperacionComponent implements AfterViewInit, OnChanges {
-    @Input() data: any;
-    @ViewChild('opsChart') opsChart!: ElementRef;
-    @Input() widgetId?: string;
+export class TipoOperacionComponent implements OnInit, AfterViewInit, OnChanges {
+
+    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+    @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
 
+    public data: any = {};
+
+    @ViewChild('opsChart') opsChart!: ElementRef;
     public chartInstance: any;
 
     constructor(private _torreService: DashboardService) { }
 
-    ngAfterViewInit() { this.renderizar(); }
+    ngOnInit(): void {
+        // 🟢 Inicializamos extrayendo del objeto central
+        if (this.widgetConfig?.data) {
+            this.data = this.widgetConfig.data;
+        }
+    }
 
-    ngOnChanges(changes: SimpleChanges) { if (changes['data'] && !changes['data'].firstChange) this.renderizar(); }
+    ngAfterViewInit() {
+        this.renderizar();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        // 🟢 Reaccionamos a los cambios del widgetConfig o inyección directa
+        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
+            this.data = this.widgetConfig?.data;
+            this.renderizar();
+        } else if (changes['data'] && !changes['data'].firstChange) {
+            this.renderizar();
+        }
+    }
 
     renderizar() {
-        if (!this.opsChart) return;
+        if (!this.opsChart || !this.opsChart.nativeElement) return;
         if (this.chartInstance) this.chartInstance.destroy();
 
         const labels = this.data?.labels || ['Importación', 'Exportación', 'Transbordo', 'Cabotaje'];
@@ -41,8 +68,10 @@ export class TipoOperacionComponent implements AfterViewInit, OnChanges {
                 labels: labels,
                 datasets: [{
                     data: valores,
-                    backgroundColor: ['#06b6d4', '#3b82f6', '#8b5cf6', '#a78bfa'], // Tonos Cyan, Azul, Púrpura
-                    borderWidth: 0
+                    // Tonos Cyan, Azul, Púrpura consistentes con el diseño original
+                    backgroundColor: ['#06b6d4', '#3b82f6', '#8b5cf6', '#a78bfa'],
+                    borderWidth: 0,
+                    hoverOffset: 4
                 }]
             },
             options: {
@@ -52,15 +81,33 @@ export class TipoOperacionComponent implements AfterViewInit, OnChanges {
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { color: '#a0a0a0', usePointStyle: true, pointStyle: 'rect', padding: 20, font: { size: 10 } }
+                        labels: {
+                            color: '#94a3b8', // 🟢 Gris sutil para modo oscuro
+                            usePointStyle: true,
+                            pointStyle: 'rect',
+                            padding: 20,
+                            font: {
+                                size: 10,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => ` ${context.label}: ${context.raw}%`
+                        }
                     }
                 }
             }
         });
     }
 
-    maximizar() {
-        this._torreService.abrirModoEnfoque(this.widgetId || '', this.data);
+    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    maximizarDesdeShell() {
+        if (this.isEnfoque) {
+            this._torreService.cerrarModoEnfoque();
+        } else {
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_TIPO_OPERACION', this.data);
+        }
     }
 }
-

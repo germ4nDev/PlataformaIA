@@ -18,27 +18,33 @@
     </div>
 
     <div class="panel-body">
+        <!-- List View -->
         <ng-container *ngIf="mostrarTabla">
-            <div *ngFor="let item of listaArribos">
-                <div class="arribo-info">
-                    <label class="arribo-nombre">{{ item.motonave || 'Motonave en tránsito' }}</label><br>
-                    <small class="arribo-terminal">{{ item.terminal || 'Terminal por definir' }} - {{ item.eta
-                        }}</small>
-                </div><br>
-            </div>
+            <ng-container *ngIf="listaArribos.length > 0; else sinArribos">
+                <div class="arribos-list-container">
+                    <div *ngFor="let item of listaArribos" class="arribo-info" style="margin-bottom: 15px;">
+                        <label class="arribo-nombre">{{ item.motonave || 'Motonave en tránsito' }}</label>
+                        <br>
+                        <!-- Using CSS margin on .arribo-info is cleaner, but keeping one <br> for layout if preferred -->
+                        <small class="arribo-terminal">{{ item.terminal || 'Terminal por definir' }} - {{ item.eta
+                            }}</small>
+                    </div>
+                </div>
+            </ng-container>
         </ng-container>
-        <canvas baseChart [datasets]="barChartData.datasets" [labels]="barChartData.labels" [options]="barChartOptions"
-            [type]="'bar'" *ngIf="!mostrarTabla">
-        </canvas>
 
-        <!-- <ng-template #noData>
-                <p class="text-muted">No hay arribos programados.</p>
-            </ng-template> -->
+        <!-- Chart View -->
+        <div class="chart-container" *ngIf="!mostrarTabla" style="height: 100%;">
+            <canvas baseChart [datasets]="barChartData.datasets" [labels]="barChartData.labels"
+                [options]="barChartOptions" [type]="'bar'">
+            </canvas>
+        </div>
 
-        <!-- <ng-template #sinArribos>
-            <div class="arribo-item text-center" style="justify-content: center; padding: 30px;">
+        <!-- Empty State Template -->
+        <ng-template #sinArribos>
+            <div class="arribo-item text-center" style="display: flex; justify-content: center; padding: 30px;">
                 <p style="color: #a0a0a0; margin: 0;">No hay arribos programados en este rango.</p>
             </div>
-        </ng-template> -->
+        </ng-template>
     </div>
 </div>

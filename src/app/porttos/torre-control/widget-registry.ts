@@ -1,7 +1,7 @@
 import { Type } from '@angular/core';
 
 import {
-    KpiCardComponent,
+    KpiCardTclComponent,
     VesselTableComponent,
     EtaChartComponent,
     ToneladasChartComponent,
@@ -14,7 +14,6 @@ import {
     HistoricoAnualComponent,
     ImplicacionesOperativasComponent,
     MapaLogisticoComponent,
-    ContKpiCardComponent
 } from '../../theme/shared/widgets/widget-index';
 
 import { ReporteSemanalMaritimoComponent } from '../widgets/panel-maritimo/reporte-semanal-maritimo/reporte-semanal-maritimo.component';
@@ -29,7 +28,6 @@ import { GateAlertasComponent } from '../widgets/panel-virtual-gate/gate-alertas
 import { ChartDoughnutComponent } from '../widgets/panel-virtual-gate/chart-doughnut/chart-doughnut.component';
 import { ChartStackedBarComponent } from '../widgets/panel-virtual-gate/chart-stacked-bar/chart-stacked-bar.component';
 import { GateEstadoCitasComponent } from '../widgets/panel-virtual-gate/gate-estado-citas/gate-estado-citas.component';
-import { GateKpiCardComponent } from '../widgets/panel-virtual-gate/gate-kpi-card/gate-kpi-card.component';
 
 // Importaciones de Contenedores (Ajusta la ruta según tu estructura de carpetas)
 import { ContenedoresPatiosComponent } from '../widgets/panel-contenedores/contenedores-patios/contenedores-patios.component';
@@ -45,37 +43,28 @@ export interface IWidgetRegistryDef {
 }
 
 export const WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
-    // ==========================================
-    // FILA 0: KPIs del MVP (Operación Marítima)
-    // ==========================================
-    'WDG_PORT_KPI_CAMIONES_PUERTO': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_CONTENEDORES': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_GRANEL': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_CARGA_SUELTA': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_RORO': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_BODEGAS': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_ESPERADOS': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_FONDEO': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_MUELLE': { componente: KpiCardComponent, defaultCols: 2, defaultRows: 1 },
 
-    // ==========================================
-    // FILA 5: Resumenes Terminales
-    // ==========================================
+    'WDG_PORT_KPI_CAMIONES_PUERTO': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_CONTENEDORES': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_GRANEL': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_CARGA_SUELTA': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_RORO': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_BODEGAS': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_ESPERADOS': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_FONDEO': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_MUELLE': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+
     'WDG_PORT_TERMINAL_INDIVIDUAL': {
         componente: TerminalSummaryCardComponent,
         defaultCols: 4,
         defaultRows: 2
     },
 
-    // ==========================================
-    // FILA 3: Tabla Maestra y Gráfica ETA
-    // ==========================================
+
     'WDG_PORT_TABLE_REPORTE_MOTONAVES': { componente: VesselTableComponent, defaultCols: 8, defaultRows: 4 },
     'WDG_PORT_CHART_ETA_ATA': { componente: EtaChartComponent, defaultCols: 4, defaultRows: 4 },
 
-    // ==========================================
-    // FILA 4: Resto de gráficas analíticas
-    // ==========================================
+
     'WDG_PORT_CHART_TONELADAS': { componente: ToneladasChartComponent, defaultCols: 6, defaultRows: 3 },
     'WDG_PORT_CONDICIONES_CANAL': { componente: CanalConditionsComponent, defaultCols: 6, defaultRows: 3 },
     'WDG_PORT_SEMANAL_MARITIMO': { componente: ReporteSemanalMaritimoComponent, defaultCols: 4, defaultRows: 3 },
@@ -99,19 +88,17 @@ export const WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'WDG_PORT_IMPLICACIONES_OPERATIVAS': { componente: ImplicacionesOperativasComponent, defaultCols: 12, defaultRows: 2 },
     'WDG_PORT_MAPA_LOGISTICO': { componente: MapaLogisticoComponent, defaultCols: 12, defaultRows: 12 },
 
-    // ==========================================
-    // PESTAÑA 2: VIRTUAL GATE & BODEGAS
-    // ==========================================
-    'WDG_PORT_KPI_GATE_OP': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_GATE_CONT': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_GATE_GRANEL': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_GATE_SUELTA': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_GATE_RORO': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_GATE_BODEGAS': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_SUB_CONT': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_SUB_GRANEL': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_SUB_SUELTA': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_SUB_NINERAS': { componente: GateKpiCardComponent, defaultCols: 2, defaultRows: 1 },
+
+    'WDG_PORT_KPI_GATE_OP': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_GATE_CONT': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_GATE_GRANEL': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_GATE_SUELTA': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_GATE_RORO': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_GATE_BODEGAS': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_SUB_CONT': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_SUB_GRANEL': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_SUB_SUELTA': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_SUB_NINERAS': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
 
     'WDG_PORT_PREGATE_VAL': { componente: GateValidacionComponent, defaultCols: 4, defaultRows: 4 },
     'WDG_PORT_GATE_ALERT': { componente: GateAlertasComponent, defaultCols: 4, defaultRows: 4 },
@@ -123,10 +110,10 @@ export const WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     // ==========================================
     // PESTAÑA 3: CONTENEDORES
     // ==========================================
-    'WDG_PORT_KPI_CONT_CARGADOS': { componente: ContKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_CONT_VACIOS': { componente: ContKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_CONT_REEFER': { componente: ContKpiCardComponent, defaultCols: 2, defaultRows: 1 },
-    'WDG_PORT_KPI_CONT_FREETIME': { componente: ContKpiCardComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_CONT_CARGADOS': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_CONT_VACIOS': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_CONT_REEFER': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
+    'WDG_PORT_KPI_CONT_FREETIME': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
 
     'WDG_PORT_CONT_RETIROS': { componente: ChartStackedBarContComponent, defaultCols: 6, defaultRows: 4 },
     'WDG_PORT_CONT_NAVIERA': { componente: ChartBarContComponent, defaultCols: 6, defaultRows: 4 },

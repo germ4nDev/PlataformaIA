@@ -27,3 +27,21 @@
         border-color: color-mix(in srgb, var(--border-color) 20%, transparent);
     }
 }
+
+.kpi-shell-title {
+    font-size: 1.2rem;
+    /* Letra un poco más robusta */
+    font-weight: 700;
+    color: var(--text-color) !important;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+}
+
+.kpi-shell-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-subtitle-color) !important;
+    /* Gris intermedio legible */
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 2px;
+}

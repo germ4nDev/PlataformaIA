@@ -1,26 +1,25 @@
 /*
     Author: German Valencia
-    Pattern: PORTTOS Generic Widget - KPI Card Inteligente (Refactorizado con Shell)
+    Pattern: PORTTOS Generic Widget - KPI Card Inteligente (Refactorizado con KpiShell)
 */
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
 import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
 import { KpiCardModel } from 'src/app/theme/shared/_helpers/models/tablero-control/kpi-card.model';
 
-// 🟢 Importamos el Shell maestro
-import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+// 🟢 Importamos el nuevo Shell especializado para KPIs
+import { KpiShellComponent } from 'src/app/theme/shared/components/kpi-shell/kpi-shell.component';
+import { KpiFormatPipe } from '../../../../theme/shared/pipes/kpi-format.pipe';
 
 @Component({
-    selector: 'app-kpi-card',
+    selector: 'app-kpi-card-tcl',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
-    templateUrl: './kpi-card.component.html',
-    styleUrls: ['./kpi-card.component.scss']
+    imports: [CommonModule, KpiShellComponent, KpiFormatPipe],
+    templateUrl: './kpi-card-tcl.component.html',
+    styleUrl: './kpi-card-tcl.component.scss'
 })
-export class KpiCardComponent implements OnInit {
-
-    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
+export class KpiCardTclComponent implements OnInit, OnChanges {
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
@@ -35,10 +34,7 @@ export class KpiCardComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        // 🟢 Inicializamos extrayendo del objeto central
-        if (this.widgetConfig?.data) {
-            this.data = this.widgetConfig.data;
-        }
+        this.procesarData();
 
         // Suscripción al filtro de ciudad
         this.filtroService.ciudad$.subscribe((ciudad) => {
@@ -48,14 +44,28 @@ export class KpiCardComponent implements OnInit {
         });
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
+            this.procesarData();
+        }
+    }
+
+    private procesarData(): void {
+        console.log('data del los kpi', this.widgetConfig);
+
+        if (this.widgetConfig?.data) {
+            this.data = this.widgetConfig.data;
+        }
+    }
+
     private actualizarDatos(ciudad: string): void {
-        this.isLoading = true;
-        // Aquí iría tu lógica de actualización hacia el backend/adaptador.
-        // Al resolver, recuerdas setear this.isLoading = false;
+        this.isLoading = false;
+        // Lógica de actualización hacia el backend/adaptador.
+        // Al resolver: this.isLoading = false;
     }
 
     // 🟢 Toggle de enfoque: Abre o cierra el modal
-    maximizarDesdeShell() {
+    maximizarDesdeShell(): void {
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {

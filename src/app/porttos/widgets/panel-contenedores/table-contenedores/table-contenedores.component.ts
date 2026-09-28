@@ -21,6 +21,7 @@ export class TableContenedoresComponent implements OnInit {
     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     public movimientos: any[] = [];
 

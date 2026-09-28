@@ -23,6 +23,7 @@ export class ChartBarContComponent implements OnInit {
     // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa del selector
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     private _data: any;
     public cargando: boolean = true;

@@ -1,7 +1,13 @@
-import { Component, Input, ChangeDetectorRef, OnChanges, SimpleChanges, OnInit, ElementRef } from '@angular/core';
+/*
+    Author: German Valencia
+    Pattern: PORTTOS Generic Widget - Terminal Summary Card (Refactorizado con Shell)
+*/
+import { Component, Input, ChangeDetectorRef, OnChanges, SimpleChanges, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TerminalDocksDetailComponent } from "../terminal-docks-detail/terminal-docks-detail.component";
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+import { TerminalDocksDetailComponent } from "../terminal-docks-detail/terminal-docks-detail.component";
+
+// 🟢 Importamos el Shell maestro
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 export interface MetricaPie {
@@ -26,7 +32,7 @@ export interface TerminalSLA {
     templateUrl: './terminal-summary-card.component.html',
     styleUrls: ['./terminal-summary-card.component.scss']
 })
-export class TerminalSummaryCardComponent implements OnChanges, OnInit {
+export class TerminalSummaryCardComponent implements OnChanges, OnInit, AfterViewInit {
 
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
@@ -52,13 +58,16 @@ export class TerminalSummaryCardComponent implements OnChanges, OnInit {
     }
 
     ngAfterViewInit(): void {
-        const contenedorModal = this.el.nativeElement.closest('.modal, dialog, .cdk-overlay-pane, .modal-dialog');
+        // 🟢 setTimeout evita el ExpressionChangedAfterItHasBeenCheckedError en Angular
+        setTimeout(() => {
+            const contenedorModal = this.el.nativeElement.closest('.modal, dialog, .cdk-overlay-pane, .modal-dialog');
 
-        if (contenedorModal) {
-            this.esVistaCompacta = false;
-            this.mostrarTabla = true;
-            this.cdr.detectChanges();
-        }
+            if (contenedorModal || this.isEnfoque) {
+                this.esVistaCompacta = false;
+                this.mostrarTabla = true;
+                this.cdr.detectChanges();
+            }
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -75,7 +84,7 @@ export class TerminalSummaryCardComponent implements OnChanges, OnInit {
 
     public maximizarDesdeShell() {
         if (this.isEnfoque) {
-            this._torreService.cerrarModoEnfoque(); // O el método que uses en tu servicio para cerrar el modal
+            this._torreService.cerrarModoEnfoque();
         } else {
             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_TERMINAL_INDIVIDUAL', this.data);
         }

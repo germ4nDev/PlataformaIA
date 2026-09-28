@@ -1,75 +1,80 @@
-<div class="porttos-widget vessel-table-panel w-100 h-100 d-flex flex-column">
-    <div class="panel-header">
-        <div class="header-titles">
-            <h3 class="panel-titulo">
-                <i class="icon-ship mr-2" *ngIf="!data.icono"></i>
-                {{ data.titulo || '🚛 Cola de Camiones · Todos los Tipos de Carga ' }}
-            </h3>
-            <p class="subtitle">{{ data.subtitulo || 'Identificación + tipo carga + operación' }}</p>
-        </div>
-        <div class="header-actions-container">
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
-                <i class="feather icon-maximize" data-feather="maximize"></i>
-            </button>
-        </div>
+<app-widget-shell [titulo]="data?.titulo || '🚛 Cola de Camiones'"
+    [subtitulo]="data?.subtitulo || 'Todos los Tipos de Carga'" [icono]="data?.icono || 'feather icon-truck'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-warning text-uppercase">
+            Logística Terrestre
+        </span>
     </div>
 
-    <div class="panel-body flex-grow-1 d-flex flex-column min-h-0 p-3 pt-0">
-        <div class="table-responsive flex-grow-1 h-100" style="overflow-y: auto;">
+    <!-- CUERPO ÚNICO DEL WIDGET (Tabla con scroll integrado) -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn table-container">
 
-            <table class="porttos-table w-100">
+        <div class="table-responsive h-100">
+            <table class="table table-hover table-borderless align-middle w-100 m-0">
 
-                <thead>
-                    <tr
-                        style="border-bottom: 1px solid #233148; color: #64748b; font-size: 10px; text-transform: uppercase;">
-                        <th style="padding: 8px 12px; font-weight: 600;">Placa</th>
-                        <th style="padding: 8px 12px; font-weight: 600;">Transportador</th>
-                        <th style="padding: 8px 12px; font-weight: 600;">Tipo Carga</th>
-                        <th style="padding: 8px 12px; font-weight: 600;">Operación</th>
-                        <th style="padding: 8px 12px; font-weight: 600;">Terminal</th>
-                        <th style="padding: 8px 12px; font-weight: 600;">Cita</th>
-                        <th style="padding: 8px 12px; font-weight: 600;">Ubicación</th>
-                        <th style="padding: 8px 12px; font-weight: 600; text-align: center;">Estado</th>
+                <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
+                    <tr class="text-muted font-weight-bold text-uppercase"
+                        style="font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th class="pb-2">Placa</th>
+                        <th class="pb-2">Transportador</th>
+                        <th class="pb-2">Tipo Carga</th>
+                        <th class="pb-2">Operación</th>
+                        <th class="pb-2">Terminal</th>
+                        <th class="pb-2">Cita</th>
+                        <th class="pb-2">Ubicación</th>
+                        <th class="pb-2 text-center">Estado</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <tr *ngFor="let cita of data?.citas"
-                        style="border-bottom: 1px solid #1e293b; color: #f8fafc; transition: background-color 0.2s;"
-                        onmouseover="this.style.backgroundColor='#1e293b'"
-                        onmouseout="this.style.backgroundColor='transparent'">
-                        <td style="padding: 10px 12px; font-weight: bold;">{{ cita.placa }}</td>
-                        <td style="padding: 10px 12px;">{{ cita.transportador }}</td>
-                        <td style="padding: 10px 12px;">
-                            <span
-                                style="border: 1px solid #0284c7; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 10px;">{{
-                                cita.tipo_carga }}</span>
+                        style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+
+                        <!-- Columna: Placa -->
+                        <td class="font-weight-bold text-white py-3">{{ cita.placa }}</td>
+
+                        <!-- Columna: Transportador -->
+                        <td class="text-light-grey">{{ cita.transportador }}</td>
+
+                        <!-- Columna: Tipo Carga -->
+                        <td>
+                            <span class="carga-badge">{{ cita.tipo_carga }}</span>
                         </td>
-                        <td style="padding: 10px 12px; color: #cbd5e1;">{{ cita.operacion }}</td>
-                        <td style="padding: 10px 12px; color: #94a3b8;">{{ cita.terminal }}</td>
-                        <td style="padding: 10px 12px; font-weight: 600;">{{ cita.fecha_hora_cita }}</td>
-                        <td style="padding: 10px 12px; color: #cbd5e1;">{{ cita.ubicacion }}</td>
-                        <td style="padding: 10px 12px; text-align: center;">
-                            <span *ngIf="cita.estado === 'VALIDADO'"
-                                style="border: 1px solid #22c55e; color: #22c55e; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">VALIDADO</span>
-                            <span *ngIf="cita.estado === 'EN OPERACIÓN'"
-                                style="border: 1px solid #0ea5e9; color: #0ea5e9; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">EN
-                                OPERACIÓN</span>
-                            <span *ngIf="cita.estado === 'DOC. FALTANTE'"
-                                style="border: 1px solid #f59e0b; color: #f59e0b; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">DOC.
-                                FALTANTE</span>
-                            <span *ngIf="cita.estado === 'RETENIDO'"
-                                style="border: 1px solid #ef4444; color: #ef4444; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">RETENIDO</span>
-                            <span *ngIf="cita.estado === 'EN RUTA'"
-                                style="border: 1px solid #8b5cf6; color: #8b5cf6; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">EN
-                                RUTA</span>
+
+                        <!-- Columnas: Operación & Terminal -->
+                        <td class="text-muted">{{ cita.operacion }}</td>
+                        <td class="text-muted">{{ cita.terminal }}</td>
+
+                        <!-- Columna: Cita (Resaltada) -->
+                        <td class="text-white fw-bold">{{ cita.fecha_hora_cita }}</td>
+
+                        <!-- Columna: Ubicación -->
+                        <td class="text-light-grey">{{ cita.ubicacion }}</td>
+
+                        <!-- Columna: Estado (Badge dinámico) -->
+                        <td class="text-center">
+                            <span class="estado-badge shadow-sm" [ngClass]="getEstadoClase(cita.estado)">
+                                {{ cita.estado | uppercase }}
+                            </span>
                         </td>
+
                     </tr>
+
+                    <!-- Estado Vacío -->
                     <tr *ngIf="!data?.citas || data.citas.length === 0">
-                        <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">No hay camiones en la
-                            cola
+                        <td colspan="8" class="text-center text-muted py-5">
+                            <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
+                            No hay camiones en la cola.
                         </td>
                     </tr>
                 </tbody>
+
             </table>
         </div>
+
     </div>
+
+</app-widget-shell>

@@ -1,176 +1,776 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { LocalStorageService, NavigationService, SwalAlertService } from 'src/app/theme/shared/service';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
-import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { MapaLogisticoComponent } from "../widgets/mapa-logistico/mapa-logistico.component";
+// import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+// import { Observable, Subscription, timer } from 'rxjs';
+// import { switchMap } from 'rxjs/operators';
+// import { LocalStorageService, NavigationService, SwalAlertService } from 'src/app/theme/shared/service';
+// import { CommonModule } from '@angular/common';
+// import { SharedModule } from 'src/app/theme/shared/shared.module';
+// import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
+// import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
+// import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+// import { MapaLogisticoComponent } from "../widgets/mapa-logistico/mapa-logistico.component";
 
-// SERVICIOS
-import { MapSocketService } from '../../theme/shared/service/tablero-control/map-socket.service';
-import { MaritimoService } from '../../theme/shared/service/tablero-control/maritimo.service';
-import { MapaGeneralService } from '../../theme/shared/service/tablero-control/mapa-general.service';
+// // SERVICIOS
+// import { MapSocketService } from '../../theme/shared/service/tablero-control/map-socket.service';
+// import { MaritimoService } from '../../theme/shared/service/tablero-control/maritimo.service';
+// import { MapaGeneralService } from '../../theme/shared/service/tablero-control/mapa-general.service';
+
+// @Component({
+//     selector: 'app-dashboard-panel',
+//     standalone: true,
+//     imports: [
+//         CommonModule,
+//         SharedModule,
+//         TranslateModule,
+//         NavBarComponent,
+//         NavContentComponent,
+//         MapaLogisticoComponent // Solo inyectamos el componente de MapLibre
+//     ],
+//     templateUrl: './dashboard-panel.component.html',
+//     styleUrl: './dashboard-panel.component.scss'
+// })
+// export class DashboardPanelComponent implements OnInit, OnDestroy {
+//     @Output() toggleSidebar = new EventEmitter<void>();
+//     activeTab: 'menu' | 'filters' | 'main' = 'menu';
+//     menuItems$!: Observable<NavigationItem[]>;
+//     hasFiltersSlot: boolean = false;
+
+//     private subscriptions = new Subscription();
+
+//     constructor(
+//         private _localStorageService: LocalStorageService,
+//         private _navigationService: NavigationService,
+//         private _mapSocketService: MapSocketService,
+//         private _maritimoService: MaritimoService,
+//         private _mapaGeneralService: MapaGeneralService, // El Cerebro (State Manager)
+//         private _translate: TranslateService,
+//         private _swalService: SwalAlertService
+//     ) {
+//         console.log('🚨🚨🚨 TORRE DE CONTROL: ORQUESTADOR INICIADO 🚨🚨🚨');
+//     }
+
+//     ngOnInit(): void {
+//         this._navigationService.getNavigationItems();
+//         this.menuItems$ = this._navigationService.menuItems$;
+
+//         // Arrancamos los motores que empujan datos al servicio
+//         this.iniciarMotoresDeDatos();
+//         this.cargarArchivosEstaticos();
+//     }
+
+//     // ========================================================================
+//     // MOTORES DE SINCRONIZACIÓN REACTIVA (Empujan datos al Cerebro)
+//     // ========================================================================
+//     private iniciarMotoresDeDatos(): void {
+//         // 1. CICLO LENTO: Gemelo Digital (Infraestructura, Clima) - Cada 5 min
+//         this.subscriptions.add(
+//             timer(0, 300000).pipe(
+//                 switchMap(() => this._mapaGeneralService.obtenerGemeloDigital())
+//             ).subscribe({
+//                 next: (data: any) => {
+//                     console.log('✅ Gemelo Digital Sincronizado');
+//                     if (data?.CAPA_INFRAESTRUCTURA) this._mapaGeneralService.actualizarInfraestructura(data.CAPA_INFRAESTRUCTURA);
+//                     if (data?.CAPA_TERRESTRE) this._mapaGeneralService.actualizarTerrestre(data.CAPA_TERRESTRE);
+//                     if (data?.CAPA_CLIMA) this._mapaGeneralService.actualizarClima(data.CAPA_CLIMA);
+//                 },
+//                 error: (err) => console.error('❌ Error Gemelo Digital:', err)
+//             })
+//         );
+
+//         // 2. CICLO RÁPIDO: Tráfico Terrestre (Camiones) - Cada 15 segundos
+//         this.subscriptions.add(
+//             timer(0, 15000).pipe(
+//                 switchMap(() => this._mapaGeneralService.obtenerCapaTerrestreMapa())
+//             ).subscribe({
+//                 next: (response: any) => {
+//                     this._mapaGeneralService.actualizarTerrestre(response.data || response);
+//                 },
+//                 error: (err) => console.error('❌ Error Tráfico Terrestre:', err)
+//             })
+//         );
+
+//         // 3. CICLO MARÍTIMO: Naves - Cada 5 min
+//         this.subscriptions.add(
+//             timer(0, 300000).pipe(
+//                 switchMap(() => this._maritimoService.obtenerCapaMaritimaMapa())
+//             ).subscribe({
+//                 next: (geoJson) => {
+//                     // En la Fase 2 pondremos el transformadorAca
+//                     this._mapaGeneralService.actualizarNaves(geoJson);
+//                 },
+//                 error: (err) => console.error('❌ Error Naves Marítimas:', err)
+//             })
+//         );
+
+//         // 4. CICLO ALERTAS: IDEAM - Cada 5 min
+//         this.subscriptions.add(
+//             timer(0, 300000).pipe(
+//                 switchMap(() => this._mapaGeneralService.getAlertasActivas())
+//             ).subscribe({
+//                 next: (response: any) => {
+//                     if (response.success && response.data) {
+//                         const geoJson = this.transformarAlertasAGeoJson(response.data);
+//                         this._mapaGeneralService.actualizarClima(geoJson); // Envía a clima o crea un nuevo Subject para alertas si prefieres
+//                         console.log('☁️ Alertas procesadas:', geoJson.features.length);
+//                     }
+//                 },
+//                 error: (err) => console.error('❌ Error Alertas:', err)
+//             })
+//         );
+
+//         // 🟢 5. CICLO INVIAS: Accidentes y Bloqueos Viales - Cada 3 min
+//         this.subscriptions.add(
+//             timer(0, 180000).pipe(
+//                 switchMap(() => this._mapaGeneralService.obtenerAccidentesYBloqueosViales())
+//             ).subscribe({
+//                 next: (geoJson: any) => {
+//                     this._mapaGeneralService.actualizarAccidentes(geoJson);
+//                     console.log('🚨 Reportes INVIAS procesados:', geoJson.features?.length || 0);
+//                 },
+//                 error: (err) => console.error('❌ Error INVIAS:', err)
+//             })
+//         );
+//     }
+
+//     private cargarArchivosEstaticos() {
+//         // Cargamos la red vial estática y la empujamos al servicio
+//         fetch('assets/data/Red_Vial_20260626.geojson')
+//             .then(res => res.json())
+//             .then(data => {
+//                 this._mapaGeneralService.actualizarVias(data);
+//                 console.log('🛣️ Red vial estática cargada en memoria');
+//             })
+//             .catch(err => console.error('Error cargando red vial:', err));
+//     }
+
+//     // ========================================================================
+//     // UTILIDADES
+//     // ========================================================================
+//     private transformarAlertasAGeoJson(data: any[]): any {
+//         return {
+//             type: 'FeatureCollection',
+//             features: data.map((alerta) => ({
+//                 type: 'Feature',
+//                 geometry: {
+//                     type: 'Point',
+//                     coordinates: [Number(alerta.longitud), Number(alerta.latitud)]
+//                 },
+//                 properties: {
+//                     tipoAlerta: alerta.tipoAlerta,
+//                     descripcion: alerta.descripcion,
+//                     nivelSeveridad: alerta.nivelSeveridad,
+//                     sector: alerta.nombreSector,
+//                     corredor: alerta.corredorVial
+//                 }
+//             }))
+//         };
+//     }
+
+//     toggleNav(): void {
+//         this.toggleSidebar.emit();
+//     }
+
+//     ngOnDestroy(): void {
+//         this.subscriptions.unsubscribe();
+//     }
+// }
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DataTablesModule } from 'angular-datatables';
+import { GridsterComponent, GridsterItemComponent, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
+import { Subject, Subscription, Observable, debounceTime, firstValueFrom } from 'rxjs';
+import { GradientConfig } from 'src/app/app-config';
+import { WidgetLobbyComponent } from 'src/app/plataforma/starter/home/widget-lobby/widget-lobby.component';
+import { WidgetSelectorComponent } from 'src/app/plataforma/starter/home/widget-selector/widget-selector.component';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+import { PTLWidgetMaestroModel } from 'src/app/theme/shared/_helpers/models/PTLWidgetMaestro.model';
+import { LocalStorageService, NavigationService, SocketManagerService, SwalAlertService } from 'src/app/theme/shared/service';
+import { PtlUsuariosWidgetsService } from 'src/app/theme/shared/service/ptlusuarios-widgets.service';
+import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
+import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+// import { Router } from '@angular/router';
+// import { Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
+// import { debounceTime } from 'rxjs/operators';
+// import { DataTablesModule } from 'angular-datatables';
+// import { GridsterConfig, GridsterItem, GridType, GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
+// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+// // Servicios y Modelos
+// import { SharedModule } from 'src/app/theme/shared/shared.module';
+// import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+// import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+// import { PTLWidgetMaestroModel } from 'src/app/theme/shared/_helpers/models/PTLWidgetMaestro.model';
+// import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+// import { GradientConfig } from 'src/app/app-config';
+
+// // Servicios Core
+// import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+// import { LocalStorageService, SocketManagerService, SwalAlertService } from 'src/app/theme/shared/service';
+// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+// import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
+
+// // Componentes
+// import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+// import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+// import { WidgetLobbyComponent } from "src/app/plataforma/starter/home/widget-lobby/widget-lobby.component";
+// import { WidgetSelectorComponent } from "src/app/plataforma/starter/home/widget-selector/widget-selector.component";
+// import { PtlUsuariosWidgetsService } from 'src/app/theme/shared/service/ptlusuarios-widgets.service';
 
 @Component({
     selector: 'app-dashboard-panel',
     standalone: true,
-    imports: [
-        CommonModule,
-        SharedModule,
-        TranslateModule,
-        NavBarComponent,
-        NavContentComponent,
-        MapaLogisticoComponent // Solo inyectamos el componente de MapLibre
-    ],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, WidgetSelectorComponent, GridsterComponent, GridsterItemComponent, WidgetLobbyComponent],
     templateUrl: './dashboard-panel.component.html',
     styleUrl: './dashboard-panel.component.scss'
 })
 export class DashboardPanelComponent implements OnInit, OnDestroy {
     @Output() toggleSidebar = new EventEmitter<void>();
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
-    menuItems$!: Observable<NavigationItem[]>;
-    hasFiltersSlot: boolean = false;
 
-    private subscriptions = new Subscription();
+    //#region VARIABLES
+    usuario: any = {};
+    private saveLayoutSubject = new Subject<any>();
+    private subs: Subscription = new Subscription();
+    private widgetsSub?: Subscription;
+
+    registrosSub?: Subscription;
+    registros: PTLSitiosAPModel[] = [];
+    registrosFiltrado: PTLSitiosAPModel[] = [];
+    aplicaciones: PTLAplicacionModel[] = [];
+    aplicacionesSub?: Subscription;
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = '';
+    gradientConfig;
+    hasFiltersSlot: boolean = false;
+    menuItems$!: Observable<NavigationItem[]>;
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+
+    public options!: GridsterConfig;
+    public dashboard: Array<GridsterItem & { type: string, data: any }> = [];
+    public isLoading: boolean = false;
+    public mostrarLobby: boolean = false;
+    public cargando: boolean = true;
+    public tableroBloqueado: boolean = true;
+    public widgetEnfoque: { type: string, data: any } | null = null;
+    public hayCambiosSinGuardar: boolean = false;
+
+    public lsWidgetsMaestro: PTLWidgetMaestroModel[] = [];
+    public lsWidgets: PTLWidgetMaestroModel[] = [];
+    public lsLayout: any[] = [];
+    public pestanaActiva: string = 'TAB_PLAT_PRINCIPAL';
+    textoBienvenida = '';
+
+    private readonly LAYOUT_POR_DEFECTO: any[] = [];
+
+    //#endregion VARIABLES
 
     constructor(
-        private _localStorageService: LocalStorageService,
+        private router: Router,
+        private translate: TranslateService,
+        private _localStoragoService: LocalStorageService,
+        private _torreService: DashboardService,
         private _navigationService: NavigationService,
-        private _mapSocketService: MapSocketService,
-        private _maritimoService: MaritimoService,
-        private _mapaGeneralService: MapaGeneralService, // El Cerebro (State Manager)
-        private _translate: TranslateService,
-        private _swalService: SwalAlertService
+        private cdr: ChangeDetectorRef,
+        private _widgetsMaestroService: PTLWidgetsMaestroService,
+        private _usuariosWidgetsService: PtlUsuariosWidgetsService,
+        private _socketManager: SocketManagerService,
+        private _swalAlertService: SwalAlertService
     ) {
-        console.log('🚨🚨🚨 TORRE DE CONTROL: ORQUESTADOR INICIADO 🚨🚨🚨');
+        this.gradientConfig = GradientConfig;
+        this.usuario = _localStoragoService.getCurrentUserLocalStorage().usuario;
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.iniciarConfiguracionGridster();
+        this.escucharDatosTiempoReal();
+
+        // Suscripción de Auto-Guardado (Debounce)
+        this.subs.add(
+            this.saveLayoutSubject.pipe(debounceTime(1500)).subscribe(layoutToSave => {
+                this.persistirLayoutEnServidor(layoutToSave);
+            })
+        );
+
         this._navigationService.getNavigationItems();
         this.menuItems$ = this._navigationService.menuItems$;
+        this.hasFiltersSlot = true;
+        this.lsWidgetsMaestro = this._widgetsMaestroService.getWidgetsActuales();
 
-        // Arrancamos los motores que empujan datos al servicio
-        this.iniciarMotoresDeDatos();
-        this.cargarArchivosEstaticos();
+        try {
+            this.cargando = true;
+
+            await this.cargarCatalogoWidgets();
+            await this.cargarLayoutInicial();
+
+            this.validarActualizacionesDeWidgetsMaestro();
+
+            const tableroState = await this._localStoragoService.getTableroLocalStorage() || {};
+            this.pestanaActiva = tableroState.pestana?.includes('TAB_PLAT') ? tableroState.pestana : 'TAB_PLAT_PRINCIPAL';
+            this.cambiarPestana(this.pestanaActiva);
+
+        } catch (error) {
+            console.error('❌ Error al inicializar el home:', error);
+            this.cargando = false;
+        }
+
+        this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
+            this.widgetEnfoque = widget;
+            this.cdr.detectChanges();
+        }));
+
+        this.escucharCambiosWidgets();
     }
 
-    // ========================================================================
-    // MOTORES DE SINCRONIZACIÓN REACTIVA (Empujan datos al Cerebro)
-    // ========================================================================
-    private iniciarMotoresDeDatos(): void {
-        // 1. CICLO LENTO: Gemelo Digital (Infraestructura, Clima) - Cada 5 min
-        this.subscriptions.add(
-            timer(0, 300000).pipe(
-                switchMap(() => this._mapaGeneralService.obtenerGemeloDigital())
-            ).subscribe({
-                next: (data: any) => {
-                    console.log('✅ Gemelo Digital Sincronizado');
-                    if (data?.CAPA_INFRAESTRUCTURA) this._mapaGeneralService.actualizarInfraestructura(data.CAPA_INFRAESTRUCTURA);
-                    if (data?.CAPA_TERRESTRE) this._mapaGeneralService.actualizarTerrestre(data.CAPA_TERRESTRE);
-                    if (data?.CAPA_CLIMA) this._mapaGeneralService.actualizarClima(data.CAPA_CLIMA);
-                },
-                error: (err) => console.error('❌ Error Gemelo Digital:', err)
-            })
-        );
+    ngOnDestroy() {
+        this.subs.unsubscribe();
+        if (this.widgetsSub) {
+            this.widgetsSub.unsubscribe();
+        }
+    }
 
-        // 2. CICLO RÁPIDO: Tráfico Terrestre (Camiones) - Cada 15 segundos
-        this.subscriptions.add(
-            timer(0, 15000).pipe(
-                switchMap(() => this._mapaGeneralService.obtenerCapaTerrestreMapa())
-            ).subscribe({
-                next: (response: any) => {
-                    this._mapaGeneralService.actualizarTerrestre(response.data || response);
-                },
-                error: (err) => console.error('❌ Error Tráfico Terrestre:', err)
-            })
-        );
+    // ==========================================
+    // 🟢 METODOS DE CARGA DE DATOS
+    // ==========================================
+    async cargarCatalogoWidgets(): Promise<void> {
+        const resp = await firstValueFrom(this._widgetsMaestroService.getWidgetsActivos());
+        const catalogoFresco = resp.widgets || [];
 
-        // 3. CICLO MARÍTIMO: Naves - Cada 5 min
-        this.subscriptions.add(
-            timer(0, 300000).pipe(
-                switchMap(() => this._maritimoService.obtenerCapaMaritimaMapa())
-            ).subscribe({
-                next: (geoJson) => {
-                    // En la Fase 2 pondremos el transformadorAca
-                    this._mapaGeneralService.actualizarNaves(geoJson);
-                },
-                error: (err) => console.error('❌ Error Naves Marítimas:', err)
-            })
-        );
+        const widgetsPermitidos = this.usuario?.widgets || [];
+        const codigosPermitidos = widgetsPermitidos.map((w: any) => w.codigoWidget);
 
-        // 4. CICLO ALERTAS: IDEAM - Cada 5 min
-        this.subscriptions.add(
-            timer(0, 300000).pipe(
-                switchMap(() => this._mapaGeneralService.getAlertasActivas())
-            ).subscribe({
-                next: (response: any) => {
-                    if (response.success && response.data) {
-                        const geoJson = this.transformarAlertasAGeoJson(response.data);
-                        this._mapaGeneralService.actualizarClima(geoJson); // Envía a clima o crea un nuevo Subject para alertas si prefieres
-                        console.log('☁️ Alertas procesadas:', geoJson.features.length);
+        this.lsWidgets = catalogoFresco.filter((w: any) => codigosPermitidos.includes(w.codigoWidget));
+        console.log('📦 Catálogo filtrado por Roles (Lobby):', this.lsWidgets);
+    }
+
+    // ==========================================
+    // 🟢 ACTUALIZACIÓN DE MÉTRICAS EN TIEMPO REAL
+    // ==========================================
+    escucharDatosTiempoReal(): void {
+        this.subs.add(
+            this._socketManager.datosTablero$.subscribe((eventoData: any) => {
+                if (!eventoData || !eventoData.codigoWidget) return;
+
+                // 1. Verificamos si el widget afectado está actualmente visible en el Gridster
+                const widgetEnPantalla = this.dashboard.find(w => w.type === eventoData.codigoWidget);
+
+                if (widgetEnPantalla) {
+                    console.log(`⚡ [Live Data] Actualizando widget ${eventoData.codigoWidget}`, eventoData.payload);
+
+                    // 2. Fusionamos la data nueva con la existente (para no borrar configuraciones previas)
+                    widgetEnPantalla.data = {
+                        ...widgetEnPantalla.data,
+                        ...eventoData.payload
+                    };
+
+                    // 3. Notificamos a la API de Gridster y a Angular que repinten este componente
+                    if (this.options.api && this.options.api.optionsChanged) {
+                        this.options.api.optionsChanged();
                     }
-                },
-                error: (err) => console.error('❌ Error Alertas:', err)
-            })
-        );
-
-        // 🟢 5. CICLO INVIAS: Accidentes y Bloqueos Viales - Cada 3 min
-        this.subscriptions.add(
-            timer(0, 180000).pipe(
-                switchMap(() => this._mapaGeneralService.obtenerAccidentesYBloqueosViales())
-            ).subscribe({
-                next: (geoJson: any) => {
-                    this._mapaGeneralService.actualizarAccidentes(geoJson);
-                    console.log('🚨 Reportes INVIAS procesados:', geoJson.features?.length || 0);
-                },
-                error: (err) => console.error('❌ Error INVIAS:', err)
-            })
-        );
-    }
-
-    private cargarArchivosEstaticos() {
-        // Cargamos la red vial estática y la empujamos al servicio
-        fetch('assets/data/Red_Vial_20260626.geojson')
-            .then(res => res.json())
-            .then(data => {
-                this._mapaGeneralService.actualizarVias(data);
-                console.log('🛣️ Red vial estática cargada en memoria');
-            })
-            .catch(err => console.error('Error cargando red vial:', err));
-    }
-
-    // ========================================================================
-    // UTILIDADES
-    // ========================================================================
-    private transformarAlertasAGeoJson(data: any[]): any {
-        return {
-            type: 'FeatureCollection',
-            features: data.map((alerta) => ({
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [Number(alerta.longitud), Number(alerta.latitud)]
-                },
-                properties: {
-                    tipoAlerta: alerta.tipoAlerta,
-                    descripcion: alerta.descripcion,
-                    nivelSeveridad: alerta.nivelSeveridad,
-                    sector: alerta.nombreSector,
-                    corredor: alerta.corredorVial
+                    this.cdr.detectChanges();
                 }
-            }))
+            })
+        );
+    }
+
+    async cargarLayoutInicial(): Promise<void> {
+        const wdtsActivos = this.lsWidgetsMaestro.filter(x => x.estadoWidget == true && x.inicial == true);
+        console.log('widgets por defacto activos', wdtsActivos);
+        wdtsActivos.forEach((wdgt: any) => {
+            const wt = {
+                type: wdgt.codigoWidget,
+                cols: wdgt.defaultCols,
+                rows: wdgt.defaultRows,
+                x: wdgt.pos_x,
+                y: wdgt.pos_y,
+                pestana: wdgt.pestana,
+                visible: true,
+                data: { tipo: wdgt.tipo }
+            };
+
+            this.LAYOUT_POR_DEFECTO.push(wt);
+        });
+        console.log('widgets por defacto activos', this.LAYOUT_POR_DEFECTO);
+
+        try {
+            const layoutDesdeBD = await firstValueFrom(this._usuariosWidgetsService.getLayoutUsuario(this.usuario.codigoUsuario));
+
+            if (layoutDesdeBD && layoutDesdeBD.length > 0) {
+                this.lsLayout = layoutDesdeBD.map((item: any) => ({
+                    ...item,
+                    type: item.codigoWidget
+                }));
+            } else {
+                const tableroState = await this._localStoragoService.getTableroLocalStorage() || {};
+                if (tableroState.layout && tableroState.layout.length > 0) {
+                    this.lsLayout = tableroState.layout;
+                } else {
+                    this.lsLayout = this.LAYOUT_POR_DEFECTO;
+                }
+
+                this.saveLayoutSubject.next(this.lsLayout);
+            }
+        } catch (error) {
+            console.error('⚠️ Error al cargar layout desde SQL. Usando default.', error);
+            this.lsLayout = this.LAYOUT_POR_DEFECTO;
+        }
+    }
+
+    resetearLayout() {
+        // 🟢 Usamos el método reactivo pasándole la descripción, el título y los textos de los botones
+        this._swalAlertService.getAlertQuestionRequest(
+            '¿Estás seguro de que deseas restablecer el tablero a su estado original? Perderás tu organización actual.',
+            '¿Restablecer tablero?',
+            'Sí, restablecer',
+            'Cancelar'
+        ).subscribe((confirmado: boolean) => {
+
+            // Si el usuario hace clic en "Cancelar" o presiona Escape, 'confirmado' será false
+            if (confirmado) {
+                this.cargando = true;
+
+                // 1. Matamos los widgets en pantalla para que la sincronización automática no los reviva
+                this.dashboard = [];
+
+                // 2. Clonamos el layout por defecto
+                this.lsLayout = this.LAYOUT_POR_DEFECTO.map(item => ({ ...item }));
+
+                // 3. Disparamos el guardado hacia SQL Server
+                this.saveLayoutSubject.next(this.lsLayout);
+
+                // 4. Sincronizamos la sesión en el navegador
+                this.sincronizarLayoutEnSessionStorage();
+
+                // 5. Refrescamos la vista de Gridster
+                this.cambiarPestana(this.pestanaActiva);
+            }
+        });
+    }
+
+    escucharCambiosWidgets(): void {
+        this.widgetsSub = this._socketManager.widgetsActualizados$.subscribe(async (data: any) => {
+            if (data.action === 'inactivado') {
+                this.lsWidgets = this.lsWidgets.filter(w => w.codigoWidget !== data.codigoWidget);
+                this.lsLayout = this.lsLayout.filter(l => (l.type !== data.codigoWidget) && (l.codigoWidget !== data.codigoWidget));
+                this.dashboard = this.dashboard.filter(w => (w.type !== data.codigoWidget) && (w['codigoWidget'] !== data.codigoWidget));
+
+                if (this.options.api && this.options.api.optionsChanged) {
+                    this.options.api.optionsChanged();
+                }
+                this.cdr.detectChanges();
+
+                this.sincronizarLayoutEnSessionStorage();
+                this.saveLayoutSubject.next(this.lsLayout);
+
+                console.log(`[Realtime] ${data.msg}`);
+            }
+
+            if (data.action === 'update') {
+                await this.cargarCatalogoWidgets();
+                this.validarActualizacionesDeWidgetsMaestro();
+                this.cambiarPestana(this.pestanaActiva);
+                console.log(`[Realtime] ${data.msg}`);
+            }
+        });
+
+        this.subs.add(
+            this._socketManager.layoutActualizado$.subscribe((data: any) => {
+                if (data.action === 'layout-limpiado') {
+                    console.log('🔄 [Realtime] Layout personal sincronizado por el servidor:', data);
+
+                    this.lsLayout = data.nuevoLayout.map((item: any) => ({
+                        ...item,
+                        type: item.codigoWidget || item.type
+                    }));
+
+                    if (this.usuario) {
+                        this.usuario.layout = JSON.stringify(this.lsLayout);
+                        this.sincronizarLayoutEnSessionStorage();
+                    }
+
+                    this.cambiarPestana(this.pestanaActiva);
+                }
+            })
+        );
+    }
+
+    iniciarConfiguracionGridster() {
+        this.options = {
+            gridType: GridType.ScrollVertical,
+            margin: 16,
+            outerMargin: false,
+            minCols: 12, maxCols: 12,
+            minRows: 1, maxRows: 100,
+            fixedRowHeight: 120,
+            pushItems: true,
+            swap: true,
+            compactType: 'compactUp&Left',
+            defaultItemCols: 4, defaultItemRows: 3,
+            displayGrid: 'onDrag&Resize',
+            draggable: { enabled: !this.tableroBloqueado },
+            resizable: { enabled: !this.tableroBloqueado },
+            mobileBreakpoint: 960, keepFixedHeightInMobile: true,
+            itemResizeCallback: () => {
+                this.hayCambiosSinGuardar = true;
+                this.sincronizarDashboardAMaestro();
+                this.saveLayoutSubject.next(this.lsLayout);
+            },
+            itemChangeCallback: () => {
+                this.hayCambiosSinGuardar = true;
+                this.sincronizarDashboardAMaestro();
+                this.saveLayoutSubject.next(this.lsLayout);
+            }
         };
+    }
+
+    validarActualizacionesDeWidgetsMaestro(): void {
+        let huboCambios = false;
+        const layoutFiltrado: any[] = [];
+
+        this.lsLayout.forEach(itemLayout => {
+            const widgetMaestro = this.lsWidgets.find((w: any) => w.codigoWidget === itemLayout.type);
+
+            if (!widgetMaestro) {
+                huboCambios = true;
+                console.log(`🚫 Widget ${itemLayout.type} expulsado del tablero (Sin permisos o Inactivo).`);
+                return;
+            }
+
+            if ((itemLayout.version || 1) < (widgetMaestro.layoutVersion || 1)) {
+                itemLayout.cols = widgetMaestro.defaultCols;
+                itemLayout.rows = widgetMaestro.defaultRows;
+                itemLayout.version = widgetMaestro.layoutVersion || 1;
+                huboCambios = true;
+            }
+
+            layoutFiltrado.push(itemLayout);
+        });
+
+        this.lsLayout = layoutFiltrado;
+        if (huboCambios) {
+            this.saveLayoutSubject.next(this.lsLayout);
+        }
+    }
+
+    persistirLayoutEnServidor(layoutData: any[]) {
+        const codigoUsuario = this.usuario?.codigoUsuario;
+        if (!codigoUsuario) return;
+
+        // 🟢 LIMPIEZA DE PAYLOAD: Extraemos estrictamente lo que va a la tabla
+        const layoutLimpio = layoutData.map(item => ({
+            codigoUsuario: codigoUsuario, // 🟢 Agregado para satisfacer la tabla y Joi
+            codigoWidget: item.codigoWidget || item.type,
+            pestana: item.pestana || 'TAB_PLAT_PRINCIPAL',
+            cols: item.cols,
+            rows: item.rows,
+            x: item.x,
+            y: item.y,
+            visible: item.visible,
+            codigoUsuarioCreacion: codigoUsuario,
+            fechaCreacion: new Date().toISOString()
+        }));
+
+        this._usuariosWidgetsService.guardarLayoutUsuario(codigoUsuario, layoutLimpio).subscribe({
+            next: (res: any) => {
+                if (res.ok) {
+                    this.hayCambiosSinGuardar = false;
+                    console.log('💾 Layout SQL sincronizado exitosamente (Payload optimizado).');
+                }
+            },
+            error: (err) => console.error('❌ Error al guardar el layout SQL:', err)
+        });
+    }
+
+    async cambiarPestana(nuevaPestana: string) {
+        this.sincronizarDashboardAMaestro();
+
+        this.isLoading = true;
+        this.cargando = true;
+        this.pestanaActiva = nuevaPestana;
+        this.dashboard = [];
+
+        this._localStoragoService.setPestanaLocalStorage(nuevaPestana, this.usuario.codigoUsuario);
+
+        const layoutParaRenderizar = this.armarDashboardPorPestana(nuevaPestana);
+        const estadoActual = await this._localStoragoService.getTableroLocalStorage() || {};
+
+        estadoActual.layout = layoutParaRenderizar;
+        estadoActual.pestana = nuevaPestana;
+
+        if (typeof (this._localStoragoService as any).setTableroLocalStorage === 'function') {
+            (this._localStoragoService as any).setTableroLocalStorage(estadoActual);
+        } else {
+            localStorage.setItem('tableroState', JSON.stringify(estadoActual));
+        }
+
+        this.renderizarLayoutDesdeCache(layoutParaRenderizar, nuevaPestana);
+    }
+
+    armarDashboardPorPestana(pestana: string): any[] {
+        return this.lsLayout
+            .map(layoutItem => {
+                const widgetConfig = this.lsWidgets.find(w => w.codigoWidget === layoutItem.type);
+                return { ...widgetConfig, ...layoutItem };
+            })
+            .filter((item: any) => item.codigoWidget && item.pestana === pestana);
+    }
+
+    renderizarLayoutDesdeCache(layoutCrudo: any[], codigoDashboard: string) {
+        this.cargando = true;
+        this.dashboard = [];
+        this.options.gridType = GridType.ScrollVertical;
+
+        if (this.options.api && this.options.api.optionsChanged) {
+            this.options.api.optionsChanged();
+        }
+        this.cdr.detectChanges();
+
+        // 🟢 FIX: Filtramos y ORDENAMOS matemáticamente de arriba hacia abajo y de izquierda a derecha
+        const layoutBase = layoutCrudo
+            .filter((w: any) => w.visible === true || w.visible === 'true' || w.visible === 1)
+            .sort((a, b) => {
+                if (a.y === b.y) {
+                    return a.x - b.x; // Si están en la misma fila, ordenamos por columna
+                }
+                return a.y - b.y; // Ordenamos por fila
+            });
+
+        setTimeout(() => {
+            this.dashboard = [...layoutBase].map(item => ({ ...item }));
+            this.cargando = false;
+            this.isLoading = false;
+
+            if (this.options.api && this.options.api.optionsChanged) {
+                this.options.api.optionsChanged();
+            }
+            this.cdr.detectChanges();
+        }, 100);
+    }
+
+    sincronizarDashboardAMaestro() {
+        if (!this.dashboard || this.dashboard.length === 0) return;
+
+        this.dashboard.forEach(widgetEnPantalla => {
+            const index = this.lsLayout.findIndex(l => l.type === widgetEnPantalla.type);
+            if (index !== -1) {
+                this.lsLayout[index] = { ...this.lsLayout[index], ...widgetEnPantalla };
+            } else {
+                this.lsLayout.push({ ...widgetEnPantalla });
+            }
+        });
+    }
+
+    abrirLobby() {
+        this.mostrarLobby = true;
+        this.cdr.detectChanges();
+    }
+
+    actualizarWidgetDesdeLobby(evento: { codigoWidget: string, seleccionado: boolean }) {
+        const { codigoWidget, seleccionado } = evento;
+        const indexLayout = this.lsLayout.findIndex(l => l.type === codigoWidget || l.codigoWidget === codigoWidget);
+
+        if (indexLayout !== -1) {
+            this.lsLayout[indexLayout].visible = seleccionado;
+            if (seleccionado) {
+                this.lsLayout[indexLayout].x = 0;
+                this.lsLayout[indexLayout].y = 0;
+            }
+        } else if (seleccionado) {
+            const widgetMaster = this.lsWidgets.find(w => w.codigoWidget === codigoWidget);
+            if (widgetMaster) {
+                this.lsLayout.push({
+                    type: widgetMaster.codigoWidget,
+                    cols: widgetMaster.defaultCols,
+                    rows: widgetMaster.defaultRows,
+                    x: 0, y: 0,
+                    pestana: this.pestanaActiva,
+                    visible: true,
+                    data: { tipo: widgetMaster.tipo },
+                    version: widgetMaster.layoutVersion
+                });
+            }
+        }
+
+        const layoutActualizado = this.armarDashboardPorPestana(this.pestanaActiva);
+        this.dashboard = [...layoutActualizado].filter(w => w.visible === true || w.visible === 'true' || w.visible === 1);
+
+        if (this.options.api && this.options.api.optionsChanged) {
+            this.options.api.optionsChanged();
+        }
+        this.cdr.detectChanges();
+
+        if (this.usuario) {
+            this.usuario.layout = JSON.stringify(this.lsLayout);
+            this.sincronizarLayoutEnSessionStorage();
+        }
+
+        this.hayCambiosSinGuardar = true;
+        this.saveLayoutSubject.next(this.lsLayout);
+    }
+
+    private sincronizarLayoutEnSessionStorage() {
+        try {
+            const keysToUpdate = ['currentUser'];
+            for (const key of keysToUpdate) {
+                const rawData = sessionStorage.getItem(key) || localStorage.getItem(key);
+                if (rawData) {
+                    const parsed = JSON.parse(rawData);
+
+                    // 🟢 Reemplazamos el JSON.stringify por el arreglo nativo directo
+                    if (parsed && parsed.usuario) {
+                        parsed.usuario.layout = this.lsLayout;
+                        if (sessionStorage.getItem(key)) sessionStorage.setItem(key, JSON.stringify(parsed));
+                        else localStorage.setItem(key, JSON.stringify(parsed));
+                        break;
+                    }
+                    else if (parsed && parsed.codigoUsuario) {
+                        parsed.layout = this.lsLayout;
+                        if (sessionStorage.getItem(key)) sessionStorage.setItem(key, JSON.stringify(parsed));
+                        else localStorage.setItem(key, JSON.stringify(parsed));
+                        break;
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('⚠️ No se pudo actualizar el layout en la sesión:', e);
+        }
+    }
+
+    // ==========================================
+    // 🟢 UTILIDADES
+    // ==========================================
+    toggleBloqueoGridster() {
+        this.tableroBloqueado = !this.tableroBloqueado;
+        if (this.options.draggable && this.options.resizable) {
+            this.options.draggable.enabled = !this.tableroBloqueado;
+            this.options.resizable.enabled = !this.tableroBloqueado;
+        }
+        if (this.options.api && this.options.api.optionsChanged) {
+            this.options.api.optionsChanged();
+        }
+    }
+
+    ingresarQplusWeb(): void {
+        this.router.navigate(['/websites/plataforma']);
+    }
+
+    cerrarModalEnfoque() {
+        this.widgetEnfoque = null;
+        this._torreService.cerrarModoEnfoque();
     }
 
     toggleNav(): void {
         this.toggleSidebar.emit();
     }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
+    trackByWidget(index: number, widget: any): string {
+        return widget.codigoWidget || widget.type;
     }
 }

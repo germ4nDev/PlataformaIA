@@ -1,181 +1,151 @@
-@use 'src/app/theme/shared/styles/components' as PORTTOS;
-
-/* ==========================================================================
-   1. CONFIGURACIÓN DEL HOST (El escudo protector)
-   ========================================================================== */
 :host {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    display: block;
     width: 100%;
+    height: 100%;
 }
 
-/* ==========================================================================
-   2. TARJETA PRINCIPAL
-   ========================================================================== */
-.PORTTOS-widget.terminal-card-panel {
-    flex: 1;
-    /* Obliga a la tarjeta a llenar el :host */
-    display: flex;
-    flex-direction: column;
+/* 🟢 Scrollbar custom */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 
-    background-color: var(--card-background);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-    /* Mantiene los bordes redondeados limpios */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
 
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        border-color: var(--app-navbar-color, rgba(13, 148, 136, 0.5));
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
     }
 }
 
-@include PORTTOS.widget-header;
-
-/* ==========================================================================
-   4. CUERPO DE LA TARJETA
-   ========================================================================== */
-.terminal-body-layout {
-    padding: var(--app-dashboard-gap, 1.2rem);
-    flex: 1;
-    /* Toma el espacio restante de la tarjeta */
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    /* Separación uniforme entre Métricas, Muelles y Eficiencia */
-}
-
-/* --- A. Fila de Métricas (Buques, Patios, Gates) --- */
-.metrics-subrow {
+/* 🟢 1. Grid de Métricas */
+.metrics-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* 3 columnas iguales */
-    gap: 12px;
-
-    .metric-mini-box {
-        background-color: color-mix(in srgb, var(--card-background) 94%, var(--text-color));
-        padding: 12px 8px;
-        border-radius: 8px;
-        text-align: center;
-        border: 1px solid transparent;
-
-        .metric-label {
-            display: block;
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: var(--text-subtitle-color);
-            margin-bottom: 6px;
-        }
-
-        .value {
-            font-size: 1.2rem;
-            font-weight: 800;
-            margin: 0;
-
-            /* Colores específicos para cada métrica */
-            &.txt-default {
-                color: var(--app-navbar-color);
-            }
-
-            &.txt-patios {
-                color: #f59e0b;
-            }
-
-            &.txt-gates {
-                color: #10b981;
-            }
-        }
-    }
+    gap: 0.5rem;
 }
 
-/* --- B. Fila de Muelles (Línea de tiempo) --- */
-.docks-subrow {
-    .docks-title {
-        font-size: 0.75rem;
+.metric-mini-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 0.5rem;
+    text-align: center;
+    transition: background 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .metric-label {
+        display: block;
+        font-size: 0.55rem;
+        color: #94a3b8;
         font-weight: 700;
-        color: var(--text-subtitle-color);
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
     }
 
-    .docks-timeline {
-        display: flex;
-        gap: 8px;
+    .value {
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 0;
+        line-height: 1;
 
-        .dock-segment {
-            flex: 1;
-            /* Todos los muelles miden lo mismo */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 4px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background-color: var(--card-background);
-
-            /* Estados dinámicos del muelle */
-            &.occupied {
-                background-color: color-mix(in srgb, #ef4444 10%, var(--card-background));
-                border-color: color-mix(in srgb, #ef4444 30%, transparent);
-                color: #ef4444;
-            }
-
-            &.free {
-                background-color: color-mix(in srgb, #10b981 10%, var(--card-background));
-                border-color: color-mix(in srgb, #10b981 30%, transparent);
-                color: #10b981;
-            }
-
-            .dock-label {
-                font-size: 0.75rem;
-                font-weight: 800;
-            }
-
-            .dock-vessel {
-                font-size: 0.65rem;
-                margin-top: 4px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-                opacity: 0.9;
-            }
+        .small-unit {
+            font-size: 0.6rem;
+            font-weight: normal;
+            opacity: 0.7;
         }
     }
 }
 
-/* --- C. Fila de Eficiencia (Barra de progreso al final) --- */
-.efficiency-subrow {
-    margin-top: auto;
-    /* Empuja la barra hacia el fondo si la tarjeta crece mucho */
+/* 🟢 2. Sección de Muelles (Segmentos) */
+.section-title {
+    font-size: 0.6rem;
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
 
-    .efficiency-labels {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 8px;
+.dock-segment {
+    min-width: 0;
+    /* Previene overflow en flex */
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+
+    .dock-label {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #f8fafc;
     }
 
-    .progress-bar-container {
-        height: 6px;
-        background-color: var(--border-color);
-        border-radius: 10px;
-        overflow: hidden;
+    .dock-vessel {
+        font-size: 0.55rem;
+        color: #cbd5e1;
+    }
 
-        .progress-bar-fill {
-            height: 100%;
-            background-color: var(--app-navbar-color);
-            border-radius: 10px;
-            transition: width 0.5s ease-out;
+    /* Estado Ocupado (Azul) */
+    &.occupied {
+        background-color: rgba(59, 130, 246, 0.15);
+        border-color: rgba(59, 130, 246, 0.5);
+    }
+
+    /* Estado Libre (Gris Sutil) */
+    &.free {
+        background-color: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.1);
+
+        .dock-label {
+            color: #94a3b8;
         }
+
+        .dock-vessel {
+            color: #64748b;
+            font-style: italic;
+        }
+    }
+}
+
+/* 🟢 Badges de Estado Dinámicos proyectados al Header */
+.tc-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.badge-success {
+        color: #10b981;
+        border: 1px solid #10b981;
+        background-color: rgba(16, 185, 129, 0.15);
+    }
+
+    &.badge-warning {
+        color: #f59e0b;
+        border: 1px solid #f59e0b;
+        background-color: rgba(245, 158, 11, 0.15);
+    }
+
+    &.badge-danger {
+        color: #ef4444;
+        border: 1px solid #ef4444;
+        background-color: rgba(239, 68, 68, 0.15);
+    }
+
+    &.badge-info {
+        color: #38bdf8;
+        border: 1px solid #0ea5e9;
+        background-color: rgba(14, 165, 233, 0.15);
     }
 }
