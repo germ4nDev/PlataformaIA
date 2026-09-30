@@ -8,7 +8,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
 import { ProfileDrpComponent } from "src/app/theme/shared/components/profile-drp/profile-drp.component";
 import { Router } from '@angular/router';
-import { KpiCardTclComponent } from '../widgets/panel-maritimo/kpi-card-tcl/kpi-card-tcl.component';
+import { KpiCardTclComponent } from '../widgets/kpi-card-tcl/kpi-card-tcl.component';
 
 @Component({
     selector: 'app-tablero-control',

@@ -1,0 +1,11 @@
+<div class="tc-footer-shell">
+    <!-- Título opcional del footer (como el "TIEMPO MEDIO ESPERA VIRTUAL") -->
+    <h6 *ngIf="titulo" class="tc-footer-title">
+        {{ titulo }}
+    </h6>
+
+    <!-- Contenedor donde se inyectará el contenido personalizado de cada widget -->
+    <div class="tc-footer-content">
+        <ng-content></ng-content>
+    </div>
+</div>

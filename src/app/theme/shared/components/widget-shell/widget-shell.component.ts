@@ -13,7 +13,7 @@ export class WidgetShellComponent {
     @Input() titulo: string = '';
     @Input() subtitulo: string = '';
     @Input() icono: string = '';
-
+    @Input() tituloFooter?: string = '';
     // Si el widget ya está abierto en el modal grande (para ocultar botón maximizar)
     @Input() isEnfoque: boolean = false;
 

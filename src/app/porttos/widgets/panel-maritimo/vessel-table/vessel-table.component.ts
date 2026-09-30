@@ -23,6 +23,7 @@ export class VesselTableComponent implements OnInit, OnChanges {
     // 🟢 NUEVO ESTÁNDAR
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
 
     public data: Partial<VesselTableModel> = {};
 

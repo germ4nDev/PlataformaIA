@@ -28,21 +28,21 @@ export function construirLayoutEstatico(widgetsDesdeBD: any[]): IWidgetLayoutDef
 export function construirLayoutMaritimo(layoutBase: any[], terminalesApi: any[]): any[] {
     const layoutFinal: any[] = [];
 
-    // 1. FILTRADO ESTRICTO: Garantizamos que solo procesemos widgets de Marítimo
     const baseMaritima = layoutBase.filter(w => !w.pestana || w.pestana === 'TLC_MARITIMO_001');
 
-    // 2. CAPA 1: KPIs Superiores (Fila fija 0)
     const kpisSuperiores = baseMaritima.filter(w => w.type && w.type.startsWith('WDG_PORT_KPI_'));
     kpisSuperiores.forEach(kpi => {
         layoutFinal.push({ ...kpi, y: 0, x: kpi.x ?? 0 });
     });
 
-    // 3. CAPA 2: Terminales Dinámicos (Arrancan en la fila 2)
+    const widget = layoutBase.find(x => x.codigoWidget == 'WDG_PORT_TERMINAL_INDIVIDUAL');
+    console.log('************ datos del widget terminal', widget);
+
     let terminalX = 0;
     let terminalY = 2;
     const widgetMaestroTerminal = baseMaritima.find(w => w.type === 'WDG_PORT_TERMINAL_INDIVIDUAL');
     const terminalCols = widgetMaestroTerminal?.cols || 4;
-    const terminalRows = 3; // Altura segura para las tarjetas de muelles
+    const terminalRows = 3;
 
     let ultimaFilaTerminales = terminalY;
 

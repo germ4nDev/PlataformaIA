@@ -71,17 +71,17 @@
 
 <!-- Modales Inferiores -->
 <app-widget-lobby-tcl [visible]="mostrarLobby" [widgetsMaster]="widgetsParaElLobby" [layoutActual]="lsLayout"
-    [pestanaActual]="pestanaActiva" (cerrar)="mostrarLobby = false" (toggleWidget)="actualizarWidgetDesdeLobby($event)">
+    [pestanaActual]="pestanaActiva" (guardar)="guardarPreferenciasWidgets($event)" (cerrar)="mostrarLobby = false"
+    (toggleWidget)="actualizarWidgetDesdeLobby($event)">
 </app-widget-lobby-tcl>
 
 <app-pestana-lobby-tcl [visible]="mostrarLobbyPestanas" [catalogoPestanas]="lsPestanas"
-    [pestanasActivas]="obtenerCodigosVisibles()" (cerrar)="mostrarLobbyPestanas = false"
+    [pestanasActivas]="pestanasVisibles" (cerrar)="mostrarLobbyPestanas = false"
     (guardar)="guardarPreferenciasPestanas($event)">
 </app-pestana-lobby-tcl>
 
 <div class="PORTTOS-backdrop-blur" *ngIf="widgetEnfoque" (click)="cerrarModalEnfoque()">
     <div class="PORTTOS-modal-lg" (click)="$event.stopPropagation()">
-        <app-widget-selector-tcl [widgetConfig]="widgetEnfoque">
-        </app-widget-selector-tcl>
+        <app-widget-selector-tcl [widgetConfig]="widgetEnfoque" [isEnfoque]="true"></app-widget-selector-tcl>
     </div>
 </div>

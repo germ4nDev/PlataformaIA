@@ -21,7 +21,7 @@ import { PTLActividadModel } from '../_helpers/models/PTLActividades.model';
 import { Puerto } from '../_helpers/models/tablero-control/puerto.model';
 import { CurrentTableroModel } from '../_helpers/models/CurrentTableroSettings.model';
 import { BehaviorSubject } from 'rxjs';
-import { LayoutTclService } from './tablero-control/layout-tcl.service';
+import { LayoutService } from './layout.service';
 import { PuertosService } from './tablero-control/puertos.service';
 
 @Injectable({
@@ -58,7 +58,7 @@ export class LocalStorageService {
 
 
     constructor(
-        private _layoutService: LayoutTclService,
+        private _layoutService: LayoutService,
         private _puertosService: PuertosService
     ) { }
 
@@ -310,8 +310,6 @@ export class LocalStorageService {
                 layout: []
             };
             this.setPuertoLocalStorage('BUENAVENTURA')
-            this.setTableroLocalStorage(this.currentTablero);
-            this.setLayoutLocalStorage('SISTEMA_DEFAULT', this.currentTablero.pestana || '');
         }
         this.puerto = this.currentTablero.puerto;
         this.pestana = this.currentTablero.pestana || '';
@@ -319,39 +317,38 @@ export class LocalStorageService {
         return this.currentTablero;
     }
 
-    setTableroLocalStorage(data: CurrentTableroModel): void {
-        this.setLocalObject('currentTablero', data);
-        this.currentTablero = data;
-        this.tableroSettings = data;
-        this.puerto = data.puerto;
-        this.pestana = data.pestana || '';
+    // setTableroLocalStorage(data: CurrentTableroModel): void {
+    //     // this.setLocalObject('currentTablero', data);
+    //     this.currentTablero = data;
+    //     this.tableroSettings = data;
+    //     this.puerto = data.puerto;
+    //     this.pestana = data.pestana || '';
 
-        // 🟢 Emitimos el cambio a todos los componentes suscritos
-        this.tableroSubject.next(data);
-    }
+    //     // 🟢 Emitimos el cambio a todos los componentes suscritos
+    //     this.tableroSubject.next(data);
+    // }
 
-    setLayoutLocalStorage(usuario: string, pestana: string) {
-        this._layoutService.obtenerLayoutPorUsuario(usuario, pestana).subscribe({
-            next: (res: any) => {
-                const updated = { ...this.currentTablero, layout: res.data || [] };
-                this.setTableroLocalStorage(updated);
-            },
-            error: (err) => console.error("Error sincronizando layout:", err)
-        });
-    }
+    // setLayoutLocalStorage(usuario: string, pestana: string) {
+    //     this._layoutService.cargarRegistrosUsuarioPestana(usuario, pestana).subscribe({
+    //         next: (res: any) => {
+    //             console.log('respuesta tablero local', res);
+
+    //             const updated = { ...this.currentTablero, layout: res.data || [] };
+    //             this.setTableroLocalStorage(updated);
+    //         },
+    //         error: (err) => console.error("Error sincronizando layout:", err)
+    //     });
+    // }
 
     setPuertoLocalStorage(idPuerto: string): void {
         this.puertos = this._puertosService.getPuertosActuales()
         const index = this.puertos.findIndex(x => x.id_puerto == idPuerto)
         console.log('puerto seleccionado localstorage', idPuerto, this.puertos[index]);
         const updated = { ...this.currentTablero, puerto: this.puertos[index] };
-        this.setTableroLocalStorage(updated);
     }
 
     setPestanaLocalStorage(nuevaPestana: string, usuario: string = 'SISTEMA_DEFAULT'): void {
         const updated = { ...this.currentTablero, pestana: nuevaPestana };
-        this.setTableroLocalStorage(updated);
-        this.setLayoutLocalStorage(usuario, nuevaPestana);
     }
 
     getPuertoLocalStorage(): Puerto {

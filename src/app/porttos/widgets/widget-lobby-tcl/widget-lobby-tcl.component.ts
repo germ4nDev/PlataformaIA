@@ -16,6 +16,7 @@ export class WidgetLobbyTclComponent implements OnInit {
     @Input() pestanaActual: string = '';
 
     @Output() cerrar = new EventEmitter<void>();
+    @Output() guardar = new EventEmitter<string[]>();
     @Output() toggleWidget = new EventEmitter<{ codigoWidget: string, seleccionado: boolean }>();
 
     public widgetsAgrupados: { [key: string]: any[] } = {};
@@ -58,21 +59,30 @@ export class WidgetLobbyTclComponent implements OnInit {
             const masterFiltrado = this.widgetsMaster || [];
 
             this.widgetsProcesados = masterFiltrado.map(widget => {
-                const item = (this.layoutActual || []).find(
-                    l => (l.type === widget.codigoWidget || l.codigoWidget === widget.codigoWidget)
-                );
-                const activo = item ? (item.visible === true || item.visible === 'true' || item.visible === 1) : false;
+                // 1. Normalizar los códigos del widget maestro para abarcar ambas propiedades
+                const codigoMaestro = widget.codigoWidget || widget.codigo_widget;
+
+                // 2. Búsqueda robusta en el layout actual (que ahora viene de this.dashboard)
+                const item = (this.layoutActual || []).find(l => {
+                    // Validar contra 'type' y 'codigoWidget', que son las propiedades usadas en el dashboard
+                    const codigoDashboard = l.type || l.codigoWidget;
+                    return codigoDashboard === codigoMaestro;
+                });
+
+                // 3. Determinar si está activo (basta con que exista en el layoutActual)
+                // Ya no necesitamos validar 'visible', porque si está en el layoutActual (dashboard), está activo.
+                const activo = item ? true : false;
 
                 const imgPath = this.isDarkMode ? widget.imagenWidget_dark : widget.imagenWidget_light;
                 const imgFinal = this._uploadService.getFilePath(this.suscriptor, 'widgets', imgPath);
 
                 return {
                     ...widget,
-                    codigoWidget: widget.codigoWidget || widget.codigo_widget,
+                    codigoWidget: codigoMaestro,
                     nombreWidget: widget.nombreWidget || widget.nombre,
                     descripcionWidget: widget.descripcionWidget || widget.descripcion,
                     imagenWidget: imgFinal,
-                    activo: activo
+                    activo: activo // Asignar el estado corregido
                 };
             });
 
@@ -131,6 +141,7 @@ export class WidgetLobbyTclComponent implements OnInit {
         if (target) {
             target.activo = seleccionado;
         }
+        this.actualizarLayoutUsuario(this.widgetsProcesados);
         this.toggleWidget.emit({ codigoWidget, seleccionado });
     }
 
@@ -149,6 +160,17 @@ export class WidgetLobbyTclComponent implements OnInit {
                 });
             }
         });
+        this.actualizarLayoutUsuario(this.widgetsProcesados);
+    }
+
+    actualizarLayoutUsuario(widgetsProcesados: any[]) {
+        const activos = widgetsProcesados.filter(x => x.activo == true);
+        const navSetrtings = this._localStorageService.getNavSettingsLocalStorage();
+        const pestana = navSetrtings.pestanas?.find(x => x.codigoPestana == this.pestanaActual);
+        pestana.widgets = activos;
+        console.log('widgets actrivos lobby', activos);
+        this.guardar.emit(activos);
+        this._localStorageService.setNavSettingsLocalStorage(navSetrtings);
     }
 
     cerrarModal() {

@@ -60,11 +60,8 @@ export const WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
         defaultRows: 2
     },
 
-
     'WDG_PORT_TABLE_REPORTE_MOTONAVES': { componente: VesselTableComponent, defaultCols: 8, defaultRows: 4 },
     'WDG_PORT_CHART_ETA_ATA': { componente: EtaChartComponent, defaultCols: 4, defaultRows: 4 },
-
-
     'WDG_PORT_CHART_TONELADAS': { componente: ToneladasChartComponent, defaultCols: 6, defaultRows: 3 },
     'WDG_PORT_CONDICIONES_CANAL': { componente: CanalConditionsComponent, defaultCols: 6, defaultRows: 3 },
     'WDG_PORT_SEMANAL_MARITIMO': { componente: ReporteSemanalMaritimoComponent, defaultCols: 4, defaultRows: 3 },
@@ -87,7 +84,6 @@ export const WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'WDG_PORT_HISTORICO_ANUAL': { componente: HistoricoAnualComponent, defaultCols: 4, defaultRows: 3 },
     'WDG_PORT_IMPLICACIONES_OPERATIVAS': { componente: ImplicacionesOperativasComponent, defaultCols: 12, defaultRows: 2 },
     'WDG_PORT_MAPA_LOGISTICO': { componente: MapaLogisticoComponent, defaultCols: 12, defaultRows: 12 },
-
 
     'WDG_PORT_KPI_GATE_OP': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },
     'WDG_PORT_KPI_GATE_CONT': { componente: KpiCardTclComponent, defaultCols: 2, defaultRows: 1 },

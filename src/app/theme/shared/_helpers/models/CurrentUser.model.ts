@@ -12,6 +12,7 @@ export class CurrentUserModel {
         public usuario?: PTLUsuarioModel,
         public usuariosSC?: any,
         public suscriptor?: any,
+        public pestanaActiva?: any,
         public roles?: PTLRoleAPModel[],
         public actividades?: PTLActividadModel[]
     ) { }

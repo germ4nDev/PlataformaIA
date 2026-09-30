@@ -61,6 +61,10 @@ export type TipoMapaBase = 'outdoor' | 'terreno' | 'satelite';
 })
 export class MapaLogisticoComponent implements AfterViewInit, OnInit, OnDestroy, IWidget {
     @ViewChild('mapContainer') mapContainer!: ElementRef;
+    @Input() widgetConfig: any;
+    @Input() isEnfoque: boolean = false;
+    @Input() mostrarTabla: boolean = false;
+
     @Input() title: string = '';
     @Input() config: any = { colspan: 12 };
     @Input() widgetId?: string;

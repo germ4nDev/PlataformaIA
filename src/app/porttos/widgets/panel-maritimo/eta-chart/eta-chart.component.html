@@ -1,7 +1,9 @@
-<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'REPORTE ETA VS ATA'"
+<!-- ==========================================
+     1. VISTA DASHBOARD (Modo Compacto)
+     ========================================== -->
+<app-widget-shell *ngIf="!isEnfoque" [titulo]="widgetConfig?.data?.titulo || 'REPORTE ETA VS ATA'"
     [subtitulo]="widgetConfig?.data?.subtitulo || 'Programación de arribos y atraques'"
-    [icono]="widgetConfig?.data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="widgetConfig?.data?.icono || 'feather icon-clock'" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
@@ -12,18 +14,72 @@
 
     <!-- CUERPO ÚNICO DEL WIDGET (Contenedor para la gráfica) -->
     <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
-
-        <!-- Loader mientras responde el backend -->
+        <!-- Loader -->
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top:0; left:0; z-index: 10;">
             <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
             <span class="text-muted" style="font-size: 0.8rem;">Cargando reporte...</span>
         </div>
 
-        <!-- Gráfica Chart.js -->
-        <canvas *ngIf="!cargando" baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
-        </canvas>
-
+        <!-- Gráfica Chart.js (Altura delegada por flexbox en tu css) -->
+        <canvas *ngIf="!cargando" baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
     </div>
 
 </app-widget-shell>
+
+
+<!-- ==========================================
+     2. VISTA MAXIMIZADA (Pantalla Completa)
+     ========================================== -->
+<div *ngIf="isEnfoque"
+    class="w-100 h-100 d-flex flex-column bg-dark p-4 rounded-3 border border-secondary border-opacity-25 shadow-lg overflow-auto animate__animated animate__fadeIn"
+    style="background-color: #1e2126 !important;">
+
+    <!-- Header del Modal -->
+    <div
+        class="d-flex justify-content-between align-items-start mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+        <div>
+            <h4 class="text-white text-uppercase fw-bold mb-1 lh-1 d-flex align-items-center gap-2">
+                <i [class]="widgetConfig?.data?.icono || 'feather icon-clock'" class="text-info"></i>
+                {{ widgetConfig?.data?.titulo || 'ANÁLISIS ETA VS ATA DETALLADO' }}
+            </h4>
+            <small class="text-muted" style="letter-spacing: 0.5px;">FUENTE: PORTTOS ENGINE · MODO EN VIVO</small>
+        </div>
+        <button class="btn btn-outline-secondary btn-icon rounded-circle shadow-sm" style="width: 40px; height: 40px;"
+            (click)="maximizarDesdeShell()">
+            <i class="feather icon-x fs-5"></i>
+        </button>
+    </div>
+
+    <!-- 🟢 Tarjetas de Resumen (Simuladas - Aquí puedes inyectar datos reales de tu backend) -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-3">
+            <div class="bg-dark border border-secondary border-opacity-25 p-3 rounded-3">
+                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">PROMEDIO DEMORA
+                    ETA</small>
+                <h3 class="fw-bold mb-0 text-white lh-1">+2.4h</h3>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="bg-dark border border-secondary border-opacity-25 p-3 rounded-3">
+                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">NAVES A
+                    TIEMPO</small>
+                <h3 class="fw-bold mb-0 text-success lh-1">78%</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor Gigante para la Gráfica -->
+    <div class="flex-grow-1 w-100 position-relative bg-dark bg-opacity-25 rounded-3 border border-secondary border-opacity-10 p-4 shadow-inner"
+        style="min-height: 50vh;">
+
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100">
+            <div class="spinner-border text-info" role="status"></div>
+        </div>
+
+        <!-- 🚀 Reutilizamos la misma gráfica, pero forzamos un redibujado amplio -->
+        <canvas *ngIf="!cargando" baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"
+            style="height: 100%; width: 100%;">
+        </canvas>
+    </div>
+</div>

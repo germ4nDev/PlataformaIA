@@ -1,0 +1,23 @@
+/* 🚨 LA MAGIA: margin-top: auto empuja el footer hasta el fondo del contenedor padre */
+.tc-footer-shell {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    /* Línea divisoria sutil */
+    width: 100%;
+}
+
+.tc-footer-title {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #8a909d;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+
+.tc-footer-content {
+    width: 100%;
+    /* Asegura que el contenido inyectado ocupe el ancho y permita Flexbox en su interior */
+}

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 // 🟢 1. Importamos el CDK de Drag & Drop
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { LocalStorageService } from 'src/app/theme/shared/service';
 
 @Component({
     selector: 'app-pestana-lobby-tcl',
@@ -14,13 +15,15 @@ import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-
 export class PestanaLobbyTclComponent implements OnChanges {
     @Input() visible: boolean = false;
     @Input() catalogoPestanas: any[] = [];
-    @Input() pestanasActivas: string[] = [];
+    @Input() pestanasActivas: any[] = [];
 
     @Output() cerrar = new EventEmitter<void>();
     @Output() guardar = new EventEmitter<string[]>(); // Se emite en vivo
 
     public pestanasProcesadas: any[] = [];
     public todosEstanSeleccionados: boolean = false;
+
+    constructor(private _localStorage: LocalStorageService) { }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible'] && this.visible) {
@@ -29,32 +32,26 @@ export class PestanaLobbyTclComponent implements OnChanges {
     }
 
     private inicializarPestanas() {
-        // Mapeamos para agregar el estado 'activo'
         this.pestanasProcesadas = this.catalogoPestanas.map(p => ({
             ...p,
-            activo: this.pestanasActivas.includes(p.codigoPestana)
+            activo: this.pestanasActivas.find(x => x.codigoPestana == p.codigoPestana) ? true : false
         }));
 
-        // 🟢 ORDENAMIENTO INTELIGENTE: Ordenamos las tarjetas visuales basándonos
-        // en el orden real en el que el usuario las arrastró previamente (pestanasActivas).
         this.pestanasProcesadas.sort((a, b) => {
             const indexA = this.pestanasActivas.indexOf(a.codigoPestana);
             const indexB = this.pestanasActivas.indexOf(b.codigoPestana);
 
-            if (indexA !== -1 && indexB !== -1) return indexA - indexB; // Ambas activas (ordenamos por su índice)
-            if (indexA !== -1) return -1; // 'a' está activa, va arriba
-            if (indexB !== -1) return 1;  // 'b' está activa, va arriba
-            return 0; // Ninguna está activa, mantienen su orden natural
+            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+            return 0;
         });
 
         this.verificarSeleccionTodos();
     }
 
-    // 🟢 NUEVO: Método que se dispara al soltar la tarjeta
     onDrop(event: CdkDragDrop<any[]>) {
-        // Reordena el arreglo visual
         moveItemInArray(this.pestanasProcesadas, event.previousIndex, event.currentIndex);
-        // Como el orden cambió, emitimos el nuevo arreglo en vivo
         this.emitirCambios();
     }
 
@@ -87,12 +84,12 @@ export class PestanaLobbyTclComponent implements OnChanges {
     }
 
     private emitirCambios() {
-        // 🟢 Al usar filter y map sobre pestanasProcesadas, automáticamente estamos
-        // emitiendo los códigos EN EL ORDEN exacto en el que quedaron tras el Drag & Drop
         const codigosSeleccionados = this.pestanasProcesadas
             .filter(p => p.activo)
-            .map(p => p.codigoPestana);
-
+            .map(p => p);
+        const navSettings = this._localStorage.getNavSettingsLocalStorage();
+        navSettings.pestanas = codigosSeleccionados;
+        this._localStorage.setNavSettingsLocalStorage(navSettings);
         this.guardar.emit(codigosSeleccionados);
     }
 

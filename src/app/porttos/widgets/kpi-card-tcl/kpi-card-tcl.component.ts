@@ -1,26 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
-    Pattern: PORTTOS Generic Widget - KPI Card (Refactorizado con Shell)
+    Pattern: PORTTOS Generic Widget - KPI Card Inteligente (Refactorizado con KpiShell)
 */
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-
-// 🟢 Importamos el Shell maestro
-import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-import { KpiShellComponent } from 'src/app/theme/shared/components/kpi-shell/kpi-shell.component';
-import { KpiCardModel } from 'src/app/theme/shared/_helpers/models/tablero-control/kpi-card.model';
 import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
+import { KpiCardModel } from 'src/app/theme/shared/_helpers/models/tablero-control/kpi-card.model';
+
+// 🟢 Importamos el nuevo Shell especializado para KPIs
+import { KpiShellComponent } from 'src/app/theme/shared/components/kpi-shell/kpi-shell.component';
+import { KpiFormatPipe } from '../../../theme/shared/pipes/kpi-format.pipe';
 
 @Component({
-    selector: 'app-gate-kpi-card',
+    selector: 'app-kpi-card-tcl',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent, KpiShellComponent],
-    templateUrl: './gate-kpi-card.component.html',
-    styleUrls: ['./gate-kpi-card.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    imports: [CommonModule, KpiShellComponent, KpiFormatPipe],
+    templateUrl: './kpi-card-tcl.component.html',
+    styleUrl: './kpi-card-tcl.component.scss'
 })
-export class GateKpiCardComponent implements OnInit, OnChanges {
+export class KpiCardTclComponent implements OnInit, OnChanges {
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
@@ -60,7 +60,7 @@ export class GateKpiCardComponent implements OnInit, OnChanges {
     }
 
     private actualizarDatos(ciudad: string): void {
-        this.isLoading = true;
+        this.isLoading = false;
         // Lógica de actualización hacia el backend/adaptador.
         // Al resolver: this.isLoading = false;
     }

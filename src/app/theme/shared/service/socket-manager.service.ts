@@ -20,6 +20,7 @@ export class SocketManagerService {
 
     // Canal para el widget de usuarios conectados y auditoría de sesiones
     public sesionesActualizadas$ = new Subject<any>();
+    //public layoutActualizadas$ = new Subject<any>();
 
     // ACTIVIDADES
     public actividadesActualizadas$ = new Subject<any>();
@@ -148,6 +149,7 @@ export class SocketManagerService {
         this.socketService.listen('items-actualizados').subscribe(data => this.itemsActualizadas$.next(data));
         this.socketService.listen('pestanas-actualizados').subscribe(data => this.pestanasActualizadoa$.next(data));
         this.socketService.listen('tipos-widget-actualizados').subscribe(data => this.tiposWidgetActualizadoa$.next(data));
+        //this.socketService.listen('layout-actualizados').subscribe(data => this.layoutActualizadas$.next(data));
         this.socketService.listen('actualizacion-datos-widget').subscribe(data => {
             this.datosTablero$.next(data);
         });

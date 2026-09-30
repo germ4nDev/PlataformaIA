@@ -10,6 +10,8 @@ export class NavSettings {
         public suite?: PTLSuiteAPModel,
         public modulo?: PTLModuloAP,
         public contexto?: any,
+        public layout?: any[],
+        public pestanas?: any[],
         public suscriptor?: PTLSuscriptorModel,
         public aplicaciones?: PTLAplicacionModel[],
     ) { }

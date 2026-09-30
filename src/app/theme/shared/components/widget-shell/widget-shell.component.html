@@ -1,4 +1,4 @@
-<div class="porttos-widget-shell d-flex flex-column w-100 h-100 position-relative" [class.modo-enfoque]="isEnfoque">
+<!-- <div class="porttos-widget-shell d-flex flex-column w-100 h-100 position-relative" [class.modo-enfoque]="isEnfoque">
     <div class="shell-header d-flex justify-content-between align-items-start w-100">
         <div class="d-flex align-items-center gap-3 overflow-hidden pe-2">
             <div class="shell-icon-box d-flex justify-content-center align-items-center rounded-3 flex-shrink-0"
@@ -32,4 +32,63 @@
         *ngIf="isEnfoque">
         <ng-content select="[detalle-enfoque]"></ng-content>
     </div>
+    <div class="shell-body d-flex flex-column flex-grow-1 position-relative w-100 mt-2"
+        style="min-height: 0; overflow: hidden;">
+
+        <ng-content></ng-content>
+
+    </div>
+</div> -->
+
+<div class="porttos-widget-shell d-flex flex-column w-100 h-100 position-relative" [class.modo-enfoque]="isEnfoque">
+
+    <!-- 1. HEADER DEL SHELL -->
+    <div class="shell-header d-flex justify-content-between align-items-start w-100 mb-2">
+        <div class="d-flex align-items-center gap-3 overflow-hidden pe-2">
+            <div class="shell-icon-box d-flex justify-content-center align-items-center rounded-3 flex-shrink-0"
+                *ngIf="icono">
+                <i [class]="icono + ' fs-5 text-muted'"></i>
+            </div>
+            <div class="d-flex flex-column text-truncate">
+                <h4 class="shell-titulo mb-0 text-white fw-bold text-truncate">{{ titulo }}</h4>
+                <small class="shell-subtitulo text-muted text-uppercase text-truncate" [innerHTML]="subtitulo"></small>
+            </div>
+        </div>
+
+        <div class="shell-actions d-flex align-items-center gap-2 flex-shrink-0">
+            <ng-content select="[acciones-extra]"></ng-content>
+            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()"
+                [title]="isEnfoque ? 'Cerrar Vista' : 'Expandir Widget'">
+                <i class="feather" [ngClass]="isEnfoque ? 'icon-minimize' : 'icon-maximize'"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. MODO NORMAL (NO ENFOQUE) -->
+    <ng-container *ngIf="!isEnfoque">
+
+        <!-- 🚨 CUERPO: Absorbe el espacio vacío -->
+        <div class="shell-body flex-grow-1 position-relative w-100"
+            style="min-height: 0; overflow-y: auto; overflow-x: hidden;">
+            <!-- Contenido principal del widget -->
+            <ng-content></ng-content>
+        </div>
+
+        <div class="shell-footer w-100 mt-auto text-center">
+            <!-- Inyección del contenido del footer (el widget pondrá su propia línea si usa panel-footer) -->
+            <!-- <h6 *ngIf="tituloFooter" class="tc-footer-title mb-3" style="font-size: 0.65rem; font-weight: 800; color: #8a909d; letter-spacing: 0.5px; text-transform: uppercase;">
+                {{ tituloFooter }}
+            </h6> -->
+
+            <ng-content select="[tc-footer]"></ng-content>
+        </div>
+
+    </ng-container>
+
+    <!-- 3. MODO ENFOQUE (MAXIMIZADO) -->
+    <div class="modal-detail-body flex-grow-1 d-flex flex-column min-h-0 position-relative p-4 w-100 h-100"
+        *ngIf="isEnfoque">
+        <ng-content select="[detalle-enfoque]"></ng-content>
+    </div>
+
 </div>

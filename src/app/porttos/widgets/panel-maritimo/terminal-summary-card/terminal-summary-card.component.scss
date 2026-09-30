@@ -1,233 +1,698 @@
+// // @use 'src/app/theme/shared/styles/components' as porttos;
+
+// // /* =======================================
+// //    1. CONTENEDOR PRINCIPAL Y HOST
+// //    ======================================= */
+// // :host {
+// //     display: block;
+// //     width: 100%;
+// //     height: 100%;
+// //     container-type: inline-size;
+// //     container-name: tarjetaTerminal;
+// // }
+
+// // .porttos-widget {
+// //     display: flex;
+// //     flex-direction: column;
+// //     height: 100%;
+// //     max-height: 100%;
+// //     width: 100%;
+// //     padding: 16px;
+// //     background-color: var(--widget-bg);
+// //     border: 1px solid var(--border-color) !important;
+// //     border-radius: 10px;
+
+// //     /* 🚨 ESTO ES LO QUE ATAJA EL DESBORDE DEL FONDO GRIS */
+// //     overflow: hidden;
+
+// //     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+// //     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+// //     &:hover {
+// //         transform: translateY(-2px);
+// //         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+// //     }
+// // }
+
+// // .panel-header {
+// //     padding: 2px !important;
+// // }
+
+// // /* 🚨 EL CAMBIO CLAVE 1: Convertimos la tarjeta en una columna flexible */
+// // .terminal-card-panel {
+// //     display: flex;
+// //     flex-direction: column;
+// //     height: 100%;
+// //     background-color: var(--widget-bg);
+// //     border: none;
+// //     box-shadow: none;
+
+// //     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+// //     &:hover {
+// //         transform: translateY(-2px);
+// //         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+// //     }
+// // }
+
+// // // @include PORTTOS.widget-header;
+
+// // /* =======================================
+// //    2. CUERPO DEL PANEL (BODY)
+// //    ======================================= */
+// // .panel-body.terminal-body-layout {
+// //     display: flex;
+// //     flex-direction: column;
+// //     /* 🚨 EL CAMBIO CLAVE 2: flex: 1 hace que empuje al footer hacia abajo */
+// //     flex: 1;
+// //     /* 🚨 EL CAMBIO CLAVE 3: El scroll ocurre SOLO aquí adentro */
+// //     overflow-y: auto;
+// //     min-height: 0;
+// //     justify-content: flex-start;
+// //     padding: 0.05rem 0.15rem 0.15rem 0.15rem;
+// //     transition: padding 0.02s ease;
+
+// //     &.table-mode {
+// //         padding: 0;
+// //     }
+// // }
+
+// // /* =======================================
+// //    3. KPIs Y FOOTER (Inferior)
+// //    ======================================= */
+// // .legend-text {
+// //     font-size: 0.8rem;
+// //     line-height: 1.3;
+// //     /* Ligeramente más compacto */
+// //     color: var(--text-color, #cbd5e1);
+// //     margin: 0 0 0.5rem 0;
+// //     /* Reducido a la mitad (antes 1rem) */
+// //     padding: 0 4px;
+// // }
+
+// // .kpis-bottom-row {
+// //     display: flex;
+// //     justify-content: space-between;
+// //     align-items: center;
+// //     border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+// //     padding-top: 0.3rem;
+// //     /* Reducido al mínimo para que la línea no toque los números */
+// //     margin-top: auto;
+
+// //     .kpi-item {
+// //         display: flex;
+// //         flex-direction: column;
+// //         text-align: center;
+// //         gap: 0px;
+// //         /* Eliminamos el espacio intermedio, el line-height hará el trabajo */
+
+// //         .kpi-val {
+// //             font-size: 1.15rem;
+// //             /* Un pelín más pequeño para encajar mejor */
+// //             font-weight: 800;
+// //             line-height: 1.1;
+// //             /* Evita que la caja de texto ocupe espacio invisible arriba y abajo */
+// //             color: var(--text-color, #ffffff);
+// //         }
+
+// //         .kpi-lbl {
+// //             font-size: 0.6rem;
+// //             line-height: 1.1;
+// //             color: var(--text-subtitle-color, #94a3b8);
+// //             text-transform: uppercase;
+// //             margin: 0;
+// //             padding-top: 2px;
+// //             /* Apenas un respiro contra el número */
+// //         }
+// //     }
+// // }
+
+
+
+// // /* =======================================
+// //    4. GRILLA DE MUELLES (Container Queries)
+// //    ======================================= */
+// // .docks-container-wrapper {
+// //     container-type: inline-size;
+// //     container-name: docksGridWrapper;
+// //     width: 100%;
+// // }
+
+// // /* 📱 VISTA COMPACTA */
+// // .docks-grid {
+// //     display: grid;
+// //     gap: 4px;
+// //     grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+// // }
+
+// // .dock-box {
+// //     background: transparent;
+// //     padding: 8px 5px;
+// //     text-align: center;
+// //     font-size: 0.5rem;
+// //     font-weight: 500;
+// //     color: var(--text-subtitle-color, #94a3b8);
+// //     border-radius: 3px;
+// //     transition: all 0.2s ease;
+
+// //     .dock-id {
+// //         font-size: inherit;
+// //     }
+
+// //     .dock-extended-info {
+// //         display: none;
+// //     }
+
+// //     /* Estados del Muelle */
+// //     &.dock-ocupado,
+// //     &.occupied {
+// //         background-color: color-mix(in srgb, var(--app-navbar-color) 60%, transparent);
+// //         border: 1px solid var(--app-navbar-color, #9b9a9a);
+// //         color: var(--app-texto-color, #999999);
+// //     }
+
+// //     &.dock-libre,
+// //     &.free {
+// //         background-color: var(--widget-bg);
+// //         border: 1px dashed var(--text-subtitle-color);
+// //         color: var(--text-subtitle-color, #ffffff);
+// //     }
+
+// //     &.default-dock,
+// //     &.dashed {
+// //         border: 1px dashed rgba(255, 255, 255, 0.2);
+// //         opacity: 0.6;
+// //     }
+// // }
+
+// // /* 🖥️ VISTA MAXIMIZADA */
+// // @container docksGridWrapper (min-width: 800px) {
+// //     .docks-grid {
+// //         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+// //         gap: 1rem;
+// //     }
+
+// //     .dock-box {
+// //         display: flex;
+// //         flex-direction: column;
+// //         align-items: flex-start;
+// //         padding: 1rem;
+// //         border-radius: 8px;
+// //         min-height: 90px;
+// //         justify-content: flex-start;
+// //         opacity: 1;
+
+// //         .dock-id {
+// //             font-size: 1.1rem;
+// //             margin-bottom: 0.5rem;
+// //             color: #cbd5e1;
+// //         }
+
+// //         .dock-extended-info {
+// //             display: flex;
+// //             flex-direction: column;
+// //             width: 100%;
+// //             animation: fadeIn 0.4s ease forwards;
+// //         }
+
+// //         .dock-ship {
+// //             font-size: 0.85rem;
+// //             font-weight: 600;
+// //             white-space: nowrap;
+// //             overflow: hidden;
+// //             text-overflow: ellipsis;
+// //             display: flex;
+// //             align-items: center;
+// //             gap: 6px;
+// //             margin-bottom: 4px;
+// //         }
+
+// //         .dock-meta {
+// //             display: flex;
+// //             align-items: center;
+// //             gap: 6px;
+// //             font-size: 0.75rem;
+// //             color: #94a3b8;
+
+// //             .esp-dot {
+// //                 width: 6px;
+// //                 height: 6px;
+// //                 border-radius: 50%;
+// //                 flex-shrink: 0;
+// //             }
+// //         }
+// //     }
+// // }
+
+// // @keyframes fadeIn {
+// //     from {
+// //         opacity: 0;
+// //         transform: translateY(5px);
+// //     }
+
+// //     to {
+// //         opacity: 1;
+// //         transform: translateY(0);
+// //     }
+// // }
+
+// // /* =======================================
+// //    5. COMPORTAMIENTO EN TAMAÑOS EXTREMOS
+// //    ======================================= */
+// // @container tarjetaTerminal (max-width: 350px) {
+// //     .panel-header .header-titles .subtitle {
+// //         display: none;
+// //     }
+
+// //     /* 🚨 Limpieza: Eliminado el bottom: 0 !important que chocaba con flexbox */
+// //     .panel-footer {
+// //         padding: 0;
+// //         margin-bottom: 10px;
+// //     }
+
+// //     .panel-body.terminal-body-layout {
+// //         padding: 0.4rem;
+// //     }
+
+// //     .legend-text {
+// //         display: none;
+// //     }
+
+// //     .kpis-bottom-row .kpi-item .kpi-val {
+// //         font-size: 1rem;
+// //     }
+// // }
+
+
+// // /* ==========================================
+// //    2. EL TRUCO DEL FOOTER (ANCLAJE EXTREMO)
+// //    ========================================== */
+// // .kpis-bottom-row {
+// //     margin-bottom: 0rem !important;
+// //     margin-left: 0rem !important;
+// //     margin-right: 0rem !important;
+// //     padding-left: 1rem;
+// //     padding-right: 1rem;
+// // }
+
+// // .panel-footer {
+// //     justify-content: space-between;
+// //     align-items: center;
+// //     margin-bottom: 0px !important;
+// //     bottom: 0 !important;
+// // }
+
+// /* ==========================================
+//    1. HOST (Obliga al componente a medir 100%)
+//    ========================================== */
+// // :host {
+// //     flex-direction: column;
+// //     width: 100%;
+// //     height: 100%;
+// //     container-type: inline-size;
+// //     container-name: tarjetaTerminal;
+// // }
+// /* ==========================================
+//    CONTENEDOR DE LA TARJETA
+//    ========================================== */
+// :host {
+//     display: block;
+//     width: 100%;
+//     height: 100%;
+// }
+
+// /* El wrapper debe ser relativo y tener un padding inferior
+//    para que los textos nunca se metan detrás del footer flotante */
+// .terminal-wrapper {
+//     position: relative;
+//     display: flex;
+//     flex-direction: column;
+//     height: 100%;
+//     padding-bottom: 65px;
+//     /* Espacio reservado para el footer */
+// }
+
+// /* Contenedor de muelles con altura fija y scroll interno si excede */
+// .docks-container-wrapper {
+//     height: 120px;
+//     overflow-y: auto;
+//     margin-top: 0.5rem;
+//     padding-right: 4px;
+// }
+
+// /* ==========================================
+//    FOOTER ABSOLUTO CONSTANTE (Siempre en la misma línea)
+//    ========================================== */
+// .terminal-footer-fixed {
+//     position: absolute;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     width: 100%;
+
+//     /* Rompemos los márgenes del widget-shell para que toque los bordes laterales y inferiores */
+//     margin-left: -1rem;
+//     margin-right: -1rem;
+//     margin-bottom: -1rem;
+
+//     padding: 10px 1rem;
+//     /* Fondo sólido para que no se mezcle con los textos */
+//     border-top: 1px solid rgba(255, 255, 255, 0.08);
+//     z-index: 5;
+// }
+
+// /* 🟢 Estilos de la Grilla (Tus estilos originales) */
+// .docks-grid {
+//     display: grid;
+//     gap: 4px;
+
+//     &.grid-bloques {
+//         grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+//     }
+
+//     &.grid-panal {
+//         grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+//     }
+// }
+
+// .dock-box {
+//     background: transparent;
+//     padding: 8px 5px;
+//     text-align: center;
+//     font-size: 0.5rem;
+//     font-weight: 500;
+//     color: var(--text-subtitle-color, #94a3b8);
+//     border-radius: 3px;
+//     transition: all 0.2s ease;
+
+//     .dock-id {
+//         font-size: inherit;
+//     }
+
+//     .dock-extended-info {
+//         display: none;
+//     }
+
+//     /* Estados del Muelle */
+//     &.dock-ocupado,
+//     &.occupied {
+//         background-color: color-mix(in srgb, var(--app-navbar-color) 60%, transparent);
+//         border: 1px solid var(--app-navbar-color, #9b9a9a);
+//         color: var(--app-texto-color, #999999);
+//     }
+
+//     &.dock-libre,
+//     &.free {
+//         background-color: var(--widget-bg);
+//         border: 1px dashed var(--text-subtitle-color);
+//         color: var(--text-subtitle-color, #ffffff);
+//     }
+
+//     &.default-dock,
+//     &.dashed {
+//         border: 1px dashed rgba(255, 255, 255, 0.2);
+//         opacity: 0.6;
+//     }
+// }
+
+@use 'src/app/theme/shared/styles/components' as porttos;
+
+/* =======================================
+   1. CONTENEDOR PRINCIPAL Y HOST
+   ======================================= */
 :host {
     display: block;
     width: 100%;
     height: 100%;
+    container-type: inline-size;
+    container-name: tarjetaTerminal;
 }
 
-/* 🟢 Acciones del Header */
-.tc-action-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
+.porttos-widget {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+    padding: 16px;
+    background-color: var(--widget-bg);
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px;
+
+    /* 🚨 ESTO ES LO QUE ATAJA EL DESBORDE DEL FONDO GRIS */
+    overflow: hidden;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 }
 
-.tc-badge {
-    padding: 0.25rem 0.6rem;
-    border-radius: 50rem;
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.panel-header {
+    padding: 2px !important;
+}
 
-    &.badge-success {
-        color: #10b981;
-        border: 1px solid #10b981;
-        background-color: rgba(16, 185, 129, 0.15);
-    }
+/* 🚨 EL CAMBIO CLAVE 1: Convertimos la tarjeta en una columna flexible */
+.terminal-card-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--widget-bg);
+    border: none;
+    box-shadow: none;
 
-    &.badge-warning {
-        color: #f59e0b;
-        border: 1px solid #f59e0b;
-        background-color: rgba(245, 158, 11, 0.15);
-    }
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 
-    &.badge-danger {
-        color: #ef4444;
-        border: 1px solid #ef4444;
-        background-color: rgba(239, 68, 68, 0.15);
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 }
 
-/* 🟢 Efecto Skeleton */
-.sk-skeleton-container {
-    width: 100%;
-}
+// @include PORTTOS.widget-header;
 
-.skeleton-box {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
-    background-size: 200% 100%;
-    animation: loadingSkeleton 1.5s infinite linear;
-    border-radius: 4px;
-}
-
-.sk-title {
-    height: 1rem;
-    width: 40%;
-}
-
-.sk-value {
-    height: 2rem;
-    width: 25%;
-    margin-top: 0.5rem;
-}
-
-.sk-trend {
-    height: 0.8rem;
-    width: 60%;
-    margin-top: 0.25rem;
-}
-
-.sk-text-line {
-    height: 0.6rem;
-    width: 90%;
-}
-
-.sk-divider {
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.05);
-    width: 100%;
-}
-
-@keyframes loadingSkeleton {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-/* 🟢 Layout Principal */
-.terminal-body-layout {
+/* =======================================
+   2. CUERPO DEL PANEL (BODY)
+   ======================================= */
+.panel-body.terminal-body-layout {
+    display: flex;
+    flex-direction: column;
+    /* 🚨 EL CAMBIO CLAVE 2: flex: 1 hace que empuje al footer hacia abajo */
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-}
-
-.table-mode {
-    padding-right: 0 !important;
-}
-
-.docks-container-wrapper {
+    /* 🚨 EL CAMBIO CLAVE 3: El scroll ocurre SOLO aquí adentro */
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    min-height: 0;
+    justify-content: flex-start;
+    padding: 0.05rem 0.15rem 0.15rem 0.15rem;
+    transition: padding 0.02s ease;
 
-    &::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
+    &.table-mode {
+        padding: 0;
     }
 }
 
-/* 🟢 Grid de Muelles */
-.docks-grid {
-    display: grid;
-    gap: 0.5rem;
-
-    &.grid-bloques {
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    }
-
-    &.grid-panal {
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    }
-}
-
-.dock-box {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
-    padding: 0.6rem 0.75rem;
-    display: flex;
-    flex-direction: column;
-    transition: background 0.2s;
-    border-left-width: 3px !important;
-    border-left-style: solid !important;
-
-    &:hover {
-        background: rgba(255, 255, 255, 0.04);
-    }
-
-    .dock-id {
-        font-size: 0.8rem;
-        color: #f8fafc;
-        margin-bottom: 0.25rem;
-    }
-
-    .dock-ship {
-        font-size: 0.7rem;
-        font-weight: 700;
-        display: block;
-
-        i {
-            font-size: 0.65rem;
-            margin-right: 3px;
-        }
-    }
-
-    /* Modificadores dinámicos desde el backend */
-    &.default-dock {
-        border-left-color: #64748b !important;
-    }
-
-    &.dock-active {
-        border-left-color: #3b82f6 !important;
-        background-color: rgba(59, 130, 246, 0.05);
-    }
-
-    &.dock-waiting {
-        border-left-color: #f59e0b !important;
-    }
-}
-
+/* =======================================
+   3. KPIs Y FOOTER (Inferior)
+   ======================================= */
 .legend-text {
-    font-size: 0.65rem;
-    color: #64748b;
-    text-align: center;
-    font-style: italic;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    /* Ligeramente más compacto */
+    color: var(--text-color, #cbd5e1);
+    margin: 0 0 0.5rem 0;
+    /* Reducido a la mitad (antes 1rem) */
+    padding: 0 4px;
 }
 
-/* 🟢 Footer KPIs Inferiores */
 .kpis-bottom-row {
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+    border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+    padding-top: 0.3rem;
+    /* Reducido al mínimo para que la línea no toque los números */
+    margin-top: auto;
 
     .kpi-item {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        flex: 1;
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        text-align: center;
+        gap: 0px;
+        /* Eliminamos el espacio intermedio, el line-height hará el trabajo */
 
         .kpi-val {
             font-size: 1.15rem;
+            /* Un pelín más pequeño para encajar mejor */
             font-weight: 800;
-            color: #f8fafc;
-            line-height: 1;
-            margin-bottom: 2px;
+            line-height: 1.1;
+            /* Evita que la caja de texto ocupe espacio invisible arriba y abajo */
+            color: var(--text-color, #ffffff);
         }
 
         .kpi-lbl {
-            font-size: 0.55rem;
-            color: #94a3b8;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 0.6rem;
+            line-height: 1.1;
+            color: var(--text-subtitle-color, #94a3b8);
+            text-transform: uppercase;
+            margin: 0;
+            padding-top: 2px;
+            /* Apenas un respiro contra el número */
         }
+    }
+}
+
+/* =======================================
+   4. GRILLA DE MUELLES (Container Queries)
+   ======================================= */
+.docks-container-wrapper {
+    container-type: inline-size;
+    container-name: docksGridWrapper;
+    width: 100%;
+}
+
+/* 📱 VISTA COMPACTA */
+.docks-grid {
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+}
+
+.dock-box {
+    background: transparent;
+    padding: 8px 5px;
+    text-align: center;
+    font-size: 0.5rem;
+    font-weight: 500;
+    color: var(--text-subtitle-color, #94a3b8);
+    border-radius: 3px;
+    transition: all 0.2s ease;
+
+    .dock-id {
+        font-size: inherit;
+    }
+
+    .dock-extended-info {
+        display: none;
+    }
+
+    /* Estados del Muelle */
+    &.dock-ocupado,
+    &.occupied {
+        background-color: color-mix(in srgb, var(--app-navbar-color) 60%, transparent);
+        border: 1px solid var(--app-navbar-color, #9b9a9a);
+        color: var(--app-texto-color, #999999);
+    }
+
+    &.dock-libre,
+    &.free {
+        background-color: var(--widget-bg);
+        border: 1px dashed var(--text-subtitle-color);
+        color: var(--text-subtitle-color, #ffffff);
+    }
+
+    &.default-dock,
+    &.dashed {
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        opacity: 0.6;
+    }
+}
+
+/* 🖥️ VISTA MAXIMIZADA */
+@container docksGridWrapper (min-width: 800px) {
+    .docks-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+
+    .dock-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+        border-radius: 8px;
+        min-height: 90px;
+        justify-content: flex-start;
+        opacity: 1;
+
+        .dock-id {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+        }
+
+        .dock-extended-info {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .dock-ship {
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .dock-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+
+            .esp-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =======================================
+   5. COMPORTAMIENTO EN TAMAÑOS EXTREMOS
+   ======================================= */
+@container tarjetaTerminal (max-width: 350px) {
+    .panel-header .header-titles .subtitle {
+        display: none;
+    }
+
+    /* 🚨 Limpieza: Eliminado el bottom: 0 !important que chocaba con flexbox */
+    .panel-footer {
+        padding: 0;
+    }
+
+    .panel-body.terminal-body-layout {
+        padding: 0.4rem;
+    }
+
+    .legend-text {
+        display: none;
+    }
+
+    .kpis-bottom-row .kpi-item .kpi-val {
+        font-size: 1rem;
     }
 }

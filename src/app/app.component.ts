@@ -55,7 +55,6 @@ import { TerminalesService } from './theme/shared/service/tablero-control/termin
 import { TiposTipoInfraestructuraService } from './theme/shared/service/tablero-control/tipos-infraestructura.service'
 import { WidgetsService } from './theme/shared/service/tablero-control/widgets.service'
 import { LayoutService } from './theme/shared/service/layout.service'
-import { LayoutTclService } from './theme/shared/service/tablero-control/layout-tcl.service'
 import { PtlpestanasService } from './theme/shared/service/ptlpestanas.service'
 import { PtltiposWidgetService } from './theme/shared/service/ptltipos-widget.service'
 
@@ -114,8 +113,7 @@ export class AppComponent implements OnInit {
         private _farosService: FarosService,
         private _tiposInfraestructuraService: TiposTipoInfraestructuraService,
         private _cronMonitorService: CronMonitorService,
-        private _layoutService: LayoutService,
-        private _layoutTclService: LayoutTclService
+        private _layoutService: LayoutService
 
     ) { }
 
@@ -271,7 +269,10 @@ export class AppComponent implements OnInit {
             () => console.log('** tipos de Widget cargados y guardados en el servicio'),
             err => console.error('Error al cargar tipos de Widget', err)
         )
-
+        this._layoutService.cargarRegistros().subscribe(
+            () => console.log('** Layouts cargados y guardados en el servicio'),
+            err => console.error('Error al cargar Layouts', err)
+        )
         //================================
         // PORTTOS
         //================================
@@ -286,10 +287,6 @@ export class AppComponent implements OnInit {
         this._muellesService.cargarMuelles().subscribe(
             () => console.log('** muelles cargados y guardados en el servicio'),
             err => console.error('Error al cargar muelles:', err)
-        )
-        this._layoutTclService.cargarLayout().subscribe(
-            () => console.log('** layouts cargados y guardados en el servicio'),
-            err => console.error('Error al cargar layouts:', err)
         )
         this._farosService.getAllFaros().subscribe(
             () => console.log('** faros cargados y guardados en el servicio'),

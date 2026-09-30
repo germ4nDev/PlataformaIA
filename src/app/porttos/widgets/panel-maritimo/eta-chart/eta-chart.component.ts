@@ -1,35 +1,33 @@
 /*
     Author: German Valencia
-    Pattern: PORTTOS Generic Widget - Reporte ETA vs ATA (Refactorizado con Shell)
+    Pattern: PORTTOS Generic Widget - Reporte ETA vs ATA (Refactorizado)
 */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgChartsModule } from 'ng2-charts';
+import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
-import { IWidget } from 'src/app/theme/shared/interfaces/torre-control/widget.interface';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-
-// 🟢 Importamos el Shell maestro
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
     selector: 'app-eta-chart',
     standalone: true,
-    imports: [CommonModule, NgChartsModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
+    imports: [CommonModule, NgChartsModule, WidgetShellComponent],
     templateUrl: './eta-chart.component.html',
     styleUrls: ['./eta-chart.component.scss']
 })
-export class EtaChartComponent implements OnInit {
+export class EtaChartComponent implements OnInit, OnChanges {
 
-    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
 
+    // 🚀 Referencia al canvas para forzar actualización
+    @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+
     private _data: any;
     public cargando: boolean = true;
 
-    // Mantenemos tu lógica reactiva del setter
     @Input() set data(value: any) {
         this._data = value;
         if (value && value.labels) {
@@ -38,6 +36,10 @@ export class EtaChartComponent implements OnInit {
                 labels: value.labels,
                 datasets: value.datasets
             };
+            // Si el chart ya existe, lo actualizamos al recibir nueva data
+            if (this.chart) {
+                this.chart.update();
+            }
         }
     }
 
@@ -46,14 +48,25 @@ export class EtaChartComponent implements OnInit {
     constructor(private _torreService: DashboardService) { }
 
     ngOnInit() {
-        // 🟢 Aseguramos la carga si la data viene dentro de widgetConfig
         if (this.widgetConfig?.data && !this._data) {
             this.data = this.widgetConfig.data;
         }
     }
 
-    // 🟢 Toggle de enfoque: Abre o cierra el modal
+    // 🟢 Escuchamos cambios para forzar el re-render del Chart al maximizar
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['isEnfoque'] && !changes['isEnfoque'].firstChange) {
+            // Un pequeño delay para que Angular dibuje el div gigante antes de pedirle al chart que se ajuste
+            setTimeout(() => {
+                if (this.chart) {
+                    this.chart.render();
+                }
+            }, 100);
+        }
+    }
+
     maximizarDesdeShell() {
+        // Tu misma lógica (El servicio se encarga de inyectar isEnfoque)
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
@@ -61,10 +74,10 @@ export class EtaChartComponent implements OnInit {
         }
     }
 
-    // Configuración visual
+    // --- CONFIGURACIÓN DE CHART.JS ---
     public barChartOptions: ChartConfiguration['options'] = {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: false, // 🚀 Clave para que se estire al maximizar
         scales: {
             y: {
                 beginAtZero: true,

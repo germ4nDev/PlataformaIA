@@ -149,3 +149,23 @@
 .kpi-shell-footer {
     padding: 0 0.5rem 0.5rem 0.5rem;
 }
+
+.btn-cerrar-modal {
+    background: transparent;
+    border: 1px solid var(--border-color, #334155);
+    color: var(--text-color, #f8fafc);
+    width: 36px;
+    height: 36px;
+    border-radius: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: var(--app-navbar-color, #334155);
+        color: var(--app-iconos-color, #334155);
+        border-color: var(--border-color, #334155);
+    }
+}
