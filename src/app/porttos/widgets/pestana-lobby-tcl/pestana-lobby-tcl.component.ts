@@ -16,13 +16,13 @@ export class PestanaLobbyTclComponent implements OnChanges {
     @Input() visible: boolean = false;
     @Input() catalogoPestanas: any[] = [];
     @Input() pestanasActivas: any[] = [];
-
+    @Output() seleccionCambiada = new EventEmitter<any[]>();
     @Output() cerrar = new EventEmitter<void>();
     @Output() guardar = new EventEmitter<string[]>(); // Se emite en vivo
 
     public pestanasProcesadas: any[] = [];
     public todosEstanSeleccionados: boolean = false;
-
+    pestanasSeleccionadas: any[] = [];
     constructor(private _localStorage: LocalStorageService) { }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -110,5 +110,16 @@ export class PestanaLobbyTclComponent implements OnChanges {
             'TLC_NOTICIAS_001': 'fas fa-newspaper text-primary'
         };
         return diccionarioIconos[codigoPestana] || 'fas fa-th-large text-secondary';
+    }
+
+    onCheckboxToggle(pestana: any, isChecked: boolean) {
+        if (isChecked) {
+            this.pestanasSeleccionadas.push(pestana.codigoPestana);
+        } else {
+            this.pestanasSeleccionadas = this.pestanasSeleccionadas.filter(cod => cod !== pestana.codigoPestana);
+        }
+
+        // 🚨 3. EL LLAMADO AL PADRE: Disparamos el evento al instante con el arreglo actualizado
+        this.guardar.emit(this.pestanasSeleccionadas);
     }
 }

@@ -7,7 +7,7 @@
 }
 
 .kpi-shell-wrapper {
-    background-color: var(--widget-bg, #1a1c23);
+    background: var(--card-background);
     /* Fondo oscuro general */
     border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
     border-radius: 12px;
@@ -23,7 +23,7 @@
     /* Efecto hover suave al pasar el mouse por la tarjeta */
     &:not(.modo-enfoque):hover {
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-        border-color: rgba(255, 255, 255, 0.1);
+        background: var(--card-background);
         transform: translateY(-2px);
     }
 
@@ -104,6 +104,24 @@
         font-size: 0.85rem;
     }
 
+    .kpi-shell-title {
+        font-size: 0.8rem;
+        /* Letra un poco más robusta */
+        font-weight: 700;
+        color: var(--text-color) !important;
+        letter-spacing: 0.3px;
+        line-height: 1.1;
+    }
+
+    .kpi-shell-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-subtitle-color) !important;
+        /* Gris intermedio legible */
+        text-transform: uppercase;
+        line-height: 1;
+        margin-top: 2px;
+    }
+
 
 }
 
@@ -121,8 +139,8 @@
     transition: all 0.2s;
 
     &:hover {
-        background: var(--widget-bg);
-        color: var(--text-color);
+        background-color: color-mix(in srgb, var(--app-navbar-color) 10%, transparent);
+        color: var(--app-iconos-color);
     }
 
     i {
@@ -130,28 +148,14 @@
     }
 }
 
-.kpi-shell-title {
-    font-size: 0.8rem;
-    /* Letra un poco más robusta */
-    font-weight: 700;
-    color: var(--text-color) !important;
-    letter-spacing: 0.3px;
-    line-height: 1.1;
-}
 
-.kpi-shell-subtitle {
-    font-size: 0.8rem;
-    color: var(--text-subtitle-color) !important;
-    /* Gris intermedio legible */
-    text-transform: uppercase;
-    line-height: 1;
-    margin-top: 2px;
-}
 
 .kpi-shell-body {
     padding: 0 0.1rem;
+    color: var(--text-color) !important;
 }
 
 .kpi-shell-footer {
     padding: 0 0.15rem 0 0.15rem;
+    color: var(--text-color) !important;
 }

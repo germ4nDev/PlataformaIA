@@ -1,0 +1,110 @@
+/* ==========================================
+   CONTENEDOR DE SCROLL DINÁMICO
+   ========================================== */
+.feed-container {
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 4px;
+    color: var(--text-color) !important;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(161, 165, 183, 0.2);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(161, 165, 183, 0.5);
+    }
+}
+
+/* ==========================================
+   DISEÑO BASE (MODO CLARO)
+   ========================================== */
+.evento-item {
+    background: var(card-background) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    color: var(--text-color) !important;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+        transform: translateX(4px);
+        border-color: rgba(161, 165, 183, 0.3) !important;
+    }
+}
+
+.evento-icono {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* ==========================================
+   CONTENEDOR DE SCROLL DINÁMICO
+   ========================================== */
+.feed-container {
+    /* La clave para que tome el alto total del WidgetShell */
+    height: 100%;
+    max-height: 100%;
+    /* Elimina el 250px restrictivo del código anterior */
+    overflow-y: auto;
+    padding-right: 4px;
+    /* Da un respiro para que el scrollbar no pise el borde */
+
+    /* Scrollbar invisible e integrado al diseño */
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(161, 165, 183, 0.2);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(161, 165, 183, 0.5);
+    }
+}
+
+/* ==========================================
+   DISEÑO DE LOS ITEMS
+   ========================================== */
+.evento-item {
+    background: var(--widget-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--evento-shadow);
+    color: var(--evento-text);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+        transform: translateX(4px);
+        border-color: var(--border-color) !important;
+    }
+}
+
+.evento-icono {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}

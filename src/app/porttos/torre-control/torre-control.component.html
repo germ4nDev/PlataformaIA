@@ -1,10 +1,100 @@
+<!-- <app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
+    [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()" (abrirCatalogo)="abrirLobbyModal()">
+</app-tc-header>
+
+<div class="tc-dashboard-container" style="position: relative;">
+    <div class="porttos-config-menu position-relative ms-2">
+
+        <button class="btn btn-outline-secondary btn-icon shadow-sm" (click)="menuConfigAbierto = !menuConfigAbierto"
+            [class.active]="menuConfigAbierto" title="Configuración del Tablero">
+            <i class="feather" [ngClass]="menuConfigAbierto ? 'icon-x' : 'icon-settings'"></i>
+        </button>
+
+        <div class="config-popover shadow-lg rounded-3 p-3 bg-dark border border-secondary border-opacity-25 animate__animated animate__fadeIn"
+            *ngIf="menuConfigAbierto">
+
+            <div
+                class="d-flex justify-content-between align-items-center mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+                <h6 class="mb-0 text-white">Personalizar Tablero</h6>
+            </div>
+
+            <div class="config-grid">
+
+                <button class="config-btn" (click)="toggleBloqueoTablero(); menuConfigAbierto = false">
+                    <div class="icon-circle bg-primary bg-opacity-10 text-primary">
+                        <i class="feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
+                    </div>
+                    <span>{{ tableroBloqueado ? 'Desbloquear' : 'Bloquear' }}</span>
+                </button>
+
+                <button class="config-btn" (click)="abrirLobbyModal(); menuConfigAbierto = false">
+                    <div class="icon-circle bg-success bg-opacity-10 text-success">
+                        <i class="feather icon-plus-circle"></i>
+                    </div>
+                    <span>Widgets</span>
+                </button>
+
+                <button class="config-btn" (click)="abrirLobbyPestanas(); menuConfigAbierto = false">
+                    <div class="icon-circle bg-warning bg-opacity-10 text-warning">
+                        <i class="feather icon-layers"></i>
+                    </div>
+                    <span>Pestañas</span>
+                </button>
+
+                <button class="config-btn" (click)="restaurarTableroDefault(); menuConfigAbierto = false">
+                    <div class="icon-circle bg-danger bg-opacity-10 text-danger">
+                        <i class="feather icon-refresh-cw"></i>
+                    </div>
+                    <span>Restaurar</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+    <div *ngIf="cargando" class="cargador-flotante">
+        <div class="cargador-contenido">
+            <div class="spinner-PORTTOS"></div>
+            <p class="text-white mt-4">Actualizando Torre de Control...</p>
+        </div>
+    </div>
+
+    <gridster class="gridster" [options]="options">
+        <gridster-item *ngFor="let widget of dashboard; trackBy: trackByWidget" [item]="widget"
+            [class.PORTTOS-fantasma]="widget.type === 'WDG_FANTASMA'">
+
+            <app-widget-selector-tcl [widgetConfig]="widget">
+            </app-widget-selector-tcl>
+
+        </gridster-item>
+    </gridster>
+
+</div>
+
+<app-widget-lobby-tcl [visible]="mostrarLobby" [widgetsMaster]="widgetsParaElLobby" [layoutActual]="lsLayout"
+    [pestanaActual]="pestanaActiva" (guardar)="guardarPreferenciasWidgets($event)" (cerrar)="mostrarLobby = false"
+    (toggleWidget)="actualizarWidgetDesdeLobby($event)">
+</app-widget-lobby-tcl>
+
+<app-pestana-lobby-tcl [visible]="mostrarLobbyPestanas" [catalogoPestanas]="lsPestanas"
+    [pestanasActivas]="pestanasVisibles" (cerrar)="mostrarLobbyPestanas = false"
+    (guardar)="guardarPreferenciasPestanas($event)">
+</app-pestana-lobby-tcl>
+
+<div class="PORTTOS-backdrop-blur" *ngIf="widgetEnfoque" (click)="cerrarModalEnfoque()">
+    <div class="PORTTOS-modal-lg" (click)="$event.stopPropagation()">
+        <app-widget-selector-tcl [widgetConfig]="widgetEnfoque" [isEnfoque]="true"></app-widget-selector-tcl>
+    </div>
+</div> -->
 <app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
     [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()" (abrirCatalogo)="abrirLobbyModal()">
 </app-tc-header>
 
 <div class="tc-dashboard-container" style="position: relative;">
+
+    <!-- 🚨 CONTENEDOR DEL HEADER INTERNO RESTAURADO -->
     <div class="d-flex justify-content-between align-items-center mb-3 w-100 gap-3">
 
+        <!-- LADO IZQUIERDO/CENTRO: Las Pestañas (Intactas) -->
         <div class="main-tabs-wrapper d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0"
             style="scrollbar-width: none;">
 
@@ -16,39 +106,67 @@
                     {{ pestana.nombrePestana }}
                 </span>
             </button>
-
         </div>
 
+        <!-- LADO DERECHO: El Menú Flotante (Reemplazando los 3 botones antiguos) -->
         <div class="d-flex align-items-center gap-2 flex-shrink-0">
-            <!-- <div class="vr bg-secondary mx-2" style="height: 40px; opacity: 0.5;"></div> -->
+            <div class="porttos-config-menu position-relative">
 
-            <button type="button"
-                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-icon-accion"
-                [hidden]="isOptionBloqueo" style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;"
-                (click)="toggleBloqueoTablero()"
-                [title]="tableroBloqueado ? 'Desbloquear Tablero' : 'Bloquear Tablero'">
-                <i class="feather" [ngClass]="tableroBloqueado ? 'icon-lock' : 'icon-unlock'"></i>
-            </button>
+                <!-- Botón Gatillo (Diseñado igual a tus botones anteriores) -->
+                <button type="button" class="border-0 shadow-none btn-icon-accion"
+                    style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;"
+                    (click)="toggleMenuConfig()" [class.bg-primary]="menuConfigAbierto"
+                    [class.text-white]="menuConfigAbierto" title="Configuración del Tablero">
+                    <i class="feather fs-5" [ngClass]="menuConfigAbierto ? 'icon-x' : 'icon-settings'"></i>
+                </button>
 
-            <button type="button"
-                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-icon-accion"
-                [ngClass]="mostrarLobbyPestanas ? 'selected' : 'no-selected'"
-                style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;"
-                (click)="abrirLobbyPestanas()" title="Gestionar Pestañas">
-                <!-- Quitamos text-white o colores forzados aquí -->
-                <i class="feather icon-layers fs-5"></i>
-            </button>
+                <!-- El Panel Flotante Oculto -->
+                <div class="config-popover shadow-lg rounded-3 p-3 bg-dark border border-secondary border-opacity-25 animate__animated animate__fadeIn"
+                    *ngIf="menuConfigAbierto">
 
-            <button type="button"
-                class="btn d-flex align-items-center justify-content-center p-0 m-0 shadow-sm btn-icon-accion"
-                [ngClass]="mostrarLobby ? 'selected' : 'no-selected'"
-                style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;" (click)="abrirLobbyModal()"
-                title="Agregar Widgets a esta pestaña">
-                <i class="feather icon-plus fs-5"></i>
-            </button>
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+                        <h6 class="mb-0 titulo text-center" style="font-size: 0.9rem;">Personalizar Tablero</h6>
+                    </div>
+
+                    <!-- Grid 2x2 para las opciones -->
+                    <div class="config-grid">
+
+                        <!-- Botón 1: Organizar (Candado) -->
+                        <button class="tc-action-btn" (click)="toggleBloqueoTablero(); menuConfigAbierto = false"
+                            title="Personalizar Tablero">
+                            <i class="feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
+                            <span>{{ tableroBloqueado ? 'Desbloquear' : 'Bloquear' }}</span>
+                        </button>
+
+                        <!-- Botón 2: Añadir Widgets (+) -->
+                        <button class="tc-action-btn" (click)="abrirLobbyModal(); menuConfigAbierto = false"
+                            title="Personalizar Tablero">
+                            <i class="feather icon-plus"></i>
+                            <span>Widgets</span>
+                        </button>
+
+                        <!-- Botón 3: Pestañas (Capas) -->
+                        <button class="tc-action-btn" (click)="abrirLobbyPestanas(); menuConfigAbierto = false"
+                            title="Personalizar Pestañas">
+                            <i class="feather icon-layers"></i>
+                            <span>Pestañas</span>
+                        </button>
+
+                        <!-- Botón 4: Restaurar Default -->
+                        <button class="tc-action-btn" (click)="restaurarTableroDefault(); menuConfigAbierto = false"
+                            title="Restaurar Tablero">
+                            <i class="feather icon-refresh-cw"></i>
+                            <span>Restaurar</span>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
+    <!-- FIN DEL HEADER INTERNO -->
+
     <!-- Cargador Flotante -->
     <div *ngIf="cargando" class="cargador-flotante">
         <div class="cargador-contenido">
@@ -57,6 +175,7 @@
         </div>
     </div>
 
+    <!-- Contenedor Gridster -->
     <gridster class="gridster" [options]="options">
         <gridster-item *ngFor="let widget of dashboard; trackBy: trackByWidget" [item]="widget"
             [class.PORTTOS-fantasma]="widget.type === 'WDG_FANTASMA'">
@@ -80,6 +199,7 @@
     (guardar)="guardarPreferenciasPestanas($event)">
 </app-pestana-lobby-tcl>
 
+<!-- Modal de Enfoque (Gigante) -->
 <div class="PORTTOS-backdrop-blur" *ngIf="widgetEnfoque" (click)="cerrarModalEnfoque()">
     <div class="PORTTOS-modal-lg" (click)="$event.stopPropagation()">
         <app-widget-selector-tcl [widgetConfig]="widgetEnfoque" [isEnfoque]="true"></app-widget-selector-tcl>

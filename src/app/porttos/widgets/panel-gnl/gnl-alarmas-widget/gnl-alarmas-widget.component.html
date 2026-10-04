@@ -1,0 +1,45 @@
+<app-widget-shell [titulo]="'Bitácora de Eventos'" [subtitulo]="'REGISTRO DE ALERTAS SCADA'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()" [icono]="'feather icon-alert-triangle'">
+
+    <div class="h-100 w-100 p-2 feed-container">
+
+        <div *ngFor="let evento of eventos" class="evento-item d-flex align-items-start p-3 mb-2 rounded">
+            <!-- Icono según tipo -->
+            <div class="evento-icono me-3" [ngClass]="{
+                     'bg-light-danger text-danger': evento.tipo === 'peligro',
+                     'bg-light-warning text-warning': evento.tipo === 'advertencia',
+                     'bg-light-info text-info': evento.tipo === 'info'
+                 }">
+                <i class="feather" [ngClass]="{
+                       'icon-alert-octagon': evento.tipo === 'peligro',
+                       'icon-alert-triangle': evento.tipo === 'advertencia',
+                       'icon-info': evento.tipo === 'info'
+                   }"></i>
+            </div>
+
+            <!-- Contenido -->
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h6 class="mb-0 fw-bold" [ngClass]="{
+                            'text-danger': evento.tipo === 'peligro',
+                            'text-warning': evento.tipo === 'advertencia'
+                        }">
+                        {{ evento.mensaje }}
+                    </h6>
+                    <small class="text-muted">{{ evento.tiempo | date:'HH:mm:ss' }}</small>
+                </div>
+                <div class="text-muted small" *ngIf="evento.valor > 0">
+                    Registro de telemetría: <span class="fw-bold">{{ evento.valor | number:'1.2-2' }} PSI</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado vacío (Sin alertas) -->
+        <div *ngIf="eventos.length === 0" class="text-center text-muted p-4">
+            <i class="feather icon-check-circle fs-2 d-block mb-2 text-success"></i>
+            Sin alertas recientes
+        </div>
+
+    </div>
+
+</app-widget-shell>

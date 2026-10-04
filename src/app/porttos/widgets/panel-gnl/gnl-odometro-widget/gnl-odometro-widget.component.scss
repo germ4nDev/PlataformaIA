@@ -1,0 +1,16 @@
+.odometer-valor {
+    font-size: clamp(3.5rem, 5vw, 6rem);
+    font-family: 'Courier New', Courier, monospace;
+    /* Tipografía digital/monoespaciada */
+    font-weight: 900;
+    color: #ffc107;
+    /* Amarillo energía */
+    text-shadow: 0px 0px 20px rgba(255, 193, 7, 0.4);
+    line-height: 1;
+}
+
+.odometer-unidad {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-weight: 700;
+    color: #a1a5b7;
+}

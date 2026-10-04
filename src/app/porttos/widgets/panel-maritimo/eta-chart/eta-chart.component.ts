@@ -27,6 +27,7 @@ export class EtaChartComponent implements OnInit, OnChanges {
 
     private _data: any;
     public cargando: boolean = true;
+    public isLoading: boolean = false;
 
     @Input() set data(value: any) {
         this._data = value;

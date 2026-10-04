@@ -1,0 +1,20 @@
+<app-widget-shell [titulo]="'Ocupación de Planta'" [subtitulo]="'GOLAR FREEZE - BRAZOS 1 Y 2'"
+    [icono]="'feather icon-database'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div class="h-100 w-100 d-flex flex-row align-items-center justify-content-center gap-4 p-3">
+
+        <!-- Dibujo del Tanque -->
+        <div class="tanque-estructura">
+            <!-- El líquido que sube y baja -->
+            <div class="tanque-liquido" [style.height.%]="nivelOcupacion"></div>
+        </div>
+
+        <!-- Indicador Numérico -->
+        <div class="d-flex flex-column">
+            <h2 class="display-5 fw-bolder mb-0 text-primary">{{ nivelOcupacion }}%</h2>
+            <span class="text-muted fw-bold">Volumen Útil</span>
+            <span class="small text-muted mt-2">Capacidad: 170,000 m³</span>
+        </div>
+
+    </div>
+</app-widget-shell>

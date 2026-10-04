@@ -27,7 +27,7 @@
             <!-- 🟢 1. El contenedor padre ahora es un cdkDropList -->
             <div class="d-flex flex-column gap-2" cdkDropList (cdkDropListDropped)="onDrop($event)">
 
-                <!-- 🟢 2. Cada tarjeta tiene cdkDrag -->
+                <!-- 🟢 2. Cada tarjeta tiene cdkDrag-->
                 <div *ngFor="let pestana of pestanasProcesadas" cdkDrag
                     class="pestana-card-item d-flex justify-content-between align-items-center p-3 rounded"
                     style="cursor: pointer; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s ease;"

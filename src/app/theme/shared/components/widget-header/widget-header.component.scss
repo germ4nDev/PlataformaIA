@@ -22,9 +22,9 @@
     }
 
     &:hover {
-        background-color: color-mix(in srgb, var(--card-background) 10%, transparent);
-        color: var(--text-color);
-        border-color: color-mix(in srgb, var(--border-color) 20%, transparent);
+        background-color: color-mix(in srgb, var(--app-navbar-color) 10%, transparent);
+        color: var(--app-iconos-color);
+        border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
     }
 }
 

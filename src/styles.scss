@@ -120,6 +120,13 @@
     --widget-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.06);
     --widget-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.10);
     --widget-border-hover: rgba(148, 163, 184, 0.4);
+
+    --gauge-track-color: #d6d6d6;
+    --gauge-value-bg: rgba(255, 255, 255, 0.9);
+    --gauge-value-text: #3f4254;
+    --gauge-pivot-bg: #ffffff;
+    --gauge-pivot-border: #b5b5c3;
+    --gauge-needle-color: #009ef7;
 }
 
 body.dark-theme {
@@ -176,6 +183,13 @@ body.dark-theme {
     --widget-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.4);
     --widget-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(255, 255, 255, 0.08);
     --widget-border-hover: rgba(255, 255, 255, 0.2);
+
+    --gauge-track-color: #2b2b40;
+    --gauge-value-bg: rgba(30, 30, 45, 0.8);
+    --gauge-value-text: #ffffff;
+    --gauge-pivot-bg: #1e1e2d;
+    --gauge-pivot-border: #a1a5b7;
+    --gauge-needle-color: #00e5ff;
 }
 
 body.gradient-dark {
@@ -188,7 +202,6 @@ body.gradient-dark {
 body,
 html {
     overflow: hidden !important;
-    /* Previene el scroll nativo de Windows (doble scroll) */
     height: 100vh;
     margin: 0;
     padding: 0;

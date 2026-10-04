@@ -13,16 +13,28 @@ html {
    BOTONES DE ACCIÓN (Lobbies) - Adaptabilidad a Temas
    ========================================================================== */
 .btn-icon-accion {
-    background-color: var(--widget-bg, rgba(255, 255, 255, 0.02));
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
-    border-radius: 10px;
+    background: var(--widget-bg, rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--border-color) !important;
+    /* Mantenemos tu borde */
+    border-radius: 10px !important;
+    /* Mantenemos la curva */
     color: var(--text-color, #ffffff);
     font-weight: 600;
     font-size: 0.9rem;
     width: 38px;
     height: 38px;
     transition: all 0.2s;
-    border: 1px solid var(--border-color) !important;
+
+    /* 🚨 AQUÍ MATAMOS EL CUADRADO FANTASMA 🚨 */
+    outline: none !important;
+    box-shadow: none !important;
+
+    &:focus,
+    &:active,
+    &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+    }
 
     &:hover {
         background: var(--app-navbar-color) !important;
@@ -42,13 +54,11 @@ html {
     }
 
     &.no-selected {
-        /* Color del ícono cuando está inactivo (Usa la variable de color de texto del tema) */
         color: var(--text-color, #495057) !important;
         background-color: var(--card-background, #ffffff);
         border-color: var(--border-color, #dee2e6);
 
         &:hover {
-            /* Un ligero oscurecimiento en claro, aclaramiento en oscuro */
             background-color: var(--app-navbar-color, rgba(0, 0, 0, 0.05)) !important;
             color: var(--app-iconos-color, #212529) !important;
         }
@@ -408,5 +418,82 @@ gridster-item {
         color: var(--app-iconos-color);
         background: var(--app-navbar-color);
         box-shadow: inset 0 -3px 0 0 #0dc8e9;
+    }
+}
+
+/* Contenedor relativo que ancla el menú */
+.porttos-config-menu {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-background, #1e2125) !important;
+    //border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1)) !important;
+}
+
+/* =========================================
+   EL PANEL FLOTANTE (MAGIA ABSOLUTA)
+   ========================================= */
+.config-popover {
+    position: absolute !important;
+    background: var(--card-background, #1e2125) !important;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1)) !important;
+    width: 240px;
+    top: calc(100% + 12px) !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important;
+
+    .titulo {
+        color: var(--text-color, #aeb4be);
+    }
+
+    .config-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+
+        .tc-action-btn {
+            width: 100%;
+            height: 90px;
+            border-radius: 12px;
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            color: var(--text-color, #aeb4be);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+
+            &:hover {
+                color: var(--app-iconos-color);
+                background: var(--app-navbar-color);
+                border: 1px solid var(--border-color);
+                transform: translateY(-2px);
+
+                i {
+                    filter: brightness(1.2);
+                }
+            }
+
+            i {
+                font-size: 2rem;
+                margin: 0;
+            }
+
+            span {
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-align: center;
+                letter-spacing: 0.5px;
+            }
+        }
     }
 }

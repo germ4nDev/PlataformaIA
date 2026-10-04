@@ -7,16 +7,9 @@
 }
 
 .kpi-shell-wrapper {
-    /* 1. Fondo idéntico al de las demás tarjetas (Terminales/Gráficas) */
     background: var(--card-background);
-    /* Color gris oscuro estándar. Si tus tarjetas usan una variable, puedes poner var(--bs-body-bg) */
-
-    /* 2. Borde perimetral estándar (igual al de la terminal COMPAS) */
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-radius: 8px;
-    /* Mismo radio de las demás tarjetas */
-
-    /* 3. Mantenemos el borde lateral izquierdo dinámico de 4px */
     border-left-width: 4px !important;
     border-left-style: solid !important;
 
@@ -101,13 +94,31 @@
 
 }
 
-.kpi-shell-title {
-    font-size: 3.2rem;
+.kpi-shell-title_modal {
+    font-size: 1.2rem;
     /* Letra un poco más robusta */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     font-weight: 700;
     color: var(--text-color) !important;
     letter-spacing: 0.3px;
     line-height: 1.1;
+}
+
+.kpi-shell-title {
+    font-size: 3.2rem;
+    /* Letra un poco más robusta */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    color: var(--text-color) !important;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+}
+
+.kpi-shell-valor {
+    font-size: 5.5rem;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    color: var(--text-color) !important;
 }
 
 .kpi-shell-subtitle {
@@ -167,5 +178,40 @@
         background: var(--app-navbar-color, #334155);
         color: var(--app-iconos-color, #334155);
         border-color: var(--border-color, #334155);
+    }
+}
+
+/* Fondo sutil para el contenedor general del toggle */
+.custom-toggle-bg {
+    background-color: rgba(0, 0, 0, 0.15);
+    /* Oscurece un poco el fondo para que el botón activo resalte más */
+}
+
+/* Estado Base (Inactivo) */
+.btn-active-toggle {
+    color: var(--text-muted-color, #8a909d);
+    /* Un color apagado para los inactivos */
+    background-color: transparent;
+    border: none;
+    border-radius: 6px !important;
+    /* Un poco menos que el contenedor (rounded-3) para que encaje perfecto adentro */
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    /* Efecto Hover para los botones inactivos */
+    &:hover:not(.active) {
+        color: var(--app-navbar-color);
+        background-color: var(--card-background);
+    }
+
+    /* ESTADO ACTIVO */
+    &.active {
+        background-color: var(--app-navbar-color);
+        /* Tu variable SCSS aquí */
+        color: var(--app-iconos-color);
+        /* Texto brillante para contrastar */
+        font-weight: 700;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        /* Sombra suave típica del diseño iOS */
     }
 }

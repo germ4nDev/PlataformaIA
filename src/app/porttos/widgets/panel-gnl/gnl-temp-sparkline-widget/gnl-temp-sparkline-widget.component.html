@@ -1,0 +1,20 @@
+<app-widget-shell [titulo]="'Temperatura Criogénica'" [subtitulo]="'TENDENCIA EN DUCTO'"
+    [icono]="'feather icon-thermometer'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div class="h-100 w-100 position-relative d-flex flex-column justify-content-center p-3 overflow-hidden">
+
+        <!-- Valor Z-Index Superior -->
+        <div class="position-relative z-index-2 mb-4 text-center">
+            <h2 class="display-4 fw-bolder mb-0" [ngClass]="tempActual > -150 ? 'text-danger' : 'text-info'">
+                {{ tempActual | number:'1.2-2' }} °C
+            </h2>
+            <span class="text-muted fw-bold d-block mt-1">Límite operativo: -150°C</span>
+        </div>
+
+        <!-- Gráfica Sparkline de fondo -->
+        <div class="position-absolute w-100" style="bottom: 0; left: 0; height: 60px; opacity: 0.5;">
+            <canvas #sparklineCanvas></canvas>
+        </div>
+
+    </div>
+</app-widget-shell>

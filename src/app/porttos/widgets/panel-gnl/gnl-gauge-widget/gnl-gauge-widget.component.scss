@@ -1,0 +1,345 @@
+.scada-widget-container {
+    background-color: var(--card-bockgorund);
+    /* Tono oscuro industrial */
+    color: var(--text-color);
+    border-radius: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid #2b2b40;
+
+    &.alerta-roja {
+        border-color: #ff4757;
+        box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+    }
+}
+
+.scada-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 20px;
+
+    i {
+        margin-right: 8px;
+        color: var(--text-color);
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #50cd89;
+        /* Verde normal */
+
+        &.blinking {
+            background-color: #ff4757;
+            /* Rojo alerta */
+            animation: blink 1s infinite alternate;
+        }
+    }
+}
+
+.gauge-body {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor fluido que crece hasta un máximo razonable */
+.gauge-container {
+    width: 100%;
+    max-width: 500px;
+    /* Límite para que no se vea deforme en pantallas 4K */
+    aspect-ratio: 2 / 1;
+    /* Mantiene la proporción exacta del viewBox="0 0 100 50" */
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+/* El SVG ocupa todo el contenedor fluido */
+.gauge-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    stroke: var(--gauge-track-color);
+    transition: stroke 0.3s ease;
+}
+
+/* Aguja posicionada con porcentajes para que crezca con el SVG */
+/* Aguja posicionada con porcentajes para que crezca con el SVG */
+.gauge-needle {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    height: 75%;
+    /* Esto es lo que le da el largo */
+    background: var(--gauge-needle-color) !important;
+    /* El color dinámico */
+    transform-origin: bottom center;
+    margin-left: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+
+    /* El punto central de pivote de la aguja */
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: -4px;
+        width: 12px;
+        height: 12px;
+        background: var(--gauge-pivot-bg);
+        border: 2px solid var(--gauge-pivot-border);
+        border-radius: 50%;
+    }
+}
+
+/* Valor numérico inferior centrado */
+.gauge-value {
+    position: absolute;
+    bottom: 5px;
+    /* Ligeramente por encima de la base */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    background: var(--gauge-value-bg);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    /* Sombra sutil para modo claro */
+
+    padding: 2px 10px;
+    border-radius: 12px;
+    z-index: 1;
+
+    .numero {
+        font-size: clamp(1.2rem, 3vw, 2.5rem);
+        /* Tipografía fluida que crece con el div */
+        font-weight: 700;
+        color: var(--gauge-value-text);
+    }
+
+    .unidad {
+        font-size: clamp(0.7rem, 1vw, 1rem);
+        color: #a1a5b7;
+        font-weight: 500;
+    }
+}
+
+.scada-footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 6px;
+
+    .temp-label {
+        color: #a1a5b7;
+        margin-right: 5px;
+    }
+
+    .temp-value {
+        font-weight: bold;
+        color: #00e5ff;
+    }
+
+    /* Azul criogénico */
+}
+
+@keyframes blink {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.3;
+    }
+}
+
+/* ==========================================
+   ESTADOS DE ALERTA (Dinámicos por Presión)
+   ========================================== */
+
+/* ESTADO ADVERTENCIA (Amarillo / Naranja) */
+.gauge-container.estado-advertencia {
+
+    /* La aguja se vuelve naranja */
+    .gauge-needle {
+        background: #ff9800 !important;
+        box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+    }
+
+    /* El número se tiñe de naranja */
+    .gauge-value .numero {
+        color: #ff9800 !important;
+    }
+
+    /* El riel de peligro cambia a naranja para coincidir */
+    .gauge-danger {
+        stroke: #ff9800 !important;
+    }
+}
+
+/* ESTADO PELIGRO (Rojo Crítico) */
+.gauge-container.estado-peligro {
+
+    /* La aguja se vuelve roja y pulsa */
+    .gauge-needle {
+        background: #ff4757 !important;
+        box-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
+        animation: pulso-aguja 1s infinite alternate;
+    }
+
+    /* El número se vuelve rojo */
+    .gauge-value .numero {
+        color: #ff4757 !important;
+    }
+
+    /* La caja del valor parpadea sutilmente en rojo */
+    .gauge-value {
+        border: 1px solid rgba(255, 71, 87, 0.5);
+        background: rgba(255, 71, 87, 0.1);
+    }
+}
+
+/* ==========================================
+   ESTADOS DE ALERTA (Dinámicos por Presión)
+   ========================================== */
+
+/* 🟢 ESTADO ESTABLE (< 85 PSI) */
+.gauge-container.estado-estable {
+
+    /* Pintamos la línea final de VERDE (usando la variable de la aguja) */
+    .gauge-danger {
+        stroke: var(--gauge-needle-color) !important;
+        transition: stroke 0.4s ease;
+    }
+}
+
+/* 🟠 ESTADO ADVERTENCIA (85 a 99 PSI) */
+.gauge-container.estado-advertencia {
+    .gauge-needle {
+        background: #ff9800 !important;
+        box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+    }
+
+    .gauge-value .numero {
+        color: #ff9800 !important;
+    }
+
+    /* Pintamos la línea final de NARANJA */
+    .gauge-danger {
+        stroke: #ff9800 !important;
+        transition: stroke 0.4s ease;
+    }
+}
+
+/* 🔴 ESTADO PELIGRO (>= 100 PSI) */
+.gauge-container.estado-peligro {
+    .gauge-needle {
+        background: #ff4757 !important;
+        box-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
+        animation: pulso-aguja 1s infinite alternate;
+    }
+
+    .gauge-value .numero {
+        color: #ff4757 !important;
+    }
+
+    .gauge-value {
+        border: 1px solid rgba(255, 71, 87, 0.5);
+        background: rgba(255, 71, 87, 0.1);
+    }
+
+    /* Pintamos la línea final de ROJO */
+    .gauge-danger {
+        stroke: #ff4757 !important;
+        transition: stroke 0.4s ease;
+    }
+}
+
+/* Animación de latido para la aguja en peligro */
+@keyframes pulso-aguja {
+    0% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 1;
+        filter: brightness(1.2);
+    }
+}
+
+/* ==========================================
+   MODO ENFOQUE (PANTALLA COMPLETA)
+   ========================================== */
+.modo-enfoque {
+
+    /* Liberamos el límite de 500px y dejamos que ocupe el 80% de la pantalla */
+    .gauge-container {
+        max-width: 1200px !important;
+        /* Límite gigante para monitores 4K */
+        width: 80% !important;
+        /* Ocupa el 80% del modal */
+    }
+
+    /* Hacemos crecer el texto del valor central */
+    .gauge-value {
+        bottom: 20px;
+        /* Lo subimos un poco más */
+        padding: 10px 30px;
+        border-radius: 20px;
+
+        .numero {
+            font-size: clamp(4rem, 8vw, 8rem);
+            /* Números inmensos */
+        }
+
+        .unidad {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+        }
+    }
+
+    /* Hacemos crecer la aguja y su pivote central */
+    .gauge-needle {
+        width: 8px;
+        /* Aguja más gruesa */
+        margin-left: -4px;
+        background: var(--gauge-pivot-bg);
+        border: 2px solid var(--gauge-pivot-border);
+
+        &::after {
+            width: 24px;
+            height: 24px;
+            bottom: -12px;
+            left: -8px;
+            border-width: 4px;
+        }
+    }
+
+    /* Hacemos crecer el label inferior de temperatura */
+    .mt-4.text-center {
+        margin-top: 4rem !important;
+
+        .text-muted {
+            font-size: 1.5rem !important;
+        }
+
+        .fw-bold {
+            font-size: 2.5rem !important;
+        }
+    }
+}

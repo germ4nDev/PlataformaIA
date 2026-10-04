@@ -2,22 +2,19 @@
    CONTENEDOR PRINCIPAL DEL WIDGET (EL MARCO)
    ========================================================= */
 .porttos-widget-shell {
-    background-color: var(--widget-bg, #1a1c23);
-    /* Fondo oscuro general */
+    background-color: var(--card-background, #1a1c23);
     border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
     border-radius: 12px;
     padding: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
-    /* Efecto hover suave al pasar el mouse por la tarjeta */
     &:not(.modo-enfoque):hover {
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
         border-color: rgba(255, 255, 255, 0.1);
         transform: translateY(-2px);
     }
 
-    /* Si está maximizado, le quitamos bordes redondeados y le damos más aire */
     &.modo-enfoque {
         border-radius: 0;
         border: none;
@@ -31,40 +28,39 @@
    ESTILOS DEL HEADER Y TEXTOS
    ========================================================= */
 .shell-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    /* La tenue línea que vimos en el diseño */
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
     padding-bottom: 12px;
 }
 
 .shell-icon-box {
     width: 40px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: var(--card-background, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
 }
 
 .shell-titulo {
     font-size: 1.1rem;
+    color: var(--text-color);
     letter-spacing: 0.3px;
 }
 
 .shell-subtitulo {
     font-size: 0.7rem;
+    color: var(--text-subtitle-color);
     letter-spacing: 0.5px;
 }
 
 /* =========================================================
    BOTONES CUADRADOS DE ACCIÓN (Compartidos)
    ========================================================= */
-/* Declaramos el estilo exacto aquí para el botón de maximizar nativo. */
 .tc-action-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    /* Diseño Squircle */
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #94a3b8;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,11 +69,23 @@
     padding: 0;
 
     &:hover {
-        background-color: rgba(255, 255, 255, 0.12);
-        color: #ffffff;
+        background-color: var(--app-navbar-color);
+        color: var(--app-iconos-color);
     }
 
     i {
         font-size: 1.1rem;
+    }
+}
+
+.modo-enfoque-body {
+    &:has(.detail-content > *) .default-content {
+        display: none !important;
+    }
+
+    .detail-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
     }
 }
