@@ -30,4 +30,9 @@ export class KpiShellComponent {
         // Si desde el switch mandas solo 'borde-cyan', lo retornamos directo
         return clase.startsWith('borde-') ? clase : `borde-${clase}`;
     }
+
+    maximizarWidget() {
+        console.log('NNNNNNNNNNNNNNNNNNNNNNNNNNNNNN');
+        this.clickEnfoque.emit();
+    }
 }

@@ -125,6 +125,30 @@
 
 }
 
+.tc-action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+
+    &:hover {
+        background-color: var(--app-navbar-color);
+        color: var(--app-iconos-color);
+    }
+
+    i {
+        font-size: 0.9rem;
+    }
+}
+
 .btn-maximizar-kpi {
     background: transparent;
     border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));

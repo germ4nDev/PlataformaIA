@@ -40,7 +40,7 @@ export class GnlOdometroWidgetComponent implements OnInit, OnDestroy {
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
-            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_ETA_ATA', this.data);
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'PTT_GNL_KPI_ODO_MMBTU', this.data);
         }
     }
 

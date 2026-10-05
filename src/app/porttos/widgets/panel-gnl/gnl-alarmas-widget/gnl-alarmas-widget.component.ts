@@ -76,7 +76,7 @@ export class GnlAlarmasWidgetComponent implements OnInit, OnDestroy {
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
-            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_ETA_ATA', this.data);
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'PTT_GNL_CHART_ALM_EVENT', this.data);
         }
     }
 }

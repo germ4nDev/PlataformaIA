@@ -100,7 +100,7 @@ export class GnlTempSparklineWidgetComponent implements OnInit, AfterViewInit, O
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
-            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_ETA_ATA', this.data);
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'PTT_GNL_CHART_SPK_TEMP', this.data);
         }
     }
 

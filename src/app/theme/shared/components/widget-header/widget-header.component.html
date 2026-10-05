@@ -1,20 +1,11 @@
 <div
     class="widget-header d-flex justify-content-between align-items-center p-3 border-bottom border-secondary border-opacity-25">
-
-    <!-- LADO IZQUIERDO: Ícono, Título y Subtítulo -->
     <div class="d-flex align-items-center gap-3">
-
-        <!-- Ícono -->
         <i *ngIf="icono" [class]="icono + ' text-muted fs-5'"></i>
-
-        <!-- Textos -->
         <div class="d-flex flex-column justify-content-center">
-            <!-- Título -->
             <h6 class="kpi-shell-title">
                 {{ titulo }}
             </h6>
-
-            <!-- Subtítulo (Solo se renderiza si existe) -->
             <small *ngIf="subtitulo" class="kpi-shell-subtitle">
                 {{ subtitulo }}
             </small>
@@ -22,27 +13,11 @@
 
     </div>
 
-    <!-- LADO DERECHO: Controles y Badges -->
     <div class="d-flex align-items-center gap-2">
-
-        <!-- Opcional: Badge indicador (solo se muestra si la variante es 'normal') -->
         <span *ngIf="variante === 'normal'"
             class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25"
             style="font-size: 0.65rem;">
             En vivo
         </span>
-
-        <!-- Botón de Maximizar / Minimizar (Solo se renderiza si mostrarEnfoque es true) -->
-        <button *ngIf="mostrarEnfoque" type="button"
-            class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center p-1 border-0 shadow-sm bg-body-tertiary"
-            style="width: 28px; height: 28px; border-radius: 6px; transition: all 0.2s;" (click)="toggleEnfoque()"
-            [title]="(isEnfoque || enModoEnfoque) ? 'Restaurar vista' : 'Ampliar widget'">
-
-            <!-- El ícono se adapta automáticamente al estado del modal o del servicio -->
-            <i class="feather fs-6"
-                [ngClass]="(isEnfoque || enModoEnfoque) ? 'icon-minimize-2' : 'icon-maximize-2'"></i>
-        </button>
-
     </div>
-
 </div>

@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DashboardService } from '../../service/tablero-control/dashboard.service';
 
 @Component({
     selector: 'app-widget-shell',
@@ -14,13 +15,15 @@ export class WidgetShellComponent {
     @Input() subtitulo: string = '';
     @Input() icono: string = '';
     @Input() tituloFooter?: string = '';
-    // Si el widget ya está abierto en el modal grande (para ocultar botón maximizar)
     @Input() isEnfoque: boolean = false;
 
     // Emisor para avisarle al padre que queremos maximizar
     @Output() clickEnfoque = new EventEmitter<void>();
 
+    constructor(private _dashboardService: DashboardService) { }
+
     maximizarWidget() {
+        console.log('NNNNNNNNNNNNNNNNNNNNNNNNNNNNNN');
         this.clickEnfoque.emit();
     }
 }

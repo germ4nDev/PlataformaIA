@@ -257,7 +257,7 @@ export class DashboardService implements OnInit, OnDestroy {
         return this.http.post(`${base_url}/tclp-dashboard`, { payload });
     }
 
-    abrirModoEnfoque(type: string, data: any) {
+    abrirModoEnfoque(type: string, data?: any) {
         this._widgetFocusSource.next({ type, data });
     }
 

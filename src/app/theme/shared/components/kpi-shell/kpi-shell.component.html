@@ -15,8 +15,8 @@
 
         <div class="kpi-shell-actions d-flex align-items-center gap-1">
             <ng-content select="[acciones-extra]"></ng-content>
-            <button class="btn-maximizar-kpi" (click)="clickEnfoque.emit()" title="Ver análisis detallado">
-                <i class="feather icon-maximize"></i>
+            <button class="tc-action-btn" (click)="maximizarWidget()" title="Cerrar vista">
+                <i [ngClass]="isEnfoque ? 'feather icon-minimize' : 'feather icon-maximize'"></i>
             </button>
         </div>
     </div>

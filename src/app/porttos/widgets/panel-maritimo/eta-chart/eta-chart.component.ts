@@ -54,7 +54,6 @@ export class EtaChartComponent implements OnInit, OnChanges {
         }
     }
 
-    // 🟢 Escuchamos cambios para forzar el re-render del Chart al maximizar
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['isEnfoque'] && !changes['isEnfoque'].firstChange) {
             // Un pequeño delay para que Angular dibuje el div gigante antes de pedirle al chart que se ajuste
@@ -75,7 +74,6 @@ export class EtaChartComponent implements OnInit, OnChanges {
         }
     }
 
-    // --- CONFIGURACIÓN DE CHART.JS ---
     public barChartOptions: ChartConfiguration['options'] = {
         responsive: true,
         maintainAspectRatio: false, // 🚀 Clave para que se estire al maximizar

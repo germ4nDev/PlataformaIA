@@ -1,34 +1,14 @@
-<!-- <div class="scada-chart-container">
-
-    <div class="scada-header">
-        <i class="fas fa-chart-area"></i>
-        <span>Histórico de Flujo (m³/h)</span>
-    </div>
-
-    <div class="chart-wrapper">
-        <canvas #flowCanvas></canvas>
-    </div>
-
-    <div class="energia-kpi" *ngIf="energiaTotal > 0">
-        <span>Energía Transferida: </span>
-        <strong class="text-warning">{{ energiaTotal | number:'1.2-2' }} MMBTU</strong>
-    </div>
-
-</div> -->
-
 <app-widget-shell [titulo]="widgetConfig?.tituloWidget || 'Histórico de Flujo (m³/h)'"
     [subtitulo]="widgetConfig?.descripcionWidget || 'Caudal de GNL en tiempo real'" [icono]="'feather icon-activity'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: KPI de MMBTU integrado al menú -->
     <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge border border-warning text-warning me-2" *ngIf="energiaTotal > 0">
+        <span class="indicador-pill-energia" *ngIf="energiaTotal > 0">
             <i class="fas fa-bolt me-1"></i>
             {{ energiaTotal | number:'1.2-2' }} MMBTU
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET -->
     <div class="h-100 w-100 position-relative pb-2 animate__animated animate__fadeIn d-flex flex-column">
 
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
@@ -37,7 +17,6 @@
             <span class="text-muted" style="font-size: 0.8rem;">Esperando telemetría...</span>
         </div>
 
-        <!-- Contenedor crítico para que Chart.js ocupe el alto completo restante del Shell -->
         <div class="chart-wrapper flex-grow-1" style="min-height: 0;">
             <canvas #flowCanvas [style.opacity]="cargando ? '0.3' : '1'"></canvas>
         </div>

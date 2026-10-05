@@ -1,0 +1,7 @@
+<div class="w-100 position-relative" style="height: calc(100vh - 160px);">
+    <gridster [options]="options" class="bg-transparent">
+        <gridster-item [item]="widget" *ngFor="let widget of dashboard; trackBy: trackByWidget">
+            <ng-container *ngComponentOutlet="obtenerComponentePara(widget.type)"></ng-container>
+        </gridster-item>
+    </gridster>
+</div>

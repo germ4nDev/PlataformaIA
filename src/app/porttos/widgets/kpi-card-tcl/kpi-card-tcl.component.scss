@@ -161,23 +161,27 @@
     padding: 0 0.5rem 0.5rem 0.5rem;
 }
 
-.btn-cerrar-modal {
-    background: transparent;
-    border: 1px solid var(--border-color, #334155);
-    color: var(--text-color, #f8fafc);
-    width: 36px;
-    height: 36px;
-    border-radius: 15%;
+.tc-action-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    padding: 0;
 
     &:hover {
-        background: var(--app-navbar-color, #334155);
-        color: var(--app-iconos-color, #334155);
-        border-color: var(--border-color, #334155);
+        background-color: var(--app-navbar-color);
+        color: var(--app-iconos-color);
+    }
+
+    i {
+        font-size: 1.6rem;
     }
 }
 

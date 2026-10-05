@@ -1,0 +1,38 @@
+<!-- ========================================== -->
+<!-- FILTRO DE PÍLDORAS (SCADA GNL)             -->
+<!-- ========================================== -->
+<div class="d-flex align-items-center flex-wrap gap-3 px-4 pt-3 mb-3">
+    <span class="text-muted small fw-bold" style="letter-spacing: 1px;">FILTRAR BRAZO:</span>
+
+    <!-- Píldora: Vista General (Consolidado) -->
+    <button class="btn rounded-pill px-4 py-1 fw-bold transition-all" [ngStyle]="brazoSeleccionado === 'TODOS'
+            ? {'border': '1px solid #FFC107', 'color': '#FFC107', 'background-color': 'rgba(255, 193, 7, 0.1)'}
+            : {'border': '1px solid #495057', 'color': '#6c757d', 'background-color': 'transparent'}"
+        (click)="cambiarFiltroGNL('TODOS')">
+        <i class="fas fa-globe me-1"></i> Vista General
+    </button>
+
+    <!-- Píldoras: Brazos Dinámicos Detectados -->
+    <button *ngFor="let brazo of brazosActivos" class="btn rounded-pill px-4 py-1 fw-bold transition-all" [ngStyle]="brazoSeleccionado === brazo
+            ? {'border': '1px solid #FFC107', 'color': '#FFC107', 'background-color': 'rgba(255, 193, 7, 0.1)'}
+            : {'border': '1px solid #495057', 'color': '#6c757d', 'background-color': 'transparent'}"
+        (click)="cambiarFiltroGNL(brazo)">
+        <i class="fas fa-code-branch me-1"></i> {{ brazo.replace('BRAZO_DESCARGA_', 'Brazo ') }}
+    </button>
+</div>
+
+<!-- ========================================== -->
+<!-- GRIDSTER PROPIO DE LA PESTAÑA GNL          -->
+<!-- ========================================== -->
+<div class="w-100 position-relative" style="height: calc(100vh - 220px);">
+    <!-- Ajusta el height calc() dependiendo del tamaño de tu header global -->
+
+    <gridster [options]="options" class="bg-transparent">
+        <gridster-item [item]="widget" *ngFor="let widget of dashboard; trackBy: trackByWidget">
+
+            <!-- Inyección Dinámica del Widget según el WIDGET_MAP -->
+            <ng-container *ngComponentOutlet="obtenerComponentePara(widget.type)"></ng-container>
+
+        </gridster-item>
+    </gridster>
+</div>

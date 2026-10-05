@@ -1,16 +1,36 @@
-<!-- EL SELECTOR YA NO ENVUELVE EN SHELL. Solo inyecta el componente dinámico -->
-<div class="w-100 h-100 position-relative" style="overflow: hidden;">
+<!-- <div class="w-100 h-100 position-relative" style="overflow: hidden;">
 
     <ng-container *ngIf="componenteDinamico; else noEncontrado">
-        <!-- Inyectamos el componente hijo (Terminal, KPI, Gráfica, etc.) -->
         <ng-container
             *ngComponentOutlet="componenteDinamico; inputs: { widgetConfig: widgetConfig, isEnfoque: isEnfoque, mostrarTabla: mostrarTablaTerminal }"></ng-container>
     </ng-container>
 
-    <!-- Fallback por si el tipo de widget no está mapeado -->
     <ng-template #noEncontrado>
         <div
             class="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-50 bg-dark rounded border border-secondary">
+            <i class="feather icon-alert-triangle fs-1 mb-2"></i>
+            <small>Falta mapear en WIDGET_MAP:</small>
+            <small class="fw-bold text-danger mt-1">{{ widgetConfig?.type }}</small>
+        </div>
+    </ng-template>
+
+</div> -->
+<!-- ========================================== -->
+<!-- WIDGET SELECTOR MASTER (TCL)               -->
+<!-- ========================================== -->
+<div class="w-100 h-100 position-relative" [class.enfoque-view]="isEnfoque" style="overflow: hidden;">
+
+    <ng-container *ngIf="componenteDinamico; else noEncontrado">
+        <!-- Inyectamos el componente dinámico (KPI, Gráfica, Medidor, etc.) pasándole la bandera isEnfoque -->
+        <ng-container
+            *ngComponentOutlet="componenteDinamico; inputs: { widgetConfig: widgetConfig, isEnfoque: isEnfoque, mostrarTabla: mostrarTablaTerminal }">
+        </ng-container>
+    </ng-container>
+
+    <!-- Fallback por si el tipo de widget no está mapeado en el WIDGET_MAP -->
+    <ng-template #noEncontrado>
+        <div
+            class="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-50 bg-dark rounded border border-secondary p-4">
             <i class="feather icon-alert-triangle fs-1 mb-2"></i>
             <small>Falta mapear en WIDGET_MAP:</small>
             <small class="fw-bold text-danger mt-1">{{ widgetConfig?.type }}</small>

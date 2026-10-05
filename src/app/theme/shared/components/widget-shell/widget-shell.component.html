@@ -103,13 +103,22 @@
             </div>
 
             <!-- Botones de Acción (Cambian según el estado) -->
-            <button *ngIf="!isEnfoque" class="tc-action-btn btn-maximizar" (click)="maximizarWidget()"
+
+            <!-- <button *ngIf="mostrarEnfoque" type="button"
+            class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center p-1 border-0 shadow-sm bg-body-tertiary"
+            style="width: 28px; height: 28px; border-radius: 6px; transition: all 0.2s;" (click)="toggleEnfoque()"
+            [title]="(isEnfoque || enModoEnfoque) ? 'Restaurar vista' : 'Ampliar widget'">
+
+            <i class="feather fs-6"
+                [ngClass]="(isEnfoque || enModoEnfoque) ? 'icon-minimize-2' : 'icon-maximize-2'"></i>
+        </button> -->
+
+            <!-- <button *ngIf="!isEnfoque" class="tc-action-btn btn-maximizar" (click)="maximizarWidget()"
                 title="Expandir Widget">
                 <i class="feather icon-maximize"></i>
-            </button>
-            <button *ngIf="isEnfoque" class="tc-action-btn flex-shrink-0 ms-2" (click)="maximizarWidget()"
-                title="Cerrar vista">
-                <i class="feather icon-x"></i>
+            </button> -->
+            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()" title="Cerrar vista">
+                <i [ngClass]="isEnfoque ? 'feather icon-minimize' : 'feather icon-maximize'"></i>
             </button>
 
         </div>

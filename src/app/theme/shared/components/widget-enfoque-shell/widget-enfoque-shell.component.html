@@ -1,0 +1,41 @@
+<div class="modal-enfoque-overlay" (click)="onCerrarClick()">
+    <div class="modal-enfoque-content" (click)="$event.stopPropagation()">
+
+        <!-- CABECERA ESTÁNDAR DEL SHELL -->
+        <div
+            class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary bg-dark rounded-top">
+
+            <!-- Lado izquierdo: Título y Subtítulo -->
+            <div class="d-flex align-items-center gap-3">
+                <i [class]="icono"></i>
+                <div>
+                    <h5 class="mb-0 text-white">{{ titulo }}</h5>
+                    <small class="text-muted">{{ subtitulo }}</small>
+                </div>
+            </div>
+
+            <!-- Zona de Extras (Aquí se inyectan las pills, contadores o botones del widget hijo) -->
+            <div class="d-flex align-items-center gap-2 mx-auto">
+                <ng-container *ngIf="headerExtrasTemplate; else projectedExtras">
+                    <ng-container *ngTemplateOutlet="headerExtrasTemplate"></ng-container>
+                </ng-container>
+                <ng-template #projectedExtras>
+                    <ng-content select="[header-extras]"></ng-content>
+                </ng-template>
+            </div>
+
+            <!-- Lado derecho: Botón de cierre unificado con la "X" -->
+            <button class="btn btn-icon btn-sm text-light rounded-circle border border-secondary bg-dark"
+                style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
+                (click)="onCerrarClick()" title="Cerrar panel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- CUERPO DEL WIDGET -->
+        <div class="p-3 w-100 h-100 overflow-auto bg-dark rounded-bottom">
+            <ng-content></ng-content>
+        </div>
+
+    </div>
+</div>

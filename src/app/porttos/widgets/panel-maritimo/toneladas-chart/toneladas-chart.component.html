@@ -14,12 +14,12 @@
         class="chart-wrapper w-100 h-100 position-relative pb-2 pe-2 animate__animated animate__fadeIn flex-grow-1 min-h-0">
 
         <!-- Renderiza solo cuando barChartData ya fue construido -->
-        <canvas baseChart *ngIf="barChartData?.datasets?.length" [data]="barChartData" [options]="barChartOptions"
+        <canvas baseChart *ngIf="barChartData.datasets.length" [data]="barChartData" [options]="barChartOptions"
             [type]="'bar'">
         </canvas>
 
         <!-- Estado vacío -->
-        <div *ngIf="!barChartData?.datasets?.length"
+        <div *ngIf="!barChartData.datasets.length"
             class="w-100 h-100 d-flex justify-content-center align-items-center text-muted small">
             <div class="spinner-border text-secondary spinner-border-sm me-2" role="status" *ngIf="!data?.labels"></div>
             <i class="feather icon-inbox me-2 opacity-50" *ngIf="data?.labels"></i>

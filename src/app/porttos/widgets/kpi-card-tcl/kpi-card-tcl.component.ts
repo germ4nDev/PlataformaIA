@@ -61,8 +61,6 @@ export class KpiCardTclComponent implements OnInit, OnChanges {
 
     private actualizarDatos(ciudad: string): void {
         this.isLoading = false;
-        // Lógica de actualización hacia el backend/adaptador.
-        // Al resolver: this.isLoading = false;
     }
 
     // 🟢 Toggle de enfoque: Abre o cierra el modal
@@ -70,7 +68,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges {
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
-            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_KPI_MAIN', this.data);
+            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'PTT_MAE_KPI_CAMIONES', this.data);
         }
     }
 }

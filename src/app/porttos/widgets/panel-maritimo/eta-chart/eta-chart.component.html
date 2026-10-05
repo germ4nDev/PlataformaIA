@@ -1,18 +1,14 @@
-<!-- 🚨 ERROR CORREGIDO: Quitamos el *ngIf="!isEnfoque" y agregamos [isEnfoque]="isEnfoque" -->
 <app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'REPORTE ETA VS ATA'"
     [subtitulo]="widgetConfig?.data?.subtitulo || 'Programación de arribos y atraques'"
     [icono]="widgetConfig?.data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase" title="Estimated Time of Arrival vs Actual Time of Arrival">
             Atraques
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor para la gráfica) -->
-    <!-- Como NO tiene la etiqueta "detalle-enfoque", el Shell lo usará para ambas vistas -->
     <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top:0; left:0; z-index: 10;">

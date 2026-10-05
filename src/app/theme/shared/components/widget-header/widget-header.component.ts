@@ -41,6 +41,8 @@ export class WidgetHeaderComponent implements OnInit, OnDestroy {
 
     toggleEnfoque() {
         // 1. Lógica para el Home
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAAA widgetId', this.widgetId);
+
         if (this.enModoEnfoque) {
             this._dashboardService.cerrarModoEnfoque();
         } else {

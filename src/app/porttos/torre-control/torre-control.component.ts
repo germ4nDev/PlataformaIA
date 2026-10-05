@@ -32,7 +32,12 @@ import { PTLLayoutModel } from 'src/app/theme/shared/_helpers/models/PTLLayout.m
 import { PTLLayoutPestanaModel } from 'src/app/theme/shared/_helpers/models/PTLLayoutPestana.model';
 
 // 🟢 IMPORTAMOS EL DICCIONARIO EXTERNO MAESTRO
-import { WIDGET_MAP } from './widget-registry'; // <-- 🚨 Asegúrate de colocar la ruta correcta
+import { WIDGET_MAP } from './widget-registry';
+// import { MaritimoDashboardComponent } from './components/maritimo-dashboard/maritimo-dashboard.component';
+// import { VirtualGateDashboardComponent } from './components/virtual-gate-dashboard/virtual-gate-dashboard.component';
+// import { ContenedoresDashboardComponent } from './components/contenedores-dashboard/contenedores-dashboard.component';
+// import { GnlDashboardComponent } from './components/gnl-dashboard/gnl-dashboard.component';
+// import { MapaDashboardComponent } from './components/mapa-dashboard/mapa-dashboard.component'; // <-- 🚨 Asegúrate de colocar la ruta correcta
 
 @Component({
     selector: 'app-torre-control',
@@ -156,6 +161,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         );
 
         this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
+            console.log('************** info del widget para modal', widget);
             this.widgetEnfoque = widget;
             this.cdr.detectChanges();
         }));
@@ -165,8 +171,6 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         this.subs.unsubscribe();
     }
 
-    // 🟢 EL INTÉRPRETE VINCULADO AL MAPA EXTERNO
-    // (Úsalo en tu HTML con: *ngComponentOutlet="obtenerComponentePara(widget.type)")
     obtenerComponentePara(codigoWidget: string): any {
         const registro = WIDGET_MAP[codigoWidget];
         return registro ? registro.componente : null;
@@ -813,18 +817,6 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         return widget.idClon || widget.codigoWidget || widget.type;
     }
 
-    abrirLobbyModal() {
-        this.filtrarWidgetsParaLobby(this.pestanaActiva);
-        this.lsLayout = this.dashboard.map(widgetGridster => {
-            return {
-                ...widgetGridster,
-                codigoWidget: widgetGridster.type || (widgetGridster as any).codigoWidget
-            };
-        });
-        this.mostrarLobby = true;
-        this.cdr.detectChanges();
-    }
-
     filtrarWidgetsParaLobby(nuevaPestana: string) {
         this.widgetsParaElLobby = (this.lsWidgets || []).filter((w: any) => {
             const estadoValido = w.estadoWidget === true || w.estadoWidget === 'true' || w.estadoWidget === 1;
@@ -832,10 +824,6 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         });
     }
 
-    abrirLobbyPestanas() {
-        this.mostrarLobbyPestanas = true;
-        this.cdr.detectChanges();
-    }
 
     obtenerCodigosVisibles(): string[] {
         return this.pestanasVisibles.map(p => {
@@ -892,31 +880,28 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         this.persistirEstadoPestanas();
     }
 
+    abrirLobbyModal() {
+        this.filtrarWidgetsParaLobby(this.pestanaActiva);
+        this.lsLayout = this.dashboard.map(widgetGridster => {
+            return {
+                ...widgetGridster,
+                codigoWidget: widgetGridster.type || (widgetGridster as any).codigoWidget
+            };
+        });
+        this.mostrarLobby = true;
+        this.cdr.detectChanges();
+    }
+
+    abrirLobbyPestanas() {
+        this.mostrarLobbyPestanas = true;
+        this.cdr.detectChanges();
+    }
+
     cerrarModalEnfoque() {
         this.widgetEnfoque = null;
         this._torreService.cerrarModoEnfoque();
     }
 
-    // async persistirEstadoPestanas() {
-    //     const estadoActual = await this._localStoragoService.getNavSettingsLocalStorage() || {};
-    //     estadoActual.pestanas = this.pestanasVisibles;
-    //     this._localStoragoService.setNavSettingsLocalStorage(estadoActual);
-
-    //     const usuario = this.usuarioId || 'SISTEMA_DEFAULT';
-
-    //     const payloadPestanas = this.pestanasVisibles.map((pestana, index) => {
-    //         return {
-    //             codigoUsuario: usuario,
-    //             codigoPestana: pestana.codigoPestana,
-    //             posicion: index
-    //         };
-    //     });
-
-    //     this._layoutService.postGuardarPestanasUsuario(this.pestanasVisibles).subscribe({
-    //         next: (res: any) => console.log('✅ Preferencias de pestañas guardadas en BD', res),
-    //         error: (err: any) => console.error('❌ Error persistiendo pestañas en BD', err)
-    //     });
-    // }
     async persistirEstadoPestanas() {
         const estadoActual = await this._localStoragoService.getNavSettingsLocalStorage() || {};
         estadoActual.pestanas = this.pestanasVisibles;
@@ -945,3 +930,89 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         });
     }
 }
+// import { Component, OnInit, OnDestroy } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { Subscription } from 'rxjs';
+// import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+
+// import { LocalStorageService } from 'src/app/theme/shared/service';
+// import { PtlpestanasService } from 'src/app/theme/shared/service/ptlpestanas.service';
+// import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
+// import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
+
+// import { TcHeaderComponent } from "../widgets/tc-header/tc-header.component";
+// import { MaritimoDashboardComponent } from './components/maritimo-dashboard/maritimo-dashboard.component';
+// import { VirtualGateDashboardComponent } from './components/virtual-gate-dashboard/virtual-gate-dashboard.component';
+// import { ContenedoresDashboardComponent } from './components/contenedores-dashboard/contenedores-dashboard.component';
+// import { MapaDashboardComponent } from './components/mapa-dashboard/mapa-dashboard.component'; // <-- Tu nuevo componente
+// import { GnlDashboardComponent } from './components/gnl-dashboard/gnl-dashboard.component';
+// // import { MaritimoDashboardComponent } from "./tabs/maritimo-dashboard/maritimo-dashboard.component";
+
+// @Component({
+//     selector: 'app-torre-control',
+//     standalone: true,
+//     imports: [
+//         CommonModule,
+//         TcHeaderComponent,
+//         GnlDashboardComponent,
+//         MaritimoDashboardComponent,
+//         VirtualGateDashboardComponent,
+//         ContenedoresDashboardComponent,
+//         MapaDashboardComponent
+//     ],
+//     templateUrl: './torre-control.component.html'
+// })
+// export class TorreControlComponent implements OnInit, OnDestroy {
+
+//     public pestanaActiva: string = '';
+//     public puertoSeleccionado: string = 'BUENAVENTURA';
+//     public usuarioId: string = '';
+
+//     public lsPestanas: any[] = [];
+//     public pestanasVisibles: any[] = [];
+//     public lsWidgets: any[] = [];
+
+//     private subs: Subscription = new Subscription();
+
+//     constructor(
+//         private _filtroService: FiltroTableroService,
+//         private _localStoragoService: LocalStorageService,
+//         private _pestanasService: PtlpestanasService,
+//         private _widgetsService: PTLWidgetsMaestroService
+//     ) { }
+
+//     ngOnInit() {
+//         const current = this._localStoragoService.getCurrentUserLocalStorage();
+//         this.usuarioId = current?.usuario?.codigoUsuario || 'SISTEMA_DEFAULT';
+
+//         // 1. Cargar el catálogo de widgets maestro
+//         this.lsWidgets = this._widgetsService.getWidgetsActuales() || [];
+
+//         // 2. Cargar Pestañas
+//         this._pestanasService.obtenerPestanasDelContexto('SUITE_ID', 'APP_ID').subscribe((res: any) => {
+//             this.lsPestanas = res.data || [];
+//             this.pestanasVisibles = this.lsPestanas.slice(0, 3); // Simplificado para el ejemplo
+//             this.pestanaActiva = current?.pestanaActiva || this.pestanasVisibles[0]?.codigoPestana;
+//         });
+
+//         // 3. Escuchar cambios de puerto global
+//         this.subs.add(
+//             this._filtroService.ciudad$.pipe(
+//                 distinctUntilChanged(), debounceTime(300), filter(p => !!p)
+//             ).subscribe((puerto: any) => {
+//                 this.puertoSeleccionado = typeof puerto === 'string' ? puerto : (puerto.id_puerto || 'BUENAVENTURA');
+//             })
+//         );
+//     }
+
+//     cambiarPestana(nuevaPestana: string) {
+//         this.pestanaActiva = nuevaPestana;
+//         const current = this._localStoragoService.getCurrentUserLocalStorage();
+//         current.pestanaActiva = nuevaPestana;
+//         this._localStoragoService.setCurrentUserLocalStorage(current);
+//     }
+
+//     ngOnDestroy() {
+//         this.subs.unsubscribe();
+//     }
+// }

@@ -3,7 +3,6 @@
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [class.alerta-roja]="alarmaActiva || presionActual >= 100">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador dinámico -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge text-uppercase" [ngClass]="{
                   'badge-danger blinking': alarmaActiva || presionActual >= 100,
@@ -15,18 +14,15 @@
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET -->
     <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center position-relative pb-2 animate__animated animate__fadeIn"
         [class.modo-enfoque]="isEnfoque" style="min-height: 200px;">
 
-        <!-- Spinner de carga -->
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top:0; left:0; z-index: 10;">
             <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
             <span class="text-muted" style="font-size: 0.8rem;">Esperando telemetría...</span>
         </div>
 
-        <!-- Envoltorio fluido del SVG con Estados Dinámicos -->
         <div class="gauge-container" [style.opacity]="cargando ? '0.3' : '1'" [ngClass]="{
                  'estado-peligro': presionActual >= 100,
                  'estado-advertencia': presionActual >= 85 && presionActual < 100,
@@ -54,7 +50,6 @@
             </div>
         </div>
 
-        <!-- Temperatura (Footer del Gauge) -->
         <div class="mt-4 text-center">
             <span class="text-muted fs-6 me-2">Temp. Ducto:</span>
             <span class="fw-bold fs-5" [ngClass]="{
