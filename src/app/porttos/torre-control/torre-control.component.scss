@@ -1,0 +1,37 @@
+.tc-dashboard-container {
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.tab-content {
+    padding: 0 !important;
+    overflow: hidden !important;
+    /* 🟢 Cambiado a hidden */
+}
+
+gridster {
+    scrollbar-width: none !important;
+    /* Firefox */
+    -ms-overflow-style: none !important;
+    /* IE 10+ y Edge */
+}
+
+gridster::-webkit-scrollbar {
+    display: none !important;
+    /* Chrome, Safari y Opera */
+    width: 0px !important;
+    background: transparent !important;
+}
+
+.main-tabs-wrapper {
+    padding: 0 12px !important;
+    margin: 0px !important;
+}
+
+.tabs-container {
+    margin-right: 12px !important;
+}
+
+.porttos-config-menu {
+    margin: 0px !important;
+}

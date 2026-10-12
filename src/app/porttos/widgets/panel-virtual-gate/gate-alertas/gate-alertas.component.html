@@ -6,34 +6,42 @@
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-danger text-uppercase">
-            Crítico
+            Crítico · {{ alertas.length }}
         </span>
     </div>
 
     <!-- CUERPO ÚNICO DEL WIDGET (Lista de alertas con scroll integrado) -->
     <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn custom-scrollbar">
 
-        <div class="d-flex flex-column gap-2 pb-2">
+        <div class="d-flex flex-column gap-2 pb-2 h-100">
+
+            <!-- Estado Cargando -->
+            <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
+                <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+                Evaluando incidencias en Pre-Gate...
+            </div>
 
             <!-- Estado Vacío -->
-            <div *ngIf="alertas.length === 0"
+            <div *ngIf="!isLoading && alertas.length === 0"
                 class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
                 <i class="feather icon-check-circle me-2 text-success"></i> Sistema operando con normalidad.
             </div>
 
-            <!-- Iteración de Alertas dinámicas -->
-            <div class="reporte-item d-flex flex-column shadow-sm" *ngFor="let alerta of alertas"
-                [ngClass]="'tipo-' + alerta.tipo">
+            <!-- Iteración de Alertas dinámicas (Referencia estable en memoria) -->
+            <ng-container *ngIf="!isLoading && alertas.length > 0">
+                <div class="reporte-item d-flex flex-column shadow-sm"
+                    *ngFor="let alerta of alertas; trackBy: trackByAlerta" [ngClass]="'tipo-' + alerta.tipo">
 
-                <div class="r-titulo mb-1 text-white fw-bold d-flex align-items-center gap-1"
-                    style="font-size: 0.75rem;">
-                    <span>{{ alerta.icono }}</span> {{ alerta.titulo }}
-                </div>
-                <div class="r-desc text-muted mb-0" style="font-size: 0.70rem; line-height: 1.3;">
-                    {{ alerta.descripcion }}
-                </div>
+                    <div class="r-titulo mb-1 text-white fw-bold d-flex align-items-center gap-1"
+                        style="font-size: 0.75rem;">
+                        <span>{{ alerta.icono }}</span> {{ alerta.titulo }}
+                    </div>
+                    <div class="r-desc text-muted mb-0" style="font-size: 0.70rem; line-height: 1.3;">
+                        {{ alerta.descripcion }}
+                    </div>
 
-            </div>
+                </div>
+            </ng-container>
 
         </div>
 

@@ -127,6 +127,65 @@
     --gauge-pivot-bg: #ffffff;
     --gauge-pivot-border: #b5b5c3;
     --gauge-needle-color: #009ef7;
+
+    /* ... tus variables actuales ... */
+    --gauge-track-color: #d6d6d6;
+    --gauge-value-bg: rgba(255, 255, 255, 0.9);
+    --gauge-value-text: #3f4254;
+    --gauge-pivot-bg: #ffffff;
+    --gauge-pivot-border: #b5b5c3;
+    --gauge-needle-color: #009ef7;
+
+    /* ==========================================================
+       Variables de Gráficas (Chart.js) - Heredadas del Tema
+       ========================================================== */
+    --chart-font-family: 'Inter', 'Roboto', sans-serif;
+    --chart-font-size-tick: 10px;
+    --chart-font-size-tick-enfoque: 12px;
+    --chart-font-size-legend: 11px;
+    --chart-font-size-legend-enfoque: 13px;
+
+    /* Geometría de Barras, Donas y Líneas */
+    --chart-bar-radius: 4px;
+    --chart-bar-radius-stacked: 2px;
+    --chart-dona-cutout: 72%;
+    --chart-dona-spacing: 3px;
+    --chart-dona-radius: 4px;
+    --chart-line-tension: 0.35;
+    --chart-line-width: 2.5px;
+
+    /* Ejes, Grillas y Tooltips conectados a tus variables de Widgets */
+    --chart-axis-text-color: var(--widget-subtitle);
+    --chart-grid-line-color: rgba(0, 0, 0, 0.07);
+    --chart-tooltip-bg: var(--widget-background);
+    --chart-tooltip-title: var(--widget-text);
+    --chart-tooltip-body: var(--widget-subtitle);
+    --chart-tooltip-border: var(--widget-border);
+    --chart-tooltip-radius: 6px;
+    --chart-tooltip-padding: 10px;
+
+    /* Paleta de Series (Usa tus colores primarios y de gauge) */
+    --chart-color-1: var(--gauge-needle-color);
+    /* #009ef7 en claro */
+    --chart-color-2: #10b981;
+    /* Esmeralda */
+    --chart-color-3: #f59e0b;
+    /* Ámbar */
+    --chart-color-4: #8b5cf6;
+    /* Violeta */
+    --chart-color-5: #ec4899;
+    /* Fucsia */
+    --chart-color-6: var(--primary-color);
+    /* #0d6efd */
+    --chart-color-7: #14b8a6;
+    /* Teal */
+    --chart-color-8: #ef4444;
+    /* Rojo */
+
+    /* Semáforos Operativos (ETA vs ATA / Saturación) */
+    --chart-semaforo-ok: var(--gauge-needle-color);
+    --chart-semaforo-alerta: #f59e0b;
+    --chart-semaforo-critico: #ef4444;
 }
 
 body.dark-theme {
@@ -190,6 +249,65 @@ body.dark-theme {
     --gauge-pivot-bg: #1e1e2d;
     --gauge-pivot-border: #a1a5b7;
     --gauge-needle-color: #00e5ff;
+
+    /* ... tus variables actuales ... */
+    --gauge-track-color: #d6d6d6;
+    --gauge-value-bg: rgba(255, 255, 255, 0.9);
+    --gauge-value-text: #3f4254;
+    --gauge-pivot-bg: #ffffff;
+    --gauge-pivot-border: #b5b5c3;
+    --gauge-needle-color: #009ef7;
+
+    /* ==========================================================
+       Variables de Gráficas (Chart.js) - Heredadas del Tema
+       ========================================================== */
+    --chart-font-family: 'Inter', 'Roboto', sans-serif;
+    --chart-font-size-tick: 10px;
+    --chart-font-size-tick-enfoque: 12px;
+    --chart-font-size-legend: 11px;
+    --chart-font-size-legend-enfoque: 13px;
+
+    /* Geometría de Barras, Donas y Líneas */
+    --chart-bar-radius: 4px;
+    --chart-bar-radius-stacked: 2px;
+    --chart-dona-cutout: 72%;
+    --chart-dona-spacing: 3px;
+    --chart-dona-radius: 4px;
+    --chart-line-tension: 0.35;
+    --chart-line-width: 2.5px;
+
+    /* Ejes, Grillas y Tooltips conectados a tus variables de Widgets */
+    --chart-axis-text-color: var(--widget-subtitle);
+    --chart-grid-line-color: rgba(78, 78, 78, 0.07);
+    --chart-tooltip-bg: var(--widget-background);
+    --chart-tooltip-title: var(--widget-text);
+    --chart-tooltip-body: var(--widget-subtitle);
+    --chart-tooltip-border: var(--widget-border);
+    --chart-tooltip-radius: 6px;
+    --chart-tooltip-padding: 10px;
+
+    /* Paleta de Series (Usa tus colores primarios y de gauge) */
+    --chart-color-1: var(--gauge-needle-color);
+    /* #009ef7 en claro */
+    --chart-color-2: #10b981;
+    /* Esmeralda */
+    --chart-color-3: #f59e0b;
+    /* Ámbar */
+    --chart-color-4: #8b5cf6;
+    /* Violeta */
+    --chart-color-5: #ec4899;
+    /* Fucsia */
+    --chart-color-6: var(--primary-color);
+    /* #0d6efd */
+    --chart-color-7: #14b8a6;
+    /* Teal */
+    --chart-color-8: #ef4444;
+    /* Rojo */
+
+    /* Semáforos Operativos (ETA vs ATA / Saturación) */
+    --chart-grid-line-color: rgba(94, 94, 94, 0.06);
+    --chart-color-1: #00d4ff;
+    --chart-semaforo-ok: #00d4ff;
 }
 
 body.gradient-dark {

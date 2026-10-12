@@ -1,31 +1,60 @@
-<app-widget-shell [titulo]="data?.titulo || '📊 TONELADAS MOVIDAS HOY'"
-    [subtitulo]="data?.subtitulo || 'Volumen de carga apilada / operada'"
+<!-- <app-widget-shell [titulo]="data?.titulo || 'TONELADAS MOVIDAS HOY · POR TIPO'"
+    [subtitulo]="data?.subtitulo || 'Volumen diario operado por terminal y especialidad de carga'"
     [icono]="data?.icono || 'feather icon-bar-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge badge-info text-uppercase">
-            Volumen
+        <span class="tc-badge badge-success text-uppercase">
+            TM / TEU Hoy
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor flex para la gráfica) -->
     <div
         class="chart-wrapper w-100 h-100 position-relative pb-2 pe-2 animate__animated animate__fadeIn flex-grow-1 min-h-0">
 
-        <!-- Renderiza solo cuando barChartData ya fue construido -->
-        <canvas baseChart *ngIf="barChartData.datasets.length" [data]="barChartData" [options]="barChartOptions"
+        <canvas baseChart *ngIf="!isLoading && tieneDatos" [data]="barChartData" [options]="barChartOptions"
             [type]="'bar'">
         </canvas>
 
-        <!-- Estado vacío -->
-        <div *ngIf="!barChartData.datasets.length"
+        <div *ngIf="isLoading || !tieneDatos"
             class="w-100 h-100 d-flex justify-content-center align-items-center text-muted small">
-            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status" *ngIf="!data?.labels"></div>
-            <i class="feather icon-inbox me-2 opacity-50" *ngIf="data?.labels"></i>
-            {{ data?.labels ? 'Sin datos de volumen.' : 'Cargando gráfica...' }}
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status" *ngIf="isLoading"></div>
+            <i class="feather icon-inbox me-2 opacity-50" *ngIf="!isLoading"></i>
+            {{ isLoading ? 'Sincronizando volumen por terminal...' : 'Sin datos de volumen registrados hoy.' }}
         </div>
 
     </div>
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'TONELADAS MOVIDAS HOY · POR TIPO'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Volumen diario operado por terminal y especialidad de carga'"
+    [icono]="data?.icono || 'feather icon-bar-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-success text-uppercase">
+            TM / TEU Hoy
+        </span>
+    </div>
+
+    <div class="chart-wrapper w-100 h-100 position-relative d-flex flex-column p-2 animate__animated animate__fadeIn">
+
+        <!-- Loader -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Sincronizando volumen por terminal...</span>
+        </div>
+
+        <!-- Gráfica Chart.js Estandarizada -->
+        <div class="flex-grow-1 position-relative" style="min-height: 0;"
+            [ngClass]="{'d-none': isLoading || !tieneDatos}">
+            <canvas #toneladasCanvas></canvas>
+        </div>
+
+        <!-- Estado vacío -->
+        <div *ngIf="!isLoading && !tieneDatos"
+            class="w-100 h-100 d-flex flex-column justify-content-center align-items-center text-muted small">
+            <i class="feather icon-inbox fs-2 mb-2 opacity-50"></i>
+            Sin datos de volumen registrados hoy.
+        </div>
+
+    </div>
 </app-widget-shell>

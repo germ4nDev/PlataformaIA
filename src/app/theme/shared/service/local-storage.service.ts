@@ -363,6 +363,69 @@ export class LocalStorageService {
         return this.currentTablero?.layout || [];
     }
 
+    /**
+   * 🟢 1. LEER LAYOUT (Síncrono y en 0 milisegundos)
+   * Devuelve los widgets de una pestaña específica desde el sessionStorage.
+   */
+    getLayoutPestana(codigoPestana: string): any[] {
+        const currentUser = this.getCurrentUserLocalStorage(); // Usa tu método existente
+
+        // Validamos que el usuario y la estructura base existan
+        if (!currentUser || !currentUser.preferenciasLayout || !currentUser.preferenciasLayout.pestanas) {
+            console.warn(`⚠️ No hay layouts guardados en sesión para el usuario.`);
+            return [];
+        }
+
+        // Buscamos la pestaña exacta
+        const pestana = currentUser.preferenciasLayout.pestanas.find((p: any) => p.codigoPestana === codigoPestana);
+
+        if (pestana && pestana.widgets) {
+            return pestana.widgets;
+        }
+
+        return [];
+    }
+
+    /**
+     * 🟢 2. GUARDAR LAYOUT (Escritura Rápida)
+     * Actualiza el layout en memoria instantáneamente al mover un widget.
+     */
+    guardarLayoutPestanaEnSesion(codigoPestana: string, widgetsActualizados: any[]) {
+        let currentUser = this.getCurrentUserLocalStorage();
+        if (!currentUser) return;
+
+        // 1. Construimos la jerarquía si está completamente en blanco
+        if (!currentUser.preferenciasLayout) currentUser.preferenciasLayout = { pestanas: [] };
+        if (!currentUser.preferenciasLayout.pestanas) currentUser.preferenciasLayout.pestanas = [];
+
+        // 2. Extraemos solo la matemática y el ID
+        const widgetsLimpios = widgetsActualizados.map(w => ({
+            id: w.id || w.idClon || w.type,
+            codigoWidget: w.codigoWidget || w.type,
+            type: w.type,
+            x: w.x,
+            y: w.y,
+            cols: w.cols,
+            rows: w.rows
+        }));
+
+        // 3. Buscamos la pestaña
+        const indexPestana = currentUser.preferenciasLayout.pestanas.findIndex((p: any) => p.codigoPestana === codigoPestana);
+
+        if (indexPestana >= 0) {
+            // 🟢 Si existe, actualizamos sus widgets
+            currentUser.preferenciasLayout.pestanas[indexPestana].widgets = widgetsLimpios;
+        } else {
+            // 🟢 ¡CRÍTICO! Si la pestaña no estaba en el arreglo inicial, LA CREAMOS.
+            currentUser.preferenciasLayout.pestanas.push({
+                codigoPestana: codigoPestana,
+                widgets: widgetsLimpios
+            });
+        }
+
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+
     localClear() {
         localStorage.clear();
     }

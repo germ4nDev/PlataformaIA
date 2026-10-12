@@ -12,42 +12,51 @@
     <!-- CUERPO ÚNICO DEL WIDGET -->
     <div class="w-100 h-100 d-flex flex-column pt-2 animate__animated animate__fadeIn">
 
-        <!-- 1. Barras de Progreso Dinámicas -->
-        <div class="progress-list flex-grow-1 pe-2 custom-scrollbar overflow-auto">
-            <div class="progress-item" *ngFor="let item of barrasProgreso">
-                <span class="p-label">{{ item.label }}</span>
-                <div class="p-track">
-                    <div class="p-fill" [ngClass]="item.colorClass" [style.width.%]="item.percent"></div>
-                </div>
-                <span class="p-value">{{ item.value }}</span>
-            </div>
+        <!-- Estado Cargando -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center flex-grow-1 text-muted small">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            Calculando cumplimiento de citas...
         </div>
 
-        <!-- 2. Footer / KPIs Inferiores -->
-        <div class="panel-footer kpis-bottom-row w-100 mt-auto pt-3 pb-2">
-
-            <div class="w-100 text-center mb-2">
-                <span class="kpi-main-title">Tiempo Medio Espera Virtual</span>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <div class="kpi-item">
-                    <span class="kpi-val text-info">{{ data?.resumen?.tiempoMedioSPRBUN || 0 }}m</span>
-                    <span class="kpi-lbl">SPRBUN</span>
-                </div>
-
-                <div class="kpi-item border-start border-end" style="border-color: rgba(255,255,255,0.05) !important;">
-                    <span class="kpi-val text-warning">{{ data?.resumen?.tiempoMedioTCBUEN || 0 }}m</span>
-                    <span class="kpi-lbl">TCBUEN</span>
-                </div>
-
-                <div class="kpi-item">
-                    <span class="kpi-val text-success">{{ data?.resumen?.tiempoMedioAGUADULCE || 0 }}m</span>
-                    <span class="kpi-lbl">AGUADULCE</span>
+        <ng-container *ngIf="!isLoading">
+            <!-- 1. Barras de Progreso Dinámicas -->
+            <div class="progress-list flex-grow-1 pe-2 custom-scrollbar overflow-auto">
+                <div class="progress-item" *ngFor="let item of barrasProgreso; trackBy: trackByBarra">
+                    <span class="p-label">{{ item.label }}</span>
+                    <div class="p-track">
+                        <div class="p-fill" [ngClass]="item.colorClass" [style.width.%]="item.percent"></div>
+                    </div>
+                    <span class="p-value">{{ item.value }}</span>
                 </div>
             </div>
 
-        </div>
+            <!-- 2. Footer / KPIs Inferiores -->
+            <div class="panel-footer kpis-bottom-row w-100 mt-auto pt-3 pb-2">
+
+                <div class="w-100 text-center mb-2">
+                    <span class="kpi-main-title">Tiempo Medio Espera Virtual</span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <div class="kpi-item">
+                        <span class="kpi-val text-info">{{ data?.resumen?.tiempoMedioSPRBUN ?? 0 }}m</span>
+                        <span class="kpi-lbl">SPRBUN</span>
+                    </div>
+
+                    <div class="kpi-item border-start border-end"
+                        style="border-color: rgba(255,255,255,0.05) !important;">
+                        <span class="kpi-val text-warning">{{ data?.resumen?.tiempoMedioTCBUEN ?? 0 }}m</span>
+                        <span class="kpi-lbl">TCBUEN</span>
+                    </div>
+
+                    <div class="kpi-item">
+                        <span class="kpi-val text-success">{{ data?.resumen?.tiempoMedioAGUADULCE ?? 0 }}m</span>
+                        <span class="kpi-lbl">AGUADULCE</span>
+                    </div>
+                </div>
+
+            </div>
+        </ng-container>
 
     </div>
 

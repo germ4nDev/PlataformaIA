@@ -56,6 +56,9 @@ export class PestanaLobbyTclComponent implements OnChanges {
     }
 
     togglePestana(codigoPestana: string) {
+        if (event) {
+            event.stopPropagation();
+        }
         const pestana = this.pestanasProcesadas.find(p => p.codigoPestana === codigoPestana);
         if (pestana) {
             pestana.activo = !pestana.activo;

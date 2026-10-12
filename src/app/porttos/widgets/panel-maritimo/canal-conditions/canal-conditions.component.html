@@ -1,3 +1,50 @@
+<!-- <app-widget-shell [titulo]="data.titulo || 'CONDICIONES DEL CANAL'"
+    [subtitulo]="data.subtitulo || 'Reporte meteorológico y estado DIMAR'" [icono]="data.icono || 'feather icon-wind'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase" title="Dirección General Marítima">
+            DIMAR
+        </span>
+    </div>
+
+    <div class="w-100 h-100 pt-2 animate__animated animate__fadeIn d-flex flex-column justify-content-center">
+
+        <div class="condiciones-grid">
+            <div class="condicion-card">
+                <span class="c-titulo">MAREA ACTUAL</span>
+                <span class="c-valor text-white">{{ data.marea || '--' }}</span>
+                <span class="c-sub opacity-0">--</span>
+            </div>
+
+            <div class="condicion-card">
+                <span class="c-titulo">VISIBILIDAD</span>
+                <span class="c-valor text-white">{{ data.visibilidad || 'N/A' }}</span>
+                <span class="c-sub">Viento: <span class="text-white">{{ data.viento || '0' }}</span></span>
+            </div>
+
+            <div class="condicion-card">
+                <span class="c-titulo">CANAL ACCESO</span>
+                <span class="c-valor" [ngClass]="data.claseEstado || 'text-success'">
+                    {{ data.estadoCanal || 'Consultando...' }}
+                </span>
+                <span class="c-sub">Pilotaje:
+                    <span [ngClass]="data.pilotaje !== 'Normal' ? 'text-warning fw-bold' : 'text-white'">
+                        {{ data.pilotaje || 'Normal' }}
+                    </span>
+                </span>
+            </div>
+
+            <div class="condicion-card">
+                <span class="c-titulo">PLEAMAR</span>
+                <span class="c-valor text-white">{{ data.pleamar || '--' }}</span>
+                <span class="c-sub opacity-0">--</span>
+            </div>
+        </div>
+
+    </div>
+
+</app-widget-shell> -->
 <app-widget-shell [titulo]="data.titulo || 'CONDICIONES DEL CANAL'"
     [subtitulo]="data.subtitulo || 'Reporte meteorológico y estado DIMAR'" [icono]="data.icono || 'feather icon-wind'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
@@ -12,39 +59,53 @@
     <!-- CUERPO ÚNICO DEL WIDGET (Grid 2x2 para las condiciones) -->
     <div class="w-100 h-100 pt-2 animate__animated animate__fadeIn d-flex flex-column justify-content-center">
 
-        <div class="condiciones-grid">
-            <!-- Tarjeta 1 -->
+        <!-- Spinner de Carga -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted" style="font-size: 0.8rem;">Sincronizando estación DIMAR...</span>
+        </div>
+
+        <!-- Cuadrícula 2x2 -->
+        <div *ngIf="!isLoading" class="condiciones-grid">
+            <!-- Tarjeta 1: Marea Actual -->
             <div class="condicion-card">
                 <span class="c-titulo">MAREA ACTUAL</span>
                 <span class="c-valor text-white">{{ data.marea || '--' }}</span>
-                <span class="c-sub opacity-0">--</span> <!-- Invisible para alinear -->
+                <span class="c-sub" [ngClass]="data.pleamar && data.pleamar !== '--' ? '' : 'opacity-0'">
+                    Pleamar: <span class="text-white">{{ data.pleamar || '--' }}</span>
+                </span>
             </div>
 
-            <!-- Tarjeta 2 -->
+            <!-- Tarjeta 2: Visibilidad y Viento -->
             <div class="condicion-card">
                 <span class="c-titulo">VISIBILIDAD</span>
                 <span class="c-valor text-white">{{ data.visibilidad || 'N/A' }}</span>
                 <span class="c-sub">Viento: <span class="text-white">{{ data.viento || '0' }}</span></span>
             </div>
 
-            <!-- Tarjeta 3 -->
+            <!-- Tarjeta 3: Canal de Acceso y Pilotaje -->
             <div class="condicion-card">
                 <span class="c-titulo">CANAL ACCESO</span>
                 <span class="c-valor" [ngClass]="data.claseEstado || 'text-success'">
-                    {{ data.estadoCanal || 'Consultando...' }}
+                    {{ data.estadoCanal || 'Abierto' }}
                 </span>
                 <span class="c-sub">Pilotaje:
-                    <span [ngClass]="data.pilotaje !== 'Normal' ? 'text-warning fw-bold' : 'text-white'">
+                    <span
+                        [ngClass]="data.pilotaje && data.pilotaje !== 'Normal' ? 'text-warning fw-bold' : 'text-white'">
                         {{ data.pilotaje || 'Normal' }}
                     </span>
                 </span>
             </div>
 
-            <!-- Tarjeta 4 -->
+            <!-- Tarjeta 4: Pleamar / Calado de Dragado -->
             <div class="condicion-card">
-                <span class="c-titulo">PLEAMAR</span>
-                <span class="c-valor text-white">{{ data.pleamar || '--' }}</span>
-                <span class="c-sub opacity-0">--</span> <!-- Invisible para alinear -->
+                <span class="c-titulo">{{ data.dragado ? 'DRAGADO ACTUAL' : 'PLEAMAR' }}</span>
+                <span class="c-valor" [ngClass]="data.dragado ? 'text-warning' : 'text-white'">
+                    {{ data.dragado || data.pleamar || '--' }}
+                </span>
+                <span class="c-sub" [ngClass]="data.restriccion ? '' : 'opacity-0'">
+                    {{ data.restriccion || '--' }}
+                </span>
             </div>
         </div>
 

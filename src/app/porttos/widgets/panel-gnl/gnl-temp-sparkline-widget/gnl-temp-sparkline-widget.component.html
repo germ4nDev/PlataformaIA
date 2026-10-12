@@ -1,18 +1,37 @@
-<app-widget-shell [titulo]="'Temperatura Criogénica'" [subtitulo]="'TENDENCIA EN DUCTO'"
-    [icono]="'feather icon-thermometer'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell [titulo]="data?.titulo || 'Temperatura en Ducto'"
+    [subtitulo]="data?.subtitulo || 'TENDENCIA EN DUCTO'" [icono]="'feather icon-thermometer'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
 
-    <div class="h-100 w-100 position-relative d-flex flex-column justify-content-center p-3 overflow-hidden">
+    <!-- PROYECCIÓN AL HEADER: Segmento activo y estado del compresor -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span class="tc-badge badge-info text-uppercase" *ngIf="tieneTelemetria">
+            {{ segmentoActivo }}
+        </span>
+
+        <span class="tc-badge text-uppercase" [ngClass]="estadoCompresor === 1 ? 'badge-success' : 'badge-secondary'">
+            Compresor {{ estadoCompresor === 1 ? 'ON' : 'OFF' }}
+        </span>
+    </div>
+
+    <div
+        class="h-100 w-100 position-relative d-flex flex-column justify-content-center p-3 overflow-hidden animate__animated animate__fadeIn">
 
         <!-- Valor Z-Index Superior -->
         <div class="position-relative z-index-2 mb-4 text-center">
-            <h2 class="display-4 fw-bolder mb-0" [ngClass]="tempActual > -150 ? 'text-danger' : 'text-info'">
+            <h2 class="display-4 fw-bolder mb-0" [ngClass]="{
+                'text-danger': esTemperaturaCritica,
+                'text-warning': esTemperaturaAdvertencia,
+                'text-info': !esTemperaturaCritica && !esTemperaturaAdvertencia
+            }">
                 {{ tempActual | number:'1.2-2' }} °C
             </h2>
-            <span class="text-muted fw-bold d-block mt-1">Límite operativo: -150°C</span>
+            <span class="text-muted fw-bold d-block mt-1" style="font-size: 0.78rem;">
+                {{ textoLimiteOperativo }}
+            </span>
         </div>
 
         <!-- Gráfica Sparkline de fondo -->
-        <div class="position-absolute w-100" style="bottom: 0; left: 0; height: 60px; opacity: 0.5;">
+        <div class="position-absolute w-100" style="bottom: 0; left: 0; height: 65px; opacity: 0.65;">
             <canvas #sparklineCanvas></canvas>
         </div>
 

@@ -1,0 +1,77 @@
+<app-widget-shell [titulo]="configData?.titulo || '📋 Movimientos y Trazabilidad de Lotes en Bodega'"
+    [subtitulo]="configData?.subtitulo || 'Control de recibo desde buque, almacenamiento y despacho terrestre'"
+    [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-success text-uppercase">
+            Lotes · {{ movimientos.length }}
+        </span>
+    </div>
+
+    <!-- CUERPO DE LA TABLA -->
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn table-container custom-scrollbar">
+        <div class="table-responsive h-100">
+            <table class="table table-hover table-borderless align-middle w-100 m-0">
+
+                <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
+                    <tr class="text-muted font-weight-bold text-uppercase"
+                        style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th style="width: 12%;" class="pb-2">Lote / BL</th>
+                        <th style="width: 18%;" class="pb-2">Bodega / Silo</th>
+                        <th style="width: 15%;" class="pb-2">Producto</th>
+                        <th style="width: 15%;" class="pb-2">Operación</th>
+                        <th style="width: 11%;" class="pb-2 text-end">Toneladas</th>
+                        <th style="width: 14%;" class="pb-2">Cliente</th>
+                        <th style="width: 6%;" class="pb-2 text-center">Estadía</th>
+                        <th style="width: 9%; text-align: right;" class="pb-2">Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!-- Loader -->
+                    <tr *ngIf="cargando">
+                        <td colspan="8" class="text-center text-muted py-5">
+                            <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
+                            Consultando lotes almacenados en bodega...
+                        </td>
+                    </tr>
+
+                    <!-- Filas de Lotes -->
+                    <ng-container *ngIf="!cargando">
+                        <tr *ngFor="let m of movimientos; trackBy: trackByMovimiento"
+                            style="font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td class="font-weight-bold text-info py-3">{{ m.lote_bl }}</td>
+                            <td class="text-white">{{ m.nombre_bodega }}</td>
+                            <td class="text-white">{{ m.producto }}</td>
+                            <td class="text-muted">{{ m.tipo_operacion }}</td>
+                            <td class="text-end fw-bold text-light">{{ m.toneladas | number:'1.1-1' }} t</td>
+                            <td class="text-white">{{ m.cliente }}</td>
+                            <td class="text-center"
+                                [ngClass]="m.dias_almacenaje >= 10 ? 'text-danger fw-bold' : 'text-muted'">
+                                {{ m.dias_almacenaje }}d
+                            </td>
+                            <td class="text-end">
+                                <span class="badge rounded-pill px-2 py-1 shadow-sm"
+                                    [ngClass]="getEstadoClase(m.estado)"
+                                    style="font-size: 0.65rem; letter-spacing: 0.5px;">
+                                    {{ m.estado }}
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Estado Vacío -->
+                        <tr *ngIf="movimientos.length === 0">
+                            <td colspan="8" class="text-center text-muted py-5">
+                                <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
+                                No hay lotes ni movimientos de bodega registrados para este puerto.
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</app-widget-shell>

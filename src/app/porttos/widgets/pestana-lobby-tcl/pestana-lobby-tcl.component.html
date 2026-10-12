@@ -1,8 +1,6 @@
-<div class="plataforma-backdrop-blur" *ngIf="visible" (click)="cerrarModal()">
-    <div class="plataforma-modal-md p-4 shadow-lg rounded" style="max-width: 500px; background: #2a2d34;"
-        (click)="$event.stopPropagation()">
+<!-- <div class="plataforma-backdrop-blur" *ngIf="visible" (click)="cerrarModal()">
+    <div class="plataforma-modal-md p-4 shadow-lg rounded" style="max-width: 500px;" (click)="$event.stopPropagation()">
 
-        <!-- Cabecera del Modal -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h3 class="titulo-modal" style="font-size: 1.25rem; color: #fff;">Gestor de Pestañas</h3>
@@ -10,13 +8,13 @@
                     entorno.</p>
             </div>
 
-            <!-- Botones circulares estilo header -->
             <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn-cerrar-modal" (click)="toggleSeleccionarTodos()"
+                <button type="button" class="lobby-action-btn" (click)="toggleSeleccionarTodos()"
                     [title]="todosEstanSeleccionados ? 'Desmarcar todos' : 'Seleccionar todos'">
                     <i class="feather" [ngClass]="todosEstanSeleccionados ? 'icon-square' : 'icon-check-square'"></i>
                 </button>
-                <button type="button" class="btn-cerrar-modal" (click)="cerrarModal()">
+
+                <button type="button" class="lobby-action-btn" (click)="cerrarModal()">
                     <i class="feather icon-x"></i>
                 </button>
             </div>
@@ -24,10 +22,8 @@
 
         <div class="overflow-auto pe-2" style="max-height: 60vh;">
 
-            <!-- 🟢 1. El contenedor padre ahora es un cdkDropList -->
             <div class="d-flex flex-column gap-2" cdkDropList (cdkDropListDropped)="onDrop($event)">
 
-                <!-- 🟢 2. Cada tarjeta tiene cdkDrag-->
                 <div *ngFor="let pestana of pestanasProcesadas" cdkDrag
                     class="pestana-card-item d-flex justify-content-between align-items-center p-3 rounded"
                     style="cursor: pointer; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s ease;"
@@ -35,20 +31,17 @@
 
                     <div class="d-flex align-items-center gap-3">
 
-                        <!-- 🟢 3. Ícono Drag Handle: Detenemos propagación para que al arrastrar no marque el checkbox -->
                         <div cdkDragHandle (click)="$event.stopPropagation()"
                             class="drag-indicator d-flex align-items-center justify-content-center text-muted"
                             style="width: 20px; cursor: grab;" title="Arrastrar para reordenar">
                             <i class="fas fa-grip-vertical fs-5"></i>
                         </div>
 
-                        <!-- Icono Principal -->
                         <div class="icon-wrapper rounded p-2 text-center d-flex align-items-center justify-content-center"
                             style="width: 40px; height: 40px; background-color: rgba(128, 128, 128, 0.1);">
                             <i [class]="obtenerIconoPestana(pestana.codigoPestana) + ' fs-5'"></i>
                         </div>
 
-                        <!-- Textos -->
                         <div>
                             <h6 class="titulo-content mb-0 fw-bold"
                                 [ngClass]="pestana.activo ? 'text-primary' : 'text-white'">
@@ -60,7 +53,6 @@
                         </div>
                     </div>
 
-                    <!-- Checkbox Minimalista -->
                     <div class="checkbox-minimalista-wrapper m-0">
                         <input class="minimal-checkbox" type="checkbox" [id]="'chk-pestana-' + pestana.codigoPestana"
                             [checked]="pestana.activo" (click)="$event.stopPropagation()"
@@ -68,6 +60,71 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="plataforma-backdrop-blur" *ngIf="visible">
+    <div class="plataforma-modal-md p-4 shadow-lg rounded" style="max-width: 500px;" (click)="$event.stopPropagation()">
+
+        <!-- Cabecera del Modal -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="titulo-modal mb-1" style="font-size: 1.25rem; color: #fff;">Gestor de Pestañas</h3>
+                <p class="subtitulo-modal text-muted mb-0" style="font-size: 0.85rem;">
+                    Selecciona y organiza las vistas de tu entorno.
+                </p>
+            </div>
+
+            <!-- Botones estilo header -->
+            <div class="d-flex align-items-center gap-2 flex-shrink-0 ms-3">
+                <button type="button" class="lobby-action-btn" (click)="toggleSeleccionarTodos()"
+                    [title]="todosEstanSeleccionados ? 'Desmarcar todos' : 'Seleccionar todos'">
+                    <i class="feather" [ngClass]="todosEstanSeleccionados ? 'icon-square' : 'icon-check-square'"></i>
+                </button>
+
+                <button type="button" class="lobby-action-btn" (click)="cerrarModal()" title="Cerrar gestor">
+                    <i class="feather icon-x"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-auto pe-2" style="max-height: 60vh;">
+            <div class="d-flex flex-column gap-2" cdkDropList (cdkDropListDropped)="onDrop($event)">
+                <div *ngFor="let pestana of pestanasProcesadas" cdkDrag
+                    class="pestana-card-item d-flex justify-content-between align-items-center p-3 rounded"
+                    style="cursor: pointer; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s ease;"
+                    (click)="togglePestana(pestana.codigoPestana)">
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div cdkDragHandle (click)="$event.stopPropagation()"
+                            class="drag-indicator d-flex align-items-center justify-content-center text-muted"
+                            style="width: 20px; cursor: grab;" title="Arrastrar para reordenar">
+                            <i class="fas fa-grip-vertical fs-5"></i>
+                        </div>
+
+                        <div class="icon-wrapper rounded p-2 text-center d-flex align-items-center justify-content-center"
+                            style="width: 40px; height: 40px; background-color: rgba(128, 128, 128, 0.1);">
+                            <i [class]="obtenerIconoPestana(pestana.codigoPestana) + ' fs-5'"></i>
+                        </div>
+
+                        <div>
+                            <h6 class="titulo-content mb-0 fw-bold"
+                                [ngClass]="pestana.activo ? 'text-primary' : 'text-white'">
+                                {{ pestana.nombrePestana || pestana.codigoPestana }}
+                            </h6>
+                            <small class="subtitulo-content text-muted text-uppercase" style="font-size: 0.7rem;">
+                                {{ pestana.codigoPestana }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-minimalista-wrapper m-0">
+                        <input class="minimal-checkbox" type="checkbox" [id]="'chk-pestana-' + pestana.codigoPestana"
+                            [checked]="pestana.activo" (click)="$event.stopPropagation()"
+                            (change)="onCheckboxChange(pestana.codigoPestana, $event)">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

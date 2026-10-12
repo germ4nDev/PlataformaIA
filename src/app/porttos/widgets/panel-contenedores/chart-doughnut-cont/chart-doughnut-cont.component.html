@@ -1,30 +1,83 @@
-<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'DISTRIBUCIÓN FREE TIME'"
-    [subtitulo]="widgetConfig?.data?.subtitulo || 'Estado de contenedores en puerto'"
-    [icono]="widgetConfig?.data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<!-- <app-widget-shell [titulo]="data?.titulo || '⏱ DISTRIBUCIÓN FREE TIME'"
+    [subtitulo]="data?.subtitulo || 'Estado de contenedores por vencimiento libre de mora'"
+    [icono]="data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase">
             Tiempos
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET -->
     <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
 
-        <!-- Loader mientras responde el backend -->
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
-            style="top:0; left:0; z-index: 10;">
-            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">Cargando gráfica...</span>
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted" style="font-size: 0.8rem;">Evaluando tramos de Free Time...</span>
         </div>
 
-        <!-- Gráfica Chart.js (Se adapta automáticamente al espacio) -->
-        <canvas *ngIf="!cargando" baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
+        <div *ngIf="!cargando && !tieneDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-clock fs-2 mb-2 opacity-50"></i>
+            Sin distribución de Free Time registrada para este puerto.
+        </div>
+
+        <canvas *ngIf="!cargando && tieneDatos" baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
             [type]="'doughnut'">
         </canvas>
 
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '🚢 Participación por Línea Naviera'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de inventario en patio (TEUs)'"
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase" *ngIf="!cargando && !sinDatos">
+            {{ totalUnidades | number:'1.0-0' }} TEUs
+        </span>
+    </div>
+
+    <div
+        class="w-100 h-100 d-flex flex-column justify-content-between p-2 position-relative animate__animated animate__fadeIn">
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Calculando participación por naviera...</span>
+        </div>
+
+        <div *ngIf="!cargando && sinDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
+            Sin unidades registradas en patio para este puerto.
+        </div>
+
+        <div class="row align-items-center h-100 g-2" [hidden]="cargando || sinDatos">
+            <div class="col-6 h-100 position-relative d-flex justify-content-center align-items-center"
+                style="min-height: 150px;">
+                <canvas #doughnutContCanvas></canvas>
+                <div class="position-absolute text-center" style="pointer-events: none;">
+                    <span class="d-block fw-bolder" style="font-size: 1.05rem;">
+                        {{ totalUnidades | number:'1.0-0' }}
+                    </span>
+                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">TEUs</small>
+                </div>
+            </div>
+
+            <div class="col-6 d-flex flex-column gap-2 pe-2 overflow-auto custom-scrollbar" style="max-height: 100%;">
+                <div *ngFor="let item of leyendaItems" class="d-flex justify-content-between align-items-center"
+                    style="font-size: 0.75rem;">
+                    <div class="d-flex align-items-center gap-2 text-truncate">
+                        <span class="rounded-circle flex-shrink-0" [style.background-color]="item.color"
+                            style="width: 9px; height: 9px; display: inline-block;">
+                        </span>
+                        <span class="fw-medium text-truncate">{{ item.label }}</span>
+                    </div>
+                    <span class="fw-bold text-info ms-2">{{ item.porcentaje }}%</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 </app-widget-shell>

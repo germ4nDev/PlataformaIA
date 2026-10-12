@@ -13,31 +13,40 @@
     <div
         class="gv-container w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 animate__animated animate__fadeIn">
 
-        <!-- Valor Principal -->
-        <div class="gv-main-value text-info mb-1">
-            {{ resumen.validados || 0 }}
+        <!-- Estado Cargando -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 text-muted small">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            Validando estado Pre-Gate...
         </div>
 
-        <div class="gv-subtitle text-muted text-uppercase mb-4 fw-bold">
-            Camiones en flujo
-        </div>
+        <!-- Contenido Principal -->
+        <ng-container *ngIf="!isLoading">
+            <!-- Valor Principal -->
+            <div class="gv-main-value text-info mb-1">
+                {{ resumen.totalFlujo || resumen.validados || 0 }}
+            </div>
 
-        <!-- Píldoras / Badges de Estados Inferiores -->
-        <div class="gv-badges-container d-flex gap-2 flex-wrap justify-content-center">
+            <div class="gv-subtitle text-muted text-uppercase mb-4 fw-bold">
+                Camiones en Pre-Gate
+            </div>
 
-            <span class="gv-badge badge-success">
-                <i class="feather icon-check me-1"></i> {{ resumen.validados || 0 }} validados
-            </span>
+            <!-- Píldoras / Badges de Estados Inferiores -->
+            <div class="gv-badges-container d-flex gap-2 flex-wrap justify-content-center">
 
-            <span class="gv-badge badge-warning">
-                <i class="feather icon-clock me-1"></i> {{ resumen.enCola || 0 }} en cola
-            </span>
+                <span class="gv-badge badge-success">
+                    <i class="feather icon-check me-1"></i> {{ resumen.validados || 0 }} validados
+                </span>
 
-            <span class="gv-badge badge-danger">
-                <i class="feather icon-alert-triangle me-1"></i> {{ resumen.retenidos || 0 }} retenidos
-            </span>
+                <span class="gv-badge badge-warning">
+                    <i class="feather icon-clock me-1"></i> {{ resumen.enCola || 0 }} en cola
+                </span>
 
-        </div>
+                <span class="gv-badge badge-danger">
+                    <i class="feather icon-alert-triangle me-1"></i> {{ resumen.retenidos || 0 }} retenidos
+                </span>
+
+            </div>
+        </ng-container>
 
     </div>
 

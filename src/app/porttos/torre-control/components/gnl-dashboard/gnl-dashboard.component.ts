@@ -1,123 +1,246 @@
+/*
+    Author: German Valencia
+    Component: GNL Dashboard (Layout Manager Puro + Telemetría Desacoplada en GnlStateService)
+*/
 import { Component, Input, OnInit, OnChanges, SimpleChanges, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterConfig, GridsterItem, GridType, GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { SocketManagerService } from 'src/app/theme/shared/service/socket-manager.service';
 import { LayoutMetadataEngineService } from 'src/app/theme/shared/service/layout-metadata-engine.service';
+import { GnlStateService } from 'src/app/theme/shared/service/tablero-control/gnl-state.service';
 import { WIDGET_MAP } from '../../widget-registry';
+import { LocalStorageService } from 'src/app/theme/shared/service';
 
 @Component({
     selector: 'app-gnl-dashboard',
     standalone: true,
     imports: [CommonModule, GridsterComponent, GridsterItemComponent],
-    templateUrl: './gnl-dashboard.component.html', // <-- Archivo enlazado
-    styleUrls: ['./gnl-dashboard.component.scss']  // (Opcional, si creas uno)
+    templateUrl: './gnl-dashboard.component.html',
+    styleUrls: ['./gnl-dashboard.component.scss']
 })
 export class GnlDashboardComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() puerto!: string;
+    @Input() puerto: string = 'BUENAVENTURA';
     @Input() usuarioId!: string;
-    @Input() lsWidgets!: any[];
+    @Input() lsWidgets: any[] = [];
 
+    private _tableroBloqueado = true;
+    @Input()
+    set tableroBloqueado(bloqueado: boolean) {
+        this._tableroBloqueado = bloqueado;
+        if (this.options && this.options.api) {
+            this.options.draggable = { enabled: !bloqueado };
+            this.options.resizable = { enabled: !bloqueado };
+            this.options.api.optionsChanged!();
+        }
+    }
+    get tableroBloqueado(): boolean {
+        return this._tableroBloqueado;
+    }
+
+    public readonly pestanaActiva: string = 'TLC_GNL_001';
     public options!: GridsterConfig;
-    public dashboard: Array<GridsterItem & { type: string, data: any }> = [];
 
+    // Estado exclusivo de Layout (Coordenadas + Componente Target + Config Inmutable)
+    public dashboard: Array<GridsterItem & {
+        id?: string;
+        idClon?: string;
+        type: string;
+        componenteTarget?: any;
+        componenteInputs?: { widgetConfig: any };
+    }> = [];
+
+    public cargando: boolean = true;
+    public hayCambiosSinGuardar: boolean = false;
+
+    // Estado del selector de brazos en el Header de GNL
     public brazoSeleccionado: string = 'TODOS';
-    public brazosActivos: Set<string> = new Set();
-    public ultimoEstadoBrazos: Map<string, any> = new Map();
-    private socketSub: Subscription | null = null;
+    public listaBrazosOrdenados: string[] = [];
+
+    private construyendoLayout: boolean = false;
+    private readonly destroy$ = new Subject<void>();
 
     constructor(
         private layoutEngine: LayoutMetadataEngineService,
         private socketService: SocketManagerService,
+        private gnlState: GnlStateService,
+        private _localStorageService: LocalStorageService,
         private cdr: ChangeDetectorRef
     ) { }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.iniciarGridster();
-        this.cargarLayout();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes['puerto'] && !changes['puerto'].isFirstChange()) {
-            this.cargarLayout(); // Recarga si cambia el puerto global
-        }
-    }
-
-    async cargarLayout() {
-        this.dashboard = await this.layoutEngine.obtenerLayoutBase('TLC_GNL_001', this.usuarioId, this.lsWidgets);
+        this.suscribirEstadoBrazos();
         this.encenderTelemetria();
-    }
 
-    encenderTelemetria() {
-        if (this.socketSub) this.socketSub.unsubscribe();
-
-        // ✅ Nos suscribimos al Subject público de tu SocketManagerService
-        this.socketSub = this.socketService.telemetriaGNLActualizada$.subscribe((payload: any) => {
-            // Filtramos para que solo procese los datos del puerto seleccionado en la cabecera
-            if (payload.id_puerto !== this.puerto) return;
-
-            // 1. Registramos el brazo dinámicamente
-            this.brazosActivos.add(payload.codigo_segmento);
-
-            // 2. Guardamos su último estado conocido en memoria
-            this.ultimoEstadoBrazos.set(payload.codigo_segmento, payload);
-
-            // 3. Verificamos qué píldora tiene seleccionada el usuario
-            if (this.brazoSeleccionado === 'TODOS') {
-                this.calcularConsolidado();
-            } else if (this.brazoSeleccionado === payload.codigo_segmento) {
-                // Si el payload que acaba de llegar pertenece al brazo que estamos mirando, actualizamos
-                this.inyectarDatosGridster(payload.flujo_m3, payload.temp_ducto, payload.presion_psi);
-            }
-        });
-    }
-
-    cambiarFiltroGNL(brazo: string) {
-        this.brazoSeleccionado = brazo;
-        if (brazo === 'TODOS') {
-            this.calcularConsolidado();
-        } else {
-            const datos = this.ultimoEstadoBrazos.get(brazo);
-            if (datos) this.inyectarDatosGridster(datos.flujo_m3, datos.temp_ducto, datos.presion_psi);
+        if (this.lsWidgets && this.lsWidgets.length > 0) {
+            this.inicializarLayoutPorPuerto();
         }
     }
 
-    private calcularConsolidado() {
-        let sFlujo = 0, sTemp = 0, sPresion = 0;
-        const total = this.ultimoEstadoBrazos.size;
-        if (total === 0) return;
+    ngOnChanges(changes: SimpleChanges): void {
+        const catalogoListo = this.lsWidgets && this.lsWidgets.length > 0;
 
-        this.ultimoEstadoBrazos.forEach(d => {
-            sFlujo += d.flujo_m3; sTemp += d.temp_ducto; sPresion += d.presion_psi;
-        });
-        this.inyectarDatosGridster(sFlujo, sTemp / total, sPresion / total);
+        // 1. Si cambia el puerto en el Header, limpiamos telemetría del puerto anterior y reconstruimos layout
+        if (changes['puerto'] && !changes['puerto'].isFirstChange() && catalogoListo) {
+            this.brazoSeleccionado = 'TODOS';
+            this.gnlState.reiniciarEstadoPuerto(this.puerto);
+            this.inicializarLayoutPorPuerto(true);
+        }
+
+        // 2. Si el catálogo maestro lsWidgets llega por primera vez desde el Padre
+        if (changes['lsWidgets'] && catalogoListo && this.dashboard.length === 0) {
+            this.inicializarLayoutPorPuerto();
+        }
     }
 
-    private inyectarDatosGridster(flujo: number, temp: number, presion: number) {
-        this.dashboard.forEach(w => {
-            const c = (w.type || '').toUpperCase();
-            if (c.includes('HISTORICO_FLUJO')) w.data = { ...w.data, flujo_m3: flujo };
-            if (c.includes('TEMPERATURA')) w.data = { ...w.data, temp_ducto: temp };
-            if (c.includes('PRESION')) w.data = { ...w.data, presion_psi: presion };
-        });
-        this.cdr.detectChanges();
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
-    obtenerComponentePara(codigoWidget: string) {
+    /**
+     * Construye o recupera de sesión únicamente el layout geométrico de Gridster.
+     * Ordena los KPIs por posición X para inyectarles su kpiIndex de forma determinista.
+     */
+    async inicializarLayoutPorPuerto(forzarReconstruccion: boolean = false): Promise<void> {
+        if (this.construyendoLayout) return;
+        this.construyendoLayout = true;
+        this.cargando = true;
+
+        const puertoNormalizado = (this.puerto || 'BUENAVENTURA').trim().toUpperCase();
+        const cacheKey = `${this.pestanaActiva}_${puertoNormalizado}`;
+
+        try {
+            let layoutGuardado = !forzarReconstruccion
+                ? this._localStorageService.getLayoutPestana(cacheKey)
+                : null;
+
+            if (!layoutGuardado || layoutGuardado.length === 0) {
+                layoutGuardado = await this.layoutEngine.obtenerLayoutBase(
+                    this.pestanaActiva,
+                    this.usuarioId,
+                    this.lsWidgets
+                );
+
+                layoutGuardado = (layoutGuardado || []).filter((w: any) => w.type || w.codigoWidget);
+                this._localStorageService.guardarLayoutPestanaEnSesion(cacheKey, layoutGuardado);
+            }
+
+            // Identificamos el orden horizontal (X) de los KPIs para preservar la asignación exacta de los 6 KPIs de GNL
+            const idsKpisOrdenados = [...(layoutGuardado || [])]
+                .filter((w: any) => (w.type || w.codigoWidget || '').toUpperCase().includes('KPI'))
+                .sort((a: any, b: any) => (a.x || 0) - (b.x || 0))
+                .map((w: any, idx: number) => w.idClon || w.id || `kpi-${idx}-${w.x}-${w.y}`);
+
+            this.dashboard = (layoutGuardado || []).map((w: any, index: number) => {
+                const codigoTipo = (w.type || w.codigoWidget || '').trim().toUpperCase();
+                const idUnico = w.idClon || w.id || `wdg-gnl-${index}-${w.x}-${w.y}`;
+                const kpiPos = idsKpisOrdenados.indexOf(w.idClon || w.id || `kpi-${index}-${w.x}-${w.y}`);
+
+                return {
+                    ...w,
+                    id: idUnico,
+                    type: codigoTipo,
+                    componenteTarget: this.obtenerComponentePara(codigoTipo),
+                    componenteInputs: {
+                        widgetConfig: {
+                            ...w,
+                            id: idUnico,
+                            type: codigoTipo,
+                            puerto: puertoNormalizado,
+                            pestana: this.pestanaActiva,
+                            kpiIndex: kpiPos >= 0 ? kpiPos : index
+                        }
+                    }
+                };
+            });
+        } catch (error) {
+            console.error('❌ [GNL Layout Manager] Error construyendo el layout:', error);
+        } finally {
+            this.cargando = false;
+            this.construyendoLayout = false;
+            this.cdr.detectChanges();
+
+            setTimeout(() => {
+                if (this.options?.api?.resize) {
+                    this.options.api.resize();
+                }
+            }, 50);
+        }
+    }
+
+    /**
+     * Escucha el socket y delega el cálculo a GnlStateService SIN tocar this.dashboard
+     */
+    private encenderTelemetria(): void {
+        this.socketService.telemetriaGNLActualizada$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((payload: any) => {
+                this.gnlState.procesarPulsoSocket(payload, this.puerto);
+            });
+    }
+
+    private suscribirEstadoBrazos(): void {
+        this.gnlState.brazosActivos$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((brazos) => {
+                if (brazos.length !== this.listaBrazosOrdenados.length) {
+                    this.listaBrazosOrdenados = brazos;
+                    this.cdr.detectChanges();
+                }
+            });
+    }
+
+    get brazosOrdenados(): string[] {
+        return this.listaBrazosOrdenados;
+    }
+
+    public cambiarFiltroGNL(brazo: string): void {
+        this.brazoSeleccionado = brazo;
+        this.gnlState.seleccionarBrazo(brazo);
+    }
+
+    obtenerComponentePara(codigoWidget: string): any {
         return WIDGET_MAP[codigoWidget] ? WIDGET_MAP[codigoWidget].componente : null;
     }
 
-    iniciarGridster() {
+    iniciarGridster(): void {
         this.options = {
-            gridType: GridType.ScrollVertical, margin: 16,
-            minCols: 12, maxCols: 12, draggable: { enabled: false }, resizable: { enabled: false }
+            gridType: GridType.ScrollVertical,
+            margin: 12,
+            addEmptyRowsCount: 1,
+            outerMargin: true,
+            outerMarginBottom: 24,
+            minCols: 12,
+            maxCols: 12,
+            minRows: 1,
+            maxRows: 1000,
+            fixedRowHeight: 160,
+            pushItems: true,
+            swap: false,
+            compactType: 'none',
+            defaultItemCols: 4,
+            defaultItemRows: 3,
+            displayGrid: 'onDrag&Resize',
+            draggable: { enabled: !this.tableroBloqueado },
+            pushDirections: { north: false, east: false, south: true, west: false },
+            resizable: { enabled: !this.tableroBloqueado },
+            mobileBreakpoint: 960,
+            keepFixedHeightInMobile: true,
+            itemResizeCallback: () => {
+                if (!this.cargando) this.hayCambiosSinGuardar = true;
+            },
+            itemChangeCallback: () => {
+                if (!this.cargando) this.hayCambiosSinGuardar = true;
+            }
         };
     }
 
-    trackByWidget(i: number, w: any) { return w.idClon || w.type; }
-
-    ngOnDestroy() {
-        if (this.socketSub) this.socketSub.unsubscribe();
+    trackByWidget(index: number, w: any): string {
+        const origen = w.componenteInputs?.widgetConfig || w;
+        return origen.idClon || origen.id || origen.type || index.toString();
     }
 }

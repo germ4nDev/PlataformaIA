@@ -1,21 +1,17 @@
-<app-widget-shell [titulo]="widgetConfig?.data?.titulo || '🏆 PRODUCTIVIDAD (MOVS/H)'"
-    [subtitulo]="widgetConfig?.data?.subtitulo || 'Velocidad de operación por grúa'"
-    [icono]="widgetConfig?.data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<!-- <app-widget-shell [titulo]="data?.titulo || 'PRODUCTIVIDAD POR TERMINAL (MOVS/H)'"
+    [subtitulo]="data?.subtitulo || 'Velocidad de operación por grúa en la jornada'"
+    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
             Rendimiento
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET -->
     <div class="w-100 h-100 d-flex flex-column animate__animated animate__fadeIn pb-2">
 
-        <!-- Leyenda Personalizada (Alineada arriba, antes de la gráfica) -->
         <div class="custom-legend d-flex flex-wrap justify-content-center mb-2"
-            [ngClass]="isEnfoque ? 'gap-4 mt-2' : 'gap-3'" *ngIf="!cargando">
+            [ngClass]="isEnfoque ? 'gap-4 mt-2' : 'gap-3'" *ngIf="!cargando && tieneDatos">
 
             <div class="legend-item d-flex align-items-center gap-1" *ngFor="let item of legendItems">
                 <span class="legend-ring shadow-sm" [style.borderColor]="item.borderColor"></span>
@@ -26,18 +22,60 @@
             </div>
         </div>
 
-        <!-- Contenedor Flex para la Gráfica -->
+        <div class="chart-wrapper flex-grow-1 position-relative min-h-0">
+
+            <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+                style="top: 0; left: 0; z-index: 10;">
+                <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+                <span class="text-muted" style="font-size: 0.8rem;">Sincronizando curva de productividad...</span>
+            </div>
+
+            <div *ngIf="!cargando && !tieneDatos"
+                class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted">
+                <i class="feather icon-activity fs-2 mb-2 opacity-50"></i>
+                <span style="font-size: 0.8rem;">Sin lecturas de movimientos/hora para este puerto.</span>
+            </div>
+
+            <canvas #productivityCanvas class="w-100 h-100" [ngClass]="{'d-none': cargando || !tieneDatos}"></canvas>
+
+        </div>
+
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'PRODUCTIVIDAD POR TERMINAL (MOVS/H)'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Velocidad de operación por grúa en la jornada'"
+    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-warning text-uppercase">
+            Rendimiento
+        </span>
+    </div>
+
+    <!-- CUERPO ÚNICO DEL WIDGET -->
+    <div class="w-100 h-100 d-flex flex-column p-2 animate__animated animate__fadeIn position-relative">
+
+        <!-- Contenedor Flex para la Gráfica (La leyenda superior la gestiona PorttosChartHelper) -->
         <div class="chart-wrapper flex-grow-1 position-relative min-h-0">
 
             <!-- Loader nativo estandarizado -->
             <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
-                style="top:0; left:0; z-index: 10;">
-                <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
-                <span class="text-muted" style="font-size: 0.8rem;">Cargando curva...</span>
+                style="top: 0; left: 0; z-index: 10;">
+                <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+                <span class="text-muted" style="font-size: 0.8rem;">Sincronizando curva de productividad...</span>
+            </div>
+
+            <!-- Estado sin datos -->
+            <div *ngIf="!cargando && !tieneDatos"
+                class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted">
+                <i class="feather icon-activity fs-2 mb-2 opacity-50"></i>
+                <span style="font-size: 0.8rem;">Sin lecturas de movimientos/hora para este puerto.</span>
             </div>
 
             <!-- Gráfica Chart.js -->
-            <canvas #productivityCanvas class="w-100 h-100" [ngClass]="{'opacity-0': cargando}"></canvas>
+            <canvas #productivityCanvas class="w-100 h-100" [ngClass]="{'d-none': cargando || !tieneDatos}"></canvas>
 
         </div>
 

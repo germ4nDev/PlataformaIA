@@ -312,7 +312,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             margin: 16,
             outerMargin: false,
             minCols: 12, maxCols: 12,
-            minRows: 1, maxRows: 100,
+            minRows: 1, maxRows: 1000,
             fixedRowHeight: 120,
             pushItems: true,
             swap: true,
@@ -320,6 +320,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             defaultItemCols: 4, defaultItemRows: 3,
             displayGrid: 'onDrag&Resize',
             draggable: { enabled: !this.tableroBloqueado },
+            pushDirections: { north: false, east: false, south: true, west: false },
             resizable: { enabled: !this.tableroBloqueado },
             mobileBreakpoint: 960, keepFixedHeightInMobile: true,
             itemResizeCallback: () => {

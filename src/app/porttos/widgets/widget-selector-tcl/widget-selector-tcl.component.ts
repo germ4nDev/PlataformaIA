@@ -1,11 +1,61 @@
-import { Component, Input, Output, EventEmitter, Type } from '@angular/core';
+// import { Component, Input, Output, EventEmitter, Type } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+
+// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+// import { WidgetHeaderComponent } from 'src/app/theme/shared/components/widget-header/widget-header.component';
+// import { WIDGET_MAP } from '../../../porttos/torre-control/widget-registry';
+
+// @Component({
+//     selector: 'app-widget-selector-tcl',
+//     standalone: true,
+//     imports: [
+//         CommonModule,
+//         WidgetShellComponent,
+//         WidgetHeaderComponent
+//     ],
+//     templateUrl: './widget-selector-tcl.component.html',
+//     styleUrls: ['./widget-selector-tcl.component.scss']
+// })
+// export class WidgetSelectorTclComponent {
+//     @Input() widgetConfig: any;
+//     @Input() isEnfoque: boolean = false;
+//     @Input() datosVivos: any; // 🟢 La compuerta abierta
+
+//     @Output() toggleEnfoque = new EventEmitter<void>();
+
+//     public mostrarTablaTerminal: boolean = false;
+
+//     get componenteDinamico(): Type<unknown> | null {
+//         if (!this.widgetConfig || !this.widgetConfig.type) return null;
+
+//         const tipo = this.widgetConfig.type.startsWith('WDG_DINAMICO_TERM')
+//             ? 'WDG_PORT_TERMINAL_INDIVIDUAL'
+//             : this.widgetConfig.type;
+
+//         const registro = WIDGET_MAP[tipo];
+//         return registro ? registro.componente : null;
+//     }
+
+//     get metaWidget() {
+//         return {
+//             titulo: this.widgetConfig?.nombreWidget || this.widgetConfig?.titulo || this.widgetConfig?.type,
+//             icono: this.widgetConfig?.icono || 'feather icon-grid'
+//         };
+//     }
+
+//     toggleTablaTerminal() {
+//         this.mostrarTablaTerminal = !this.mostrarTablaTerminal;
+//     }
+
+//     accionEnfoque() {
+//         this.toggleEnfoque.emit();
+//     }
+// }
+import { Component, Input, Output, EventEmitter, Type, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// 1. Importas tu Shell y Header maestros
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 import { WidgetHeaderComponent } from 'src/app/theme/shared/components/widget-header/widget-header.component';
-
-// 2. Importas tu diccionario existente (Ajusta la ruta real de tu archivo)
 import { WIDGET_MAP } from '../../../porttos/torre-control/widget-registry';
 
 @Component({
@@ -15,31 +65,59 @@ import { WIDGET_MAP } from '../../../porttos/torre-control/widget-registry';
         CommonModule,
         WidgetShellComponent,
         WidgetHeaderComponent
-        // CERO importaciones de gráficas individuales aquí. Angular las inyectará en memoria.
     ],
     templateUrl: './widget-selector-tcl.component.html',
     styleUrls: ['./widget-selector-tcl.component.scss']
 })
-export class WidgetSelectorTclComponent {
+export class WidgetSelectorTclComponent implements OnChanges {
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
+    @Input() datosVivos: any; // 🟢 La compuerta abierta
+
     @Output() toggleEnfoque = new EventEmitter<void>();
 
     public mostrarTablaTerminal: boolean = false;
 
-    get componenteDinamico(): Type<unknown> | null {
-        if (!this.widgetConfig || !this.widgetConfig.type) return null;
+    // 🟢 Propiedades estáticas para evitar el bucle infinito
+    public componenteDinamico: Type<unknown> | null = null;
+    public componenteInputs: any = {};
 
-        // Mantienes la regla para las terminales dinámicas
+    ngOnChanges(changes: SimpleChanges) {
+        // 1. Solo resolvemos el componente si la configuración cambia
+        if (changes['widgetConfig']) {
+            this.resolverComponente();
+        }
+
+        // 2. Solo armamos los inputs cuando llega nueva data (Cortocircuitos)
+        if (changes['widgetConfig'] || changes['datosVivos'] || changes['isEnfoque']) {
+            this.actualizarInputs();
+        }
+    }
+
+    private resolverComponente() {
+        if (!this.widgetConfig || !this.widgetConfig.type) {
+            this.componenteDinamico = null;
+            return;
+        }
+
         const tipo = this.widgetConfig.type.startsWith('WDG_DINAMICO_TERM')
             ? 'WDG_PORT_TERMINAL_INDIVIDUAL'
             : this.widgetConfig.type;
 
         const registro = WIDGET_MAP[tipo];
-        return registro ? registro.componente : null;
+        this.componenteDinamico = registro ? registro.componente : null;
     }
 
-    // Metadatos para el header (Si tu BD ya manda titulo e icono, úsalos directamente)
+    private actualizarInputs() {
+        // 🟢 Creamos el objeto UNA sola vez en memoria por cada cambio real
+        this.componenteInputs = {
+            widgetConfig: this.widgetConfig,
+            isEnfoque: this.isEnfoque,
+            mostrarTabla: this.mostrarTablaTerminal,
+            datosVivos: this.datosVivos
+        };
+    }
+
     get metaWidget() {
         return {
             titulo: this.widgetConfig?.nombreWidget || this.widgetConfig?.titulo || this.widgetConfig?.type,
@@ -49,6 +127,7 @@ export class WidgetSelectorTclComponent {
 
     toggleTablaTerminal() {
         this.mostrarTablaTerminal = !this.mostrarTablaTerminal;
+        this.actualizarInputs(); // Actualizamos la referencia para que el Outlet se entere
     }
 
     accionEnfoque() {

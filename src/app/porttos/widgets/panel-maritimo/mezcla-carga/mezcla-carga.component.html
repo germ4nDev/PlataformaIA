@@ -1,17 +1,103 @@
-<app-widget-shell [titulo]="data?.titulo || 'MEZCLA POR TIPO DE CARGA'"
-    [subtitulo]="data?.subtitulo || 'Distribución de toneladas movilizadas'"
-    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+<!-- <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '🚢 Distribución Marítima'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Participación volumétrica por categoría'"
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge badge-primary text-uppercase">
-            Volumen
-        </span>
+        <span class="tc-badge badge-info text-uppercase">{{ badgeHeader }}</span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor de la Gráfica) -->
-    <div class="chart-wrapper w-100 h-100 position-relative pb-2 pe-2 animate__animated animate__fadeIn">
-        <canvas #barChart></canvas>
+    <div
+        class="w-100 h-100 d-flex flex-column justify-content-between p-2 position-relative animate__animated animate__fadeIn">
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Consultando distribución marítima...</span>
+        </div>
+
+        <div *ngIf="!cargando && sinDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
+            Sin distribución de carga disponible para este puerto.
+        </div>
+
+        <div class="row align-items-center h-100 g-2" [hidden]="cargando || sinDatos">
+            <div class="col-6 h-100 position-relative d-flex justify-content-center align-items-center"
+                style="min-height: 150px;">
+                <canvas #doughnutMaritimoCanvas></canvas>
+                <div class="position-absolute text-center" style="pointer-events: none;">
+                    <span class="d-block fw-bolder" style="font-size: 1.05rem;">
+                        {{ totalVolumen | number:'1.0-1' }}
+                    </span>
+                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">{{ unidadMedida }}</small>
+                </div>
+            </div>
+
+            <div class="col-6 d-flex flex-column gap-2 pe-2 overflow-auto custom-scrollbar" style="max-height: 100%;">
+                <div *ngFor="let item of leyendaItems" class="d-flex justify-content-between align-items-center"
+                    style="font-size: 0.75rem;">
+                    <div class="d-flex align-items-center gap-2 text-truncate">
+                        <span class="rounded-circle flex-shrink-0" [style.background-color]="item.color"
+                            style="width: 9px; height: 9px; display: inline-block;">
+                        </span>
+                        <span class="fw-medium text-truncate">{{ item.label }}</span>
+                    </div>
+                    <span class="fw-bold text-info ms-2">{{ item.porcentaje }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'MEZCLA POR TIPO DE CARGA'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de toneladas movilizadas por tipo de carga'"
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase">{{ badgeHeader }}</span>
+    </div>
+
+    <div
+        class="w-100 h-100 d-flex flex-column justify-content-between p-2 position-relative animate__animated animate__fadeIn">
+        <!-- Loader -->
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Consultando distribución marítima...</span>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div *ngIf="!cargando && sinDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
+            Sin distribución de carga disponible para este puerto.
+        </div>
+
+        <!-- Dona + Leyenda Lateral -->
+        <div class="row align-items-center h-100 g-2" [hidden]="cargando || sinDatos">
+            <div class="col-6 h-100 position-relative d-flex justify-content-center align-items-center"
+                style="min-height: 150px;">
+                <canvas #doughnutMaritimoCanvas></canvas>
+                <div class="position-absolute text-center" style="pointer-events: none;">
+                    <span class="d-block fw-bolder" style="font-size: 1.05rem;">
+                        {{ totalVolumen | kpiFormat:1 }}
+                    </span>
+                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">{{ unidadMedida }}</small>
+                </div>
+            </div>
+
+            <div class="col-6 d-flex flex-column gap-2 pe-2 overflow-auto custom-scrollbar" style="max-height: 100%;">
+                <div *ngFor="let item of leyendaItems" class="d-flex justify-content-between align-items-center"
+                    style="font-size: 0.75rem;">
+                    <div class="d-flex align-items-center gap-2 text-truncate">
+                        <span class="rounded-circle flex-shrink-0" [style.background-color]="item.color"
+                            style="width: 9px; height: 9px; display: inline-block;">
+                        </span>
+                        <span class="fw-medium text-truncate" [title]="item.label">{{ item.label }}</span>
+                    </div>
+                    <span class="fw-bold text-info ms-2">{{ item.porcentaje }}%</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 </app-widget-shell>

@@ -1,14 +1,43 @@
-<app-widget-shell [titulo]="'Energía Transferida'" [subtitulo]="'TOTALIZADOR EN MMBTU'" [icono]="'feather icon-zap'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell [titulo]="data?.titulo || 'Energía Transferida'"
+    [subtitulo]="data?.subtitulo || 'TOTALIZADOR EN MMBTU'" [icono]="'feather icon-zap'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
 
-    <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center p-4">
+    <!-- PROYECCIÓN AL HEADER: Segmento activo -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span class="tc-badge badge-info text-uppercase" *ngIf="tieneTelemetria">
+            {{ segmentoActivo }}
+        </span>
+    </div>
+
+    <!-- CUERPO DEL WIDGET -->
+    <div
+        class="h-100 w-100 d-flex flex-column align-items-center justify-content-center p-4 position-relative animate__animated animate__fadeIn">
+
+        <!-- Indicador sutil mientras llega el primer pulso del Socket/CSV -->
+        <div *ngIf="cargando" class="position-absolute top-0 end-0 mt-2 me-3 d-flex align-items-center text-muted"
+            style="font-size: 0.72rem;">
+            <div class="spinner-grow text-warning spinner-grow-sm me-1" role="status"
+                style="width: 0.6rem; height: 0.6rem;"></div>
+            <span>Sincronizando SCADA...</span>
+        </div>
+
+        <!-- Caja del Odómetro -->
         <div class="odometer-box d-flex align-items-baseline gap-2">
-            <!-- Usamos un pipe de Angular para que se vea como 1,425.50 -->
             <span class="odometer-valor">{{ energiaTotal | number:'1.2-2' }}</span>
             <span class="odometer-unidad">MMBTU</span>
         </div>
-        <div class="mt-3 tc-badge badge-light-warning">
-            <i class="feather icon-trending-up me-1"></i> Facturación en vivo
+
+        <!-- Píldora inferior con estado de facturación y caudal en vivo -->
+        <div class="mt-3 d-flex align-items-center gap-2 flex-wrap justify-content-center">
+            <div class="tc-badge badge-light-warning">
+                <i class="feather icon-trending-up me-1"></i> Facturación en vivo
+            </div>
+
+            <span *ngIf="tieneTelemetria && caudalActual > 0" class="text-muted small" style="font-size: 0.75rem;">
+                · {{ caudalActual | number:'1.2-2' }} m³/h ({{ tasaInstantanea | number:'1.1-1' }} kWh)
+            </span>
         </div>
+
     </div>
+
 </app-widget-shell>

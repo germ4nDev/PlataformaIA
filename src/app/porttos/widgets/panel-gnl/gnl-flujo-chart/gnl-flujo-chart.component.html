@@ -1,4 +1,4 @@
-<app-widget-shell [titulo]="widgetConfig?.tituloWidget || 'Histórico de Flujo (m³/h)'"
+<!-- <app-widget-shell [titulo]="widgetConfig?.tituloWidget || 'Histórico de Flujo (m³/h)'"
     [subtitulo]="widgetConfig?.descripcionWidget || 'Caudal de GNL en tiempo real'" [icono]="'feather icon-activity'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
@@ -15,6 +15,39 @@
             style="top:0; left:0; z-index: 10;">
             <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
             <span class="text-muted" style="font-size: 0.8rem;">Esperando telemetría...</span>
+        </div>
+
+        <div class="chart-wrapper flex-grow-1" style="min-height: 0;">
+            <canvas #flowCanvas [style.opacity]="cargando ? '0.3' : '1'"></canvas>
+        </div>
+
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || 'Histórico de Flujo (m³/h)'"
+    [subtitulo]="data?.subtitulo || 'Caudal de GNL en tiempo real'" [icono]="'feather icon-activity'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROJECTIE NAAR HEADER: Actieve arm + geaccumuleerde energie -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span class="tc-badge badge-info text-uppercase" *ngIf="tieneTelemetria">
+            {{ ultimoBrazo }}
+        </span>
+
+        <span class="indicador-pill-energia" *ngIf="energiaTotal > 0">
+            <i class="fas fa-bolt me-1"></i>
+            {{ energiaTotal | number:'1.2-2' }} MMBTU
+        </span>
+    </div>
+
+    <!-- BODY VAN DE WIDGET -->
+    <div class="h-100 w-100 position-relative pb-2 animate__animated animate__fadeIn d-flex flex-column">
+
+        <!-- Laadstatus zolang er nog geen socket-puls is binnengekomen -->
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted" style="font-size: 0.8rem;">Esperando telemetría SCADA...</span>
         </div>
 
         <div class="chart-wrapper flex-grow-1" style="min-height: 0;">

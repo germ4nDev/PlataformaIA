@@ -1,0 +1,90 @@
+<app-widget-shell [titulo]="data?.titulo || '🏢 Saturación de Bodegas y Silos'"
+    [subtitulo]="data?.subtitulo || 'Ocupación física frente a capacidad nominal (Ton)'"
+    [icono]="data?.icono || 'feather icon-home'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Estado global de saturación -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span class="tc-badge text-uppercase"
+            [ngClass]="totalBodegasCriticas > 0 ? 'badge-danger blinking' : 'badge-info'">
+            {{ totalBodegasCriticas > 0 ? (totalBodegasCriticas + ' Críticas') : (listaBodegas.length + ' Zonas') }}
+        </span>
+    </div>
+
+    <!-- CUERPO DEL WIDGET -->
+    <div class="w-100 h-100 overflow-auto pe-2 pt-1 custom-scrollbar animate__animated animate__fadeIn">
+
+        <!-- Loader mientras responde el backend -->
+        <div *ngIf="cargando"
+            class="d-flex justify-content-center align-items-center w-100 h-100 py-4 text-muted small">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            Consultando inventario de bodegas y silos...
+        </div>
+
+        <!-- Lista de Bodegas y Silos -->
+        <ng-container *ngIf="!cargando">
+            <div *ngFor="let bod of listaBodegas; trackBy: trackByBodega" class="p-3 mb-2 rounded"
+                style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);">
+
+                <!-- Fila Superior: Nombre de Bodega + Badge de Estado -->
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div class="d-flex align-items-center gap-2 text-truncate pe-2">
+                        <span class="badge bg-dark border border-secondary text-info" style="font-size: 0.65rem;">
+                            {{ bod.codigo_bodega }}
+                        </span>
+                        <span class="fw-bold text-white text-truncate" style="font-size: 0.84rem;">
+                            {{ bod.nombre_bodega }}
+                        </span>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                        <span class="fw-bolder" [style.color]="bod.colorBarra" style="font-size: 0.9rem;">
+                            {{ bod.ocupacion_pct | number:'1.0-1' }}%
+                        </span>
+                        <span class="badge rounded-pill px-2 py-1" [ngClass]="bod.claseBadge"
+                            style="font-size: 0.62rem;">
+                            {{ bod.estado_operativo }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Barra de Progreso de Ocupación -->
+                <div class="progress my-2"
+                    style="height: 7px; background-color: rgba(255, 255, 255, 0.08); border-radius: 4px;">
+                    <div class="progress-bar" role="progressbar" [style.width.%]="bod.ocupacion_pct"
+                        [style.background-color]="bod.colorBarra" style="transition: width 0.4s ease;">
+                    </div>
+                </div>
+
+                <!-- Fila Inferior: Toneladas, Tipo de Carga y Condiciones Ambientales -->
+                <div class="d-flex justify-content-between align-items-center text-muted flex-wrap gap-1"
+                    style="font-size: 0.73rem;">
+                    <span>
+                        <strong class="text-light">{{ bod.inventario_actual_ton | number:'1.0-0' }}</strong> /
+                        {{ bod.capacidad_maxima_ton | number:'1.0-0' }} Ton ·
+                        <span class="text-info">{{ bod.tipo_carga_principal }}</span>
+                    </span>
+
+                    <div class="d-flex align-items-center gap-2"
+                        *ngIf="bod.temperatura_c !== null || bod.humedad_relativa_pct !== null">
+                        <span *ngIf="bod.temperatura_c !== null">
+                            <i class="feather icon-thermometer me-1"></i>{{ bod.temperatura_c | number:'1.1-1' }}°C
+                        </span>
+                        <span *ngIf="bod.humedad_relativa_pct !== null">
+                            <i class="feather icon-droplet me-1"></i>{{ bod.humedad_relativa_pct | number:'1.0-0' }}% HR
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Estado Vacío -->
+            <div *ngIf="listaBodegas.length === 0"
+                class="d-flex flex-column justify-content-center align-items-center h-100 text-muted py-5 small">
+                <i class="feather icon-inbox fs-2 mb-2 opacity-50"></i>
+                No hay bodegas ni silos registrados para este puerto.
+            </div>
+        </ng-container>
+
+    </div>
+
+</app-widget-shell>

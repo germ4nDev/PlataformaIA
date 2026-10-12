@@ -129,6 +129,9 @@ export class WidgetLobbyTclComponent implements OnInit {
 
     // 🟢 MODIFICADO: Para poder hacer clic en toda la tarjeta (div), no solo en el checkbox
     toggleWidgetCard(widget: any) {
+        if (event) {
+            event.stopPropagation();
+        }
         const nuevoEstado = !widget.activo;
         widget.activo = nuevoEstado;
         this.toggleWidget.emit({ codigoWidget: widget.codigoWidget, seleccionado: nuevoEstado });
@@ -142,7 +145,10 @@ export class WidgetLobbyTclComponent implements OnInit {
             target.activo = seleccionado;
         }
         this.actualizarLayoutUsuario(this.widgetsProcesados);
-        this.toggleWidget.emit({ codigoWidget, seleccionado });
+        this.toggleWidget.emit({
+            codigoWidget: codigoWidget,
+            seleccionado: seleccionado
+        });
     }
 
     get todosEstanSeleccionados(): boolean {
@@ -151,6 +157,9 @@ export class WidgetLobbyTclComponent implements OnInit {
     }
 
     toggleSeleccionarTodos() {
+        if (event) {
+            event.stopPropagation();
+        }
         const marcarComoActivo = !this.todosEstanSeleccionados;
         this.widgetsProcesados.forEach(widget => {
             if (widget.activo !== marcarComoActivo) {

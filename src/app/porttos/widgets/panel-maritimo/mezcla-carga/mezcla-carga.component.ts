@@ -1,163 +1,463 @@
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// /*
+//     Author: German Valencia
+//     Pattern: PORTTOS Smart Widget - Donas Marítimas (Mezcla de Carga, Participación Terminal, Tipo Operación)
+//     Standard: PorttosChartHelper (Light & Dark Mode Ready)
+// */
+// import {
+//     Component,
+//     Input,
+//     OnInit,
+//     AfterViewInit,
+//     OnChanges,
+//     OnDestroy,
+//     SimpleChanges,
+//     ViewChild,
+//     ElementRef,
+//     ChangeDetectorRef
+// } from '@angular/core';
+// import { CommonModule, DecimalPipe } from '@angular/common';
+// import { Chart } from 'chart.js';
+// import { Subject } from 'rxjs';
+// import { takeUntil } from 'rxjs/operators';
+
+// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+// import { MaritimoService } from 'src/app/theme/shared/service/tablero-control/maritimo.service';
+// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+// import {
+//     PorttosChartHelper,
+//     ILeyendaDonaItem
+// } from 'src/app/theme/shared/_helpers/porttos-chart.helper';
+
+// @Component({
+//     selector: 'app-mezcla-carga',
+//     standalone: true,
+//     imports: [CommonModule, WidgetShellComponent],
+//     templateUrl: './mezcla-carga.component.html',
+//     styleUrls: ['./mezcla-carga.component.scss']
+// })
+// export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+//     @Input() widgetConfig: any;
+//     @Input() isEnfoque: boolean = false;
+//     @Input() mostrarTabla: boolean = false;
+//     @Input() datosVivos: any;
+
+//     @ViewChild('doughnutMaritimoCanvas') doughnutMaritimoCanvas!: ElementRef<HTMLCanvasElement>;
+
+//     public chart?: Chart;
+//     public cargando: boolean = true;
+//     public sinDatos: boolean = false;
+//     public totalVolumen: number = 0;
+//     public unidadMedida: string = 'Ton';
+//     public badgeHeader: string = 'VOLUMEN';
+//     public leyendaItems: ILeyendaDonaItem[] = [];
+
+//     private labels: string[] = [];
+//     private valores: number[] = [];
+//     private vistaLista: boolean = false;
+//     private metadatosSQL: any = {};
+//     private readonly destroy$ = new Subject<void>();
+
+//     constructor(
+//         private _maritimoService: MaritimoService,
+//         private _torreService: DashboardService,
+//         private cdr: ChangeDetectorRef
+//     ) { }
+
+//     ngOnInit(): void {
+//         this.configurarMetadatosPorCodigo();
+//         this.cargarDatosMaritimos();
+//     }
+
+//     ngAfterViewInit(): void {
+//         this.vistaLista = true;
+//         this.renderizarDona();
+//     }
+
+//     ngOnChanges(changes: SimpleChanges): void {
+//         if (changes['isEnfoque'] && !changes['isEnfoque'].isFirstChange()) {
+//             setTimeout(() => this.chart?.resize(), 60);
+//         }
+
+//         if (
+//             (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) ||
+//             (changes['datosVivos'] && this.datosVivos)
+//         ) {
+//             this.configurarMetadatosPorCodigo();
+//             this.cargarDatosMaritimos();
+//         }
+//     }
+
+//     ngOnDestroy(): void {
+//         this.destroy$.next();
+//         this.destroy$.complete();
+//         if (this.chart) {
+//             this.chart.destroy();
+//         }
+//     }
+
+//     private configurarMetadatosPorCodigo(): void {
+//         const codigo = (
+//             this.widgetConfig?.type ||
+//             this.widgetConfig?.codigoWidget ||
+//             ''
+//         ).toUpperCase();
+
+//         if (codigo.includes('PARTICIPACION') || codigo.includes('MERCADO')) {
+//             this.badgeHeader = 'MERCADO';
+//             this.unidadMedida = '%';
+//         } else if (codigo.includes('OPERACION') || codigo.includes('COMERCIO')) {
+//             this.badgeHeader = 'COMERCIO';
+//             this.unidadMedida = 'Ton';
+//         } else {
+//             this.badgeHeader = 'VOLUMEN';
+//             this.unidadMedida = 'M Ton';
+//         }
+//     }
+
+//     private cargarDatosMaritimos(): void {
+//         if (this.datosVivos && (this.datosVivos.labels || this.datosVivos.valores)) {
+//             this.procesarPayload(this.datosVivos);
+//             return;
+//         }
+
+//         const puerto = (this.widgetConfig?.puerto || 'BUENAVENTURA').trim().toUpperCase();
+//         const codigoWidget = (
+//             this.widgetConfig?.type ||
+//             this.widgetConfig?.codigoWidget ||
+//             'PTT_MAR_CHRT_MEZCLA'
+//         )
+//             .trim()
+//             .toUpperCase();
+
+//         this.cargando = true;
+
+//         this._maritimoService
+//             .obtenerDatosWidgetMaritimo(puerto, codigoWidget)
+//             .pipe(takeUntil(this.destroy$))
+//             .subscribe({
+//                 next: (res: any) => this.procesarPayload(res),
+//                 error: (err) => {
+//                     console.error('❌ [SmartWidget ChartDoughnutMaritimo] Error:', err);
+//                     this.sinDatos = true;
+//                     this.cargando = false;
+//                     this.cdr.detectChanges();
+//                 }
+//             });
+//     }
+
+//     private procesarPayload(raw: any): void {
+//         if (!raw) {
+//             this.sinDatos = true;
+//             this.cargando = false;
+//             this.cdr.detectChanges();
+//             return;
+//         }
+
+//         this.metadatosSQL = Array.isArray(raw) ? {} : raw;
+
+//         this.labels = (raw.labels || raw.categorias || []).map((l: any) => String(l));
+//         this.valores = (raw.valores || raw.data || raw.datasets?.[0]?.data || []).map((v: any) =>
+//             Number(v || 0)
+//         );
+
+//         const { total, items } = PorttosChartHelper.calcularLeyendaDona(this.labels, this.valores);
+//         this.totalVolumen = total;
+//         this.leyendaItems = items;
+//         this.sinDatos = this.labels.length === 0 || this.totalVolumen === 0;
+
+//         this.cargando = false;
+//         this.renderizarDona();
+//         this.cdr.detectChanges();
+//     }
+
+//     private renderizarDona(): void {
+//         if (!this.vistaLista || this.sinDatos) return;
+
+//         this.chart = PorttosChartHelper.renderizarDona(
+//             this.doughnutMaritimoCanvas,
+//             this.chart,
+//             this.labels,
+//             this.valores,
+//             this.unidadMedida
+//         );
+//     }
+
+//     get data(): any {
+//         return {
+//             ...(this.widgetConfig?.data || {}),
+//             ...this.metadatosSQL,
+//             labels: this.labels,
+//             valores: this.valores
+//         };
+//     }
+
+//     public maximizarDesdeShell(): void {
+//         if (this.isEnfoque) {
+//             this._torreService.cerrarModoEnfoque();
+//         } else {
+//             this._torreService.abrirModoEnfoque(
+//                 this.widgetConfig?.type || 'PTT_MAR_CHRT_MEZCLA',
+//                 this.data
+//             );
+//         }
+//     }
+// }
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
-    Pattern: PORTTOS Generic Widget - Mezcla de Carga (Refactorizado con Shell)
+    Pattern: PORTTOS Smart Widget - Mezcla por Tipo de Carga (Consumo Autónomo SQL)
+    Standard: PorttosChartHelper (Light & Dark Mode Ready)
 */
-import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    AfterViewInit,
+    OnChanges,
+    OnDestroy,
+    SimpleChanges,
+    ViewChild,
+    ElementRef,
+    ChangeDetectorRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Chart, registerables } from 'chart.js';
-import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-import { LocalStorageService, ThemeService } from 'src/app/theme/shared/service';
-import { Subscription } from 'rxjs';
+import { Chart } from 'chart.js';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-// 🟢 Importamos el Shell maestro
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-Chart.register(...registerables);
+import { MaritimoService } from 'src/app/theme/shared/service/tablero-control/maritimo.service';
+import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+import { KpiFormatPipe } from 'src/app/theme/shared/pipes/kpi-format.pipe';
+import {
+    PorttosChartHelper,
+    ILeyendaDonaItem
+} from 'src/app/theme/shared/_helpers/chart.helper';
 
 @Component({
     selector: 'app-mezcla-carga',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
+    imports: [CommonModule, WidgetShellComponent, KpiFormatPipe],
     templateUrl: './mezcla-carga.component.html',
-    styleUrls: ['./mezcla-carga.component.scss'], // Corregido a styleUrls
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./mezcla-carga.component.scss']
 })
 export class MezclaCargaComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
-
-    // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
+    @Input() datosVivos: any;
 
-    public data: any;
-    @ViewChild('barChart') barChart!: ElementRef;
+    @ViewChild('doughnutMaritimoCanvas') doughnutMaritimoCanvas!: ElementRef<HTMLCanvasElement>;
 
-    private themeSub: Subscription = new Subscription();
-    public chartInstance: any;
-    public themeSettings: any;
+    public chart?: Chart;
+    public cargando: boolean = true;
+    public sinDatos: boolean = false;
+    public totalVolumen: number = 0;
+    public unidadMedida: string = 'M Ton';
+    public badgeHeader: string = 'VOLUMEN';
+    public leyendaItems: ILeyendaDonaItem[] = [];
+
+    private labels: string[] = [];
+    private valores: number[] = [];
+    private vistaLista: boolean = false;
+    private metadatosSQL: any = {};
+    private readonly destroy$ = new Subject<void>();
 
     constructor(
+        private _maritimoService: MaritimoService,
         private _torreService: DashboardService,
-        private _localStorageService: LocalStorageService,
-        private _themeService: ThemeService
+        private cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit(): void {
-        // 🟢 Extraemos la data desde la configuración dinámica
-        if (this.widgetConfig?.data) {
-            this.data = this.widgetConfig.data;
+        this.configurarMetadatosPorCodigo();
+        this.cargarDatosMaritimos();
+    }
+
+    ngAfterViewInit(): void {
+        this.vistaLista = true;
+        if (!this.cargando && !this.sinDatos) {
+            this.renderizarDona();
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['isEnfoque'] && !changes['isEnfoque'].isFirstChange()) {
+            setTimeout(() => this.chart?.resize(), 60);
         }
 
-        this.themeSettings = this._localStorageService.getThemeSettings();
-
-        // Suscripción centralizada al cambio de tema
-        this.themeSub = this._themeService.isDarkTheme$.subscribe(() => {
-            this.themeSettings = this._localStorageService.getThemeSettings(); // Actualizamos variables
-            this.renderizarGrafica();
-        });
-    }
-
-    ngAfterViewInit() {
-        this.renderizarGrafica();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        // 🟢 Reaccionamos a la data inyectada desde el widgetConfig
-        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
-            this.data = this.widgetConfig?.data;
-            this.renderizarGrafica();
-        } else if (changes['data'] && !changes['data'].firstChange) {
-            this.renderizarGrafica();
+        if (
+            (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) ||
+            (changes['datosVivos'] && this.datosVivos)
+        ) {
+            this.configurarMetadatosPorCodigo();
+            this.cargarDatosMaritimos();
         }
     }
 
     ngOnDestroy(): void {
-        if (this.themeSub) {
-            this.themeSub.unsubscribe();
-        }
-        if (this.chartInstance) {
-            this.chartInstance.destroy();
+        this.destroy$.next();
+        this.destroy$.complete();
+        if (this.chart) {
+            this.chart.destroy();
         }
     }
 
-    renderizarGrafica() {
-        if (!this.barChart || !this.barChart.nativeElement) return;
+    private configurarMetadatosPorCodigo(): void {
+        const codigo = (
+            this.widgetConfig?.type ||
+            this.widgetConfig?.codigoWidget ||
+            ''
+        ).toUpperCase();
 
-        if (this.chartInstance) {
-            this.chartInstance.destroy();
-        }
-
-        let colorTexto = '#ffffff';
-        let colorSubtitulo = '#a0a0a0';
-        let colorGrid = 'rgba(255,255,255,0.1)';
-
-        if (this.themeSettings?.isDarkTheme) {
-            colorTexto = '#b4b4b4';
-            colorSubtitulo = '#9c9c9c';
-            colorGrid = 'rgba(255,255,255,0.05)'; // 🟢 Ajustado a un color más sutil
+        if (codigo.includes('PARTICIPACION') || codigo.includes('MERCADO')) {
+            this.badgeHeader = 'MERCADO';
+            this.unidadMedida = '%';
+        } else if (codigo.includes('OPERACION') || codigo.includes('COMERCIO')) {
+            this.badgeHeader = 'COMERCIO';
+            this.unidadMedida = 'Ton';
         } else {
-            colorTexto = '#212529';
-            colorSubtitulo = '#464e57';
-            colorGrid = '#e6e6e6';
+            this.badgeHeader = 'VOLUMEN';
+            this.unidadMedida = 'Ton';
         }
-
-        const labels = this.data?.labels || ['Contenedores', 'Granel sólido', 'General/vehíc.', 'Granel líquido', 'Carbón'];
-        const valores = this.data?.valores || [13.5, 5.8, 1.8, 0.8, 0.6];
-        const colores = ['#3b82f6', '#10b981', '#fab131', '#06b6d4', '#8c6e5c'];
-
-        this.chartInstance = new Chart(this.barChart.nativeElement, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: valores,
-                    backgroundColor: colores,
-                    borderWidth: 0,
-                    borderRadius: 2,
-                    barThickness: 24 // 🟢 Un poco más finas para estilizar
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => ` ${context.raw} Mt`
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { color: colorGrid },
-                        border: { display: false }, // 🟢 Oculta la línea del eje
-                        ticks: {
-                            color: colorSubtitulo,
-                            font: { size: 10 },
-                            callback: (value) => value + ' Mt'
-                        }
-                    },
-                    y: {
-                        grid: { display: false },
-                        border: { display: false }, // 🟢 Oculta la línea del eje
-                        ticks: {
-                            color: colorTexto,
-                            font: { size: 11, weight: 'bold' }
-                        }
-                    }
-                }
-            }
-        });
     }
 
-    // 🟢 Toggle de enfoque: Abre o cierra el modal
-    maximizarDesdeShell() {
+    private cargarDatosMaritimos(): void {
+        if (
+            this.datosVivos &&
+            (this.datosVivos.labels || this.datosVivos.valores || Array.isArray(this.datosVivos))
+        ) {
+            this.procesarPayload(this.datosVivos);
+            return;
+        }
+
+        const puerto = (this.widgetConfig?.puerto || 'BUENAVENTURA').trim().toUpperCase();
+        const codigoWidget = (
+            this.widgetConfig?.type ||
+            this.widgetConfig?.codigoWidget ||
+            'PTT_MAE_CHRT_MEZCLA_CARGA'
+        )
+            .trim()
+            .toUpperCase();
+
+        this.cargando = true;
+
+        this._maritimoService
+            .obtenerDatosWidgetMaritimo(puerto, codigoWidget)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (res: any) => this.procesarPayload(res),
+                error: (err) => {
+                    console.error('❌ [SmartWidget MezclaCarga] Error consultando mezcla de carga:', err);
+                    this.sinDatos = true;
+                    this.cargando = false;
+                    this.cdr.detectChanges();
+                }
+            });
+    }
+
+    /**
+     * Soporta:
+     * 1. Objeto { labels, valores } o { labels, datasets: [{ data }] }
+     * 2. Filas crudas de SQL Server: [{ tipo_carga / tipoCarga, toneladas / totalToneladas }]
+     */
+    private procesarPayload(raw: any): void {
+        if (!raw) {
+            this.sinDatos = true;
+            this.cargando = false;
+            this.cdr.detectChanges();
+            return;
+        }
+
+        this.metadatosSQL = Array.isArray(raw) ? {} : raw;
+
+        const etiquetas = raw.labels || raw.categorias || [];
+        const series = raw.valores || raw.data || raw.datasets?.[0]?.data || [];
+
+        if (Array.isArray(etiquetas) && etiquetas.length > 0) {
+            this.labels = etiquetas.map((l: any) => String(l));
+            this.valores = series.map((v: any) => Number(v || 0));
+        } else {
+            // Homologación si vienen filas crudas desde SQL Server
+            const filas: any[] = Array.isArray(raw) ? raw : raw.rows || raw.data || [];
+            if (filas.length > 0) {
+                const agrupado = new Map<string, number>();
+                filas.forEach((f: any) => {
+                    const clave = String(
+                        f.tipoCarga ||
+                        f.tipo_carga ||
+                        f.categoria ||
+                        f.terminal ||
+                        f.tipo_operacion ||
+                        'Carga General'
+                    ).trim();
+
+                    const valorFila = Number(
+                        f.totalToneladas ??
+                        f.total_toneladas ??
+                        f.toneladas ??
+                        f.volumen ??
+                        f.valor ??
+                        (Number(f.importacion || 0) +
+                            Number(f.exportacion || 0) +
+                            Number(f.transbordo || 0))
+                    );
+
+                    agrupado.set(clave, (agrupado.get(clave) || 0) + (isNaN(valorFila) ? 0 : valorFila));
+                });
+
+                this.labels = Array.from(agrupado.keys());
+                this.valores = Array.from(agrupado.values()).map((v) => Number(v.toFixed(1)));
+            } else {
+                this.labels = [];
+                this.valores = [];
+            }
+        }
+
+        const { total, items } = PorttosChartHelper.calcularLeyendaDona(this.labels, this.valores);
+        this.totalVolumen = total;
+        this.leyendaItems = items;
+        this.sinDatos = this.labels.length === 0 || this.totalVolumen === 0;
+
+        this.cargando = false;
+        // Primero actualizamos la vista para que el canvas deje de estar [hidden]
+        this.cdr.detectChanges();
+
+        if (this.vistaLista && !this.sinDatos) {
+            setTimeout(() => this.renderizarDona(), 20);
+        }
+    }
+
+    private renderizarDona(): void {
+        if (!this.vistaLista || this.sinDatos || !this.doughnutMaritimoCanvas?.nativeElement) return;
+
+        this.chart = PorttosChartHelper.renderizarDona(
+            this.doughnutMaritimoCanvas,
+            this.chart,
+            this.labels,
+            this.valores,
+            this.unidadMedida
+        );
+    }
+
+    get data(): any {
+        return {
+            ...(this.widgetConfig?.data || {}),
+            ...this.metadatosSQL,
+            labels: this.labels,
+            valores: this.valores
+        };
+    }
+
+    public maximizarDesdeShell(): void {
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
-            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_MEZCLA_CARGA', this.data);
+            this._torreService.abrirModoEnfoque(
+                this.widgetConfig?.type || 'PTT_MAE_CHRT_MEZCLA_CARGA',
+                this.data
+            );
         }
     }
 }

@@ -1,7 +1,28 @@
-<div class="w-100 position-relative" style="height: calc(100vh - 160px);">
-    <gridster [options]="options" class="bg-transparent">
+<div class="w-100 position-relative d-flex flex-column" style="height: 100%; overflow: hidden;">
+    <!-- 1. Loader mientras se construye la estructura geométrica del layout -->
+    <div *ngIf="cargando" class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5">
+        <div class="spinner-border text-info mb-2" role="status"></div>
+        <span class="text-muted small">Construyendo tablero de Bodegas y Silos ({{ puerto }})...</span>
+    </div>
+
+    <!-- 2. Estado vacío por si la pestaña aún no tiene widgets configurados en BD -->
+    <div *ngIf="!cargando && (!dashboard || dashboard.length === 0)"
+        class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5 text-muted">
+        <i class="feather icon-package fs-1 mb-2 opacity-50"></i>
+        <p class="mb-0">No hay widgets configurados para la pestaña de Mapa Lgistico ({{ pestanaActiva }}).</p>
+    </div>
+
+    <!-- El spinner o cargador ya está gestionado globalmente, aquí solo bloqueamos que no renderice vacío -->
+    <gridster [options]="options" *ngIf="options && !cargando" class="bg-transparent flex-grow-1">
+
         <gridster-item [item]="widget" *ngFor="let widget of dashboard; trackBy: trackByWidget">
-            <ng-container *ngComponentOutlet="obtenerComponentePara(widget.type)"></ng-container>
+
+            <!-- 🟢 EL PASE INMUTABLE -->
+            <ng-container *ngComponentOutlet="widget['componenteTarget']; inputs: widget['componenteInputs']">
+            </ng-container>
+
         </gridster-item>
+
     </gridster>
+
 </div>

@@ -1,44 +1,73 @@
-<app-widget-shell [titulo]="'Bitácora de Eventos'" [subtitulo]="'REGISTRO DE ALERTAS SCADA'" [isEnfoque]="isEnfoque"
+<app-widget-shell [titulo]="data?.titulo || 'Bitácora de Eventos'"
+    [subtitulo]="data?.subtitulo || 'REGISTRO DE ALERTAS SCADA'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()" [icono]="'feather icon-alert-triangle'">
 
-    <div class="h-100 w-100 p-2 feed-container">
+    <!-- PROYECCIÓN AL HEADER: Contador de eventos en bitácora -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span class="tc-badge text-uppercase" [ngClass]="totalPeligro > 0 ? 'badge-danger blinking' : 'badge-success'">
+            {{ totalPeligro > 0 ? (totalPeligro + ' Críticas') : 'Normal' }}
+        </span>
+    </div>
 
-        <div *ngFor="let evento of eventos" class="evento-item d-flex align-items-start p-3 mb-2 rounded">
-            <!-- Icono según tipo -->
-            <div class="evento-icono me-3" [ngClass]="{
-                     'bg-light-danger text-danger': evento.tipo === 'peligro',
-                     'bg-light-warning text-warning': evento.tipo === 'advertencia',
-                     'bg-light-info text-info': evento.tipo === 'info'
-                 }">
-                <i class="feather" [ngClass]="{
-                       'icon-alert-octagon': evento.tipo === 'peligro',
-                       'icon-alert-triangle': evento.tipo === 'advertencia',
-                       'icon-info': evento.tipo === 'info'
-                   }"></i>
-            </div>
+    <!-- CUERPO DEL WIDGET -->
+    <div class="h-100 w-100 p-2 feed-container overflow-auto custom-scrollbar animate__animated animate__fadeIn">
 
-            <!-- Contenido -->
-            <div class="flex-grow-1">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <h6 class="mb-0 fw-bold" [ngClass]="{
+        <!-- Estado de espera inicial -->
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            Monitoreando eventos SCADA...
+        </div>
+
+        <!-- Lista de Eventos SCADA -->
+        <ng-container *ngIf="!cargando">
+            <div *ngFor="let evento of eventosFiltrados; trackBy: trackByEvento"
+                class="evento-item d-flex align-items-start p-3 mb-2 rounded">
+
+                <!-- Icono según severidad -->
+                <div class="evento-icono me-3" [ngClass]="{
+                    'bg-light-danger text-danger': evento.tipo === 'peligro',
+                    'bg-light-warning text-warning': evento.tipo === 'advertencia',
+                    'bg-light-info text-info': evento.tipo === 'info'
+                }">
+                    <i class="feather" [ngClass]="{
+                        'icon-alert-octagon': evento.tipo === 'peligro',
+                        'icon-alert-triangle': evento.tipo === 'advertencia',
+                        'icon-info': evento.tipo === 'info'
+                    }"></i>
+                </div>
+
+                <!-- Contenido del Evento -->
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <h6 class="mb-0 fw-bold" style="font-size: 0.82rem;" [ngClass]="{
                             'text-danger': evento.tipo === 'peligro',
-                            'text-warning': evento.tipo === 'advertencia'
+                            'text-warning': evento.tipo === 'advertencia',
+                            'text-info': evento.tipo === 'info'
                         }">
-                        {{ evento.mensaje }}
-                    </h6>
-                    <small class="text-muted">{{ evento.tiempo | date:'HH:mm:ss' }}</small>
-                </div>
-                <div class="text-muted small" *ngIf="evento.valor > 0">
-                    Registro de telemetría: <span class="fw-bold">{{ evento.valor | number:'1.2-2' }} PSI</span>
-                </div>
-            </div>
-        </div>
+                            {{ evento.mensaje }}
+                        </h6>
+                        <small class="text-muted ms-2 text-nowrap">{{ evento.tiempo | date:'HH:mm:ss' }}</small>
+                    </div>
 
-        <!-- Estado vacío (Sin alertas) -->
-        <div *ngIf="eventos.length === 0" class="text-center text-muted p-4">
-            <i class="feather icon-check-circle fs-2 d-block mb-2 text-success"></i>
-            Sin alertas recientes
-        </div>
+                    <div class="text-muted small d-flex align-items-center gap-2 flex-wrap" *ngIf="evento.valor > 0">
+                        <span>Presión: <strong class="text-white">{{ evento.valor | number:'1.1-2' }}
+                                PSI</strong></span>
+                        <span *ngIf="evento.caudal !== undefined">· Caudal: <strong>{{ evento.caudal | number:'1.2-2' }}
+                                m³/h</strong></span>
+                        <span class="badge bg-dark border border-secondary text-uppercase" style="font-size: 0.62rem;">
+                            {{ evento.eventoScada }}
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Estado vacío (Sin alertas) -->
+            <div *ngIf="eventosFiltrados.length === 0" class="text-center text-muted p-4">
+                <i class="feather icon-check-circle fs-2 d-block mb-2 text-success"></i>
+                Sin alertas recientes para {{ filtroSegmento === 'TODOS' ? 'la red de ductos' : filtroSegmento }}
+            </div>
+        </ng-container>
 
     </div>
 

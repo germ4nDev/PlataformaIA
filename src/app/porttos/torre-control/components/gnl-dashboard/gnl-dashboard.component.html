@@ -1,38 +1,56 @@
 <!-- ========================================== -->
-<!-- FILTRO DE PÍLDORAS (SCADA GNL)             -->
+<!-- AUTHOR: German Valencia                -->
 <!-- ========================================== -->
-<div class="d-flex align-items-center flex-wrap gap-3 px-4 pt-3 mb-3">
+<div class="d-flex align-items-center gap-3 px-4 pt-3 mb-3">
     <span class="text-muted small fw-bold" style="letter-spacing: 1px;">FILTRAR BRAZO:</span>
 
-    <!-- Píldora: Vista General (Consolidado) -->
-    <button class="btn rounded-pill px-4 py-1 fw-bold transition-all" [ngStyle]="brazoSeleccionado === 'TODOS'
-            ? {'border': '1px solid #FFC107', 'color': '#FFC107', 'background-color': 'rgba(255, 193, 7, 0.1)'}
-            : {'border': '1px solid #495057', 'color': '#6c757d', 'background-color': 'transparent'}"
-        (click)="cambiarFiltroGNL('TODOS')">
-        <i class="fas fa-globe me-1"></i> Vista General
-    </button>
+    <div class="position-relative">
+        <i class="fas" [ngClass]="brazoSeleccionado === 'TODOS' ? 'fa-globe text-warning' : 'fa-code-branch text-info'"
+            style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+        </i>
 
-    <!-- Píldoras: Brazos Dinámicos Detectados -->
-    <button *ngFor="let brazo of brazosActivos" class="btn rounded-pill px-4 py-1 fw-bold transition-all" [ngStyle]="brazoSeleccionado === brazo
-            ? {'border': '1px solid #FFC107', 'color': '#FFC107', 'background-color': 'rgba(255, 193, 7, 0.1)'}
-            : {'border': '1px solid #495057', 'color': '#6c757d', 'background-color': 'transparent'}"
-        (click)="cambiarFiltroGNL(brazo)">
-        <i class="fas fa-code-branch me-1"></i> {{ brazo.replace('BRAZO_DESCARGA_', 'Brazo ') }}
-    </button>
+        <select class="form-select bg-dark text-white shadow-none cursor-pointer"
+            style="min-width: 260px; padding-left: 40px; border: 1px solid #495057;"
+            (change)="cambiarFiltroGNL($any($event.target).value)">
+
+            <option value="TODOS" [selected]="brazoSeleccionado === 'TODOS'">
+                Vista General (Consolidado)
+            </option>
+
+            <option *ngFor="let brazo of brazosOrdenados" [value]="brazo" [selected]="brazoSeleccionado === brazo">
+                {{ brazo.replace('BRAZO_DESCARGA_', 'Brazo ') }}
+            </option>
+
+        </select>
+    </div>
 </div>
 
-<!-- ========================================== -->
-<!-- GRIDSTER PROPIO DE LA PESTAÑA GNL          -->
-<!-- ========================================== -->
-<div class="w-100 position-relative" style="height: calc(100vh - 220px);">
-    <!-- Ajusta el height calc() dependiendo del tamaño de tu header global -->
+<!-- GRIDSTER PROPIO DE LA PESTAÑA GNL -->
+<div class="w-100 position-relative d-flex flex-column" style="height: 100%; overflow: hidden;">
 
-    <gridster [options]="options" class="bg-transparent">
+    <!-- 1. Loader mientras se construye la estructura geométrica del layout -->
+    <div *ngIf="cargando" class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5">
+        <div class="spinner-border text-info mb-2" role="status"></div>
+        <span class="text-muted small">Construyendo tablero de Bodegas y Silos ({{ puerto }})...</span>
+    </div>
+
+    <!-- 2. Estado vacío por si la pestaña aún no tiene widgets configurados en BD -->
+    <div *ngIf="!cargando && (!dashboard || dashboard.length === 0)"
+        class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5 text-muted">
+        <i class="feather icon-package fs-1 mb-2 opacity-50"></i>
+        <p class="mb-0">No hay widgets configurados para la pestaña de GNL ({{ pestanaActiva }}).</p>
+    </div>
+
+    <gridster [options]="options" *ngIf="options && !cargando" class="bg-transparent flex-grow-1">
+
         <gridster-item [item]="widget" *ngFor="let widget of dashboard; trackBy: trackByWidget">
 
-            <!-- Inyección Dinámica del Widget según el WIDGET_MAP -->
-            <ng-container *ngComponentOutlet="obtenerComponentePara(widget.type)"></ng-container>
+            <!-- 🟢 EL PASE INMUTABLE -->
+            <ng-container *ngComponentOutlet="widget['componenteTarget']; inputs: widget['componenteInputs']">
+            </ng-container>
 
         </gridster-item>
+
     </gridster>
+
 </div>

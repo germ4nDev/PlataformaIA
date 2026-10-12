@@ -1,18 +1,60 @@
-<app-widget-shell
-    [titulo]="data?.titulo ? '📊 ' + data.titulo + ' ' + (data?.rango || '') : '📊 HISTÓRICO ANUAL 2018-2025'"
+<!-- <app-widget-shell
+    [titulo]="data?.titulo ? '📊 ' + data.titulo + ' ' + (data?.rango || '') : '📊 HISTÓRICO ANUAL ' + (data?.rango || '2018-2026')"
     [subtitulo]="data?.subtitulo || 'Toneladas movilizadas · tendencia de largo plazo'"
     [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-cyan text-uppercase">
             Tendencia
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor de la Gráfica) -->
     <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
-        <canvas #lineChart></canvas>
+
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Consultando histórico multianual...</span>
+        </div>
+
+        <div *ngIf="!isLoading && !tieneDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-activity fs-2 mb-2 opacity-50"></i>
+            Sin serie histórica anual disponible para este puerto.
+        </div>
+
+        <canvas #lineChart [ngClass]="{'d-none': isLoading || !tieneDatos}"></canvas>
+
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📊 Histórico Anual'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Toneladas movilizadas · Tendencia portuaria'"
+    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge text-uppercase"
+            [ngClass]="badgeHeader === 'RENDIMIENTO' ? 'badge-warning' : 'badge-info'">
+            {{ badgeHeader }}
+        </span>
+    </div>
+
+    <div class="w-100 h-100 position-relative d-flex flex-column p-2 animate__animated animate__fadeIn">
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Cargando serie histórica...</span>
+        </div>
+
+        <div *ngIf="!cargando && sinDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-activity fs-2 mb-2 opacity-50"></i>
+            Sin serie histórica anual disponible para este puerto.
+        </div>
+
+        <div class="flex-grow-1 position-relative" style="min-height: 0;" [hidden]="cargando || sinDatos">
+            <canvas #lineMaritimoCanvas></canvas>
+        </div>
     </div>
 
 </app-widget-shell>

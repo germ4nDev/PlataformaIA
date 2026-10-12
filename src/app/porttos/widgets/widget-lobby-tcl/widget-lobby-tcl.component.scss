@@ -51,6 +51,30 @@
     }
 }
 
+.lobby-action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background-color: var(--card-background);
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+
+    &:hover {
+        background-color: var(--app-navbar-color);
+        color: var(--app-iconos-color);
+    }
+
+    i {
+        font-size: 1.1rem;
+    }
+}
+
 .titulo-modal,
 h3 {
     color: var(--text-color, #ffffff) !important;

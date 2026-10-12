@@ -1,9 +1,8 @@
-<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'RETIROS Y PRIORIZACIÓN'"
-    [subtitulo]="widgetConfig?.data?.subtitulo || 'Retiros y Priorización'"
-    [icono]="widgetConfig?.data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell [titulo]="data?.titulo || '📦 RETIROS DE CONTENEDORES CARGADOS · 8 DÍAS'"
+    [subtitulo]="data?.subtitulo || 'Priorización por vencimiento de Free Time'"
+    [icono]="data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador en azul (haciendo juego con tu paleta) -->
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-primary text-uppercase">
             Proyecciones
@@ -15,13 +14,21 @@
 
         <!-- Loader mientras responde el backend -->
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
-            style="top:0; left:0; z-index: 10;">
-            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">Cargando proyecciones...</span>
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted" style="font-size: 0.8rem;">Calculando priorización de retiros...</span>
         </div>
 
-        <!-- Gráfica Chart.js (Se adapta automáticamente al espacio del Shell) -->
-        <canvas *ngIf="!cargando" baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
+        <!-- Estado Vacío -->
+        <div *ngIf="!cargando && !tieneDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-package fs-2 mb-2 opacity-50"></i>
+            Sin proyecciones de retiro registradas para este puerto.
+        </div>
+
+        <!-- Gráfica Chart.js -->
+        <canvas *ngIf="!cargando && tieneDatos" baseChart [data]="barChartData" [options]="barChartOptions"
+            [type]="'bar'">
         </canvas>
 
     </div>

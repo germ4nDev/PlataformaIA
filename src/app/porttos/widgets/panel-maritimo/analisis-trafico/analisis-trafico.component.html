@@ -1,51 +1,130 @@
-<app-widget-shell [titulo]="data?.titulo || 'Análisis de Tráfico Portuario'"
-    [subtitulo]="data?.subtitulo || 'Resumen y Evolución'" [icono]="data?.icono || 'feather icon-trending-up'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+<!-- <app-widget-shell [titulo]="data?.titulo || 'Análisis de Tráfico Portuario'"
+    [subtitulo]="data?.subtitulo || 'Resumen y Evolución Mensual (24m)'"
+    [icono]="data?.icono || 'feather icon-trending-up'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-primary text-uppercase">
-            Macro
+            Supertransporte
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET (Flexbox column para separar KPIs y Gráfica) -->
-    <div class="w-100 h-100 d-flex flex-column pt-2 animate__animated animate__fadeIn">
+    <div class="w-100 h-100 d-flex flex-column pt-2 animate__animated animate__fadeIn position-relative">
 
-        <!-- KPIs Superiores (Grid) -->
-        <div class="kpi-macro-grid mb-3 px-1" *ngIf="data?.kpisTop">
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Consultando series históricas de Supertransporte...</span>
+        </div>
+
+        <div class="kpi-macro-grid mb-3 px-1" *ngIf="!isLoading && data?.kpisTop">
             <div class="kpi-macro-card">
                 <span class="km-label">TONELADAS MOV.</span>
-                <span class="km-valor">{{ data.kpisTop.toneladas.valor }}</span>
-                <span class="km-sub">{{ data.kpisTop.toneladas.detalle }}</span>
+                <span class="km-valor">{{ data.kpisTop?.toneladas?.valor || '--' }}</span>
+                <span class="km-sub">{{ data.kpisTop?.toneladas?.detalle || '' }}</span>
             </div>
 
             <div class="kpi-macro-card">
                 <span class="km-label">VARIACIÓN YOY</span>
-                <span class="km-valor" [ngClass]="data.kpisTop.variacion.claseTendencia">
-                    {{ data.kpisTop.variacion.valor }}
+                <span class="km-valor" [ngClass]="data.kpisTop?.variacion?.claseTendencia || 'text-info'">
+                    {{ data.kpisTop?.variacion?.valor || '--' }}
                 </span>
-                <span class="km-sub">{{ data.kpisTop.variacion.detalle }}</span>
+                <span class="km-sub">{{ data.kpisTop?.variacion?.detalle || '' }}</span>
             </div>
 
             <div class="kpi-macro-card">
                 <span class="km-label">PARTICIPACIÓN NAL.</span>
-                <span class="km-valor">{{ data.kpisTop.participacion.valor }}</span>
-                <span class="km-sub">{{ data.kpisTop.participacion.detalle }}</span>
+                <span class="km-valor">{{ data.kpisTop?.participacion?.valor || '--' }}</span>
+                <span class="km-sub">{{ data.kpisTop?.participacion?.detalle || '' }}</span>
             </div>
 
             <div class="kpi-macro-card">
                 <span class="km-label">FLUJO DOMINANTE</span>
-                <span class="km-valor" [ngClass]="data.kpisTop.flujo.claseTendencia">
-                    {{ data.kpisTop.flujo.valor }}
+                <span class="km-valor" [ngClass]="data.kpisTop?.flujo?.claseTendencia || 'text-success'">
+                    {{ data.kpisTop?.flujo?.valor || '--' }}
                 </span>
-                <span class="km-sub">{{ data.kpisTop.flujo.detalle }}</span>
+                <span class="km-sub">{{ data.kpisTop?.flujo?.detalle || '' }}</span>
+            </div>
+        </div>
+
+        <div class="chart-container-macro flex-grow-1 position-relative pb-2" style="min-height: 0;">
+            <canvas #trafficChart [ngClass]="{'d-none': isLoading || !tieneDatosGrafico}"></canvas>
+
+            <div *ngIf="!isLoading && !tieneDatosGrafico"
+                class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+                <i class="feather icon-bar-chart-2 fs-2 mb-2 opacity-50"></i>
+                Sin serie mensual registrada en Supertransporte para este puerto.
+            </div>
+        </div>
+
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'Análisis de Tráfico Portuario'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Resumen y Evolución Mensual (24m)'"
+    [icono]="data?.icono || 'feather icon-trending-up'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Badge indicador -->
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-primary text-uppercase">
+            Supertransporte
+        </span>
+    </div>
+
+    <!-- CUERPO ÚNICO DEL WIDGET (Flexbox column para separar KPIs y Gráfica) -->
+    <div class="w-100 h-100 d-flex flex-column pt-2 animate__animated animate__fadeIn position-relative">
+
+        <!-- Estado Cargando -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Consultando series históricas de Supertransporte...</span>
+        </div>
+
+        <!-- KPIs Superiores (Grid) -->
+        <div class="kpi-macro-grid mb-3 px-1" *ngIf="!isLoading && data?.kpisTop">
+            <div class="kpi-macro-card">
+                <span class="km-label">TONELADAS MOV.</span>
+                <span class="km-valor">{{ data.kpisTop?.toneladas?.valor || '--' }}</span>
+                <small *ngIf="data.kpisTop?.toneladas?.valorCompleto" class="text-muted d-block"
+                    style="font-size: 0.68rem; opacity: 0.75;">
+                    {{ data.kpisTop.toneladas.valorCompleto }}
+                </small>
+                <span class="km-sub">{{ data.kpisTop?.toneladas?.detalle || '' }}</span>
+            </div>
+
+            <div class="kpi-macro-card">
+                <span class="km-label">VARIACIÓN YOY</span>
+                <span class="km-valor" [ngClass]="data.kpisTop?.variacion?.claseTendencia || 'text-info'">
+                    {{ data.kpisTop?.variacion?.valor || '--' }}
+                </span>
+                <span class="km-sub">{{ data.kpisTop?.variacion?.detalle || '' }}</span>
+            </div>
+
+            <div class="kpi-macro-card">
+                <span class="km-label">PARTICIPACIÓN NAL.</span>
+                <span class="km-valor">{{ data.kpisTop?.participacion?.valor || '--' }}</span>
+                <span class="km-sub">{{ data.kpisTop?.participacion?.detalle || '' }}</span>
+            </div>
+
+            <div class="kpi-macro-card">
+                <span class="km-label">FLUJO DOMINANTE</span>
+                <span class="km-valor" [ngClass]="data.kpisTop?.flujo?.claseTendencia || 'text-success'">
+                    {{ data.kpisTop?.flujo?.valor || '--' }}
+                </span>
+                <span class="km-sub">{{ data.kpisTop?.flujo?.detalle || '' }}</span>
             </div>
         </div>
 
         <!-- Gráfica (Ocupa el resto del espacio disponible) -->
         <div class="chart-container-macro flex-grow-1 position-relative pb-2" style="min-height: 0;">
-            <canvas #trafficChart></canvas>
+            <canvas #trafficChart [ngClass]="{'d-none': isLoading || !tieneDatosGrafico}"></canvas>
+
+            <!-- Estado Vacío -->
+            <div *ngIf="!isLoading && !tieneDatosGrafico"
+                class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+                <i class="feather icon-bar-chart-2 fs-2 mb-2 opacity-50"></i>
+                Sin serie mensual registrada en Supertransporte para este puerto.
+            </div>
         </div>
 
     </div>

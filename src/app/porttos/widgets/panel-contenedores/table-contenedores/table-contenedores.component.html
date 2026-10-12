@@ -1,17 +1,16 @@
-<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'Movimientos y Trazabilidad'"
-    [subtitulo]="widgetConfig?.data?.subtitulo || 'Registro Operativo de Contenedores'"
-    [icono]="widgetConfig?.data?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell [titulo]="configData?.titulo || '📦 Movimientos y Trazabilidad de Contenedores'"
+    [subtitulo]="configData?.subtitulo || 'Cargados a retirar y vacíos a devolver · Próximas 8 horas'"
+    [icono]="configData?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase">
-            Operaciones
+            Operaciones · {{ movimientos.length }}
         </span>
     </div>
 
     <!-- CUERPO ÚNICO DEL WIDGET (Tabla con scroll integrado) -->
-    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn table-container">
+    <div class="w-100 h-100 overflow-auto pt-2 pe-2 animate__animated animate__fadeIn table-container custom-scrollbar">
 
         <div class="table-responsive h-100">
             <table class="table table-hover table-borderless align-middle w-100 m-0">
@@ -31,29 +30,44 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let m of movimientos"
-                        style="font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td class="font-weight-bold text-info py-3">{{ m.contenedor }}</td>
-                        <td class="text-white">{{ m.tipo }}</td>
-                        <td class="text-white">{{ m.naviera }}</td>
-                        <td class="text-white">{{ m.operacion }}</td>
-                        <td class="text-muted">{{ m.ruta ? m.ruta.replace('?', '→') : '-' }}</td>
-                        <td class="text-white">{{ m.cliente }}</td>
-                        <td class="text-muted">{{ m.freeTime }}</td>
-                        <td class="text-end">
-                            <span class="badge rounded-pill px-2 py-1 shadow-sm" [ngClass]="getEstadoClase(m.estado)"
-                                style="font-size: 0.65rem; letter-spacing: 0.5px;">
-                                {{ m.estado }}
-                            </span>
+                    <!-- Estado Cargando -->
+                    <tr *ngIf="isLoading">
+                        <td colspan="8" class="text-center text-muted py-5">
+                            <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
+                            Sincronizando trazabilidad de contenedores...
                         </td>
                     </tr>
 
-                    <tr *ngIf="!movimientos || movimientos.length === 0">
-                        <td colspan="8" class="text-center text-muted py-5">
-                            <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                            No hay movimientos registrados en la base de datos.
-                        </td>
-                    </tr>
+                    <!-- Filas de Movimientos -->
+                    <ng-container *ngIf="!isLoading">
+                        <tr *ngFor="let m of movimientos; trackBy: trackByMovimiento"
+                            style="font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td class="font-weight-bold text-info py-3">{{ m.contenedor }}</td>
+                            <td class="text-white">{{ m.tipo }}</td>
+                            <td class="text-white">{{ m.naviera }}</td>
+                            <td class="text-white">{{ m.operacion }}</td>
+                            <td class="text-muted">{{ m.ruta }}</td>
+                            <td class="text-white">{{ m.cliente }}</td>
+                            <td [ngClass]="esFreeTimeCritico(m.freeTime) ? 'text-danger fw-bold' : 'text-muted'">
+                                {{ m.freeTime }}
+                            </td>
+                            <td class="text-end">
+                                <span class="badge rounded-pill px-2 py-1 shadow-sm"
+                                    [ngClass]="getEstadoClase(m.estado)"
+                                    style="font-size: 0.65rem; letter-spacing: 0.5px;">
+                                    {{ m.estado }}
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Estado Vacío -->
+                        <tr *ngIf="movimientos.length === 0">
+                            <td colspan="8" class="text-center text-muted py-5">
+                                <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
+                                No hay movimientos de contenedores registrados para este puerto.
+                            </td>
+                        </tr>
+                    </ng-container>
                 </tbody>
 
             </table>

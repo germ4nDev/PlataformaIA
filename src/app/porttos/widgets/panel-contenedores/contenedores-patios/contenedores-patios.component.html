@@ -1,42 +1,50 @@
-<app-widget-shell [titulo]="widgetConfig?.data?.titulo || 'Saturación de Patios'"
-    [subtitulo]="widgetConfig?.data?.subtitulo || 'Capacidad vs Ocupación'"
-    [icono]="widgetConfig?.data?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell [titulo]="configData?.titulo || '🏗 Saturación de Patios'"
+    [subtitulo]="configData?.subtitulo || 'Capacidad vs Ocupación en Terminales y Depots'"
+    [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
-            Ocupación
+            Ocupación · {{ listadoPatios.length }} Patios
         </span>
     </div>
 
     <!-- CUERPO ÚNICO DEL WIDGET (Lista de barras de progreso) -->
-    <div class="patios-list w-100 h-100 overflow-auto pt-2 animate__animated animate__fadeIn pe-2">
+    <div class="patios-list w-100 h-100 overflow-auto pt-2 animate__animated animate__fadeIn pe-2 custom-scrollbar">
+
+        <!-- Estado Cargando -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            Consultando saturación de patios y depósitos...
+        </div>
 
         <!-- Mensaje si no hay datos -->
-        <div *ngIf="listadoPatios.length === 0"
-            class="d-flex justify-content-center align-items-center h-100 text-muted small">
-            No hay información de patios disponible.
+        <div *ngIf="!isLoading && listadoPatios.length === 0"
+            class="d-flex flex-column justify-content-center align-items-center h-100 text-muted small">
+            <i class="feather icon-layers fs-2 mb-2 opacity-50"></i>
+            No hay información de patios disponible para este puerto.
         </div>
 
         <!-- Iteración de patios -->
-        <div *ngFor="let patio of listadoPatios" class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="text-white fw-medium" style="font-size: 0.8rem;">{{ patio.nombre }}</span>
-                <span class="badge border bg-opacity-10" [ngClass]="getEstadoBadge(patio.estado)"
-                    style="font-size: 0.65rem;">
-                    {{ patio.porcentaje }}% - {{ patio.estado }}
-                </span>
-            </div>
-            <!-- Barra de Progreso -->
-            <div class="progress rounded-pill overflow-hidden shadow-sm"
-                style="height: 6px; background-color: rgba(255,255,255,0.05);">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                    [style.width.%]="patio.porcentaje" [style.background-color]="getColorBarra(patio.porcentaje)"
-                    [attr.aria-valuenow]="patio.porcentaje" aria-valuemin="0" aria-valuemax="100">
+        <ng-container *ngIf="!isLoading && listadoPatios.length > 0">
+            <div *ngFor="let patio of listadoPatios; trackBy: trackByPatio" class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="text-white fw-medium" style="font-size: 0.8rem;">{{ patio.nombre }}</span>
+                    <span class="badge border bg-opacity-10" [ngClass]="getEstadoBadge(patio.estado)"
+                        style="font-size: 0.65rem;">
+                        {{ patio.porcentaje }}% - {{ patio.estado }}
+                    </span>
+                </div>
+                <!-- Barra de Progreso -->
+                <div class="progress rounded-pill overflow-hidden shadow-sm"
+                    style="height: 6px; background-color: rgba(255,255,255,0.05);">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        [style.width.%]="patio.porcentaje" [style.background-color]="getColorBarra(patio.porcentaje)"
+                        [attr.aria-valuenow]="patio.porcentaje" aria-valuemin="0" aria-valuemax="100">
+                    </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
 
     </div>
 

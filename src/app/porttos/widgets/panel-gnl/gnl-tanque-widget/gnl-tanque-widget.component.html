@@ -1,7 +1,25 @@
-<app-widget-shell [titulo]="'Ocupación de Planta'" [subtitulo]="'GOLAR FREEZE - BRAZOS 1 Y 2'"
-    [icono]="'feather icon-database'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell [titulo]="data?.titulo || 'Ocupación de Planta'"
+    [subtitulo]="data?.subtitulo || 'GOLAR FREEZE - BRAZOS 1 Y 2'" [icono]="'feather icon-database'"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div class="h-100 w-100 d-flex flex-row align-items-center justify-content-center gap-4 p-3">
+    <!-- PROYECCIÓN AL HEADER: Segmento y estado de Válvula SCADA -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span class="tc-badge badge-info text-uppercase" *ngIf="tieneTelemetria">
+            {{ segmentoActivo }}
+        </span>
+
+        <span class="tc-badge text-uppercase" [ngClass]="{
+            'badge-success': estadoValvula === 1,
+            'badge-warning': estadoValvula === 2,
+            'badge-danger': estadoValvula === 0
+        }">
+            {{ textoValvula }}
+        </span>
+    </div>
+
+    <!-- CUERPO DEL WIDGET -->
+    <div
+        class="h-100 w-100 d-flex flex-row align-items-center justify-content-center gap-4 p-3 animate__animated animate__fadeIn">
 
         <!-- Dibujo del Tanque -->
         <div class="tanque-estructura">
@@ -9,11 +27,22 @@
             <div class="tanque-liquido" [style.height.%]="nivelOcupacion"></div>
         </div>
 
-        <!-- Indicador Numérico -->
+        <!-- Indicador Numérico y Volumen Real -->
         <div class="d-flex flex-column">
-            <h2 class="display-5 fw-bolder mb-0 text-primary">{{ nivelOcupacion }}%</h2>
-            <span class="text-muted fw-bold">Volumen Útil</span>
-            <span class="small text-muted mt-2">Capacidad: 170,000 m³</span>
+            <h2 class="display-5 fw-bolder mb-0 text-primary">
+                {{ nivelOcupacion | number:'1.0-1' }}%
+            </h2>
+            <span class="text-white fw-bold" style="font-size: 0.85rem;">
+                {{ volumenActualM3 | number:'1.0-0' }} m³ almacenados
+            </span>
+            <span class="small text-muted mt-1">
+                Capacidad: {{ capacidadMaximaM3 | number:'1.0-0' }} m³
+            </span>
+            <span class="small mt-1" [ngClass]="estadoBomba === 1 ? 'text-success' : 'text-muted'"
+                style="font-size: 0.72rem;">
+                <i class="feather icon-activity me-1"></i>
+                Bomba: {{ estadoBomba === 1 ? 'EN LÍNEA' : 'STANDBY' }}
+            </span>
         </div>
 
     </div>

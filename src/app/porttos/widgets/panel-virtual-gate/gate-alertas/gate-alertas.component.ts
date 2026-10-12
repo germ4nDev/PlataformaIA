@@ -1,82 +1,267 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
-    Pattern: PORTTOS Generic Widget - Gate Alertas (Refactorizado con Shell)
+    Pattern: PORTTOS Smart Widget - Gate Alertas Operativas (Consumo Autónomo SQL)
 */
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    OnChanges,
+    OnDestroy,
+    SimpleChanges,
+    ViewEncapsulation,
+    ChangeDetectorRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-// 🟢 Importamos el Shell maestro
+import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+import { VirtualGateService } from 'src/app/theme/shared/service/tablero-control/virtual-gate.service';
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+
+export interface IAlertaGate {
+    id?: string | number;
+    tipo: 'danger' | 'warning' | 'info' | 'success';
+    icono: string;
+    titulo: string;
+    descripcion: string;
+}
 
 @Component({
     selector: 'app-gate-alertas',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
+    imports: [CommonModule, WidgetShellComponent],
     templateUrl: './gate-alertas.component.html',
     styleUrls: ['./gate-alertas.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class GateAlertasComponent implements OnInit, OnChanges {
-
-    // 🟢 NUEVO ESTÁNDAR
+export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
 
-    public data: any = {};
-    public alertas: any[] = [];
+    // Respaldo cuando se abre en el modal de Modo Enfoque
+    @Input() datosVivos: any;
 
-    constructor(private _torreService: DashboardService) { }
+    public cargandoAlertas: boolean = true;
+    public listaAlertas: IAlertaGate[] = [];
+
+    private datosAutonomosSQL: any = null;
+    private readonly destroy$ = new Subject<void>();
+
+    constructor(
+        private _virtualGateService: VirtualGateService,
+        private _torreService: DashboardService,
+        private cdr: ChangeDetectorRef
+    ) { }
 
     ngOnInit(): void {
-        this.procesarData(this.widgetConfig?.data);
+        this.cargarAlertasGate();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
-            this.procesarData(this.widgetConfig?.data);
-        } else if (changes['data'] && !changes['data'].firstChange) {
-            this.procesarData(changes['data'].currentValue);
+        if (
+            (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) ||
+            (changes['datosVivos'] && this.datosVivos)
+        ) {
+            this.cargarAlertasGate();
         }
     }
 
-    private procesarData(newData: any) {
-        this.data = newData || {};
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
 
-        // Si el backend nos inyecta alertas dinámicas, las usamos.
-        // Si no, cargamos el mock visual por defecto.
-        if (this.data.alertas && this.data.alertas.length > 0) {
-            this.alertas = this.data.alertas;
-        } else {
-            this.alertas = [
-                {
-                    tipo: 'danger',
-                    icono: '🛑',
-                    titulo: 'Cola crítica gate TCBUEN',
-                    descripcion: '22 camiones esperando - ETA m/v EVERGREEN HARMONY +2h'
+    /**
+     * Consulta autónoma a VirtualGateService (TCL_CitasGate) filtrada por puerto
+     */
+    private cargarAlertasGate(): void {
+        // 1. Si viene precargado desde el modal de Modo Enfoque
+        if (
+            this.datosVivos &&
+            (Array.isArray(this.datosVivos.alertas) ||
+                Array.isArray(this.datosVivos.citas) ||
+                Array.isArray(this.datosVivos))
+        ) {
+            this.procesarPayloadAlertas(this.datosVivos);
+            return;
+        }
+
+        const puerto = (this.widgetConfig?.puerto || 'BUENAVENTURA').trim().toUpperCase();
+        const codigoWidget = (this.widgetConfig?.type || this.widgetConfig?.codigoWidget || 'PTT_GATE_PANEL_ALERTAS')
+            .trim()
+            .toUpperCase();
+
+        this.cargandoAlertas = true;
+
+        this._virtualGateService
+            .obtenerDatosWidgetGate(puerto, codigoWidget)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: (respuestaSQL: any) => {
+                    this.procesarPayloadAlertas(respuestaSQL);
                 },
-                {
-                    tipo: 'warning',
-                    icono: '⚠️',
-                    titulo: 'Camión LMR-013 retenido',
-                    descripcion: 'SICE no validado - Naviera MSC - acción manual'
-                },
-                {
-                    tipo: 'info',
-                    icono: 'ℹ️',
-                    titulo: 'Patio NORTE TCBUEN al 94%',
-                    descripcion: 'Reasignando devoluciones MAERSK a BUEN-LOG'
+                error: (err) => {
+                    console.error('❌ [SmartWidget GateAlertas] Error consultando alertas de Virtual Gate:', err);
+                    this.listaAlertas = [];
+                    this.cargandoAlertas = false;
+                    this.cdr.detectChanges();
                 }
-            ];
+            });
+    }
+
+    /**
+     * Soporta:
+     * 1. Arreglo directo de alertas [{ tipo/severidad, icono, titulo, descripcion }]
+     * 2. Derivación automática desde las filas de dbo.TCL_CitasGate (sin cita, demoras, congestión por terminal)
+     */
+    private procesarPayloadAlertas(raw: any): void {
+        if (!raw) {
+            this.listaAlertas = [];
+            this.datosAutonomosSQL = { alertas: [] };
+            this.cargandoAlertas = false;
+            this.cdr.detectChanges();
+            return;
+        }
+
+        const alertasCrudas: any[] = Array.isArray(raw.alertas)
+            ? raw.alertas
+            : Array.isArray(raw) && raw[0]?.titulo
+                ? raw
+                : [];
+
+        if (alertasCrudas.length > 0) {
+            this.listaAlertas = alertasCrudas.map((a: any, idx: number) => {
+                const tipo = this.normalizarTipo(a.tipo || a.severidad || a.tipo_color);
+                return {
+                    id: a.id ?? idx,
+                    tipo,
+                    icono: a.icono || this.resolverIcono(tipo),
+                    titulo: a.titulo || 'Incidencia en Gate',
+                    descripcion: a.descripcion || a.detalle || ''
+                };
+            });
+        } else {
+            // Derivación directa desde filas de dbo.TCL_CitasGate
+            const citas: any[] = Array.isArray(raw.citas)
+                ? raw.citas
+                : Array.isArray(raw)
+                    ? raw
+                    : [];
+            this.listaAlertas = this.derivarAlertasDesdeCitasSQL(citas);
+        }
+
+        this.datosAutonomosSQL = {
+            ...(Array.isArray(raw) ? {} : raw),
+            titulo: raw.titulo || '⚠ Alertas Operativas',
+            subtitulo: raw.subtitulo || 'Monitoreo de incidencias en tiempo real',
+            icono: raw.icono || 'feather icon-alert-triangle',
+            alertas: this.listaAlertas
+        };
+
+        this.cargandoAlertas = false;
+        this.cdr.detectChanges();
+    }
+
+    private derivarAlertasDesdeCitasSQL(citas: any[]): IAlertaGate[] {
+        if (!citas || citas.length === 0) return [];
+
+        const generadas: IAlertaGate[] = [];
+
+        // 1. Camiones sin cita o retenidos en TCL_CitasGate
+        const sinCita = citas.filter((c) => /sin cita|retenid|rechaz/i.test(c.estado || ''));
+        sinCita.slice(0, 2).forEach((c, idx) => {
+            generadas.push({
+                id: `sc-${c.id_cita || idx}`,
+                tipo: 'danger',
+                icono: '🛑',
+                titulo: `Camión ${c.placa} — ${c.estado || 'Sin cita'}`,
+                descripcion: `${c.ubicacion || 'Pre-gate'} · ${c.transportador || 'Transportador'} (${c.terminal || 'Terminal'})`
+            });
+        });
+
+        // 2. Terminales con tiempo_espera_minutos elevado (>= 25 min)
+        const demorasAltas = citas.filter((c) => Number(c.tiempo_espera_minutos || 0) >= 25);
+        if (demorasAltas.length > 0) {
+            const maxEspera = Math.max(...demorasAltas.map((c) => Number(c.tiempo_espera_minutos || 0)));
+            const terminalCritica = demorasAltas[0].terminal || 'Terminal';
+            generadas.push({
+                id: 'demora-gate',
+                tipo: 'warning',
+                icono: '⚠️',
+                titulo: `Cola activa en gate ${terminalCritica} (máx. ${maxEspera} min)`,
+                descripcion: `${demorasAltas.length} camiones superan los 25 min de espera virtual`
+            });
+        }
+
+        // 3. balance informativo de flujo en cola
+        const enCola = citas.filter((c) => /cola|pre-?gate/i.test(c.estado || ''));
+        if (enCola.length > 0) {
+            generadas.push({
+                id: 'flujo-info',
+                tipo: 'info',
+                icono: 'ℹ️',
+                titulo: `${enCola.length} unidades en enturnamiento Pre-Gate`,
+                descripcion: 'Dosificación activa por ventana horaria hacia terminales'
+            });
+        }
+
+        return generadas;
+    }
+
+    private normalizarTipo(rawTipo?: string): 'danger' | 'warning' | 'info' | 'success' {
+        const t = (rawTipo || '').toLowerCase();
+        if (t.includes('danger') || t.includes('crit') || t.includes('roj')) return 'danger';
+        if (t.includes('warn') || t.includes('amarill') || t.includes('demor')) return 'warning';
+        if (t.includes('succ') || t.includes('verd') || t.includes('ok')) return 'success';
+        return 'info';
+    }
+
+    private resolverIcono(tipo: 'danger' | 'warning' | 'info' | 'success'): string {
+        switch (tipo) {
+            case 'danger':
+                return '🛑';
+            case 'warning':
+                return '⚠️';
+            case 'success':
+                return '✅';
+            default:
+                return 'ℹ️';
         }
     }
 
-    maximizarDesdeShell() {
+    get data(): any {
+        return {
+            ...(this.widgetConfig?.data || {}),
+            ...(this.datosVivos || {}),
+            ...(this.datosAutonomosSQL || {}),
+            alertas: this.listaAlertas
+        };
+    }
+
+    get alertas(): IAlertaGate[] {
+        return this.listaAlertas;
+    }
+
+    get isLoading(): boolean {
+        return this.cargandoAlertas && !this.datosAutonomosSQL && !this.datosVivos;
+    }
+
+    trackByAlerta(index: number, item: IAlertaGate): string | number {
+        return item.id ?? `${item.titulo}-${index}`;
+    }
+
+    maximizarDesdeShell(): void {
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
-            this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_GATE_ALERTAS', this.data);
+            this._torreService.abrirModoEnfoque(
+                this.widgetConfig?.type || 'PTT_GATE_PANEL_ALERTAS',
+                this.data
+            );
         }
     }
 }

@@ -1,5 +1,34 @@
-<app-widget-shell [titulo]="data?.titulo || '🏆 PARTICIPACIÓN TERMINALES'"
-    [subtitulo]="data?.subtitulo || 'Distribución de mercado por operador'"
+<!-- <app-widget-shell [titulo]="data?.titulo || 'PARTICIPACIÓN POR TERMINAL (%)'"
+    [subtitulo]="data?.subtitulo || 'Distribución de volumen por sociedad portuaria'"
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-success text-uppercase">
+            Mercado
+        </span>
+    </div>
+
+    <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn flex-grow-1 min-h-0">
+
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Calculando participación por sociedad portuaria...</span>
+        </div>
+
+        <div *ngIf="!isLoading && !tieneDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
+            Sin datos de participación registrados para este puerto.
+        </div>
+
+        <canvas #donutChart [ngClass]="{'d-none': isLoading || !tieneDatos}"></canvas>
+
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'PARTICIPACIÓN POR TERMINAL (%)'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de volumen por sociedad portuaria'"
     [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
@@ -9,9 +38,53 @@
         </span>
     </div>
 
-    <!-- CUERPO ÚNICO DEL WIDGET (Contenedor de la Gráfica Doughnut) -->
-    <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn flex-grow-1 min-h-0">
-        <canvas #donutChart></canvas>
+    <!-- CUERPO DEL WIDGET -->
+    <div
+        class="w-100 h-100 d-flex flex-column justify-content-between p-2 position-relative animate__animated animate__fadeIn">
+
+        <!-- Estado Cargando -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Calculando participación por sociedad portuaria...</span>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div *ngIf="!isLoading && !tieneDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
+            Sin datos de participación registrados para este puerto.
+        </div>
+
+        <!-- Dona + Leyenda Lateral Estandarizada -->
+        <div class="row align-items-center h-100 g-2" [hidden]="isLoading || !tieneDatos">
+            <!-- Canvas con Totalizador Central -->
+            <div class="col-6 h-100 position-relative d-flex justify-content-center align-items-center"
+                style="min-height: 150px;">
+                <canvas #donutChart></canvas>
+                <div class="position-absolute text-center" style="pointer-events: none;">
+                    <span class="d-block fw-bolder" style="font-size: 1.05rem;">
+                        {{ leyendaItems.length }}
+                    </span>
+                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">Terminales</small>
+                </div>
+            </div>
+
+            <!-- Leyenda Lateral con Porcentajes -->
+            <div class="col-6 d-flex flex-column gap-2 pe-2 overflow-auto custom-scrollbar" style="max-height: 100%;">
+                <div *ngFor="let item of leyendaItems" class="d-flex justify-content-between align-items-center"
+                    style="font-size: 0.75rem;">
+                    <div class="d-flex align-items-center gap-2 text-truncate">
+                        <span class="rounded-circle flex-shrink-0" [style.background-color]="item.color"
+                            style="width: 9px; height: 9px; display: inline-block;">
+                        </span>
+                        <span class="fw-medium text-truncate" [title]="item.label">{{ item.label }}</span>
+                    </div>
+                    <span class="fw-bold text-info ms-2">{{ item.porcentaje }}%</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </app-widget-shell>

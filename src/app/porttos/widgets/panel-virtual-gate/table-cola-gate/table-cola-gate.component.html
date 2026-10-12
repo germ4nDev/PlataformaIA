@@ -5,7 +5,7 @@
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
-            Logística Terrestre
+            Logística Terrestre · {{ citas.length }} Unidades
         </span>
     </div>
 
@@ -30,46 +30,57 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let cita of data?.citas"
-                        style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
-
-                        <!-- Columna: Placa -->
-                        <td class="font-weight-bold text-white py-3">{{ cita.placa }}</td>
-
-                        <!-- Columna: Transportador -->
-                        <td class="text-light-grey">{{ cita.transportador }}</td>
-
-                        <!-- Columna: Tipo Carga -->
-                        <td>
-                            <span class="carga-badge">{{ cita.tipo_carga }}</span>
-                        </td>
-
-                        <!-- Columnas: Operación & Terminal -->
-                        <td class="text-muted">{{ cita.operacion }}</td>
-                        <td class="text-muted">{{ cita.terminal }}</td>
-
-                        <!-- Columna: Cita (Resaltada) -->
-                        <td class="text-white fw-bold">{{ cita.fecha_hora_cita }}</td>
-
-                        <!-- Columna: Ubicación -->
-                        <td class="text-light-grey">{{ cita.ubicacion }}</td>
-
-                        <!-- Columna: Estado (Badge dinámico) -->
-                        <td class="text-center">
-                            <span class="estado-badge shadow-sm" [ngClass]="getEstadoClase(cita.estado)">
-                                {{ cita.estado | uppercase }}
-                            </span>
-                        </td>
-
-                    </tr>
-
-                    <!-- Estado Vacío -->
-                    <tr *ngIf="!data?.citas || data.citas.length === 0">
+                    <!-- Estado Cargando -->
+                    <tr *ngIf="isLoading">
                         <td colspan="8" class="text-center text-muted py-5">
-                            <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                            No hay camiones en la cola.
+                            <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
+                            Sincronizando cola de camiones en Virtual Gate...
                         </td>
                     </tr>
+
+                    <!-- Filas de Citas -->
+                    <ng-container *ngIf="!isLoading">
+                        <tr *ngFor="let cita of citas; trackBy: trackByCita"
+                            style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+
+                            <!-- Columna: Placa -->
+                            <td class="font-weight-bold text-white py-3">{{ cita.placa }}</td>
+
+                            <!-- Columna: Transportador -->
+                            <td class="text-light-grey">{{ cita.transportador }}</td>
+
+                            <!-- Columna: Tipo Carga -->
+                            <td>
+                                <span class="carga-badge">{{ cita.tipo_carga }}</span>
+                            </td>
+
+                            <!-- Columnas: Operación & Terminal -->
+                            <td class="text-muted">{{ cita.operacion }}</td>
+                            <td class="text-muted">{{ cita.terminal }}</td>
+
+                            <!-- Columna: Cita (Resaltada) -->
+                            <td class="text-white fw-bold">{{ cita.fecha_hora_cita }}</td>
+
+                            <!-- Columna: Ubicación -->
+                            <td class="text-light-grey">{{ cita.ubicacion }}</td>
+
+                            <!-- Columna: Estado (Badge dinámico) -->
+                            <td class="text-center">
+                                <span class="estado-badge shadow-sm" [ngClass]="getEstadoClase(cita.estado)">
+                                    {{ cita.estado | uppercase }}
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        <!-- Estado Vacío -->
+                        <tr *ngIf="citas.length === 0">
+                            <td colspan="8" class="text-center text-muted py-5">
+                                <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
+                                No hay camiones registrados en la cola para este puerto.
+                            </td>
+                        </tr>
+                    </ng-container>
                 </tbody>
 
             </table>

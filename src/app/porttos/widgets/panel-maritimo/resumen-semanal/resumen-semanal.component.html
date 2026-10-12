@@ -1,4 +1,4 @@
-<div class="PORTTOS-widget resumen-semanal">
+<!-- <div class="PORTTOS-widget resumen-semanal">
     <div class="panel-header">
         <div class="header-titles">
             <h3 class="panel-titulo">
@@ -11,21 +11,19 @@
                 <i *ngIf="mostrarTabla" class="feather icon-bar-chart-2" data-feather="bar-chart-2"></i>
                 <i *ngIf="!mostrarTabla" class="feather icon-list" data-feather="list"></i>
             </button>
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
+            <button class="btn-maximizar" (click)="maximizarDesdeShell()" title="Ver en pantalla completa">
                 <i class="feather icon-maximize" data-feather="maximize"></i>
             </button>
         </div>
     </div>
 
     <div class="panel-body">
-        <!-- List View -->
         <ng-container *ngIf="mostrarTabla">
             <ng-container *ngIf="listaArribos.length > 0; else sinArribos">
                 <div class="arribos-list-container">
                     <div *ngFor="let item of listaArribos" class="arribo-info" style="margin-bottom: 15px;">
                         <label class="arribo-nombre">{{ item.motonave || 'Motonave en tránsito' }}</label>
                         <br>
-                        <!-- Using CSS margin on .arribo-info is cleaner, but keeping one <br> for layout if preferred -->
                         <small class="arribo-terminal">{{ item.terminal || 'Terminal por definir' }} - {{ item.eta
                             }}</small>
                     </div>
@@ -33,18 +31,85 @@
             </ng-container>
         </ng-container>
 
-        <!-- Chart View -->
         <div class="chart-container" *ngIf="!mostrarTabla" style="height: 100%;">
             <canvas baseChart [datasets]="barChartData.datasets" [labels]="barChartData.labels"
                 [options]="barChartOptions" [type]="'bar'">
             </canvas>
         </div>
 
-        <!-- Empty State Template -->
         <ng-template #sinArribos>
             <div class="arribo-item text-center" style="display: flex; justify-content: center; padding: 30px;">
                 <p style="color: #a0a0a0; margin: 0;">No hay arribos programados en este rango.</p>
             </div>
         </ng-template>
     </div>
-</div>
+</div> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'ARRIBOS 7 DÍAS'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Programación de arribos y atraques'"
+    [icono]="data?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- PROYECCIÓN AL HEADER: Botón para alternar entre Gráfica y Lista -->
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span class="tc-badge badge-info text-uppercase" *ngIf="!cargando && listaArribos.length > 0">
+            {{ listaArribos.length }} Naves
+        </span>
+        <button class="btn btn-sm btn-outline-secondary py-0 px-2 border-0" (click)="toggleVista()"
+            [title]="mostrarTabla ? 'Ver gráfica de barras' : 'Ver listado de motonaves'">
+            <i *ngIf="mostrarTabla" class="feather icon-bar-chart-2 text-info"></i>
+            <i *ngIf="!mostrarTabla" class="feather icon-list text-info"></i>
+        </button>
+    </div>
+
+    <!-- CUERPO DEL WIDGET -->
+    <div class="w-100 h-100 position-relative d-flex flex-column p-2 animate__animated animate__fadeIn">
+
+        <!-- Loader -->
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Consultando programación 7 días...</span>
+        </div>
+
+        <!-- 1. VISTA DE LISTA DE ARRIBOS -->
+        <ng-container *ngIf="!cargando && mostrarTabla">
+            <div *ngIf="listaArribos.length > 0; else sinArribos"
+                class="arribos-list-container flex-grow-1 overflow-auto custom-scrollbar pe-1">
+                <div *ngFor="let item of listaArribos" class="arribo-info py-2 px-2 mb-2 rounded"
+                    style="background: rgba(148, 163, 184, 0.08); border-left: 3px solid #00d4ff;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold" style="font-size: 0.8rem;">
+                            {{ item.motonave || item.nombre_buque || 'Motonave en tránsito' }}
+                        </span>
+                        <span class="badge bg-info bg-opacity-10 text-info" style="font-size: 0.68rem;">
+                            {{ item.eta || item.fecha_arribo || 'ETA Pendiente' }}
+                        </span>
+                    </div>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
+                        {{ item.terminal || item.instalacion_portuaria || 'Terminal por definir' }}
+                    </small>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- 2. VISTA DE GRÁFICA DE BARRAS -->
+        <div class="flex-grow-1 position-relative" style="min-height: 0;"
+            [ngClass]="{'d-none': cargando || mostrarTabla || !tieneDatosGrafico}">
+            <canvas #resumenSemanalCanvas></canvas>
+        </div>
+
+        <!-- Estado vacío cuando está en modo Gráfica y no hay datos -->
+        <ng-container *ngIf="!cargando && !mostrarTabla && !tieneDatosGrafico">
+            <ng-container *ngTemplateOutlet="sinArribos"></ng-container>
+        </ng-container>
+
+        <!-- Template unificado de Estado Vacío -->
+        <ng-template #sinArribos>
+            <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+                <i class="feather icon-anchor fs-2 mb-2 opacity-50"></i>
+                No hay arribos programados en este rango.
+            </div>
+        </ng-template>
+
+    </div>
+
+</app-widget-shell>
