@@ -11,3 +11,12 @@ gridster::-webkit-scrollbar {
     width: 0px !important;
     background: transparent !important;
 }
+
+.tc-dropdown {
+    width: 250px !important;
+    background-color: var(--widget-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+    border-radius: 10px !important;
+    padding: 8px;
+}

@@ -18,7 +18,7 @@ export class WidgetLobbyTclComponent implements OnInit {
     @Output() cerrar = new EventEmitter<void>();
     @Output() guardar = new EventEmitter<string[]>();
     @Output() toggleWidget = new EventEmitter<{ codigoWidget: string, seleccionado: boolean }>();
-
+    public isDarkTheme: boolean = true;
     public widgetsAgrupados: { [key: string]: any[] } = {};
     public categorias: string[] = [];
 
@@ -48,10 +48,30 @@ export class WidgetLobbyTclComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        this.sincronizarTemaActual();
         if (this.visible) {
             this.procesarWidgets();
             this.cdr.detectChanges();
         }
+    }
+
+    public sincronizarTemaActual(): void {
+        try {
+            const rawTheme = localStorage.getItem('themeSettings');
+            if (rawTheme) {
+                const themeSettings = JSON.parse(rawTheme);
+                if (typeof themeSettings?.isDarkTheme === 'boolean') {
+                    this.isDarkTheme = themeSettings.isDarkTheme;
+                    return;
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ No se pudo parsear themeSettings desde localStorage:', error);
+        }
+
+        // Respaldo automático por si aún no existe la llave en localStorage
+        this.isDarkTheme = document.body.classList.contains('dark-layout') ||
+            document.body.getAttribute('data-theme') === 'dark';
     }
 
     procesarWidgets() {
@@ -154,6 +174,28 @@ export class WidgetLobbyTclComponent implements OnInit {
     get todosEstanSeleccionados(): boolean {
         if (!this.widgetsProcesados || this.widgetsProcesados.length === 0) return false;
         return this.widgetsProcesados.every(w => w.activo);
+    }
+
+    public obtenerImagenWidget(widget: any): string {
+        if (!widget) {
+            return 'assets/images/widget-default.png';
+        }
+
+        const imgDark =
+            widget.imagenWidget_dark ||
+            widget.imagen_dark ||
+            widget.imagenDark ||
+            widget.imagenWidget;
+
+        const imgLight =
+            widget.imagenWidget_light ||
+            widget.imagen_light ||
+            widget.imagenLight ||
+            widget.imagenWidget;
+
+        const rutaSeleccionada = this.isDarkTheme ? (imgDark || imgLight) : (imgLight || imgDark);
+
+        return rutaSeleccionada || 'assets/images/widget-default.png';
     }
 
     toggleSeleccionarTodos() {

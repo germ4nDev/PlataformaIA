@@ -1,6 +1,7 @@
 <!-- HEADER GLOBAL -->
 <app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
-    [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()" (abrirCatalogo)="abrirLobbyModal()">
+    [pestanaActiva]="pestanaActiva" [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()"
+    (abrirCatalogo)="abrirLobbyModal()">
 </app-tc-header>
 
 <div class="tc-dashboard-container d-flex flex-column" style="position: relative; height: calc(100vh - 110px);">
@@ -35,19 +36,19 @@
                         <h6 class="mb-0 titulo text-center" style="font-size: 0.9rem;">Personalizar Tablero</h6>
                     </div>
                     <div class="config-grid">
-                        <button class="tc-action-btn" (click)="toggleBloqueoTablero(); menuConfigAbierto = false">
-                            <i class="feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
-                            <span>{{ tableroBloqueado ? 'Desbloquear' : 'Bloquear' }}</span>
+                        <button class="tc-action-btn" (click)="abrirLobbyPestanas(); menuConfigAbierto = false"
+                            title="Personalizar Pestañas">
+                            <i class="feather icon-layers"></i>
+                            <span>Pestañas</span>
                         </button>
                         <button class="tc-action-btn" (click)="abrirLobbyModal(); menuConfigAbierto = false"
                             title="Personalizar Widgets de la Pestaña">
                             <i class="feather icon-plus"></i>
                             <span>Widgets</span>
                         </button>
-                        <button class="tc-action-btn" (click)="abrirLobbyPestanas(); menuConfigAbierto = false"
-                            title="Personalizar Pestañas">
-                            <i class="feather icon-layers"></i>
-                            <span>Pestañas</span>
+                        <button class="tc-action-btn" (click)="toggleBloqueoTablero(); menuConfigAbierto = false">
+                            <i class="feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
+                            <span>{{ tableroBloqueado ? 'Desbloquear' : 'Bloquear' }}</span>
                         </button>
                         <button class="tc-action-btn" (click)="restaurarTableroDefault(); menuConfigAbierto = false"
                             title="Restaurar Tablero">

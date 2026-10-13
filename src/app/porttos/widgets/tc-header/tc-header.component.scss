@@ -149,16 +149,19 @@
 }
 
 .tc-dropdown {
-    width: 250px !important;
+    width: 260px !important;
     background-color: var(--widget-bg) !important;
     color: var(--text-color) !important;
     border-color: var(--border-color) !important;
     border-radius: 10px !important;
+    //margin-left: 16px;
     padding: 8px;
 }
 
 .tc-filtro-puerto {
-    width: 250px !important;
+    align-items: start !important;
+    align-content: start !important;
+    width: 270px !important;
 }
 
 .titulo-filtro {

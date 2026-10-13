@@ -77,7 +77,7 @@
 <div class="plataforma-backdrop-blur" *ngIf="visible">
     <div class="plataforma-modal-lg p-4 shadow-lg rounded" (click)="$event.stopPropagation()">
 
-        <!-- Cabecera del Modal (Idéntica al Gestor de Pestañas) -->
+        <!-- Cabecera del Modal -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h3 class="titulo-modal mb-1" style="font-size: 1.25rem; color: #fff;">
@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <!-- Cuerpo del Catálogo (Ahora sí fuera del d-flex de la cabecera) -->
+        <!-- Cuerpo del Catálogo -->
         <div class="widgets-grid-container overflow-auto pe-2" style="max-height: 65vh;">
 
             <!-- TABS DE CATEGORÍAS -->
@@ -115,8 +115,16 @@
             <!-- CUADRÍCULA DE WIDGETS -->
             <div class="row g-3 overflow-auto" style="max-height: 55vh; overflow-x: hidden;">
                 <div class="col-12 col-md-6 col-lg-4" *ngFor="let widget of widgetsFiltrados">
-                    <!-- TARJETA WIDGET -->
-                    <div class="widget-catalog-card" [class.card-active]="widget.activo">
+
+                    <!-- 🟢 TARJETA WIDGET CON BACKGROUND EN TODA LA TARJETA -->
+                    <div class="widget-catalog-card" [class.card-active]="widget.activo" [ngStyle]="{
+                            'background-image': 'url(\'' + obtenerImagenWidget(widget) + '\')',
+                            'background-size': 'cover',
+                            'background-position': 'center',
+                            'background-repeat': 'no-repeat'
+                        }">
+
+                        <!-- Cabecera flotante sobre la imagen -->
                         <div class="widget-card-header">
                             <div class="icon-wrapper">
                                 <i class="feather icon-pie-chart"></i>
@@ -124,10 +132,7 @@
                             <span class="header-title text-truncate">{{ widget.nombreWidget }}</span>
                         </div>
 
-                        <div class="card-bg-image"
-                            [ngStyle]="{'background-image': 'url(' + (widget.imagenWidget || 'assets/images/widget-default.png') + ')'}">
-                        </div>
-
+                        <!-- Overlay inferior flotante sobre la imagen -->
                         <div class="widget-card-overlay">
                             <div class="widget-footer-content d-flex justify-content-between align-items-center w-100">
                                 <div class="widget-info-text text-truncate pe-2">
@@ -152,6 +157,7 @@
                                 </p>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
