@@ -105,7 +105,7 @@ export class TableContenedoresComponent implements OnInit, OnChanges, OnDestroy 
         this.cargandoMovimientos = true;
 
         this._contenedoresService
-            .obtenerDatosWidgetContenedores(puerto, codigoWidget)
+            .obtenerDatosWidgetContenedores(codigoWidget, puerto) // Corregido 2026-10-17: antes (puerto, codigo) → tomaba el puerto guardado, no el del filtro
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (respuestaSQL: any) => {

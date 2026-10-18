@@ -1,57 +1,37 @@
-<!-- <app-widget-shell [titulo]="widgetConfig?.tituloWidget || 'Histórico de Flujo (m³/h)'"
-    [subtitulo]="widgetConfig?.descripcionWidget || 'Caudal de GNL en tiempo real'" [icono]="'feather icon-activity'"
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'Histórico de Flujo (m³/h)'"
+    [subtitulo]="widgetConfig?.subtitulo || 'CAUDAL DE GNL EN TIEMPO REAL (SCADA)'" [icono]="'feather icon-activity'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
-    <div acciones-extra class="d-flex align-items-center">
-        <span class="indicador-pill-energia" *ngIf="energiaTotal > 0">
-            <i class="fas fa-bolt me-1"></i>
-            {{ energiaTotal | number:'1.2-2' }} MMBTU
-        </span>
-    </div>
+    <!-- 🟢 PROYECCIÓN AL HEADER: Badge de Energía y Nombre del Brazo -->
+    <!-- Todo lo que pongamos aquí dentro aparecerá en la esquina superior derecha del widget -->
+    <div acciones-extra class="d-flex align-items-center me-2">
 
-    <div class="h-100 w-100 position-relative pb-2 animate__animated animate__fadeIn d-flex flex-column">
-
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
-            style="top:0; left:0; z-index: 10;">
-            <div class="spinner-border text-secondary spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">Esperando telemetría...</span>
+        <!-- Píldora de Energía Consumida (MMBTU) -->
+        <div class="energia-pill d-flex align-items-center me-3" [ngClass]="{'cargando': cargando}">
+            <i class="feather icon-zap me-1"></i>
+            <span class="fw-bold">{{ energiaTotal | number:'1.2-2' }} MMBTU</span>
         </div>
 
-        <div class="chart-wrapper flex-grow-1" style="min-height: 0;">
-            <canvas #flowCanvas [style.opacity]="cargando ? '0.3' : '1'"></canvas>
-        </div>
-
-    </div>
-
-</app-widget-shell> -->
-<app-widget-shell [titulo]="data?.titulo || 'Histórico de Flujo (m³/h)'"
-    [subtitulo]="data?.subtitulo || 'Caudal de GNL en tiempo real'" [icono]="'feather icon-activity'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
-
-    <!-- PROJECTIE NAAR HEADER: Actieve arm + geaccumuleerde energie -->
-    <div acciones-extra class="d-flex align-items-center gap-2">
-        <span class="tc-badge badge-info text-uppercase" *ngIf="tieneTelemetria">
+        <!-- 🟢 Badge Dinámico del Brazo Filtrado -->
+        <span class="badge bg-dark text-uppercase small" *ngIf="!cargando">
             {{ ultimoBrazo }}
         </span>
-
-        <span class="indicador-pill-energia" *ngIf="energiaTotal > 0">
-            <i class="fas fa-bolt me-1"></i>
-            {{ energiaTotal | number:'1.2-2' }} MMBTU
-        </span>
     </div>
 
-    <!-- BODY VAN DE WIDGET -->
-    <div class="h-100 w-100 position-relative pb-2 animate__animated animate__fadeIn d-flex flex-column">
+    <!-- CONTENEDOR PRINCIPAL DEL WIDGET -->
+    <div class="scada-widget-inner w-100 h-100 d-flex flex-column position-relative"
+        [ngClass]="{'modo-enfoque': isEnfoque}">
 
-        <!-- Laadstatus zolang er nog geen socket-puls is binnengekomen -->
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
-            style="top: 0; left: 0; z-index: 10;">
-            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">Esperando telemetría SCADA...</span>
+        <!-- Spinner de carga -->
+        <div *ngIf="cargando" class="w-100 h-100 d-flex justify-content-center align-items-center">
+            <div class="spinner-border text-info" role="status">
+                <span class="visually-hidden">Conectando a SCADA...</span>
+            </div>
         </div>
 
-        <div class="chart-wrapper flex-grow-1" style="min-height: 0;">
-            <canvas #flowCanvas [style.opacity]="cargando ? '0.3' : '1'"></canvas>
+        <!-- Gráfica de Flujo -->
+        <div class="chart-container w-100 flex-grow-1 position-relative" [class.d-none]="cargando">
+            <canvas #flowCanvas></canvas>
         </div>
 
     </div>

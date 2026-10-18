@@ -49,22 +49,18 @@
             </button>
         </div>
 
+        <!-- Rediseño 2026-10-18: la leyenda usa los mismos íconos que pinta el mapa (mapa-iconos.ts) -->
         <div class="leyenda-body">
-            <h4>Elementos Gráficos</h4>
-            <ul class="leyenda-lista">
-                <li *ngFor="let item of entidades">
-                    <span class="leyenda-circulo" [style.background-color]="item.color"></span>
-                    <span class="leyenda-texto">{{ item.label }}</span>
-                </li>
-            </ul>
-            <hr>
-            <h4>Estados Operativos</h4>
-            <ul class="leyenda-lista">
-                <li *ngFor="let estado of estados">
-                    <span class="leyenda-circulo" [style.background-color]="estado.color"></span>
-                    <span class="leyenda-texto">{{ estado.label }}</span>
-                </li>
-            </ul>
+            <ng-container *ngFor="let grupo of leyendaMapa; let ultimo = last">
+                <h4>{{ grupo.grupo }}</h4>
+                <ul class="leyenda-lista leyenda-iconos">
+                    <li *ngFor="let item of grupo.items">
+                        <img class="leyenda-icono" [src]="iconoLeyenda(item.icono)" [alt]="item.texto">
+                        <span class="leyenda-texto">{{ item.texto }}</span>
+                    </li>
+                </ul>
+                <hr *ngIf="!ultimo">
+            </ng-container>
         </div>
     </div>
 

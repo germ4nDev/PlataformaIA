@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, from, Observable, shareReplay, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -54,6 +54,40 @@ export class MapaGeneralService {
 
     public visibilidad$ = new BehaviorSubject<{ [key: string]: boolean }>(this.visibilidadState);
     private datosCargados = false;
+
+    // ==========================================================
+    // FILTRO DE PUERTO (agregado 2026-10-18)
+    // Naves, flota, geocercas e incidentes se piden solo para el puerto del filtro del tablero
+    // (?puerto=). Infraestructura y clima siguen siendo nacionales: dan el contexto del país.
+    // ==========================================================
+    private puertoActual: string | null = null;
+
+    public get puertoFiltro(): string | null {
+        return this.puertoActual;
+    }
+
+    /** Devuelve true si el puerto cambió (el mapa debe limpiar y recargar sus capas por puerto). */
+    public establecerPuerto(puerto: string | null | undefined): boolean {
+        const limpio = (puerto || '').toString().trim().toUpperCase();
+        const nuevo = !limpio || limpio === 'ALL' ? null : limpio;
+        if (nuevo === this.puertoActual) return false;
+        this.puertoActual = nuevo;
+        return true;
+    }
+
+    private paramsPuerto(extra: { [k: string]: string } = {}): HttpParams {
+        let params = new HttpParams({ fromObject: extra });
+        if (this.puertoActual) params = params.set('puerto', this.puertoActual);
+        return params;
+    }
+
+    /** Recarga solo las capas que dependen del puerto. */
+    public recargarCapasDelPuerto(): void {
+        if (!this.datosCargados) return; // la carga inicial ya usará el puerto nuevo
+        this.getCapaNaves().subscribe();
+        this.cargarEventosVialesActivos();
+        this.cargarFlotaTerrestreGPS();
+    }
 
     constructor(private http: HttpClient) { }
 
@@ -119,7 +153,7 @@ export class MapaGeneralService {
     }
 
     public getCapaNaves(): Observable<any> {
-        return this.http.get<any>(`${base_url}/mapa-general/naves`).pipe(
+        return this.http.get<any>(`${base_url}/mapa-general/naves`, { params: this.paramsPuerto() }).pipe(
             tap(resp => {
                 if (resp.success && resp.data) {
                     this.navesSubject.next(resp.data);
@@ -175,14 +209,14 @@ export class MapaGeneralService {
     }
 
     public getGeocercasKPIs(): Observable<any> {
-        return this.http.get(`${base_url}/flota-terrestre/geocercas-kpis`);
+        return this.http.get(`${base_url}/flota-terrestre/geocercas-kpis`, { params: this.paramsPuerto() });
     }
 
     // 🟢 ESTE ES EL ENDPOINT MAESTRO DE LA FLOTA GPS QUE USA EL COMPONENTE PARA EL RADAR
     public getFlotaGeoJSON(): Observable<any> {
         // Al agregar ?t= milisegundos, la URL cambia cada 10 segundos y el navegador no puede cachearla
         const timestamp = new Date().getTime();
-        return this.http.get<any>(`${base_url}/flota-terrestre/activa?t=${timestamp}`);
+        return this.http.get<any>(`${base_url}/flota-terrestre/activa`, { params: this.paramsPuerto({ t: String(timestamp) }) });
     }
 
     public obtenerCapaNaves(): Observable<any> {
@@ -197,7 +231,7 @@ export class MapaGeneralService {
 
     public cargarEventosVialesActivos(): void {
         const endpoint = `${base_url}/eventos-viales/eventos`;
-        this.http.get<any>(endpoint).subscribe({
+        this.http.get<any>(endpoint, { params: this.paramsPuerto() }).subscribe({
             next: (geoJsonData) => {
                 this.accidentesSubject.next(geoJsonData);
                 this.actualizarGemelo('CAPA_ACCIDENTES', geoJsonData);

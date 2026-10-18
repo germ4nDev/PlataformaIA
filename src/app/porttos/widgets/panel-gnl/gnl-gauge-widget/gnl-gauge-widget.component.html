@@ -1,66 +1,97 @@
-<app-widget-shell [titulo]="data?.titulo || 'Presión de Descarga'"
-    [subtitulo]="data?.subtitulo || 'Telemetría de Brazo de Carga'" [icono]="'feather icon-compass'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
-    [class.alerta-roja]="alarmaActiva || presionActual >= 100">
+<!-- <app-widget-shell [titulo]="widgetConfig?.titulo || 'Presión de Línea'"
+    [subtitulo]="widgetConfig?.subtitulo || 'TELEMETRÍA SCADA'" [icono]="'feather icon-compass'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
 
-    <!-- PROYECCIÓN AL HEADER: Segmento activo + Estado de Presión -->
-    <div acciones-extra class="d-flex align-items-center gap-2">
-        <span class="tc-badge badge-info text-uppercase" *ngIf="tieneTelemetria">
-            {{ segmentoActivo }}
-        </span>
+    <div class="scada-widget-inner w-100 h-100 d-flex flex-column justify-content-between p-2"
+        [ngClass]="{'modo-enfoque': isEnfoque}">
 
-        <span class="tc-badge text-uppercase" [ngClass]="{
-            'badge-danger blinking': alarmaActiva || presionActual >= 100,
-            'badge-warning': !alarmaActiva && presionActual >= 85 && presionActual < 100,
-            'badge-success': !alarmaActiva && presionActual < 85
-        }">
-            {{ (alarmaActiva || presionActual >= 100)
-            ? (tipoEvento !== 'normal' ? ('ALERTA · ' + tipoEvento) : 'ALTA PRESIÓN')
-            : (presionActual >= 85 ? 'PRECAUCIÓN' : 'ESTABLE') }}
-        </span>
-    </div>
-
-    <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center position-relative pb-2 animate__animated animate__fadeIn"
-        [class.modo-enfoque]="isEnfoque" style="min-height: 200px;">
-
-        <!-- Loader mientras llega el primer pulso SCADA -->
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
-            style="top: 0; left: 0; z-index: 10;">
-            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">Esperando telemetría SCADA...</span>
+        <div class="d-flex align-items-center justify-content-end px-2">
+            <span class="badge bg-dark text-uppercase small">{{ widgetConfig?.brazo || 'TODOS' }}</span>
+            <span class="status-dot ms-2" [ngClass]="{'blinking': presionActual >= 100}"></span>
         </div>
 
-        <div class="gauge-container" [style.opacity]="cargando ? '0.3' : '1'" [ngClass]="{
-            'estado-peligro': alarmaActiva || presionActual >= 100,
-            'estado-advertencia': !alarmaActiva && presionActual >= 85 && presionActual < 100,
-            'estado-estable': !alarmaActiva && presionActual < 85
-        }">
-            <svg viewBox="0 0 100 50" class="gauge-svg">
-                <!-- Riel gris base -->
-                <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8"
-                    stroke-linecap="round" />
+        <div class="gauge-body flex-grow-1 d-flex justify-content-center align-items-center position-relative">
+            <div class="gauge-container" [ngClass]="{
+                'estado-estable': presionActual < 85,
+                'estado-advertencia': presionActual >= 85 && presionActual < 100,
+                'estado-peligro': presionActual >= 100
+            }">
 
-                <!-- Riel de estado final -->
-                <path class="gauge-danger" d="M 78.3 21.7 A 40 40 0 0 1 90 50" fill="none" stroke-width="8"
-                    stroke-linecap="round" />
-            </svg>
+                <svg class="gauge-svg" viewBox="0 0 100 50">
+                    <path d="M 15 45 A 35 35 0 0 1 85 45" fill="none" stroke-width="7" stroke-linecap="round"
+                        stroke="#2b2b40"></path>
 
-            <!-- Aguja dinámica -->
-            <div class="gauge-needle" [style.transform]="'rotate(' + calcularAnguloAguja + 'deg)'"></div>
+                    <path class="gauge-danger" d="M 15 45 A 35 35 0 0 1 85 45" fill="none" stroke-width="7"
+                        stroke-linecap="round" stroke="#00d4ff" [attr.stroke-dasharray]="arcoDashArray"
+                        style="transition: stroke-dasharray 0.4s ease-in-out;">
+                    </path>
+                </svg>
 
-            <!-- Valor numérico en el centro -->
-            <div class="gauge-value">
-                <span class="numero">{{ presionActual | number:'1.1-2' }}</span>
-                <span class="unidad">PSI</span>
+                <div class="gauge-needle" [style.transform]="'rotate(' + anguloAguja + 'deg)'"></div>
+
+                <div class="gauge-value">
+                    <span class="numero">{{ presionActual | number:'1.2-2' }}</span>
+                    <span class="unidad">PSI</span>
+                </div>
             </div>
         </div>
 
-        <!-- Temperatura del Ducto calibrada para escala criogénica y escala positiva de scada_pipeline.csv -->
-        <div class="mt-4 text-center">
-            <span class="text-muted fs-6 me-2">Temp. Ducto:</span>
-            <span class="fw-bold fs-5" [ngClass]="claseTemperatura">
-                {{ temperaturaActual | number:'1.2-2' }} °C
-            </span>
+        <div class="scada-footer text-center py-1">
+            <span class="temp-label text-muted">Temp. Ducto:</span>
+            <span class="temp-value fw-bold text-info">{{ temperaturaActual | number:'1.2-2' }} °C</span>
+        </div>
+
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'Presión de Línea'"
+    [subtitulo]="widgetConfig?.subtitulo || 'TELEMETRÍA SCADA'" [icono]="'feather icon-compass'" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <div class="scada-widget-inner w-100 h-100 d-flex flex-column justify-content-between p-2"
+        [ngClass]="{'modo-enfoque': isEnfoque}">
+
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-end px-2">
+            <span class="badge bg-dark text-uppercase small">{{ ultimoBrazo }}</span>
+            <span class="status-dot ms-2" [style.background-color]="colorEstado"
+                [ngClass]="{'blinking': colorEstado === '#ff4757'}"></span>
+        </div>
+
+        <!-- Cuerpo del Tacómetro -->
+        <div class="gauge-body flex-grow-1 d-flex justify-content-center align-items-center position-relative">
+
+            <!-- 🟢 Inyectamos el colorEstado como variable CSS para la aguja y activamos latido si es rojo -->
+            <div class="gauge-container" [style.--color-estado]="colorEstado"
+                [ngClass]="{'estado-peligro': colorEstado === '#ff4757'}">
+
+                <svg class="gauge-svg" viewBox="0 0 100 50">
+                    <path d="M 15 45 A 35 35 0 0 1 85 45" fill="none" stroke-width="7" stroke-linecap="round"
+                        stroke="#2b2b40"></path>
+
+                    <!-- 🟢 STROKE DINÁMICO: Cambia de color mágicamente según el Get colorEstado() -->
+                    <path class="gauge-danger" d="M 15 45 A 35 35 0 0 1 85 45" fill="none" stroke-width="7"
+                        stroke-linecap="round" [attr.stroke]="colorEstado" [attr.stroke-dasharray]="arcoDashArray"
+                        style="transition: stroke-dasharray 0.4s ease-in-out, stroke 0.4s ease-in-out;">
+                    </path>
+                </svg>
+
+                <div class="gauge-needle" [style.transform]="'rotate(' + anguloAguja + 'deg)'"></div>
+
+                <!-- Caja Numérica Dinámica -->
+                <div class="gauge-value"
+                    [style.borderColor]="colorEstado === '#00d4ff' ? 'rgba(255,255,255,0.08)' : colorEstado"
+                    [style.backgroundColor]="colorEstado === '#00d4ff' ? 'rgba(20, 20, 30, 0.85)' : colorEstado + '1A'">
+                    <span class="numero" [style.color]="colorEstado">{{ presionActual | number:'1.2-2' }}</span>
+                    <span class="unidad" [style.color]="colorEstado === '#00d4ff' ? '#a1a5b7' : colorEstado">PSI</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="scada-footer text-center py-1">
+            <span class="temp-label text-muted">Temp. Ducto:</span>
+            <span class="temp-value fw-bold text-info">{{ temperaturaActual | number:'1.2-2' }} °C</span>
         </div>
 
     </div>

@@ -1,35 +1,4 @@
-<!-- <app-widget-shell [titulo]="data?.titulo || '🔄 DEVOLUCIÓN DE VACÍOS · POR NAVIERA'"
-    [subtitulo]="data?.subtitulo || 'Asignación a terminales vs. patios externos'"
-    [icono]="data?.icono || 'feather icon-box'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
-
-    <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge badge-purple text-uppercase">
-            Stock vs Capacidad
-        </span>
-    </div>
-
-    <div class="chart-wrapper w-100 h-100 position-relative pb-2 animate__animated animate__fadeIn">
-
-        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
-            style="top: 0; left: 0; z-index: 10;">
-            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">Consultando cupos por línea naviera...</span>
-        </div>
-
-        <div *ngIf="!cargando && !tieneDatos"
-            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
-            <i class="feather icon-box fs-2 mb-2 opacity-50"></i>
-            Sin registros de devolución de vacíos para este puerto.
-        </div>
-
-        <canvas *ngIf="!cargando && tieneDatos" baseChart [data]="barChartData" [options]="barChartOptions"
-            [type]="'bar'">
-        </canvas>
-
-    </div>
-
-</app-widget-shell> -->
-<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📊 Balance Operativo de Contenedores'"
+<!-- <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📊 Balance Operativo de Contenedores'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Movimientos de ingreso y salida en patio'"
     [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
@@ -51,6 +20,36 @@
         </div>
 
         <div class="flex-grow-1 position-relative" style="min-height: 0;" [hidden]="cargando || sinDatos">
+            <canvas #barContCanvas></canvas>
+        </div>
+    </div>
+
+</app-widget-shell> -->
+<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📊 Balance Operativo de Contenedores'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Movimientos de ingreso y salida en patio'"
+    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center">
+        <span class="tc-badge badge-info text-uppercase">MOVIMIENTOS</span>
+    </div>
+
+    <div class="w-100 h-100 position-relative d-flex flex-column p-2 animate__animated animate__fadeIn">
+        <!-- Loader -->
+        <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+            style="top: 0; left: 0; z-index: 10;">
+            <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
+            <span class="text-muted small">Consultando flujo de patio...</span>
+        </div>
+
+        <!-- Estado vacío -->
+        <div *ngIf="!cargando && sinDatos"
+            class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
+            <i class="feather icon-bar-chart fs-2 mb-2 opacity-50"></i>
+            Sin movimientos de contenedores registrados para este puerto.
+        </div>
+
+        <!-- Canvas Chart.js unificado -->
+        <div class="flex-grow-1 position-relative" style="min-height: 0;" [ngClass]="{'d-none': cargando || sinDatos}">
             <canvas #barContCanvas></canvas>
         </div>
     </div>

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
-import { SKIP_TOKEN_INTERCEPTOR } from '../../_helpers/http-context-keys';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -17,36 +16,21 @@ export class IngestaService {
         const formData = new FormData();
         formData.append('archivoExcel', archivo);
 
-        const context = new HttpContext().set(SKIP_TOKEN_INTERCEPTOR, true);
-
-        return this.http.post(`${base_url}/tclp-ingesta/rndc`, formData, {
-            context,
-            headers: { 'enctype': 'multipart/form-data' } // Forzamos el tipo
-        });
+        return this.http.post(`${base_url}/tclp-ingesta/rndc`, formData);
     }
 
     subirMatrizOperaciones(archivo: File): Observable<any> {
         const formData = new FormData();
         formData.append('archivoExcel', archivo);
 
-        const context = new HttpContext().set(SKIP_TOKEN_INTERCEPTOR, true);
-
-        return this.http.post(`${base_url}/tclp-ingesta/matriz`, formData, {
-            context,
-            headers: { 'enctype': 'multipart/form-data' } // Forzamos el tipo
-        });
+        return this.http.post(`${base_url}/tclp-ingesta/matriz`, formData);
     }
 
     subirCsvMaritimo(archivo: File): Observable<any> {
         const formData = new FormData();
         formData.append('archivoCsv', archivo);
 
-        const context = new HttpContext().set(SKIP_TOKEN_INTERCEPTOR, true);
-
-        return this.http.post(`${base_url}/tclp-ingesta/maritimo`, formData, {
-            context,
-            headers: { 'enctype': 'multipart/form-data' } // Forzamos el tipo
-        });
+        return this.http.post(`${base_url}/tclp-ingesta/maritimo`, formData);
     }
 
     actualizarHistoricoSuperTrasnporte() {

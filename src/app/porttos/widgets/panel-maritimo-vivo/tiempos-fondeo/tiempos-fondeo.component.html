@@ -1,0 +1,29 @@
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'ESPERA EN FONDEO'"
+    [subtitulo]="'Antes de atracar · últimos ' + dias + ' días · ' + puerto" icono="feather icon-clock"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
+        <span class="tc-badge badge-info" title="Mediana">Mediana {{ duracion(datos.fondeo.resumen.medianaMin) }}</span>
+        <span class="tc-badge badge-warning" title="El 90 % de las naves esperó menos que esto">P90 {{ duracion(datos.fondeo.resumen.p90Min) }}</span>
+    </div>
+
+    <div *ngIf="cargando" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted">
+        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> Calculando tiempos...
+    </div>
+    <div *ngIf="!cargando && error && !datos" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
+        <i class="feather icon-alert-triangle me-2"></i>{{ error }}
+    </div>
+    <div *ngIf="datos && datos.fondeo.porDia.length === 0" class="d-flex flex-column justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
+        <i class="feather icon-bar-chart-2 fs-3 mb-2 opacity-50"></i>
+        Aún no hay atraques registrados. El historial se llena a medida que el motor AIS detecta salidas de fondeo.
+    </div>
+
+    <div class="flex-grow-1 position-relative" style="min-height: 0;" [class.d-none]="!datos || datos.fondeo.porDia.length === 0">
+        <canvas #lienzo></canvas>
+    </div>
+
+    <div *ngIf="datos && datos.fondeo.porDia.length > 0" class="mv-pie pt-1 d-flex justify-content-between flex-wrap gap-2">
+        <span>{{ datos.fondeo.resumen.eventos }} atraques · máx. {{ duracion(datos.fondeo.resumen.maximoMin) }}</span>
+        <span>Estadía en muelle: prom. {{ duracion(datos.estadia.resumen.promedioMin) }} · p90 {{ duracion(datos.estadia.resumen.p90Min) }}</span>
+    </div>
+</app-widget-shell>

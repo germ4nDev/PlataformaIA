@@ -1,0 +1,31 @@
+// Estilos comunes de los widgets marítimos en vivo (usan las variables del tema: claro/oscuro)
+.mv-estado {
+    font-size: 0.8rem;
+}
+.mv-pie {
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+.mv-lista {
+    overflow-y: auto;
+    min-height: 0;
+}
+.mv-fila {
+    border-bottom: 1px solid var(--widget-border, rgba(127, 127, 127, 0.15));
+    padding: 0.4rem 0.25rem;
+    font-size: 0.8rem;
+}
+.mv-barra {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--widget-border, rgba(127, 127, 127, 0.15));
+    overflow: hidden;
+    > span {
+        display: block;
+        height: 100%;
+        border-radius: 2px;
+    }
+    .ok { background: var(--chart-semaforo-ok, #009ef7); }
+    .alerta { background: var(--chart-semaforo-alerta, #f59e0b); }
+    .critico { background: var(--chart-semaforo-critico, #ef4444); }
+}

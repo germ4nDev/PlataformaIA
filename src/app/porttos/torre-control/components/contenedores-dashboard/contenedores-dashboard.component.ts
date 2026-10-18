@@ -65,6 +65,7 @@ export class ContenedoresDashboardComponent implements OnInit, OnChanges {
         if (this.lsWidgets && this.lsWidgets.length > 0) {
             this.inicializarLayoutPorPuerto();
         }
+        this._contenedoresService.obtenerDashboardContenedores(this.puerto, true).subscribe();
     }
 
     ngOnChanges(changes: SimpleChanges): void {

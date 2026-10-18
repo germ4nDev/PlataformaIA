@@ -1,0 +1,40 @@
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'COLA DE FONDEO'"
+    [subtitulo]="'Naves fondeadas esperando muelle · ' + puerto" icono="feather icon-anchor" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
+        <span class="tc-badge badge-info">{{ datos.fondeo.naves }} en fondeo</span>
+        <span *ngIf="enAlerta() > 0" class="tc-badge badge-warning">{{ enAlerta() }} sobre umbral</span>
+    </div>
+
+    <div *ngIf="cargando" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted">
+        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> Leyendo posiciones AIS...
+    </div>
+    <div *ngIf="!cargando && error && !datos" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
+        <i class="feather icon-alert-triangle me-2"></i>{{ error }}
+    </div>
+    <div *ngIf="datos && datos.fondeo.cola.length === 0" class="d-flex flex-column justify-content-center align-items-center h-100 mv-estado text-muted">
+        <i class="feather icon-check-circle fs-3 mb-2 opacity-50"></i>Sin naves en fondeo en este momento.
+    </div>
+
+    <div *ngIf="datos && datos.fondeo.cola.length > 0" class="mv-lista h-100">
+        <div *ngFor="let nave of datos.fondeo.cola; let i = index; trackBy: trackMmsi" class="mv-fila">
+            <div class="d-flex justify-content-between align-items-center gap-2">
+                <div class="text-truncate">
+                    <span class="text-muted me-1">{{ i + 1 }}.</span>
+                    <strong>{{ nave.nombre || 'MMSI ' + nave.mmsi }}</strong>
+                    <small *ngIf="nave.destino" class="text-muted ms-1">→ {{ nave.destino }}</small>
+                </div>
+                <span class="flex-shrink-0" [ngClass]="{ 'text-warning': nivel(nave) === 'alerta', 'text-danger': nivel(nave) === 'critico' }">
+                    {{ duracion(nave.minutos) }}
+                </span>
+            </div>
+            <div class="mv-barra mt-1"><span [ngClass]="nivel(nave)" [style.width.%]="ancho(nave)"></span></div>
+        </div>
+    </div>
+
+    <div *ngIf="datos" class="mv-pie pt-1">
+        Promedio {{ duracion(datos.fondeo.minutosPromedio) }} · actualizado {{ ultimaActualizacion | date: 'HH:mm:ss' }}
+        <span *ngIf="error" class="text-warning"> · ⚠ {{ error }}</span>
+    </div>
+</app-widget-shell>

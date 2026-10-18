@@ -181,18 +181,8 @@ export class WidgetLobbyTclComponent implements OnInit {
             return 'assets/images/widget-default.png';
         }
 
-        const imgDark =
-            widget.imagenWidget_dark ||
-            widget.imagen_dark ||
-            widget.imagenDark ||
-            widget.imagenWidget;
-
-        const imgLight =
-            widget.imagenWidget_light ||
-            widget.imagen_light ||
-            widget.imagenLight ||
-            widget.imagenWidget;
-
+        const imgDark = this._uploadService.getFilePath(this.suscriptor, 'widgets', widget.imagenWidget_dark);
+        const imgLight = this._uploadService.getFilePath(this.suscriptor, 'widgets', widget.imagenWidget_light);
         const rutaSeleccionada = this.isDarkTheme ? (imgDark || imgLight) : (imgLight || imgDark);
 
         return rutaSeleccionada || 'assets/images/widget-default.png';

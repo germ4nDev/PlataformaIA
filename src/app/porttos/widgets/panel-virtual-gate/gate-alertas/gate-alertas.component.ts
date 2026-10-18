@@ -98,7 +98,7 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
         this.cargandoAlertas = true;
 
         this._virtualGateService
-            .obtenerDatosWidgetGate(puerto, codigoWidget)
+            .obtenerDatosWidgetGate(codigoWidget, puerto) // Corregido 2026-10-17: antes (puerto, codigo)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (respuestaSQL: any) => {
@@ -135,13 +135,14 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
 
         if (alertasCrudas.length > 0) {
             this.listaAlertas = alertasCrudas.map((a: any, idx: number) => {
-                const tipo = this.normalizarTipo(a.tipo || a.severidad || a.tipo_color);
+                // Backend: { severidad: 'CRITICA', tipo: 'TIEMPO DE ESPERA EXCEDIDO', mensaje, placa, terminal }
+                const tipo = this.normalizarTipo(a.severidad || a.tipo_color || a.tipo);
                 return {
                     id: a.id ?? idx,
                     tipo,
                     icono: a.icono || this.resolverIcono(tipo),
-                    titulo: a.titulo || 'Incidencia en Gate',
-                    descripcion: a.descripcion || a.detalle || ''
+                    titulo: a.titulo || (a.tipo ? `${a.tipo}${a.terminal ? ' · ' + a.terminal : ''}` : 'Incidencia en Gate'),
+                    descripcion: a.descripcion || a.mensaje || a.detalle || ''
                 };
             });
         } else {

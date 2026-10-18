@@ -463,6 +463,8 @@ export class GnlStateService {
             flujo_m3: flujoNorm,
             flujo: flujoNorm,
             flujo_m3h: flujoNorm,
+            // Corregido 2026-10-17: el KPI de caudal lee caudal_m3h; por brazo no existía y marcaba 0
+            caudal_m3h: flujoNorm,
             temp_ducto: tempNorm,
             temperatura: tempNorm,
             temperatura_c: tempNorm,

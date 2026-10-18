@@ -1,0 +1,34 @@
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'OPERACIÓN MARÍTIMA EN VIVO'"
+    [subtitulo]="'AIS + DIMAR · ' + puerto" icono="feather icon-activity" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center gap-2">
+        <span *ngIf="(datos?.resumen?.criticas ?? 0) > 0" class="tc-badge badge-danger text-uppercase">
+            {{ datos?.resumen?.criticas }} crítica(s)
+        </span>
+        <span *ngIf="ultimaActualizacion" class="mv-pie">{{ ultimaActualizacion | date: 'HH:mm:ss' }}</span>
+    </div>
+
+    <div *ngIf="cargando" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted">
+        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> Calculando indicadores...
+    </div>
+
+    <div *ngIf="!cargando && error && !datos" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
+        <i class="feather icon-alert-triangle me-2"></i>{{ error }}
+    </div>
+
+    <div *ngIf="datos" class="mv-kpis h-100">
+        <div *ngFor="let t of tarjetas" class="mv-kpi">
+            <div class="d-flex align-items-center gap-2 mv-kpi-titulo text-muted text-uppercase">
+                <i [class]="t.icono"></i><span class="text-truncate">{{ t.titulo }}</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="mv-kpi-valor">{{ t.valor }}</span>
+                <span class="tc-badge mv-kpi-punto" [ngClass]="t.clase">&nbsp;</span>
+            </div>
+            <div class="mv-kpi-detalle text-muted text-truncate" [title]="t.detalle">{{ t.detalle }}</div>
+        </div>
+    </div>
+
+    <div *ngIf="datos && error" class="mv-pie text-warning px-1">⚠ {{ error }} (mostrando el último dato)</div>
+</app-widget-shell>

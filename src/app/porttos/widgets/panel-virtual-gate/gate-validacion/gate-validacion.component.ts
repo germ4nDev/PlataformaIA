@@ -97,7 +97,7 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
         this.cargandoValidacion = true;
 
         this._virtualGateService
-            .obtenerDatosWidgetGate(puerto, codigoWidget)
+            .obtenerDatosWidgetGate(codigoWidget, puerto) // Corregido 2026-10-17: antes (puerto, codigo)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (respuestaSQL: any) => {
@@ -130,9 +130,14 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
         const fuenteResumen = raw.resumen || raw;
         const citas: any[] = Array.isArray(raw) ? raw : raw.citas || raw.rows || [];
 
-        let validados = Number(fuenteResumen.validados ?? fuenteResumen.citasOk ?? NaN);
-        let enCola = Number(fuenteResumen.enCola ?? fuenteResumen.colaVirtual ?? NaN);
-        let retenidos = Number(fuenteResumen.retenidos ?? fuenteResumen.sinCita ?? NaN);
+        // Backend (virtual-gate.service.js): { totalEvaluados, listosIngreso, observados }
+        const evaluados = Number(fuenteResumen.totalEvaluados ?? NaN);
+        const listos = Number(fuenteResumen.listosIngreso ?? NaN);
+        const observados = Number(fuenteResumen.observados ?? NaN);
+        let validados = Number(fuenteResumen.validados ?? fuenteResumen.citasOk ?? listos);
+        let retenidos = Number(fuenteResumen.retenidos ?? fuenteResumen.sinCita ?? observados);
+        let enCola = Number(fuenteResumen.enCola ?? fuenteResumen.colaVirtual
+            ?? (isNaN(evaluados) ? NaN : Math.max(0, evaluados - (listos || 0) - (observados || 0))));
 
         // Si alguno no viene pre-calculado, lo calculamos desde las filas de TCL_CitasGate / TCL_RegistroCamiones
         if (isNaN(validados) || isNaN(enCola) || isNaN(retenidos)) {
@@ -150,6 +155,7 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
         const totalFlujo = Number(
             fuenteResumen.totalPregate ??
             fuenteResumen.totalFlujo ??
+            fuenteResumen.totalEvaluados ??
             (validados + enCola + retenidos)
         );
 

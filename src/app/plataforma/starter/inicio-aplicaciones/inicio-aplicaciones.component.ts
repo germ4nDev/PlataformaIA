@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router'
 import { Router, ActivatedRoute } from '@angular/router'
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap'
 import { ColorPickerModule } from 'ngx-color-picker';
-import { PtlAplicacionesService, PTLRolesAPService, PtlusuariosRolesApService, PtlusuariosScService, UploadFilesService } from 'src/app/theme/shared/service';
+import { AuthenticationService, PtlAplicacionesService, PTLRolesAPService, PtlusuariosRolesApService, PtlusuariosScService, UploadFilesService } from 'src/app/theme/shared/service';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
@@ -54,6 +54,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        private _authenticationService: AuthenticationService,
         private _aplicacionesService: PtlAplicacionesService,
         private _modulosService: PtlmodulosApService,
         private _rolesService: PTLRolesAPService,
@@ -198,5 +199,12 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
                 console.error('❌ Error inicializando permisos', err);
             }
         });
+    }
+
+    regresar() {
+        this._localStorageService.removeObject('suscriptor')
+        this._localStorageService.removeObject('aplicaciones')
+        this._authenticationService.logout();
+        this.router.navigate(['autenticacion/login']);
     }
 }

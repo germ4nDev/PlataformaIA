@@ -1,0 +1,18 @@
+.mv-tabla {
+    font-size: 0.78rem;
+    color: inherit;
+    --bs-table-bg: transparent;
+    --bs-table-color: inherit;
+    th {
+        font-size: 0.65rem;
+        letter-spacing: 0.4px;
+        font-weight: 500;
+        position: sticky;
+        top: 0;
+        background: var(--widget-background, transparent);
+    }
+    td {
+        vertical-align: middle;
+        border-color: var(--widget-border, rgba(127, 127, 127, 0.15));
+    }
+}

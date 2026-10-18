@@ -163,10 +163,11 @@ export class BodegasSaturacionComponent implements OnInit, OnChanges, OnDestroy 
                 capacidad_maxima_ton: capacidad,
                 inventario_actual_ton: inventario,
                 ocupacion_pct: ocupacion,
-                temperatura_c: b.temperatura_c !== undefined ? Number(b.temperatura_c) : null,
-                humedad_relativa_pct:
-                    b.humedad_relativa_pct !== undefined ? Number(b.humedad_relativa_pct) : null,
-                estado_operativo: semaforo.etiqueta,
+                // Corregido 2026-10-17: null (sin sensor) se mostraba como 0.0 °C / 0 % HR
+                temperatura_c: b.temperatura_c != null ? Number(b.temperatura_c) : null,
+                humedad_relativa_pct: b.humedad_relativa_pct != null ? Number(b.humedad_relativa_pct) : null,
+                // MANTENIMIENTO es un estado real de la bodega: no se reemplaza por el semáforo de ocupación
+                estado_operativo: String(b.estado_operativo || '').toUpperCase() === 'MANTENIMIENTO' ? 'MANTENIMIENTO' : semaforo.etiqueta,
                 colorBarra: semaforo.colorHex,
                 claseBadge: semaforo.claseBadge
             };

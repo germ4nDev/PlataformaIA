@@ -97,10 +97,11 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
         this.cargandoEstado = true;
 
         this._virtualGateService
-            .obtenerDatosWidgetGate(puerto, codigoWidget)
+            .obtenerDatosWidgetGate(codigoWidget, puerto) // Corregido 2026-10-17: antes (puerto, codigo)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (respuestaSQL: any) => {
+                    console.log('[SmartWidget GateEstadoCitas] Consultando estado de citas:', respuestaSQL);
                     this.procesarPayloadEstado(respuestaSQL);
                 },
                 error: (err) => {
@@ -139,24 +140,29 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
         } else if (Array.isArray(raw.citas) && raw.citas[0]?.label && raw.citas[0]?.percent !== undefined) {
             this.listaBarras = raw.citas;
         } else {
+            // Backend: { totalCitas, atendidas, enCola, retrasadas }; respaldo front: { enVentana, enCola, vencidas, retenidos }
             const confirmadas =
                 raw.confirmadas ??
                 raw.activas ??
-                citas.filter((c) => /cita ok|en turno|confirmad|autorizad/i.test(c.estado || '')).length;
+                raw.atendidas ??
+                raw.enVentana ??
+                citas.filter((c) => /cita ok|en turno|confirmad|autorizad|validad|finaliz|atendid/i.test(c.estado || '')).length;
 
             const enEspera =
                 raw.enEspera ??
                 raw.enCola ??
-                citas.filter((c) => /cola|espera|pre-?gate|tr[aá]nsito/i.test(c.estado || '')).length;
+                citas.filter((c) => /cola|espera|pre[-_ ]?gate|tr[aá]nsito|enturnad/i.test(c.estado || '')).length;
 
             const reagendadas =
                 raw.reagendadas ??
                 raw.vencidas ??
-                citas.filter((c) => /vencid|reagend|demor/i.test(c.estado || '')).length;
+                raw.retrasadas ??
+                citas.filter((c) => /vencid|reagend|demor|retrasad/i.test(c.estado || '')).length;
 
             const canceladas =
                 raw.canceladas ??
                 raw.sinCita ??
+                raw.retenidos ??
                 citas.filter((c) => /sin cita|cancel|retenid|rechaz/i.test(c.estado || '')).length;
 
             const total = Math.max(confirmadas + enEspera + reagendadas + canceladas, 1);
@@ -190,7 +196,8 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // B. Cálculo del Tiempo Medio de Espera por Terminal (desde tiempo_espera_minutos de TCL_CitasGate)
-        const calcularPromedioTerminal = (patron: RegExp, fallback: number): number => {
+        // Corregido 2026-10-17: sin citas de la terminal se mostraban tiempos fijos (12/28/9 min); ahora '—'
+        const calcularPromedioTerminal = (patron: RegExp, fallback: number | null): number | null => {
             if (Array.isArray(raw.tiemposTerminal)) {
                 const encontrado = raw.tiemposTerminal.find((t: any) => patron.test(t.terminal || ''));
                 if (encontrado && encontrado.minutos !== undefined) return Number(encontrado.minutos);
@@ -205,11 +212,11 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
         const resumenNormalizado = {
             ...resumenBase,
             tiempoMedioSPRBUN:
-                resumenBase.tiempoMedioSPRBUN ?? calcularPromedioTerminal(/sprbun/i, 12),
+                resumenBase.tiempoMedioSPRBUN ?? calcularPromedioTerminal(/sprbun/i, null),
             tiempoMedioTCBUEN:
-                resumenBase.tiempoMedioTCBUEN ?? calcularPromedioTerminal(/tcbuen/i, 28),
+                resumenBase.tiempoMedioTCBUEN ?? calcularPromedioTerminal(/tcbuen/i, null),
             tiempoMedioAGUADULCE:
-                resumenBase.tiempoMedioAGUADULCE ?? calcularPromedioTerminal(/aguadulce|spia/i, 9)
+                resumenBase.tiempoMedioAGUADULCE ?? calcularPromedioTerminal(/aguadulce|spia/i, null)
         };
 
         this.datosAutonomosSQL = {

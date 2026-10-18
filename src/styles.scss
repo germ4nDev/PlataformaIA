@@ -244,16 +244,16 @@ body.dark-theme {
     --widget-border-hover: rgba(255, 255, 255, 0.2);
 
     --gauge-track-color: #2b2b40;
-    --gauge-value-bg: rgba(30, 30, 45, 0.8);
+    --gauge-value-bg: #222222;
     --gauge-value-text: #ffffff;
     --gauge-pivot-bg: #1e1e2d;
     --gauge-pivot-border: #a1a5b7;
     --gauge-needle-color: #00e5ff;
 
     /* ... tus variables actuales ... */
-    --gauge-track-color: #d6d6d6;
-    --gauge-value-bg: rgba(255, 255, 255, 0.9);
-    --gauge-value-text: #3f4254;
+    --gauge-track-color: #555555;
+    --gauge-value-bg: #222222;
+    --gauge-value-text: #dddddd;
     --gauge-pivot-bg: #ffffff;
     --gauge-pivot-border: #b5b5c3;
     --gauge-needle-color: #009ef7;
@@ -705,6 +705,45 @@ html {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
+
+.tc-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+
+    &:hover {
+        background-color: var(--app-navbar-color);
+        color: var(--app-iconos-color);
+    }
+
+    i {
+        font-size: 1.3rem;
+    }
+}
+
+.tc-toolbar-nav {
+    display: flex;
+    flex-direction: row !important;
+    /* Fuerza a que sea horizontal */
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    /* Espacio entre los 3 elementos */
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    /* Aniquila los puntos del <li> */
+}
+
 
 /* ==========================================================================
    06. FORMULARIOS, RADIOS Y CHECKBOXES

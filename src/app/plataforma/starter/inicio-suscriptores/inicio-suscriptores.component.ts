@@ -15,7 +15,8 @@ import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fulls
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import {
     UploadFilesService,
-    LocalStorageService
+    LocalStorageService,
+    AuthenticationService
 } from 'src/app/theme/shared/service';
 import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUser.model';
 
@@ -40,6 +41,7 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
     usuarioEmpresaSC: PTLUsuaioEmpresasSCModel = {} as PTLUsuaioEmpresasSCModel;
 
     constructor(
+        private _authenticationService: AuthenticationService,
         private _uploadService: UploadFilesService,
         private _localStorageService: LocalStorageService,
         private router: Router
@@ -72,5 +74,12 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
         const current = this._localStorageService.getCurrentUserLocalStorage();
         this._localStorageService.setObject('suscriptor', susc)
         this.router.navigate(['/starter/inicio-aplicaciones']);
+    }
+
+    regresar() {
+        this._localStorageService.removeObject('suscriptor')
+        this._localStorageService.removeObject('aplicaciones')
+        this._authenticationService.logout();
+        this.router.navigate(['autenticacion/login']);
     }
 }

@@ -515,25 +515,8 @@
 //         this.map = new maplibregl.Map(mapOptions);
 
 //         this.map.on('style.load', () => {
-//             const iconosLogistica = [
-//                 { id: 'icono-barco', url: '/assets/icons/barco.png' },
-//                 { id: 'icono-camion', url: '/assets/icons/camion.png' },
-//                 { id: 'icono-camion-frente', url: '/assets/icons/camion-frente.png' },
-//                 { id: 'icono-accidente', url: '/assets/icons/accidente.png' },
-//                 { id: 'accidente-cluster', url: '/assets/icons/accidente-cluster.png' },
-//                 { id: 'icono-congestion', url: '/assets/icons/congestion.png' },
-//                 { id: 'icono-obra', url: '/assets/icons/congestion.png' },
-//                 { id: 'congestion-cluster', url: '/assets/icons/congestion-cluster.png' },
-//                 { id: 'marcador-puerto', url: '/assets/icons/puerto.png' },
-//                 { id: 'icono-peaje', url: '/assets/icons/peaje.png' },
-//                 { id: 'peaje-cluster', url: '/assets/icons/peaje-cluster.png' },
-//                 { id: 'icono-faro', url: '/assets/icons/faro.png' },
-//                 { id: 'clima-lluvia', url: '/assets/icons/clima-lluvia.png' },
-//                 { id: 'clima-tormenta', url: '/assets/icons/clima-tormenta.png' },
-//                 { id: 'clima-viento', url: '/assets/icons/clima-viento.png' },
-//                 { id: 'clima-incendio', url: '/assets/icons/clima-incendio.png' },
-//                 { id: 'clima-defecto', url: '/assets/icons/clima.png' }
-//             ];
+//             // Íconos vectoriales del mapa (mapa-iconos.ts). Reemplazan los PNG anteriores, que no se distinguían bien.
+        const iconosLogistica: { id: string; url: string }[] = [];
 
 //             this.cargarIconosMasivamente(iconosLogistica).then(() => {
 //                 this.inicializarCapas();
@@ -1283,6 +1266,7 @@ import maplibregl, { GeoJSONSource } from 'maplibre-gl';
 import { ToastrService } from 'ngx-toastr';
 import { parse } from 'wellknown';
 import * as turf from '@turf/turf';
+import { COLORES_MAPA, LEYENDA_MAPA, iconoDataUrl, registrarIconosMapa, tipoInfraestructura } from './mapa-iconos';
 
 const INFRA_THEME = {
     puerto: { fill: '#cbd5e1', line: '#475569', circle: '#cbd5e1' },
@@ -1377,6 +1361,10 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
     public mostrarCapas: boolean = false;
     public mostrarLeyenda: boolean = false;
     public entidades = NOMENCLATURA_ENTIDADES;
+    /** Leyenda con los mismos íconos del mapa */
+    public leyendaMapa = LEYENDA_MAPA;
+    public iconoLeyenda = iconoDataUrl;
+    private ultimosMarcadoresInfra: any = null;
     public estados = ESTADOS_OPERATIVOS;
 
     public menuCapas = [
@@ -1398,7 +1386,8 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
             abierto: true,
             capas: [
                 { id: 'terrestre', nombre: 'Flota en ruta (GPS)', activa: true },
-                { id: 'vias', nombre: 'Red Vial Nacional', activa: true },
+                // Apagada por defecto (igual que MapaGeneralService.visibilidadState): la red vial solo se descarga al activarla
+                { id: 'vias', nombre: 'Red Vial Nacional', activa: false },
                 { id: 'peajes', nombre: 'Peajes y Geocercas', activa: true }
             ]
         },
@@ -1408,7 +1397,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
             abierto: true,
             capas: [
                 { id: 'accidentes', nombre: 'Incidentes Viales', activa: true },
-                { id: 'clima', nombre: 'Alertas IDEAM', activa: true }
+                { id: 'clima', nombre: 'Clima actual por puerto', activa: true }
             ]
         }
     ];
@@ -1435,6 +1424,8 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
     }
 
     ngOnInit(): void {
+        // El puerto del widget se fija antes de la carga inicial: naves, flota, geocercas e incidentes ya salen filtrados
+        this._mapaService.establecerPuerto(this.widgetConfig?.puerto);
         if (this.widgetConfig?.titulo || this.widgetConfig?.tituloWidget) {
             this.title = this.widgetConfig.titulo || this.widgetConfig.tituloWidget;
         }
@@ -1457,7 +1448,12 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 else if (ciudadEmitida?.id) idEsperado = ciudadEmitida.id;
                 else if (ciudadEmitida?.target?.value) idEsperado = ciudadEmitida.target.value;
 
-                if (idEsperado) this.verificarCambioDeSession(idEsperado, 0);
+                if (idEsperado) {
+                    this.cambiarPuertoMapa(idEsperado);
+                    this.verificarCambioDeSession(idEsperado, 0);
+                    // El radar AIS sigue al puerto del filtro: el backend solo rastrea los puertos que alguien mira
+                    this._socketService.unirseSalaPuerto('maritimo', idEsperado);
+                }
             })
         );
 
@@ -1485,7 +1481,9 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         if (changes['widgetConfig'] && !changes['widgetConfig'].isFirstChange()) {
             const nuevoPuerto = this.widgetConfig?.puerto;
             if (nuevoPuerto) {
+                this.cambiarPuertoMapa(nuevoPuerto);
                 this.verificarCambioDeSession(nuevoPuerto, 0);
+                this._socketService.unirseSalaPuerto('maritimo', nuevoPuerto);
             }
         }
 
@@ -1505,6 +1503,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         if (this.maritimoSub) this.maritimoSub.unsubscribe();
 
         this._mapaSocketService.desconectarSalaMaritima();
+        this._socketService.salirSalaPuerto('maritimo');
         if (this.map) this.map.remove();
     }
 
@@ -1517,6 +1516,8 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         if (data.CAPA_INFRAESTRUCTURA) {
             this.ultimaInfraGeoJson = this.procesarInfraestructuraWkt(data.CAPA_INFRAESTRUCTURA);
             this.actualizarFuente('infra-source', this.ultimaInfraGeoJson);
+            this.ultimosMarcadoresInfra = this.marcadoresDeInfraestructura(this.ultimaInfraGeoJson);
+            this.actualizarFuente('infra-marcadores-source', this.ultimosMarcadoresInfra);
         }
         if (data.CAPA_TERRESTRE) {
             this.ultimaFlotaGeoJson = data.CAPA_TERRESTRE;
@@ -1564,21 +1565,68 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         }
 
         this.maritimoSub = this._socketService.listen('radar-actualizado').subscribe((featureSocket: any) => {
-            if (featureSocket && featureSocket.geometry) {
+            // Corregido 2026-10-18: un error aquí (geocerca con huecos o multipolígono, coordenadas nulas)
+            // cortaba la actualización del radar. Ahora se valida la nave y cada geocerca por separado.
+            try {
+                this.procesarNaveRadar(featureSocket);
+            } catch (error) {
+                console.warn('⚠️ [Mapa] Pulso AIS descartado:', error);
+            }
+        });
+    }
+
+    /**
+     * Agregado 2026-10-18: al cambiar de puerto se limpian las naves del puerto anterior (antes quedaban en el mapa)
+     * y se vuelven a pedir las capas filtradas por el puerto nuevo.
+     */
+    private cambiarPuertoMapa(puerto: string): void {
+        if (!this._mapaService.establecerPuerto(puerto)) return;
+        this.navesActuales.clear();
+        this.renderizarNavesFusionadas();
+        this._mapaService.recargarCapasDelPuerto();
+        if (this.geocercasSubscription) this.consultarGeocercas();
+    }
+
+    /** Geocercas de faros con geometría válida para turf (se calcula una vez al cargar los faros). */
+    private geocercasFarosValidas: Array<{ faro: any; poligono: any }> = [];
+
+    private static esPosicion(c: any): boolean {
+        return Array.isArray(c) && c.length >= 2 && Number.isFinite(c[0]) && Number.isFinite(c[1]);
+    }
+
+    private static esPoligonoValido(g: any): boolean {
+        if (!g || !Array.isArray(g.coordinates)) return false;
+        const anilloOk = (r: any) => Array.isArray(r) && r.length >= 4 && r.every(MapaLogisticoComponent.esPosicion);
+        if (g.type === 'Polygon') return g.coordinates.length > 0 && g.coordinates.every(anilloOk);
+        if (g.type === 'MultiPolygon') return g.coordinates.length > 0 && g.coordinates.every((p: any) => Array.isArray(p) && p.every(anilloOk));
+        return false;
+    }
+
+    private indexarGeocercasFaros(): void {
+        this.geocercasFarosValidas = (this.farosActivos || []).flatMap((faro: any) => {
+            const feature = faro?.geocerca_geo?.features?.[0];
+            return feature && MapaLogisticoComponent.esPoligonoValido(feature.geometry) ? [{ faro, poligono: feature }] : [];
+        });
+    }
+
+    private procesarNaveRadar(featureSocket: any): void {
+            if (featureSocket && featureSocket.properties && MapaLogisticoComponent.esPosicion(featureSocket.geometry?.coordinates)) {
                 const idUnico = featureSocket.properties.mmsi || featureSocket.properties.nombre_motonave;
+                if (!idUnico) return;
                 const nombreNave = featureSocket.properties.nombre_motonave || 'Desconocida';
                 const naveExistente = this.navesActuales.get(idUnico);
 
                 const puntoNave = turf.point(featureSocket.geometry.coordinates);
-                let faroDetectado = null;
+                let faroDetectado: any = null;
 
-                for (const faro of this.farosActivos) {
-                    if (faro.geocerca_geo && faro.geocerca_geo.features.length > 0) {
-                        const poligonoFaro = faro.geocerca_geo.features[0];
-                        if (turf.booleanPointInPolygon(puntoNave, poligonoFaro)) {
+                for (const { faro, poligono } of this.geocercasFarosValidas) {
+                    try {
+                        if (turf.booleanPointInPolygon(puntoNave, poligono)) {
                             faroDetectado = faro;
                             break;
                         }
+                    } catch {
+                        // geocerca que turf no puede evaluar: se ignora
                     }
                 }
 
@@ -1604,7 +1652,6 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 this.navesActuales.set(idUnico, featureSocket);
                 this.renderizarNavesFusionadas();
             }
-        });
     }
 
     public cambiarEstiloBase(nuevoEstilo: TipoMapaBase): void {
@@ -1689,7 +1736,8 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         this.subs.add(
             this._farosService.getAllFaros().subscribe({
                 next: (faros: FaroModel[]) => {
-                    this.farosActivos = faros;
+                    this.farosActivos = faros || [];
+                    this.indexarGeocercasFaros();
                     this.renderizarFarosMapa();
                 },
                 error: (error) => {
@@ -1875,6 +1923,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         // Único listener 'style.load': carga íconos, reconstruye capas y re-hidrata fuentes
         this.map.on('style.load', async () => {
             await this.cargarIconosMasivamente(iconosLogistica);
+            await registrarIconosMapa(this.map);
             this.inicializarCapas();
             this.rehidratarFuentesEnMapa();
 
@@ -1914,6 +1963,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
      */
     private rehidratarFuentesEnMapa(): void {
         if (this.ultimaInfraGeoJson) this.actualizarFuente('infra-source', this.ultimaInfraGeoJson);
+        if (this.ultimosMarcadoresInfra) this.actualizarFuente('infra-marcadores-source', this.ultimosMarcadoresInfra);
         if (this.ultimaFlotaGeoJson) this.actualizarFuente('terrestre-source', this.ultimaFlotaGeoJson);
         if (this.ultimoClimaGeoJson) this.actualizarFuente('clima-source', this.ultimoClimaGeoJson);
         if (this.ultimaViasGeoJson) this.actualizarFuente('vias-source', this.ultimaViasGeoJson);
@@ -1939,11 +1989,22 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
     private consultarGeocercas(): void {
         this._mapaService.getGeocercasKPIs().subscribe({
             next: (res: any) => {
-                if (!res?.data) return;
+                if (!Array.isArray(res?.data)) return;
 
-                const features = res.data.map((item: any) => ({
+                // Corregido 2026-10-18: una geocerca sin geometría (wkt nulo o inválido) tumbaba toda la capa en
+                // cada ciclo de 30 s; ahora se omite esa geocerca.
+                const features = res.data.map((item: any) => {
+                    let geometry: any = null;
+                    try {
+                        geometry = item.wkt ? this.convertirWKT_ACirculo(item.wkt, item.radio_metros) : null;
+                    } catch {
+                        geometry = null;
+                    }
+                    return { item, geometry };
+                }).filter((x: any) => x.geometry && x.geometry.type && x.geometry.coordinates)
+                  .map(({ item, geometry }: any) => ({
                     type: 'Feature',
-                    geometry: this.convertirWKT_ACirculo(item.wkt, item.radio_metros),
+                    geometry,
                     properties: {
                         nombre_faro: item.nombre_faro,
                         tipo_faro: item.tipo_faro,
@@ -1953,9 +2014,10 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                         camiones_ruta: item.camiones_ruta,
                         camiones_detenidos: item.camiones_detenidos,
                         total_naves: item.total_naves,
-                        naves_fondeadas: item.naves_fondeadas,
-                        naves_avisadas: item.naves_avisadas,
-                        naves_arribadas: item.naves_arribadas
+                        // El backend envía fondeadas/avisadas/arribadas (antes se leía naves_* → NaN en el popup)
+                        naves_fondeadas: Number(item.naves_fondeadas ?? item.fondeadas ?? 0),
+                        naves_avisadas: Number(item.naves_avisadas ?? item.avisadas ?? 0),
+                        naves_arribadas: Number(item.naves_arribadas ?? item.arribadas ?? 0)
                     }
                 }));
 
@@ -2067,6 +2129,32 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                         });
                     }
 
+                    // Agregado 2026-10-18: bodegas, silos, patios y tanques de la terminal (antes se ignoraban)
+                    if (Array.isArray(terminal.infraestructuras)) {
+                        terminal.infraestructuras.forEach((infra: any) => {
+                            const wktInfra = infra.infra_geocerca_wkt || infra.infra_ubicacion_wkt;
+                            if (!wktInfra) return;
+                            try {
+                                const geo = parse(wktInfra);
+                                if (!geo) return;
+                                features.push({
+                                    type: 'Feature',
+                                    geometry: geo as any,
+                                    properties: {
+                                        id: infra.id_infraestructura,
+                                        nombre: infra.nombre_infra,
+                                        tipo: tipoInfraestructura(infra.tipo_infra || infra.nombre_infra),
+                                        tipo_original: infra.tipo_infra,
+                                        terminal: terminal.nombre_terminal,
+                                        color_ui: infra.color_ui
+                                    }
+                                });
+                            } catch {
+                                // WKT inválido: se omite esa infraestructura
+                            }
+                        });
+                    }
+
                     const wktTerminal = terminal.terminal_wkt || terminal.terminal_geocerca_wkt;
                     let terminalGeo = null;
 
@@ -2103,7 +2191,46 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         return { type: 'FeatureCollection', features };
     }
 
+    /** Un punto por elemento de infraestructura (centro de su polígono) para pintar su ícono. */
+    private marcadoresDeInfraestructura(infra: any): any {
+        const features: any[] = [];
+        (infra?.features || []).forEach((f: any) => {
+            try {
+                const punto = f.geometry?.type === 'Point' ? f : turf.pointOnFeature(f);
+                const c = punto?.geometry?.coordinates;
+                if (!Array.isArray(c) || !Number.isFinite(c[0]) || !Number.isFinite(c[1])) return;
+                features.push({ type: 'Feature', geometry: { type: 'Point', coordinates: c }, properties: { ...f.properties } });
+            } catch {
+                // geometría que turf no puede procesar: sin ícono
+            }
+        });
+        return { type: 'FeatureCollection', features };
+    }
+
     private configurarEventosClicks(): void {
+        // Clic en un grupo: acercar hasta separarlo (antes no hacía nada o abría un popup genérico)
+        const capasGrupo: Array<[string, string]> = [
+            ['naves-cluster-symbol', 'naves-source'],
+            ['terrestre-cluster-content', 'terrestre-source'],
+            ['peajes-cluster-content', 'peajes-source'],
+            ['viales-cluster-content', 'alertas-viales-source'],
+            ['clima-cluster-symbol', 'clima-source']
+        ];
+        capasGrupo.forEach(([capa, fuente]) => {
+            this.map.on('click', capa, async (e: any) => {
+                const f = e.features?.[0];
+                const idGrupo = f?.properties?.cluster_id;
+                const src = this.map.getSource(fuente) as any;
+                if (idGrupo === undefined || !src?.getClusterExpansionZoom) return;
+                try {
+                    const zoom = await src.getClusterExpansionZoom(idGrupo);
+                    this.map.easeTo({ center: f.geometry.coordinates, zoom: Math.min(zoom + 0.3, 17), duration: 600 });
+                } catch { /* grupo ya no existe */ }
+            });
+            this.map.on('mouseenter', capa, () => (this.map.getCanvas().style.cursor = 'zoom-in'));
+            this.map.on('mouseleave', capa, () => (this.map.getCanvas().style.cursor = ''));
+        });
+
         const capasClickeables = [
             'capa-infra-fill',
             'capa-infra-point',
@@ -2112,7 +2239,9 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
             'viales-individual',
             'clima-individual',
             'peajes-individual',
-            'peajes-cluster-content',
+            'infra-marcadores-puerto',
+            'infra-marcadores-terminal',
+            'infra-marcadores-detalle',
             'geocerca-fill-layer'
         ];
 
@@ -2156,6 +2285,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
 
         [
             'infra-source',
+            'infra-marcadores-source',
             'naves-source',
             'clima-source',
             'alertas-viales-source',
@@ -2185,11 +2315,11 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
             this.map.addSource('source-faros', { type: 'geojson', data: emptyData });
         }
 
+        // Corregido 2026-10-18: antes se descargaba la red vial completa (245 MB) en cada carga y en cada cambio
+        // de estilo, aunque la capa estuviera apagada. Ahora la fuente nace vacía y se llena al activar la capa.
         if (!this.map.getSource('vias-source')) {
-            this.map.addSource('vias-source', {
-                type: 'geojson',
-                data: this.ultimaViasGeoJson || '/assets/data/Red_Vial_20260626.geojson'
-            });
+            this.map.addSource('vias-source', { type: 'geojson', data: this.ultimaViasGeoJson || emptyData });
+            this.viasDescargadas = !!this.ultimaViasGeoJson;
         }
 
         const layers = [
@@ -2198,9 +2328,13 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 type: 'fill',
                 source: 'infra-source',
                 filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'tipo', 'puerto']],
+                // Rediseño 2026-10-18: cada tipo con el color de su ícono; relleno suave para no tapar el mapa base
                 paint: {
-                    'fill-color': ['coalesce', ['get', 'color_ui'], '#94a3b8'],
-                    'fill-opacity': 0.7
+                    'fill-color': ['coalesce', ['get', 'color_ui'], ['match', ['get', 'tipo'],
+                        'terminal', COLORES_MAPA.terminal, 'muelle', COLORES_MAPA.muelle, 'bodega', COLORES_MAPA.bodega,
+                        'silo', COLORES_MAPA.silo, 'patio', COLORES_MAPA.patio, 'tanque', COLORES_MAPA.tanque,
+                        COLORES_MAPA.infraestructura]],
+                    'fill-opacity': ['match', ['get', 'tipo'], 'terminal', 0.18, 0.4]
                 }
             },
             {
@@ -2209,8 +2343,11 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'infra-source',
                 filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'tipo', 'puerto']],
                 paint: {
-                    'line-color': ['coalesce', ['get', 'color_ui'], '#475569'],
-                    'line-width': 1.5
+                    'line-color': ['coalesce', ['get', 'color_ui'], ['match', ['get', 'tipo'],
+                        'terminal', COLORES_MAPA.terminal, 'muelle', COLORES_MAPA.muelle, 'bodega', COLORES_MAPA.bodega,
+                        'silo', COLORES_MAPA.silo, 'patio', COLORES_MAPA.patio, 'tanque', COLORES_MAPA.tanque,
+                        COLORES_MAPA.infraestructura]],
+                    'line-width': ['match', ['get', 'tipo'], 'terminal', 2, 1.5]
                 }
             },
             {
@@ -2219,7 +2356,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'infra-source',
                 filter: ['all', ['==', '$type', 'Polygon'], ['==', 'tipo', 'puerto']],
                 paint: {
-                    'fill-color': ['coalesce', ['get', 'color_ui'], !this.isDark ? '#60a5fa' : '#3b82f6'],
+                    'fill-color': ['coalesce', ['get', 'color_ui'], COLORES_MAPA.puerto],
                     'fill-opacity': 0.15
                 }
             },
@@ -2229,7 +2366,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'infra-source',
                 filter: ['all', ['==', '$type', 'Polygon'], ['==', 'tipo', 'puerto']],
                 paint: {
-                    'line-color': ['coalesce', ['get', 'color_ui'], !this.isDark ? '#699dd8' : '#567cf7'],
+                    'line-color': ['coalesce', ['get', 'color_ui'], COLORES_MAPA.puerto],
                     'line-width': 2.5,
                     'line-dasharray': [4, 2]
                 }
@@ -2340,17 +2477,74 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                     ]
                 }
             },
+            // =====================================================================================
+            // ÍCONOS Y GRUPOS (rediseño 2026-10-18 · ver mapa-iconos.ts)
+            // Infraestructura: cuadros redondeados por tipo, que aparecen según el zoom para no saturar.
+            // Activos: círculos por color de entidad. Grupos: círculo con halo + glifo + cantidad (clic = acercar).
+            // =====================================================================================
             {
-                id: 'terrestre-cluster-circle',
-                type: 'circle',
-                source: 'terrestre-source',
-                filter: ['has', 'point_count'],
-                paint: {
-                    'circle-color': ['step', ['get', 'point_count'], '#2563eb', 20, '#f59e0b', 50, '#ef4444'],
-                    'circle-radius': 24,
-                    'circle-stroke-width': 2,
-                    'circle-stroke-color': '#000000'
-                }
+                id: 'infra-marcadores-puerto',
+                type: 'symbol',
+                source: 'infra-marcadores-source',
+                filter: ['==', ['get', 'tipo'], 'puerto'],
+                layout: {
+                    'icon-image': 'infra-puerto',
+                    'icon-size': ['interpolate', ['linear'], ['zoom'], 4, 0.75, 10, 1],
+                    'icon-allow-overlap': true,
+                    'text-field': ['get', 'nombre'],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 12,
+                    'text-offset': [0, 1.6],
+                    'text-anchor': 'top',
+                    'text-optional': true
+                },
+                paint: { 'text-color': '#ffffff', 'text-halo-color': COLORES_MAPA.puerto, 'text-halo-width': 1.6 }
+            },
+            {
+                id: 'infra-marcadores-terminal',
+                type: 'symbol',
+                source: 'infra-marcadores-source',
+                minzoom: 10,
+                filter: ['==', ['get', 'tipo'], 'terminal'],
+                layout: {
+                    'icon-image': 'infra-terminal',
+                    'icon-size': 0.85,
+                    'icon-allow-overlap': true,
+                    'text-field': ['get', 'nombre'],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 11,
+                    'text-offset': [0, 1.5],
+                    'text-anchor': 'top',
+                    'text-optional': true
+                },
+                paint: { 'text-color': '#ffffff', 'text-halo-color': COLORES_MAPA.terminal, 'text-halo-width': 1.5 }
+            },
+            {
+                id: 'infra-marcadores-detalle',
+                type: 'symbol',
+                source: 'infra-marcadores-source',
+                minzoom: 12.5,
+                filter: ['match', ['get', 'tipo'], ['puerto', 'terminal'], false, true],
+                layout: {
+                    'icon-image': [
+                        'match', ['get', 'tipo'],
+                        'muelle', 'infra-muelle',
+                        'bodega', 'infra-bodega',
+                        'silo', 'infra-silo',
+                        'patio', 'infra-patio',
+                        'tanque', 'infra-tanque',
+                        'infra-generica'
+                    ],
+                    'icon-size': 0.75,
+                    'icon-allow-overlap': true,
+                    'text-field': ['step', ['zoom'], '', 14, ['get', 'nombre']],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 10,
+                    'text-offset': [0, 1.4],
+                    'text-anchor': 'top',
+                    'text-optional': true
+                },
+                paint: { 'text-color': '#ffffff', 'text-halo-color': '#0f172a', 'text-halo-width': 1.4 }
             },
             {
                 id: 'terrestre-cluster-content',
@@ -2358,17 +2552,16 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'terrestre-source',
                 filter: ['has', 'point_count'],
                 layout: {
-                    'icon-image': 'icono-camion-frente',
-                    'icon-size': 0.05,
-                    'icon-offset': [0, -10],
+                    'icon-image': 'grupo-camion',
+                    'icon-size': ['step', ['get', 'point_count'], 0.8, 25, 0.95, 100, 1.1],
                     'text-field': '{point_count_abbreviated}',
                     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                    'text-size': 12,
-                    'text-offset': [0, 0.8],
+                    'text-size': 13,
+                    'text-offset': [0, 0.75],
                     'icon-allow-overlap': true,
                     'text-allow-overlap': true
                 },
-                paint: { 'text-color': '#ffffff' }
+                paint: { 'text-color': '#ffffff', 'text-halo-color': '#064e3b', 'text-halo-width': 1 }
             },
             {
                 id: 'terrestre-individual',
@@ -2376,23 +2569,9 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'terrestre-source',
                 filter: ['!', ['has', 'point_count']],
                 layout: {
-                    'icon-image': 'icono-camion',
-                    'icon-size': ['case', ['>', ['get', 'velocidad'], 0], 0.05, 0.07],
-                    'icon-allow-overlap': true,
-                    'icon-rotate': ['coalesce', ['get', 'rumbo'], 0],
-                    'icon-rotation-alignment': 'map'
-                }
-            },
-            {
-                id: 'peajes-cluster-circle',
-                type: 'circle',
-                source: 'peajes-source',
-                filter: ['has', 'point_count'],
-                paint: {
-                    'circle-color': ['step', ['get', 'point_count'], '#10b981', 4, '#059669', 8, '#047857'],
-                    'circle-radius': 22,
-                    'circle-stroke-width': 2,
-                    'circle-stroke-color': '#000000'
+                    'icon-image': ['match', ['get', 'estado'], 'EN_RUTA', 'camion-ruta', 'camion-detenido'],
+                    'icon-size': 0.8,
+                    'icon-allow-overlap': true
                 }
             },
             {
@@ -2401,36 +2580,23 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'peajes-source',
                 filter: ['has', 'point_count'],
                 layout: {
-                    'icon-image': 'peaje-cluster',
-                    'icon-size': 0.08,
-                    'icon-offset': [0, -100],
+                    'icon-image': 'grupo-peaje',
+                    'icon-size': ['step', ['get', 'point_count'], 0.7, 10, 0.82, 25, 0.95],
                     'text-field': '{point_count_abbreviated}',
                     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                    'text-size': 13,
-                    'text-offset': [0, 0.7],
+                    'text-size': 12,
+                    'text-offset': [0, 0.72],
                     'icon-allow-overlap': true,
                     'text-allow-overlap': true
                 },
-                paint: { 'text-color': '#ffffff' }
+                paint: { 'text-color': '#1c1917' }
             },
             {
                 id: 'peajes-individual',
                 type: 'symbol',
                 source: 'peajes-source',
                 filter: ['!', ['has', 'point_count']],
-                layout: { 'icon-image': 'icono-peaje', 'icon-size': 0.05, 'icon-allow-overlap': true }
-            },
-            {
-                id: 'viales-cluster-circle',
-                type: 'circle',
-                source: 'alertas-viales-source',
-                filter: ['has', 'point_count'],
-                paint: {
-                    'circle-color': ['step', ['get', 'point_count'], '#eab308', 4, '#f97316', 8, '#dc2626'],
-                    'circle-radius': 22,
-                    'circle-stroke-width': 2,
-                    'circle-stroke-color': '#000000'
-                }
+                layout: { 'icon-image': 'peaje', 'icon-size': 0.65, 'icon-allow-overlap': true }
             },
             {
                 id: 'viales-cluster-content',
@@ -2438,17 +2604,16 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'alertas-viales-source',
                 filter: ['has', 'point_count'],
                 layout: {
-                    'icon-image': 'accidente-cluster',
-                    'icon-size': 0.05,
-                    'icon-offset': [0, -85],
+                    'icon-image': 'grupo-incidente',
+                    'icon-size': ['step', ['get', 'point_count'], 0.75, 50, 0.9, 500, 1.05],
                     'text-field': '{point_count_abbreviated}',
                     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
                     'text-size': 13,
-                    'text-offset': [0, 1.1],
+                    'text-offset': [0, 0.75],
                     'icon-allow-overlap': true,
                     'text-allow-overlap': true
                 },
-                paint: { 'text-color': '#ffffff', 'text-halo-color': '#000000', 'text-halo-width': 1 }
+                paint: { 'text-color': '#ffffff', 'text-halo-color': '#7f1d1d', 'text-halo-width': 1 }
             },
             {
                 id: 'viales-individual',
@@ -2458,66 +2623,16 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 layout: {
                     'icon-image': [
                         'match',
-                        ['get', 'tipoEvento'],
-                        'ACCIDENTE',
-                        'icono-accidente',
-                        'VEHICULO_AVERIDADO',
-                        'icono-accidente',
-                        'MANTENIMIENTO_OBRA',
-                        'icono-obra',
-                        'CIERRE_VIAL',
-                        'icono-obra',
-                        'CONGESTION',
-                        'icono-obra',
-                        'icono-accidente'
+                        ['upcase', ['coalesce', ['get', 'tipoEvento'], '']],
+                        ['MANTENIMIENTO_OBRA', 'OBRA', 'OBRAS', 'MANTENIMIENTO'], 'incidente-obra',
+                        ['CIERRE_VIAL', 'CIERRE', 'CIERRE TOTAL', 'VIA CERRADA'], 'incidente-cierre',
+                        ['CONGESTION', 'CONGESTIÓN', 'TRAFICO', 'PASO A UN CARRIL'], 'incidente-congestion',
+                        'incidente-accidente'
                     ],
-                    'icon-size': 0.1,
+                    'icon-size': 0.75,
                     'icon-allow-overlap': true,
                     'icon-ignore-placement': true
                 }
-            },
-            {
-                id: 'naves-cluster-symbol',
-                type: 'symbol',
-                source: 'naves-source',
-                filter: ['has', 'point_count'],
-                layout: {
-                    'icon-image': 'icono-barco',
-                    'icon-size': 0.07,
-                    'icon-allow-overlap': true,
-                    'text-field': '{point_count}',
-                    'text-size': 12,
-                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                    'text-allow-overlap': true,
-                    'text-offset': [0, 1.2]
-                },
-                paint: { 'text-color': '#ffffff', 'text-halo-color': '#0f172a', 'text-halo-width': 2 }
-            },
-            {
-                id: 'naves-individual',
-                type: 'symbol',
-                source: 'naves-source',
-                filter: ['!', ['has', 'point_count']],
-                layout: {
-                    'icon-image': 'icono-barco',
-                    'icon-size': 0.06,
-                    'icon-allow-overlap': true,
-                    'icon-rotate': ['coalesce', ['get', 'rumbo'], 0],
-                    'icon-rotation-alignment': 'map'
-                }
-            },
-            {
-                id: 'naves-nombres',
-                type: 'symbol',
-                source: 'naves-source',
-                filter: ['!', ['has', 'point_count']],
-                layout: {
-                    'text-field': ['get', 'nombre_motonave'],
-                    'text-size': 11,
-                    'text-offset': [0, 2],
-                    'text-anchor': 'top'
-                },
-                paint: { 'text-color': '#ffffff', 'text-halo-color': '#020617', 'text-halo-width': 2 }
             },
             {
                 id: 'clima-cluster-symbol',
@@ -2525,16 +2640,16 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'clima-source',
                 filter: ['has', 'point_count'],
                 layout: {
-                    'icon-image': 'clima-defecto',
-                    'icon-size': 0.04,
+                    'icon-image': 'grupo-clima',
+                    'icon-size': 0.75,
                     'icon-allow-overlap': true,
                     'text-field': '{point_count}',
-                    'text-size': 12,
                     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                    'text-allow-overlap': true,
-                    'text-offset': [0, 1.2]
+                    'text-size': 12,
+                    'text-offset': [0, 0.75],
+                    'text-allow-overlap': true
                 },
-                paint: { 'text-color': '#ffffff', 'text-halo-color': '#0f172a', 'text-halo-width': 2 }
+                paint: { 'text-color': '#ffffff' }
             },
             {
                 id: 'clima-individual',
@@ -2542,26 +2657,75 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 source: 'clima-source',
                 filter: ['!', ['has', 'point_count']],
                 layout: {
+                    'icon-image': 'clima',
+                    'icon-size': 0.75,
+                    'icon-allow-overlap': true,
+                    // Temperatura junto al ícono (OpenWeather: properties.temp)
+                    'text-field': ['case', ['has', 'temp'], ['concat', ['to-string', ['round', ['to-number', ['get', 'temp'], 0]]], '°'], ''],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 12,
+                    'text-offset': [1.4, 0],
+                    'text-anchor': 'left',
+                    'text-allow-overlap': true
+                },
+                paint: { 'text-color': '#ffffff', 'text-halo-color': COLORES_MAPA.clima, 'text-halo-width': 1.6 }
+            },
+            {
+                id: 'naves-cluster-symbol',
+                type: 'symbol',
+                source: 'naves-source',
+                filter: ['has', 'point_count'],
+                layout: {
+                    'icon-image': 'grupo-nave',
+                    'icon-size': ['step', ['get', 'point_count'], 0.8, 25, 0.95, 100, 1.1],
+                    'icon-allow-overlap': true,
+                    'text-field': '{point_count_abbreviated}',
+                    'text-size': 13,
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-allow-overlap': true,
+                    'text-offset': [0, 0.75]
+                },
+                paint: { 'text-color': '#ffffff', 'text-halo-color': '#0c4a6e', 'text-halo-width': 1 }
+            },
+            {
+                id: 'naves-individual',
+                type: 'symbol',
+                source: 'naves-source',
+                filter: ['!', ['has', 'point_count']],
+                layout: {
+                    // Color por estado AIS; sin estado AIS, por el estado DIMAR (FONDEADAS / ARRIBADAS)
                     'icon-image': [
                         'match',
-                        ['get', 'fenomeno'],
-                        'Lluvia',
-                        'clima-lluvia',
-                        'Precipitaciones',
-                        'clima-lluvia',
-                        'Tormenta Electrica',
-                        'clima-tormenta',
-                        'Vientos Fuertes',
-                        'clima-viento',
-                        'Vendaval',
-                        'clima-viento',
-                        'Incendio Forestal',
-                        'clima-incendio',
-                        'clima-defecto'
+                        ['coalesce', ['get', 'estado_ais'], ['get', 'estado_inferido'], ['get', 'estado_nave'], ''],
+                        'NAVEGANDO', 'nave-navegando',
+                        'EN MANIOBRA', 'nave-maniobra',
+                        ['FONDEADO', 'FONDEADAS'], 'nave-fondeado',
+                        ['ATRACADO', 'ARRIBADAS'], 'nave-atracado',
+                        'DETENIDO', 'nave-detenido',
+                        ['VARADO', 'SIN GOBIERNO', 'EMERGENCIA'], 'nave-alerta',
+                        'nave-sin-estado'
                     ],
-                    'icon-size': 0.04,
-                    'icon-allow-overlap': true
+                    'icon-size': ['interpolate', ['linear'], ['zoom'], 5, 0.65, 11, 0.9, 15, 1.1],
+                    'icon-allow-overlap': true,
+                    'icon-rotate': ['to-number', ['get', 'rumbo'], 0],
+                    'icon-rotation-alignment': 'map'
                 }
+            },
+            {
+                id: 'naves-nombres',
+                type: 'symbol',
+                source: 'naves-source',
+                minzoom: 9,
+                filter: ['!', ['has', 'point_count']],
+                layout: {
+                    'text-field': ['coalesce', ['get', 'nombre_motonave'], ''],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 11,
+                    'text-offset': [0, 1.8],
+                    'text-anchor': 'top',
+                    'text-optional': true
+                },
+                paint: { 'text-color': '#ffffff', 'text-halo-color': '#020617', 'text-halo-width': 2 }
             }
         ];
 
@@ -2629,6 +2793,8 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         const isAccidentesVisible = vis['accidentes'] !== false;
         const isPeajesVisible = vis['peajes'] !== false;
 
+        if (isViasVisible) this.asegurarRedVial();
+
         const mapping = [
             { id: 'vias-layer', visible: isViasVisible },
             { id: 'naves-cluster-symbol', visible: isNavesVisible },
@@ -2637,6 +2803,9 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
             { id: 'capa-infra-fill', visible: isInfraVisible },
             { id: 'capa-infra-line', visible: isInfraVisible },
             { id: 'capa-infra-point', visible: isInfraVisible },
+            { id: 'infra-marcadores-puerto', visible: isInfraVisible },
+            { id: 'infra-marcadores-terminal', visible: isInfraVisible },
+            { id: 'infra-marcadores-detalle', visible: isInfraVisible },
             { id: 'puerto-fill', visible: isInfraVisible },
             { id: 'puerto-line', visible: isInfraVisible },
             { id: 'terrestre-cluster-circle', visible: isTerrestreVisible },
@@ -2661,6 +2830,18 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         });
     }
 
+    /** Red vial simplificada (IGAC/INVIAS, ~50 m de tolerancia). Se pide una sola vez por estilo del mapa. */
+    private static readonly URL_RED_VIAL = '/assets/data/Red_Vial_simplificada.geojson';
+    private viasDescargadas = false;
+
+    private asegurarRedVial(): void {
+        if (this.viasDescargadas || !this.map) return;
+        const fuente = this.map.getSource('vias-source') as GeoJSONSource | undefined;
+        if (!fuente) return;
+        this.viasDescargadas = true;
+        fuente.setData(MapaLogisticoComponent.URL_RED_VIAL as any);
+    }
+
     private iniciarRadarGeocercas(): void {
         if (this.geocercasSubscription) this.geocercasSubscription.unsubscribe();
         this.consultarGeocercas();
@@ -2675,6 +2856,9 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         switch (layerId) {
             case 'capa-infra-fill':
             case 'capa-infra-point':
+            case 'infra-marcadores-puerto':
+            case 'infra-marcadores-terminal':
+            case 'infra-marcadores-detalle':
                 return `<div class="custom-map-popup infra"><h3>${data.nombre || 'Sin nombre'}</h3><p><strong>Tipo:</strong> ${data.tipo ? data.tipo.toUpperCase() : 'N/A'
                     }</p></div>`;
 
@@ -2697,6 +2881,27 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 if (estadoNave === 'FONDEADAS') badgeColor = '#facc15';
                 if (estadoNave === 'ARRIBADAS') badgeColor = '#22c55e';
 
+                // Estado AIS (motor de ingesta): independiente del estado DIMAR
+                const estadoAis: string | null = data.estado_ais || data.estado_inferido || data.estadoInferido || null;
+                const coloresAis: Record<string, string> = {
+                    'ATRACADO': '#22c55e', 'FONDEADO': '#facc15', 'EN MANIOBRA': '#38bdf8', 'NAVEGANDO': '#3b82f6',
+                    'DETENIDO': '#94a3b8', 'VARADO': '#ef4444', 'SIN GOBIERNO': '#ef4444', 'EMERGENCIA': '#dc2626',
+                    'PESCA': '#14b8a6', 'REMOLQUE': '#f97316'
+                };
+                const colorAis = (estadoAis && coloresAis[estadoAis]) || '#64748b';
+                const desdeAis = data.estado_ais_desde ? new Date(data.estado_ais_desde).getTime() : NaN;
+                const minutosAis = Number.isFinite(desdeAis) ? Math.max(0, Math.round((Date.now() - desdeAis) / 60000)) : NaN;
+                const tiempoAis = Number.isFinite(minutosAis)
+                    ? (minutosAis >= 60 ? `${Math.floor(minutosAis / 60)} h ${minutosAis % 60} min` : `${minutosAis} min`)
+                    : '';
+                const zonaAis = [data.id_puerto, data.id_terminal, data.codigo_muelle].filter(Boolean).join(' · ');
+                const badgeAis = estadoAis
+                    ? `<span title="Declarado por la nave: ${data.estado_nav_ais_texto || 'N/D'}" style="background-color: ${colorAis}; color: ${estadoAis === 'FONDEADO' ? '#000' : '#fff'}; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; white-space: nowrap;">AIS: ${estadoAis}</span>`
+                    : '';
+                const lineaAis = estadoAis
+                    ? `<b>Estado AIS:</b> ${estadoAis}${tiempoAis ? ` · hace ${tiempoAis}` : ''}${zonaAis ? ` · ${zonaAis}` : ''}<br>`
+                    : '';
+
                 return `
                 <div class="custom-map-popup nave-popup" style="min-width: 260px; font-family: sans-serif;">
                     <div class="PORTTOS-popup-header" style="border-bottom: 2px solid #00E5FF; padding-bottom: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-start;">
@@ -2713,6 +2918,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                     }; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; white-space: nowrap;">
                                 ${estadoNave}
                             </span>
+                            ${badgeAis}
                         </div>
                     </div>
                     <div class="PORTTOS-popup-body" style="font-size: 12px; line-height: 1.5; color: ${this.isDark ? '#e2e8f0' : '#334155'
@@ -2723,6 +2929,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                         <b>Agencia:</b> ${agencia}<br>
                         <hr style="margin: 4px 0; border: 0.5px dashed #ccc;">
                         <b>Velocidad:</b> ${velocidadnv} | <b>Rumbo:</b> ${rumbo}<br>
+                        ${lineaAis}
                         <b>Dimensiones:</b> Eslora ${eslora}m | Calado ${calado}<br>
                         <b>Instalación:</b> ${terminal}<br>
                         <b>ETA:</b> <span style="color: #d9534f; font-weight: bold;">${eta}</span>

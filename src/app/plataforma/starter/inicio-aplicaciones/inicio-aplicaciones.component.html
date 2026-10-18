@@ -6,7 +6,17 @@
         <div class="container-fluid panel-overlay">
             <a class="navbar-brand" href="#"></a>
             <div class="nav-right">
-                <app-language-selector></app-language-selector>
+                <ul class="tc-toolbar-nav d-flex align-items-center mb-0 list-unstyled gap-2">
+                    <li class="nav-item">
+                        <button (click)="regresar()" class="tc-action-btn"
+                            title="{{ 'PLATAFORMA.REGRESARLOGIN' | translate }}">
+                            <i class="feather icon-arrow-left"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <app-language-selector></app-language-selector>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>

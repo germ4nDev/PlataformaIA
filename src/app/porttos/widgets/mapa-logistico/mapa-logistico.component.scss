@@ -946,3 +946,27 @@
         }
     }
 }
+
+// Rediseño 2026-10-18: íconos reales en la leyenda
+.panel-leyenda .leyenda-body {
+    max-height: 60vh;
+    overflow-y: auto;
+
+    .leyenda-iconos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 12px;
+
+        li {
+            margin: 0;
+            gap: 8px;
+        }
+    }
+
+    .leyenda-icono {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+}

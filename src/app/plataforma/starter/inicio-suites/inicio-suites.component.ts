@@ -11,7 +11,7 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { SharedModule } from 'src/app/theme/shared/shared.module'
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component'
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component'
-import { ThemeService, UploadFilesService } from 'src/app/theme/shared/service'
+import { AuthenticationService, ThemeService, UploadFilesService } from 'src/app/theme/shared/service'
 import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.model'
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
 @Component({
@@ -32,6 +32,7 @@ export class InicioSuitesComponent implements OnInit {
 
     constructor(
         private router: Router,
+        private _authenticationService: AuthenticationService,
         private _localStorageService: LocalStorageService,
         private _themeStorage: ThemeService,
         private _suitesService: PtlSuitesAPService,
@@ -72,5 +73,12 @@ export class InicioSuitesComponent implements OnInit {
             }
         });
 
+    }
+
+    regresar() {
+        this._localStorageService.removeObject('suscriptor')
+        this._localStorageService.removeObject('aplicaciones')
+        this._authenticationService.logout();
+        this.router.navigate(['autenticacion/login']);
     }
 }

@@ -75,36 +75,59 @@
     transition: stroke 0.3s ease;
 }
 
-/* Aguja posicionada con porcentajes para que crezca con el SVG */
-/* Aguja posicionada con porcentajes para que crezca con el SVG */
+.gauge-stroke {
+    stroke: var(--gauge-track-color);
+}
+
+/* 🟢 LA AGUJA Y SU BASE UTILIZAN LA VARIABLE CSS INYECTADA */
 .gauge-needle {
     position: absolute;
-    bottom: 0;
+    bottom: 0px;
     left: 50%;
-    width: 4px;
-    height: 75%;
-    /* Esto es lo que le da el largo */
-    background: var(--gauge-needle-color) !important;
-    /* El color dinámico */
-    transform-origin: bottom center;
-    margin-left: -2px;
-    border-radius: 4px 4px 0 0;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 2;
+    width: 3px;
+    height: 70%;
+    background: var(--color-estado) !important;
+    transform-origin: bottom center !important;
+    margin-left: -1.5px;
+    border-radius: 3px 3px 0 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease;
+    z-index: 10;
 
-    /* El punto central de pivote de la aguja */
     &::after {
         content: '';
         position: absolute;
-        bottom: -6px;
-        left: -4px;
+        bottom: -5px;
+        left: -4.5px;
         width: 12px;
         height: 12px;
-        background: var(--gauge-pivot-bg);
-        border: 2px solid var(--gauge-pivot-border);
+        background: #ffffff;
+        border: 2px solid var(--color-estado) !important;
         border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        transition: border-color 0.4s ease;
     }
 }
+
+/* ==========================================
+   ANIMACIÓN DE LATIDO SOLO PARA EL PELIGRO
+   ========================================== */
+.gauge-container.estado-peligro .gauge-needle {
+    animation: pulso-aguja 1s infinite alternate;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
+}
+
+@keyframes pulso-aguja {
+    0% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 1;
+        filter: brightness(1.3);
+    }
+}
+
+/* IMPORTANTE: Borra o comenta las viejas clases .estado-advertencia y .estado-peligro que estaban al final, ya no las necesitamos porque HTML hace todo el trabajo. */
 
 /* Valor numérico inferior centrado */
 .gauge-value {
@@ -125,7 +148,7 @@
     z-index: 1;
 
     .numero {
-        font-size: clamp(1.2rem, 3vw, 2.5rem);
+        font-size: clamp(1rem, 3vw, 2rem);
         /* Tipografía fluida que crece con el div */
         font-weight: 700;
         color: var(--gauge-value-text);
@@ -142,18 +165,18 @@
     text-align: center;
     margin-top: 15px;
     font-size: 12px;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--card-bockgorund);
     padding: 8px;
     border-radius: 6px;
 
     .temp-label {
-        color: #a1a5b7;
+        color: var(--text-subtitle-color);
         margin-right: 5px;
     }
 
     .temp-value {
         font-weight: bold;
-        color: #00e5ff;
+        color: var(--app-navbar-color);
     }
 
     /* Azul criogénico */
@@ -173,113 +196,77 @@
    ESTADOS DE ALERTA (Dinámicos por Presión)
    ========================================== */
 
-/* ESTADO ADVERTENCIA (Amarillo / Naranja) */
-.gauge-container.estado-advertencia {
-
-    /* La aguja se vuelve naranja */
-    .gauge-needle {
-        background: #ff9800 !important;
-        box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-    }
-
-    /* El número se tiñe de naranja */
-    .gauge-value .numero {
-        color: #ff9800 !important;
-    }
-
-    /* El riel de peligro cambia a naranja para coincidir */
-    .gauge-danger {
-        stroke: #ff9800 !important;
-    }
-}
-
-/* ESTADO PELIGRO (Rojo Crítico) */
-.gauge-container.estado-peligro {
-
-    /* La aguja se vuelve roja y pulsa */
-    .gauge-needle {
-        background: #ff4757 !important;
-        box-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
-        animation: pulso-aguja 1s infinite alternate;
-    }
-
-    /* El número se vuelve rojo */
-    .gauge-value .numero {
-        color: #ff4757 !important;
-    }
-
-    /* La caja del valor parpadea sutilmente en rojo */
-    .gauge-value {
-        border: 1px solid rgba(255, 71, 87, 0.5);
-        background: rgba(255, 71, 87, 0.1);
-    }
-}
-
-/* ==========================================
-   ESTADOS DE ALERTA (Dinámicos por Presión)
-   ========================================== */
-
-/* 🟢 ESTADO ESTABLE (< 85 PSI) */
+/* 🟢 ESTADO ESTABLE (Azul Criogénico Original) */
 .gauge-container.estado-estable {
 
-    /* Pintamos la línea final de VERDE (usando la variable de la aguja) */
+    /* Aguja y pivote en azul menta */
+    .gauge-needle {
+        background: #00d4ff !important;
+
+        &::after {
+            border-color: #00d4ff !important;
+        }
+    }
+
+    /* El arco de progreso en azul menta */
     .gauge-danger {
-        stroke: var(--gauge-needle-color) !important;
+        stroke: #00d4ff !important;
         transition: stroke 0.4s ease;
     }
 }
 
-/* 🟠 ESTADO ADVERTENCIA (85 a 99 PSI) */
+/* 🟠 ESTADO ADVERTENCIA (Amarillo / Naranja) */
 .gauge-container.estado-advertencia {
     .gauge-needle {
         background: #ff9800 !important;
         box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+
+        &::after {
+            border-color: #ff9800 !important;
+        }
     }
 
-    .gauge-value .numero {
-        color: #ff9800 !important;
+    .gauge-value {
+        border-color: rgba(255, 152, 0, 0.4) !important;
+        background: rgba(255, 152, 0, 0.05) !important;
+
+        .numero,
+        .unidad {
+            color: #ff9800 !important;
+        }
     }
 
-    /* Pintamos la línea final de NARANJA */
     .gauge-danger {
         stroke: #ff9800 !important;
         transition: stroke 0.4s ease;
     }
 }
 
-/* 🔴 ESTADO PELIGRO (>= 100 PSI) */
+/* 🔴 ESTADO PELIGRO (Rojo Crítico) */
 .gauge-container.estado-peligro {
     .gauge-needle {
         background: #ff4757 !important;
         box-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
         animation: pulso-aguja 1s infinite alternate;
-    }
 
-    .gauge-value .numero {
-        color: #ff4757 !important;
+        &::after {
+            border-color: #ff4757 !important;
+        }
     }
 
     .gauge-value {
-        border: 1px solid rgba(255, 71, 87, 0.5);
-        background: rgba(255, 71, 87, 0.1);
+        border-color: rgba(255, 71, 87, 0.6) !important;
+        background: rgba(255, 71, 87, 0.1) !important;
+
+        .numero,
+        .unidad {
+            color: #ff4757 !important;
+        }
     }
 
-    /* Pintamos la línea final de ROJO */
     .gauge-danger {
         stroke: #ff4757 !important;
         transition: stroke 0.4s ease;
-    }
-}
-
-/* Animación de latido para la aguja en peligro */
-@keyframes pulso-aguja {
-    0% {
-        opacity: 0.8;
-    }
-
-    100% {
-        opacity: 1;
-        filter: brightness(1.2);
     }
 }
 
@@ -341,5 +328,26 @@
         .fw-bold {
             font-size: 2.5rem !important;
         }
+    }
+
+    .scada-footer {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 20px;
+        background: var(--card-bockgorund);
+        padding: 8px;
+        border-radius: 6px;
+
+        .temp-label {
+            color: var(--text-subtitle-color);
+            margin-right: 20px;
+        }
+
+        .temp-value {
+            font-weight: bold;
+            color: var(--app-navbar-color);
+        }
+
+        /* Azul criogénico */
     }
 }

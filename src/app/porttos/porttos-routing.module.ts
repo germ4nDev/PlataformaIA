@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RoleGuard } from '../guards/role.guard';
 
 const routes: Routes = [
     {
@@ -13,98 +14,122 @@ const routes: Routes = [
             },
             {
                 path: 'dahboard-panel',
-                loadComponent: () => import('./dashboard-panel/dashboard-panel.component')
-                    .then(c => c.DashboardPanelComponent)
+                loadComponent: () => import('./administacion/dashboard-panel/dashboard-panel.component')
+                    .then(c => c.DashboardPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'panel-control',
-                loadComponent: () => import('./panel-control/panel-control.component')
-                    .then(c => c.PanelControlComponent)
+                loadComponent: () => import('./administacion/panel-control/panel-control.component')
+                    .then(c => c.PanelControlComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'ingesta-panel',
-                loadComponent: () => import('./ingesta-panel/ingesta-panel.component')
-                    .then(c => c.IngestaPanelComponent)
+                loadComponent: () => import('./administacion/ingesta-panel/ingesta-panel.component')
+                    .then(c => c.IngestaPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'torre-control',
                 loadComponent: () => import('./torre-control/torre-control.component')
-                    .then(c => c.TorreControlComponent)
-            },
-            {
-                path: 'widget-panel',
-                loadComponent: () => import('./widgets-panel/widgets-panel.component')
-                    .then(c => c.WidgetsPanelComponent)
-            },
-            {
-                path: 'gestion-widget',
-                loadComponent: () => import('./widgets-panel/gestion-widget/gestion-widget.component')
-                    .then(c => c.GestionWidgetComponent)
+                    .then(c => c.TorreControlComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'puertos-panel',
-                loadComponent: () => import('./puertos-panel/puertos-panel.component')
-                    .then(c => c.PuertosPanelComponent)
+                loadComponent: () => import('./administacion/puertos-panel/puertos-panel.component')
+                    .then(c => c.PuertosPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-puerto-panel',
-                loadComponent: () => import('./puertos-panel/gestion-pueerto-panel/gestion-pueerto-panel.component')
-                    .then(c => c.GestionPueertoPanelComponent)
+                loadComponent: () => import('./administacion/puertos-panel/gestion-pueerto-panel/gestion-pueerto-panel.component')
+                    .then(c => c.GestionPueertoPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'terminales-panel',
-                loadComponent: () => import('./terminales-panel/terminales-panel.component')
-                    .then(c => c.TerminalesPanelComponent)
+                loadComponent: () => import('./administacion/terminales-panel/terminales-panel.component')
+                    .then(c => c.TerminalesPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-terminal-panel',
-                loadComponent: () => import('./terminales-panel/gestion-terminal-panel/gestion-terminal-panel.component')
-                    .then(c => c.GestionTerminalPanelComponent)
+                loadComponent: () => import('./administacion/terminales-panel/gestion-terminal-panel/gestion-terminal-panel.component')
+                    .then(c => c.GestionTerminalPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'muelles-panel',
-                loadComponent: () => import('./muelles-panel/muelles-panel.component')
-                    .then(c => c.MuellesPanelComponent)
+                loadComponent: () => import('./administacion/muelles-panel/muelles-panel.component')
+                    .then(c => c.MuellesPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-muelle-panel',
-                loadComponent: () => import('./muelles-panel/gestion-muelle-panel/gestion-muelle-panel.component')
-                    .then(c => c.GestionMuellePanelComponent)
+                loadComponent: () => import('./administacion/muelles-panel/gestion-muelle-panel/gestion-muelle-panel.component')
+                    .then(c => c.GestionMuellePanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'faros-panel',
-                loadComponent: () => import('./faros-panel/faros-panel.component')
-                    .then(c => c.FarosPanelComponent)
+                loadComponent: () => import('./administacion/faros-panel/faros-panel.component')
+                    .then(c => c.FarosPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-faro-panel',
-                loadComponent: () => import('./faros-panel/gestion-faro-panel/gestion-faro-panel.component')
-                    .then(c => c.GestionFaroPanelComponent)
+                loadComponent: () => import('./administacion/faros-panel/gestion-faro-panel/gestion-faro-panel.component')
+                    .then(c => c.GestionFaroPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'infraestructuras-panel',
-                loadComponent: () => import('./infraestructuras-panel/infraestructuras-panel.component')
-                    .then(c => c.InfraestructurasPanelComponent)
+                loadComponent: () => import('./administacion/infraestructuras-panel/infraestructuras-panel.component')
+                    .then(c => c.InfraestructurasPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-infraestructura',
-                loadComponent: () => import('./infraestructuras-panel/gestion-infraestructura/gestion-infraestructura.component')
-                    .then(c => c.GestionInfraestructuraComponent)
+                loadComponent: () => import('./administacion/infraestructuras-panel/gestion-infraestructura/gestion-infraestructura.component')
+                    .then(c => c.GestionInfraestructuraComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'tipos-infraestructura-panel',
-                loadComponent: () => import('./tipos-infraestructura-panel/tipos-infraestructura-panel.component')
-                    .then(c => c.TiposInfraestructuraPanelComponent)
+                loadComponent: () => import('./administacion/tipos-infraestructura-panel/tipos-infraestructura-panel.component')
+                    .then(c => c.TiposInfraestructuraPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'cron-monitor',
-                loadComponent: () => import('./cron-monitor/cron-monitor.component')
-                    .then(c => c.CronMonitorComponent)
+                loadComponent: () => import('./administacion/cron-monitor/cron-monitor.component')
+                    .then(c => c.CronMonitorComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-tipo-infraestructura',
-                loadComponent: () => import('./tipos-infraestructura-panel/gestion-tipo-infraestructura/gestion-tipo-infraestructura.component')
-                    .then(c => c.GestionTipoInfraestructuraComponent)
+                loadComponent: () => import('./administacion/tipos-infraestructura-panel/gestion-tipo-infraestructura/gestion-tipo-infraestructura.component')
+                    .then(c => c.GestionTipoInfraestructuraComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             }
         ]
     }

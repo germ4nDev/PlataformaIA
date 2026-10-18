@@ -1,3 +1,364 @@
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// /*
+//     Author: German Valencia
+//     Component: PORTTOS Smart Widget - GNL Flujo Chart (Consumo Autónomo SCADA CSV / WebSocket)
+// */
+// import {
+//     Component,
+//     OnInit,
+//     OnChanges,
+//     SimpleChanges,
+//     OnDestroy,
+//     ViewChild,
+//     ElementRef,
+//     AfterViewInit,
+//     Input,
+//     ChangeDetectorRef
+// } from '@angular/core';
+// import { CommonModule, DecimalPipe } from '@angular/common';
+// import { Chart, ChartConfiguration, registerables } from 'chart.js';
+// import { Subject } from 'rxjs';
+// import { takeUntil } from 'rxjs/operators';
+
+// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+// import { GnlStateService, ITelemetriaGNL } from 'src/app/theme/shared/service/tablero-control/gnl-state.service';
+
+// Chart.register(...registerables);
+
+// @Component({
+//     selector: 'app-gnl-flujo-chart',
+//     standalone: true,
+//     imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+//     templateUrl: './gnl-flujo-chart.component.html',
+//     styleUrls: ['./gnl-flujo-chart.component.scss']
+// })
+// export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+//     @Input() widgetConfig: any;
+//     @Input() isEnfoque: boolean = false;
+//     @Input() mostrarTabla: boolean = false;
+//     @Input() datosVivos: any;
+
+//     @ViewChild('flowCanvas') flowCanvas!: ElementRef<HTMLCanvasElement>;
+
+//     public chart!: Chart;
+//     public energiaTotal: number = 0;
+//     public ultimoBrazo: string = 'TODOS LOS BRAZOS';
+//     public tieneTelemetria: boolean = false;
+
+//     // private readonly MAX_DATA_POINTS = 100;
+//     private historialLabels: string[] = [];
+//     private historialValores: number[] = [];
+//     private vistaLista: boolean = false;
+//     private readonly destroy$ = new Subject<void>();
+//     private readonly MAX_DATA_POINTS = 60;
+
+//     constructor(
+//         private _gnlState: GnlStateService,
+//         private _torreService: DashboardService,
+//         private cdr: ChangeDetectorRef
+//     ) { }
+
+//     ngOnInit(): void {
+//         if (this.datosVivos) {
+//             this.hidratarDesdeEnfoque(this.datosVivos);
+//         }
+
+//         this._gnlState.brazoSeleccionado$
+//             .pipe(takeUntil(this.destroy$))
+//             .subscribe((nuevoBrazo: string) => {
+//                 if (nuevoBrazo && this.ultimoBrazo !== nuevoBrazo) {
+//                     this.ultimoBrazo = nuevoBrazo;
+//                     this.limpiarLienzo();
+//                 }
+//             });
+
+//         this._gnlState.telemetriaFiltrada$
+//             .pipe(takeUntil(this.destroy$))
+//             .subscribe((pulso: ITelemetriaGNL | null) => {
+//                 if (pulso) {
+//                     this.procesarTelemetria(pulso);
+//                 }
+//             });
+//     }
+
+//     ngAfterViewInit(): void {
+//         this.vistaLista = true;
+//         this.crearGraficoVacio();
+
+//         if (this.historialValores.length > 0 && this.chart) {
+//             this.chart.data.labels = [...this.historialLabels];
+//             this.chart.data.datasets[0].data = [...this.historialValores];
+//             this.chart.update('none');
+//         }
+//     }
+
+//     ngOnChanges(changes: SimpleChanges): void {
+//         if (changes['isEnfoque'] && !changes['isEnfoque'].isFirstChange()) {
+//             setTimeout(() => {
+//                 this.chart?.resize();
+//             }, 60);
+//         }
+
+//         if (changes['datosVivos'] && this.datosVivos) {
+//             if (Array.isArray(this.datosVivos.historialValores)) {
+//                 this.hidratarDesdeEnfoque(this.datosVivos);
+//             } else if (this.datosVivos.flujo_m3 !== undefined || this.datosVivos.flow_rate !== undefined) {
+//                 this.procesarTelemetria(this.datosVivos);
+//             }
+//         }
+//     }
+
+//     ngOnDestroy(): void {
+//         this.destroy$.next();
+//         this.destroy$.complete();
+//         if (this.chart) {
+//             this.chart.destroy();
+//         }
+//     }
+
+//     get data(): any {
+//         return {
+//             ...(this.widgetConfig?.data || {}),
+//             titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'Histórico de Flujo (m³/h)',
+//             subtitulo:
+//                 this.widgetConfig?.descripcionWidget ||
+//                 this.widgetConfig?.data?.subtitulo ||
+//                 'Caudal de GNL en tiempo real (SCADA)',
+//             historialLabels: [...this.historialLabels],
+//             historialValores: [...this.historialValores],
+//             energiaTotal: this.energiaTotal,
+//             ultimoBrazo: this.ultimoBrazo
+//         };
+//     }
+
+//     get cargando(): boolean {
+//         return !this.tieneTelemetria;
+//     }
+
+//     private hidratarDesdeEnfoque(snapshot: any): void {
+//         if (Array.isArray(snapshot.historialLabels) && Array.isArray(snapshot.historialValores)) {
+//             this.historialLabels = [...snapshot.historialLabels];
+//             this.historialValores = [...snapshot.historialValores];
+//             this.energiaTotal = Number(snapshot.energiaTotal || 0);
+//             this.ultimoBrazo = snapshot.ultimoBrazo || 'TODOS';
+//             this.tieneTelemetria = this.historialValores.length > 0;
+
+//             if (this.vistaLista && this.chart) {
+//                 this.chart.data.labels = [...this.historialLabels];
+//                 this.chart.data.datasets[0].data = [...this.historialValores];
+//                 this.chart.update('none');
+//             }
+//             this.cdr.detectChanges();
+//         } else if (snapshot.flujo_m3 !== undefined || snapshot.flow_rate !== undefined) {
+//             this.procesarTelemetria(snapshot);
+//         }
+//     }
+
+//     private procesarTelemetria(datosTelemetria: any): void {
+//         if (!datosTelemetria) return;
+
+//         const brazoActual = String(
+//             datosTelemetria.codigo_segmento ??
+//             (datosTelemetria.segment_id !== undefined ? `SEG-${datosTelemetria.segment_id}` : 'TODOS')
+//         );
+
+//         if (this.ultimoBrazo !== brazoActual && this.ultimoBrazo !== '') {
+//             this.limpiarLienzo();
+//         }
+
+//         this.ultimoBrazo = brazoActual;
+//         this.tieneTelemetria = true;
+
+//         const flujo = Number(datosTelemetria.flujo_total_m3 ?? datosTelemetria.flujo_m3 ?? datosTelemetria.flow_rate ?? 0);
+//         const timestamp = datosTelemetria.timestamp || new Date().toISOString();
+
+//         // 🟢 LA MAGIA SCADA: PRE-LLENADO DE LÍNEA BASE
+//         // Si el lienzo está vacío y el flujo ya tiene un valor lógico, llenamos el historial de golpe
+//         if (this.historialValores.length === 0 && flujo > 0) {
+//             const fechaActual = new Date(timestamp);
+//             for (let i = this.MAX_DATA_POINTS; i > 0; i--) {
+//                 // Simulamos que este mismo valor estable ocurrió en los minutos anteriores
+//                 const tiempoAtras = new Date(fechaActual.getTime() - (i * 2000));
+//                 this.historialLabels.push(tiempoAtras.toLocaleTimeString());
+//                 this.historialValores.push(Number(flujo.toFixed(2)));
+//             }
+//         }
+
+//         this.actualizarGraficoEnVivo(flujo, timestamp);
+
+//         // Cálculo de energía
+//         if (datosTelemetria.energy_consumption !== undefined && datosTelemetria.esConsolidado) {
+//             this.energiaTotal = Number(datosTelemetria.energy_consumption);
+//         } else if (datosTelemetria.energia !== undefined) {
+//             this.energiaTotal = Number(datosTelemetria.energia);
+//         } else {
+//             this.energiaTotal = (flujo * 22.4) / 3600;
+//         }
+
+//         this.cdr.detectChanges();
+//     }
+
+//     private limpiarLienzo(): void {
+//         this.energiaTotal = 0;
+//         this.historialLabels = [];
+//         this.historialValores = [];
+
+//         if (this.chart) {
+//             this.chart.data.labels = [];
+//             this.chart.data.datasets[0].data = [];
+//             this.chart.update('none');
+//         }
+//         this.cdr.detectChanges();
+//     }
+
+//     private crearGraficoVacio(): void {
+//         if (!this.flowCanvas?.nativeElement) return;
+
+//         const ctx = this.flowCanvas.nativeElement.getContext('2d');
+//         if (!ctx) return;
+
+//         const grosorLinea = this.isEnfoque ? 4 : 2;
+//         const tamanoFuente = this.isEnfoque ? 14 : 10;
+//         const espaciadoTexto = this.isEnfoque ? 16 : 10;
+
+//         const config: ChartConfiguration = {
+//             type: 'line',
+//             data: {
+//                 labels: [],
+//                 datasets: [
+//                     {
+//                         label: 'Flujo',
+//                         data: [],
+//                         borderColor: '#00d4ff',
+//                         borderWidth: grosorLinea,
+//                         pointRadius: 0,
+
+//                         // 🟢 MEJORAMOS EL HOVER DEL PUNTO
+//                         pointHoverRadius: 5,               // Tamaño del punto al pasar el mouse
+//                         pointHitRadius: 15,                // Área invisible de captura del mouse (más grande para acertar fácil)
+//                         pointHoverBackgroundColor: '#ffffff', // Centro blanco
+//                         pointHoverBorderColor: '#00d4ff',     // Borde cyan
+//                         pointHoverBorderWidth: 2,
+
+//                         fill: true,
+//                         tension: 0.2,
+
+//                         backgroundColor: (context: any) => {
+//                             const chart = context.chart;
+//                             const { ctx, chartArea } = chart;
+//                             if (!chartArea) return 'rgba(0, 212, 255, 0.2)';
+
+//                             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+//                             gradient.addColorStop(0, 'rgba(0, 212, 255, 0.6)');
+//                             gradient.addColorStop(1, 'rgba(0, 212, 255, 0.01)');
+//                             return gradient;
+//                         }
+//                     }
+//                 ]
+//             },
+//             options: {
+//                 responsive: true,
+//                 maintainAspectRatio: false,
+//                 animation: { duration: 0 },
+
+//                 // 🟢 LA MAGIA DE LA INTERACCIÓN: Se activa el tooltip solo con estar en la misma columna (X)
+//                 interaction: {
+//                     mode: 'index',
+//                     intersect: false
+//                 },
+
+//                 plugins: {
+//                     legend: { display: false },
+
+//                     // 🟢 DISEÑO DEL TOOLTIP INDUSTRIAL
+//                     tooltip: {
+//                         enabled: true,
+//                         backgroundColor: 'rgba(20, 20, 30, 0.9)', // Fondo oscuro transparente
+//                         titleColor: '#a1a5b7',                    // Color de la hora (título)
+//                         bodyColor: '#ffffff',                     // Color del valor
+//                         bodyFont: { weight: 'bold', size: 14 },
+//                         borderColor: 'rgba(255, 255, 255, 0.1)',
+//                         borderWidth: 1,
+//                         padding: 10,
+//                         displayColors: false, // Oculta el cuadrito de color al lado del texto
+//                         callbacks: {
+//                             label: (context) => {
+//                                 return `Caudal: ${context.parsed.y} m³/h`;
+//                             }
+//                         }
+//                     }
+//                 },
+//                 layout: { padding: { left: -10, right: 0, top: 20, bottom: 0 } },
+//                 scales: {
+//                     x: { display: false },
+//                     y: {
+//                         position: 'left',
+//                         border: { display: false },
+//                         grid: { color: 'rgba(255, 255, 255, 0.05)', tickLength: 0 },
+//                         ticks: { color: '#a1a5b7', font: { size: tamanoFuente }, padding: espaciadoTexto }
+//                     }
+//                 }
+//             }
+//         };
+
+//         this.chart = new Chart(ctx, config);
+//     }
+
+//     private actualizarGraficoEnVivo(nuevoValor: number, timestamp: string): void {
+//         const parsedDate = new Date(timestamp);
+//         const etiquetaHora = !isNaN(parsedDate.getTime())
+//             ? parsedDate.toLocaleTimeString()
+//             : String(timestamp);
+
+//         const ultimaEtiqueta = this.historialLabels.length > 0 ? this.historialLabels[this.historialLabels.length - 1] : '';
+
+//         // 🟢 CÓDIGO ANTI-RAMPA
+//         if (etiquetaHora === ultimaEtiqueta && this.historialValores.length > 0) {
+//             this.historialValores[this.historialValores.length - 1] = Number(nuevoValor.toFixed(2));
+//         } else {
+//             this.historialLabels.push(etiquetaHora);
+//             this.historialValores.push(Number(nuevoValor.toFixed(2)));
+//         }
+
+//         if (this.historialLabels.length > this.MAX_DATA_POINTS) {
+//             this.historialLabels.shift();
+//             this.historialValores.shift();
+//         }
+
+//         if (this.vistaLista && this.chart) {
+//             this.chart.data.labels = [...this.historialLabels];
+//             this.chart.data.datasets[0].data = [...this.historialValores];
+
+//             // 🟢 LA MAGIA PARA CERRAR LA ESCALA:
+//             // Forzamos al Eje Y a ajustarse milimétricamente a los valores actuales
+//             if (this.historialValores.length > 1 && this.chart.options.scales && this.chart.options.scales['y']) {
+//                 const minData = Math.min(...this.historialValores);
+//                 const maxData = Math.max(...this.historialValores);
+
+//                 // Calculamos un colchón microscópico (5%) para que la línea no toque los bordes del cuadro
+//                 const margen = (maxData - minData) * 0.05;
+
+//                 // Obligamos a la gráfica a empezar y terminar justo en los bordes de la fluctuación
+//                 this.chart.options.scales['y'].min = minData - (margen === 0 ? 1 : margen);
+//                 this.chart.options.scales['y'].max = maxData + (margen === 0 ? 1 : margen);
+//             }
+
+//             this.chart.update('none');
+//         }
+//     }
+
+//     public maximizarDesdeShell(): void {
+//         if (this.isEnfoque) {
+//             this._torreService.cerrarModoEnfoque();
+//         } else {
+//             this._torreService.abrirModoEnfoque(
+//                 this.widgetConfig?.type || 'PTT_GNL_LINECHART_FLUJO',
+//                 this.data
+//             );
+//         }
+//     }
+// }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -37,22 +398,25 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
     @Input() widgetConfig: any;
     @Input() isEnfoque: boolean = false;
     @Input() mostrarTabla: boolean = false;
-
-    // Respaldo para hidratar el historial cuando se abre en el modal de Modo Enfoque
     @Input() datosVivos: any;
 
     @ViewChild('flowCanvas') flowCanvas!: ElementRef<HTMLCanvasElement>;
 
     public chart!: Chart;
     public energiaTotal: number = 0;
+
+    // 🟢 ESTA ES LA VARIABLE QUE SE MUESTRA EN EL HTML COMO "TODOS" O "BRAZO-X"
     public ultimoBrazo: string = 'TODOS';
     public tieneTelemetria: boolean = false;
 
-    private readonly MAX_DATA_POINTS = 50;
+    private readonly MAX_DATA_POINTS = 60; // 🟢 Buffer ágil
     private historialLabels: string[] = [];
     private historialValores: number[] = [];
     private vistaLista: boolean = false;
     private readonly destroy$ = new Subject<void>();
+
+    public ultimoFlujoConocido: number = 0;
+    private tickerInterval: any;
 
     constructor(
         private _gnlState: GnlStateService,
@@ -61,12 +425,11 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
     ) { }
 
     ngOnInit(): void {
-        // 1. Si se abre en el modal de Modo Enfoque, restauramos la serie acumulada
         if (this.datosVivos) {
             this.hidratarDesdeEnfoque(this.datosVivos);
         }
 
-        // 2. Escuchamos cambios en el filtro de segmento/brazo (SEG-1..SEG-50 o TODOS)
+        // Suscripción a cambios forzados de brazo desde el servicio maestro
         this._gnlState.brazoSeleccionado$
             .pipe(takeUntil(this.destroy$))
             .subscribe((nuevoBrazo: string) => {
@@ -76,7 +439,7 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
                 }
             });
 
-        // 3. Suscripción autónoma al flujo de telemetría de scada_pipeline.csv
+        // Suscripción al flujo constante de telemetría
         this._gnlState.telemetriaFiltrada$
             .pipe(takeUntil(this.destroy$))
             .subscribe((pulso: ITelemetriaGNL | null) => {
@@ -84,13 +447,15 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
                     this.procesarTelemetria(pulso);
                 }
             });
+
+        // 🟢 PRENDEMOS EL MOTOR GRÁFICO
+        this.iniciarMotorGrafico();
     }
 
     ngAfterViewInit(): void {
         this.vistaLista = true;
         this.crearGraficoVacio();
 
-        // Si ya había lecturas en el buffer (por BehaviorSubject o Modo Enfoque), las dibujamos de inmediato
         if (this.historialValores.length > 0 && this.chart) {
             this.chart.data.labels = [...this.historialLabels];
             this.chart.data.datasets[0].data = [...this.historialValores];
@@ -117,9 +482,13 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
     ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
-        if (this.chart) {
-            this.chart.destroy();
+
+        // 🟢 APAGAMOS EL MOTOR AL CERRAR EL WIDGET
+        if (this.tickerInterval) {
+            clearInterval(this.tickerInterval);
         }
+
+        if (this.chart) this.chart.destroy();
     }
 
     get data(): any {
@@ -160,9 +529,15 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
         }
     }
 
-    /**
-     * Procesa cada pulso de telemetría (soporta tanto flujo_m3 como flow_rate de scada_pipeline.csv)
-     */
+    private iniciarMotorGrafico(): void {
+        this.tickerInterval = setInterval(() => {
+            // Solo avanza si ya llegó el primer dato del brazo actual
+            if (!this.tieneTelemetria) return;
+
+            this.avanzarGrafico();
+        }, 2000); // 2000ms = 2 segundos. Con MAX_DATA_POINTS=60, ves 2 minutos de historia.
+    }
+
     private procesarTelemetria(datosTelemetria: any): void {
         if (!datosTelemetria) return;
 
@@ -176,27 +551,71 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
         }
 
         this.ultimoBrazo = brazoActual;
-        this.tieneTelemetria = true;
 
-        const flujo = Number(datosTelemetria.flujo_m3 ?? datosTelemetria.flow_rate ?? 0);
-        const timestamp = datosTelemetria.timestamp || new Date().toISOString();
+        // 🟢 Actualizamos el valor maestro, el Motor Gráfico se encargará de dibujarlo
+        const flujo = Number(datosTelemetria.flujo_total_m3 ?? datosTelemetria.flujo_m3 ?? datosTelemetria.flow_rate ?? 0);
+        this.ultimoFlujoConocido = Number(flujo.toFixed(2));
 
-        this.actualizarGraficoEnVivo(flujo, timestamp);
+        // Pre-llenado instantáneo cuando llega el PRIMER pulso de un brazo
+        if (!this.tieneTelemetria) {
+            const fechaActual = new Date();
+            for (let i = this.MAX_DATA_POINTS; i > 0; i--) {
+                const tiempoAtras = new Date(fechaActual.getTime() - (i * 2000));
+                this.historialLabels.push(tiempoAtras.toLocaleTimeString());
+                this.historialValores.push(this.ultimoFlujoConocido);
+            }
+            this.tieneTelemetria = true;
+        }
 
-        // Si el CSV trae energy_consumption lo usamos; de lo contrario calculamos por caudal
-        const deltaEnergia =
-            datosTelemetria.energy_consumption !== undefined
-                ? Number(datosTelemetria.energy_consumption) / 60
-                : (flujo * 22.4) / 3600;
+        // Cálculos de energía
+        if (datosTelemetria.energy_consumption !== undefined && datosTelemetria.esConsolidado) {
+            this.energiaTotal = Number(datosTelemetria.energy_consumption);
+        } else if (datosTelemetria.energia !== undefined) {
+            this.energiaTotal = Number(datosTelemetria.energia);
+        } else {
+            this.energiaTotal = (flujo * 22.4) / 3600;
+        }
 
-        this.energiaTotal += deltaEnergia;
         this.cdr.detectChanges();
+    }
+
+    private avanzarGrafico(): void {
+        // Tomamos la hora exacta de este segundo
+        const etiquetaHora = new Date().toLocaleTimeString();
+
+        // Inyectamos la hora y el último valor conocido
+        this.historialLabels.push(etiquetaHora);
+        this.historialValores.push(this.ultimoFlujoConocido);
+
+        // Desplazamos la cola para mantener el tamaño del array
+        if (this.historialLabels.length > this.MAX_DATA_POINTS) {
+            this.historialLabels.shift();
+            this.historialValores.shift();
+        }
+
+        if (this.vistaLista && this.chart) {
+            this.chart.data.labels = [...this.historialLabels];
+            this.chart.data.datasets[0].data = [...this.historialValores];
+
+            // 🟢 AUTO-ZOOM
+            if (this.historialValores.length > 1 && this.chart.options.scales && this.chart.options.scales['y']) {
+                const minData = Math.min(...this.historialValores);
+                const maxData = Math.max(...this.historialValores);
+                const margen = (maxData - minData) * 0.05;
+                this.chart.options.scales['y'].min = minData - (margen === 0 ? 1 : margen);
+                this.chart.options.scales['y'].max = maxData + (margen === 0 ? 1 : margen);
+            }
+
+            this.chart.update('none');
+        }
     }
 
     private limpiarLienzo(): void {
         this.energiaTotal = 0;
         this.historialLabels = [];
         this.historialValores = [];
+        this.tieneTelemetria = false;
+        this.ultimoFlujoConocido = 0;
 
         if (this.chart) {
             this.chart.data.labels = [];
@@ -212,12 +631,7 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
         const ctx = this.flowCanvas.nativeElement.getContext('2d');
         if (!ctx) return;
 
-        const altoGradiente = this.isEnfoque ? 1000 : 400;
-        const gradient = ctx.createLinearGradient(0, 0, 0, altoGradiente);
-        gradient.addColorStop(0, 'rgba(0, 127, 255, 0.7)');
-        gradient.addColorStop(1, 'rgba(0, 127, 255, 0.1)');
-
-        const grosorLinea = this.isEnfoque ? 5 : 3;
+        const grosorLinea = this.isEnfoque ? 4 : 2;
         const tamanoFuente = this.isEnfoque ? 14 : 10;
         const espaciadoTexto = this.isEnfoque ? 16 : 10;
 
@@ -227,14 +641,32 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
                 labels: [],
                 datasets: [
                     {
-                        label: 'Flujo m³/h',
+                        label: 'Flujo',
                         data: [],
-                        borderColor: '#007FFF',
-                        backgroundColor: gradient,
+                        borderColor: '#00d4ff',
                         borderWidth: grosorLinea,
                         pointRadius: 0,
+
+                        // 🟢 EFECTO HOVER DEL TOOLTIP
+                        pointHoverRadius: 5,
+                        pointHitRadius: 15,
+                        pointHoverBackgroundColor: '#ffffff',
+                        pointHoverBorderColor: '#00d4ff',
+                        pointHoverBorderWidth: 2,
+
                         fill: true,
-                        tension: 0.4
+                        tension: 0.1, // 🟢 Serrucho para marcar picos más rectos
+
+                        backgroundColor: (context: any) => {
+                            const chart = context.chart;
+                            const { ctx, chartArea } = chart;
+                            if (!chartArea) return 'rgba(0, 212, 255, 0.2)';
+
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, 'rgba(0, 212, 255, 0.6)');
+                            gradient.addColorStop(1, 'rgba(0, 212, 255, 0.01)');
+                            return gradient;
+                        }
                     }
                 ]
             },
@@ -242,17 +674,40 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: { duration: 0 },
-                plugins: { legend: { display: false } },
+
+                // 🟢 INTERACCIÓN AUTOMÁTICA DEL TOOLTIP
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+
+                plugins: {
+                    legend: { display: false },
+
+                    // 🟢 TOOLTIP ELEGANTE
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(20, 20, 30, 0.9)',
+                        titleColor: '#a1a5b7',
+                        bodyColor: '#ffffff',
+                        bodyFont: { weight: 'bold', size: 14 },
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: false,
+                        callbacks: {
+                            label: (context) => `Caudal: ${context.parsed.y} m³/h`
+                        }
+                    }
+                },
                 layout: { padding: { left: -10, right: 0, top: 20, bottom: 0 } },
                 scales: {
                     x: { display: false },
                     y: {
                         position: 'left',
                         border: { display: false },
-                        grid: { color: 'rgba(161, 165, 183, 0.1)', tickLength: 0 },
-                        ticks: { color: '#a1a5b7', font: { size: tamanoFuente }, padding: espaciadoTexto },
-                        min: 0,
-                        suggestedMax: 10 // Calibrado para flow_rate de scada_pipeline.csv (1.01 - 7.53)
+                        grid: { color: 'rgba(255, 255, 255, 0.05)', tickLength: 0 },
+                        ticks: { color: '#a1a5b7', font: { size: tamanoFuente }, padding: espaciadoTexto }
                     }
                 }
             }
@@ -261,14 +716,17 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
         this.chart = new Chart(ctx, config);
     }
 
-    private actualizarGraficoEnVivo(nuevoValor: number, timestamp: string): void {
-        const parsedDate = new Date(timestamp);
-        const etiquetaHora = !isNaN(parsedDate.getTime())
-            ? parsedDate.toLocaleTimeString()
-            : String(timestamp);
+    private actualizarGraficoEnVivo(nuevoValor: number): void {
+        const etiquetaHora = new Date().toLocaleTimeString();
+        const ultimaEtiqueta = this.historialLabels.length > 0 ? this.historialLabels[this.historialLabels.length - 1] : '';
 
-        this.historialLabels.push(etiquetaHora);
-        this.historialValores.push(nuevoValor);
+        // Si llegan varios pulsos en el MISMO segundo local, actualizamos la punta. Si no, avanza hacia la derecha.
+        if (etiquetaHora === ultimaEtiqueta && this.historialValores.length > 0) {
+            this.historialValores[this.historialValores.length - 1] = Number(nuevoValor.toFixed(2));
+        } else {
+            this.historialLabels.push(etiquetaHora);
+            this.historialValores.push(Number(nuevoValor.toFixed(2)));
+        }
 
         if (this.historialLabels.length > this.MAX_DATA_POINTS) {
             this.historialLabels.shift();
@@ -278,6 +736,15 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
         if (this.vistaLista && this.chart) {
             this.chart.data.labels = [...this.historialLabels];
             this.chart.data.datasets[0].data = [...this.historialValores];
+
+            if (this.historialValores.length > 1 && this.chart.options.scales && this.chart.options.scales['y']) {
+                const minData = Math.min(...this.historialValores);
+                const maxData = Math.max(...this.historialValores);
+                const margen = (maxData - minData) * 0.05;
+                this.chart.options.scales['y'].min = minData - (margen === 0 ? 1 : margen);
+                this.chart.options.scales['y'].max = maxData + (margen === 0 ? 1 : margen);
+            }
+
             this.chart.update('none');
         }
     }

@@ -51,7 +51,13 @@ export class KpiFormatPipe implements PipeTransform {
                 return texto;
             }
 
-            // 2. Extraemos posible unidad al final (ej: "19.440,5 Ton" -> numStr: "19.440,5", unidad: "Ton")
+            // 2. Ya viene compacto desde el backend (ej: "14.5K", "1.2M", "8K"): se respeta tal cual.
+            //    Corregido 2026-10-17: antes se quitaba el punto como si fuera de miles y "14.5K" salía como "145".
+            if (/^[+-]?\d+(?:[.,]\d+)?\s*[KkMm]$/.test(texto)) {
+                return texto.replace(/\s+/g, '').toUpperCase();
+            }
+
+            // 3. Extraemos posible unidad al final (ej: "19.440,5 Ton" -> numStr: "19.440,5", unidad: "Ton")
             const match = texto.match(/^([+-]?[\d.,]+)\s*([a-zA-Z/]+)?$/);
             if (!match) {
                 return texto; // Si es un texto alfanumérico que no empieza por número, se devuelve igual

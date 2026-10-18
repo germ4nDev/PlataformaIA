@@ -1,0 +1,53 @@
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'LLEGADAS PROGRAMADAS'"
+    [subtitulo]="'Avisos DIMAR cruzados con AIS · ' + puerto" icono="feather icon-navigation"
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+
+    <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
+        <span class="tc-badge badge-info" title="Próximas 24 h">24 h: {{ datos.resumen.proximas24h }}</span>
+        <span class="tc-badge badge-secondary" title="Entre 24 y 48 h">48 h: {{ datos.resumen.de24a48h }}</span>
+        <span class="tc-badge badge-secondary" title="Entre 48 y 72 h">72 h: {{ datos.resumen.de48a72h }}</span>
+        <span *ngIf="datos.resumen.atrasadas" class="tc-badge badge-danger">{{ datos.resumen.atrasadas }} atrasadas</span>
+    </div>
+
+    <div *ngIf="cargando" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted">
+        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> Cruzando avisos con AIS...
+    </div>
+    <div *ngIf="!cargando && error && !datos" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
+        <i class="feather icon-alert-triangle me-2"></i>{{ error }}
+    </div>
+    <div *ngIf="datos && datos.naves.length === 0" class="d-flex flex-column justify-content-center align-items-center h-100 mv-estado text-muted">
+        <i class="feather icon-inbox fs-3 mb-2 opacity-50"></i>Sin avisos de arribo en las próximas {{ datos.horas }} h.
+    </div>
+
+    <div *ngIf="datos && datos.naves.length > 0" class="mv-lista h-100">
+        <table class="table table-sm mb-0 mv-tabla">
+            <thead>
+                <tr class="text-muted text-uppercase">
+                    <th>ETA</th>
+                    <th>Motonave</th>
+                    <th class="d-none d-xl-table-cell">Agencia</th>
+                    <th class="d-none d-lg-table-cell">Instalación</th>
+                    <th class="text-end">Situación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let a of datos.naves; trackBy: trackAviso">
+                    <td class="text-nowrap">
+                        {{ a.eta | date: 'dd/MM HH:mm' : '-0500' }}
+                        <div class="mv-pie">{{ relativo(a.minutosParaEta) }}</div>
+                    </td>
+                    <td class="text-truncate" style="max-width: 220px;">
+                        <strong>{{ a.motonave }}</strong>
+                        <div class="mv-pie text-truncate">{{ a.tipoNave || '—' }}<span *ngIf="a.eslora"> · {{ a.eslora }} m</span></div>
+                    </td>
+                    <td class="d-none d-xl-table-cell text-truncate" style="max-width: 160px;">{{ a.agencia || '—' }}</td>
+                    <td class="d-none d-lg-table-cell text-truncate" style="max-width: 160px;">{{ a.instalacion || '—' }}</td>
+                    <td class="text-end">
+                        <span class="tc-badge" [ngClass]="claseSituacion(a)"
+                            [title]="a.estadoAis ? 'AIS: ' + a.estadoAis : 'Sin posición AIS reciente'">{{ a.situacion }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</app-widget-shell>

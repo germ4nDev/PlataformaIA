@@ -31,6 +31,7 @@ export interface IOpcionesBarraPorttos {
     horizontal?: boolean;
     mostrarLeyenda?: boolean;
     isEnfoque?: boolean;
+    esStacked?: boolean
 }
 
 export interface IOpcionesLineaPorttos {
@@ -370,9 +371,54 @@ export class PorttosChartHelper {
                         ...(apilado ? { mode: 'index', intersect: false } : {})
                     }
                 },
+                // scales: {
+                //     x: {
+                //         stacked: apilado,
+                //         grid: {
+                //             display: horizontal,
+                //             color: gridColor
+                //         },
+                //         border: { display: false },
+                //         ticks: {
+                //             color: axisTextColor,
+                //             font: { family: fontFamily, size: tickSize }
+                //         }
+                //     },
+                //     y: {
+                //         stacked: apilado,
+                //         beginAtZero: true,
+                //         grid: {
+                //             display: !horizontal,
+                //             color: gridColor
+                //         },
+                //         border: { display: false },
+                //         ticks: {
+                //             color: axisTextColor,
+                //             font: { family: fontFamily, size: tickSize },
+                //             callback: (val) => {
+                //                 if (horizontal) return val;
+                //                 const num = Number(val);
+                //                 if (!isNaN(num)) {
+                //                     if (Math.abs(num) >= 1_000_000) {
+                //                         return (
+                //                             (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
+                //                         );
+                //                     }
+                //                     if (Math.abs(num) >= 10_000) {
+                //                         return (num / 1_000).toFixed(0) + 'K';
+                //                     }
+                //                 }
+                //                 const sufijoCorto = unidad
+                //                     ? ` ${unidad.toLowerCase().slice(0, 3)}`
+                //                     : '';
+                //                 return `${val}${sufijoCorto}`;
+                //             }
+                //         }
+                //     }
+                // },
                 scales: {
                     x: {
-                        stacked: apilado,
+                        stacked: apilado, // 🟢 Chart.js apilará en X
                         grid: {
                             display: horizontal,
                             color: gridColor
@@ -384,7 +430,7 @@ export class PorttosChartHelper {
                         }
                     },
                     y: {
-                        stacked: apilado,
+                        stacked: apilado, // 🟢 Chart.js sumará los valores en Y
                         beginAtZero: true,
                         grid: {
                             display: !horizontal,
@@ -394,6 +440,10 @@ export class PorttosChartHelper {
                         ticks: {
                             color: axisTextColor,
                             font: { family: fontFamily, size: tickSize },
+                            // 🟢 IMPORTANTE PARA STACKED: Agregamos un stepSize dinámico solo si los números son muy pequeños
+                            // para evitar que Chart.js intente apilar decimales (ej. 0.5 camiones)
+                            stepSize: apilado ? 1 : undefined,
+
                             callback: (val) => {
                                 if (horizontal) return val;
                                 const num = Number(val);
@@ -415,6 +465,7 @@ export class PorttosChartHelper {
                         }
                     }
                 }
+
             }
         };
 

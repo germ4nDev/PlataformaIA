@@ -1,84 +1,16 @@
-<!-- <div class="porttos-widget-shell d-flex flex-column w-100 h-100 position-relative" [class.modo-enfoque]="isEnfoque">
-
-    <div *ngIf="!isEnfoque" class="shell-header d-flex justify-content-between align-items-start w-100 mb-2">
-        <div class="d-flex align-items-center gap-3 overflow-hidden pe-2">
-            <div class="shell-icon-box d-flex justify-content-center align-items-center rounded-3 flex-shrink-0"
-                *ngIf="icono">
-                <i [class]="icono + ' fs-5 text-muted'"></i>
-            </div>
-            <div class="d-flex flex-column text-truncate">
-                <h4 class="shell-titulo mb-0 text-truncate">{{ titulo }}</h4>
-                <small class="shell-subtitulo text-muted text-uppercase text-truncate" [innerHTML]="subtitulo"></small>
-            </div>
-        </div>
-        <div class="shell-actions d-flex align-items-center gap-2 flex-shrink-0">
-            <ng-content select="[acciones-extra]"></ng-content>
-            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()" title="Expandir Widget">
-                <i class="feather icon-maximize"></i>
-            </button>
-        </div>
-    </div>
-
-    <div *ngIf="isEnfoque"
-        class="d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25 pb-3 mb-1">
-        <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 d-flex justify-content-center align-items-center border border-secondary border-opacity-25"
-                style="width: 48px; height: 48px;">
-                <i [class]="icono || 'feather icon-box'" class="fs-4 text-info"></i>
-            </div>
-            <div>
-                <h4 class="shell-titulo">{{ titulo }}</h4>
-                <div *ngIf="subtitulo" class="shell-subtitulo" style="letter-spacing: 0.5px; font-size: 0.85rem;"
-                    [innerHTML]="subtitulo"></div>
-            </div>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-            <div class="d-flex align-items-center gap-2">
-                <ng-content select="[acciones-extra]"></ng-content>
-                <ng-content select="[badges-enfoque]"></ng-content>
-            </div>
-            <button class="tc-action-btn flex-shrink-0 ms-2" (click)="maximizarWidget()">
-                <i class="feather icon-x"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="shell-body d-flex flex-column flex-grow-1 position-relative w-100"
-        [ngClass]="isEnfoque ? 'overflow-auto p-2 modo-enfoque-body' : 'overflow-hidden'" style="min-height: 0;">
-
-        <div class="default-content flex-grow-1 d-flex flex-column h-100">
-            <ng-content></ng-content>
-        </div>
-
-        <div class="detail-content" [class.d-none]="!isEnfoque">
-            <ng-content select="[detalle-enfoque]"></ng-content>
-        </div>
-    </div>
-
-    <div *ngIf="!isEnfoque" class="shell-footer w-100 mt-auto text-center">
-        <ng-content select="[tc-footer]"></ng-content>
-    </div>
-
-</div> -->
 <div class="porttos-widget-shell d-flex flex-column w-100 h-100 position-relative" [class.modo-enfoque]="isEnfoque">
 
-    <!-- ========================================== -->
-    <!-- HEADER UNIFICADO (Se adapta a ambos modos) -->
-    <!-- ========================================== -->
     <div class="d-flex justify-content-between w-100"
         [ngClass]="isEnfoque ? 'align-items-center border-bottom border-secondary border-opacity-25 pb-3 mb-1' : 'shell-header align-items-start mb-2'">
 
-        <!-- LADO IZQUIERDO: Ícono y Textos -->
         <div class="d-flex align-items-center gap-3 overflow-hidden pe-2">
 
-            <!-- Ícono dinámico -->
             <div *ngIf="icono" class="d-flex justify-content-center align-items-center rounded-3 flex-shrink-0"
                 [ngClass]="isEnfoque ? 'border border-secondary border-opacity-25' : 'shell-icon-box'"
                 [style.width]="isEnfoque ? '48px' : 'auto'" [style.height]="isEnfoque ? '48px' : 'auto'">
                 <i [class]="icono" [ngClass]="isEnfoque ? 'fs-4 text-info' : 'fs-5 text-muted'"></i>
             </div>
 
-            <!-- Textos dinámicos -->
             <div class="d-flex flex-column text-truncate">
                 <h4 class="shell-titulo mb-0 text-truncate">{{ titulo }}</h4>
                 <small *ngIf="subtitulo" class="shell-subtitulo text-muted text-uppercase text-truncate"
@@ -87,36 +19,17 @@
             </div>
         </div>
 
-        <!-- LADO DERECHO: Badges y Botones -->
         <div class="d-flex align-items-center flex-shrink-0" [ngClass]="isEnfoque ? 'gap-3' : 'shell-actions gap-2'">
 
-            <!-- CONTENEDOR DE BADGES (Único ng-content para no romper Angular) -->
             <div class="d-flex align-items-center gap-2">
 
-                <!-- Los badges normales (Ej: MERCADO, ATRAQUES) siempre visibles -->
                 <ng-content select="[acciones-extra]"></ng-content>
 
-                <!-- Los badges exclusivos (Ej: TERMINAL) solo se muestran si está enfocado -->
                 <div [class.d-none]="!isEnfoque">
                     <ng-content select="[badges-enfoque]"></ng-content>
                 </div>
             </div>
 
-            <!-- Botones de Acción (Cambian según el estado) -->
-
-            <!-- <button *ngIf="mostrarEnfoque" type="button"
-            class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center p-1 border-0 shadow-sm bg-body-tertiary"
-            style="width: 28px; height: 28px; border-radius: 6px; transition: all 0.2s;" (click)="toggleEnfoque()"
-            [title]="(isEnfoque || enModoEnfoque) ? 'Restaurar vista' : 'Ampliar widget'">
-
-            <i class="feather fs-6"
-                [ngClass]="(isEnfoque || enModoEnfoque) ? 'icon-minimize-2' : 'icon-maximize-2'"></i>
-        </button> -->
-
-            <!-- <button *ngIf="!isEnfoque" class="tc-action-btn btn-maximizar" (click)="maximizarWidget()"
-                title="Expandir Widget">
-                <i class="feather icon-maximize"></i>
-            </button> -->
             <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()" title="Cerrar vista">
                 <i [ngClass]="isEnfoque ? 'feather icon-minimize' : 'feather icon-maximize'"></i>
             </button>
