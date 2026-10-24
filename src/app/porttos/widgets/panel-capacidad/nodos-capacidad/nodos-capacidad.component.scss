@@ -1,0 +1,65 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.cuerpo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 6px 8px;
+}
+
+.contenido {
+    flex: 1;
+    min-height: 0;
+}
+
+.insignia {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: rgba(47, 150, 180, 0.15);
+    color: #2f96b4;
+    white-space: nowrap;
+}
+
+.contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.filtros button {
+    padding: 2px 9px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+.filtros button.activo {
+    background: #2f96b4;
+    border-color: #2f96b4;
+    color: #fff;
+}
+
+.tabla {
+    flex: 1;
+    min-height: 0;
+}
+/* Las clases .detalle-* de la vista ampliada viven en widget-shell (comunes a todos los widgets). */

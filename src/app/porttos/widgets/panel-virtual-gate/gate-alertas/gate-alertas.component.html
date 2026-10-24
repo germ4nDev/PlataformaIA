@@ -1,12 +1,12 @@
 <app-widget-shell [titulo]="data?.titulo || '⚠ Alertas Operativas'"
     [subtitulo]="data?.subtitulo || 'Monitoreo de incidencias en tiempo real'"
     [icono]="data?.icono || 'feather icon-alert-triangle'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+    (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-danger text-uppercase">
-            Crítico · {{ alertas.length }}
+            {{ criticas }} críticas · {{ totalAlertas }}
         </span>
     </div>
 

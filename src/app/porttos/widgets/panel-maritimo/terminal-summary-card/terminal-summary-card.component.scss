@@ -569,6 +569,7 @@
     color: var(--text-subtitle-color, #94a3b8);
     border-radius: 3px;
     transition: all 0.2s ease;
+    position: relative;
 
     .dock-id {
         font-size: inherit;
@@ -597,6 +598,27 @@
     &.dashed {
         border: 1px dashed rgba(255, 255, 255, 0.2);
         opacity: 0.6;
+    }
+
+    &.maintenance {
+        background: repeating-linear-gradient(45deg, transparent 0 4px, rgba(245, 158, 11, 0.12) 4px 8px);
+        border: 1px solid rgba(245, 158, 11, 0.45);
+        color: #f59e0b;
+    }
+
+    /* Verificación AIS frente al line-up */
+    .dock-ais {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+
+        &.ais-confirmado { background: #10b981; box-shadow: 0 0 4px #10b981; }
+        &.ais-sin_confirmar { background: #f59e0b; }
+        &.ais-discrepancia,
+        &.ais-no_reportado { background: #ef4444; box-shadow: 0 0 4px #ef4444; }
     }
 }
 

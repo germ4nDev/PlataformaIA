@@ -118,6 +118,13 @@ const routes: Routes = [
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
+                path: 'reglas-alertas-panel',
+                loadComponent: () => import('./administacion/reglas-alertas-panel/reglas-alertas-panel.component')
+                    .then(c => c.ReglasAlertasPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR'] }
+            },
+            {
                 path: 'cron-monitor',
                 loadComponent: () => import('./administacion/cron-monitor/cron-monitor.component')
                     .then(c => c.CronMonitorComponent),

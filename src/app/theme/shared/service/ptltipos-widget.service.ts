@@ -39,11 +39,11 @@ export class PtltiposWidgetService {
         });
     }
 
-    get tiposWidget$(): Observable<PTLPestanaModel[]> {
+    get tiposWidget$(): Observable<PTLTipoWidgetModel[]> {
         return this._tiposWidget.asObservable()
     }
 
-    getPestanasActuales(): PTLPestanaModel[] {
+    getTipoeWidgetActuales(): PTLTipoWidgetModel[] {
         return this._tiposWidget.getValue()
     }
 
@@ -51,19 +51,19 @@ export class PtltiposWidgetService {
         console.log('Consultando y ordenando tiposWidget del servidor...')
         const url = `${base_url}/tipos-widget`
         return this.http.get(url).pipe(
-            map((resp: any) => resp.respuesta as PTLPestanaModel[]),
+            map((resp: any) => resp.respuesta as PTLTipoWidgetModel[]),
             map((tiposWidget: PTLTipoWidgetModel[]) => {
                 return tiposWidget.sort((a: any, b: any) => a.nombreTipo.localeCompare(b.nombreTipo))
             }),
             tap(tiposWidgetOrdenadas => {
-                console.log('***************tipos de widget', tiposWidgetOrdenadas);
+                console.log('***************[SERVICIO] tipos de widget', tiposWidgetOrdenadas);
 
                 this._tiposWidget.next(tiposWidgetOrdenadas)
             })
         )
     }
 
-    getPestanas() {
+    getTipoeWidget() {
         const url = `${base_url}/tipos-widget/`
         return this.http.get(url).pipe(
             map((resp: any) => {
@@ -89,7 +89,7 @@ export class PtltiposWidgetService {
         )
     }
 
-    postCrearRegistro(data: PTLPestanaModel) {
+    postCrearRegistro(data: PTLTipoWidgetModel) {
         console.log('registro servicio', data);
         const url = `${base_url}/tipos-widget`
         console.log('servicio de tiposWidget', data)

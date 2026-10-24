@@ -1,0 +1,12 @@
+<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+    <div acciones-extra class="d-flex align-items-center gap-2"></div>
+    <div class="cuerpo">
+        <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!labels.length"
+            [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
+        <div class="contenido" *ngIf="!cargando && !error && !(!labels.length)">
+            <app-grafica-tcl tipo="barras" [labels]="labels" [series]="series" unidad="t"
+                [isEnfoque]="isEnfoque"></app-grafica-tcl>
+        </div>
+    </div>
+</app-widget-shell>

@@ -29,7 +29,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'PARTICIPACIÓN POR TERMINAL (%)'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de volumen por sociedad portuaria'"
-    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">

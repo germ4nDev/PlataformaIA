@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="configData?.titulo || '🏗 Saturación de Patios'"
     [subtitulo]="configData?.subtitulo || 'Capacidad vs Ocupación en Terminales y Depots'"
-    [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="configData?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
@@ -32,15 +32,15 @@
                     <span class="text-white fw-medium" style="font-size: 0.8rem;">{{ patio.nombre }}</span>
                     <span class="badge border bg-opacity-10" [ngClass]="getEstadoBadge(patio.estado)"
                         style="font-size: 0.65rem;">
-                        {{ patio.porcentaje }}% - {{ patio.estado }}
+                        {{ patio.porcentaje !== null ? patio.porcentaje + '% - ' : '' }}{{ patio.estado }}
                     </span>
                 </div>
                 <!-- Barra de Progreso -->
                 <div class="progress rounded-pill overflow-hidden shadow-sm"
                     style="height: 6px; background-color: rgba(255,255,255,0.05);">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                        [style.width.%]="patio.porcentaje" [style.background-color]="getColorBarra(patio.porcentaje)"
-                        [attr.aria-valuenow]="patio.porcentaje" aria-valuemin="0" aria-valuemax="100">
+                        [style.width.%]="patio.porcentaje ?? 0" [style.background-color]="getColorBarra(patio.porcentaje ?? 0)"
+                        [attr.aria-valuenow]="patio.porcentaje ?? 0" aria-valuemin="0" aria-valuemax="100">
                     </div>
                 </div>
             </div>

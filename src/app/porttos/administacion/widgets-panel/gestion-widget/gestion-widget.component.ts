@@ -177,7 +177,7 @@ export class GestionWidgetComponent implements OnInit {
                     this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY'))
                     form.resetForm()
                     // this.isSubmit = false;
-                    this.router.navigate(['/tablero-control/widget-panel'])
+                    this.router.navigate(['/porttos/widget-panel'])
                 }
             },
             error: (err: any) => {
@@ -213,7 +213,7 @@ export class GestionWidgetComponent implements OnInit {
                     this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'))
                     form.resetForm()
                     // this.isSubmit = false;
-                    this.router.navigate(['/tablero-control/widget-panel'])
+                    this.router.navigate(['/porttos/widget-panel'])
                 }
             },
             error: (err: any) => {
@@ -230,7 +230,7 @@ export class GestionWidgetComponent implements OnInit {
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/tablero-control/widget-panel'])
+        this.router.navigate(['/porttos/widget-panel'])
     }
 
     navMobClick() {

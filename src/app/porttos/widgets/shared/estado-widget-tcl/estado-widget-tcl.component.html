@@ -1,0 +1,12 @@
+<div class="estado" *ngIf="cargando">
+    <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
+    <span>{{ mensajeCarga }}</span>
+</div>
+<div class="estado estado-error" *ngIf="!cargando && error">
+    <i class="feather icon-alert-triangle"></i>
+    <span>{{ error }}</span>
+</div>
+<div class="estado" *ngIf="!cargando && !error && vacio">
+    <i [ngClass]="icono"></i>
+    <span>{{ mensajeVacio }}</span>
+</div>

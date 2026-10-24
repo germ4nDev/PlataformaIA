@@ -29,14 +29,17 @@ export interface IMovimientoBodega {
     tipo_operacion: string;
     toneladas: number;
     cliente: string;
-    dias_almacenaje: number;
+    dias_almacenaje: number | null;
+    fechaCreacion?: string | null;
     estado: string;
 }
 
+import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tcl.component';
+import { OpcionRango, RangoTclComponent } from '../../shared/rango-tcl/rango-tcl.component';
 @Component({
     selector: 'app-table-bodegas',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [CommonModule, DecimalPipe, WidgetShellComponent, TablaTclComponent, RangoTclComponent],
     templateUrl: './table-bodegas.component.html',
     styleUrls: ['./table-bodegas.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -61,6 +64,47 @@ export class TableBodegasComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit(): void {
         this.cargarMovimientosBodega();
+        if (this.isEnfoque) this.cargarRango();
+    }
+
+    // ---------------------------------------------------------------- vista ampliada: movimientos por rango (Fase 3)
+    public readonly rangosDias: OpcionRango<number>[] = [{ valor: 7, etiqueta: '7 días' }, { valor: 30, etiqueta: '30 días' }, { valor: 90, etiqueta: '90 días' }];
+    public dias = 30;
+    public filasRango: any[] = [];
+    public notaRango: string | null = null;
+    public origenRango: any = null;
+    public readonly columnasRango: ColumnaTabla[] = [
+        { campo: 'fechaCreacion', titulo: 'Fecha', tipo: 'fecha' },
+        { campo: 'lote_bl', titulo: 'Lote / BL', tipo: 'principal' },
+        { campo: 'nombre_bodega', titulo: 'Bodega' },
+        { campo: 'producto', titulo: 'Producto' },
+        { campo: 'tipo_operacion', titulo: 'Operación', tipo: 'estado' },
+        { campo: 'toneladas', titulo: 'Toneladas', tipo: 'numero', decimales: 1, unidad: 't' },
+        { campo: 'cliente', titulo: 'Cliente' },
+        { campo: 'dias_almacenaje', titulo: 'Estadía', tipo: 'numero', unidad: 'd' },
+        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
+        { campo: 'codigoUsuarioCreacion', titulo: 'Registró' }
+    ];
+
+    cambiarDias(d: number): void {
+        this.dias = d;
+        this.cargarRango();
+    }
+
+    private cargarRango(): void {
+        const puerto = (this.widgetConfig?.puerto || 'BUENAVENTURA').trim().toUpperCase();
+        this._bodegasService.movimientosRango(puerto, this.dias).subscribe({
+            next: (r: any) => {
+                this.filasRango = (r?.movimientos || []).map((m: any, i: number) => ({ ...m, id: m.id_movimiento_bodega ?? i }));
+                this.origenRango = r?.origen || null;
+                this.notaRango = r?.origen?.nota || null;
+                this.cdr.detectChanges();
+            },
+            error: (e: any) => {
+                this.notaRango = e?.error?.msg || 'No se pudieron consultar los movimientos';
+                this.cdr.detectChanges();
+            }
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -129,14 +173,15 @@ export class TableBodegasComponent implements OnInit, OnChanges, OnDestroy {
 
         this.listaMovimientos = filasCrudas.map((m: any, idx: number) => ({
             id_movimiento_bodega: m.id_movimiento_bodega ?? m.id ?? idx,
-            nombre_bodega: m.nombre_bodega || m.bodega || `Bodega ${(idx % 4) + 1}`,
-            lote_bl: m.lote_bl || m.bl || m.codigo_lote || `BL-${1040 + idx}`,
-            producto: m.producto || m.tipo_carga || 'Granel Sólido',
-            tipo_operacion: m.tipo_operacion || m.operacion || 'INGRESO BUQUE',
+            nombre_bodega: m.nombre_bodega || m.bodega || '—',
+            lote_bl: m.lote_bl || m.bl || m.codigo_lote || '—',
+            producto: m.producto || m.tipo_carga || '—',
+            tipo_operacion: m.tipo_operacion || m.operacion || '—',
             toneladas: Number(m.toneladas ?? m.peso_ton ?? 0),
             cliente: m.cliente || m.importador || '—',
-            dias_almacenaje: Number(m.dias_almacenaje ?? m.dias ?? 1),
-            estado: m.estado || 'Almacenado'
+            dias_almacenaje: m.dias_almacenaje ?? m.dias ?? null,
+            fechaCreacion: m.fechaCreacion ?? null,
+            estado: m.estado || '—'
         }));
 
         this.cargando = false;

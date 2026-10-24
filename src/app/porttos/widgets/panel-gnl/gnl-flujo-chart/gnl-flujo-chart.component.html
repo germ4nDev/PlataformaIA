@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="widgetConfig?.titulo || 'Histórico de Flujo (m³/h)'"
     [subtitulo]="widgetConfig?.subtitulo || 'CAUDAL DE GNL EN TIEMPO REAL (SCADA)'" [icono]="'feather icon-activity'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origen$ | async" [lienzo]="true">
 
     <!-- 🟢 PROYECCIÓN AL HEADER: Badge de Energía y Nombre del Brazo -->
     <!-- Todo lo que pongamos aquí dentro aparecerá en la esquina superior derecha del widget -->
@@ -34,6 +34,36 @@
             <canvas #flowCanvas></canvas>
         </div>
 
+    </div>
+
+    <!-- Vista ampliada: historial consolidado por hora y volumen por brazo -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
+        <div class="detalle-cabecera">
+            <h6 class="detalle-titulo">Historial consolidado por hora</h6>
+            <div class="d-flex align-items-center gap-2">
+                <span *ngIf="historial?.simulado" class="detalle-simulado">SIMULADO</span>
+                <app-rango-tcl [valor]="horas" [deshabilitado]="cargandoHistorial" (cambio)="cambiarHoras($event)"></app-rango-tcl>
+            </div>
+        </div>
+
+        <div *ngIf="resumenHistorial" class="detalle-resumen">
+            <span>Volumen: <strong>{{ resumenHistorial.volumen | number:'1.0-1' }} m³</strong></span>
+            <span>Energía: <strong>{{ resumenHistorial.energia | number:'1.0-1' }} MMBTU</strong></span>
+            <span *ngIf="resumenHistorial.presion !== null">Presión prom.: <strong>{{ resumenHistorial.presion | number:'1.0-1' }} psi</strong></span>
+            <span>Alarmas: <strong>{{ resumenHistorial.alarmas | number:'1.0-0' }}</strong></span>
+        </div>
+        <p *ngIf="notaHistorial" class="detalle-ayuda">{{ notaHistorial }}</p>
+
+        <div class="detalle-grafica" *ngIf="historial?.filas && historial?.labels?.length">
+            <app-grafica-tcl tipo="barras" [labels]="historial!.labels" [series]="seriesHistorial" unidad="m³"
+                [apilado]="seriesHistorial.length > 1" [isEnfoque]="true"></app-grafica-tcl>
+        </div>
+
+        <ng-container *ngIf="filasBrazos.length">
+            <h6 class="detalle-titulo mt-2">Volumen por brazo</h6>
+            <app-tabla-tcl [columnas]="columnasBrazos" [filas]="filasBrazos" [ampliada]="true" [seleccionable]="false"
+                nombreArchivo="gnl-volumen-por-brazo"></app-tabla-tcl>
+        </ng-container>
     </div>
 
 </app-widget-shell>

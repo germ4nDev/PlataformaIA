@@ -7,7 +7,7 @@
         <div class="pro-head">
             <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" alt="User-Profile-Image" />
             <a href="javascript:void(0)" class="dud-logout" title="Logout" (click)="logout(); profileDrop.close()">
-                <i class="feather icon-log-out"></i>
+                <i class="feather icon-log-out icon-bg"></i>
             </a>
         </div>
 
@@ -18,31 +18,32 @@
 
             <li>
                 <a href="javascript:void(0)" class="dropdown-item" (click)="perfilUsuario(); profileDrop.close()">
-                    <i class="feather icon-user"></i> {{ 'PLATAFORMA.NAVBAR.PROFILE' | translate }}
+                    <i class="feather icon-user icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.PROFILE' | translate }}
                 </a>
             </li>
             <li>
                 <a href="javascript:void(0)" class="dropdown-item" (click)="profileDrop.close()">
-                    <i class="feather icon-mail"></i> {{ 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}
+                    <i class="feather icon-mail icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}
                 </a>
             </li>
             <li>
                 <a href="javascript:void(0)" class="dropdown-item" (click)="lockscreen(); profileDrop.close()">
-                    <i class="feather icon-lock"></i> {{ 'PLATAFORMA.NAVBAR.LOCK' | translate }}
+                    <i class="feather icon-lock icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.LOCK' | translate }}
                 </a>
             </li>
 
             <li>
                 <a href="javascript:void(0)" class="dropdown-item" (click)="toggleTheme()">
-                    <i class="{{ iconoTema }} icon-lg"></i>{{ themeTextKey | translate }}
+                    <i class="{{ iconoTema }} icon-bg"></i>{{ themeTextKey | translate }}
                 </a>
             </li>
 
             <li>
                 <div class="color-picker-dropdown">
                     <a href="javascript:void(0)" class="dropdown-item" (click)="togglePanelColores($event)">
-                        <i class="feather icon-droplet"></i> {{ 'PLATAFORMA.NAVBAR.NAVBARCOLOR' | translate }}
-                        <i class="feather" [ngClass]="mostrarPanelColores ? 'icon-chevron-up' : 'icon-chevron-down'"
+                        <i class="feather icon-droplet icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.NAVBARCOLOR' | translate }}
+                        <i class="feather icon-bg"
+                            [ngClass]="mostrarPanelColores ? 'icon-chevron-up' : 'icon-chevron-down'"
                             style="margin-left: auto; font-size: 14px;"></i>
                     </a>
 

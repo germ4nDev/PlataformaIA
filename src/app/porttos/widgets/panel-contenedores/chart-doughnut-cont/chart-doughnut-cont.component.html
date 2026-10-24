@@ -1,10 +1,10 @@
 <!-- <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '🚢 Participación por Línea Naviera'"
-    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de inventario en patio (TEUs)'"
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de inventario en patio'"
     [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase" *ngIf="!cargando && !sinDatos">
-            {{ totalUnidades | number:'1.0-0' }} TEUs
+            {{ totalUnidades | number:'1.0-0' }} {{ unidadTexto }}
         </span>
     </div>
 
@@ -30,7 +30,7 @@
                     <span class="d-block fw-bolder" style="font-size: 1.05rem;">
                         {{ totalUnidades | number:'1.0-0' }}
                     </span>
-                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">TEUs</small>
+                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">{{ unidadTexto }}</small>
                 </div>
             </div>
 
@@ -51,12 +51,12 @@
 
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '🚢 Participación por Línea Naviera'"
-    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de inventario en patio (TEUs)'"
-    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de inventario en patio'"
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase" *ngIf="!cargando && !sinDatos">
-            {{ totalUnidades | number:'1.0-0' }} TEUs
+            {{ totalUnidades | number:'1.0-0' }} {{ unidadTexto }}
         </span>
     </div>
 
@@ -86,7 +86,7 @@
                     <span class="d-block fw-bolder text-white" style="font-size: 1.05rem;">
                         {{ totalUnidades | number:'1.0-0' }}
                     </span>
-                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">TEUs</small>
+                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">{{ unidadTexto }}</small>
                 </div>
             </div>
 

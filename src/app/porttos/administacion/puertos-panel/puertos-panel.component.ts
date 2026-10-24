@@ -251,12 +251,12 @@ export class PuertosPanelComponent implements OnInit, OnDestroy {
 
     OnNuevaRegistroClick(): void {
         this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['tablero-control/gestion-puerto-panel'])
+        this.router.navigate(['porttos/gestion-puerto-panel'])
     }
 
     OnEditarRegistroClick(id: string): void {
         this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tablero-control/gestion-puerto-panel'])
+        this.router.navigate(['porttos/gestion-puerto-panel'])
     }
 
     OnEliminarRegistroClick(id: string): void {

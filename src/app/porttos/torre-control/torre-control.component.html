@@ -1,12 +1,10 @@
-<!-- HEADER GLOBAL -->
-<app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
+<!-- <app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
     [pestanaActiva]="pestanaActiva" [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()"
     (abrirCatalogo)="abrirLobbyModal()">
 </app-tc-header>
 
 <div class="tc-dashboard-container d-flex flex-column" style="position: relative; height: calc(100vh - 110px);">
 
-    <!-- BARRA DE TABS SUPERIOR -->
     <div class="main-tabs-wrapper d-flex justify-content-between align-items-center mb-3 w-100 gap-3">
         <div class="d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0" style="scrollbar-width: none;">
             <button *ngFor="let pestana of pestanasVisibles" type="button" class="tabs-container btn-main-tab m-0"
@@ -19,49 +17,84 @@
             </button>
         </div>
 
-        <!-- MENÚ DE CONFIGURACIÓN -->
         <div class="d-flex align-items-center gap-2 flex-shrink-0">
             <div class="porttos-config-menu position-relative">
-                <button type="button" class="border-0 shadow-none btn-icon-accion"
-                    style="width: 38px; height: 38px; border-radius: 8px; transition: all 0.2s;"
-                    (click)="toggleMenuConfig()" [class.bg-primary]="menuConfigAbierto"
-                    [class.text-white]="menuConfigAbierto" title="Configuración del Tablero">
-                    <i class="feather fs-5" [ngClass]="menuConfigAbierto ? 'icon-x' : 'icon-settings'"></i>
+
+                <button type="button" class="border-0 shadow-none btn-menu fab-principal" (click)="toggleMenuConfig()"
+                    [class.activo]="menuConfigAbierto" title="Configuración del Tablero">
+                    <i class="icon feather" [ngClass]="menuConfigAbierto ? 'icon-x' : 'icon-settings'"></i>
                 </button>
 
-                <div class="config-popover shadow-lg rounded-3 p-3 bg-dark border border-secondary border-opacity-25 animate__animated animate__fadeIn"
-                    *ngIf="menuConfigAbierto">
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-3 border-bottom border-secondary border-opacity-25 pb-2">
-                        <h6 class="mb-0 titulo text-center" style="font-size: 0.9rem;">Personalizar Tablero</h6>
+                <div class="config-popover animate__animated animate__fadeIn" *ngIf="menuConfigAbierto">
+
+                    <ng-container *ngIf="!mostrarLobby && !mostrarLobbyPestanas">
+                        <div class="config-grid">
+                            <button (click)="mostrarLobbyPestanas = true" title="Personalizar Pestañas">
+                                <i class="icon feather icon-layers"></i>
+                            </button>
+                            <button (click)="mostrarLobby = true" title="Personalizar Widgets">
+                                <i class="icon feather icon-plus"></i>
+                            </button>
+                            <button (click)="toggleBloqueoTablero(); toggleMenuConfig()" title="Bloquear/Desbloquear">
+                                <i class="icon feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
+                            </button>
+                            <button (click)="restaurarTableroDefault(); toggleMenuConfig()" title="Restaurar Tablero">
+                                <i class="icon feather icon-refresh-cw"></i>
+                            </button>
+                        </div>
+                    </ng-container>
+
+                    <div class="panel-interno animate__animated animate__fadeInRight" *ngIf="mostrarLobbyPestanas">
+                        <div class="panel-menu">
+                            <div class="panel-header">
+                                <h3>Gestor de Pestañas</h3>
+                                <button type="button" class="btn-cerrar" (click)="cerrarLobbyPestanas()">
+                                    <i class="icon feather icon-x"></i>
+                                </button>
+                            </div>
+                            <div class="contenido-panel">
+
+                                <div class="panel-interno animate__animated animate__fadeInRight"
+                                    *ngIf="mostrarLobbyPestanas">
+                                    <app-pestana-lobby-tcl class="d-flex flex-column w-100 h-100" [visible]="true"
+                                        [catalogoPestanas]="lsPestanas" [pestanasActivas]="pestanasVisibles"
+                                        (guardar)="guardarPreferenciasPestanas($event)"
+                                        (cerrar)="cerrarLobbyPestanas()">
+                                    </app-pestana-lobby-tcl>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="config-grid">
-                        <button class="tc-action-btn" (click)="abrirLobbyPestanas(); menuConfigAbierto = false"
-                            title="Personalizar Pestañas">
-                            <i class="feather icon-layers"></i>
-                            <span>Pestañas</span>
-                        </button>
-                        <button class="tc-action-btn" (click)="abrirLobbyModal(); menuConfigAbierto = false"
-                            title="Personalizar Widgets de la Pestaña">
-                            <i class="feather icon-plus"></i>
-                            <span>Widgets</span>
-                        </button>
-                        <button class="tc-action-btn" (click)="toggleBloqueoTablero(); menuConfigAbierto = false">
-                            <i class="feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
-                            <span>{{ tableroBloqueado ? 'Desbloquear' : 'Bloquear' }}</span>
-                        </button>
-                        <button class="tc-action-btn" (click)="restaurarTableroDefault(); menuConfigAbierto = false"
-                            title="Restaurar Tablero">
-                            <i class="feather icon-refresh-cw"></i>
-                            <span>Restaurar</span>
-                        </button>
+
+                    <div class="panel-interno animate__animated animate__fadeInRight" *ngIf="mostrarLobby">
+                        <div class="panel-menu">
+                            <div class="panel-header">
+                                <h3>Catálogo de Widgets</h3>
+                                <button type="button" class="btn-cerrar" (click)="cerrarLobbyWidgets()">
+                                    <i class="icon feather icon-x"></i>
+                                </button>
+                            </div>
+                            <div class="contenido-panel">
+
+                                <div class="panel-interno animate__animated animate__fadeInRight" *ngIf="mostrarLobby">
+                                    <app-widget-lobby-tcl class="d-flex flex-column w-100 h-100" [visible]="true"
+                                        [widgetsMaster]="widgetsParaElLobby" [layoutActual]="lsLayout"
+                                        [pestanaActual]="pestanaActiva" (guardar)="guardarPreferenciasWidgets($event)"
+                                        (toggleWidget)="actualizarWidgetDesdeLobby($event)"
+                                        (cerrar)="cerrarLobbyWidgets()">
+                                    </app-widget-lobby-tcl>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 🟢 ÁREA DE TRABAJO: Protegida por el Candado "entornoListo" -->
     <div *ngIf="entornoListo; else pantallaCarga" class="tab-content flex-grow-1 w-100 position-relative"
         [ngSwitch]="pestanaActiva">
 
@@ -101,9 +134,38 @@
             </app-mapa-dashboard>
         </ng-container>
 
+        <ng-container *ngSwitchCase="'TLC_GRANEL_001'">
+            <app-granel-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-granel-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_SUELTA_001'">
+            <app-carga-suelta-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-carga-suelta-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_CAPACIDAD_001'">
+            <app-capacidad-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-capacidad-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_NOTICIAS'">
+            <app-noticias-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-noticias-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_NOTICIAS_001'">
+            <app-noticias-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-noticias-dashboard>
+        </ng-container>
+
     </div>
 
-    <!-- 🔴 SPINNER DE CARGA GLOBAL -->
     <ng-template #pantallaCarga>
         <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100"
             style="min-height: 300px;">
@@ -115,22 +177,182 @@
 
 </div>
 
-<!-- MODAL DE LOBBY DE WIDGETS -->
 <app-widget-lobby-tcl [visible]="mostrarLobby" [widgetsMaster]="widgetsParaElLobby" [layoutActual]="lsLayout"
     [pestanaActual]="pestanaActiva" (guardar)="guardarPreferenciasWidgets($event)" (cerrar)="cerrarLobbyWidgets()"
     (toggleWidget)="actualizarWidgetDesdeLobby($event)">
 </app-widget-lobby-tcl>
 
-<!-- MODAL DE LOBBY DE PESTAÑAS -->
 <app-pestana-lobby-tcl [visible]="mostrarLobbyPestanas" [catalogoPestanas]="lsPestanas"
     [pestanasActivas]="pestanasVisibles" (cerrar)="cerrarLobbyPestanas()"
     (guardar)="guardarPreferenciasPestanas($event)">
 </app-pestana-lobby-tcl>
 
+<div class="PORTTOS-backdrop-blur" *ngIf="widgetEnfoque" (click)="cerrarModalEnfoque()">
+    <div class="PORTTOS-modal-lg" (click)="$event.stopPropagation()">
+        <app-widget-selector-tcl [widgetConfig]="widgetEnfoque.config" [datosVivos]="widgetEnfoque.datosVivos" [isEnfoque]="true"
+            (toggleEnfoque)="cerrarModalEnfoque()">
+        </app-widget-selector-tcl>
+    </div>
+</div> -->
+<!-- HEADER GLOBAL -->
+<app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
+    [pestanaActiva]="pestanaActiva" [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()"
+    (abrirCatalogo)="mostrarLobby = true">
+</app-tc-header>
+
+<div class="tc-dashboard-container d-flex flex-column" style="position: relative; height: calc(100vh - 110px);">
+
+    <!-- BARRA DE TABS SUPERIOR -->
+    <div class="main-tabs-wrapper d-flex justify-content-between align-items-center mb-3 w-100 gap-3">
+        <div class="d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0" style="scrollbar-width: none;">
+            <button *ngFor="let pestana of pestanasVisibles" type="button" class="tabs-container btn-main-tab m-0"
+                [class.active]="pestanaActiva === pestana.codigoPestana"
+                (click)="cambiarPestana(pestana.codigoPestana)">
+                <span class="d-flex align-items-center gap-2">
+                    <i [class]="obtenerIconoPestana(pestana.codigoPestana)"></i>
+                    {{ pestana.nombrePestana }}
+                </span>
+            </button>
+        </div>
+
+        <!-- MENÚ DE CONFIGURACIÓN MAESTRO (Patrón Drill-down) -->
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <div class="porttos-config-menu position-relative">
+
+                <button type="button" class="border-0 shadow-none btn-menu fab-principal" (click)="toggleMenuConfig()"
+                    [class.activo]="menuConfigAbierto" title="Configuración del Tablero">
+                    <i class="icon feather" [ngClass]="menuConfigAbierto ? 'icon-x' : 'icon-settings'"></i>
+                </button>
+
+                <div class="config-popover animate__animated animate__fadeIn" *ngIf="menuConfigAbierto">
+
+                    <!-- VISTA 1: Grilla de Botones -->
+                    <ng-container *ngIf="!mostrarLobby && !mostrarLobbyPestanas">
+                        <div class="config-grid">
+                            <button (click)="mostrarLobbyPestanas = true" title="Personalizar Pestañas">
+                                <i class="icon feather icon-layers"></i>
+                            </button>
+                            <button (click)="mostrarLobby = true" title="Personalizar Widgets de la Pestaña">
+                                <i class="icon feather icon-plus"></i>
+                            </button>
+                            <button (click)="toggleBloqueoTablero(); toggleMenuConfig()" title="Bloquear/Desbloquear">
+                                <i class="icon feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
+                            </button>
+                            <button (click)="restaurarTableroDefault(); toggleMenuConfig()" title="Restaurar Tablero">
+                                <i class="icon feather icon-refresh-cw"></i>
+                            </button>
+                        </div>
+                    </ng-container>
+
+                    <!-- VISTA 2: Lobby de Pestañas (Panel Lateral) -->
+                    <div class="panel-interno animate__animated animate__fadeInRight" *ngIf="mostrarLobbyPestanas">
+                        <app-pestana-lobby-tcl class="d-flex flex-column w-100 h-100" [visible]="true"
+                            [catalogoPestanas]="lsPestanas" [pestanasActivas]="pestanasVisibles"
+                            (guardar)="guardarPreferenciasPestanas($event)" (cerrar)="cerrarLobbyPestanas()">
+                        </app-pestana-lobby-tcl>
+                    </div>
+
+                    <!-- VISTA 3: Lobby de Widgets (Panel Lateral) -->
+                    <div class="panel-interno animate__animated animate__fadeInRight" *ngIf="mostrarLobby">
+                        <app-widget-lobby-tcl class="d-flex flex-column w-100 h-100" [visible]="true"
+                            [widgetsMaster]="widgetsParaElLobby" [layoutActual]="lsLayout"
+                            [pestanaActual]="pestanaActiva" (guardar)="guardarPreferenciasWidgets($event)"
+                            (toggleWidget)="actualizarWidgetDesdeLobby($event)" (cerrar)="cerrarLobbyWidgets()">
+                        </app-widget-lobby-tcl>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÁREA DE TRABAJO (Con todas tus pestañas completas) -->
+    <div *ngIf="entornoListo; else pantallaCarga" class="tab-content flex-grow-1 w-100 position-relative"
+        [ngSwitch]="pestanaActiva">
+
+        <ng-container *ngSwitchCase="'TLC_MARITIMO_001'">
+            <app-maritimo-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-maritimo-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_CONTENEDORES_001'">
+            <app-contenedores-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-contenedores-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_VIRTUAL_GATE_001'">
+            <app-virtual-gate-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-virtual-gate-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_GNL_001'">
+            <app-gnl-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-gnl-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_BODEGAS_001'">
+            <app-bodegas-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-bodegas-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_MAPA_001'">
+            <app-mapa-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-mapa-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_GRANEL_001'">
+            <app-granel-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-granel-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_SUELTA_001'">
+            <app-carga-suelta-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-carga-suelta-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_CAPACIDAD_001'">
+            <app-capacidad-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-capacidad-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_NOTICIAS'">
+            <app-noticias-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-noticias-dashboard>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TLC_NOTICIAS_001'">
+            <app-noticias-dashboard #pestanaHija [puerto]="puertoActivo" [usuarioId]="usuarioActivoId"
+                [lsWidgets]="lsWidgets" [tableroBloqueado]="tableroBloqueado">
+            </app-noticias-dashboard>
+        </ng-container>
+    </div>
+
+    <!-- SPINNER DE CARGA GLOBAL -->
+    <ng-template #pantallaCarga>
+        <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100"
+            style="min-height: 300px;">
+            <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+            <h5 class="text-white">Iniciando Centro de Control Portuario...</h5>
+            <small class="text-secondary">Descargando configuraciones y catálogo de widgets.</small>
+        </div>
+    </ng-template>
+
+</div>
+
 <!-- MODAL GLOBAL DE MODO ENFOQUE -->
 <div class="PORTTOS-backdrop-blur" *ngIf="widgetEnfoque" (click)="cerrarModalEnfoque()">
     <div class="PORTTOS-modal-lg" (click)="$event.stopPropagation()">
-        <app-widget-selector-tcl [widgetConfig]="widgetEnfoque" [isEnfoque]="true"
+        <app-widget-selector-tcl [widgetConfig]="widgetEnfoque.config" [datosVivos]="widgetEnfoque.datosVivos" [isEnfoque]="true"
             (toggleEnfoque)="cerrarModalEnfoque()">
         </app-widget-selector-tcl>
     </div>

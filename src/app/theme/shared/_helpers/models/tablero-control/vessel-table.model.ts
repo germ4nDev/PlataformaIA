@@ -12,6 +12,15 @@ export interface Motonave {
     estadoTexto: string;      // Añadido para el HTML
     estadoClase: string;
     puerto: string;
+    // Line-up completo (Fase 3 · vista ampliada); opcionales porque no todas las fuentes los traen
+    muelle?: string | null;
+    viaje?: string | null;
+    eslora?: number | null;
+    zarpe?: string | null;
+    novedades?: string | null;
+    etaIso?: string | null;
+    /** ETA ya pasó y no hay ATA. */
+    atrasada?: boolean;
 }
 
 export interface VesselTableModel {

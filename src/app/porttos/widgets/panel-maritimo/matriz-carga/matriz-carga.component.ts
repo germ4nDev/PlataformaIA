@@ -1,65 +1,3 @@
-// /*
-//     Author: German Valencia
-//     Pattern: PORTTOS Generic Widget - Matriz de Carga (Refactorizado Dumb Component)
-// */
-// import { Component, Input, ViewEncapsulation } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-
-// // 🟢 Importamos el Shell maestro
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-matriz-carga',
-//     standalone: true,
-//     imports: [CommonModule, WidgetShellComponent],
-//     templateUrl: './matriz-carga.component.html',
-//     styleUrls: ['./matriz-carga.component.scss'],
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class MatrizCargaComponent {
-
-//     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
-//     @Input() widgetConfig: any;
-//     @Input() isEnfoque: boolean = false;
-//     @Input() mostrarTabla: boolean = false;
-
-//     // 🟢 LA NUEVA COMPUERTA: Recibe la data inyectada directamente desde el HTML
-//     @Input() datosVivos: any;
-
-//     constructor(
-//         private _torreService: DashboardService
-//     ) { }
-
-//     // 🟢 EL CEREBRO REACTIVO: Elimina suscripciones, búsquedas por ID y forcejeos.
-//     get data() {
-//         // Combinamos la configuración estática de diseño con la data viva inyectada.
-//         // Si no hay data inyectada, asume la configuración base o devuelve vacío.
-//         return {
-//             ...(this.widgetConfig?.data || {}),
-//             ...(this.datosVivos || {})
-//         };
-//     }
-
-//     get isLoading(): boolean {
-//         // Consideramos que está cargando solo si la data no ha llegado.
-//         return !this.datosVivos;
-//     }
-
-//     formatNum(val: number): string {
-//         if (!val || val === 0) return '—';
-//         return val.toLocaleString('es-CO');
-//     }
-
-//     // 🟢 Toggle de enfoque: Abre o cierra el modal
-//     maximizarDesdeShell() {
-//         if (this.isEnfoque) {
-//             this._torreService.cerrarModoEnfoque();
-//         } else {
-//             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_MATRIZ', this.data);
-//         }
-//     }
-// }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -93,10 +31,12 @@ export interface IFilaMatrizCarga {
     total: number;
 }
 
+import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive';
+
 @Component({
     selector: 'app-matriz-carga',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './matriz-carga.component.html',
     styleUrls: ['./matriz-carga.component.scss'],
     encapsulation: ViewEncapsulation.None

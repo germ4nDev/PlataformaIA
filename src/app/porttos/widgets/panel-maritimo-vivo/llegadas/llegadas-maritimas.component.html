@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="widgetConfig?.titulo || 'LLEGADAS PROGRAMADAS'"
     [subtitulo]="'Avisos DIMAR cruzados con AIS · ' + puerto" icono="feather icon-navigation"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origenVivo">
 
     <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
         <span class="tc-badge badge-info" title="Próximas 24 h">24 h: {{ datos.resumen.proximas24h }}</span>
@@ -49,5 +49,9 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <!-- Vista ampliada: todos los datos del aviso y del AIS -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="h-100 d-flex flex-column" style="min-height: 420px;">
+        <app-tabla-tcl [columnas]="columnasLlegadas" [filas]="filasLlegadas" campoId="id" [ampliada]="true" nombreArchivo="llegadas-programadas"></app-tabla-tcl>
     </div>
 </app-widget-shell>

@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '🌾 Inventario por Tipo de Carga'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Participación volumétrica en bodegas y silos'"
-    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <!-- PROYECCIÓN AL HEADER -->
     <div acciones-extra class="d-flex align-items-center">

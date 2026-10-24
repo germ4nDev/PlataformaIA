@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()" title="Cerrar vista">
+            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()" [title]="isEnfoque ? 'Cerrar vista ampliada' : 'Ampliar'">
                 <i [ngClass]="isEnfoque ? 'feather icon-minimize' : 'feather icon-maximize'"></i>
             </button>
 
@@ -41,10 +41,10 @@
     <!-- CUERPO UNIFICADO (LA MAGIA DEL FALLBACK)   -->
     <!-- ========================================== -->
     <div class="shell-body d-flex flex-column flex-grow-1 position-relative w-100"
-        [ngClass]="isEnfoque ? 'overflow-auto p-2 modo-enfoque-body' : 'overflow-hidden'" style="min-height: 0;">
+        [ngClass]="isEnfoque ? 'overflow-auto p-2 modo-enfoque-body' : 'overflow-hidden'" [class.lienzo]="isEnfoque && lienzo" style="min-height: 0;">
 
         <!-- Contenido 1: El por defecto (Gráficas, etc.) -->
-        <div class="default-content flex-grow-1 d-flex flex-column h-100">
+        <div class="default-content flex-grow-1 d-flex flex-column" [class.h-100]="!(isEnfoque && lienzo)">
             <ng-content></ng-content>
         </div>
 
@@ -53,6 +53,9 @@
             <ng-content select="[detalle-enfoque]"></ng-content>
         </div>
     </div>
+
+    <!-- Origen del dato (solo en la vista ampliada) -->
+    <app-origen-dato-tcl *ngIf="isEnfoque && origen" [origen]="origen"></app-origen-dato-tcl>
 
     <!-- ========================================== -->
     <!-- FOOTER NORMAL (Se oculta al maximizar)     -->

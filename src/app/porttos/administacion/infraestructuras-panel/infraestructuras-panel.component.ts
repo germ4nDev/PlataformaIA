@@ -248,12 +248,12 @@ export class InfraestructurasPanelComponent implements OnInit, OnDestroy {
 
     OnNuevaAplicaicionClick(): void {
         this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['tablero-control/gestion-infraestructura'])
+        this.router.navigate(['porttos/gestion-infraestructura'])
     }
 
     OnEditarAplicaicionClick(id: string): void {
         this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tablero-control/gestion-infraestructura'])
+        this.router.navigate(['porttos/gestion-infraestructura'])
     }
 
     OnEliminarAplicaicionClick(id: string): void {

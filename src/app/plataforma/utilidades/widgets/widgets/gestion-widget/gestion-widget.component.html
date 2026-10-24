@@ -74,6 +74,26 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label class="form-control-label" for="codigoTipo">{{
+                                    'WIDGETS.GESTION.TIPOWIDGET' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoTipo"
+                                    id="codigoTipo"
+                                    [ngClass]="{ 'is-invalid': !codigoTipo.valid && (codigoTipo.dirty || codigoTipo.touched || isSubmit) }"
+                                    #codigoTipo="ngModel" required [(ngModel)]="FormRegistro.codigoTipo"
+                                    (change)="onCodigoTipoClick($event)">
+                                    <option value="" disabled>{{ 'WIDGETS.GESTION.PLACEHOLDERTIPOWIDGET' | translate }}
+                                    </option>
+                                    <option [value]="tipo.codigoTipo" *ngFor="let tipo of tiposWidget">{{tipo.nombreTipo
+                                        }}</option>
+                                </select>
+                                <label *ngIf="!codigoTipo.valid && (codigoTipo.dirty || codigoTipo.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'TICKETS.TICKETS.GESTION.REQUERIDOTIPOWIDGET' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label class="form-control-label" for="defaultCols">{{
                                     'WIDGETS.GESTION.COLUMNAS' | translate }}</label>
                                 <input class="form-control form-input" id="defaultCols" name="defaultCols" type="number"
@@ -132,13 +152,14 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="tipo">{{
+                                <label class="form-control-label" for="anclajeTipo">{{
                                     'WIDGETS.GESTION.TIPO' | translate }}</label>
-                                <input class="form-control form-input" id="tipo" name="tipo" type="text"
+                                <input class="form-control form-input" id="anclajeTipo" name="anclajeTipo" type="text"
                                     placeholder="{{ 'WIDGETS.GESTION.TIPOHOLDER' | translate }}"
-                                    [ngClass]="{ 'is-invalid': !tipo.valid && (tipo.dirty || tipo.touched || isSubmit) }"
-                                    #tipo="ngModel" required [(ngModel)]="FormRegistro.tipo" />
-                                <label *ngIf="!tipo.valid && (tipo.dirty || tipo.touched || isSubmit)"
+                                    [ngClass]="{ 'is-invalid': !anclajeTipo.valid && (anclajeTipo.dirty || anclajeTipo.touched || isSubmit) }"
+                                    #anclajeTipo="ngModel" required [(ngModel)]="FormRegistro.anclajeTipo" />
+                                <label
+                                    *ngIf="!anclajeTipo.valid && (anclajeTipo.dirty || anclajeTipo.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'WIDGETS.GESTION.REQUERIDOTIPO' | translate }}
                                 </label>
@@ -146,15 +167,53 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="pestana">{{
-                                    'WIDGETS.GESTION.PESTANA' | translate }}</label>
-                                <input class="form-control form-input" id="pestana" name="pestana" type="text"
-                                    placeholder="{{ 'WIDGETS.GESTION.PESTANAHOLDER' | translate }}"
-                                    [ngClass]="{ 'is-invalid': !pestana.valid && (pestana.dirty || pestana.touched || isSubmit) }"
-                                    #pestana="ngModel" required [(ngModel)]="FormRegistro.pestana" />
-                                <label *ngIf="!pestana.valid && (pestana.dirty || pestana.touched || isSubmit)"
+                                <label class="form-control-label" for="offsetY">{{
+                                    'WIDGETS.GESTION.OFFSETY' | translate }}</label>
+                                <input class="form-control form-input" id="offsetY" name="offsetY" type="number"
+                                    placeholder="{{ 'WIDGETS.GESTION.OFFSETYHOLDER' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !offsetY.valid && (offsetY.dirty || offsetY.touched || isSubmit) }"
+                                    #offsetY="ngModel" required [(ngModel)]="FormRegistro.offsetY" />
+                                <label *ngIf="!offsetY.valid && (offsetY.dirty || offsetY.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'WIDGETS.GESTION.REQUERIDOPESTANA' | translate }}
+                                    {{ 'WIDGETS.GESTION.REQUERIDOOFFSETY' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="layoutVersion">{{
+                                    'WIDGETS.GESTION.LAYOUTVERSION' | translate }}</label>
+                                <input class="form-control form-input" id="layoutVersion" name="layoutVersion"
+                                    type="number" placeholder="{{ 'WIDGETS.GESTION.LAYOUTVERSIONHOLDER' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !layoutVersion.valid && (layoutVersion.dirty || layoutVersion.touched || isSubmit) }"
+                                    #layoutVersion="ngModel" required [(ngModel)]="FormRegistro.layoutVersion" />
+                                <label
+                                    *ngIf="!layoutVersion.valid && (layoutVersion.dirty || layoutVersion.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'WIDGETS.GESTION.REQUERIDOLAYOUTVERSION' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoPestana">{{
+                                    'WIDGETS.GESTION.CODIGOPESTANA' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoPestana"
+                                    id="codigoPestana"
+                                    [ngClass]="{ 'is-invalid': !codigoPestana.valid && (codigoPestana.dirty || codigoPestana.touched || isSubmit) }"
+                                    #codigoPestana="ngModel" required [(ngModel)]="FormRegistro.codigoPestana"
+                                    (change)="onCodigoPestanaClick($event)">
+                                    <option value="" disabled>{{ 'WIDGETS.GESTION.PLACEHOLDERCODIGOPESTANA' | translate
+                                        }}
+                                    </option>
+                                    <option [value]="tipo.codigoPestana" *ngFor="let tipo of pestanas">
+                                        {{tipo.nombrePestana
+                                        }}</option>
+                                </select>
+                                <label
+                                    *ngIf="!codigoPestana.valid && (codigoPestana.dirty || codigoPestana.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'TICKETS.TICKETS.GESTION.REQUERIDOCODIGOPESTANA' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -186,7 +245,7 @@
                                     accept="image/*" (change)="onFileSelectedClick($event)">
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                                     (click)="fileInput.click()">
-                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    <i class="feather icon-upload me-2"></i>
                                     {{ 'PLATAFORMA.SELECTFILE' | translate }}
                                 </button>
                             </div>
@@ -201,7 +260,7 @@
                                     accept="image/*" (change)="onFileSelectedDarkClick($event)">
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                                     (click)="fileInput.click()">
-                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    <i class="feather icon-upload me-2"></i>
                                     {{ 'PLATAFORMA.SELECTFILE' | translate }}
                                 </button>
                             </div>

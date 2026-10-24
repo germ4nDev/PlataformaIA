@@ -1,0 +1,52 @@
+<div class="tabla-herramientas" *ngIf="ampliada">
+    <div class="buscador">
+        <i class="feather icon-search"></i>
+        <input type="search" placeholder="Buscar..." [value]="busqueda" (input)="buscar($any($event.target).value)" aria-label="Buscar en la tabla">
+    </div>
+    <span class="contador">{{ filtradas.length }} de {{ filas.length || 0 }} filas</span>
+    <button type="button" class="btn-csv" (click)="exportar()" [disabled]="!filtradas.length" title="Exportar a CSV">
+        <i class="feather icon-download"></i> CSV
+    </button>
+</div>
+<div class="tabla-tcl" [class.ampliada]="ampliada">
+    <table>
+        <thead>
+            <tr>
+                <th *ngFor="let c of columnasVista" [style.width]="c.ancho || null" [ngClass]="'al-' + (c.alinear || (c.tipo === 'numero' ? 'der' : 'izq'))"
+                    [class.ordenable]="ampliada" (click)="ordenarPor(c)">{{ c.titulo }}<i *ngIf="orden?.campo === c.campo" class="feather ms-1"
+                        [ngClass]="orden?.dir === 1 ? 'icon-arrow-up' : 'icon-arrow-down'"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let f of vista; trackBy: porId" [class.pulsable]="seleccionable && filaClick.observed"
+                [class.seleccionada]="idSeleccionado !== null && f[campoId] === idSeleccionado" (click)="seleccionable && filaClick.observed && filaClick.emit(f)">
+                <td *ngFor="let c of columnasVista" [ngClass]="'al-' + (c.alinear || (c.tipo === 'numero' ? 'der' : 'izq'))" [ngSwitch]="c.tipo || 'texto'">
+                    <span *ngSwitchCase="'principal'" class="principal">{{ texto(f[c.campo]) }}</span>
+                    <span *ngSwitchCase="'numero'" class="numero">
+                        <ng-container *ngIf="f[c.campo] !== null && f[c.campo] !== undefined; else guion">{{ f[c.campo] | number: formato(c) }}{{ c.unidad ? ' ' + c.unidad : '' }}</ng-container>
+                    </span>
+                    <span *ngSwitchCase="'estado'" class="estado" [ngClass]="'tono-' + tono(f[c.campo])">{{ estadoTexto(f[c.campo]) }}</span>
+                    <span *ngSwitchCase="'avance'" class="avance">
+                        <span class="pista"><span class="relleno" [style.width.%]="f[c.campo] || 0"></span></span>
+                        <span class="numero">{{ (f[c.campo] || 0) | number: '1.0-0' }} %</span>
+                    </span>
+                    <span *ngSwitchCase="'fecha'">
+                        <ng-container *ngIf="f[c.campo]; else guion">{{ f[c.campo] | date: 'dd/MM HH:mm' : '-0500' }}</ng-container>
+                    </span>
+                    <span *ngSwitchCase="'hora'">
+                        <ng-container *ngIf="f[c.campo]; else guion">{{ f[c.campo] | date: 'HH:mm' : '-0500' }}</ng-container>
+                    </span>
+                    <span *ngSwitchCase="'si-no'" [class.marca-si]="f[c.campo] === true">{{ f[c.campo] === true ? 'Sí' : f[c.campo] === false ? 'No' : '—' }}</span>
+                    <span *ngSwitchCase="'lista'">{{ (f[c.campo] || []).join(', ') || '—' }}</span>
+                    <span *ngSwitchDefault>{{ texto(f[c.campo]) }}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-template #guion>—</ng-template>
+</div>
+<div class="tabla-paginas" *ngIf="ampliada && paginas > 1">
+    <button type="button" (click)="irA(pagina - 1)" [disabled]="pagina === 0" aria-label="Página anterior"><i class="feather icon-chevron-left"></i></button>
+    <span>Página {{ pagina + 1 }} de {{ paginas }}</span>
+    <button type="button" (click)="irA(pagina + 1)" [disabled]="pagina >= paginas - 1" aria-label="Página siguiente"><i class="feather icon-chevron-right"></i></button>
+</div>

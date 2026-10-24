@@ -16,9 +16,9 @@ export * from 'src/app/porttos/widgets/panel-maritimo/tipo-operacion/tipo-operac
 export * from 'src/app/porttos/widgets/panel-maritimo/matriz-carga/matriz-carga.component';
 export * from 'src/app/porttos/widgets/panel-maritimo/historico-anual/historico-anual.component';
 export * from 'src/app/porttos/widgets/panel-maritimo/implicaciones-operativas/implicaciones-operativas.component';
-export * from 'src/app/porttos/widgets/kpi-card-tcl/kpi-card-tcl.component';
+export * from 'src/app/porttos/widgets/shared/kpi-card-tcl/kpi-card-tcl.component';
 
-export * from 'src/app/porttos/widgets/mapa-logistico/mapa-logistico.component';
+export * from 'src/app/porttos/widgets/panel-mapa/mapa-logistico/mapa-logistico.component';
 
 export * from 'src/app/porttos/widgets/panel-contenedores/chart-bar-cont/chart-bar-cont.component';
 export * from 'src/app/porttos/widgets/panel-contenedores/chart-doughnut-cont/chart-doughnut-cont.component';

@@ -232,6 +232,27 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
         this.cdr.detectChanges();
     }
 
+    /**
+     * Pie "tiempo medio de espera": las terminales con más citas del puerto, desde estadoCitas.porTerminal del API
+     * (corregido 2026-10-23: antes eran SPRBUN, TCBUEN y AGUADULCE fijas y en otros puertos salía '—').
+     */
+    get terminalesPie(): Array<{ terminal: string; esperaPromedioMin: number | null }> {
+        const lista = this.data?.porTerminal;
+        if (Array.isArray(lista) && lista.length) return lista.slice(0, this.isEnfoque ? 6 : 3);
+        const r = this.data?.resumen || {};
+        return [['SPRBUN', r.tiempoMedioSPRBUN], ['TCBUEN', r.tiempoMedioTCBUEN], ['AGUADULCE', r.tiempoMedioAGUADULCE]]
+            .filter(([, v]) => v !== null && v !== undefined)
+            .map(([terminal, v]) => ({ terminal: String(terminal), esperaPromedioMin: Number(v) }));
+    }
+
+    colorEspera(min: number | null): string {
+        const u = this.data?.umbrales || { atencion: 25, critico: 45 };
+        if (min === null || min === undefined) return 'text-muted';
+        return min >= u.critico ? 'text-danger' : min >= u.atencion ? 'text-warning' : 'text-success';
+    }
+
+    trackByTerminal = (_: number, t: { terminal: string }): string => t.terminal;
+
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),

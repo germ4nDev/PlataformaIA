@@ -28,7 +28,7 @@ export class PTLListasPreciosService {
         if (this._socketManager.listasPreciosActualizadas$) {
             this._socketManager.listasPreciosActualizadas$.subscribe({
                 next: (payload: any) => {
-                    console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
+                    // console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
                     this._listasPreciosChange.next(payload);
                     this.cargarRegistros().subscribe();
                 },

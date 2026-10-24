@@ -142,7 +142,7 @@
                                     </label>
                                     <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
                                         id="fileUploadInput" class="form-control form-input d-none"
-                                        name="fotoUsuario" />
+                                        name="fondoAplicacion" />
                                 </div>
                             </div>
                         </div>
@@ -151,11 +151,69 @@
                                 <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOUI' | translate }}</label>
                                 <img *ngIf="selectedFileUrlUI" [src]="selectedFileUrlUI" class="image-preview-ui" />
                                 <div class="file-input-wrapper">
-                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
+                                    <label for="fileUploadInputUI" class="btn btn-primary btn-NuevoRegistro">
                                         {{ 'Seleccionar archivo' | translate }}
                                     </label>
                                     <input type="file" (change)="onFileSelectedUIClick($event)" accept="image/*"
                                         id="fileUploadInputUI" class="form-control form-input d-none"
+                                        name="logoAplicacionUI" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOUIB' | translate }}</label>
+                                <img *ngIf="selectedFileUrlUIB" [src]="selectedFileUrlUIB" class="image-preview-ui" />
+                                <div class="file-input-wrapper">
+                                    <label for="fileUploadInputUIB" class="btn btn-primary btn-NuevoRegistro">
+                                        {{ 'Seleccionar archivo' | translate }}
+                                    </label>
+                                    <input type="file" (change)="onFileSelectedUIBClick($event)" accept="image/*"
+                                        id="fileUploadInputUIB" class="form-control form-input d-none"
+                                        name="logoAplicacionUIB" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOLOGO' | translate }}</label>
+                                <img *ngIf="selectedFileUrlLogo" [src]="selectedFileUrlLogo" class="image-preview-ui" />
+                                <div class="file-input-wrapper">
+                                    <label for="fileUploadInputLogo" class="btn btn-primary btn-NuevoRegistro">
+                                        {{ 'Seleccionar archivo' | translate }}
+                                    </label>
+                                    <input type="file" (change)="onFileSelectedLogoClick($event)" accept="image/*"
+                                        id="fileUploadInputLogo" class="form-control form-input d-none"
+                                        name="logoAplicacion" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOLOGOB' | translate }}</label>
+                                <img *ngIf="selectedFileUrlLogoB" [src]="selectedFileUrlLogoB"
+                                    class="image-preview-ui" />
+                                <div class="file-input-wrapper">
+                                    <label for="fileUploadInputLogoB" class="btn btn-primary btn-NuevoRegistro">
+                                        {{ 'Seleccionar archivo' | translate }}
+                                    </label>
+                                    <input type="file" (change)="onFileSelectedLogoBClick($event)" accept="image/*"
+                                        id="fileUploadInputLogoB" class="form-control form-input d-none"
+                                        name="logoAplicacionB" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOIICONO' | translate }}</label>
+                                <img *ngIf="selectedFileUrlIcono" [src]="selectedFileUrlIcono"
+                                    class="image-preview-ui" />
+                                <div class="file-input-wrapper">
+                                    <label for="fileUploadInputIcono" class="btn btn-primary btn-NuevoRegistro">
+                                        {{ 'Seleccionar archivo' | translate }}
+                                    </label>
+                                    <input type="file" (change)="onFileSelectedIconoClick($event)" accept="image/*"
+                                        id="fileUploadInputIcono" class="form-control form-input d-none"
                                         name="imagenAplicacionUI" />
                                 </div>
                             </div>

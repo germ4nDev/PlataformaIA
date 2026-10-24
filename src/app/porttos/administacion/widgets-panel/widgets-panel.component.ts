@@ -228,12 +228,12 @@ export class WidgetsPanelComponent implements OnInit, OnDestroy {
 
     OnNuevaWidgetClick(): void {
         this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['tablero-control/gestion-widget'])
+        this.router.navigate(['porttos/gestion-widget'])
     }
 
     OnEditarWidgetClick(id: string): void {
         this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tablero-control/gestion-widget'])
+        this.router.navigate(['porttos/gestion-widget'])
     }
 
     OnEliminarWidgetClick(id: string): void {
@@ -334,54 +334,3 @@ export class WidgetsPanelComponent implements OnInit, OnDestroy {
 // },
 
 
-
-
-//             private suscribirseADatos() {
-//     this.subs.add(this._mapaService.gemeloDigital$.subscribe(data => {
-//         if (!data) return;
-//         if (data.CAPA_INFRAESTRUCTURA) this.actualizarFuente('infra-source', this.procesarInfraestructuraWkt(data.CAPA_INFRAESTRUCTURA));
-//         if (data.CAPA_TERRESTRE) this.actualizarFuente('terrestre-source', data.CAPA_TERRESTRE);
-//         if (data.CAPA_CLIMA) this.actualizarFuente('clima-source', data.CAPA_CLIMA);
-//         if (data.CAPA_VIAS) this.actualizarFuente('vias-source', data.CAPA_VIAS);
-//     }));
-
-//     this.subs.add(this._mapaService.naves$.subscribe(data => { if (data) this.actualizarFuente('naves-source', data); }));
-
-//     // Aquí ya estamos llamando a procesarRelacionIncidentePeaje()
-//     this.subs.add(this._mapaService.accidentes$.subscribe(data => {
-//         this.ultimosIncidentes = data;
-//         this.procesarRelacionIncidentePeaje();
-//     }));
-
-//     // 🟢 AJUSTE AQUÍ: Mapear la visibilidad de los clusters
-//     this.subs.add(this._mapaService.visibilidad$.subscribe(vis => {
-//         if (!this.map || !this.map.isStyleLoaded()) return;
-
-//         const mapping = [
-//             { id: 'vias-layer', visible: vis['vias'] },
-//             { id: 'naves-layer', visible: vis['naves'] },
-//             { id: 'capa-infra-fill', visible: vis['infra'] },
-//             { id: 'capa-infra-line', visible: vis['infra'] },
-//             { id: 'capa-infra-point', visible: vis['infra'] },
-//             { id: 'terrestre-clusters', visible: vis['terrestre'] },
-//             { id: 'terrestre-cluster-count', visible: vis['terrestre'] },
-//             { id: 'terrestre-individual', visible: vis['terrestre'] },
-//             { id: 'clima-layer', visible: vis['clima'] },
-//             // 🟢 AJUSTE: Mapear las 3 capas nuevas de los clusters de accidentes
-//             { id: 'viales-clusters', visible: vis['accidentes'] },
-//             { id: 'viales-cluster-count', visible: vis['accidentes'] },
-//             { id: 'viales-individual', visible: vis['accidentes'] },
-//             { id: 'puerto-fill', visible: vis['infra'] },
-//             { id: 'puerto-line', visible: vis['infra'] },
-//             { id: 'peajes-layer', visible: vis['peajes'] !== false },
-//             { id: 'geocercas-layer', visible: vis['peajes'] !== false },
-//             { id: 'geocercas-line-layer', visible: vis['peajes'] !== false }
-//         ];
-
-//         mapping.forEach(m => {
-//             if (this.map.getLayer(m.id)) {
-//                 this.map.setLayoutProperty(m.id, 'visibility', m.visible ? 'visible' : 'none');
-//             }
-//         });
-//     }));
-// }

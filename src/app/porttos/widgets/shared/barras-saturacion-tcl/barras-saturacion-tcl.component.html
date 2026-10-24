@@ -1,0 +1,12 @@
+<ul class="saturacion">
+    <li *ngFor="let i of items; trackBy: porNombre">
+        <div class="fila">
+            <span class="nombre">{{ i.nombre }}</span>
+            <span class="valor" [ngClass]="i.semaforo">{{ i.valorTexto ?? (i.porcentaje === null ? '—' : i.porcentaje +
+                ' %') }}</span>
+        </div>
+        <div class="pista" *ngIf="i.porcentaje !== null"><span class="relleno" [ngClass]="i.semaforo"
+                [style.width.%]="i.porcentaje > 100 ? 100 : i.porcentaje"></span></div>
+        <div class="detalle" *ngIf="i.detalle">{{ i.detalle }}</div>
+    </li>
+</ul>

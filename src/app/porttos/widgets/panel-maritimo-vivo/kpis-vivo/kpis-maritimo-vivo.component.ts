@@ -8,8 +8,9 @@ import { CommonModule } from '@angular/common';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tcl.component';
 import {
-    Llegadas, OcupacionMuelles, ResumenMaritimo, TiemposMaritimos
+    EmbudoLlegada, Llegadas, OcupacionMuelles, ResumenMaritimo, TiemposMaritimos
 } from 'src/app/theme/shared/service/tablero-control/maritimo-vivo.service';
 import { WidgetMaritimoVivoBase } from '../shared/widget-maritimo-vivo.base';
 import { CLASE_SEMAFORO, formatoDuracion, semaforo } from '../shared/maritimo-vivo.util';
@@ -19,6 +20,8 @@ interface DatosKpis {
     ocupacion: OcupacionMuelles | null;
     llegadas: Llegadas | null;
     tiempos: TiemposMaritimos | null;
+    /** Solo en la vista ampliada: embudo de llegada con cuello de botella (/maritimo/:puerto/embudo). */
+    embudo: EmbudoLlegada | null;
 }
 
 interface Tarjeta {
@@ -32,7 +35,7 @@ interface Tarjeta {
 @Component({
     selector: 'app-kpis-maritimo-vivo',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './kpis-maritimo-vivo.component.html',
     styleUrls: ['../shared/maritimo-vivo.scss', './kpis-maritimo-vivo.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,6 +43,24 @@ interface Tarjeta {
 export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis> {
     protected readonly codigo = 'PTT_MAE_VIVO_KPIS';
     public tarjetas: Tarjeta[] = [];
+    public readonly duracion = formatoDuracion;
+
+    // Vista ampliada (2026-10-24)
+    public readonly columnasEstados: ColumnaTabla[] = [
+        { campo: 'estado', titulo: 'Estado AIS', tipo: 'estado' },
+        { campo: 'naves', titulo: 'Naves', tipo: 'numero' },
+        { campo: 'minutosPromedio', titulo: 'Tiempo promedio', tipo: 'numero', unidad: 'min' },
+        { campo: 'minutosMaximo', titulo: 'Máximo', tipo: 'numero', unidad: 'min' }
+    ];
+    public readonly columnasCriticas: ColumnaTabla[] = [
+        { campo: 'nombre', titulo: 'Nave', tipo: 'principal' },
+        { campo: 'mmsi', titulo: 'MMSI' },
+        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
+        { campo: 'minutos', titulo: 'Tiempo en el estado', tipo: 'numero', unidad: 'min' },
+        { campo: 'idTerminal', titulo: 'Terminal' }
+    ];
+    public filasEstados: any[] = [];
+    public filasCriticas: any[] = [];
 
     /**
      * Cada consulta es independiente: si una falla (p. ej. falta la migración 005 para "tiempos"),
@@ -51,7 +72,8 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
             resumen: seguro(this.core.resumen(puerto)),
             ocupacion: seguro(this.core.ocupacion(puerto)),
             llegadas: seguro(this.core.llegadas(puerto)),
-            tiempos: seguro(this.core.tiempos(puerto, 30))
+            tiempos: seguro(this.core.tiempos(puerto, 30)),
+            embudo: this.isEnfoque ? seguro(this.core.embudo(puerto)) : of(null)
         });
     }
 
@@ -110,5 +132,9 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
         } : sinDato('Naves en zona', 'feather icon-radio'));
 
         this.tarjetas = tarjetas;
+        this.filasEstados = Object.entries(d.resumen?.porEstado || {})
+            .map(([estado, m]) => ({ estado, ...m }))
+            .sort((a, b) => b.naves - a.naves);
+        this.filasCriticas = (d.embudo?.criticas?.lista || []).map((n, i) => ({ ...n, estado: n.estado || n.situacion, mmsi: n.mmsi || `—${i}` }));
     }
 }

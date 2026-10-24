@@ -1,0 +1,35 @@
+<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [lienzo]="true" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="criticos">{{ criticos }}
+            críticos</span></div>
+    <div class="cuerpo">
+        <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!todos.length"
+            [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
+        <div class="contenido" *ngIf="!cargando && !error && !(!todos.length)">
+            <div class="filtros">
+                <button type="button" [class.activo]="!categoria" (click)="filtrar(null)">Todos · {{ todos.length
+                    }}</button>
+                <button type="button" *ngFor="let c of categorias" [class.activo]="categoria === c.codigo"
+                    (click)="filtrar(c.codigo)">{{ c.nombre }} · {{ c.nodos }}</button>
+            </div>
+            <div class="tabla"><app-tabla-tcl [columnas]="columnas" [filas]="filas" [ampliada]="isEnfoque" [columnasAmpliadas]="columnasAmpliadas" [nombreArchivo]="titulo"
+                [seleccionable]="isEnfoque" [idSeleccionado]="nodoElegido?.id ?? null" (filaClick)="seleccionar($event)"></app-tabla-tcl></div>
+        </div>
+    </div>
+    <!-- Vista ampliada: ocupación y tráfico del nodo elegido -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
+        <div class="detalle-cabecera">
+            <h6 class="detalle-titulo">Serie del nodo {{ nodoElegido ? '· ' + nodoElegido.nombre : '' }}</h6>
+            <app-rango-tcl [valor]="horas" [deshabilitado]="!nodoElegido" (cambio)="cambiarHoras($event)"></app-rango-tcl>
+        </div>
+        <p *ngIf="!nodoElegido" class="detalle-ayuda">Pulsa un nodo de la tabla para ver su ocupación, entradas y salidas hora a hora.</p>
+        <p *ngIf="errorSerie" class="detalle-ayuda text-warning">{{ errorSerie }}</p>
+        <ng-container *ngIf="nodoElegido && serie">
+            <p class="detalle-ayuda">{{ serie.conDato }} de {{ serie.horas }} horas con dato<span *ngIf="serie.simulado"> · datos simulados</span>. Las horas sin foto quedan vacías.</p>
+            <div class="row g-2">
+                <div class="col-lg-6 detalle-grafica"><app-grafica-tcl tipo="linea" [labels]="serie.labels" [series]="seriesOcupacion" unidad="%" [isEnfoque]="true"></app-grafica-tcl></div>
+                <div class="col-lg-6 detalle-grafica"><app-grafica-tcl tipo="barras" [labels]="serie.labels" [series]="seriesTrafico" unidad="veh/h" [isEnfoque]="true"></app-grafica-tcl></div>
+            </div>
+        </ng-container>
+    </div>
+</app-widget-shell>

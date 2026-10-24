@@ -1,0 +1,373 @@
+<!-- mapa-logistico.component.html -->
+<div #raizMapa class="PORTTOS-widget -logistico-panel" [class.pantalla-completa]="pantallaCompleta">
+
+    <!-- Vista ampliada del mapa: panel lateral con lo que el mapa ya tiene en memoria (2026-10-24) -->
+    <aside class="panel-lateral-fs" *ngIf="pantallaCompleta && panelLateralAbierto">
+        <div class="plf-cabecera">
+            <div class="plf-pestanas">
+                <button type="button" *ngFor="let t of pestanasPanel" [class.activo]="pestanaPanel === t.id"
+                    (click)="pestanaPanel = t.id" [title]="t.nombre">
+                    <i [class]="t.icono"></i> {{ t.nombre }} <span class="plf-n">{{ filasPanel[t.id].length }}</span>
+                </button>
+            </div>
+            <button type="button" class="plf-cerrar" (click)="panelLateralAbierto = false" title="Ocultar panel"><i
+                    class="feather icon-chevrons-right"></i></button>
+        </div>
+        <div class="plf-cuerpo">
+            <app-tabla-tcl [columnas]="columnasPanel[pestanaPanel]" [filas]="filasPanel[pestanaPanel]" campoId="id"
+                [ampliada]="true" [tamanoPagina]="30" [nombreArchivo]="'mapa-' + pestanaPanel"
+                (filaClick)="volarAFila($event)"></app-tabla-tcl>
+        </div>
+        <div class="plf-pie">Datos en memoria del mapa · se actualiza cada 10 s · pulsa una fila para ir al punto</div>
+    </aside>
+    <button type="button" class="plf-abrir" *ngIf="pantallaCompleta && !panelLateralAbierto"
+        (click)="panelLateralAbierto = true" title="Mostrar panel">
+        <i class="feather icon-list"></i>
+    </button>
+
+    <div class="panel-body">
+
+        <!-- 1. EL LIENZO DEL MAPA -->
+        <div #mapContainer id="map"></div>
+
+        <!-- Aviso: la última sincronización con TomTom falló en alguna zona (ciclo de vida de eventos viales) -->
+        <div class="aviso-fuente-vial" *ngIf="avisoEventosViales" role="status">
+            <i class="feather icon-alert-triangle"></i><span>{{ avisoEventosViales }}</span>
+        </div>
+
+        <!-- 2. MENÚ Y CONTENIDO FLOTANTE (Drill-down) -->
+        <div class="porttos-config-menu">
+
+            <!-- BOTÓN GATILLO PRINCIPAL -->
+            <button type="button" class="fab-principal" [class.activo]="estiloBase === 'satelite'"
+                title="Herramientas del Mapa" (click)="toggleMenuConfig()" [class.activo]="menuConfigAbierto">
+                <i class="icon feather icon-map"></i>
+
+                <span class="alertas-badge" *ngIf="alertasSinLeer > 0">{{ alertasSinLeer > 9 ? '9+' :
+                    alertasSinLeer }}</span>
+            </button>
+
+            <!-- POPOVER MAESTRO -->
+            <div class="config-popover" *ngIf="menuConfigAbierto">
+
+                <!-- VISTA 1: GRILLA DE BOTONES -->
+                <ng-container *ngIf="!hayPanelAbierto">
+                    <div class="config-grid">
+                        <button type="button" (click)="mostrarCapas = true" [class.activo]="mostrarCapas"
+                            title="Capas del Mapa">
+                            <i class="icon feather icon-layers"></i>
+                        </button>
+
+                        <button type="button" (click)="mostrarLeyenda = true" [class.activo]="mostrarLeyenda"
+                            title="Convenciones del Mapa">
+                            <i class="icon feather icon-info"></i>
+                        </button>
+
+                        <button type="button" (click)="mostrarBitacora = true" [class.activo]="mostrarBitacora"
+                            title="Alertas del mapa" class="position-relative">
+                            <i class="icon feather icon-bell"></i>
+                            <span class="alertas-badge" *ngIf="alertasSinLeer > 0">{{ alertasSinLeer > 9 ? '9+' :
+                                alertasSinLeer }}</span>
+                        </button>
+
+                        <button type="button" (click)="mostrarEmbudo = true" [class.activo]="mostrarEmbudo"
+                            title="Embudo de llegada de naves">
+                            <i class="icon feather icon-filter"></i>
+                        </button>
+
+                        <button type="button" (click)="mostrarRecorrido = true"
+                            [class.activo]="mostrarRecorrido || modoRecorrido" title="Reproducir las últimas horas">
+                            <i class="icon feather icon-film"></i>
+                        </button>
+
+                        <button type="button" (click)="toggleMapaBase()" [class.activo]="estiloBase === 'satelite'"
+                            title="Alternar Vista Satelital">
+                            <i class="icon feather"
+                                [ngClass]="estiloBase === 'satelite' ? 'icon-map' : 'icon-globe'"></i>
+                        </button>
+
+                        <button type="button" (click)="centrarMapa()" title="Centrar Mapa en Operación">
+                            <i class="icon feather icon-crosshair"></i>
+                        </button>
+
+                        <button type="button" (click)="alternarPantallaCompleta()" [class.activo]="pantallaCompleta"
+                            [title]="pantallaCompleta ? 'Cerrar vista ampliada' : 'Ampliar mapa'">
+                            <i class="icon feather"
+                                [ngClass]="pantallaCompleta ? 'icon-minimize' : 'icon-maximize'"></i>
+                        </button>
+                    </div>
+
+                    <!-- Aviso de modo recorrido -->
+                    <div class="aviso-recorrido" *ngIf="modoRecorrido">
+                        <span class="aviso-punto" [class.pausa]="!reproduciendo"></span>
+                        <span class="aviso-texto">Reproduciendo<strong *ngIf="fechaRecorrido"> · {{ fechaRecorrido |
+                                date: 'HH:mm' : '-0500' }}</strong></span>
+                        <div class="controles-aviso">
+                            <button type="button" (click)="alternarReproduccion()" [disabled]="!recorrido"
+                                [title]="reproduciendo ? 'Pausar' : 'Reproducir'">
+                                <i class="icon feather" [ngClass]="reproduciendo ? 'icon-pause' : 'icon-play'"></i>
+                            </button>
+                            <button type="button" class="aviso-vivo" (click)="salirRecorrido()">En vivo</button>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarCapas">
+                    <div class="panel-menu">
+                        <div class="panel-header">
+                            <h3>Visualización de Capas</h3>
+                            <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                                <i class="icon feather icon-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="contenido-panel">
+                            <div class="grupo-capas" *ngFor="let grupo of menuCapas">
+
+                                <!-- ENCABEZADO DEL GRUPO -->
+                                <div class="grupo-header" (click)="toggleGrupoMenu(grupo)">
+                                    <span class="grupo-titulo">{{ grupo.grupo }}</span>
+
+                                    <!-- Agrupamos el checkbox y la flecha a la derecha -->
+                                    <div class="controles-header">
+                                        <input type="checkbox" class="grupo-check" [checked]="grupoActivo(grupo)"
+                                            [indeterminate]="grupoParcial(grupo)" (click)="$event.stopPropagation()"
+                                            (change)="toggleGrupoCompleto(grupo, $any($event.target).checked)">
+                                        <span class="icono-toggle">{{ grupo.abierto ? '▼' : '▶' }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- LISTA DE CAPAS -->
+                                <div class="grupo-body" *ngIf="grupo.abierto">
+                                    <label class="capa-item" *ngFor="let capa of grupo.capas">
+
+                                        <!-- Contenedor para alinear el check con la primera línea de texto -->
+                                        <div class="capa-check-wrapper">
+                                            <input type="checkbox" [checked]="capa.activa"
+                                                (change)="capa.activa = $any($event.target).checked; toggleCapaMenu(capa.id, $event)">
+                                        </div>
+
+                                        <img *ngIf="capa.icono" class="capa-muestra" [src]="iconoLeyenda(capa.icono)"
+                                            alt="">
+                                        <span *ngIf="!capa.icono" class="capa-muestra capa-muestra-color"
+                                            [style.border-color]="capa.color"
+                                            [style.background-color]="capa.color + '40'"></span>
+
+                                        <span class="capa-nombre">{{ capa.nombre }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel: LEYENDA -->
+                <!-- <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarLeyenda">
+                    <div class="panel-menu">
+                        <div class="panel-header">
+                            <h6>Convenciones del Mapa</h6>
+                            <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                                <i class="icon feather icon-x"></i>
+                            </button>
+                        </div>
+                        <div class="contenido-panel">
+                            <ng-container *ngFor="let grupo of leyendaMapa; let ultimo = last">
+                                <h4>{{ grupo.grupo }}</h4>
+                                <p class="leyenda-nota" *ngIf="grupo.nota">{{ grupo.nota }}</p>
+                                <ul class="leyenda-lista leyenda-iconos">
+                                    <li *ngFor="let item of grupo.items">
+                                        <img *ngIf="item.icono" class="leyenda-icono" [src]="iconoLeyenda(item.icono)"
+                                            [alt]="item.texto">
+                                        <span *ngIf="!item.icono" class="leyenda-icono leyenda-color"
+                                            [style.background-color]="item.color + '99'"
+                                            [style.border-color]="item.color"></span>
+                                        <span class="leyenda-texto">{{ item.texto }}</span>
+                                    </li>
+                                </ul>
+                                <hr *ngIf="!ultimo">
+                            </ng-container>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarLeyenda">
+                    <div class="panel-menu">
+                        <div class="panel-header">
+                            <!-- Usamos h3 igual que en el panel de capas para mantener consistencia -->
+                            <h3>Convenciones del Mapa</h3>
+                            <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                                <i class="icon feather icon-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="contenido-panel">
+                            <!-- Agregamos la clase adicional 'grupo-leyenda' para sus ajustes específicos -->
+                            <div class="grupo-capas grupo-leyenda" *ngFor="let grupo of leyendaMapa">
+
+                                <!-- ENCABEZADO -->
+                                <div class="grupo-header">
+                                    <span class="grupo-titulo">{{ grupo.grupo }}</span>
+                                </div>
+
+                                <!-- CUERPO DE LA LEYENDA -->
+                                <div class="grupo-body">
+
+                                    <p class="leyenda-nota" *ngIf="grupo.nota">{{ grupo.nota }}</p>
+
+                                    <!-- Usamos capa-item igual que en los checkboxes -->
+                                    <div class="capa-item" *ngFor="let item of grupo.items">
+
+                                        <img *ngIf="item.icono" class="capa-muestra" [src]="iconoLeyenda(item.icono)"
+                                            [alt]="item.texto">
+
+                                        <!-- Usamos el mismo + '40' para que la transparencia coincida con las capas -->
+                                        <span *ngIf="!item.icono" class="capa-muestra capa-muestra-color"
+                                            [style.background-color]="item.color + '40'"
+                                            [style.border-color]="item.color"></span>
+
+                                        <span class="capa-nombre">{{ item.texto }}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel: BITÁCORA / ALERTAS -->
+                <!-- <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarBitacora">
+                    <div class="panel-header">
+                        <h6>Alertas del mapa</h6>
+                        <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                            <i class="icon feather icon-x"></i>
+                        </button>
+                    </div>
+                    <div class="contenido-scroll p-2">
+                        <p class="text-muted small text-center my-3" *ngIf="!bitacoraAlertas.length">Sin alertas por
+                            ahora en este puerto.</p>
+                        <button type="button" class="alerta-item d-block w-100 text-start"
+                            *ngFor="let a of bitacoraAlertas; trackBy: trackAlerta" [ngClass]="'nivel-' + a.nivel"
+                            (click)="verAlerta(a)" [disabled]="!a.coordenadas">
+                            <span class="alerta-punto"></span>
+                            <span class="alerta-texto">
+                                <strong>{{ a.titulo }}</strong>
+                                <span>{{ a.mensaje }}<em *ngIf="a.simulado"> · simulado</em></span>
+                            </span>
+                            <span class="alerta-hora">{{ a.fecha | date: 'HH:mm' }}</span>
+                        </button>
+                    </div>
+                </div> -->
+                <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarBitacora">
+                    <div class="panel-menu">
+                        <div class="panel-header">
+                            <h3>Alertas del mapa</h3>
+                            <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                                <i class="icon feather icon-x"></i>
+                            </button>
+                        </div>
+
+                        <div class="contenido-panel">
+                            <!-- Mensaje de estado vacío con un poco más de aire -->
+                            <p class="text-muted small text-center my-4" *ngIf="!bitacoraAlertas.length">
+                                Sin alertas por ahora en este puerto.
+                            </p>
+
+                            <!-- Contenedor maestro de la lista (Hereda de grupo-capas) -->
+                            <div class="grupo-capas grupo-alertas" *ngIf="bitacoraAlertas.length > 0">
+                                <div class="grupo-body">
+
+                                    <!-- Botón de alerta individual -->
+                                    <button type="button" class="alerta-item"
+                                        *ngFor="let a of bitacoraAlertas; trackBy: trackAlerta"
+                                        [ngClass]="'nivel-' + a.nivel" (click)="verAlerta(a)"
+                                        [disabled]="!a.coordenadas">
+
+                                        <span class="alerta-punto"></span>
+
+                                        <span class="alerta-texto">
+                                            <strong>{{ a.titulo }}</strong>
+                                            <span>{{ a.mensaje }}<em *ngIf="a.simulado"> · simulado</em></span>
+                                        </span>
+
+                                        <span class="alerta-hora">{{ a.fecha | date: 'HH:mm' }}</span>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel: EMBUDO DE LLEGADA -->
+                <!-- <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarEmbudo">
+                    <div class="panel-header">
+                        <h6>Embudo de Llegada</h6>
+                        <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                            <i class="icon feather icon-x"></i>
+                        </button>
+                    </div>
+                    <div class="contenido-scroll">
+                        <app-embudo-llegada [embudo]="embudo" [cargando]="cargandoEmbudo" [isDark]="isDark"
+                            [etapaActiva]="etapaEmbudo" (seleccionar)="seleccionarEtapaEmbudo($event)"
+                            (cerrar)="cerrarPaneles()"></app-embudo-llegada>
+                    </div>
+                </div> -->
+                <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarEmbudo">
+                    <div class="panel-menu">
+                        <div class="panel-header">
+                            <h3>Embudo de Llegada</h3>
+                            <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                                <i class="icon feather icon-x"></i>
+                            </button>
+                        </div>
+                        <div class="contenido-panel">
+                            <app-embudo-llegada [embudo]="embudo" [cargando]="cargandoEmbudo" [isDark]="isDark"
+                                [etapaActiva]="etapaEmbudo" (seleccionar)="seleccionarEtapaEmbudo($event)"
+                                (cerrar)="cerrarPaneles()"></app-embudo-llegada>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel: RECORRIDO (TIMELINE) -->
+                <!-- <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarRecorrido">
+                    <div class="panel-header">
+                        <h6>Reproducir Historial</h6>
+                        <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                            <i class="icon feather icon-x"></i>
+                        </button>
+                    </div>
+                    <div class="contenido-scroll" style="padding: 0;">
+                        <app-recorrido-panel [recorrido]="recorrido" [cargando]="cargandoRecorrido"
+                            [error]="errorRecorrido" [isDark]="isDark" [horas]="horasRecorrido"
+                            [segundo]="segundoRecorrido" [reproduciendo]="reproduciendo"
+                            [velocidad]="velocidadRecorrido" (cambiarHoras)="cambiarHorasRecorrido($event)"
+                            (alternar)="alternarReproduccion()" (cambiarVelocidad)="cambiarVelocidadRecorrido($event)"
+                            (buscar)="buscarRecorrido($event)" (verEvento)="verEventoRecorrido($event)"
+                            (cerrar)="cerrarPaneles()" (salir)="salirRecorrido()"></app-recorrido-panel>
+                    </div>
+                </div> -->
+                <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarRecorrido">
+                    <div class="panel-menu">
+                        <div class="panel-header">
+                            <h3>Reproducir Historial</h3>
+                            <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
+                                <i class="icon feather icon-x"></i>
+                            </button>
+                        </div>
+                        <div class="contenido-panel">
+                            <app-recorrido-panel [recorrido]="recorrido" [cargando]="cargandoRecorrido"
+                                [error]="errorRecorrido" [isDark]="isDark" [horas]="horasRecorrido"
+                                [segundo]="segundoRecorrido" [reproduciendo]="reproduciendo"
+                                [velocidad]="velocidadRecorrido" (cambiarHoras)="cambiarHorasRecorrido($event)"
+                                (alternar)="alternarReproduccion()"
+                                (cambiarVelocidad)="cambiarVelocidadRecorrido($event)"
+                                (buscar)="buscarRecorrido($event)" (verEvento)="verEventoRecorrido($event)"
+                                (cerrar)="cerrarPaneles()" (salir)="salirRecorrido()"></app-recorrido-panel>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

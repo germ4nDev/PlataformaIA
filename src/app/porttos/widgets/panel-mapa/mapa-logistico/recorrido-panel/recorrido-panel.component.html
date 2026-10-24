@@ -1,0 +1,153 @@
+<!-- <div class="recorrido" [class.dark-theme]="isDark">
+    <div class="recorrido-ventanas" role="group" aria-label="Ventana de tiempo">
+        <button type="button" *ngFor="let h of ventanas" [class.activo]="h === horas" (click)="cambiarHoras.emit(h)">{{
+            h }} h</button>
+    </div>
+
+    <p class="recorrido-aviso" *ngIf="cargando">Cargando el recorrido…</p>
+    <p class="recorrido-aviso recorrido-error" *ngIf="!cargando && error">{{ error }}</p>
+    <p class="recorrido-aviso" *ngIf="!cargando && !error && vacio">
+        Todavía no hay recorrido guardado en esta ventana. El mapa guarda una muestra por minuto desde que se activa el
+        muestreo.
+    </p>
+
+    <ng-container *ngIf="recorrido && !cargando && !error && !vacio">
+        <div class="recorrido-reloj">
+            <strong>{{ fecha | date: 'HH:mm' : '-0500' }}</strong>
+            <span>{{ dia }}</span>
+        </div>
+
+        <div class="recorrido-linea">
+            <div class="recorrido-marcas">
+                <span *ngFor="let e of recorrido.eventos; trackBy: trackEvento" class="marca"
+                    [ngClass]="'nivel-' + e.nivel" [style.left.%]="pos(e.seg)" [title]="e.titulo"></span>
+            </div>
+            <input type="range" min="0" [max]="duracion" step="10" [value]="segundo"
+                (input)="alMover($any($event.target).value)" aria-label="Momento del recorrido">
+            <div class="recorrido-extremos">
+                <span>{{ hora(0) | date: 'HH:mm' : '-0500' }}</span>
+                <span>Ahora</span>
+            </div>
+        </div>
+
+        <div class="recorrido-controles">
+            <button type="button" (click)="saltar(-15)" title="15 min atrás"><i
+                    class="icon feather icon-rewind"></i></button>
+            <button type="button" class="principal" (click)="alternar.emit()"
+                [title]="reproduciendo ? 'Pausar' : 'Reproducir'">
+                <i class="icon feather" [ngClass]="reproduciendo ? 'icon-pause' : 'icon-play'"></i>
+            </button>
+            <button type="button" (click)="saltar(15)" title="15 min adelante"><i
+                    class="icon feather icon-fast-forward"></i></button>
+            <div class="recorrido-velocidades" role="group" aria-label="Velocidad">
+                <button type="button" *ngFor="let v of velocidades" [class.activo]="v.valor === velocidad"
+                    (click)="cambiarVelocidad.emit(v.valor)">{{ v.etiqueta }}</button>
+            </div>
+        </div>
+
+        <p class="recorrido-totales">
+            {{ recorrido.totales.naves }} naves · {{ recorrido.totales.camiones }} camiones · {{
+            recorrido.eventos.length }} eventos
+        </p>
+
+        <div class="recorrido-eventos" *ngIf="recorrido.eventos.length">
+            <h4>Eventos</h4>
+            <button type="button" class="evento" *ngFor="let e of recorrido.eventos; trackBy: trackEvento"
+                [ngClass]="'nivel-' + e.nivel" [class.pasado]="e.seg <= segundo" (click)="verEvento.emit(e)"
+                title="Ir a este momento">
+                <span class="evento-punto"></span>
+                <span class="evento-texto">
+                    <strong>{{ e.titulo }}</strong>
+                    <span *ngIf="e.mensaje">{{ e.mensaje }}</span>
+                </span>
+                <span class="evento-hora">{{ hora(e.seg) | date: 'HH:mm' : '-0500' }}</span>
+            </button>
+        </div>
+    </ng-container>
+
+    <div class="recorrido-pie">
+        <button type="button" class="volver" (click)="salir.emit()">
+            <i class="icon feather icon-radio"></i> Volver a en vivo
+        </button>
+    </div>
+</div> -->
+<div class="recorrido" [class.dark-theme]="isDark">
+    <!-- Pestañas estilo "Segmented Control" tipo macOS -->
+    <div class="tabs-planos" role="group" aria-label="Ventana de tiempo">
+        <button type="button" *ngFor="let h of ventanas" [class.activo]="h === horas" (click)="cambiarHoras.emit(h)">
+            {{ h }} h
+        </button>
+    </div>
+
+    <p class="aviso-plano" *ngIf="cargando">Cargando el recorrido…</p>
+    <p class="aviso-plano text-error" *ngIf="!cargando && error">{{ error }}</p>
+    <p class="aviso-plano" *ngIf="!cargando && !error && vacio">
+        Todavía no hay recorrido guardado en esta ventana. El mapa guarda una muestra por minuto.
+    </p>
+
+    <ng-container *ngIf="recorrido && !cargando && !error && !vacio">
+        <div class="reloj-plano">
+            <strong>{{ fecha | date: 'HH:mm' : '-0500' }}</strong>
+            <span>{{ dia }}</span>
+        </div>
+
+        <div class="linea-tiempo">
+            <div class="marcas">
+                <span *ngFor="let e of recorrido.eventos; trackBy: trackEvento" class="marca-punto"
+                    [ngClass]="'nivel-' + e.nivel" [style.left.%]="pos(e.seg)" [title]="e.titulo"></span>
+            </div>
+            <input type="range" min="0" [max]="duracion" step="10" [value]="segundo"
+                (input)="alMover($any($event.target).value)" aria-label="Momento del recorrido">
+            <div class="extremos">
+                <span>{{ hora(0) | date: 'HH:mm' : '-0500' }}</span>
+                <span>Ahora</span>
+            </div>
+        </div>
+
+        <div class="controles-planos">
+            <button type="button" class="btn-salto" (click)="saltar(-15)" title="15 min atrás"><i
+                    class="icon feather icon-rewind"></i></button>
+
+            <button type="button" class="btn-play" (click)="alternar.emit()"
+                [title]="reproduciendo ? 'Pausar' : 'Reproducir'">
+                <i class="icon feather" [ngClass]="reproduciendo ? 'icon-pause' : 'icon-play'"></i>
+            </button>
+
+            <button type="button" class="btn-salto" (click)="saltar(15)" title="15 min adelante"><i
+                    class="icon feather icon-fast-forward"></i></button>
+
+            <div class="velocidades-planas" role="group">
+                <button type="button" *ngFor="let v of velocidades" [class.activo]="v.valor === velocidad"
+                    (click)="cambiarVelocidad.emit(v.valor)">
+                    {{ v.etiqueta }}
+                </button>
+            </div>
+        </div>
+
+        <p class="totales-planos">
+            {{ recorrido.totales.naves }} naves · {{ recorrido.totales.camiones }} camiones · {{
+            recorrido.eventos.length }} eventos
+        </p>
+
+        <!-- Eventos idénticos a la Bitácora -->
+        <div class="eventos-planos" *ngIf="recorrido.eventos.length">
+            <h4>Eventos</h4>
+            <button type="button" class="evento-item" *ngFor="let e of recorrido.eventos; trackBy: trackEvento"
+                [ngClass]="'nivel-' + e.nivel" [class.pasado]="e.seg <= segundo" (click)="verEvento.emit(e)"
+                title="Ir a este momento">
+                <span class="evento-punto"></span>
+                <span class="evento-texto">
+                    <strong>{{ e.titulo }}</strong>
+                    <span *ngIf="e.mensaje">{{ e.mensaje }}</span>
+                </span>
+                <span class="evento-hora">{{ hora(e.seg) | date: 'HH:mm' : '-0500' }}</span>
+            </button>
+        </div>
+    </ng-container>
+
+    <div class="pie-recorrido">
+        <button type="button" class="btn-volver" (click)="salir.emit()">
+            <i class="icon feather icon-radio"></i> Volver a en vivo
+        </button>
+    </div>
+</div>

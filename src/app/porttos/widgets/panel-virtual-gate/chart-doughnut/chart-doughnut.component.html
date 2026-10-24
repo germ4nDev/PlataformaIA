@@ -52,7 +52,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📍 Distribución 10 km'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Camiones en radio de influencia portuaria'"
-    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase">

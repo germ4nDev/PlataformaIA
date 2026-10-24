@@ -512,6 +512,10 @@ import { ThemeService } from '../../../service/theme.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { mapboxDrawStyles } from './mapbox-draw-styles';
 import * as turf from '@turf/turf';
+import {
+    agregarCapaReferencia, alternarCapaReferencia, referenciaEn, geometriaParaEditor,
+    describirReferencia, elementoOriginal, ATRIBUCION_REFERENCIA
+} from './mapa-referencia';
 
 @Component({
     selector: 'app-mapa-selector',
@@ -550,6 +554,10 @@ export class MapaSelectorComponent implements ControlValueAccessor, OnInit, OnDe
     @Output() onConfirm = new EventEmitter<any>();
 
     private marker: maplibregl.Marker | null = null;
+    /** Capa de referencia (OSM) para calcar o adoptar geometrías reales. */
+    public referenciaVisible = true;
+    public readonly atribucionReferencia = ATRIBUCION_REFERENCIA;
+    private popupReferencia: maplibregl.Popup | null = null;
     public isDark: boolean = false;
     private subs: Subscription = new Subscription();
     public currentSelectionMode: 'point' | 'polygon' = 'polygon';
@@ -605,6 +613,7 @@ export class MapaSelectorComponent implements ControlValueAccessor, OnInit, OnDe
 
     closeModal() {
         this.isModalOpen = false;
+        this.cerrarPopupReferencia();
         if (this.map) this.map.remove();
     }
 
@@ -776,6 +785,10 @@ export class MapaSelectorComponent implements ControlValueAccessor, OnInit, OnDe
             // Dibujamos el marcador si es punto
             this.renderMarker();
 
+            // Capa de referencia debajo del dibujo (se cargan los puertos que entran a la vista)
+            agregarCapaReferencia(this.map, this.referenciaVisible);
+            this.map.on('moveend', () => agregarCapaReferencia(this.map, this.referenciaVisible));
+
             this.map.on('styledata', () => {
                 const style = this.map.getStyle();
                 if (!style || !style.layers) return;
@@ -790,9 +803,10 @@ export class MapaSelectorComponent implements ControlValueAccessor, OnInit, OnDe
             });
 
             this.map.on('click', (e) => {
-                if (this.modo === 'poligono') return;
                 const target = e.originalEvent.target as HTMLElement;
                 if (target.closest('.mapboxgl-ctrl-group') || target.closest('.mapboxgl-ctrl')) return;
+                if (this.mostrarReferencia(e)) return;
+                if (this.modo === 'poligono') return;
                 this.handlePointPlacement(e.lngLat);
             });
 
@@ -1030,12 +1044,95 @@ export class MapaSelectorComponent implements ControlValueAccessor, OnInit, OnDe
     private refreshMapState() {
         if (!this.map || !this.map.loaded()) return;
         this.renderMarker();
+        agregarCapaReferencia(this.map, this.referenciaVisible);
         if (this.modo === 'poligono' && this.draw) {
             this.draw.deleteAll();
             if (this.tempValue.geocerca) {
                 this.draw.add({ type: 'Feature', geometry: this.tempValue.geocerca, properties: {} });
             }
         }
+    }
+
+    // ── Capa de referencia ─────────────────────────────────────────────
+
+    alternarReferencia(): void {
+        this.referenciaVisible = !this.referenciaVisible;
+        this.cerrarPopupReferencia();
+        if (this.map) alternarCapaReferencia(this.map, this.referenciaVisible);
+    }
+
+    /** Muestra el popup del elemento de referencia bajo el clic. Devuelve true si lo hubo. */
+    private mostrarReferencia(e: maplibregl.MapMouseEvent): boolean {
+        if (!this.map) return false;
+        if (this.modo === 'poligono' && this.draw) {
+            // No interferir mientras se dibuja o se edita un polígono propio
+            if (this.draw.getMode() !== 'simple_select') return false;
+            if (this.draw.getFeatureIdsAt(e.point).length) return false;
+        }
+        const ref = referenciaEn(this.map, e.point);
+        if (!ref) return false;
+
+        const { titulo, detalle } = describirReferencia(ref);
+        const cont = document.createElement('div');
+        cont.className = 'ref-popup';
+        const t = document.createElement('strong');
+        t.textContent = titulo;
+        const d = document.createElement('div');
+        d.className = 'ref-popup-detalle';
+        d.textContent = detalle;
+        cont.append(t, d);
+
+        const boton = (texto: string, accion: () => void) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'btn btn-primary btn-sm ref-popup-btn';
+            b.textContent = texto;
+            b.addEventListener('click', accion);
+            cont.appendChild(b);
+        };
+
+        if (geometriaParaEditor(ref, this.modo)) {
+            boton(this.modo === 'punto' ? 'Usar su centro' : 'Usar esta geometría',
+                () => this.adoptarReferencia(String(ref.source), String(ref.properties?.['osm_id'])));
+        } else {
+            const n = document.createElement('div');
+            n.className = 'ref-popup-detalle';
+            n.textContent = 'Está trazado como línea: dibuja el polígono calcando encima.';
+            cont.appendChild(n);
+        }
+        if (this.modo === 'punto') {
+            const lngLat = e.lngLat;
+            boton('Poner el punto aquí', () => { this.handlePointPlacement(lngLat); this.cerrarPopupReferencia(); });
+        }
+
+        this.cerrarPopupReferencia();
+        this.popupReferencia = new maplibregl.Popup({ closeButton: true, maxWidth: '280px' })
+            .setLngLat(e.lngLat).setDOMContent(cont).addTo(this.map);
+        return true;
+    }
+
+    /** Copia la geometría real (sin recortes de teselas) del elemento de referencia al editor. */
+    private async adoptarReferencia(fuente: string, osmId: string): Promise<void> {
+        const original = await elementoOriginal(this.map, fuente, osmId);
+        const geom = geometriaParaEditor(original, this.modo);
+        this.cerrarPopupReferencia();
+        if (!geom) return;
+
+        if (this.modo === 'punto') {
+            this.tempValue.ubicacion = { lat: geom.coordinates[1], lon: geom.coordinates[0] };
+            this.renderMarker();
+            return;
+        }
+        if (this.modo === 'poligono' && this.draw) {
+            // La geocerca es un único polígono: reemplaza lo dibujado
+            this.draw.deleteAll();
+            this.draw.add({ type: 'Feature', geometry: geom, properties: {} });
+            this.updateGeocerca({ geometry: geom });
+        }
+    }
+
+    private cerrarPopupReferencia(): void {
+        if (this.popupReferencia) { this.popupReferencia.remove(); this.popupReferencia = null; }
     }
 
     private emitChange() { this.onChange(this.innerValue); this.onTouched(); }

@@ -31,7 +31,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📦 RETIROS DE CONTENEDORES CARGADOS · 8 DÍAS'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Priorización por vencimiento de Free Time'"
-    [icono]="data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-primary text-uppercase">

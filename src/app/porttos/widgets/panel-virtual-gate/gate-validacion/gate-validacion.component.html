@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="data?.titulo || '🛡 Pre-Gate · Validación'"
     [subtitulo]="data?.subtitulo || 'Estado actual de camiones'" [icono]="data?.icono || 'feather icon-check-square'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen" [lienzo]="true">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
@@ -48,6 +48,29 @@
             </div>
         </ng-container>
 
+    </div>
+
+    <!-- Vista ampliada: validación por tipo y citas observadas -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="d-flex flex-column gap-3 pt-2">
+        <div *ngIf="tiposValidacion.length" class="validacion-tipos">
+            <h6 class="mb-2">Resultado por tipo de validación</h6>
+            <div *ngFor="let t of tiposValidacion" class="tipo-fila">
+                <span class="tipo-nombre">{{ t.nombre }}</span>
+                <div class="tipo-barra" [title]="t.aprobadas + ' aprobadas · ' + t.fallidas + ' fallidas · ' + t.sinDato + ' sin dato'">
+                    <span class="tramo aprobada" [style.width.%]="pct(t.aprobadas, t.total)"></span>
+                    <span class="tramo fallida" [style.width.%]="pct(t.fallidas, t.total)"></span>
+                    <span class="tramo sin-dato" [style.width.%]="pct(t.sinDato, t.total)"></span>
+                </div>
+                <span class="tipo-cifras">{{ t.aprobadas }} ok · {{ t.fallidas }} fallas · {{ t.sinDato }} sin dato</span>
+            </div>
+        </div>
+        <div>
+            <h6 class="mb-2">Citas observadas o sin dato de validación ({{ filasObservadas.length }})</h6>
+            <div style="height: 320px;">
+                <app-tabla-tcl [columnas]="columnasObservadas" [filas]="filasObservadas" campoId="id" [ampliada]="true"
+                    [nombreArchivo]="'validacion-pregate'"></app-tabla-tcl>
+            </div>
+        </div>
     </div>
 
 </app-widget-shell>

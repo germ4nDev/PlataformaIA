@@ -2,30 +2,64 @@
 .mv-estado {
     font-size: 0.8rem;
 }
+
 .mv-pie {
     font-size: 0.7rem;
     opacity: 0.7;
 }
+
 .mv-lista {
     overflow-y: auto;
     min-height: 0;
 }
+
 .mv-fila {
-    border-bottom: 1px solid var(--widget-border, rgba(127, 127, 127, 0.15));
+    border-bottom: 1px solid var(--border-color, rgba(127, 127, 127, 0.15));
     padding: 0.4rem 0.25rem;
     font-size: 0.8rem;
 }
+
+.mv-valor {
+    color: var(--text-color);
+}
+
+.mv-subtitulo-valor {
+    color: var(--text-subtitle-color);
+}
+
 .mv-barra {
     height: 4px;
     border-radius: 2px;
-    background: var(--widget-border, rgba(127, 127, 127, 0.15));
+    background: var(--border-color, rgba(127, 127, 127, 0.15));
     overflow: hidden;
-    > span {
+
+    >span {
         display: block;
         height: 100%;
         border-radius: 2px;
     }
-    .ok { background: var(--chart-semaforo-ok, #009ef7); }
-    .alerta { background: var(--chart-semaforo-alerta, #f59e0b); }
-    .critico { background: var(--chart-semaforo-critico, #ef4444); }
+
+    .ok {
+        background: var(--chart-semaforo-ok, #009ef7);
+    }
+
+    .alerta {
+        background: var(--chart-semaforo-alerta, #f59e0b);
+    }
+
+    .critico {
+        background: var(--chart-semaforo-critico, #ef4444);
+    }
 }
+// Vista ampliada (2026-10-24)
+.mv-detalle-titulo { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-subtitle-color); margin-bottom: 0.5rem; }
+.mv-embudo { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.mv-etapa {
+    display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color, rgba(127, 127, 127, 0.2));
+    &.cuello { border-color: #f89406; box-shadow: 0 0 0 1px #f89406 inset; }
+    .mv-etapa-nombre { font-size: 0.72rem; text-transform: uppercase; color: var(--text-subtitle-color); }
+    .mv-etapa-naves { font-size: 1.6rem; font-weight: 700; color: var(--text-color); }
+    .mv-etapa-tiempo { font-size: 0.7rem; color: var(--text-subtitle-color); }
+    .mv-etapa-sobre { font-size: 0.7rem; color: #d97c05; font-weight: 600; }
+}
+.mv-cuello { margin-top: 8px; font-size: 0.8rem; color: #d97c05; }

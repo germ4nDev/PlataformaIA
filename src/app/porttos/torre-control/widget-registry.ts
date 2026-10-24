@@ -51,6 +51,30 @@ import { OcupacionMuellesComponent } from '../widgets/panel-maritimo-vivo/ocupac
 import { LlegadasMaritimasComponent } from '../widgets/panel-maritimo-vivo/llegadas/llegadas-maritimas.component';
 import { TiemposFondeoComponent } from '../widgets/panel-maritimo-vivo/tiempos-fondeo/tiempos-fondeo.component';
 
+// Pestañas Granel, Carga suelta, Capacidad y Noticias (migración 013; datos en TablerosPestanasService)
+import { MotonavesGranelComponent } from '../widgets/panel-granel/motonaves-granel/motonaves-granel.component';
+import { ProductoGranelComponent } from '../widgets/panel-granel/producto-granel/producto-granel.component';
+import { EquiposGranelComponent } from '../widgets/panel-granel/equipos-granel/equipos-granel.component';
+import { BodegasGranelComponent } from '../widgets/panel-granel/bodegas-granel/bodegas-granel.component';
+import { TendenciaGranelComponent } from '../widgets/panel-granel/tendencia-granel/tendencia-granel.component';
+import { HistoricoGranelComponent } from '../widgets/panel-granel/historico-granel/historico-granel.component';
+import { BreakbulkSueltaComponent } from '../widgets/panel-carga-suelta/breakbulk-suelta/breakbulk-suelta.component';
+import { ProyectoSueltaComponent } from '../widgets/panel-carga-suelta/proyecto-suelta/proyecto-suelta.component';
+import { ComposicionSueltaComponent } from '../widgets/panel-carga-suelta/composicion-suelta/composicion-suelta.component';
+import { PatiosVehiculosComponent } from '../widgets/panel-carga-suelta/patios-vehiculos/patios-vehiculos.component';
+import { RoroSueltaComponent } from '../widgets/panel-carga-suelta/roro-suelta/roro-suelta.component';
+import { MarcasVehiculosComponent } from '../widgets/panel-carga-suelta/marcas-vehiculos/marcas-vehiculos.component';
+import { IndicadoresSueltaComponent } from '../widgets/panel-carga-suelta/indicadores-suelta/indicadores-suelta.component';
+import { HistoricoSueltaComponent } from '../widgets/panel-carga-suelta/historico-suelta/historico-suelta.component';
+import { SaturacionCapacidadComponent } from '../widgets/panel-capacidad/saturacion-capacidad/saturacion-capacidad.component';
+import { TraficoCapacidadComponent } from '../widgets/panel-capacidad/trafico-capacidad/trafico-capacidad.component';
+import { NodosCapacidadComponent } from '../widgets/panel-capacidad/nodos-capacidad/nodos-capacidad.component';
+import { TendenciaCapacidadComponent } from '../widgets/panel-capacidad/tendencia-capacidad/tendencia-capacidad.component';
+import { FeedNoticiasComponent } from '../widgets/panel-noticias/feed-noticias/feed-noticias.component';
+import { CorredoresNoticiasComponent } from '../widgets/panel-noticias/corredores-noticias/corredores-noticias.component';
+import { ClimaPuertosComponent } from '../widgets/panel-noticias/clima-puertos/clima-puertos.component';
+import { FuentesNoticiasComponent } from '../widgets/panel-noticias/fuentes-noticias/fuentes-noticias.component';
+
 export interface IWidgetRegistryDef {
     componente: Type<unknown>;
     defaultCols: number;
@@ -191,6 +215,49 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_BOD_CHRT_FLUJO': { componente: ChartBarBodegasComponent, defaultCols: 4, defaultRows: 4 },
     'PTT_BOD_CHRT_CARGA': { componente: ChartDoughnutBodegasComponent, defaultCols: 4, defaultRows: 4 },
     'PTT_BOD_TAB_MOVIMIENTOS': { componente: TableBodegasComponent, defaultCols: 12, defaultRows: 4 },
+
+    // ── Granel, Carga suelta, Capacidad y Noticias (KPIs por kpi-card-tcl; el resto, widgets de cada pestaña) ──
+    'PTT_GRA_KPI_AGRICOLA': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_GRA_KPI_MINERAL': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_GRA_KPI_LIQUIDO': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_GRA_KPI_EQUIPOS': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_GRA_TAB_MOTONAVES': { componente: MotonavesGranelComponent, defaultCols: 8, defaultRows: 3 },
+    'PTT_GRA_CHRT_PRODUCTO': { componente: ProductoGranelComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_GRA_TAB_EQUIPOS': { componente: EquiposGranelComponent, defaultCols: 8, defaultRows: 3 },
+    'PTT_GRA_PANEL_BODEGAS': { componente: BodegasGranelComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_GRA_CHRT_TENDENCIA': { componente: TendenciaGranelComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_GRA_CHRT_HISTORICO': { componente: HistoricoGranelComponent, defaultCols: 4, defaultRows: 3 },
+
+    'PTT_SUE_KPI_BREAKBULK': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_SUE_KPI_PROYECTO': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_SUE_KPI_VEH_IMPORT': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_SUE_KPI_VEH_EXPORT': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_SUE_TAB_BREAKBULK': { componente: BreakbulkSueltaComponent, defaultCols: 8, defaultRows: 3 },
+    'PTT_SUE_TAB_PROYECTO': { componente: ProyectoSueltaComponent, defaultCols: 8, defaultRows: 3 },
+    'PTT_SUE_CHRT_COMPOSICION': { componente: ComposicionSueltaComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_SUE_PANEL_PATIOS': { componente: PatiosVehiculosComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_SUE_TAB_RORO': { componente: RoroSueltaComponent, defaultCols: 8, defaultRows: 3 },
+    'PTT_SUE_CHRT_MARCAS': { componente: MarcasVehiculosComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_SUE_PANEL_INDICADORES': { componente: IndicadoresSueltaComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_SUE_CHRT_HISTORICO': { componente: HistoricoSueltaComponent, defaultCols: 4, defaultRows: 3 },
+
+    'PTT_CAP_KPI_NODOS': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_CAP_KPI_TEU': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_CAP_KPI_TON': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_CAP_KPI_CRITICOS': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_CAP_CHRT_SATURACION': { componente: SaturacionCapacidadComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_CAP_CHRT_TRAFICO': { componente: TraficoCapacidadComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_CAP_TAB_NODOS': { componente: NodosCapacidadComponent, defaultCols: 8, defaultRows: 3 },
+    'PTT_CAP_CHRT_TENDENCIA': { componente: TendenciaCapacidadComponent, defaultCols: 4, defaultRows: 3 },
+
+    'PTT_NOT_KPI_TRM': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_NOT_KPI_NOTICIAS': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_NOT_KPI_VIAS': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_NOT_KPI_CLIMA': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
+    'PTT_NOT_FEED': { componente: FeedNoticiasComponent, defaultCols: 8, defaultRows: 5 },
+    'PTT_NOT_CORREDORES': { componente: CorredoresNoticiasComponent, defaultCols: 4, defaultRows: 5 },
+    'PTT_NOT_CLIMA_PUERTOS': { componente: ClimaPuertosComponent, defaultCols: 6, defaultRows: 3 },
+    'PTT_NOT_FUENTES': { componente: FuentesNoticiasComponent, defaultCols: 6, defaultRows: 3 },
 };
 
 /**

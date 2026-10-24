@@ -1,0 +1,32 @@
+<!--
+    Author: German Valencia
+    Plantilla común de las pestañas con cuadrícula (PestanaGridsterBase): carga, vacío y widgets.
+-->
+<div class="dashboard-wrapper w-100 h-100 position-relative">
+    <div *ngIf="cargando" class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5">
+        <div class="spinner-border text-info mb-2" role="status"></div>
+        <span class="text-muted small">Construyendo tablero de {{ nombrePestana }} ({{ puerto }})...</span>
+    </div>
+
+    <div *ngIf="!cargando && !dashboard.length"
+        class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5 text-muted">
+        <i class="fs-1 mb-2 opacity-50" [ngClass]="iconoVacio"></i>
+        <p class="mb-0">No hay widgets configurados para la pestaña {{ nombrePestana }} ({{ pestanaActiva }}).</p>
+        <small>Agrégalos desde el catálogo de widgets (o revisa que las migraciones de la pestaña estén aplicadas).</small>
+    </div>
+
+    <gridster *ngIf="!cargando && options && dashboard.length" [options]="options" class="bg-transparent">
+        <gridster-item *ngFor="let w of dashboard; trackBy: trackByWidget" [item]="w" class="rounded overflow-hidden shadow-sm">
+            <ng-container *ngIf="w.componenteTarget; else sinRegistrar">
+                <ng-container *ngComponentOutlet="w.componenteTarget; inputs: w.componenteInputs"></ng-container>
+            </ng-container>
+            <ng-template #sinRegistrar>
+                <div class="pendiente-registro d-flex flex-column justify-content-center align-items-center w-100 h-100 p-3 text-muted rounded">
+                    <i class="feather icon-alert-circle text-warning fs-3 mb-2"></i>
+                    <span class="fw-bold small">{{ w.type }}</span>
+                    <small class="text-center mt-1">Widget pendiente de registro en <code>WIDGET_MAP</code></small>
+                </div>
+            </ng-template>
+        </gridster-item>
+    </gridster>
+</div>

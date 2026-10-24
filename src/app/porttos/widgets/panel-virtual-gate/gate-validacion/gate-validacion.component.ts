@@ -20,6 +20,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
 import { VirtualGateService } from 'src/app/theme/shared/service/tablero-control/virtual-gate.service';
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
+import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tcl.component';
 
 export interface IResumenValidacionGate {
     totalFlujo: number;
@@ -31,7 +32,7 @@ export interface IResumenValidacionGate {
 @Component({
     selector: 'app-gate-validacion',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './gate-validacion.component.html',
     styleUrls: ['./gate-validacion.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -173,6 +174,50 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
             icono: raw.icono || 'feather icon-check-square',
             resumen: resumenNormalizado
         };
+    }
+
+    // ---------------------------------------------------------------- vista ampliada (2026-10-24)
+
+    public readonly columnasObservadas: ColumnaTabla[] = [
+        { campo: 'placa', titulo: 'Placa', tipo: 'principal' },
+        { campo: 'transportador', titulo: 'Transportador' },
+        { campo: 'terminal', titulo: 'Terminal' },
+        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
+        { campo: 'fallas', titulo: 'Falla en', tipo: 'lista' },
+        { campo: 'sinDato', titulo: 'Sin dato en', tipo: 'lista' }
+    ];
+
+    /** Aprobadas / fallidas / sin dato por tipo de validación (lo calcula el API). */
+    get tiposValidacion(): Array<{ nombre: string; aprobadas: number; fallidas: number; sinDato: number; total: number }> {
+        const p = this.data?.porTipo;
+        if (!p) return [];
+        return [['OCR de placa', p.ocr], ['Biometría', p.biometria], ['Documental', p.documental]]
+            .filter(([, v]) => !!v)
+            .map(([nombre, v]: any) => ({ nombre, ...v, total: (v.aprobadas || 0) + (v.fallidas || 0) + (v.sinDato || 0) }));
+    }
+
+    pct(n: number, total: number): number {
+        return total > 0 ? Math.round((n / total) * 100) : 0;
+    }
+
+    private _observadas: { origen: any; filas: any[] } = { origen: null, filas: [] };
+    /** Citas con alguna validación fallida o sin dato. */
+    get filasObservadas(): any[] {
+        const citas = this.data?.citas;
+        if (this._observadas.origen !== citas) {
+            const nombres: Array<[string, string]> = [['validacion_ocr', 'OCR'], ['validacion_biometria', 'Biometría'], ['validacion_documental', 'Documental']];
+            this._observadas = {
+                origen: citas,
+                filas: (Array.isArray(citas) ? citas : [])
+                    .map((c: any) => ({
+                        ...c, id: c.id_cita,
+                        fallas: nombres.filter(([k]) => c[k] === false).map(([, n]) => n),
+                        sinDato: nombres.filter(([k]) => c[k] === null || c[k] === undefined).map(([, n]) => n)
+                    }))
+                    .filter((c: any) => c.fallas.length || c.sinDato.length)
+            };
+        }
+        return this._observadas.filas;
     }
 
     get data(): any {

@@ -1,7 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, from, Observable, shareReplay, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, shareReplay, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { VISIBILIDAD_INICIAL } from 'src/app/porttos/widgets/panel-mapa/mapa-logistico/mapa-capas';
+import { SocketService } from '../sockets.service';
+
+/** Aviso del API cuando un evento vial aparece o se despeja (sala puerto:{P}:mapa). */
+const EVENTO_CAMBIO_VIALES = 'eventos-viales-cambio';
+
+/** Origen de la capa de eventos viales (ciclo de vida, 2026-10-26). */
+export interface OrigenEventosViales {
+    fuente: string | null;
+    esRespaldo: boolean;
+    periodo: string | null;
+    generadoEn: string;
+    nota: string | null;
+    ultimaSincronizacion: string | null;
+    zonasFallidas: string[];
+}
 
 const base_url = environment.apiUrl;
 
@@ -39,18 +55,16 @@ export class MapaGeneralService {
     private accidentesSubject = new BehaviorSubject<any>(null);
     public accidentes$: Observable<any> = this.accidentesSubject.asObservable().pipe(shareReplay(1));
 
+    /** Origen de los eventos viales: última sincronización con TomTom y zonas que fallaron. */
+    private origenVialesSubject = new BehaviorSubject<OrigenEventosViales | null>(null);
+    public origenViales$: Observable<OrigenEventosViales | null> = this.origenVialesSubject.asObservable();
+    private cambiosVialesSub: Subscription | null = null;
+
     // ==========================================================
     // 2. ESTADO DE VISIBILIDAD
     // ==========================================================
-    private visibilidadState: { [key: string]: boolean } = {
-        naves: true,
-        infra: true,
-        terrestre: true,
-        clima: true,
-        vias: false,
-        accidentes: true,
-        limites: true
-    };
+    // Estado de cada entrada del menú de capas (catálogo único en mapa-logistico/mapa-capas.ts)
+    private visibilidadState: { [key: string]: boolean } = { ...VISIBILIDAD_INICIAL };
 
     public visibilidad$ = new BehaviorSubject<{ [key: string]: boolean }>(this.visibilidadState);
     private datosCargados = false;
@@ -89,7 +103,7 @@ export class MapaGeneralService {
         this.cargarFlotaTerrestreGPS();
     }
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private _socketService: SocketService) { }
 
     // ==========================================================
     // 3. EL MOTOR DE ARRANQUE
@@ -103,6 +117,7 @@ export class MapaGeneralService {
         this.getCapaClima().subscribe();
         this.getCapaNaves().subscribe();
         this.cargarEventosVialesActivos();
+        this.escucharCambiosEventosViales();
 
         // 🟢 NUEVO: Carga de flota GPS integrada (Reemplaza la antigua capa estática)
         this.cargarFlotaTerrestreGPS();
@@ -234,10 +249,34 @@ export class MapaGeneralService {
         this.http.get<any>(endpoint, { params: this.paramsPuerto() }).subscribe({
             next: (geoJsonData) => {
                 this.accidentesSubject.next(geoJsonData);
+                this.origenVialesSubject.next(geoJsonData?.origen || null);
                 this.actualizarGemelo('CAPA_ACCIDENTES', geoJsonData);
             },
             error: (error) => { console.error('❌ Error incidentes:', error); }
         });
+    }
+
+    /**
+     * Ciclo de vida de los eventos viales: el API avisa cuando uno aparece o se despeja (cada sincronización con
+     * TomTom o un despeje manual) y la capa se recarga, así el accidente resuelto sale del mapa sin recargar.
+     * El mapa ya está en la sala puerto:{P}:mapa (la abre AlertasMapaService).
+     */
+    private escucharCambiosEventosViales(): void {
+        if (this.cambiosVialesSub) return;
+        this.cambiosVialesSub = this._socketService
+            .listen<{ puerto: string; nuevos: string[]; despejados: string[] }>(EVENTO_CAMBIO_VIALES)
+            .subscribe((cambio) => {
+                const propio = !this.puertoActual
+                    || SocketService.normalizarPuerto(cambio?.puerto || '') === SocketService.normalizarPuerto(this.puertoActual);
+                if (propio) this.cargarEventosVialesActivos();
+            });
+    }
+
+    /** Despeje manual del operador (eventos que no vienen de TomTom). La capa se recarga al terminar. */
+    public despejarEventoVial(codigo: string): Observable<any> {
+        return this.http.patch(`${base_url}/eventos-viales/eventos/${encodeURIComponent(codigo)}/despejar`, {}).pipe(
+            tap(() => this.cargarEventosVialesActivos())
+        );
     }
 
     // 🟢 Método de carga inicial optimizado
@@ -252,169 +291,9 @@ export class MapaGeneralService {
         });
     }
 
-    // public obtenerAccidentesYBloqueosViales(): Observable<any> {
-    //     const urlSocrata = 'https://www.datos.gov.co/resource/7i66-rps2.json?$limit=500';
-    //     const peticionLimpia = fetch(urlSocrata).then(response => {
-    //         if (!response.ok) throw new Error('Error conectando con el INVIAS');
-    //         return response.json();
-    //     });
-    //     return from(peticionLimpia).pipe(
-    //         map((datos: any[]) => {
-    //             const features = datos
-    //                 .filter(incidente => incidente.latitud && incidente.longitud)
-    //                 .map(incidente => ({
-    //                     type: 'Feature',
-    //                     geometry: { type: 'Point', coordinates: [parseFloat(incidente.longitud), parseFloat(incidente.latitud)] },
-    //                     properties: {
-    //                         estado: incidente.estado_via || 'RESTRINGIDO',
-    //                         descripcion: incidente.corredor_vial_via_que_conduce || 'Reporte vial',
-    //                         jurisdiccion: incidente.jurisdiccion_ditra || 'N/A'
-    //                     }
-    //                 }));
-    //             return { type: 'FeatureCollection', features };
-    //         })
-    //     );
-    // }
-    // public obtenerAccidentesYBloqueosViales(): Observable<any> {
-    //     const urlSocrata = 'https://www.datos.gov.co/resource/7i66-rps2.json?$limit=500';
-
-    //     // 1. Obtenemos la fecha de hoy en formato YYYY-MM-DD
-    //     const hoy = new Date().toLocaleDateString('en-CA');
-
-    //     const peticionLimpia = fetch(urlSocrata).then(response => {
-    //         if (!response.ok) throw new Error('Error conectando con el INVIAS');
-    //         return response.json();
-    //     });
-
-    //     return from(peticionLimpia).pipe(
-    //         map((datos: any[]) => {
-
-    //             // 🕵️‍♂️ EL LOG PARA INSPECCIONAR
-    //             console.log("--- RESPUESTA INVIAS (PRIMER REGISTRO) ---");
-    //             console.log(datos[0]);
-    //             console.log("------------------------------------------");
-
-    //             const features = datos
-    //                 // Filtramos que tengan coordenadas válidas
-    //                 .filter(incidente => incidente.latitud && incidente.longitud)
-
-    //                 // 2. NUEVO: Filtramos que la fecha del incidente coincida con "hoy"
-    //                 .filter(incidente => {
-    //                     // ⚠️ OJO: 'fecha_reporte' es un ejemplo. Debes poner el nombre real del campo de fecha que arroje el JSON
-    //                     if (!incidente.fecha_reporte) return false;
-
-    //                     // Extraemos solo la fecha (ignorando la hora que venga en la T)
-    //                     const fechaIncidente = incidente.fecha_reporte.split('T')[0];
-    //                     return fechaIncidente === hoy;
-    //                 })
-
-    //                 // Mapeamos a GeoJSON
-    //                 .map(incidente => ({
-    //                     type: 'Feature',
-    //                     geometry: { type: 'Point', coordinates: [parseFloat(incidente.longitud), parseFloat(incidente.latitud)] },
-    //                     properties: {
-    //                         estado: incidente.estado_via || 'RESTRINGIDO',
-    //                         descripcion: incidente.corredor_vial_via_que_conduce || 'Reporte vial',
-    //                         jurisdiccion: incidente.jurisdiccion_ditra || 'N/A'
-    //                     }
-    //                 }));
-
-    //             return { type: 'FeatureCollection', features };
-    //         })
-    //     );
-    // }
-
-    // public obtenerAccidentesYBloqueosViales(): Observable<any> {
-    //     // 💡 TRUCO PRO: Añadimos "$order=fecha DESC" para que el INVIAS nos envíe siempre lo más reciente primero
-    //     const urlSocrata = 'https://www.datos.gov.co/resource/7i66-rps2.json?$order=fecha DESC&$limit=500';
-
-    //     // Obtenemos la fecha de hoy en formato YYYY-MM-DD
-    //     const hoy = new Date().toLocaleDateString('en-CA');
-
-    //     const peticionLimpia = fetch(urlSocrata).then(response => {
-    //         if (!response.ok) throw new Error('Error conectando con el INVIAS');
-    //         return response.json();
-    //     });
-
-    //     return from(peticionLimpia).pipe(
-    //         map((datos: any[]) => {
-    //             // 🕵️‍♂️ EL LOG PARA INSPECCIONAR
-    //             console.log("--- RESPUESTA INVIAS (PRIMER REGISTRO) ---");
-    //             console.log(datos[0]);
-    //             console.log("------------------------------------------");
-
-    //             const features = datos
-    //                 // 1. Descartamos los que no tengan coordenadas
-    //                 .filter(incidente => incidente.latitud && incidente.longitud)
-
-    //                 // 2. Filtramos para que SOLO pasen los de hoy
-    //                 .filter(incidente => {
-    //                     if (!incidente.fecha) return false;
-
-    //                     // Extraemos la fecha cortando en la 'T' (ej: '2026-01-16T19:07...' -> '2026-01-16')
-    //                     const fechaIncidente = incidente.fecha.split('T')[0];
-    //                     return fechaIncidente === hoy;
-    //                 })
-
-    //                 // 3. Mapeamos a GeoJSON usando las propiedades reales de tu imagen
-    //                 .map(incidente => ({
-    //                     type: 'Feature',
-    //                     geometry: { type: 'Point', coordinates: [parseFloat(incidente.longitud), parseFloat(incidente.latitud)] },
-    //                     properties: {
-    //                         estado: incidente.estado_de_reporte || 'RESTRINGIDO',
-    //                         evento: incidente.evento_presentado || 'N/A',
-    //                         motivo: incidente.motivo_de_la_afectaci_n_vial || 'N/A',
-    //                         descripcion: incidente.corredor_vial_via_que_conduce || 'Reporte vial',
-    //                         departamento: incidente.departamento || '',
-    //                         municipio: incidente.municipio || '',
-    //                         fecha: incidente.fecha
-    //                     }
-    //                 }));
-
-    //             return { type: 'FeatureCollection', features };
-    //         })
-    //     );
-    // }
-    public obtenerAccidentesYBloqueosViales(): Observable<any> {
-        const urlSocrata = 'https://www.datos.gov.co/resource/7i66-rps2.json?$order=fecha DESC&$limit=500';
-
-        const peticionLimpia = fetch(urlSocrata).then(response => {
-            if (!response.ok) throw new Error('Error conectando con el INVIAS');
-            return response.json();
-        });
-
-        return from(peticionLimpia).pipe(
-            map((datos: any[]) => {
-                // 🕵️‍♂️ EL LOG PARA INSPECCIONAR
-                // console.log("--- RESPUESTA INVIAS (PRIMER REGISTRO) ---");
-                // console.log(datos[0]);
-                // console.log("------------------------------------------");
-
-                const features = datos
-                    // 1. Descartamos los que no tengan coordenadas
-                    .filter(incidente => incidente.latitud && incidente.longitud)
-
-                    // 2. 🟢 NUEVA ESTRATEGIA: Filtramos SOLO los que sigan vigentes, sin importar la fecha
-                    .filter(incidente => incidente.estado_de_reporte === 'VIGENTE')
-
-                    // 3. Mapeamos a GeoJSON
-                    .map(incidente => ({
-                        type: 'Feature',
-                        geometry: { type: 'Point', coordinates: [parseFloat(incidente.longitud), parseFloat(incidente.latitud)] },
-                        properties: {
-                            estado: incidente.estado_de_reporte,
-                            evento: incidente.evento_presentado || 'N/A',
-                            motivo: incidente.motivo_de_la_afectaci_n_vial || 'N/A',
-                            descripcion: incidente.corredor_vial_via_que_conduce || 'Reporte vial',
-                            departamento: incidente.departamento || '',
-                            municipio: incidente.municipio || '',
-                            fecha: incidente.fecha // Dejamos la fecha original para que el usuario sepa desde cuándo está el bloqueo
-                        }
-                    }));
-
-                return { type: 'FeatureCollection', features };
-            })
-        );
+    /** Peajes nacionales (archivo estático del front). */
+    public obtenerPeajes(): Observable<any> {
+        return this.http.get('/assets/data/Peajes_20260705.geojson');
     }
 
     public vincularMotonave(mmsi: string, idAviso: number, nombreOpcional?: string) {

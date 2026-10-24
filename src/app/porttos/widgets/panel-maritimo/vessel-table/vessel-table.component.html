@@ -64,12 +64,15 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data.titulo || 'REPORTE DE MOTONAVES · 72H'"
     [subtitulo]="data.subtitulo || 'Programación de arribos y atraques'" [icono]="data.icono || 'feather icon-anchor'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center gap-2">
         <span class="tc-badge badge-info text-uppercase">
             Programación · {{ data.motonaves?.length || 0 }} Naves
+        </span>
+        <span *ngIf="totalAtrasadas" class="tc-badge badge-eta-vencida text-uppercase" title="ETA vencida sin ATA">
+            {{ totalAtrasadas }} con ETA vencida
         </span>
     </div>
 
@@ -101,7 +104,7 @@
 
                     <!-- Filas de Motonaves -->
                     <ng-container *ngIf="!isLoading">
-                        <tr *ngFor="let nave of data.motonaves; trackBy: trackByNave"
+                        <tr *ngFor="let nave of data.motonaves; trackBy: trackByNave" [class.nave-atrasada]="nave.atrasada"
                             style="font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
                             <td class="font-weight-bold text-white py-3">
                                 {{ nave.motonave }}
@@ -131,5 +134,11 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <!-- Vista ampliada: el line-up completo (viaje, muelle, eslora, zarpe, novedades, ETA vencida) -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="detalle h-100" style="min-height: 420px;">
+        <app-tabla-tcl [columnas]="columnasAmpliadas" [filas]="filasAmpliadas" [ampliada]="true" [seleccionable]="false"
+            nombreArchivo="line-up-motonaves"></app-tabla-tcl>
     </div>
 </app-widget-shell>

@@ -1,0 +1,51 @@
+<!-- Cuerpo del Gestor de Pestañas (Sin Modal) -->
+<div class="lobby-contenedor-maestro">
+    <div class="lobby-header">
+        <div>
+            <h6 class="tipulo-panel fw-bold fs-5 text-uppercase">Gestor de Pestañas</h6>
+        </div>
+
+        <!-- 🟢 CONTENEDOR PARA AGRUPAR LOS DOS BOTONES A LA DERECHA -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- Todas las pestañas (mismo control que "Todos" del lobby de widgets) -->
+            <label class="seleccionar-todas" *ngIf="pestanasProcesadas.length"
+                [title]="todasActivas ? 'Quitar todas las pestañas' : 'Mostrar todas las pestañas'">
+                <input class="minimal-checkbox" type="checkbox" [checked]="todasActivas"
+                    [indeterminate]="algunasActivas" (change)="seleccionarTodas($any($event.target).checked)">
+                <span>Todas <small>({{ pestanasActivasCount }}/{{ pestanasProcesadas.length }})</small></span>
+            </label>
+            <button type="button" class="btn-cerrar" (click)="cerrar.emit()" [title]="'Cerrar Ventana'">
+                <i class="feather icon-x"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="widgets-lobby-body">
+
+        <div class="lista-pestanas" cdkDropList (cdkDropListDropped)="onDrop($event)">
+
+            <div class="pestana-list-item" *ngFor="let pestana of pestanasProcesadas" cdkDrag
+                [class.item-active]="pestana.activo" (click)="togglePestana(pestana.codigoPestana)">
+
+                <div class="d-flex align-items-center gap-3 w-100">
+                    <div cdkDragHandle (click)="$event.stopPropagation()" class="drag-handle text-muted"
+                        title="Arrastrar para reordenar">
+                        <i class="feather icon-menu"></i>
+                    </div>
+
+                    <div class="widget-info d-flex flex-column align-items-start flex-grow-1 overflow-hidden">
+                        <h6 class="titulo-item fw-bold">{{ pestana.nombrePestana ||
+                            pestana.codigoPestana }}</h6>
+                        <span class="widget-code-badge text-muted small">{{ pestana.codigoPestana }}</span>
+                    </div>
+
+                    <div class="checkbox-minimalista-wrapper ms-auto flex-shrink-0">
+                        <input class="minimal-checkbox" type="checkbox" [id]="'chk-pestana-' + pestana.codigoPestana"
+                            [checked]="pestana.activo" (click)="$event.stopPropagation()"
+                            (change)="onCheckboxChange(pestana.codigoPestana, $event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -30,7 +30,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📊 Histórico Anual'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Toneladas movilizadas · Tendencia portuaria'"
-    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge text-uppercase"

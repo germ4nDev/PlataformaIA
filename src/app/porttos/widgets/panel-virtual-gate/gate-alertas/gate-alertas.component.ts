@@ -216,7 +216,7 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
     private normalizarTipo(rawTipo?: string): 'danger' | 'warning' | 'info' | 'success' {
         const t = (rawTipo || '').toLowerCase();
         if (t.includes('danger') || t.includes('crit') || t.includes('roj')) return 'danger';
-        if (t.includes('warn') || t.includes('amarill') || t.includes('demor')) return 'warning';
+        if (t.includes('warn') || t.includes('amarill') || t.includes('demor') || t.includes('atenci')) return 'warning';
         if (t.includes('succ') || t.includes('verd') || t.includes('ok')) return 'success';
         return 'info';
     }
@@ -241,6 +241,18 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
             ...(this.datosAutonomosSQL || {}),
             alertas: this.listaAlertas
         };
+    }
+
+    /** Alertas críticas (≥ 45 min) y total, aunque la lista venga recortada a 20 (corregido 2026-10-23). */
+    get criticas(): number {
+        const raw = this.datosAutonomosSQL || this.datosVivos || {};
+        if (typeof raw.alertasCriticas === 'number') return raw.alertasCriticas;
+        return this.alertas.filter((a: any) => /CRIT|PELIGRO|DANGER|ROJO/i.test(String(a.severidad || a.tipo || ''))).length;
+    }
+
+    get totalAlertas(): number {
+        const raw = this.datosAutonomosSQL || this.datosVivos || {};
+        return Number(raw.totalAlertas ?? this.alertas.length);
     }
 
     get alertas(): IAlertaGate[] {

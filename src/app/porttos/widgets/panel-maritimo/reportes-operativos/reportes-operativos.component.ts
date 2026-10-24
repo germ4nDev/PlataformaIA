@@ -1,60 +1,3 @@
-// /*
-//     Author: German Valencia
-//     Pattern: PORTTOS Generic Widget - Reportes Operativos (Refactorizado Dumb Component)
-// */
-// import { Component, Input, ViewEncapsulation } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-
-// // 🟢 Importamos el Shell maestro
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-reportes-operativos',
-//     standalone: true,
-//     imports: [CommonModule, WidgetShellComponent],
-//     templateUrl: './reportes-operativos.component.html',
-//     styleUrls: ['./reportes-operativos.component.scss'],
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class ReportesOperativosComponent {
-
-//     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
-//     @Input() widgetConfig: any;
-//     @Input() isEnfoque: boolean = false;
-//     @Input() mostrarTabla: boolean = false;
-
-//     // 🟢 LA NUEVA COMPUERTA: Recibe la data inyectada directamente desde la pestaña
-//     @Input() datosVivos: any;
-
-//     constructor(private _torreService: DashboardService) { }
-
-//     // 🟢 EL CEREBRO REACTIVO: Calcula la data en tiempo real
-//     get data() {
-//         if (!this.widgetConfig) return {};
-
-//         const configBase = this.widgetConfig.data || {};
-
-//         // Fusión limpia: combina la configuración visual con los datos vivos
-//         return {
-//             ...configBase,
-//             ...(this.datosVivos || {})
-//         };
-//     }
-
-//     get isLoading(): boolean {
-//         return !this.widgetConfig && !this.datosVivos;
-//     }
-
-//     // 🟢 Toggle de enfoque: Abre o cierra el modal
-//     maximizarDesdeShell() {
-//         if (this.isEnfoque) {
-//             this._torreService.cerrarModoEnfoque();
-//         } else {
-//             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_REPORTES', this.data);
-//         }
-//     }
-// }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -88,10 +31,12 @@ export interface IReporteOperativoItem {
     icono?: string;
 }
 
+import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive';
+
 @Component({
     selector: 'app-reportes-operativos',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './reportes-operativos.component.html',
     styleUrls: ['./reportes-operativos.component.scss'],
     encapsulation: ViewEncapsulation.None

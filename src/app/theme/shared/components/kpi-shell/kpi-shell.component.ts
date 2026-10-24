@@ -32,7 +32,6 @@ export class KpiShellComponent {
     }
 
     maximizarWidget() {
-        console.log('NNNNNNNNNNNNNNNNNNNNNNNNNNNNNN');
         this.clickEnfoque.emit();
     }
 }

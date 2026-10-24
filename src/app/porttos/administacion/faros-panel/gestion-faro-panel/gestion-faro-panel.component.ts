@@ -202,14 +202,6 @@ export class GestionFaroPanelComponent implements OnInit {
     btnGestionarRegistroClick(form: any) {
         const payload = { ...this.FormRegistro };
         payload.geocerca_geo = this.FormRegistro.geocerca_geo ? this.FormRegistro.geocerca_geo : this.faro.geocerca_geo
-        // payload.geocerca_geo = this.FormRegistro.geocerca_geo?.geocerca ? {
-        //     type: 'FeatureCollection',
-        //     features: [{
-        //         type: 'Feature',
-        //         geometry: this.FormRegistro.geocerca_geo.geocerca,
-        //         properties: {}
-        //     }]
-        // } : null;
         payload.usuario_cargue = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
         payload.fecha_cargue = new Date().toISOString();
         console.log('payload', payload);
@@ -226,7 +218,7 @@ export class GestionFaroPanelComponent implements OnInit {
                         console.log('MODIFICAdo FaroModel', resp.data);
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('MUELLES.CREATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/faros-panel'])
+                        this.router.navigate(['/porttos/faros-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -254,7 +246,7 @@ export class GestionFaroPanelComponent implements OnInit {
                     if (resp.ok) {
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('MUELLES.UPDATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/faros-panel'])
+                        this.router.navigate(['/porttos/faros-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -272,7 +264,7 @@ export class GestionFaroPanelComponent implements OnInit {
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/tablero-control/faros-panel'])
+        this.router.navigate(['/porttos/faros-panel'])
     }
 
     navMobClick() {

@@ -58,7 +58,7 @@
 <app-widget-shell
     [titulo]="(data?.titulo || '🏆 MATRIZ TERMINAL x TIPO DE CARGA') + (data?.anio ? ' · ' + data.anio : '')"
     [subtitulo]="data?.subtitulo || 'Toneladas movilizadas · revela la especialización operativa'"
-    [icono]="data?.icono || 'feather icon-grid'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-grid'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge de Operadores y Tipos -->
     <div acciones-extra class="d-flex align-items-center">

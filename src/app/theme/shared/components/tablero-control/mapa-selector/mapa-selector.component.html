@@ -31,6 +31,16 @@
                                 (click)="draw.trash()" title="Eliminar">
                                 <i class="icon feather icon-trash-2"></i>
                             </button>
+
+                            <button class="btn btn-primary btn-map-option btn-animacion-map" type="button"
+                                [class.ref-apagada]="!referenciaVisible"
+                                (click)="alternarReferencia()"
+                                [title]="referenciaVisible ? 'Ocultar referencia (OpenStreetMap)' : 'Mostrar referencia (OpenStreetMap)'">
+                                <i class="icon feather icon-layers"></i>
+                            </button>
+                        </div>
+                        <div class="ref-atribucion" *ngIf="referenciaVisible">
+                            Referencia: clic en un elemento para usar su geometría · {{ atribucionReferencia }}
                         </div>
                     </div>
                 </div>

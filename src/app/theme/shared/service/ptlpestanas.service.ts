@@ -216,7 +216,7 @@ export class PtlpestanasService {
                 console.log('Respuesta servicio getPestanas', resp);
                 return {
                     ok: resp.success ?? true,
-                    pestanas: resp.data || resp.pestanas
+                    pestanas: resp.data || resp.respuesta
                 };
             })
         );

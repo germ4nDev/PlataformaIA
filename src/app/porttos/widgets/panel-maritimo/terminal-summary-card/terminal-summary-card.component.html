@@ -2,7 +2,7 @@
 <app-widget-shell [titulo]="data.nombreTerminal || data.nombre || 'Terminal Marítimo'"
     [subtitulo]="data.descripcionTerminal || data.descripcion || 'Operación Portuaria'"
     [icono]="data.icono || 'feather icon-anchor'" [tituloFooter]="'TIEMPO MEDIO ESPERA VIRTUAL'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+    (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- ACCIONES EXTRA (Arriba a la derecha) -->
     <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="!cargandoIA">
@@ -13,6 +13,11 @@
         <span class="tc-badge rounded-pill border border-danger text-danger bg-transparent" *ngIf="data.badgeCount">
             {{ data.badgeCount }}
         </span>
+        <span class="tc-badge rounded-pill bg-transparent" *ngIf="data.aisDisponible"
+            [ngClass]="(data.kpis?.discrepanciasAis || 0) > 0 ? 'border-danger text-danger' : 'border-success text-success'"
+            [title]="'Confirmados por AIS: ' + (data.kpis?.confirmadosAis || 0) + ' · Sin confirmar: ' + (data.kpis?.sinConfirmarAis || 0) + ' · Diferencias: ' + (data.kpis?.discrepanciasAis || 0)">
+            AIS {{ data.kpis?.confirmadosAis || 0 }}/{{ data.kpis?.motonaves || 0 }}
+        </span>
     </div>
 
     <!-- CUERPO PRINCIPAL DEL WIDGET (Los muelles / docks) -->
@@ -22,7 +27,9 @@
             <div class="docks-container-wrapper w-100">
                 <div class="docks-grid" [ngClass]="(data.docks?.length || 0) > 4 ? 'grid-panal' : 'grid-bloques'">
                     <div *ngFor="let muelle of data.docks" class="dock-box" [ngClass]="muelle?.class || 'default-dock'"
-                        [title]="(muelle?.label || muelle?.id) + (muelle?.barcoAtracado ? ' - ' + muelle.barcoAtracado : ' - Disponible')">
+                        [title]="(muelle?.label || muelle?.id) + (muelle?.barcoAtracado ? ' - ' + muelle.barcoAtracado : (muelle?.class === 'maintenance' ? ' - Mantenimiento' : ' - Disponible')) + (muelle?.ais?.texto && muelle.ais.estado !== 'LIBRE' && muelle.ais.estado !== 'SIN_DATOS' ? ' · ' + muelle.ais.texto : '')">
+                        <span class="dock-ais" *ngIf="muelle?.ais && muelle.ais.estado !== 'LIBRE' && muelle.ais.estado !== 'SIN_DATOS'"
+                            [ngClass]="'ais-' + (muelle.ais.estado | lowercase)"></span>
                         <span class="dock-id fw-bold">{{ muelle?.label || muelle?.nombre || muelle?.id }}</span>
 
                         <div class="dock-extended-info">

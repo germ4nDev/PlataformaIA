@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
-import { LocalStorageService } from 'src/app/theme/shared/service';
+import { FiltroTableroService } from './filtro-tablero.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -19,7 +19,7 @@ export class VirtualGateService {
 
     constructor(
         private http: HttpClient,
-        private _localStorageService: LocalStorageService
+        private _filtroTablero: FiltroTableroService
     ) {
         const rawUrl = (environment.apiUrl || 'http://localhost:3000/api').replace(/\/+$/, '');
         this.baseApi = rawUrl.endsWith('/virtual-gate')
@@ -29,13 +29,13 @@ export class VirtualGateService {
 
     private resolverPuertoReal(puertoCandidato?: any): string {
         if (!puertoCandidato || typeof puertoCandidato === 'object') {
-            return (this._localStorageService.getPuertoLocalStorage() || 'BUENAVENTURA').toString().trim().toUpperCase();
+            return (this._filtroTablero.getCiudadActual() || 'BUENAVENTURA').toString().trim().toUpperCase();
         }
 
         const limpio = String(puertoCandidato).trim().toUpperCase();
 
         if (limpio.startsWith('PTT_') || limpio.startsWith('TLC_') || limpio.includes('[OBJECT OBJECT]')) {
-            return (this._localStorageService.getPuertoLocalStorage() || 'BUENAVENTURA').toString().trim().toUpperCase();
+            return (this._filtroTablero.getCiudadActual() || 'BUENAVENTURA').toString().trim().toUpperCase();
         }
 
         return limpio;
@@ -76,19 +76,19 @@ export class VirtualGateService {
                 const vg = resp?.virtualGate || this.generarVirtualGateVacio();
 
                 switch (codigo) {
-                    case 'PTT_GATE_CHRT_CITAS': return vg.citas12h;
-                    case 'PTT_GATE_CHRT_DIST': return vg.distribucion10km;
+                    case 'PTT_GATE_CHRT_CITAS': return { ...(vg.citas12h || {}), origen: vg.origen };
+                    case 'PTT_GATE_CHRT_DIST': return { ...(vg.distribucion10km || {}), origen: vg.origen };
                     // Los paneles reciben su nodo + las citas (para derivar lo que el backend no trae)
-                    case 'PTT_GATE_PANEL_ALERTAS': return { alertas: vg.alertas || [], citas: vg.citas || [] };
-                    case 'PTT_GATE_PANEL_ESTADO': return { ...(vg.estadoCitas || {}), citas: vg.citas || [] };
-                    case 'PTT_GATE_PANEL_VAL': return { ...(vg.validacion || {}), citas: vg.citas || [] };
+                    case 'PTT_GATE_PANEL_ALERTAS': return { alertas: vg.alertas || [], totalAlertas: vg.totalAlertas, citas: vg.citas || [], origen: vg.origen };
+                    case 'PTT_GATE_PANEL_ESTADO': return { ...(vg.estadoCitas || {}), citas: vg.citas || [], origen: vg.origen };
+                    case 'PTT_GATE_PANEL_VAL': return { ...(vg.validacion || {}), citas: vg.citas || [], origen: vg.origen };
                     case 'PTT_GATE_TAB_COLA':
                     case 'PTT_GATE_TABLA_COLA': return vg.citas;
                     default: {
                         // Corregido 2026-10-17: las 10 tarjetas PTT_GATE_KPI_* recibían el objeto completo (sin 'valor')
                         // y mostraban 0 / "Métrica Clave".
                         const kpi = this.kpiGate(codigo, vg.resumen || {});
-                        return kpi ?? vg;
+                        return kpi ? { ...kpi, ...this.detalleKpiGate(codigo, vg.citas || []), origen: vg.origen } : vg;
                     }
                 }
             })
@@ -112,19 +112,22 @@ export class VirtualGateService {
         const resumenBackend = fuenteDatos.resumen || rawData.resumen || {};
 
         // Normalizamos
+        // Corregido 2026-10-23: el front ya no completa datos que faltan (transportador, terminal, fecha = ahora...):
+        // lo que no viene queda vacío y la vista lo muestra como '—'. El API marca esos campos en `imputados`.
+        const mayus = (v: any) => (v === null || v === undefined || v === '' ? null : String(v).toUpperCase());
         const citas = citasCrudas.map((c: any, idx: number) => ({
             ...c,
             id_cita: c.id_cita || `VG-${100 + idx}`,
-            placa: String(c.placa || 'S/P').toUpperCase(),
-            transportador: c.transportador || c.empresa || 'LOGÍSTICA PORTUARIA',
-            empresa: c.transportador || c.empresa || 'LOGÍSTICA PORTUARIA',
-            tipo_carga: String(c.tipo_carga || 'CONTENEDORES').toUpperCase(),
-            operacion: String(c.operacion || 'RETIRO').toUpperCase(),
-            terminal: String(c.terminal || 'TCBUEN').toUpperCase(),
-            ubicacion: c.ubicacion || 'Pre-gate',
-            estado: String(c.estado || 'En Cola').trim(),
+            placa: mayus(c.placa),
+            transportador: c.transportador || c.empresa || null,
+            empresa: c.transportador || c.empresa || null,
+            tipo_carga: mayus(c.tipo_carga),
+            operacion: mayus(c.operacion),
+            terminal: mayus(c.terminal),
+            ubicacion: c.ubicacion || null,
+            estado: String(c.estado || 'SIN_ESTADO').trim(),
             tiempo_espera_minutos: Number(c.tiempo_espera_minutos ?? c.tiempo_espera ?? 0),
-            fecha_hora_cita: c.fecha_hora_cita || new Date().toISOString()
+            fecha_hora_cita: c.fecha_hora_cita || null
         }));
 
         // Construimos
@@ -135,7 +138,9 @@ export class VirtualGateService {
             distribucion10km: fuenteDatos.distribucion10km || this.calcularDistribucion10Km(citas),
             estadoCitas: fuenteDatos.estadoCitas || this.calcularEstadoCitasYEspera(citas, resumenBackend),
             validacion: fuenteDatos.validacion || this.calcularValidacionPregate(citas, resumenBackend),
-            alertas: fuenteDatos.alertas || this.calcularAlertasGate(citas)
+            alertas: fuenteDatos.alertas || this.calcularAlertasGate(citas),
+            totalAlertas: fuenteDatos.totalAlertas ?? (fuenteDatos.alertas || []).length,
+            origen: fuenteDatos.origen || null
         };
 
         return { ...res, ok: true, puerto, virtualGate };
@@ -150,13 +155,50 @@ export class VirtualGateService {
             PTT_GATE_KPI_GRANEL: { titulo: 'GRANEL (TON)', valor: n(r.totalGranel), subtitulo: r.subtituloGranel || '', colorBorde: 'borde-naranja' },
             PTT_GATE_KPI_SUELTA: { titulo: 'CARGA SUELTA (TON)', valor: n(r.totalCargaSuelta), subtitulo: r.subtituloCargaSuelta || '', colorBorde: 'borde-green' },
             PTT_GATE_KPI_RORO: { titulo: 'VEHÍCULOS RO-RO', valor: n(r.totalRoro), subtitulo: r.subtituloRoro || '', colorBorde: 'borde-teal' },
-            PTT_GATE_KPI_BODEGAS: { titulo: 'SATURACIÓN BODEGAS', valor: r.saturacionBodegas || '0%', subtitulo: r.subtituloBodegas || '', colorBorde: 'borde-purple' },
+            PTT_GATE_KPI_BODEGAS: { titulo: 'SATURACIÓN BODEGAS', valor: r.saturacionBodegas || '—', subtitulo: r.subtituloBodegas || '', colorBorde: 'borde-purple' },
             PTT_GATE_KPI_SUB_CONT: { titulo: 'CAMIONES CONTENEDOR', valor: n(r.subContenedores), subtitulo: 'Citas de contenedores', colorBorde: 'borde-amarillo' },
             PTT_GATE_KPI_SUB_GRANEL: { titulo: 'CAMIONES GRANEL', valor: n(r.subGranel), subtitulo: 'Citas de granel', colorBorde: 'borde-naranja' },
             PTT_GATE_KPI_SUB_SUELTA: { titulo: 'CAMIONES CARGA SUELTA', valor: n(r.subCargaSuelta), subtitulo: 'Citas de carga suelta', colorBorde: 'borde-green' },
             PTT_GATE_KPI_SUB_NINERAS: { titulo: 'NIÑERAS / RO-RO', valor: n(r.subNineras), subtitulo: 'Citas de vehículos', colorBorde: 'borde-teal' }
         };
         return mapa[codigo] ?? null;
+    }
+
+    /**
+     * Vista ampliada de los KPI del gate (2026-10-24): desglose con las citas que ya llegan (por estado o por
+     * terminal) y su definición. Toneladas solo con peso de báscula.
+     */
+    private detalleKpiGate(codigo: string, citas: any[]): { desglose: any[]; definicion: string } {
+        const final = (c: any) => /FINALIZADO|CANCELADO|ATENDIDO|SALI/.test(String(c.estado || ''));
+        const tipo: Record<string, (c: any) => boolean> = {
+            CONT: (c) => String(c.tipo_carga || '').includes('CONT'),
+            GRANEL: (c) => String(c.tipo_carga || '').includes('GRANEL'),
+            SUELTA: (c) => /SUELTA|GENERAL/.test(String(c.tipo_carga || '')),
+            RORO: (c) => /RORO|VEH|NI[ÑN]ERA/.test(String(c.tipo_carga || ''))
+        };
+        const agrupar = (lista: any[], clave: (c: any) => string, valor: (c: any) => number = () => 1, unidad = 'citas') => {
+            const m = new Map<string, number>();
+            lista.forEach((c) => m.set(clave(c) || 'SIN DATO', (m.get(clave(c) || 'SIN DATO') || 0) + valor(c)));
+            return [...m.entries()].sort((a, b) => b[1] - a[1]).map(([etiqueta, v]) => ({ etiqueta, valor: Math.round(v * 10) / 10, unidad }));
+        };
+        const sub = codigo.replace('PTT_GATE_KPI_', '');
+        if (sub === 'OP') {
+            return { desglose: agrupar(citas.filter((c) => !final(c)), (c) => c.estado), definicion: 'Camiones con cita activa en la ventana de 48 h, por estado.' };
+        }
+        const base = sub.replace('SUB_', '').replace('NINERAS', 'RORO');
+        const filtro = tipo[base];
+        if (!filtro) return { desglose: [], definicion: '' };
+        const lista = citas.filter(filtro);
+        if (sub.startsWith('SUB_')) {
+            return { desglose: agrupar(lista.filter((c) => !final(c)), (c) => c.estado), definicion: 'Citas activas del tipo de carga, por estado.' };
+        }
+        if (base === 'GRANEL' || base === 'SUELTA') {
+            return {
+                desglose: agrupar(lista.filter((c) => c.peso_bascula_ton !== null && c.peso_bascula_ton !== undefined), (c) => c.terminal, (c) => Number(c.peso_bascula_ton) || 0, 't'),
+                definicion: 'Toneladas con peso de báscula por terminal (las citas sin pesaje no suman).'
+            };
+        }
+        return { desglose: agrupar(lista, (c) => c.terminal), definicion: 'Citas del tipo de carga en la ventana de 48 h, por terminal.' };
     }
 
     private generarVirtualGateVacio(): any {
@@ -191,9 +233,9 @@ export class VirtualGateService {
             enCola,
             totalContenedores: contList.length,
             subtituloContenedores: `${validados} validados · ${enCola} en cola`,
-            totalGranel: granelList.length * 34,
+            totalGranel: 0,
             subtituloGranel: `${granelList.length} camiones granel`,
-            totalCargaSuelta: sueltaList.length * 22,
+            totalCargaSuelta: 0,
             subtituloCargaSuelta: `${sueltaList.length} turnos carga suelta`,
             totalRoro: roroList.length,
             subtituloRoro: 'Unidades en enturnamiento',

@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="widgetConfig?.titulo || '🚛 Cola de Camiones'"
     [subtitulo]="widgetConfig?.subtitulo || 'Todos los Tipos de Carga'" [icono]="'feather icon-truck'"
-    [isEnfoque]="false" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origen">
 
     <!-- Badge indicador en el Header -->
     <div acciones-extra class="d-flex align-items-center">
@@ -42,19 +42,19 @@
                     <tr *ngFor="let cita of listaCitas"
                         style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
 
-                        <td class="font-weight-bold text-white py-3">{{ cita.placa || 'S/P' }}</td>
+                        <td class="font-weight-bold text-white py-3">{{ cita.placa || '—' }}</td>
 
-                        <td class="text-light-grey">{{ cita.transportador || cita.empresa || 'N/A' }}</td>
+                        <td class="text-light-grey">{{ cita.transportador || cita.empresa || '—' }}</td>
 
                         <td>
                             <span
                                 class="carga-badge badge bg-secondary bg-opacity-25 text-light fw-normal rounded-pill px-2">
-                                {{ cita.tipo_carga || 'CONTENEDORES' }}
+                                {{ cita.tipo_carga || 'SIN CLASIFICAR' }}
                             </span>
                         </td>
 
-                        <td class="text-muted">{{ cita.operacion || 'RETIRO' }}</td>
-                        <td class="text-muted">{{ cita.terminal || 'TCBUEN' }}</td>
+                        <td class="text-muted">{{ cita.operacion || '—' }}</td>
+                        <td class="text-muted">{{ cita.terminal || '—' }}</td>
 
                         <td class="text-white fw-bold">
                             {{ cita.fecha_hora_cita ? (cita.fecha_hora_cita | date:'shortTime') : '--:--' }}
@@ -67,7 +67,7 @@
                             </span>
                         </td>
 
-                        <td class="text-light-grey">{{ cita.ubicacion || 'Pre-gate' }}</td>
+                        <td class="text-light-grey">{{ cita.ubicacion || '—' }}</td>
 
                         <td class="text-center">
                             <span class="estado-badge shadow-sm badge border bg-transparent" [ngClass]="{
@@ -75,7 +75,7 @@
                                     'border-warning text-warning': (cita.estado || '').toUpperCase().includes('COLA') || (cita.estado || '').toUpperCase().includes('ENTURN'),
                                     'border-danger text-danger': (cita.estado || '').toUpperCase().includes('RETEN') || (cita.estado || '').toUpperCase().includes('VENC') || (cita.estado || '').toUpperCase().includes('RECHAZ')
                                 }">
-                                {{ (cita.estado || 'EN COLA') | uppercase }}
+                                {{ (cita.estado || 'SIN ESTADO') | uppercase }}
                             </span>
                         </td>
 
@@ -93,6 +93,12 @@
             </table>
         </div>
 
+    </div>
+
+    <!-- Vista ampliada: detalle completo de cada cita (reemplaza la tabla del tablero) -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="h-100 d-flex flex-column" style="min-height: 420px;">
+        <app-tabla-tcl [columnas]="columnasDetalle" [filas]="filasDetalle" campoId="id" [ampliada]="true"
+            [nombreArchivo]="'cola-virtual-gate'"></app-tabla-tcl>
     </div>
 
 </app-widget-shell>

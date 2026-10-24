@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="widgetConfig?.titulo || 'OPERACIÓN MARÍTIMA EN VIVO'"
     [subtitulo]="'AIS + DIMAR · ' + puerto" icono="feather icon-activity" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+    (clickEnfoque)="maximizarDesdeShell()" [lienzo]="true" [origen]="origenVivo">
 
     <div acciones-extra class="d-flex align-items-center gap-2">
         <span *ngIf="(datos?.resumen?.criticas ?? 0) > 0" class="tc-badge badge-danger text-uppercase">
@@ -31,4 +31,30 @@
     </div>
 
     <div *ngIf="datos && error" class="mv-pie text-warning px-1">⚠ {{ error }} (mostrando el último dato)</div>
+    <!-- Vista ampliada: embudo de llegada, naves por estado AIS y naves críticas -->
+    <div detalle-enfoque *ngIf="isEnfoque && datos" class="d-flex flex-column gap-3 pt-2">
+        <div *ngIf="datos.embudo as e">
+            <h6 class="mv-detalle-titulo">Embudo de llegada · próximas {{ e.horas }} h</h6>
+            <div class="mv-embudo">
+                <div *ngFor="let et of e.etapas" class="mv-etapa" [class.cuello]="e.cuelloDeBotella?.etapa === et.codigo" [title]="et.descripcion">
+                    <span class="mv-etapa-nombre">{{ et.nombre }}</span>
+                    <span class="mv-etapa-naves">{{ et.naves }}</span>
+                    <span class="mv-etapa-tiempo">Prom. {{ duracion(et.minutosPromedio) }} · ref. p90 {{ duracion(et.referenciaP90Min) }}</span>
+                    <span *ngIf="et.sobreReferencia" class="mv-etapa-sobre">{{ et.sobreReferencia }} sobre la referencia</span>
+                </div>
+            </div>
+            <div *ngIf="e.cuelloDeBotella" class="mv-cuello"><i class="feather icon-alert-triangle me-1"></i>{{ e.cuelloDeBotella.texto }}</div>
+        </div>
+        <div *ngIf="!datos.embudo" class="mv-pie">Embudo de llegada no disponible (requiere AIS y avisos DIMAR del puerto).</div>
+        <div class="row g-3">
+            <div class="col-lg-6">
+                <h6 class="mv-detalle-titulo">Naves por estado AIS</h6>
+                <div style="height: 260px;"><app-tabla-tcl [columnas]="columnasEstados" [filas]="filasEstados" campoId="estado" [ampliada]="true" nombreArchivo="naves-por-estado"></app-tabla-tcl></div>
+            </div>
+            <div class="col-lg-6">
+                <h6 class="mv-detalle-titulo">Naves críticas ({{ filasCriticas.length }})</h6>
+                <div style="height: 260px;"><app-tabla-tcl [columnas]="columnasCriticas" [filas]="filasCriticas" campoId="mmsi" [ampliada]="true" nombreArchivo="naves-criticas"></app-tabla-tcl></div>
+            </div>
+        </div>
+    </div>
 </app-widget-shell>

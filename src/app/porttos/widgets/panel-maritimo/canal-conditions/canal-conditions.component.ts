@@ -1,129 +1,3 @@
-// // /*
-// //     Author: German Valencia
-// //     Pattern: PORTTOS Generic Widget - Condiciones del Canal (Refactorizado con Shell)
-// // */
-// // import { ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-// // import { CommonModule } from '@angular/common';
-// // import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-// // import { CanalModel } from 'src/app/theme/shared/_helpers/models/tablero-control/canal.model';
-
-// // // 🟢 Importamos el Shell maestro
-// // import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// // @Component({
-// //     selector: 'app-canal-conditions',
-// //     standalone: true,
-// //     imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
-// //     templateUrl: './canal-conditions.component.html',
-// //     styleUrls: ['./canal-conditions.component.scss'],
-// //     encapsulation: ViewEncapsulation.None
-// // })
-// // export class CanalConditionsComponent implements OnInit {
-
-// //     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
-// //     @Input() widgetConfig: any;
-// //     @Input() isEnfoque: boolean = false;
-// //     @Input() mostrarTabla: boolean = false;
-
-// //     public data: any = {}; // Usamos any o Partial<CanalModel> para manejar la data inyectada
-// //     public isLoading: boolean = true; // Empezamos cargando
-
-// //     constructor(
-// //         private cdr: ChangeDetectorRef,
-// //         private _torreService: DashboardService
-// //     ) { }
-
-// //     ngOnInit(): void {
-// //         this._torreService.datosPestana$.subscribe(diccionario => {
-// //             if (!diccionario) return;
-
-// //             let miId = this.widgetConfig?.idClon || this.widgetConfig?.id;
-// //             let codigo = (this.widgetConfig?.type || this.widgetConfig?.codigoWidget || '').toUpperCase();
-
-// //             // Búsqueda inteligente: Por ID, por Código exacto o por coincidencia parcial
-// //             let miData = (miId && diccionario[miId]) ? diccionario[miId] : diccionario[codigo];
-
-// //             if (!miData) {
-// //                 const llave = Object.keys(diccionario).find(k => k.includes('TU_CLAVE_AQUI')); // Ej: 'MOTONAVES', 'CANAL'
-// //                 if (llave) miData = diccionario[llave];
-// //             }
-
-// //             if (miData) {
-// //                 // AQUÍ ASIGNAS LA DATA A TU VARIABLE LOCAL (ej. this.miModeloData = miData)
-// //                 this.isLoading = false;
-// //                 this.cdr.detectChanges();
-// //             }
-// //         });
-// //     }
-
-// //     // 🟢 Toggle de enfoque: Abre o cierra el modal de forma estandarizada
-// //     maximizarDesdeShell() {
-// //         if (this.isEnfoque) {
-// //             this._torreService.cerrarModoEnfoque();
-// //         } else {
-// //             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_CANAL', this.data);
-// //         }
-// //     }
-// // }
-// /*
-//     Author: German Valencia
-//     Pattern: PORTTOS Generic Widget - Condiciones del Canal (Refactorizado Dumb Component)
-// */
-// import { Component, Input, ViewEncapsulation } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-
-// // 🟢 Importamos el Shell maestro
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-canal-conditions',
-//     standalone: true,
-//     imports: [CommonModule, WidgetShellComponent],
-//     templateUrl: './canal-conditions.component.html',
-//     styleUrls: ['./canal-conditions.component.scss'],
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class CanalConditionsComponent {
-
-//     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
-//     @Input() widgetConfig: any;
-//     @Input() isEnfoque: boolean = false;
-//     @Input() mostrarTabla: boolean = false;
-
-//     // 🟢 LA NUEVA COMPUERTA: Recibe los datos vivos directo del túnel de la pestaña. ¡Cero suscripciones!
-//     @Input() datosVivos: any;
-
-//     constructor(
-//         private _torreService: DashboardService
-//     ) { }
-
-//     // 🟢 EL CEREBRO REACTIVO: Angular lo reevalúa solo cuando 'datosVivos' cambia
-//     get data() {
-//         if (!this.widgetConfig) return {};
-
-//         const configBase = this.widgetConfig.data || {};
-
-//         // Fusionamos la configuración visual con los datos vivos de las condiciones del canal
-//         return {
-//             ...configBase,
-//             ...(this.datosVivos || {})
-//         };
-//     }
-
-//     get isLoading(): boolean {
-//         return !this.datosVivos;
-//     }
-
-//     // 🟢 Toggle de enfoque: Abre o cierra el modal de forma estandarizada
-//     maximizarDesdeShell() {
-//         if (this.isEnfoque) {
-//             this._torreService.cerrarModoEnfoque();
-//         } else {
-//             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_CANAL', this.data);
-//         }
-//     }
-// }/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
     Pattern: PORTTOS Smart Widget - Condiciones del Canal (Consumo Autónomo SQL)
@@ -146,10 +20,12 @@ import { DashboardService } from 'src/app/theme/shared/service/tablero-control/d
 import { MaritimoService } from 'src/app/theme/shared/service/tablero-control/maritimo.service';
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
+import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive';
+
 @Component({
     selector: 'app-canal-conditions',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './canal-conditions.component.html',
     styleUrls: ['./canal-conditions.component.scss'],
     encapsulation: ViewEncapsulation.None

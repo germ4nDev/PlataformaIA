@@ -130,14 +130,6 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
         this.farosTransformados$ = this._farosService.faros$.pipe(
             switchMap((frs: FaroModel[]) => {
                 if (!frs) return of([])
-                // const transformedFaros = frs.map((fr: any) => {
-                //     fr.nomEstado = fr.estado ? 'Activo' : 'Inactivo'
-                //     fr.nomAlerta = fr.genera_alerta_toast ? 'Con Alerta' : 'Sin Alerta'
-                //     fr.nomTipo = this.ETIPOS_FARO.filter(x => x.id == fr.tipo_faro)[0].label
-                //     fr.punto = fr.ubicacion_geo.features[0].geometry.coordinates;
-                //     fr.coordenadas = fr.geocerca_geo.features[0].geometry.coordinates[0];
-                //     return fr as FaroModel
-                // })
                 const transformedFaros = frs.map((fr: any) => {
                     fr.nomEstado = fr.estado ? 'Activo' : 'Inactivo';
                     fr.nomAlerta = fr.genera_alerta_toast ? 'Con Alerta' : 'Sin Alerta';
@@ -269,12 +261,12 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
 
     OnNuevaRegistroClick(): void {
         this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['tablero-control/gestion-faro-panel'])
+        this.router.navigate(['porttos/gestion-faro-panel'])
     }
 
     OnEditarRegistroClick(id: string): void {
         this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tablero-control/gestion-faro-panel'])
+        this.router.navigate(['porttos/gestion-faro-panel'])
     }
 
     OnEliminarRegistroClick(id: string): void {

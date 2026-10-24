@@ -1,0 +1,121 @@
+.reglas-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    h5 { margin-bottom: 4px; }
+    .selector-puerto { max-width: 260px; }
+}
+
+.aviso-migracion {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-left: 4px solid #f89406;
+    border-radius: 6px;
+    background: rgba(248, 148, 6, 0.1);
+    font-size: 13px;
+}
+
+.tabla-reglas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.regla {
+    display: grid;
+    grid-template-columns: minmax(240px, 1.2fr) 2fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 10px;
+
+    &.apagada { opacity: 0.6; }
+}
+
+.regla-titulo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    strong { font-size: 14px; }
+}
+
+.origen {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    white-space: nowrap;
+
+    &.origen-puerto { background: rgba(47, 150, 180, 0.15); color: #2f96b4; }
+    &.origen-global { background: rgba(100, 116, 139, 0.15); color: #64748b; }
+    &.origen-defecto { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+}
+
+.regla-campos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .campo {
+        display: flex;
+        flex-direction: column;
+        width: 150px;
+        margin: 0;
+
+        small { margin-bottom: 2px; color: #64748b; }
+    }
+}
+
+.regla-acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+/* Interruptor activa / apagada */
+.interruptor {
+    position: relative;
+    display: inline-block;
+    flex: none;
+    width: 38px;
+    height: 22px;
+    margin: 0;
+
+    input { opacity: 0; width: 0; height: 0; }
+
+    span {
+        position: absolute;
+        inset: 0;
+        border-radius: 22px;
+        background: #cbd5e1;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+    }
+
+    input:checked + span { background: #059669; }
+    input:checked + span::before { transform: translateX(16px); }
+    input:disabled + span { cursor: not-allowed; opacity: 0.6; }
+}
+
+@media (max-width: 1100px) {
+    .regla { grid-template-columns: 1fr; }
+    .regla-acciones { align-items: flex-start; }
+}

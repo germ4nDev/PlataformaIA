@@ -29,7 +29,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'TIPO DE OPERACIÓN PORTUARIA'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Importación · Exportación · Transbordo · Cabotaje'"
-    [icono]="data?.icono || 'feather icon-repeat'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-repeat'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">

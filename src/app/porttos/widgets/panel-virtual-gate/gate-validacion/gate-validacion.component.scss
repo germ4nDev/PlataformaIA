@@ -69,3 +69,12 @@
         background-color: rgba(34, 197, 94, 0.15);
     }
 }
+/* Vista ampliada (2026-10-24) */
+.validacion-tipos h6, [detalle-enfoque] h6 { font-size: 0.8rem; color: var(--text-subtitle-color); text-transform: uppercase; letter-spacing: 0.4px; }
+.tipo-fila { display: grid; grid-template-columns: 130px 1fr auto; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; color: var(--text-color); }
+.tipo-barra { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: rgba(148, 163, 184, 0.2); }
+.tramo { display: block; height: 100%; }
+.tramo.aprobada { background: #51a351; }
+.tramo.fallida { background: #bd362f; }
+.tramo.sin-dato { background: #94a3b8; }
+.tipo-cifras { font-size: 0.72rem; color: var(--text-subtitle-color); white-space: nowrap; }

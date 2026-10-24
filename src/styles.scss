@@ -311,7 +311,7 @@ body.dark-theme {
 }
 
 body.gradient-dark {
-    background-color: #121212 !important;
+    background-color: var(--card-background) !important;
 }
 
 /* ==========================================================================

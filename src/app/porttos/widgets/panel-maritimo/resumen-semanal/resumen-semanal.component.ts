@@ -1,105 +1,3 @@
-// /*
-//     Author: German Valencia
-//     Pattern: PORTTOS Generic Widget - Resumen Semanal (Refactorizado Dumb Component)
-// */
-// import { Component, Input, ViewChild, ViewEncapsulation, OnChanges, SimpleChanges } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-// import { BaseChartDirective, NgChartsModule } from 'ng2-charts';
-// import { ChartConfiguration } from 'chart.js';
-
-// // 🟢 Importamos el Shell maestro
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-resumen-semanal',
-//     standalone: true,
-//     imports: [CommonModule, NgChartsModule, WidgetShellComponent],
-//     templateUrl: './resumen-semanal.component.html',
-//     styleUrl: './resumen-semanal.component.scss',
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class ResumenSemanalComponent implements OnChanges {
-//     @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-
-//     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
-//     @Input() widgetConfig: any;
-//     @Input() isEnfoque: boolean = false;
-//     @Input() mostrarTabla: boolean = false;
-
-//     // 🟢 LA NUEVA COMPUERTA: Recibe los datos vivos directo desde la pestaña
-//     @Input() datosVivos: any;
-
-//     public listaArribos: any[] = [];
-//     public barChartOptions: ChartConfiguration['options'] = {
-//         responsive: true,
-//         maintainAspectRatio: false
-//     };
-//     public barChartData: ChartConfiguration['data'] = { datasets: [], labels: [] };
-
-//     constructor(private _torreService: DashboardService) { }
-
-//     // 🟢 CORREGIDO: Ahora se llama 'data' para que tu HTML lo reconozca
-//     get data() {
-//         return {
-//             ...(this.widgetConfig?.data || {}),
-//             ...(this.datosVivos || {})
-//         };
-//     }
-
-//     ngOnChanges(changes: SimpleChanges): void {
-//         // 1. Si cambian los datos, rearmamos la gráfica y la tabla
-//         if (changes['widgetConfig'] || changes['datosVivos']) {
-//             const dataObj = this.data; // Leemos el getter
-
-//             if (dataObj && (dataObj.arribos || dataObj.listado)) {
-//                 this.listaArribos = dataObj.arribos || dataObj.listado || [];
-
-//                 if (dataObj.labels && dataObj.datasets?.length > 0) {
-//                     this.barChartData = {
-//                         labels: dataObj.labels,
-//                         datasets: [{
-//                             data: dataObj.datasets[0].data || [],
-//                             label: 'Arribos',
-//                             backgroundColor: '#3b82f6'
-//                         }]
-//                     };
-//                 }
-//             }
-//         }
-
-//         // 2. Si entra en modo enfoque, redimensionamos la gráfica de ng2-charts
-//         if (changes['isEnfoque'] && !changes['isEnfoque'].firstChange) {
-//             setTimeout(() => {
-//                 if (this.chart) {
-//                     this.chart.update();
-//                 }
-//             }, 100);
-//         }
-//     }
-
-//     // 🟢 Renombrado al estándar del Shell
-//     maximizarDesdeShell(): void {
-//         if (this.isEnfoque) {
-//             this._torreService.cerrarModoEnfoque();
-//         } else {
-//             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_RESUMEN_SEMANAL', this.data);
-//         }
-//     }
-
-//     public toggleVista(): void {
-//         this.mostrarTabla = !this.mostrarTabla;
-
-//         // Timeout is standard for ng2-charts to ensure the canvas exists in the DOM
-//         if (!this.mostrarTabla) {
-//             setTimeout(() => {
-//                 if (this.chart) {
-//                     this.chart.update();
-//                 }
-//             });
-//         }
-//     }
-// }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -132,10 +30,12 @@ import {
     IDatasetBarra
 } from 'src/app/theme/shared/_helpers/chart.helper';
 
+import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive';
+
 @Component({
     selector: 'app-resumen-semanal',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './resumen-semanal.component.html',
     styleUrl: './resumen-semanal.component.scss',
     encapsulation: ViewEncapsulation.None

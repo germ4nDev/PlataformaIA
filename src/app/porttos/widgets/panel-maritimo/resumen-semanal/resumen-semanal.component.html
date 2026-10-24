@@ -46,7 +46,7 @@
 </div> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'ARRIBOS 7 DÍAS'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Programación de arribos y atraques'"
-    [icono]="data?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Botón para alternar entre Gráfica y Lista -->
     <div acciones-extra class="d-flex align-items-center gap-2">

@@ -61,7 +61,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'Análisis de Tráfico Portuario'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Resumen y Evolución Mensual (24m)'"
-    [icono]="data?.icono || 'feather icon-trending-up'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-trending-up'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">

@@ -36,7 +36,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data.titulo || '🎯 IMPLICACIONES OPERATIVAS PARA LA TORRE DE CONTROL'"
     [subtitulo]="data.subtitulo || 'Impacto en el control de la operación portuaria y terrestre'"
-    [icono]="data.icono || 'feather icon-alert-circle'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data.icono || 'feather icon-alert-circle'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">

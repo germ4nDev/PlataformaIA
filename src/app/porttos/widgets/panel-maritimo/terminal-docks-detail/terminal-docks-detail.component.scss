@@ -65,3 +65,21 @@
         background-color: rgba(59, 130, 246, 0.15);
     }
 }
+
+/* Verificación AIS frente al line-up */
+.ais-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid currentColor;
+
+    &.ais-confirmado { color: #10b981; background: rgba(16, 185, 129, 0.12); }
+    &.ais-sin_confirmar { color: #f59e0b; background: rgba(245, 158, 11, 0.12); }
+    &.ais-discrepancia,
+    &.ais-no_reportado { color: #ef4444; background: rgba(239, 68, 68, 0.12); }
+    &.ais-libre,
+    &.ais-sin_datos { color: #64748b; background: transparent; }
+}

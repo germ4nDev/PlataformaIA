@@ -1,175 +1,3 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// // /*
-// //     Author: German Valencia
-// //     Pattern: PORTTOS Generic Widget - Vessel Table (Refactorizado con Shell)
-// // */
-// // import { Component, Input, HostBinding, OnInit, OnChanges, SimpleChanges, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-// // import { CommonModule } from '@angular/common';
-// // import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-// // import { VesselTableModel } from 'src/app/theme/shared/_helpers/models/tablero-control/vessel-table.model';
-
-// // // 🟢 Importamos el Shell maestro
-// // import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// // @Component({
-// //     selector: 'app-vessel-table',
-// //     standalone: true,
-// //     imports: [CommonModule, WidgetShellComponent], // 🟢 Añadimos WidgetShellComponent
-// //     templateUrl: './vessel-table.component.html',
-// //     styleUrls: ['./vessel-table.component.scss'],
-// //     encapsulation: ViewEncapsulation.None
-// // })
-// // export class VesselTableComponent implements OnInit, OnChanges {
-
-// //     // 🟢 NUEVO ESTÁNDAR
-// //     @Input() widgetConfig: any;
-// //     @Input() isEnfoque: boolean = false;
-// //     @Input() mostrarTabla: boolean = false;
-
-// //     public data: Partial<VesselTableModel> = {};
-// //     public isLoading: boolean = false;
-
-// //     // Mantenemos la lógica de expansión de columnas adaptada al widgetConfig
-// //     @HostBinding('class') get hostClass() {
-// //         return `col-span-${this.widgetConfig?.colspan || 2}`;
-// //     }
-
-// //     constructor(
-// //         private cdr: ChangeDetectorRef,
-// //         private _torreService: DashboardService
-// //     ) { }
-
-// //     ngOnInit(): void {
-// //         const dataExistente = this._torreService.obtenerDatosActuales();
-// //         if (dataExistente) {
-// //             this.procesarDataDelTunel(dataExistente);
-// //         }
-
-// //         this._torreService.datosPestana$.subscribe(diccionario => {
-// //             if (diccionario) {
-// //                 this.procesarDataDelTunel(diccionario);
-// //             }
-// //         });
-// //     }
-
-// //     private procesarDataDelTunel(diccionario: any) {
-// //         if (!diccionario) return;
-// //         // console.log('****DATOS DICCIONARIO MOTONAVES', diccionario);
-// //         // console.log('****widgetConfig', this.widgetConfig);
-
-// //         let miId = this.widgetConfig?.idClon || this.widgetConfig?.id || 'PTT_MAE_TAB_MOTONAVES';
-// //         let codigo = (this.widgetConfig?.type || this.widgetConfig?.codigoWidget || 'PTT_MAE_TAB_MOTONAVES').toUpperCase();
-
-// //         let miData = null;
-
-// //         if (miId && diccionario[miId]) {
-// //             miData = diccionario[miId];
-// //         }
-// //         else if (codigo && diccionario[codigo]) {
-// //             miData = diccionario[codigo];
-// //         }
-// //         else {
-// //             const llave = Object.keys(diccionario).find(k =>
-// //                 k.toUpperCase().includes('WDG_TABLE_REPORTE_MOTONAVES')
-// //             );
-// //             if (llave) {
-// //                 miData = diccionario[llave];
-// //             }
-// //         }
-
-// //         if (miData) {
-// //             console.log('✅ Datos atrapados exitosamente para el widget:', miData);
-
-// //             this.data = miData;
-
-// //             this.isLoading = false;
-// //             this.cdr.detectChanges();
-// //         } else {
-// //             console.warn('⚠️ El diccionario no trajo datos compatibles con este componente.');
-// //         }
-// //     }
-
-// //     ngOnChanges(changes: SimpleChanges): void {
-// //         if (changes['widgetConfig'] && !changes['widgetConfig'].firstChange) {
-// //             this.data = this.widgetConfig?.data || {};
-// //         }
-// //     }
-
-// //     // 🟢 Toggle de enfoque: Abre o cierra el modal
-// //     maximizarDesdeShell() {
-// //         if (this.isEnfoque) {
-// //             this._torreService.cerrarModoEnfoque();
-// //         } else {
-// //             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'PTT_MAE_TAB_MOTONAVES', this.data);
-// //         }
-// //     }
-// // }
-// /*
-//     Author: German Valencia
-//     Pattern: PORTTOS Generic Widget - Vessel Table (Refactorizado Dumb Component)
-// */
-// import { Component, Input, HostBinding, ViewEncapsulation } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-// import { VesselTableModel } from 'src/app/theme/shared/_helpers/models/tablero-control/vessel-table.model';
-
-// // 🟢 Importamos el Shell maestro
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-vessel-table',
-//     standalone: true,
-//     imports: [CommonModule, WidgetShellComponent],
-//     templateUrl: './vessel-table.component.html',
-//     styleUrls: ['./vessel-table.component.scss'],
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class VesselTableComponent {
-
-//     // 🟢 NUEVO ESTÁNDAR
-//     @Input() widgetConfig: any;
-//     @Input() isEnfoque: boolean = false;
-//     @Input() mostrarTabla: boolean = false;
-
-//     // 🟢 LA NUEVA COMPUERTA: Recibe los datos filtrados y listos directo desde la pestaña
-//     @Input() datosVivos: any;
-
-//     // Mantenemos la lógica de expansión de columnas adaptada al widgetConfig
-//     @HostBinding('class') get hostClass() {
-//         return `col-span-${this.widgetConfig?.colspan || 2}`;
-//     }
-
-//     constructor(
-//         private _torreService: DashboardService
-//     ) { }
-
-//     // 🟢 EL CEREBRO REACTIVO: Fusión automática de configuraciones y datos de la API
-//     get data(): Partial<VesselTableModel> {
-//         if (!this.widgetConfig) return {};
-
-//         const configBase = this.widgetConfig.data || {};
-
-//         return {
-//             ...configBase,
-//             ...(this.datosVivos || {})
-//         };
-//     }
-
-//     get isLoading(): boolean {
-//         // La tabla está cargando mientras no reciba la inyección de la API
-//         return !this.datosVivos;
-//     }
-
-//     // 🟢 Toggle de enfoque: Abre o cierra el modal
-//     maximizarDesdeShell() {
-//         if (this.isEnfoque) {
-//             this._torreService.cerrarModoEnfoque();
-//         } else {
-//             // Mandamos los datos ya procesados por el getter
-//             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'PTT_MAE_TAB_MOTONAVES', this.data);
-//         }
-//     }
-// }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -195,10 +23,30 @@ import { MaritimoService } from 'src/app/theme/shared/service/tablero-control/ma
 import { VesselTableModel } from 'src/app/theme/shared/_helpers/models/tablero-control/vessel-table.model';
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
+import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive';
+import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tcl.component';
+
+/** Vista ampliada (Fase 3): todo el line-up que trae el API, con búsqueda, orden y CSV. */
+const COLUMNAS_AMPLIADAS: ColumnaTabla[] = [
+    { campo: 'motonave', titulo: 'Motonave', tipo: 'principal' },
+    { campo: 'naviera', titulo: 'Línea / agencia' },
+    { campo: 'viaje', titulo: 'Viaje' },
+    { campo: 'terminal', titulo: 'Terminal' },
+    { campo: 'muelle', titulo: 'Muelle' },
+    { campo: 'eslora', titulo: 'Eslora', tipo: 'numero', decimales: 0, unidad: 'm' },
+    { campo: 'eta', titulo: 'ETA' },
+    { campo: 'fechaAtraque', titulo: 'ATA / atraque' },
+    { campo: 'zarpe', titulo: 'Zarpe' },
+    { campo: 'carga', titulo: 'Carga' },
+    { campo: 'estadoTexto', titulo: 'Estado', tipo: 'estado' },
+    { campo: 'atrasada', titulo: 'ETA vencida', tipo: 'si-no', alinear: 'centro' },
+    { campo: 'novedades', titulo: 'Novedades' }
+];
+
 @Component({
     selector: 'app-vessel-table',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './vessel-table.component.html',
     styleUrls: ['./vessel-table.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -212,6 +60,7 @@ export class VesselTableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() datosVivos: any;
 
     public cargandoTabla: boolean = true;
+    public readonly columnasAmpliadas = COLUMNAS_AMPLIADAS;
     private datosAutonomosSQL: Partial<VesselTableModel> | null = null;
     private readonly destroy$ = new Subject<void>();
 
@@ -359,6 +208,21 @@ export class VesselTableComponent implements OnInit, OnChanges, OnDestroy {
 
     get isLoading(): boolean {
         return this.cargandoTabla && !this.datosAutonomosSQL && !this.datosVivos;
+    }
+
+    /** Filas de la vista ampliada: id estable para la tabla y sin '--' de relleno. */
+    get filasAmpliadas(): any[] {
+        return (this.data.motonaves || []).map((n: any, i: number) => ({
+            ...n,
+            id: this.trackByNave(i, n),
+            fechaAtraque: n.fechaAtraque === '--' ? null : n.fechaAtraque,
+            eta: n.eta === '--' ? null : n.eta,
+            atrasada: n.atrasada === true
+        }));
+    }
+
+    get totalAtrasadas(): number {
+        return (this.data.motonaves || []).filter((n: any) => n.atrasada === true).length;
     }
 
     trackByNave(index: number, nave: any): string {

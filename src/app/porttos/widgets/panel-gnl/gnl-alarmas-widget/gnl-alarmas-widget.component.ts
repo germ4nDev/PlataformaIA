@@ -55,6 +55,11 @@ export class GnlAlarmasWidgetComponent implements OnInit, OnChanges, OnDestroy {
     private ultimaFirmaPorSegmento = new Map<string, string>();
     private readonly destroy$ = new Subject<void>();
 
+    /** Origen del dato (telemetría simulada o real) para la vista ampliada. */
+    public get origen$() {
+        return this._gnlState.origen$;
+    }
+
     constructor(
         private _gnlState: GnlStateService,
         private _torreService: DashboardService,
@@ -238,9 +243,10 @@ export class GnlAlarmasWidgetComponent implements OnInit, OnChanges, OnDestroy {
         if (this.isEnfoque) {
             this._torreService.cerrarModoEnfoque();
         } else {
+            // La foto actual va como datosVivos: el modal es otra instancia y antes se abría vacío
             this._torreService.abrirModoEnfoque(
                 this.widgetConfig?.type || 'PTT_GNL_CHART_ALM_EVENT',
-                this.data
+                { ...this.data, puerto: this.widgetConfig?.puerto, datosVivos: this.data }
             );
         }
     }

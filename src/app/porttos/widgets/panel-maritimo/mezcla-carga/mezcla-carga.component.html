@@ -50,7 +50,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'MEZCLA POR TIPO DE CARGA'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de toneladas movilizadas por tipo de carga'"
-    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase">{{ badgeHeader }}</span>

@@ -1,0 +1,34 @@
+<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [lienzo]="true" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="filas.length">{{ operando
+            }} operando</span></div>
+    <div class="cuerpo">
+        <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!filas.length"
+            [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
+        <div class="contenido" *ngIf="!cargando && !error && !(!filas.length)">
+            <app-tabla-tcl [columnas]="columnas" [filas]="filas" [ampliada]="isEnfoque" [columnasAmpliadas]="columnasAmpliadas" [nombreArchivo]="titulo"
+                [seleccionable]="isEnfoque" [idSeleccionado]="seleccion?.id ?? null" (filaClick)="seleccionar($event)"></app-tabla-tcl>
+        </div>
+    </div>
+    <!-- Vista ampliada: avance hora a hora de la motonave elegida -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
+        <div class="detalle-cabecera">
+            <h6 class="detalle-titulo">Avance {{ seleccion ? '· ' + seleccion.motonave : '' }}</h6>
+            <app-rango-tcl [valor]="horas" [deshabilitado]="!seleccion" (cambio)="cambiarHoras($event)"></app-rango-tcl>
+        </div>
+        <p *ngIf="!seleccion" class="detalle-ayuda">Pulsa una motonave de la tabla para ver su avance hora a hora frente al ritmo que necesita para terminar a tiempo.</p>
+        <p *ngIf="errorAvance" class="detalle-ayuda text-warning">{{ errorAvance }}</p>
+        <ng-container *ngIf="seleccion && avance?.operacion as o">
+            <div class="detalle-resumen">
+                <span>Operadas <strong>{{ o.operadas | number: '1.0-0' }}</strong> de {{ o.total | number: '1.0-0' }} t</span>
+                <span>Pendiente <strong>{{ o.pendiente | number: '1.0-0' }}</strong> t</span>
+                <span *ngIf="avance?.ritmoNecesarioTmh != null">Ritmo necesario <strong>{{ avance?.ritmoNecesarioTmh | number: '1.0-0' }}</strong> t/h</span>
+                <span *ngIf="o.finEstimado">Fin estimado {{ o.finEstimado | date: 'dd/MM HH:mm' : '-0500' }}</span>
+                <span *ngIf="o.simulado" class="text-warning">Simulado</span>
+            </div>
+            <div class="detalle-grafica">
+                <app-grafica-tcl tipo="linea" [labels]="avance?.labels || []" [series]="seriesAvance" unidad="t" [isEnfoque]="true"></app-grafica-tcl>
+            </div>
+        </ng-container>
+    </div>
+</app-widget-shell>

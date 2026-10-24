@@ -45,7 +45,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'PRODUCTIVIDAD POR TERMINAL (MOVS/H)'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Velocidad de operación por grúa en la jornada'"
-    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">

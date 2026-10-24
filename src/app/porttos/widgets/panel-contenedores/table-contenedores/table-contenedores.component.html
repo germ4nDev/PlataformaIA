@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="configData?.titulo || '📦 Movimientos y Trazabilidad de Contenedores'"
     [subtitulo]="configData?.subtitulo || 'Cargados a retirar y vacíos a devolver · Próximas 8 horas'"
-    [icono]="configData?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="configData?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="configData?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
@@ -25,6 +25,7 @@
                         <th style="width: 18%;" class="pb-2">Ruta</th>
                         <th style="width: 12%;" class="pb-2">Cliente</th>
                         <th style="width: 9%;" class="pb-2">Free Time</th>
+                        <th *ngIf="isEnfoque" class="pb-2">Registro</th>
                         <th style="width: 12%; text-align: right;" class="pb-2">Estado</th>
                     </tr>
                 </thead>
@@ -32,7 +33,7 @@
                 <tbody>
                     <!-- Estado Cargando -->
                     <tr *ngIf="isLoading">
-                        <td colspan="8" class="text-center text-muted py-5">
+                        <td [attr.colspan]="isEnfoque ? 9 : 8" class="text-center text-muted py-5">
                             <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
                             Sincronizando trazabilidad de contenedores...
                         </td>
@@ -51,6 +52,10 @@
                             <td [ngClass]="esFreeTimeCritico(m.freeTime) ? 'text-danger fw-bold' : 'text-muted'">
                                 {{ m.freeTime }}
                             </td>
+                            <td *ngIf="isEnfoque" class="text-muted">
+                                {{ m.fechaRegistro ? (m.fechaRegistro | date: 'dd/MM HH:mm' : '-0500') : '—' }}
+                                <i *ngIf="m.sinPuerto" class="feather icon-alert-circle text-warning ms-1" title="Movimiento sin puerto asignado: se ve en todos los puertos"></i>
+                            </td>
                             <td class="text-end">
                                 <span class="badge rounded-pill px-2 py-1 shadow-sm"
                                     [ngClass]="getEstadoClase(m.estado)"
@@ -62,7 +67,7 @@
 
                         <!-- Estado Vacío -->
                         <tr *ngIf="movimientos.length === 0">
-                            <td colspan="8" class="text-center text-muted py-5">
+                            <td [attr.colspan]="isEnfoque ? 9 : 8" class="text-center text-muted py-5">
                                 <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
                                 No hay movimientos de contenedores registrados para este puerto.
                             </td>

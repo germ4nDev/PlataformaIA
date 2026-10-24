@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="configData?.titulo || '📋 Movimientos y Trazabilidad de Lotes en Bodega'"
     [subtitulo]="configData?.subtitulo || 'Control de recibo desde buque, almacenamiento y despacho terrestre'"
-    [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="isEnfoque ? (origenRango || configData?.origen) : configData?.origen">
 
     <!-- PROYECCIÓN AL HEADER -->
     <div acciones-extra class="d-flex align-items-center">
@@ -48,8 +48,8 @@
                             <td class="text-end fw-bold text-light">{{ m.toneladas | number:'1.1-1' }} t</td>
                             <td class="text-white">{{ m.cliente }}</td>
                             <td class="text-center"
-                                [ngClass]="m.dias_almacenaje >= 10 ? 'text-danger fw-bold' : 'text-muted'">
-                                {{ m.dias_almacenaje }}d
+                                [ngClass]="(m.dias_almacenaje ?? 0) >= 10 ? 'text-danger fw-bold' : 'text-muted'">
+                                {{ m.dias_almacenaje !== null ? m.dias_almacenaje + 'd' : '—' }}
                             </td>
                             <td class="text-end">
                                 <span class="badge rounded-pill px-2 py-1 shadow-sm"
@@ -74,4 +74,15 @@
         </div>
     </div>
 
+    <!-- Vista ampliada: todos los movimientos del rango, con búsqueda, orden y CSV (reemplaza la tabla del tablero) -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="detalle h-100" style="min-height: 440px;">
+        <div class="detalle-cabecera">
+            <h6 class="detalle-titulo">Movimientos de los últimos {{ dias }} días</h6>
+            <app-rango-tcl [opciones]="rangosDias" [valor]="dias" (cambio)="cambiarDias($event)"></app-rango-tcl>
+        </div>
+        <p *ngIf="notaRango" class="detalle-ayuda">{{ notaRango }}</p>
+        <div class="flex-grow-1" style="min-height: 360px;">
+            <app-tabla-tcl [columnas]="columnasRango" [filas]="filasRango" campoId="id" [ampliada]="true" nombreArchivo="movimientos-bodega"></app-tabla-tcl>
+        </div>
+    </div>
 </app-widget-shell>

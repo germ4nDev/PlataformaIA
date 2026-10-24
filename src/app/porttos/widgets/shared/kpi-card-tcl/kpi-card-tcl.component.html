@@ -1,0 +1,138 @@
+<app-kpi-shell *ngIf="!isEnfoque" [titulo]="data?.titulo || 'Métrica Clave'"
+    [icono]="data?.icono || 'feather icon-activity'" [colorBorde]="data?.colorBorde || data?.color || 'info'"
+    (clickEnfoque)="maximizarDesdeShell()">
+
+    <!-- Estado de Carga -->
+    <div *ngIf="isLoading" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center gap-2">
+        <div class="skeleton-box rounded-pill w-25" style="height: 0.5rem; opacity: 0.4;"></div>
+        <div class="skeleton-box rounded w-50" style="height: 3rem; opacity: 0.7;"></div>
+    </div>
+
+    <!-- Cuerpo Central -->
+    <div *ngIf="!isLoading"
+        class="w-100 h-100 d-flex justify-content-center align-items-center animate__animated animate__fadeIn">
+        <!-- Contenedor en columna para apilar el valor principal y el valor completo debajo -->
+        <div class="d-flex flex-column align-items-center justify-content-center text-center my-auto">
+
+            <div class="d-flex align-items-baseline gap-1">
+                <h1 class="kpi-shell-title mb-0">
+                    {{ (data?.valor | kpiFormat) || '0' }}
+                </h1>
+            </div>
+
+            <!-- 2. Valor Completo Debajo, Pequeño y Muted (Ej: 19.440,5 Ton) -->
+            <small *ngIf="valorCompletoMuted" class="text-muted fw-normal mt-1"
+                style="font-size: 0.75rem; letter-spacing: 0.3px; opacity: 0.75; line-height: 1.1;">
+                {{ valorCompletoMuted }}
+            </small>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div kpi-footer *ngIf="!isLoading" class="w-100 text-center pb-2 px-1">
+        <div *ngIf="data?.subtitulo" class="kpi-shell-subtitle text-uppercase text-muted"
+            style="letter-spacing: 0.5px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <span style="opacity: 0.5; margin-right: 2px;">—</span> {{ data?.subtitulo }}
+        </div>
+    </div>
+</app-kpi-shell>
+
+<!-- ==========================================
+     2. KPI AMPLIADO (plantilla común de la vista ampliada)
+     Contrato opcional del KPI: desglose[], serie{'24h'|'7d'|...}, definicion, formula, umbrales, origen/fuente,
+     simulado, generadoEn. Lo que no llegue no se pinta; si no hay nada adicional se muestra el valor del tablero.
+     ========================================== -->
+<div *ngIf="isEnfoque" class="enfoque-container d-flex flex-column w-100 h-100 animate__animated animate__fadeIn">
+
+    <div class="enfoque-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom border-secondary border-opacity-25"
+        [ngClass]="data?.colorBorde">
+        <div class="d-flex align-items-center gap-3">
+            <div class="icon-box-enfoque rounded-3 d-flex align-items-center justify-content-center border border-secondary border-opacity-50">
+                <i [class]="data?.icono || 'feather icon-activity'" class="fs-4"></i>
+            </div>
+            <div>
+                <h4 class="kpi-shell-title_modal">{{ data?.titulo || 'Métrica Clave' }}</h4>
+                <small class="kpi-shell-subtitle text-muted" style="letter-spacing: 0.5px;">{{ puertoEnfoque }}</small>
+            </div>
+        </div>
+        <button class="tc-action-btn" (click)="maximizarDesdeShell()" title="Cerrar vista ampliada">
+            <i class="feather icon-minimize"></i>
+        </button>
+    </div>
+
+    <div *ngIf="isLoading" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-2">
+        <div class="spinner-border text-info" role="status"></div>
+        <small class="kpi-shell-subtitle">Consultando {{ data?.titulo || 'indicador' }}...</small>
+    </div>
+
+    <div *ngIf="!isLoading" class="enfoque-body flex-grow-1 d-flex flex-row overflow-hidden">
+
+        <!-- Bloque 1: el valor del tablero -->
+        <div class="enfoque-sidebar d-flex flex-column justify-content-center align-items-center p-4 border-end border-secondary border-opacity-25">
+            <h1 class="kpi-shell-valor mb-0">{{ (data?.valor | kpiFormat) || '0' }}</h1>
+            <span class="kpi-shell-subtitle">{{ data?.unidad || '' }}</span>
+            <small *ngIf="valorCompletoMuted" class="text-muted mt-2">{{ valorCompletoMuted }}</small>
+            <div *ngIf="data?.subtitulo" class="w-100 p-3 mt-3 rounded-3 border border-secondary border-opacity-10 text-center">
+                <p class="kpi-shell-subtitle mb-0">{{ data?.subtitulo }}</p>
+            </div>
+            <div *ngIf="data?.tendencia && data?.tendencia !== data?.subtitulo" class="mt-2 kpi-shell-subtitle">{{ data?.tendencia }}</div>
+            <div *ngIf="data?.umbrales as u" class="umbrales mt-3">
+                <span class="umbral verde">Normal</span>
+                <span class="umbral amarillo">Atención ≥ {{ u.amarillo }}</span>
+                <span class="umbral rojo">Crítico ≥ {{ u.rojo }}</span>
+            </div>
+        </div>
+
+        <!-- Lienzo: serie, desglose y definición -->
+        <div class="enfoque-main flex-grow-1 p-4 d-flex flex-column gap-4 overflow-auto">
+
+            <!-- Bloque 3: contexto temporal -->
+            <section *ngIf="rangosSerie.length" class="bloque">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="kpi-shell-title_modal mb-0">Evolución</h5>
+                    <div class="btn-group" *ngIf="rangosSerie.length > 1">
+                        <button *ngFor="let r of rangosSerie" class="btn btn-sm btn-active-toggle" [class.active]="r === rangoSerie" (click)="rangoSerie = r">{{ r }}</button>
+                    </div>
+                </div>
+                <div class="grafica-serie">
+                    <app-grafica-tcl tipo="linea" [labels]="serieActual.labels" [series]="serieGrafica" [unidad]="data?.unidad || ''" [isEnfoque]="true"></app-grafica-tcl>
+                </div>
+            </section>
+
+            <!-- Bloque 4: desglose -->
+            <section *ngIf="desglose.length" class="bloque">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="kpi-shell-title_modal mb-0">Desglose</h5>
+                    <button type="button" class="btn-csv" (click)="exportarDesglose()" title="Exportar a CSV"><i class="feather icon-download"></i> CSV</button>
+                </div>
+                <div class="desglose">
+                    <div *ngFor="let d of desglose" class="fila-desglose">
+                        <span class="etiqueta" [title]="d.etiqueta">{{ d.etiqueta }}</span>
+                        <span class="pista"><span class="relleno" [ngClass]="'tono-' + (d.semaforo || 'info')" [style.width.%]="anchoDesglose(d.valor)"></span></span>
+                        <span class="valor">{{ d.valor | number: '1.0-2' }}{{ d.unidad || data?.unidad ? ' ' + (d.unidad || data?.unidad) : '' }}</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cómo se calcula -->
+            <section *ngIf="data?.definicion || data?.formula" class="bloque">
+                <h5 class="kpi-shell-title_modal mb-2">Cómo se calcula</h5>
+                <p *ngIf="data?.definicion" class="definicion mb-1">{{ data?.definicion }}</p>
+                <code *ngIf="data?.formula" class="formula">{{ data?.formula }}</code>
+            </section>
+
+            <!-- Sin detalle adicional: se ve lo mismo del tablero -->
+            <div *ngIf="!rangosSerie.length && !desglose.length && !data?.definicion && !data?.formula"
+                class="sin-detalle flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center p-4">
+                <i class="feather icon-bar-chart-2 mb-2"></i>
+                <p class="mb-0">Este indicador todavía no tiene detalle ampliado.</p>
+                <small>Se muestra el mismo valor del tablero.</small>
+            </div>
+
+            <!-- Bloque 5: origen del dato -->
+            <app-origen-dato-tcl class="mt-auto" [origen]="data?.origen" [fuente]="data?.fuente ?? data?.origen?.fuente"
+                [simulado]="esSimulado" [generadoEn]="data?.generadoEn ?? data?.origen?.generadoEn"></app-origen-dato-tcl>
+        </div>
+    </div>
+</div>

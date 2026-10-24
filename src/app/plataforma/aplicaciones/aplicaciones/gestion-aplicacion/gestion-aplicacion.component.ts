@@ -42,6 +42,7 @@ export class GestionAplicacionComponent implements OnInit {
     navCollapsed: boolean = false
     navCollapsedMob: boolean = false
     windowWidth: number = 0
+
     selectedFile: File | null = null
     previewUrl: string | ArrayBuffer | null = null
     userPhotoUrl: string = ''
@@ -54,6 +55,29 @@ export class GestionAplicacionComponent implements OnInit {
     fileNameUI: string | null = null
     selectedFileUrlUI: string | null = null
 
+    selectedFileUIB: File | null = null
+    previewUrlUIB: string | ArrayBuffer | null = null
+    userPhotoUrlUIB: string = ''
+    fileNameUIB: string | null = null
+    selectedFileUrlUIB: string | null = null
+
+    selectedFileIcono: File | null = null
+    previewUrlIcono: string | ArrayBuffer | null = null
+    userPhotoUrlIcono: string = ''
+    fileNameIcono: string | null = null
+    selectedFileUrlIcono: string | null = null
+
+    selectedFileLogo: File | null = null
+    previewUrlLogo: string | ArrayBuffer | null = null
+    userPhotoUrlLogo: string = ''
+    fileNameLogo: string | null = null
+    selectedFileUrlLogo: string | null = null
+
+    selectedFileLogoB: File | null = null
+    previewUrlLogoB: string | ArrayBuffer | null = null
+    userPhotoUrlLogoB: string = ''
+    fileNameLogoB: string | null = null
+    selectedFileUrlLogoB: string | null = null
 
     form: undefined
     isSubmit: boolean = false
@@ -91,8 +115,12 @@ export class GestionAplicacionComponent implements OnInit {
                 next: (resp: any) => {
                     this.FormRegistro = resp.aplicacion
                     this.codeAplicacion = resp.aplicacion.codigoAplicacion
-                    this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenInicio)
-                    this.selectedFileUrlUI = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenUI)
+                    this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenInicio) || 'no-image.png';
+                    this.selectedFileUrlUI = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenUI) || 'no-image.png';
+                    this.selectedFileUrlUIB = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenUIB) || 'no-image.png';
+                    this.selectedFileUrlLogo = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenLogo) || 'no-image.png';
+                    this.selectedFileUrlLogoB = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenLogoB) || 'no-image.png';
+                    this.selectedFileUrlIcono = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenIcono) || 'no-image.png';
                 },
                 error: () => {
                     Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
@@ -119,6 +147,10 @@ export class GestionAplicacionComponent implements OnInit {
         if (this.modoEdicion == false) {
             this.FormRegistro.codigoAplicacion = uuidv4()
             this.FormRegistro.imagenInicio = 'no-image.png'
+            this.FormRegistro.imagenUI = 'no-image.png'
+            this.FormRegistro.imagenUIB = 'no-image.png'
+            this.FormRegistro.imagenLogo = 'no-image.png'
+            this.FormRegistro.imagenIcono = 'no-image.png'
             console.log('FormRegistro loading', this.FormRegistro)
         }
         console.log('Inicial formregistro', this.FormRegistro)
@@ -189,6 +221,109 @@ export class GestionAplicacionComponent implements OnInit {
         }
     }
 
+    onFileSelectedUIBClick(event: any) {
+        const file: File = event.target.files[0]
+        const objUpload = {
+            susc: this.suscriptor,
+            tipo: 'aplicaciones'
+        }
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+                this.selectedFileUrlUIB = e.target.result
+            }
+            reader.readAsDataURL(file)
+            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+                next: (path: any) => {
+                    const resp = path.data.respuesta
+                    this.FormRegistro.imagenUIB = resp.fileName
+                },
+                error: () => {
+                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                }
+            })
+        } else {
+            this.selectedFileUrlUIB = null
+        }
+    }
+
+    onFileSelectedLogoClick(event: any) {
+        const file: File = event.target.files[0]
+        const objUpload = {
+            susc: this.suscriptor,
+            tipo: 'aplicaciones'
+        }
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+                this.selectedFileUrlLogo = e.target.result
+            }
+            reader.readAsDataURL(file)
+            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+                next: (path: any) => {
+                    const resp = path.data.respuesta
+                    this.FormRegistro.imagenLogo = resp.fileName
+                },
+                error: () => {
+                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                }
+            })
+        } else {
+            this.selectedFileUrlLogo = null
+        }
+    }
+
+    onFileSelectedLogoBClick(event: any) {
+        const file: File = event.target.files[0]
+        const objUpload = {
+            susc: this.suscriptor,
+            tipo: 'aplicaciones'
+        }
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+                this.selectedFileUrlLogoB = e.target.result
+            }
+            reader.readAsDataURL(file)
+            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+                next: (path: any) => {
+                    const resp = path.data.respuesta
+                    this.FormRegistro.imagenLogoB = resp.fileName
+                },
+                error: () => {
+                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                }
+            })
+        } else {
+            this.selectedFileUrlLogoB = null
+        }
+    }
+
+    onFileSelectedIconoClick(event: any) {
+        const file: File = event.target.files[0]
+        const objUpload = {
+            susc: this.suscriptor,
+            tipo: 'aplicaciones'
+        }
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+                this.selectedFileUrlIcono = e.target.result
+            }
+            reader.readAsDataURL(file)
+            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+                next: (path: any) => {
+                    const resp = path.data.respuesta
+                    this.FormRegistro.imagenIcono = resp.fileName
+                },
+                error: () => {
+                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                }
+            })
+        } else {
+            this.selectedFileUrlIcono = null
+        }
+    }
     btnGestionarAplicacionClick(form: any) {
         // this.isSubmit = true;
         const registroData = form.value as PTLAplicacionModel
@@ -196,6 +331,10 @@ export class GestionAplicacionComponent implements OnInit {
         if (this.modoEdicion) {
             registroData.imagenInicio = this.FormRegistro.imagenInicio
             registroData.imagenUI = this.FormRegistro.imagenUI
+            registroData.imagenUIB = this.FormRegistro.imagenUIB
+            registroData.imagenLogo = this.FormRegistro.imagenLogo
+            registroData.imagenLogoB = this.FormRegistro.imagenLogoB
+            registroData.imagenIcono = this.FormRegistro.imagenIcono
             registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
             registroData.fechaModificacion = new Date().toISOString()
             this._aplicacionesService.actualizarAplicacion(registroData).subscribe({
@@ -229,6 +368,10 @@ export class GestionAplicacionComponent implements OnInit {
             registroData.codigoAplicacion = uuidv4()
             registroData.imagenInicio = this.FormRegistro.imagenInicio
             registroData.imagenUI = this.FormRegistro.imagenUI
+            registroData.imagenUIB = this.FormRegistro.imagenUIB
+            registroData.imagenLogo = this.FormRegistro.imagenLogo
+            registroData.imagenLogoB = this.FormRegistro.imagenLogoB
+            registroData.imagenIcono = this.FormRegistro.imagenIcono
             registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
             registroData.fechaCreacion = new Date().toISOString()
             registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''

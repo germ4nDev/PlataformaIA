@@ -1,0 +1,21 @@
+<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [lienzo]="true" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+    <div acciones-extra class="d-flex align-items-center gap-2"></div>
+    <div class="cuerpo">
+        <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!labels.length"
+            [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
+        <div class="contenido" *ngIf="!cargando && !error && !(!labels.length)">
+            <app-grafica-tcl tipo="barras" [labels]="labels" [series]="series" unidad="%" [horizontal]="true"
+                [isEnfoque]="isEnfoque"></app-grafica-tcl>
+        </div>
+    </div>
+    <!-- Vista ampliada: categorías (simple frente a ponderado) y nodos de la categoría elegida -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="d-flex flex-column gap-3 pt-2">
+        <div class="detalle-titulo" *ngIf="cobertura">Cobertura: {{ cobertura.conDato }} de {{ cobertura.total }} nodos con ocupación vigente. Las categorías sin ningún dato no se pintan en verde: quedan sin valor.</div>
+        <div style="height: 220px;"><app-tabla-tcl [columnas]="columnasCategorias" [filas]="filasCategorias" campoId="id" [ampliada]="true" nombreArchivo="saturacion-por-categoria"></app-tabla-tcl></div>
+        <div class="filtros-categoria">
+            <button type="button" *ngFor="let c of filasCategorias" [class.activo]="c.codigo === categoriaElegida" (click)="elegirCategoria(c.codigo)">{{ c.nombre }} · {{ c.nodos }}</button>
+        </div>
+        <div style="height: 300px;"><app-tabla-tcl [columnas]="columnasNodos" [filas]="nodosCategoria" campoId="id" [ampliada]="true" nombreArchivo="nodos-categoria"></app-tabla-tcl></div>
+    </div>
+</app-widget-shell>

@@ -27,7 +27,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📊 Balance Operativo de Contenedores'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Movimientos de ingreso y salida en patio'"
-    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase">MOVIMIENTOS</span>

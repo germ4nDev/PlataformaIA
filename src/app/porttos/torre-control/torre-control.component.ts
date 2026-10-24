@@ -26,10 +26,10 @@ import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/serv
 import { PtlpestanasService } from 'src/app/theme/shared/service/ptlpestanas.service';
 import { LayoutService } from 'src/app/theme/shared/service/layout.service';
 
-import { TcHeaderComponent } from '../widgets/tc-header/tc-header.component';
-import { WidgetSelectorTclComponent } from '../widgets/widget-selector-tcl/widget-selector-tcl.component';
-import { WidgetLobbyTclComponent } from '../widgets/widget-lobby-tcl/widget-lobby-tcl.component';
-import { PestanaLobbyTclComponent } from '../widgets/pestana-lobby-tcl/pestana-lobby-tcl.component';
+import { TcHeaderComponent } from '../widgets/shared/tc-header/tc-header.component';
+import { WidgetSelectorTclComponent } from '../widgets/shared/widget-selector-tcl/widget-selector-tcl.component';
+import { WidgetLobbyTclComponent } from '../widgets/shared/widget-lobby-tcl/widget-lobby-tcl.component';
+import { PestanaLobbyTclComponent } from '../widgets/shared/pestana-lobby-tcl/pestana-lobby-tcl.component';
 
 import { Widget } from 'src/app/theme/shared/_helpers/models/tablero-control/widget.model';
 import { PTLLayoutModel } from 'src/app/theme/shared/_helpers/models/PTLLayout.model';
@@ -41,6 +41,10 @@ import { ContenedoresDashboardComponent } from './components/contenedores-dashbo
 import { VirtualGateDashboardComponent } from './components/virtual-gate-dashboard/virtual-gate-dashboard.component';
 import { MapaDashboardComponent } from './components/mapa-dashboard/mapa-dashboard.component';
 import { BodegasDashboardComponent } from './components/bodegas-dashboard/bodegas-dashboard.component';
+import { GranelDashboardComponent } from './components/granel-dashboard/granel-dashboard.component';
+import { CargaSueltaDashboardComponent } from './components/carga-suelta-dashboard/carga-suelta-dashboard.component';
+import { CapacidadDashboardComponent } from './components/capacidad-dashboard/capacidad-dashboard.component';
+import { NoticiasDashboardComponent } from './components/noticias-dashboard/noticias-dashboard.component';
 
 @Component({
     selector: 'app-torre-control',
@@ -57,7 +61,11 @@ import { BodegasDashboardComponent } from './components/bodegas-dashboard/bodega
         ContenedoresDashboardComponent,
         VirtualGateDashboardComponent,
         MapaDashboardComponent,
-        BodegasDashboardComponent
+        BodegasDashboardComponent,
+        GranelDashboardComponent,
+        CargaSueltaDashboardComponent,
+        CapacidadDashboardComponent,
+        NoticiasDashboardComponent
     ],
     templateUrl: './torre-control.component.html',
     styleUrls: ['./torre-control.component.scss']
@@ -80,7 +88,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
     public menuConfigAbierto: boolean = false;
     public mostrarLobby: boolean = false;
     public mostrarLobbyPestanas: boolean = false;
-    public widgetEnfoque: { type: string; data: any } | null = null;
+    /** Widget abierto en modo enfoque: su widgetConfig completo (con puerto y pestaña) y sus datos vivos. */
+    public widgetEnfoque: { config: any; datosVivos: any } | null = null;
 
     public lsWidgets: Widget[] = [];
     public lsLayout: any[] = [];
@@ -137,7 +146,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
         this.subs.add(
             this._torreService.widgetFocus$.subscribe((widget) => {
-                this.widgetEnfoque = widget;
+                this.widgetEnfoque = this.armarConfigEnfoque(widget);
                 this.cdr.detectChanges();
             })
         );
@@ -282,7 +291,11 @@ export class TorreControlComponent implements OnInit, OnDestroy {
             'TLC_CONTENEDORES_001': 'fas fa-box text-success',
             'TLC_GNL_001': 'fas fa-fire-alt text-danger',
             'TLC_MAPA_001': 'fas fa-map-marked-alt text-danger',
-            'TLC_NOTICIAS_001': 'fas fa-newspaper text-primary'
+            'TLC_NOTICIAS_001': 'fas fa-newspaper text-primary',
+            'TLC_NOTICIAS': 'fas fa-newspaper text-primary',
+            'TLC_GRANEL_001': 'fas fa-seedling text-success',
+            'TLC_SUELTA_001': 'fas fa-car text-warning',
+            'TLC_CAPACIDAD_001': 'fas fa-warehouse text-info'
         };
         return diccionarioIconos[codigoPestana] || 'fas fa-th-large text-secondary';
     }
@@ -603,6 +616,23 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         this.mostrarLobby = false;
         this.mostrarLobbyPestanas = true;
         this.cdr.detectChanges();
+    }
+
+    /**
+     * El modal crea una instancia nueva del widget: se le entrega el contexto completo para que consulte el mismo
+     * puerto que el tablero (antes llegaba solo {type, data} y los widgets caían en BUENAVENTURA). Lo que el widget
+     * mande en data se aplana en widgetConfig (data se conserva por compatibilidad) y data.datosVivos va como input.
+     */
+    private armarConfigEnfoque(widget: { type: string; data: any } | null): { config: any; datosVivos: any } | null {
+        if (!widget) return null;
+        const data = widget.data || {};
+        // Si el widget manda una lista (p. ej. sus filas), no se aplana en la configuración
+        const { datosVivos, ...resto } = Array.isArray(data) ? ({ datosVivos: undefined } as any) : data;
+        const puerto = String(resto.puerto || this.puertoActivo || 'BUENAVENTURA').trim().toUpperCase();
+        return {
+            config: { ...resto, type: widget.type, codigoWidget: resto.codigoWidget || widget.type, data, puerto, pestana: resto.pestana || this.pestanaActiva },
+            datosVivos: datosVivos ?? null
+        };
     }
 
     cerrarModalEnfoque(): void {

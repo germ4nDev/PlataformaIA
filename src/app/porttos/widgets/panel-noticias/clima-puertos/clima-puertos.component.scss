@@ -1,0 +1,69 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.cuerpo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 6px 8px;
+}
+
+.contenido {
+    flex: 1;
+    min-height: 0;
+}
+
+.insignia {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: rgba(47, 150, 180, 0.15);
+    color: #2f96b4;
+    white-space: nowrap;
+}
+
+.rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.tarjeta {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.72rem;
+    color: var(--widget-subtitle);
+}
+
+.tarjeta.actual {
+    border-color: #2f96b4;
+}
+
+.nombre {
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 0.78rem;
+}
+
+.temp {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.viento.fuerte {
+    color: #d97c05;
+    font-weight: 600;
+}

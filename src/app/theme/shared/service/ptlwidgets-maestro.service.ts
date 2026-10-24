@@ -22,7 +22,7 @@ export class PTLWidgetsMaestroService {
         private http: HttpClient,
         private _socketManager: SocketManagerService
     ) {
-        console.log('******* Servicio de Widgets Maestro iniciado correctamente');
+        // console.log('******* Servicio de Widgets Maestro iniciado correctamente');
         if (this._socketManager.widgetsActualizados$) {
             this._socketManager.widgetsActualizados$.subscribe({
                 next: (payload: any) => {
@@ -44,12 +44,12 @@ export class PTLWidgetsMaestroService {
     }
 
     cargarRegistros() {
-        console.log('Consultando y ordenando catálogo de widgets del servidor...');
+        // console.log('Consultando y ordenando catálogo de widgets del servidor...');
         const url = `${base_url}/widgets/activos`;
         return this.http.get(url).pipe(
             map((resp: any) => resp.widgets as PTLWidgetMaestroModel[]),
             map((regs: PTLWidgetMaestroModel[]) => {
-                console.log('widgets cargados', regs);
+                // console.log('widgets cargados', regs);
                 return regs.sort((a: any, b: any) => (a.nombreWidget || '').localeCompare(b.nombreWidget || ''));
             }),
             tap(registrosOrdenados => {
@@ -96,8 +96,8 @@ export class PTLWidgetsMaestroService {
     }
 
     actualizarWidget(codigoWidget: string, data: PTLWidgetMaestroModel) {
-        console.log('actualizar el widget codigo', codigoWidget);
-        console.log('actualizar el widget', data);
+        // console.log('actualizar el widget codigo', codigoWidget);
+        // console.log('actualizar el widget', data);
 
         const url = `${base_url}/widgets/${codigoWidget}`;
         return this.http.put(url, data).pipe(

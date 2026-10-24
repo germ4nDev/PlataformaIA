@@ -1,0 +1,10 @@
+<div class="grafica" [class.con-leyenda]="tipo === 'dona'">
+    <div class="lienzo"><canvas #lienzo></canvas></div>
+    <ul class="leyenda" *ngIf="tipo === 'dona' && leyenda.length">
+        <li *ngFor="let i of leyenda">
+            <span class="punto" [style.background]="i.color"></span>
+            <span class="nombre">{{ i.label }}</span>
+            <span class="pct">{{ i.porcentaje }} %</span>
+        </li>
+    </ul>
+</div>

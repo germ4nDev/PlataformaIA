@@ -216,7 +216,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                     if (resp.ok) {
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('PUERTOS.CREATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/puertos-panel'])
+                        this.router.navigate(['/porttos/puertos-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -238,7 +238,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                     if (resp.ok) {
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('PUERTOS.UPDATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/puertos-panel'])
+                        this.router.navigate(['/porttos/puertos-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -256,7 +256,7 @@ export class GestionPueertoPanelComponent implements OnInit {
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/tablero-control/puertos-panel'])
+        this.router.navigate(['/porttos/puertos-panel'])
     }
 
     navMobClick() {

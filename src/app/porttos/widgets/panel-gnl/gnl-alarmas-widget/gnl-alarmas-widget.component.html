@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="data?.titulo || 'Bitácora de Eventos'"
     [subtitulo]="data?.subtitulo || 'REGISTRO DE ALERTAS SCADA'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()" [icono]="'feather icon-alert-triangle'">
+    (clickEnfoque)="maximizarDesdeShell()" [icono]="'feather icon-alert-triangle'" [origen]="origen$ | async">
 
     <!-- PROYECCIÓN AL HEADER: Contador de eventos en bitácora -->
     <div acciones-extra class="d-flex align-items-center gap-2">

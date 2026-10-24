@@ -25,6 +25,10 @@ import { PTLWidgetMaestroModel } from 'src/app/theme/shared/_helpers/models/PTLW
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
 import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
 import { Observable, Subscription } from 'rxjs'
+import { PtltiposWidgetService } from 'src/app/theme/shared/service/ptltipos-widget.service'
+import { PTLTipoWidgetModel } from 'src/app/theme/shared/_helpers/models/PTLTipoWidget.model'
+import { PtlpestanasService } from 'src/app/theme/shared/service/ptlpestanas.service'
+import { PTLPestanaModel } from 'src/app/theme/shared/_helpers/models/PTLPestana.model'
 
 @Component({
     selector: 'app-gestion-widget',
@@ -71,6 +75,8 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
     codSuite: string = ''
     roles: PTLRoleAPModel[] = []
     rolesFiltrado: PTLRoleAPModel[] = []
+    tiposWidget: PTLTipoWidgetModel[] = []
+    pestanas: PTLPestanaModel[] = []
     widgetRoles: any[] = []
     todosLosRoles: any[] = []
     tipoRolSeleccionado: string = ''
@@ -86,11 +92,16 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
         private _swalAlertService: SwalAlertService,
         private _translate: TranslateService,
         private _localStorageService: LocalStorageService,
+        private _tiposWidgetService: PtltiposWidgetService,
+        private _pestanasService: PtlpestanasService,
         private _uploadService: UploadFilesService
     ) {
         this.isSubmit = false
         this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        const registroId = this._localStorageService.getObject<string>('regId') || ''
+        const registroId = this._localStorageService.getObject<string>('regId') || '';
+        this.tiposWidget = this._tiposWidgetService.getTipoeWidgetActuales();
+        console.log('***** [COMPONENTE] tipos de widget', this.tiposWidget);
+
         if (registroId != 'nuevo') {
             // console.log('me llena el Id', registroId);
             this.modoEdicion = true
@@ -116,6 +127,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this._navigationService.getNavigationItems()
         this.menuItems = this._navigationService.menuItems$
+        this.consultarPestanas();
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
                 this._localStorageService.setFormRegistro(this.FormRegistro)
@@ -130,6 +142,10 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
             this._localStorageService.removeFormRegistro()
         }
         if (!this.modoEdicion) {
+            this.FormRegistro.codigoPestana = '';
+            this.FormRegistro.codigoTipo = '';
+            this.FormRegistro.layoutVersion = 0;
+            this.FormRegistro.offsetY = 0;
             //   console.log('formRegistro original', this.FormRegistro);
         }
     }
@@ -137,8 +153,25 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
+    consultarPestanas() {
+        this._pestanasService.getPestanas().subscribe(data => {
+            console.log('***** [COMPONENTE] pestanas', data);
+            this.pestanas = data.pestanas;
+        });
+    }
+
     actualizarDescripcionRegistro(nuevoContenido: string): void {
         this.FormRegistro.descripcionWidget = nuevoContenido
+    }
+
+    onCodigoTipoClick(event: any) {
+        console.log('Codigo ttipo wieget', event.target.value);
+        this.FormRegistro.codigoTipo = event.target.value;
+    }
+
+    onCodigoPestanaClick(event: any) {
+        console.log('Codigo PESTANA', event.target.value);
+        this.FormRegistro.codigoPestana = event.target.value;
     }
 
     onFileSelectedClick(event: any) {

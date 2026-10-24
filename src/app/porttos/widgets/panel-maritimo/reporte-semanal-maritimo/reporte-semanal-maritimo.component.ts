@@ -1,66 +1,3 @@
-// /*
-//     Author: German Valencia
-//     Pattern: PORTTOS Generic Widget - Resumen Semanal Marítimo (Refactorizado Dumb Component)
-// */
-// import { Component, Input, ViewEncapsulation } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-
-// // 🟢 Importamos el Shell maestro
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-reporte-semanal-maritimo',
-//     standalone: true,
-//     imports: [CommonModule, WidgetShellComponent],
-//     templateUrl: './reporte-semanal-maritimo.component.html',
-//     styleUrls: ['./reporte-semanal-maritimo.component.scss'],
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class ReporteSemanalMaritimoComponent {
-
-//     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
-//     @Input() widgetConfig: any;
-//     @Input() isEnfoque: boolean = false;
-//     @Input() mostrarTabla: boolean = false;
-
-//     // 🟢 LA NUEVA COMPUERTA: Recibe la data inyectada directamente desde el HTML de la pestaña
-//     @Input() datosVivos: any;
-
-//     constructor(private _torreService: DashboardService) { }
-
-//     // 🟢 EL CEREBRO REACTIVO: Calcula la data en tiempo real
-//     get data() {
-//         if (!this.widgetConfig) return {};
-
-//         const configBase = this.widgetConfig.data || {};
-
-//         // Fusión limpia: combina la configuración visual con los datos vivos (si llegaron)
-//         return {
-//             ...configBase,
-//             ...(this.datosVivos || {})
-//         };
-//     }
-
-//     // El HTML usa ahora este getter en su *ngFor en lugar de una variable fija
-//     get metricas() {
-//         return this.data.metricas || [];
-//     }
-
-//     get isLoading(): boolean {
-//         return !this.widgetConfig && !this.datosVivos;
-//     }
-
-//     // 🟢 Toggle de enfoque: Abre o cierra el modal
-//     maximizarDesdeShell() {
-//         if (this.isEnfoque) {
-//             this._torreService.cerrarModoEnfoque();
-//         } else {
-//             // Mandamos la data fusionada para que el modal la dibuje con los mismos valores
-//             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_RESUMEN_SEMANAL', this.data);
-//         }
-//     }
-// }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -91,10 +28,12 @@ export interface IMetricaSemanal {
     claseTendencia?: string;
 }
 
+import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive';
+
 @Component({
     selector: 'app-reporte-semanal-maritimo',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './reporte-semanal-maritimo.component.html',
     styleUrls: ['./reporte-semanal-maritimo.component.scss'],
     encapsulation: ViewEncapsulation.None

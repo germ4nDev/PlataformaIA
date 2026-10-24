@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="data?.titulo || 'ESTADO DE CITAS'"
     [subtitulo]="data?.subtitulo || 'Gestión de turnos y accesos'" [icono]="data?.icono || 'feather icon-calendar'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
@@ -37,23 +37,16 @@
                     <span class="kpi-main-title">Tiempo Medio Espera Virtual</span>
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    <div class="kpi-item">
-                        <span class="kpi-val text-info">{{ data?.resumen?.tiempoMedioSPRBUN != null ? data.resumen.tiempoMedioSPRBUN + 'm' : '—' }}</span>
-                        <span class="kpi-lbl">SPRBUN</span>
-                    </div>
-
-                    <div class="kpi-item border-start border-end"
-                        style="border-color: rgba(255,255,255,0.05) !important;">
-                        <span class="kpi-val text-warning">{{ data?.resumen?.tiempoMedioTCBUEN != null ? data.resumen.tiempoMedioTCBUEN + 'm' : '—' }}</span>
-                        <span class="kpi-lbl">TCBUEN</span>
-                    </div>
-
-                    <div class="kpi-item">
-                        <span class="kpi-val text-success">{{ data?.resumen?.tiempoMedioAGUADULCE != null ? data.resumen.tiempoMedioAGUADULCE + 'm' : '—' }}</span>
-                        <span class="kpi-lbl">AGUADULCE</span>
+                <div class="d-flex justify-content-between" *ngIf="terminalesPie.length; else sinTerminales">
+                    <div class="kpi-item" *ngFor="let t of terminalesPie; let i = index; trackBy: trackByTerminal"
+                        [class.border-start]="i > 0" style="border-color: rgba(255,255,255,0.05) !important;">
+                        <span class="kpi-val" [ngClass]="colorEspera(t.esperaPromedioMin)">{{ t.esperaPromedioMin != null ? t.esperaPromedioMin + 'm' : '—' }}</span>
+                        <span class="kpi-lbl" [title]="t.terminal">{{ t.terminal }}</span>
                     </div>
                 </div>
+                <ng-template #sinTerminales>
+                    <div class="w-100 text-center kpi-lbl">Sin citas activas por terminal</div>
+                </ng-template>
 
             </div>
         </ng-container>

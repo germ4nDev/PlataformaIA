@@ -1,0 +1,37 @@
+<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="todas.length">{{
+            todas.length }} en 7 días</span></div>
+    <div class="cuerpo">
+        <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!todas.length"
+            [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
+        <div class="contenido" *ngIf="!cargando && !error && !(!todas.length)">
+            <div class="busqueda" *ngIf="isEnfoque">
+                <input type="search" placeholder="Buscar en titulares y resúmenes..." [value]="busqueda" (input)="buscar($any($event.target).value)" aria-label="Buscar noticias">
+                <select (change)="elegirMedio($any($event.target).value)" aria-label="Filtrar por medio">
+                    <option value="">Todos los medios</option>
+                    <option *ngFor="let m of medios" [value]="m" [selected]="m === medio">{{ m }}</option>
+                </select>
+                <span class="contador">{{ noticias.length }} de {{ todas.length }}</span>
+            </div>
+            <div class="filtros">
+                <button type="button" [class.activo]="!categoria" (click)="filtrar(null)">Todas</button>
+                <button type="button" *ngFor="let c of categorias" [class.activo]="categoria === c.codigo"
+                    (click)="filtrar(c.codigo)">{{ c.nombre }} · {{ c.noticias }}</button>
+            </div>
+            <ul class="feed">
+                <li *ngFor="let n of noticias; trackBy: porId" [class.del-puerto]="n.delPuerto">
+                    <a [href]="n.url" target="_blank" rel="noopener noreferrer">{{ n.titulo }}</a>
+                    <div class="meta">
+                        <span class="cat">{{ n.categoriaNombre }}</span>
+                        <span *ngIf="n.medio">{{ n.medio }}</span>
+                        <span>{{ n.fecha | date: 'dd MMM · HH:mm' : '-0500' }}</span>
+                        <span class="puerto" *ngIf="n.delPuerto">{{ puerto }}</span>
+                        <span *ngIf="isEnfoque" class="proveedor">vía {{ n.proveedor }}</span>
+                    </div>
+                    <p *ngIf="isEnfoque && n.resumen" class="resumen">{{ n.resumen }}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</app-widget-shell>

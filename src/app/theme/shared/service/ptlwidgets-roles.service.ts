@@ -22,7 +22,7 @@ export class PtlWidgetsRolesService {
         private http: HttpClient,
         private _socketManager: SocketManagerService
     ) {
-        console.log('******* Servicio de Widgets Roles iniciado correctamente');
+        //console.log('******* Servicio de Widgets Roles iniciado correctamente');
 
         if (this._socketManager.widgetsRolesActualizados$) {
             this._socketManager.widgetsRolesActualizados$.subscribe({
@@ -47,12 +47,12 @@ export class PtlWidgetsRolesService {
 
     // 🟢 Método utilizado en tu forkJoin del Login
     cargarRegistros() {
-        console.log('Consultando asignaciones de widgets-roles del servidor...');
+        //console.log('Consultando asignaciones de widgets-roles del servidor...');
         const url = `${base_url}/widgets-roles`;
         return this.http.get(url).pipe(
             map((resp: any) => resp.widgetsRoles as PTLWidgetRoleModel[]),
             tap((RolesOrdenadas) => {
-                console.log('actividades roles servicio', RolesOrdenadas);
+                //console.log('actividades roles servicio', RolesOrdenadas);
 
                 this._widgetsRoles.next(RolesOrdenadas);
             })
@@ -73,7 +73,7 @@ export class PtlWidgetsRolesService {
 
     asignarRolAWidget(data: any) {
         const url = `${base_url}/widgets-roles`;
-        console.log('Servicio Widgets Roles (Crear)', data);
+        //console.log('Servicio Widgets Roles (Crear)', data);
         return this.http.post(url, data).pipe(
             map((resp: any) => {
                 return {
@@ -90,7 +90,7 @@ export class PtlWidgetsRolesService {
 
     postCrearBulkRegistro(codigoWidget: string, data: PTLWidgetRoleModel[]) {
         const url = `${base_url}/widgets-roles/bulk/${codigoWidget}`;
-        console.log('servicio widgetsRoles', data);
+        //console.log('servicio widgetsRoles', data);
         return this.http.post(url, data).pipe(
             map((resp: any) => {
                 return {
@@ -106,7 +106,7 @@ export class PtlWidgetsRolesService {
         const url = `${base_url}/widgets-roles/${codigoWidget}/${codigoRol}`;
         return this.http.put(url, data).pipe(
             map((resp: any) => {
-                console.log('Data de asignación modificada', resp);
+                //console.log('Data de asignación modificada', resp);
                 return {
                     ok: true,
                     widgetRole: resp.widgetRole
@@ -123,7 +123,7 @@ export class PtlWidgetsRolesService {
         const url = `${base_url}/widgets-roles/${codigoWidget}/${codigoRol}`;
         return this.http.delete(url).pipe(
             map((resp: any) => {
-                console.log('Data de asignación eliminada', resp);
+                //console.log('Data de asignación eliminada', resp);
                 return {
                     ok: true,
                     msg: resp.msg

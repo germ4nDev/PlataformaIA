@@ -1,197 +1,67 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
-    Component: Virtual Gate Dashboard (Layout Manager Puro - Arquitectura Smart Widgets)
+    Component: Virtual Gate Dashboard (pestaña TLC_VIRTUAL_GATE_001) · Layout Manager común (PestanaGridsterBase)
+    Precarga la cola del gate al iniciar y al cambiar de puerto. Los KPI PTT_GATE_KPI_* sin registro propio usan
+    la tarjeta de PTT_GATE_KPI_OP (KpiCardTclComponent).
 */
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GridsterConfig, GridsterItem, GridType, GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
-
+import { GridsterComponent, GridsterItemComponent, GridsterConfig } from 'angular-gridster2';
 import { LayoutMetadataEngineService } from 'src/app/theme/shared/service/layout-metadata-engine.service';
-import { VirtualGateService } from 'src/app/theme/shared/service/tablero-control/virtual-gate.service';
 import { LocalStorageService } from 'src/app/theme/shared/service';
+import { VirtualGateService } from 'src/app/theme/shared/service/tablero-control/virtual-gate.service';
 import { WIDGET_MAP } from '../../widget-registry';
+import { PestanaGridsterBase } from '../pestana-gridster/pestana-gridster.base';
 
 @Component({
     selector: 'app-virtual-gate-dashboard',
     standalone: true,
     imports: [CommonModule, GridsterComponent, GridsterItemComponent],
-    templateUrl: './virtual-gate-dashboard.component.html',
-    styleUrls: ['./virtual-gate-dashboard.component.scss']
+    templateUrl: '../pestana-gridster/pestana-gridster.component.html',
+    styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })
-export class VirtualGateDashboardComponent implements OnInit, OnChanges {
-    @Input() puerto: string = 'BUENAVENTURA';
-    @Input() usuarioId!: string;
-    @Input() lsWidgets: any[] = [];
-
-    private _tableroBloqueado = true;
-    @Input()
-    set tableroBloqueado(bloqueado: boolean) {
-        this._tableroBloqueado = bloqueado;
-        if (this.options && this.options.api) {
-            this.options.draggable = { enabled: !bloqueado };
-            this.options.resizable = { enabled: !bloqueado };
-            this.options.api.optionsChanged!();
-        }
-    }
-    get tableroBloqueado(): boolean {
-        return this._tableroBloqueado;
-    }
-
-    public readonly pestanaActiva: string = 'TLC_VIRTUAL_GATE_001';
-    public options: GridsterConfig = {};
-
-    public dashboard: Array<GridsterItem & {
-        id?: string;
-        idClon?: string;
-        type: string;
-        componenteTarget?: any;
-        componenteInputs?: { widgetConfig: any };
-    }> = [];
-
-    public cargando: boolean = true;
-    public hayCambiosSinGuardar: boolean = false;
-    private construyendoLayout: boolean = false;
+export class VirtualGateDashboardComponent extends PestanaGridsterBase {
+    readonly pestanaActiva = 'TLC_VIRTUAL_GATE_001';
+    readonly nombrePestana = 'Virtual Gate';
+    override readonly iconoVacio = 'feather icon-log-in';
 
     constructor(
-        private layoutEngine: LayoutMetadataEngineService,
-        private _virtualGateService: VirtualGateService,
-        private _localStorageService: LocalStorageService,
-        private cdr: ChangeDetectorRef
-    ) { }
+        layoutEngine: LayoutMetadataEngineService,
+        localStorageService: LocalStorageService,
+        cdr: ChangeDetectorRef,
+        private _virtualGateService: VirtualGateService
+    ) {
+        super(layoutEngine, localStorageService, cdr);
+    }
 
-    ngOnInit(): void {
-        this.iniciarGridster();
+    protected override titulosDelCatalogo(): boolean {
+        return false;
+    }
 
+    protected override prefijoId(): string {
+        return 'wdg-gate';
+    }
+
+    protected override opcionesGridster(): Partial<GridsterConfig> {
+        return { pushDirections: { north: true, east: true, south: true, west: true } };
+    }
+
+    protected override alIniciar(): void {
         this._virtualGateService.obtenerColaGate(this.puerto, true).subscribe();
-
-        if (this.lsWidgets && this.lsWidgets.length > 0) {
-            this.inicializarLayoutPorPuerto();
-        }
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        const catalogoListo = this.lsWidgets && this.lsWidgets.length > 0;
-
-        if (changes['puerto'] && !changes['puerto'].isFirstChange() && catalogoListo) {
-            this._virtualGateService.limpiarCachePuerto();
-            this._virtualGateService.obtenerColaGate(this.puerto, true).subscribe();
-
-            this.inicializarLayoutPorPuerto(true);
-        }
-
-        if (changes['lsWidgets'] && catalogoListo && this.dashboard.length === 0) {
-            this.inicializarLayoutPorPuerto();
-        }
+    protected override alCambiarPuerto(): void {
+        this._virtualGateService.limpiarCachePuerto();
+        this._virtualGateService.obtenerColaGate(this.puerto, true).subscribe();
     }
 
-    async inicializarLayoutPorPuerto(forzarReconstruccion: boolean = false): Promise<void> {
-        if (this.construyendoLayout) return;
-        this.construyendoLayout = true;
-        this.cargando = true;
-
-        const puertoNormalizado = (this.puerto || 'BUENAVENTURA').trim().toUpperCase();
-        const cacheKey = `${this.pestanaActiva}_${puertoNormalizado}`;
-
-        try {
-            let layoutGuardado = !forzarReconstruccion
-                ? this._localStorageService.getLayoutPestana(cacheKey)
-                : null;
-
-            if (!layoutGuardado || layoutGuardado.length === 0) {
-                layoutGuardado = await this.layoutEngine.obtenerLayoutBase(
-                    this.pestanaActiva,
-                    this.usuarioId,
-                    this.lsWidgets
-                );
-
-                layoutGuardado = (layoutGuardado || []).filter((w: any) => w.type || w.codigoWidget);
-                this._localStorageService.guardarLayoutPestanaEnSesion(cacheKey, layoutGuardado);
-            }
-
-            this.dashboard = (layoutGuardado || []).map((w: any, index: number) => {
-                const codigoTipo = (w.type || w.codigoWidget || '').trim().toUpperCase();
-                const idUnico = w.idClon || w.id || `wdg-gate-${index}-${w.x}-${w.y}`;
-
-                return {
-                    ...w,
-                    id: idUnico,
-                    type: codigoTipo,
-                    componenteTarget: this.obtenerComponentePara(codigoTipo),
-                    componenteInputs: {
-                        widgetConfig: {
-                            ...w,
-                            id: idUnico,
-                            type: codigoTipo,
-                            puerto: puertoNormalizado
-                        }
-                    }
-                };
-            });
-        } catch (error) {
-            console.error('❌ [Virtual Gate Layout Manager] Error construyendo el layout:', error);
-        } finally {
-            this.cargando = false;
-            this.construyendoLayout = false;
-            this.cdr.detectChanges();
-
-            setTimeout(() => {
-                if (this.options?.api?.resize) {
-                    this.options.api.resize();
-                }
-            }, 50);
-        }
-    }
-
-    obtenerComponentePara(codigoWidget: string): any {
-        if (!codigoWidget) return null;
-
-        const key = codigoWidget.trim().toUpperCase();
-
-        if (WIDGET_MAP[key]) {
-            return WIDGET_MAP[key].componente;
-        }
-
-        if (key.startsWith('PTT_GATE_KPI_')) {
-            return WIDGET_MAP['PTT_GATE_KPI_OP'].componente; // Usamos este como puente a la clase KpiCardTclComponent
-        }
-
+    override obtenerComponentePara(codigoWidget: string): any {
+        const codigo = (codigoWidget || '').trim().toUpperCase();
+        if (!codigo) return null;
+        if (WIDGET_MAP[codigo]) return WIDGET_MAP[codigo].componente;
+        // Puente a KpiCardTclComponent para los KPI del gate sin registro propio
+        if (codigo.startsWith('PTT_GATE_KPI_')) return WIDGET_MAP['PTT_GATE_KPI_OP']?.componente ?? null;
         return null;
-    }
-
-    iniciarGridster(): void {
-        this.options = {
-            gridType: GridType.ScrollVertical,
-            margin: 12,
-            outerMargin: true,
-            outerMarginBottom: 24,
-            addEmptyRowsCount: 1,
-            minCols: 12,
-            maxCols: 12,
-            minRows: 1,
-            maxRows: 1000,
-            fixedRowHeight: 160,
-            pushItems: true,
-            swap: false,
-            compactType: 'none',
-            defaultItemCols: 4,
-            defaultItemRows: 3,
-            displayGrid: 'onDrag&Resize',
-            draggable: { enabled: !this.tableroBloqueado },
-            pushDirections: { north: true, east: true, south: true, west: true },
-            resizable: { enabled: !this.tableroBloqueado },
-            mobileBreakpoint: 960,
-            keepFixedHeightInMobile: true,
-            itemResizeCallback: () => {
-                if (!this.cargando) this.hayCambiosSinGuardar = true;
-            },
-            itemChangeCallback: () => {
-                if (!this.cargando) this.hayCambiosSinGuardar = true;
-            }
-        };
-    }
-
-    trackByWidget(index: number, w: any): string {
-        const origen = w.componenteInputs?.widgetConfig || w;
-        return origen.idClon || origen.id || origen.type || index.toString();
     }
 }

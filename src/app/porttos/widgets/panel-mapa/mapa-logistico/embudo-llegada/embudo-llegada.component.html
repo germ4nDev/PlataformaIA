@@ -1,0 +1,63 @@
+<!-- <div class="embudo">
+    <div class="embudo-cargando" *ngIf="cargando && !embudo">Calculando embudo…</div>
+
+    <ng-container *ngIf="embudo">
+        <div class="embudo-aviso" *ngIf="!embudo.aisDisponible">Sin datos AIS del puerto: solo se ven los avisos DIMAR.
+        </div>
+        <div class="embudo-aviso" *ngIf="!embudo.avisosDisponibles">Sin avisos DIMAR: la etapa "Avisadas" queda vacía.
+        </div>
+        <div class="embudo-critico" *ngIf="embudo.criticas.naves > 0">
+            ⛔ {{ embudo.criticas.naves }} nave{{ embudo.criticas.naves === 1 ? '' : 's' }} en estado crítico (varada,
+            sin gobierno o emergencia)
+        </div>
+        <div class="embudo-cuello" *ngIf="embudo.cuelloDeBotella">⚠ {{ embudo.cuelloDeBotella.texto }}</div>
+
+        <button type="button" class="etapa" *ngFor="let e of embudo.etapas; trackBy: trackEtapa"
+            [class.activa]="etapaActiva === e.codigo" [class.cuello]="esCuello(e)" (click)="elegir(e)"
+            [title]="e.descripcion + (e.naves ? ' · clic para verlas en el mapa' : '')">
+            <span class="etapa-cifra">{{ e.naves }}</span>
+            <span class="etapa-cuerpo">
+                <span class="etapa-nombre">{{ e.nombre }}</span>
+                <span class="etapa-barra"><span [style.width.%]="ancho(e)"
+                        [ngClass]="'barra-' + e.codigo"></span></span>
+                <span class="etapa-detalle" [class.excede]="excede(e)">{{ detalle(e) }}</span>
+            </span>
+        </button>
+
+        <small class="embudo-pie">Toque una etapa para resaltar sus naves en el mapa · {{ embudo.totalEnPuerto }} en la
+            zona del puerto</small>
+    </ng-container>
+</div> -->
+<div class="embudo-cargando" *ngIf="cargando && !embudo">Calculando embudo…</div>
+
+<ng-container *ngIf="embudo">
+    <!-- Alertas superiores limpias -->
+    <div class="alerta-plana" *ngIf="!embudo.aisDisponible">Sin datos AIS del puerto: solo se ven avisos DIMAR.</div>
+    <div class="alerta-plana" *ngIf="!embudo.avisosDisponibles">Sin avisos DIMAR: la etapa "Avisadas" queda vacía.</div>
+    <div class="alerta-plana nivel-error" *ngIf="embudo.criticas.naves > 0">
+        ⛔ {{ embudo.criticas.naves }} nave{{ embudo.criticas.naves === 1 ? '' : 's' }} en estado crítico.
+    </div>
+    <div class="alerta-plana nivel-warning" *ngIf="embudo.cuelloDeBotella">
+        ⚠ {{ embudo.cuelloDeBotella.texto }}
+    </div>
+
+    <!-- Lista de etapas (Estilo Flat) -->
+    <div class="lista-plana">
+        <button type="button" class="item-plano" *ngFor="let e of embudo.etapas; trackBy: trackEtapa"
+            [class.activo]="etapaActiva === e.codigo" [class.cuello]="esCuello(e)" (click)="elegir(e)"
+            [title]="e.descripcion + (e.naves ? ' · clic para verlas' : '')">
+
+            <span class="cifra-destacada">{{ e.naves }}</span>
+
+            <span class="cuerpo-item">
+                <span class="titulo-item">{{ e.nombre }}</span>
+                <span class="barra-progreso">
+                    <span [style.width.%]="ancho(e)" [ngClass]="'barra-' + e.codigo"></span>
+                </span>
+                <span class="detalle-item" [class.excede]="excede(e)">{{ detalle(e) }}</span>
+            </span>
+        </button>
+    </div>
+
+    <small class="pie-panel">Toque una etapa para resaltar sus naves · {{ embudo.totalEnPuerto }} en la zona</small>
+</ng-container>

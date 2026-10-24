@@ -23,14 +23,6 @@ export class LayoutService {
 
     constructor(private http: HttpClient) {
         console.log('******* Servicio de layouts iniciado correctamente')
-        // this._socketManager.layoutActualizado$.subscribe({
-        //     next: (payload) => {
-        //         console.log(`📡 Socket interceptado - Acción: ${payload.action}, ID: ${payload.id}`);
-        //         this._layoutChange.next(payload);
-        //         this.cargarRegistros().subscribe();
-        //     },
-        //     error: (err) => console.error('Error escuchando al manager:', err)
-        // });
     }
 
     get layouts(): Observable<PTLLayoutModel[]> {
@@ -113,27 +105,6 @@ export class LayoutService {
      * Obtiene la plantilla maestra, estrategia y reglas matemáticas de una pestaña.
      * Se usa cuando un usuario entra por primera vez o restaura el tablero.
      */
-    // getPlantillaMaestra(codigoPestana: string): Observable<any> {
-    //     const url = `${base_url}/layout/plantilla/${codigoPestana}`;
-    //     return this.http.get(url).pipe(
-    //         // Asumimos que tu backend de Node devuelve { ok: true, data: { ... } }
-    //         // o { success: true, layout: { ... } }. Ajusta "resp.layout" o "resp.data" según tu Backend.
-    //         map((resp: any) => {
-    //             // Verificamos de dónde viene exactamente la data del DTO
-    //             const layoutData = resp.layout || resp.data || resp;
-
-    //             // Si la estructura trae la propiedad "configuracion.widgetsEstaticos", la guardamos en el Subject
-    //             if (layoutData && layoutData.configuracion && layoutData.configuracion.widgetsEstaticos) {
-    //                 this._layout.next(layoutData.configuracion.widgetsEstaticos);
-    //             }
-
-    //             return layoutData;
-    //         }),
-    //         tap((layout) => {
-    //             console.log('=====layout encontrado en el Servicio', layout);
-    //         })
-    //     );
-    // }
     getPlantillaMaestra(codigoPestana: string): Observable<any> {
         const url = `${base_url}/layout/plantilla/${codigoPestana}`;
         return this.http.get(url).pipe(

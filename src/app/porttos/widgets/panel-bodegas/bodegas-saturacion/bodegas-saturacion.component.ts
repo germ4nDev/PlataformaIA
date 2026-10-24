@@ -26,9 +26,9 @@ export interface IBodegaItem {
     nombre_bodega: string;
     tipo_almacenamiento: string;
     tipo_carga_principal: string;
-    capacidad_maxima_ton: number;
+    capacidad_maxima_ton: number | null;
     inventario_actual_ton: number;
-    ocupacion_pct: number;
+    ocupacion_pct: number | null;
     temperatura_c?: number | null;
     humedad_relativa_pct?: number | null;
     estado_operativo: string;
@@ -36,10 +36,12 @@ export interface IBodegaItem {
     claseBadge: string;
 }
 
+import { GraficaTclComponent, SerieGrafica } from '../../shared/grafica-tcl/grafica-tcl.component';
+import { RangoTclComponent } from '../../shared/rango-tcl/rango-tcl.component';
 @Component({
     selector: 'app-bodegas-saturacion',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [CommonModule, DecimalPipe, WidgetShellComponent, GraficaTclComponent, RangoTclComponent],
     templateUrl: './bodegas-saturacion.component.html',
     styleUrls: ['./bodegas-saturacion.component.scss']
 })
@@ -65,6 +67,41 @@ export class BodegasSaturacionComponent implements OnInit, OnChanges, OnDestroy 
 
     ngOnInit(): void {
         this.cargarSaturacionBodegas();
+        if (this.isEnfoque) this.cargarSerie();
+    }
+
+    // ---------------------------------------------------------------- vista ampliada: ocupación en el tiempo (Fase 3)
+    public horas: 24 | 72 | 168 = 24;
+    public serieLabels: string[] = [];
+    public seriesOcupacion: SerieGrafica[] = [];
+    public notaSerie: string | null = null;
+    private readonly paleta = ['#2f96b4', '#51a351', '#f89406', '#8b5cf6', '#14b8a6', '#d946ef', '#64748b', '#eab308'];
+
+    cambiarHoras(h: 24 | 72 | 168): void {
+        this.horas = h;
+        this.cargarSerie();
+    }
+
+    private cargarSerie(): void {
+        const puerto = (this.widgetConfig?.puerto || 'BUENAVENTURA').trim().toUpperCase();
+        this._bodegasService.ocupacionBodegas(puerto, this.horas).subscribe({
+            next: (r: any) => {
+                const conDato = (r?.bodegas || []).filter((b: any) => b.conDato > 0);
+                this.serieLabels = r?.labels || [];
+                this.seriesOcupacion = [
+                    ...conDato.slice(0, 8).map((b: any, i: number) => ({ label: b.codigo || b.nombre, data: b.ocupacionPct, color: this.paleta[i % this.paleta.length] })),
+                    { label: `Atención (${r?.umbrales?.atencion ?? 75} %)`, data: this.serieLabels.map(() => r?.umbrales?.atencion ?? 75), color: '#f8940688' },
+                    { label: `Crítico (${r?.umbrales?.critico ?? 90} %)`, data: this.serieLabels.map(() => r?.umbrales?.critico ?? 90), color: '#bd362f88' }
+                ];
+                this.notaSerie = !conDato.length ? 'Sin fotos de ocupación en el periodo.'
+                    : conDato.length > 8 ? `Se muestran 8 de ${conDato.length} bodegas con dato.` : (r?.origen?.simulado ? 'Datos simulados.' : null);
+                this.cdr.detectChanges();
+            },
+            error: (e: any) => {
+                this.notaSerie = e?.error?.msg || 'No se pudo consultar la serie de ocupación';
+                this.cdr.detectChanges();
+            }
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -139,27 +176,29 @@ export class BodegasSaturacionComponent implements OnInit, OnChanges, OnDestroy 
             : raw.bodegas || raw.saturacionBodegas || raw.nodos || [];
 
         this.listaBodegas = filasCrudas.map((b: any, index: number) => {
-            const capacidad = Number(b.capacidad_maxima_ton ?? b.capacidad ?? 10000);
+            // Corregido 2026-10-23: sin capacidad registrada no se supone 10.000 t; la ocupación queda sin dato
+            const capacidadCruda = b.capacidad_maxima_ton ?? b.capacidad;
+            const capacidad: number | null = capacidadCruda === null || capacidadCruda === undefined ? null : Number(capacidadCruda);
             const inventario = Number(b.inventario_actual_ton ?? b.inventario ?? 0);
 
-            const pctCalculado =
-                b.ocupacion_pct !== undefined
+            const pctCalculado: number | null =
+                b.ocupacion_pct !== undefined && b.ocupacion_pct !== null
                     ? Number(b.ocupacion_pct)
-                    : b.porcentaje !== undefined
+                    : b.porcentaje !== undefined && b.porcentaje !== null
                         ? Number(b.porcentaje)
-                        : capacidad > 0
+                        : capacidad && capacidad > 0
                             ? Number(((inventario / capacidad) * 100).toFixed(1))
-                            : 0;
+                            : null;
 
-            const ocupacion = Math.min(100, Math.max(0, pctCalculado));
-            const semaforo = this.evaluarSemaforoOcupacion(ocupacion, b.estado_operativo);
+            const ocupacion: number | null = pctCalculado === null ? null : Math.min(100, Math.max(0, pctCalculado));
+            const semaforo = this.evaluarSemaforoOcupacion(ocupacion ?? 0, b.estado_operativo);
 
             return {
                 id_bodega: b.id_bodega ?? b.id ?? index,
-                codigo_bodega: b.codigo_bodega || `BOD-0${index + 1}`,
-                nombre_bodega: b.nombre_bodega || b.nombre_nodo || b.nombre || `Bodega ${index + 1}`,
-                tipo_almacenamiento: (b.tipo_almacenamiento || b.tipo || 'CUBIERTA').toUpperCase(),
-                tipo_carga_principal: b.tipo_carga_principal || b.producto || 'Carga General',
+                codigo_bodega: b.codigo_bodega || '—',
+                nombre_bodega: b.nombre_bodega || b.nombre_nodo || b.nombre || '—',
+                tipo_almacenamiento: String(b.tipo_almacenamiento || b.tipo || '—').toUpperCase(),
+                tipo_carga_principal: b.tipo_carga_principal || b.producto || '—',
                 capacidad_maxima_ton: capacidad,
                 inventario_actual_ton: inventario,
                 ocupacion_pct: ocupacion,
@@ -167,7 +206,7 @@ export class BodegasSaturacionComponent implements OnInit, OnChanges, OnDestroy 
                 temperatura_c: b.temperatura_c != null ? Number(b.temperatura_c) : null,
                 humedad_relativa_pct: b.humedad_relativa_pct != null ? Number(b.humedad_relativa_pct) : null,
                 // MANTENIMIENTO es un estado real de la bodega: no se reemplaza por el semáforo de ocupación
-                estado_operativo: String(b.estado_operativo || '').toUpperCase() === 'MANTENIMIENTO' ? 'MANTENIMIENTO' : semaforo.etiqueta,
+                estado_operativo: String(b.estado_operativo || '').toUpperCase() === 'MANTENIMIENTO' ? 'MANTENIMIENTO' : ocupacion === null ? 'SIN DATO' : semaforo.etiqueta,
                 colorBarra: semaforo.colorHex,
                 claseBadge: semaforo.claseBadge
             };
@@ -213,7 +252,7 @@ export class BodegasSaturacionComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     get totalBodegasCriticas(): number {
-        return this.listaBodegas.filter((b) => b.ocupacion_pct >= 90).length;
+        return this.listaBodegas.filter((b) => (b.ocupacion_pct ?? 0) >= 90).length;
     }
 
     public trackByBodega(index: number, item: IBodegaItem): string | number {

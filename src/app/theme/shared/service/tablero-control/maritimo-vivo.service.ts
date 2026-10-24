@@ -1,6 +1,6 @@
 /*
     Author: German Valencia
-    Pattern: PORTTOS Client - KPIs marítimos en vivo (PlataformaApiIA · /api/maritimo/:puerto/{resumen,tiempos,ocupacion,llegadas})
+    Pattern: PORTTOS Client - KPIs marítimos en vivo (PlataformaApiIA · /api/maritimo/:puerto/{resumen,tiempos,ocupacion,muelles-estado,embudo,llegadas})
     Los tipos reflejan el contrato de services/torre-control/maritimo-vivo.service.js.
     El token lo agrega el AuthInterceptor, igual que para el API actual.
 */
@@ -65,6 +65,49 @@ export interface Llegadas {
     resumen: { total: number; proximas24h: number; de24a48h: number; de48a72h: number; atrasadas: number; enRadar: number; enPuerto: number; sinAis: number };
     naves: AvisoLlegada[];
 }
+/** Estado de muelles para el mapa (GeoJSON). Propiedades planas por muelle. */
+export type EstadoMuelle = 'LIBRE' | 'OCUPADO' | 'RESERVADO' | 'MANTENIMIENTO';
+export interface PropiedadesEstadoMuelle {
+    id: number | string; clave: string; codigoMuelle: string; idTerminal: string; terminal: string;
+    especialidad: string | null; caladoMetros: number | null;
+    estado: EstadoMuelle; fuente: 'AIS' | 'LINEUP' | 'AIS_Y_LINEUP' | null;
+    verificacion: string; verificacionTexto: string;
+    nave: string | null; mmsi: string | null; eslora: number | null; minutosAtracada: number | null; navesEnMuelle: number;
+    proximoMotonave: string | null; proximoEnMinutos: number | null; proximaEslora: number | null; reservasVentana: number;
+    etiqueta: string;
+}
+export interface EstadoMuelles {
+    type: 'FeatureCollection';
+    puerto: PuertoMaritimo;
+    generadoEn: string;
+    horasReserva: number;
+    aisDisponible: boolean;
+    resumen: { muelles: number; conGeometria: number; porEstado: Record<EstadoMuelle, number>; sinGeometria: string[] };
+    features: Array<{ type: 'Feature'; properties: PropiedadesEstadoMuelle; geometry: any }>;
+}
+/** Embudo de llegada: AVISADA → APROXIMACION → FONDEADA → MANIOBRA → ATRACADA. */
+export type CodigoEtapaEmbudo = 'AVISADA' | 'APROXIMACION' | 'FONDEADA' | 'MANIOBRA' | 'ATRACADA';
+export interface NaveEmbudo {
+    mmsi: string | null; nombre: string | null; estado?: string; situacion?: string;
+    latitud: number | null; longitud: number | null; velocidad?: number | null; minutos?: number | null;
+    eta?: string | null; minutosParaEta?: number | null; eslora?: number | null;
+    idTerminal?: string | null; codigoMuelle?: string | null;
+}
+export interface EtapaEmbudo {
+    codigo: CodigoEtapaEmbudo; nombre: string; descripcion: string; naves: number;
+    minutosPromedio: number | null; minutosMaximo: number | null;
+    referenciaMedianaMin: number | null; referenciaP90Min: number | null; sobreReferencia: number;
+    detalle?: { enRadar: number; sinAis: number; atrasadas: number; proximas24h: number };
+    lista: NaveEmbudo[];
+}
+export interface EmbudoLlegada {
+    puerto: PuertoMaritimo; generadoEn: string; horas: number;
+    aisDisponible: boolean; avisosDisponibles: boolean;
+    etapas: EtapaEmbudo[];
+    cuelloDeBotella: { etapa: CodigoEtapaEmbudo; texto: string } | null;
+    criticas: { naves: number; lista: NaveEmbudo[] };
+    totalEnPuerto: number;
+}
 /** Evento 'nave-cambio-estado' que emite el motor AIS a la sala puerto:{PUERTO}:maritimo */
 export interface CambioEstadoNave {
     mmsi: string; nombre_motonave: string | null; estado_anterior: string | null; estado_nuevo: string;
@@ -99,6 +142,16 @@ export class MaritimoVivoService {
 
     ocupacion(puerto: string): Observable<OcupacionMuelles> {
         return this.get<OcupacionMuelles>(puerto, 'ocupacion');
+    }
+
+    /** Embudo de llegada del puerto (ventana de avisos en horas; referencia de espera de los últimos días). */
+    embudo(puerto: string, horas = 72, diasReferencia = 7): Observable<EmbudoLlegada> {
+        return this.get<EmbudoLlegada>(puerto, 'embudo', { horas, diasReferencia });
+    }
+
+    /** GeoJSON con el estado de cada muelle (capa "Estado de muelles" del mapa). */
+    estadoMuelles(puerto: string, horasReserva = 24, vigenciaMin = 60): Observable<EstadoMuelles> {
+        return this.get<EstadoMuelles>(puerto, 'muelles-estado', { horasReserva, vigenciaMin });
     }
 
     llegadas(puerto: string, horas = 72, horasAtras = 12): Observable<Llegadas> {

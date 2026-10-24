@@ -110,6 +110,7 @@ export class PtlAplicacionesService {
     }
 
     actualizarAplicacion(aplicacion: PTLAplicacionModel) {
+        console.log('===========modificar app  servicio front', aplicacion);
         const url = `${base_url}/aplicaciones/${aplicacion.codigoAplicacion}`
         return this.http.put(url, aplicacion).pipe(
             map((resp: any) => {

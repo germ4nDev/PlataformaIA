@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="data?.titulo || 'RESUMEN SEMANAL'"
     [subtitulo]="data?.subtitulo || 'Resumen Semanal Marítimo'" [icono]="data?.icono || 'feather icon-wind'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">

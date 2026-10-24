@@ -1,0 +1,75 @@
+<div class="lobby-contenedor-maestro">
+
+    <div class="lobby-header">
+        <div>
+            <h3 class="titulo-panel fw-bold fs-5 text-uppercase">Catálogo de Widgets</h3>
+        </div>
+        <button type="button" class="btn-cerrar" (click)="cerrar.emit()">
+            <i class="feather icon-x"></i>
+        </button>
+    </div>
+
+    <div class="widgets-lobby-body">
+
+        <!-- TABS DE CATEGORÍAS + seleccionar todos los widgets de la categoría activa -->
+        <div
+            class="barra-categorias d-flex align-items-center gap-3 mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+            <div class="tabs-scroll-container d-flex gap-2 flex-grow-1">
+                <button *ngFor="let cat of categorias" type="button" class="btn-categoria"
+                    [class.active]="tabActiva === cat" (click)="cambiarTab(cat)">
+                    <i class="feather icon-layers me-2"></i> {{ cat }}
+                </button>
+            </div>
+            <label class="seleccionar-categoria" *ngIf="widgetsFiltrados.length"
+                [title]="todosCategoriaSeleccionados ? 'Quitar todos los widgets de ' + tabActiva : 'Agregar todos los widgets de ' + tabActiva">
+                <input class="minimal-checkbox" type="checkbox" [checked]="todosCategoriaSeleccionados"
+                    [indeterminate]="algunosCategoriaSeleccionados"
+                    (change)="seleccionarCategoria($any($event.target).checked)">
+                <span>Todos <small>({{ activosEnCategoria }}/{{ widgetsFiltrados.length }})</small></span>
+            </label>
+        </div>
+
+        <!-- CUADRÍCULA DE 2 COLUMNAS -->
+        <div class="lista-widgets">
+            <div class="widget-list-item" *ngFor="let widget of widgetsFiltrados" [class.item-active]="widget.activo"
+                (click)="toggleCheckbox(widget)"
+                [ngStyle]="{'background-image': 'url(\'' + obtenerImagenWidget(widget) + '\')'}">
+
+                <!-- Overlay Oscuro de Fondo -->
+                <div class="item-overlay"></div>
+
+                <!-- Contenido de la Tarjeta -->
+                <div class="item-content d-flex flex-column h-100 w-100 justify-content-between">
+
+                    <!-- Fila Superior: Miniatura e Icono + Checkbox -->
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="widget-thumbnail d-flex align-items-center justify-content-center">
+                            <i class="feather icon-pie-chart"></i>
+                        </div>
+                        <div class="checkbox-minimalista-wrapper">
+                            <input class="minimal-checkbox" type="checkbox" [id]="'check-' + widget.codigoWidget"
+                                [checked]="widget.activo" (click)="$event.stopPropagation()"
+                                (change)="onCheckboxChange(widget.codigoWidget, $event)">
+                        </div>
+                    </div>
+
+                    <!-- Fila Inferior: Título, Código y Descripción Expandible en Hover -->
+                    <div class="widget-info-footer">
+                        <h6 class="mb-1 text-truncate fw-bold text-white" [title]="widget.nombreWidget">{{
+                            widget.nombreWidget }}</h6>
+                        <span class="widget-code-badge mb-1 d-inline-block">{{ widget.codigoWidget }}</span>
+
+                        <!-- Descripción que se expande con scroll invisible en hover -->
+                        <div class="desc-container">
+                            <p class="desc-texto mb-0 text-light small">
+                                {{ widget.descripcionWidget || 'Habilita este widget para visualizar sus métricas.' }}
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

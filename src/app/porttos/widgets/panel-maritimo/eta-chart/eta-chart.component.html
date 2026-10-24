@@ -29,7 +29,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'REPORTE ETA VS ATA'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Desviación media (horas) entre arribo estimado y atraque real'"
-    [icono]="data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase" title="Estimated Time of Arrival vs Actual Time of Arrival">

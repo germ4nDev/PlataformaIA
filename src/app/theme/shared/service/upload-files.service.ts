@@ -28,6 +28,8 @@ export class UploadFilesService {
         const formData = new FormData();
         formData.append('file', file);
 
+        console.log('********** subir imagen', formData);
+
         const headers = new HttpHeaders({
             'x-token': this._localStorageService.getTokenLocalStorage()
         });

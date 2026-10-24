@@ -1,0 +1,312 @@
+:host {
+    display: block;
+    width: 100%;
+    padding: 16px;
+}
+
+/* Pestañas estilo macOS */
+.tabs-planos {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    padding: 4px;
+    background: var(--card-background);
+    border-radius: 8px;
+
+    button {
+        flex: 1;
+        padding: 6px 0;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        color: var(--text-subtitle-color);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            color: var(--text-color);
+        }
+
+        &.activo {
+            background: var(--app-navbar-color);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+.aviso-plano {
+    font-size: 12px;
+    color: var(--text-subtitle-color);
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.text-error {
+    color: #bd362f;
+}
+
+.reloj-plano {
+    text-align: center;
+    margin-bottom: 16px;
+
+    strong {
+        display: block;
+        font-size: 26px;
+        color: var(--app-navbar-color);
+        line-height: 1.1;
+        font-weight: 700;
+    }
+
+    span {
+        font-size: 11px;
+        color: var(--text-subtitle-color);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
+.linea-tiempo {
+    position: relative;
+    margin-bottom: 16px;
+    padding: 0 4px;
+
+    input[type=range] {
+        width: 100%;
+        cursor: pointer;
+        accent-color: var(--app-navbar-color);
+    }
+
+    .extremos {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: var(--text-subtitle-color);
+        margin-top: 4px;
+    }
+
+    .marcas {
+        position: absolute;
+        top: 8px;
+        left: 4px;
+        right: 4px;
+        height: 10px;
+        pointer-events: none;
+
+        .marca-punto {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            background: #94a3b8;
+
+            &.nivel-info {
+                background: #2f96b4;
+            }
+
+            &.nivel-warning {
+                background: #f89406;
+            }
+
+            &.nivel-error {
+                background: #bd362f;
+            }
+        }
+    }
+}
+
+.controles-planos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    .btn-salto {
+        background: transparent;
+        border: none;
+        color: var(--text-subtitle-color);
+        font-size: 18px;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--text-color);
+        }
+    }
+
+    .btn-play {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--app-navbar-color);
+        color: #fff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    .velocidades-planas {
+        display: flex;
+        gap: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 4px;
+        border-radius: 6px;
+
+        button {
+            font-size: 11px;
+            padding: 4px 8px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            color: var(--text-subtitle-color);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button.activo {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-color);
+        }
+    }
+}
+
+.totales-planos {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-subtitle-color);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 12px;
+}
+
+/* Lista de Eventos (Hereda aspecto de la bitácora) */
+.eventos-planos {
+    h4 {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-subtitle-color);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        margin-top: 0;
+    }
+
+    .evento-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+        padding: 8px 10px;
+        background: transparent;
+        border: none;
+        border-left: 3px solid transparent;
+        border-radius: 6px;
+        text-align: left;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: 0.2s;
+        margin-bottom: 4px;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        &.pasado {
+            opacity: 0.5;
+        }
+
+        &.nivel-info {
+            border-left-color: #2f96b4;
+
+            .evento-punto {
+                background: #2f96b4;
+            }
+        }
+
+        &.nivel-warning {
+            border-left-color: #f89406;
+
+            .evento-punto {
+                background: #f89406;
+            }
+        }
+
+        &.nivel-error {
+            border-left-color: #bd362f;
+
+            .evento-punto {
+                background: #bd362f;
+            }
+        }
+
+        .evento-punto {
+            width: 8px;
+            height: 8px;
+            margin-top: 5px;
+            border-radius: 50%;
+            flex: none;
+        }
+
+        .evento-texto {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            line-height: 1.3;
+
+            strong {
+                font-weight: 600;
+                color: var(--text-color);
+                margin-bottom: 2px;
+            }
+
+            span {
+                color: var(--text-subtitle-color);
+                font-size: 11px;
+            }
+        }
+
+        .evento-hora {
+            font-size: 11px;
+            color: var(--text-subtitle-color);
+            flex: none;
+            padding-top: 2px;
+        }
+    }
+}
+
+.pie-recorrido {
+    margin-top: 18px;
+
+    .btn-volver {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-color);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+
+        i {
+            margin-right: 6px;
+            color: var(--app-navbar-color);
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    }
+}

@@ -46,7 +46,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="widgetConfig?.titulo || 'Presión de Línea'"
     [subtitulo]="widgetConfig?.subtitulo || 'TELEMETRÍA SCADA'" [icono]="'feather icon-compass'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+    (clickEnfoque)="maximizarDesdeShell()" [origen]="origen$ | async">
 
     <div class="scada-widget-inner w-100 h-100 d-flex flex-column justify-content-between p-2"
         [ngClass]="{'modo-enfoque': isEnfoque}">

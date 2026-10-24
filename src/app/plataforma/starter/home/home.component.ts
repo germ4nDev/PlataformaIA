@@ -94,44 +94,44 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.iniciarConfiguracionGridster();
-        this.escucharDatosTiempoReal();
+        // this.iniciarConfiguracionGridster();
+        // this.escucharDatosTiempoReal();
 
-        // Suscripción de Auto-Guardado (Debounce)
-        this.subs.add(
-            this.saveLayoutSubject.pipe(debounceTime(1500)).subscribe(layoutToSave => {
-                this.persistirLayoutEnServidor(layoutToSave);
-            })
-        );
+        // // Suscripción de Auto-Guardado (Debounce)
+        // this.subs.add(
+        //     this.saveLayoutSubject.pipe(debounceTime(1500)).subscribe(layoutToSave => {
+        //         this.persistirLayoutEnServidor(layoutToSave);
+        //     })
+        // );
 
         this._navigationService.getNavigationItems();
         this.menuItems$ = this._navigationService.menuItems$;
         this.hasFiltersSlot = true;
-        this.lsWidgetsMaestro = this._widgetsMaestroService.getWidgetsActuales();
+        // this.lsWidgetsMaestro = this._widgetsMaestroService.getWidgetsActuales();
 
-        try {
-            this.cargando = true;
+        // try {
+        //     this.cargando = true;
 
-            await this.cargarCatalogoWidgets();
-            await this.cargarLayoutInicial();
+        //     await this.cargarCatalogoWidgets();
+        //     await this.cargarLayoutInicial();
 
-            this.validarActualizacionesDeWidgetsMaestro();
+        //     this.validarActualizacionesDeWidgetsMaestro();
 
-            const tableroState = await this._localStoragoService.getTableroLocalStorage() || {};
-            this.pestanaActiva = tableroState.pestana?.includes('TAB_PLAT') ? tableroState.pestana : 'TAB_PLAT_PRINCIPAL';
-            this.cambiarPestana(this.pestanaActiva);
+        //     const tableroState = await this._localStoragoService.getTableroLocalStorage() || {};
+        //     this.pestanaActiva = tableroState.pestana?.includes('TAB_PLAT') ? tableroState.pestana : 'TAB_PLAT_PRINCIPAL';
+        //     this.cambiarPestana(this.pestanaActiva);
 
-        } catch (error) {
-            console.error('❌ Error al inicializar el home:', error);
-            this.cargando = false;
-        }
+        // } catch (error) {
+        //     console.error('❌ Error al inicializar el home:', error);
+        //     this.cargando = false;
+        // }
 
-        this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
-            this.widgetEnfoque = widget;
-            this.cdr.detectChanges();
-        }));
+        // this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
+        //     this.widgetEnfoque = widget;
+        //     this.cdr.detectChanges();
+        // }));
 
-        this.escucharCambiosWidgets();
+        // this.escucharCambiosWidgets();
     }
 
     ngOnDestroy() {

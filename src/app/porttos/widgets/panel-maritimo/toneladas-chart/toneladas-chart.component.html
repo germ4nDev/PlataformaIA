@@ -26,7 +26,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'TONELADAS MOVIDAS HOY · POR TIPO'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Volumen diario operado por terminal y especialidad de carga'"
-    [icono]="data?.icono || 'feather icon-bar-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-bar-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase">

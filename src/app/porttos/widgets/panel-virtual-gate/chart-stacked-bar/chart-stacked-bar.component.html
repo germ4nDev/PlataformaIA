@@ -33,7 +33,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '🕒 Citas Próximas 12 Horas'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Por terminal y franja horaria'"
-    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <div acciones-extra class="d-flex align-items-center">
         <!-- 🟢 CORREGIDO: Usamos data.datasets en lugar de datasets privado -->

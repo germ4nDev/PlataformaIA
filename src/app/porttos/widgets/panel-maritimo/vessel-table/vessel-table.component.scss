@@ -52,3 +52,6 @@
         background-color: rgba(14, 165, 233, 0.15);
     }
 }
+/* ETA vencida sin ATA (line-up de Fase 3) */
+app-vessel-table tr.nave-atrasada td:first-child { box-shadow: inset 3px 0 0 #ffc107; }
+app-vessel-table .tc-badge.badge-eta-vencida { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: rgba(255, 193, 7, 0.12); border: 1px solid #ffc107; color: #ffc107; }

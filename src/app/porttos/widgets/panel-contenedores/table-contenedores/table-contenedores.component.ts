@@ -32,6 +32,8 @@ export interface IMovimientoContenedor {
     freeTime: string;
     free_time?: string;
     estado: string;
+    fechaRegistro?: string | null;
+    sinPuerto?: boolean;
 }
 
 @Component({
@@ -151,14 +153,16 @@ export class TableContenedoresComponent implements OnInit, OnChanges, OnDestroy 
             return {
                 id_movimiento: m.id_movimiento ?? m.id ?? idx,
                 contenedor: m.contenedor || m.codigoUnidad || m.numero_contenedor || '—',
-                tipo: m.tipo || m.tipoContenedor || '40\' HC',
+                tipo: m.tipo || m.tipoContenedor || '—',
                 naviera: m.naviera || m.linea_naviera || '—',
-                operacion: m.operacion || m.condicionCarga || 'Retiro cargado',
+                operacion: m.operacion || m.condicionCarga || '—',
                 ruta: rutaFormateada,
                 cliente: m.cliente || m.importador || '—',
                 freeTime: String(freeTimeValor),
                 free_time: String(freeTimeValor),
-                estado: m.estado || m.estado_operativo || 'Programado'
+                estado: m.estado || m.estado_operativo || '—',
+                fechaRegistro: m.fechaRegistro ?? m.fechaCreacion ?? null,
+                sinPuerto: !!m.sinPuerto
             };
         });
 

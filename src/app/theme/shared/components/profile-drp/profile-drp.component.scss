@@ -7,9 +7,6 @@
 }
 
 /* UTILIDADES GENERALES */
-.icon-lg {
-    font-size: 20px;
-}
 
 .nav-right {
     display: flex;
@@ -24,6 +21,7 @@
 .dropdown-menu {
     background-color: var(--card-background) !important;
     border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     z-index: 1050;
@@ -32,6 +30,20 @@
     padding: 0;
     overflow: hidden;
     animation: dropFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .dropdown-item {
+        color: var(--text-color) !important;
+
+        i.icon {
+            color: var(--text-color) !important;
+            font-size: 1.3rem !important;
+            margin: 0 !important;
+        }
+
+        .icon-bg {
+            color: var(--text-color) !important;
+        }
+    }
 }
 
 @keyframes dropFadeIn {
@@ -89,7 +101,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            color: var(--text-subtitle-color);
+            color: var(--text-color);
             font-size: 1.2rem;
             transition: all 0.2s ease;
             width: 32px;
@@ -100,8 +112,18 @@
             border-radius: 50%;
 
             &:hover {
-                color: #ffffff;
+                color: var(--text-color);
                 background-color: #dc3545;
+            }
+
+            i.icon {
+                color: var(--text-color) !important;
+                font-size: 1.3rem !important;
+                margin: 0 !important;
+            }
+
+            .icon-bg {
+                color: var(--text-color) !important;
             }
         }
     }
@@ -133,7 +155,7 @@
 
                 i.feather {
                     font-size: 18px;
-                    color: var(--text-subtitle-color);
+                    color: var(--text-color);
                     transition: color 0.2s ease;
                 }
 

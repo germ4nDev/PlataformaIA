@@ -56,6 +56,16 @@ export abstract class WidgetMaritimoVivoBase<T> implements OnInit, OnChanges, On
         this.suscripcion?.unsubscribe();
     }
 
+    /** Origen del dato (pie de la vista ampliada). */
+    public get origenVivo(): { fuente: string; periodo: string; generadoEn: Date | null; nota: string | null } {
+        return {
+            fuente: 'AIS (posiciones) + avisos de llegada DIMAR',
+            periodo: 'En vivo · posiciones AIS de los últimos 60 min',
+            generadoEn: this.ultimaActualizacion,
+            nota: this.error ? `Última consulta fallida: ${this.error}` : null
+        };
+    }
+
     public refrescar(): void {
         this.iniciar();
     }

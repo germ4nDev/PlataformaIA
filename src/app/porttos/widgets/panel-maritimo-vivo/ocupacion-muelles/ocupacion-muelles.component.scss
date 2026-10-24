@@ -7,27 +7,41 @@
     border-radius: 0.4rem;
     font-size: 0.72rem;
     line-height: 1.2;
-    border: 1px solid var(--widget-border, rgba(127, 127, 127, 0.2));
+    border: 1px solid var(--border-color, rgba(127, 127, 127, 0.2));
 
     &.ocupado {
         border-color: var(--chart-color-1, #009ef7);
         background: color-mix(in srgb, var(--chart-color-1, #009ef7) 14%, transparent);
     }
+
     &.libre {
         border-style: dashed;
         border-color: var(--chart-color-2, #10b981);
     }
+
     &.mantenimiento {
         opacity: 0.55;
         background: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(127, 127, 127, 0.15) 4px, rgba(127, 127, 127, 0.15) 8px);
     }
 }
+
 .mv-muelle-codigo {
+    color: var(--text-color);
     font-weight: 600;
 }
+
 .mv-muelle-nave {
+    color: var(--text-color);
     opacity: 0.8;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.mv-valor {
+    color: var(--text-color);
+}
+
+.mv-subtitulo-valor {
+    color: var(--text-subtitle-color);
 }

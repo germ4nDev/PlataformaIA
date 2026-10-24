@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="data?.titulo || '🏢 Saturación de Bodegas y Silos'"
     [subtitulo]="data?.subtitulo || 'Ocupación física frente a capacidad nominal (Ton)'"
-    [icono]="data?.icono || 'feather icon-home'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-home'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen" [lienzo]="true">
 
     <!-- PROYECCIÓN AL HEADER: Estado global de saturación -->
     <div acciones-extra class="d-flex align-items-center gap-2">
@@ -38,7 +38,7 @@
 
                     <div class="d-flex align-items-center gap-2 flex-shrink-0">
                         <span class="fw-bolder" [style.color]="bod.colorBarra" style="font-size: 0.9rem;">
-                            {{ bod.ocupacion_pct | number:'1.0-1' }}%
+                            {{ bod.ocupacion_pct !== null ? (bod.ocupacion_pct | number:'1.0-1') + '%' : 'Sin capacidad' }}
                         </span>
                         <span class="badge rounded-pill px-2 py-1" [ngClass]="bod.claseBadge"
                             style="font-size: 0.62rem;">
@@ -50,7 +50,7 @@
                 <!-- Barra de Progreso de Ocupación -->
                 <div class="progress my-2"
                     style="height: 7px; background-color: rgba(255, 255, 255, 0.08); border-radius: 4px;">
-                    <div class="progress-bar" role="progressbar" [style.width.%]="bod.ocupacion_pct"
+                    <div class="progress-bar" role="progressbar" [style.width.%]="bod.ocupacion_pct ?? 0"
                         [style.background-color]="bod.colorBarra" style="transition: width 0.4s ease;">
                     </div>
                 </div>
@@ -87,4 +87,15 @@
 
     </div>
 
+    <!-- Vista ampliada: ocupación de cada bodega en el tiempo -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
+        <div class="detalle-cabecera">
+            <h6 class="detalle-titulo">Ocupación en el tiempo (%)</h6>
+            <app-rango-tcl [valor]="horas" (cambio)="cambiarHoras($event)"></app-rango-tcl>
+        </div>
+        <p *ngIf="notaSerie" class="detalle-ayuda">{{ notaSerie }}</p>
+        <div class="detalle-grafica" *ngIf="serieLabels.length">
+            <app-grafica-tcl tipo="linea" [labels]="serieLabels" [series]="seriesOcupacion" unidad="%" [isEnfoque]="true"></app-grafica-tcl>
+        </div>
+    </div>
 </app-widget-shell>

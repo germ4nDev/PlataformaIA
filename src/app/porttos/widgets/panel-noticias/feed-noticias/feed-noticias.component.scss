@@ -1,0 +1,122 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.cuerpo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 6px 8px;
+}
+
+.contenido {
+    flex: 1;
+    min-height: 0;
+}
+
+.insignia {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: rgba(47, 150, 180, 0.15);
+    color: #2f96b4;
+    white-space: nowrap;
+}
+
+.contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.filtros button {
+    padding: 2px 9px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+.filtros button.activo {
+    background: #2f96b4;
+    border-color: #2f96b4;
+    color: #fff;
+}
+
+.feed {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.feed::-webkit-scrollbar {
+    display: none;
+}
+
+.feed li {
+    padding: 8px 4px 8px 8px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    border-left: 3px solid transparent;
+}
+
+.feed li.del-puerto {
+    border-left-color: #2f96b4;
+}
+
+.feed a {
+    color: var(--text-color);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.3;
+}
+
+.feed a:hover {
+    text-decoration: underline;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 3px;
+    font-size: 0.7rem;
+    color: var(--widget-subtitle);
+}
+
+.cat {
+    color: #2f96b4;
+    font-weight: 600;
+}
+
+.puerto {
+    color: #51a351;
+    font-weight: 600;
+}
+
+/* Vista ampliada (2026-10-24) */
+.busqueda { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;
+    input, select { padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--widget-bg); color: var(--text-color); font-size: 0.8rem; }
+    input { flex: 1 1 240px; }
+    .contador { font-size: 0.72rem; color: var(--widget-subtitle); } }
+.resumen { margin: 4px 0 0; font-size: 0.78rem; color: var(--widget-subtitle); line-height: 1.35; }
+.proveedor { font-style: italic; }

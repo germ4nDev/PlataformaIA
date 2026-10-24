@@ -1,0 +1,20 @@
+/* Común a todas las pestañas con cuadrícula: ocupan el alto del área de trabajo y el scroll va sin barra */
+:host {
+    display: block;
+    height: 100% !important;
+}
+
+gridster {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+gridster::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+}
+
+.pendiente-registro {
+    border: 1px dashed var(--border-color, rgba(148, 163, 184, 0.4));
+    background-color: var(--widget-bg, transparent);
+}

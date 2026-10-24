@@ -1,0 +1,12 @@
+<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+    (clickEnfoque)="maximizarDesdeShell()">
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="filas.length">{{ operando
+            }}/{{ filas.length }} en uso</span></div>
+    <div class="cuerpo">
+        <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!filas.length"
+            [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
+        <div class="contenido" *ngIf="!cargando && !error && !(!filas.length)">
+            <app-tabla-tcl [columnas]="columnas" [filas]="filas" [ampliada]="isEnfoque" [columnasAmpliadas]="columnasAmpliadas" [nombreArchivo]="titulo"></app-tabla-tcl>
+        </div>
+    </div>
+</app-widget-shell>

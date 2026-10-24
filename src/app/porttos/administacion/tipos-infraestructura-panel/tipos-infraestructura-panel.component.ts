@@ -201,12 +201,12 @@ export class TiposInfraestructuraPanelComponent implements OnInit, OnDestroy {
 
     OnNuevaAplicaicionClick(): void {
         this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['tablero-control/gestion-tipo-infraestructura'])
+        this.router.navigate(['porttos/gestion-tipo-infraestructura'])
     }
 
     OnEditarAplicaicionClick(id: string): void {
         this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tablero-control/gestion-tipo-infraestructura'])
+        this.router.navigate(['porttos/gestion-tipo-infraestructura'])
     }
 
     OnEliminarAplicaicionClick(id: string): void {

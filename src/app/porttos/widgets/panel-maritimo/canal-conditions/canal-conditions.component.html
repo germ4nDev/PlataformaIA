@@ -47,7 +47,7 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data.titulo || 'CONDICIONES DEL CANAL'"
     [subtitulo]="data.subtitulo || 'Reporte meteorológico y estado DIMAR'" [icono]="data.icono || 'feather icon-wind'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">

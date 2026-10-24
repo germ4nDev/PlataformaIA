@@ -4,27 +4,35 @@
     gap: 0.75rem;
     align-content: center;
 }
+
 .mv-kpi {
-    border: 1px solid var(--widget-border, rgba(127, 127, 127, 0.15));
+    border: 1px solid var(--corder-color, rgba(127, 127, 127, 0.15));
     border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
     min-width: 0;
 }
+
 .mv-kpi-titulo {
+    color: var(--text-color);
     font-size: 0.65rem;
     letter-spacing: 0.4px;
 }
+
 .mv-kpi-valor {
+    color: var(--text-color);
     font-size: 1.6rem;
     font-weight: 600;
     line-height: 1.2;
 }
+
 .mv-kpi-punto {
     width: 8px;
     height: 8px;
     padding: 0;
     border-radius: 50%;
 }
+
 .mv-kpi-detalle {
+    color: var(--text-color);
     font-size: 0.7rem;
 }

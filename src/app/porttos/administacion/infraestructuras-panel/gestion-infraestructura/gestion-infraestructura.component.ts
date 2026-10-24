@@ -245,7 +245,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                         console.log('MODIFICAdo Infraestructura', resp.data);
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('MUELLES.CREATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/infraestructuras-panel'])
+                        this.router.navigate(['/porttos/infraestructuras-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -267,7 +267,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                     if (resp.ok) {
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('MUELLES.UPDATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/infraestructuras-panel'])
+                        this.router.navigate(['/porttos/infraestructuras-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -285,7 +285,7 @@ export class GestionInfraestructuraComponent implements OnInit {
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/tablero-control/infraestructuras-panel'])
+        this.router.navigate(['/porttos/infraestructuras-panel'])
     }
 
     navMobClick() {

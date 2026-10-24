@@ -151,3 +151,37 @@
     z-index: 1000;
     display: flex;
 }
+/* Capa de referencia (OpenStreetMap) */
+.ref-atribucion {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    z-index: 2;
+    max-width: calc(100% - 16px);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #333;
+    pointer-events: none;
+}
+
+:host ::ng-deep .ref-popup {
+    font-size: 12px;
+    color: #222;
+
+    .ref-popup-detalle {
+        margin: 4px 0;
+        color: #555;
+    }
+
+    .ref-popup-btn {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+    }
+}
+
+.btn.btn-map-option.ref-apagada {
+    opacity: 0.45;
+}

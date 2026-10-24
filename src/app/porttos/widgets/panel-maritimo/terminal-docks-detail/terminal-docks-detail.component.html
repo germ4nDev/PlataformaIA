@@ -23,6 +23,7 @@
                     <th class="pb-2">Barco</th>
                     <th class="pb-2" *ngIf="!vistaCompacta">Operación</th>
                     <th class="pb-2 text-center">Estado</th>
+                    <th class="pb-2 text-center" *ngIf="hayAis">AIS</th>
                 </tr>
             </thead>
 
@@ -67,9 +68,16 @@
                     <!-- Columna: Estado -->
                     <td class="text-center">
                         <span class="badge rounded-pill px-2 py-1 shadow-sm"
-                            [ngClass]="muelle.estado === 'ocupado' ? 'bg-primary text-white border-primary' : 'bg-secondary bg-opacity-25 text-light border border-secondary'"
+                            [ngClass]="muelle.estado === 'ocupado' ? 'bg-primary text-white border-primary' : muelle.estado === 'mantenimiento' ? 'bg-warning bg-opacity-25 text-warning border border-warning' : 'bg-secondary bg-opacity-25 text-light border border-secondary'"
                             style="font-size: 0.65rem; letter-spacing: 0.5px;">
-                            {{ muelle.status | uppercase }}
+                            {{ textoEstado(muelle) }}
+                        </span>
+                    </td>
+
+                    <td class="text-center" *ngIf="hayAis">
+                        <span class="ais-pill" [ngClass]="'ais-' + ((muelle.ais?.estado || 'SIN_DATOS') | lowercase)"
+                            [title]="muelle.ais?.texto || 'Sin datos AIS'">
+                            {{ etiquetaAis(muelle.ais?.estado) }}
                         </span>
                     </td>
 
@@ -77,7 +85,7 @@
 
                 <!-- Estado Vacío -->
                 <tr *ngIf="!dataArray || dataArray.length === 0">
-                    <td [attr.colspan]="vistaCompacta ? 4 : 6" class="text-center text-muted py-5">
+                    <td [attr.colspan]="(vistaCompacta ? 4 : 6) + (hayAis ? 1 : 0)" class="text-center text-muted py-5">
                         <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
                         No hay infraestructura configurada.
                     </td>

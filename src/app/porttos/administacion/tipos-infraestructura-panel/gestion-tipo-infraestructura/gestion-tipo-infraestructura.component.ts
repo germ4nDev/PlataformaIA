@@ -209,7 +209,7 @@ export class GestionTipoInfraestructuraComponent implements OnInit {
                         console.log('MODIFICAdo TipoInfraestructura', resp.data);
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('MUELLES.CREATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/tipos-infraestructura-panel'])
+                        this.router.navigate(['/porttos/tipos-infraestructura-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -231,7 +231,7 @@ export class GestionTipoInfraestructuraComponent implements OnInit {
                     if (resp.ok) {
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('MUELLES.UPDATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/tipos-infraestructura-panel'])
+                        this.router.navigate(['/porttos/tipos-infraestructura-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -249,7 +249,7 @@ export class GestionTipoInfraestructuraComponent implements OnInit {
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/tablero-control/tipos-infraestructura-panel'])
+        this.router.navigate(['/porttos/tipos-infraestructura-panel'])
     }
 
     navMobClick() {

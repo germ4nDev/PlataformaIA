@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="widgetConfig?.titulo || 'Temperatura Criogénica'"
     [subtitulo]="widgetConfig?.subtitulo || 'TENDENCIA TÉRMICA EN TIEMPO REAL'" [icono]="'feather icon-thermometer'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origen$ | async">
 
     <!-- 🟢 2. Proyección al Header (Badge del Brazo) -->
     <!-- Se proyectará automáticamente arriba gracias al atributo 'acciones-extra' -->

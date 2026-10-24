@@ -45,7 +45,8 @@ export class BodegasService {
                     catchError((err) => {
                         console.error(`❌ [BodegasService] Error consultando puerto ${puertoKey}:`, err);
                         this.bodegasCachePorPuerto$.delete(puertoKey);
-                        return of(this.homologarPayloadBodegas({}, puertoKey));
+                        // Corregido 2026-10-23: el error ya no se ve como 0 % / 0 Ton (parecía un dato válido)
+                        return of(this.homologarPayloadBodegas({ error: err?.error?.msg || 'No se pudo consultar el API de bodegas' }, puertoKey));
                     })
                 );
 
@@ -58,34 +59,6 @@ export class BodegasService {
     /**
      * Selector específico para que cada Smart Widget de Bodegas consuma solo su nodo
      */
-    // public obtenerDatosWidgetBodegas(puerto: string, codigoWidget: string): Observable<any> {
-    //     const codigo = (codigoWidget || '').trim().toUpperCase();
-
-    //     return this.obtenerDashboardBodegas(puerto).pipe(
-    //         map((dashboard) => {
-    //             switch (codigo) {
-    //                 case 'PTT_BOD_KPI_OCUPACION':
-    //                     return dashboard.kpis?.ocupacionGeneral;
-    //                 case 'PTT_BOD_KPI_INVENTARIO':
-    //                     return dashboard.kpis?.inventarioTotal;
-    //                 case 'PTT_BOD_KPI_DESPACHOS':
-    //                     return dashboard.kpis?.tasaDespacho;
-    //                 case 'PTT_BOD_KPI_ALERTAS':
-    //                     return dashboard.kpis?.alertasBodega;
-    //                 case 'PTT_BOD_PANEL_SATURACION':
-    //                     return dashboard.saturacionBodegas;
-    //                 case 'PTT_BOD_CHRT_FLUJO':
-    //                     return dashboard.flujoEntradasSalidas;
-    //                 case 'PTT_BOD_CHRT_CARGA':
-    //                     return dashboard.distribucionPorCarga;
-    //                 case 'PTT_BOD_TAB_MOVIMIENTOS':
-    //                     return dashboard.movimientosBodega;
-    //                 default:
-    //                     return dashboard;
-    //             }
-    //         })
-    //     );
-    // }
     /**
      * Selector blindado para que cada Smart Widget y cada KPI de Bodegas reciba su nodo exacto
      */
@@ -96,7 +69,7 @@ export class BodegasService {
             map((dashboard) => {
                 // 1. Widgets de Panel, Gráficas y Tabla
                 if (codigo === 'PTT_BOD_PANEL_SATURACION' || codigo.includes('SATURACION')) {
-                    return dashboard.saturacionBodegas;
+                    return { saturacionBodegas: dashboard.saturacionBodegas, origen: dashboard.origen };
                 }
                 if (codigo === 'PTT_BOD_CHRT_FLUJO' || (codigo.includes('CHRT') && codigo.includes('FLUJO'))) {
                     return dashboard.flujoEntradasSalidas;
@@ -105,21 +78,25 @@ export class BodegasService {
                     return dashboard.distribucionPorCarga;
                 }
                 if (codigo === 'PTT_BOD_TAB_MOVIMIENTOS' || codigo.includes('TAB_MOVIMIENTOS')) {
-                    return dashboard.movimientosBodega;
+                    return { movimientos: dashboard.movimientosBodega, origen: dashboard.origen };
                 }
 
                 // 2. Tarjetas KPI de Bodegas (Coincidencia exacta o por palabra clave)
                 const kpis = dashboard.kpis || {};
-                let kpiSeleccionado: any = null;
-
-                if (codigo === 'PTT_BOD_KPI_OCUPACION' || codigo.includes('OCUP') || codigo.includes('CAPACIDAD') || codigo.endsWith('_1') || codigo.endsWith('_01')) {
-                    kpiSeleccionado = kpis.ocupacionGeneral;
-                } else if (codigo === 'PTT_BOD_KPI_INVENTARIO' || codigo.includes('INVENTARIO') || codigo.includes('EXISTENCIA') || codigo.endsWith('_2') || codigo.endsWith('_02')) {
-                    kpiSeleccionado = kpis.inventarioTotal;
-                } else if (codigo === 'PTT_BOD_KPI_DESPACHOS' || codigo.includes('DESPACH') || codigo.includes('FLUJO') || codigo.includes('OPERATIV') || codigo.endsWith('_3') || codigo.endsWith('_03')) {
-                    kpiSeleccionado = kpis.tasaDespacho;
-                } else if (codigo === 'PTT_BOD_KPI_ALERTAS' || codigo.includes('ALERT') || codigo.includes('CRITIC') || codigo.endsWith('_4') || codigo.endsWith('_04')) {
-                    kpiSeleccionado = kpis.alertasBodega;
+                // Corregido 2026-10-23: primero el código exacto; antes un código terminado en _1, _2... podía
+                // tomar el KPI equivocado por coincidencia floja
+                const exactos: Record<string, any> = {
+                    PTT_BOD_KPI_OCUPACION: kpis.ocupacionGeneral,
+                    PTT_BOD_KPI_INVENTARIO: kpis.inventarioTotal,
+                    PTT_BOD_KPI_DESPACHOS: kpis.tasaDespacho,
+                    PTT_BOD_KPI_ALERTAS: kpis.alertasBodega
+                };
+                let kpiSeleccionado: any = exactos[codigo] ?? null;
+                if (!kpiSeleccionado && codigo.includes('_KPI_')) {
+                    if (codigo.includes('OCUP') || codigo.includes('CAPACIDAD')) kpiSeleccionado = kpis.ocupacionGeneral;
+                    else if (codigo.includes('INVENTARIO') || codigo.includes('EXISTENCIA')) kpiSeleccionado = kpis.inventarioTotal;
+                    else if (codigo.includes('DESPACH') || codigo.includes('FLUJO') || codigo.includes('OPERATIV')) kpiSeleccionado = kpis.tasaDespacho;
+                    else if (codigo.includes('ALERT') || codigo.includes('CRITIC')) kpiSeleccionado = kpis.alertasBodega;
                 }
 
                 // Si es un KPI, devolvemos todas las variantes de nombre de propiedad que usa KpiCardTclComponent
@@ -132,7 +109,6 @@ export class BodegasService {
                         valor: kpiSeleccionado.valor,
                         value: kpiSeleccionado.valor,
                         subtitulo: kpiSeleccionado.subtitulo,
-                        tendencia: kpiSeleccionado.subtitulo,
                         icono: kpiSeleccionado.icono || 'feather icon-box',
                         colorBorde: kpiSeleccionado.colorBorde || 'borde-cyan'
                     };
@@ -171,32 +147,36 @@ export class BodegasService {
             (b) => Number(b.ocupacion_pct ?? b.porcentaje ?? 0) >= 90 || String(b.estado_operativo || '').includes('CRÍTIC')
         ).length;
 
-        const kpis = raw?.kpis || {
-            ocupacionGeneral: {
-                titulo: 'OCUPACIÓN DE BODEGAS',
-                valor: `${pctOcupacion}%`,
-                subtitulo: `${bodegas.length} Bodegas y Silos activos`,
-                colorBorde: pctOcupacion >= 90 ? 'borde-rojo' : 'borde-cyan'
-            },
-            inventarioTotal: {
-                titulo: 'INVENTARIO ALMACENADO',
-                valor: `${totalInventario.toLocaleString('es-CO')} Ton`,
-                subtitulo: `Capacidad: ${totalCapacidad.toLocaleString('es-CO')} Ton`,
-                colorBorde: 'borde-green'
-            },
-            tasaDespacho: {
-                titulo: 'FLUJO DE DESPACHO',
-                valor: raw?.tasaDespachoValor || `${movimientos.length} Lotes`,
-                subtitulo: 'Operación activa en últimas 24h',
-                colorBorde: 'borde-amarillo'
-            },
-            alertasBodega: {
-                titulo: 'BODEGAS EN ALERTA',
-                valor: String(bodegasCriticas),
-                subtitulo: bodegasCriticas > 0 ? 'Saturación ≥ 90% detectada' : 'Almacenamiento en rango normal',
-                colorBorde: bodegasCriticas > 0 ? 'borde-rojo' : 'borde-purple'
+        // Sin respuesta del API: las tarjetas dicen que no hay dato en lugar de mostrar 0 % / 0 Ton
+        const sinDato = (titulo: string) => ({ titulo, valor: '—', subtitulo: raw?.error || 'Sin datos de bodegas', colorBorde: 'borde-gris' });
+        const kpis = raw?.kpis || (raw?.error || !bodegas.length
+            ? {
+                ocupacionGeneral: sinDato('OCUPACIÓN DE BODEGAS'),
+                inventarioTotal: sinDato('INVENTARIO ALMACENADO'),
+                tasaDespacho: sinDato('FLUJO OPERATIVO (24H)'),
+                alertasBodega: sinDato('BODEGAS EN ALERTA')
             }
-        };
+            : {
+                ocupacionGeneral: {
+                    titulo: 'OCUPACIÓN DE BODEGAS',
+                    valor: totalCapacidad > 0 ? `${pctOcupacion}%` : '—',
+                    subtitulo: `${bodegas.length} Bodegas y Silos activos`,
+                    colorBorde: pctOcupacion >= 90 ? 'borde-rojo' : 'borde-cyan'
+                },
+                inventarioTotal: {
+                    titulo: 'INVENTARIO ALMACENADO',
+                    valor: `${totalInventario.toLocaleString('es-CO')} Ton`,
+                    subtitulo: `Capacidad: ${totalCapacidad.toLocaleString('es-CO')} Ton`,
+                    colorBorde: 'borde-green'
+                },
+                tasaDespacho: { titulo: 'FLUJO OPERATIVO (24H)', valor: '—', subtitulo: 'El API no envió el cálculo de 24 h', colorBorde: 'borde-gris' },
+                alertasBodega: {
+                    titulo: 'BODEGAS EN ALERTA',
+                    valor: String(bodegasCriticas),
+                    subtitulo: bodegasCriticas > 0 ? 'Saturación ≥ 90% detectada' : 'Almacenamiento en rango normal',
+                    colorBorde: bodegasCriticas > 0 ? 'borde-rojo' : 'borde-purple'
+                }
+            });
 
         return {
             puerto,
@@ -204,7 +184,23 @@ export class BodegasService {
             saturacionBodegas: bodegas,
             flujoEntradasSalidas: raw?.flujoEntradasSalidas || {},
             distribucionPorCarga: raw?.distribucionPorCarga || {},
-            movimientosBodega: movimientos
+            movimientosBodega: movimientos,
+            origen: raw?.origen || null,
+            error: raw?.error || null
         };
+    }
+
+    // ---------------------------------------------------------------- detalle de la vista ampliada (Fase 3)
+
+    /** Serie de ocupación por bodega (fotos de TCL_OcupacionNodos). */
+    public ocupacionBodegas(puerto: string, horas: 24 | 72 | 168 = 24): Observable<any> {
+        const p = (puerto || 'BUENAVENTURA').trim().toUpperCase();
+        return this.http.get<any>(`${base_url}/bodegas/ocupacion`, { params: { puerto: p, horas: String(horas) } }).pipe(map((r) => r?.data));
+    }
+
+    /** Movimientos de los últimos días con la estadía calculada (hasta 2.000). */
+    public movimientosRango(puerto: string, dias = 30): Observable<any> {
+        const p = (puerto || 'BUENAVENTURA').trim().toUpperCase();
+        return this.http.get<any>(`${base_url}/bodegas/movimientos/rango`, { params: { puerto: p, dias: String(dias) } }).pipe(map((r) => r?.data));
     }
 }

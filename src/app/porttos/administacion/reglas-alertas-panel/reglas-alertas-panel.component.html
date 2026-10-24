@@ -1,0 +1,97 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3">
+                    <div class="filtro">
+                        <small>Configuración de</small>
+                        <select class="form-control form-select" [ngModel]="puerto" (ngModelChange)="cambiarPuerto($event)">
+                            <option value="*">Todos los puertos (global)</option>
+                            <option *ngFor="let p of puertos" [value]="p.id">{{ p.nombre }}</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <div class="reglas-encabezado">
+                    <div>
+                        <h5>Reglas de alertas del mapa</h5>
+                        <p class="text-muted mb-0">
+                            {{ puerto === '*' ? 'Configuración global: aplica a todos los puertos que no tengan una propia.' :
+                               'Configuración de ' + puerto + ': lo que guardes aquí sobreescribe la global solo para este puerto.' }}
+                        </p>
+                    </div>
+                    <select class="form-control form-select selector-puerto" [ngModel]="puerto" (ngModelChange)="cambiarPuerto($event)">
+                        <option value="*">Todos los puertos (global)</option>
+                        <option *ngFor="let p of puertos" [value]="p.id">{{ p.nombre }}</option>
+                    </select>
+                </div>
+
+                <div class="aviso-migracion" *ngIf="!cargando && !persistencia">
+                    Falta aplicar la migración <code>011_alertas_mapa.sql</code>. Las alertas funcionan con los valores por
+                    defecto que se ven abajo, pero no se pueden modificar ni se guarda la bitácora.
+                </div>
+
+                <app-data-loader *ngIf="cargando" [isLoading]="true" message="Cargando reglas de alertas..."></app-data-loader>
+
+                <div class="tabla-reglas" *ngIf="!cargando">
+                    <div class="regla" *ngFor="let f of filas; trackBy: trackRegla" [class.apagada]="!f.activa">
+                        <div class="regla-titulo">
+                            <label class="interruptor" [title]="f.activa ? 'Activa' : 'Apagada'">
+                                <input type="checkbox" [(ngModel)]="f.activa" [disabled]="!f.editable || f.guardando">
+                                <span></span>
+                            </label>
+                            <div>
+                                <strong>{{ f.regla.nombre }}</strong>
+                                <small class="text-muted d-block">{{ f.regla.niveles }}</small>
+                            </div>
+                            <span class="origen" [ngClass]="'origen-' + f.origen">{{ etiquetaOrigen(f.origen) }}</span>
+                        </div>
+
+                        <div class="regla-campos">
+                            <label class="campo" *ngFor="let u of f.regla.umbrales; let i = index">
+                                <small>{{ u.etiqueta }}</small>
+                                <input type="number" class="form-control" min="0" [(ngModel)]="f.umbrales[i]"
+                                    [disabled]="!f.editable || f.guardando" [placeholder]="u.defecto">
+                            </label>
+                            <label class="campo">
+                                <small>No repetir antes de (min)</small>
+                                <input type="number" class="form-control" min="1" max="1440" [(ngModel)]="f.enfriamiento"
+                                    [disabled]="!f.editable || f.guardando">
+                            </label>
+                        </div>
+
+                        <div class="regla-acciones">
+                            <small class="text-muted" *ngIf="f.modificada">Modificada: {{ f.modificada }}</small>
+                            <small class="text-muted" *ngIf="puerto !== '*' && !f.regla.porPuerto">Solo se configura globalmente</small>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="puerto !== '*' && f.origen === 'puerto'"
+                                (click)="restablecer(f)" [disabled]="f.guardando">Usar la global</button>
+                            <button type="button" class="btn btn-sm btn-primary" (click)="guardar(f)" [disabled]="!f.editable || f.guardando">
+                                {{ f.guardando ? 'Guardando...' : 'Guardar' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

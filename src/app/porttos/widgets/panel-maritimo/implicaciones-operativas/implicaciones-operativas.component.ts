@@ -1,63 +1,3 @@
-// /*
-//     Author: German Valencia
-//     Pattern: PORTTOS Generic Widget - Implicaciones Operativas (Refactorizado Dumb Component)
-// */
-// import { Component, Input, ViewEncapsulation } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
-
-// // 🟢 Importamos el Shell maestro
-// import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
-
-// @Component({
-//     selector: 'app-implicaciones-operativas',
-//     standalone: true,
-//     imports: [CommonModule, WidgetShellComponent],
-//     templateUrl: './implicaciones-operativas.component.html',
-//     styleUrls: ['./implicaciones-operativas.component.scss'],
-//     encapsulation: ViewEncapsulation.None
-// })
-// export class ImplicacionesOperativasComponent {
-
-//     // 🟢 NUEVO ESTÁNDAR: Inputs requeridos por el selector dinámico
-//     @Input() widgetConfig: any;
-//     @Input() isEnfoque: boolean = false;
-//     @Input() mostrarTabla: boolean = false;
-
-//     // 🟢 LA NUEVA COMPUERTA: Recibe los datos vivos directo del túnel de la pestaña. ¡Cero suscripciones!
-//     @Input() datosVivos: any;
-
-//     constructor(
-//         private _torreService: DashboardService
-//     ) { }
-
-//     // 🟢 EL CEREBRO REACTIVO: Angular lo reevalúa solo cuando 'datosVivos' o 'widgetConfig' cambia
-//     get data() {
-//         if (!this.widgetConfig) return {};
-
-//         const configBase = this.widgetConfig.data || {};
-
-//         // Fusión limpia: el diseño de la BD con los valores en tiempo real (si los hay)
-//         return {
-//             ...configBase,
-//             ...(this.datosVivos || {})
-//         };
-//     }
-
-//     get isLoading(): boolean {
-//         // En este widget, asumimos que está cargando solo si no hay ni configuración ni datos vivos
-//         return !this.widgetConfig && !this.datosVivos;
-//     }
-
-//     // 🟢 Toggle de enfoque: Abre o cierra el modal de forma estandarizada
-//     maximizarDesdeShell() {
-//         if (this.isEnfoque) {
-//             this._torreService.cerrarModoEnfoque();
-//         } else {
-//             this._torreService.abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PORT_IMPLICACIONES', this.data);
-//         }
-//     }
-// }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -88,10 +28,12 @@ export interface IInsightOperativo {
     color: string;
 }
 
+import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive';
+
 @Component({
     selector: 'app-implicaciones-operativas',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './implicaciones-operativas.component.html',
     styleUrls: ['./implicaciones-operativas.component.scss'],
     encapsulation: ViewEncapsulation.None

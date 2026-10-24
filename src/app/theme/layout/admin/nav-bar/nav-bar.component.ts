@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { NavRightComponent } from './nav-right/nav-right.component';
 import { ThemeService } from 'src/app/theme/shared/service/theme.service';
-import { LocalStorageService } from 'src/app/theme/shared/service';
+import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service';
 import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.model';
 
 @Component({
@@ -20,16 +20,19 @@ export class NavBarComponent implements OnInit {
     menuClass = false;
     collapseStyle = 'none';
     windowWidth = window.innerWidth;
-    logoEmpresa: string = 'assets/images/logo.png';
     @Output() NavCollapse = new EventEmitter<void>();
     @Output() NavCollapsedMob = new EventEmitter<void>();
+    logoEmpresa: string = 'assets/images/logo.png';
+    suscriptor: string = '';
 
     constructor(
         private themeService: ThemeService,
         private _localStorage: LocalStorageService,
+        private _uploadService: UploadFilesService,
         private _themeService: ThemeService
     ) {
         console.log('abriendo navbar');
+        this.suscriptor = this._localStorage.getSuscriptorPlataformaLocalStorage()
     }
 
     ngOnInit(): void {
@@ -37,8 +40,9 @@ export class NavBarComponent implements OnInit {
         console.log('navsettings en el navbar', navSettings);
         // const dark = 'assets/tablero-control/logoUIPorttosDK.png'
         // const soft = 'assets/tablero-control/logoUIPorttosWT.png'
-        const dark = 'assets/images/tablero-control/logoUIPorttosDK.png'
-        const soft = 'assets/images/tablero-control/logoUIPorttosWT.png'
+        const aplicacion = navSettings.aplicacion;
+        const dark = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', aplicacion.imagenUIB) || 'no-image.png';
+        const soft = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', aplicacion.imagenUI) || 'no-image.png';
         const isDark = this._localStorage.getThemeSettings();
         this.logoEmpresa = isDark.isDarkTheme ? dark : soft;
 

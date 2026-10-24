@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📊 Flujo de Recibo vs. Despacho (Ton)'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Ingreso desde buque frente a evacuación terrestre'"
-    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+    [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Balance Neto -->
     <div acciones-extra class="d-flex align-items-center gap-2">

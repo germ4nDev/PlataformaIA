@@ -24,9 +24,11 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 export interface IPatioSaturacion {
     id?: string | number;
     nombre: string;
-    porcentaje: number;
-    estado: 'CRÍTICO' | 'ALTO' | 'NORMAL' | string;
+    /** null = sin foto de ocupación vigente (no se inventa 0 %). */
+    porcentaje: number | null;
+    estado: 'CRÍTICO' | 'ALTO' | 'NORMAL' | 'SIN DATO' | string;
     capacidadTeus?: number;
+    simulado?: boolean;
 }
 
 @Component({
@@ -145,30 +147,20 @@ export class ContenedoresPatiosComponent implements OnInit, OnChanges, OnDestroy
                 p.patio ||
                 `Patio #${idx + 1}`;
 
-            const porcentaje = Math.min(
-                100,
-                Math.max(
-                    0,
-                    Math.round(
-                        Number(
-                            p.porcentaje ??
-                            p.ocupacion_actual_pct ??
-                            p.ocupacion ??
-                            p.porcentajeOcupacion ??
-                            0
-                        )
-                    )
-                )
-            );
+            const crudo = p.porcentaje ?? p.ocupacion_actual_pct ?? p.ocupacion ?? p.porcentajeOcupacion;
+            const porcentaje: number | null = crudo === null || crudo === undefined || crudo === ''
+                ? null
+                : Math.min(100, Math.max(0, Math.round(Number(crudo))));
 
-            const estado = this.resolverEstadoSemantico(p.estado || p.estado_operativo, porcentaje);
+            const estado = porcentaje === null ? 'SIN DATO' : this.resolverEstadoSemantico(p.estado || p.estado_operativo, porcentaje);
 
             return {
                 id: p.id_nodo ?? p.id ?? idx,
                 nombre,
                 porcentaje,
                 estado,
-                capacidadTeus: p.capacidad_teus ? Number(p.capacidad_teus) : undefined
+                capacidadTeus: p.capacidadTeus ?? (p.capacidad_teus ? Number(p.capacidad_teus) : undefined),
+                simulado: !!p.simulado
             };
         });
 
@@ -219,6 +211,8 @@ export class ContenedoresPatiosComponent implements OnInit, OnChanges, OnDestroy
                 return 'bg-danger text-white border-danger';
             case 'ALTO':
                 return 'bg-warning text-dark border-warning';
+            case 'SIN DATO':
+                return 'bg-secondary text-white border-secondary';
             default:
                 return 'bg-success text-white border-success';
         }
