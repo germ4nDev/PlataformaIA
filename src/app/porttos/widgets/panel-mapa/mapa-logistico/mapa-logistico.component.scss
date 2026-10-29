@@ -922,3 +922,84 @@
         cursor: default;
     }
 }
+// ── Analista IA flotante (2026-10-24): arriba a la derecha, sobre el mapa ─────────────────────────────
+.fab-ia {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1052;
+    width: 48px;
+    height: 48px;
+    border-radius: 50px;
+    border: 1px solid rgba(124, 92, 255, 0.55);
+    background: var(--card-background);
+    color: var(--text-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+
+    &:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124, 92, 255, 0.35); }
+    &.abierto { border-color: #7c5cff; }
+    // En la vista ampliada el panel lateral usa la esquina: el botón baja
+    &.con-panel-fs { top: 64px; }
+
+    .fab-ia-sello {
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        padding: 4px 7px;
+        border-radius: 6px;
+        color: #fff;
+        background: linear-gradient(135deg, #7c5cff, #00b3ff);
+    }
+
+    .fab-ia-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 5px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 20px;
+        text-align: center;
+        color: #fff;
+        background: #f59e0b;
+        border: 2px solid var(--card-background);
+
+        &.critica { background: #dc3545; }
+    }
+}
+
+.panel-ia-flotante {
+    position: absolute;
+    top: 72px;
+    right: 15px;
+    z-index: 1051;
+    width: min(420px, calc(100% - 100px));
+    height: min(620px, calc(100% - 90px));
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card-background);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    // Montado pero oculto: así el número del botón se actualiza sin abrirlo
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+
+    &.abierto { visibility: visible; opacity: 1; transform: none; pointer-events: auto; }
+    &.con-panel-fs { top: 121px; height: min(620px, calc(100% - 140px)); }
+
+    ::ng-deep app-analista-ia { display: block; height: 100%; }
+}
+
+@media (max-width: 600px) {
+    .panel-ia-flotante { width: calc(100% - 30px); }
+}

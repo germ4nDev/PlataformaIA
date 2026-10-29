@@ -1,0 +1,374 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'PLATAFORMA.FILTERS' | translate }}</button>
+            </div>
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3">
+                    <small>Periodo de las métricas</small>
+                    <select class="form-control form-select" [(ngModel)]="dias" (ngModelChange)="cargarResumen()">
+                        <option [ngValue]="1">Hoy y ayer</option>
+                        <option [ngValue]="7">Últimos 7 días</option>
+                        <option [ngValue]="14">Últimos 14 días</option>
+                        <option [ngValue]="30">Últimos 30 días</option>
+                    </select>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <div class="ia-encabezado">
+                    <div>
+                        <h5><span class="ia-sello">IA</span>Administración de la capa de IA</h5>
+                        <p class="text-muted mb-0">Encender y apagar por puerto y tarea, modo sombra, presupuesto, versiones de prompt y métricas de uso y precisión.</p>
+                    </div>
+                    <nav class="ia-vistas">
+                        <button type="button" [class.activa]="vista === 'resumen'" (click)="cambiarVista('resumen')">Resumen</button>
+                        <button type="button" [class.activa]="vista === 'config'" (click)="cambiarVista('config')">Configuración</button>
+                        <button type="button" [class.activa]="vista === 'prompts'" (click)="cambiarVista('prompts')">Prompts</button>
+                        <button type="button" [class.activa]="vista === 'asistente'" (click)="cambiarVista('asistente')">Asistente</button>
+                    </nav>
+                </div>
+
+                <app-data-loader *ngIf="cargando" [isLoading]="true" message="Leyendo el estado de la IA..."></app-data-loader>
+
+                <!-- ═════════════ RESUMEN ═════════════ -->
+                <ng-container *ngIf="vista === 'resumen' && resumen as r">
+                    <div class="aviso" *ngIf="!r.disponible">Falta aplicar la migración <code>015_analisis_ia.sql</code>: no hay registro de uso ni hallazgos.</div>
+
+                    <div class="tarjetas">
+                        <div class="tarjeta" [class.ok]="r.env.habilitada" [class.off]="!r.env.habilitada">
+                            <small>Analista (IA_ENABLED)</small>
+                            <strong>{{ r.env.habilitada ? 'Encendido' : 'Apagado' }}</strong>
+                            <span>{{ r.env.proveedor }} · {{ r.env.modeloAnalista }}</span>
+                        </div>
+                        <div class="tarjeta" [class.warn]="r.env.modoSombra">
+                            <small>Publicación (.env)</small>
+                            <strong>{{ r.env.modoSombra ? 'Modo sombra' : 'Publicando' }}</strong>
+                            <span>Tipos: {{ r.env.tiposPublicar?.join(', ') }}</span>
+                        </div>
+                        <div class="tarjeta" [class.off]="r.cerebro?.cortacircuito?.abierto">
+                            <small>Cortacircuito</small>
+                            <strong>{{ r.cerebro?.cortacircuito?.abierto ? 'Abierto' : 'Cerrado' }}</strong>
+                            <span>{{ r.cerebro?.cortacircuito?.abierto ? 'hasta ' + (r.cerebro.cortacircuito.hasta | date: 'HH:mm') : 'fallos seguidos: ' + (r.cerebro?.cortacircuito?.fallosSeguidos ?? 0) }}</span>
+                        </div>
+                        <div class="tarjeta">
+                            <small>Resúmenes</small>
+                            <strong>{{ r.env.resumenes ? 'Turnos ' + r.env.turnos?.join(' · ') + ' h' : 'Apagados' }}</strong>
+                            <span>{{ r.env.modeloResumen }}{{ r.resumenes?.ultimaCorrida ? ' · última ' + (r.resumenes.ultimaCorrida.fecha | date: 'dd/MM HH:mm') : '' }}</span>
+                        </div>
+                        <div class="tarjeta">
+                            <small>Consumo ({{ r.dias }} días)</small>
+                            <strong>US$ {{ r.consumo.total.costoUsd | number: '1.2-4' }}</strong>
+                            <span>{{ r.consumo.total.llamadas }} llamadas · {{ r.consumo.total.omitidas }} omitidas · {{ r.consumo.total.errores }} errores</span>
+                        </div>
+                    </div>
+
+                    <div class="bloque" *ngIf="r.consumo.porDia.length">
+                        <h6>Costo y llamadas por día</h6>
+                        <div class="barras">
+                            <div class="barra" *ngFor="let d of r.consumo.porDia" [title]="d.dia + ': US$ ' + d.costoUsd + ' · ' + d.llamadas + ' llamadas'">
+                                <span class="costo" [style.height.%]="(d.costoUsd / maxCostoDia) * 100"></span>
+                                <span class="llamadas" [style.height.%]="(d.llamadas / maxLlamadasDia) * 100"></span>
+                                <small>{{ d.dia | slice: 5 }}</small>
+                            </div>
+                        </div>
+                        <small class="text-muted"><span class="leyenda costo"></span>costo <span class="leyenda llamadas"></span>llamadas al modelo</small>
+                    </div>
+
+                    <div class="bloque">
+                        <h6>Por puerto</h6>
+                        <div class="tabla-scroll">
+                            <table class="table table-sm tabla-ia">
+                                <thead>
+                                    <tr>
+                                        <th>Puerto</th><th>Analista</th><th>Resúmenes</th><th class="num">Llamadas</th><th class="num">Costo US$</th>
+                                        <th class="num">Alertas</th><th class="num">Publicadas</th><th class="num">Se cumplieron</th><th class="num">Útil</th>
+                                        <th>Último turno</th><th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of r.puertos">
+                                        <td><strong>{{ p.nombre }}</strong></td>
+                                        <td><span class="estado" [ngClass]="estadoTarea(p.tareas['analista_turno']).clase">{{ estadoTarea(p.tareas['analista_turno']).texto }}</span></td>
+                                        <td><span class="estado" [ngClass]="estadoTarea(p.tareas['resumen_turno']).clase">{{ estadoTarea(p.tareas['resumen_turno']).texto }}</span></td>
+                                        <td class="num">{{ (p.tareas['analista_turno'].uso?.llamadas || 0) + (p.tareas['resumen_turno'].uso?.llamadas || 0) }}</td>
+                                        <td class="num">{{ ((p.tareas['analista_turno'].uso?.costoUsd || 0) + (p.tareas['resumen_turno'].uso?.costoUsd || 0)) | number: '1.2-4' }}</td>
+                                        <td class="num">{{ p.hallazgos.alertas }}</td>
+                                        <td class="num">{{ p.hallazgos.publicadas }}</td>
+                                        <td class="num" [title]="p.precision.seCumplieron + ' sí · ' + p.precision.noSeCumplieron + ' no'">{{ p.precision.precisionPct === null ? '—' : p.precision.precisionPct + ' %' }}</td>
+                                        <td class="num" [title]="p.precision.votosUtiles + ' útil · ' + p.precision.votosNoEra + ' no era'">{{ p.precision.utilPct === null ? '—' : p.precision.utilPct + ' %' }}</td>
+                                        <td><small>{{ p.ultimoTurno ? (p.ultimoTurno.fecha | date: 'HH:mm') + ' · ' + p.ultimoTurno.estado : '—' }}</small></td>
+                                        <td class="acciones">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" (click)="analizar(p.puerto)" [disabled]="trabajando.has('analizar|' + p.puerto) || !r.env.habilitada"
+                                                title="Llama al analista ahora (respeta el presupuesto)">Analizar</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="rehacerCierre(p.puerto)" [disabled]="trabajando.has('cierre|' + p.puerto)"
+                                                title="Rehace el cierre del último turno">Cierre de turno</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <small class="text-muted">«Se cumplieron»: alertas vencidas que la verificación automática confirmó contra los umbrales. «Útil»: votos de los usuarios.</small>
+                    </div>
+                </ng-container>
+
+                <!-- ═════════════ CONFIGURACIÓN ═════════════ -->
+                <ng-container *ngIf="vista === 'config'">
+                    <app-data-loader *ngIf="!config" [isLoading]="true" message="Leyendo la configuración..."></app-data-loader>
+                    <ng-container *ngIf="config as c">
+                        <div class="aviso" *ngIf="!c.esquema017">
+                            Falta aplicar la migración <code>017_ia_resumenes_admin.sql</code>. Mientras tanto manda el <code>.env</code> y no se puede configurar por puerto.
+                        </div>
+                        <div class="selector">
+                            <label>
+                                <small>Puerto</small>
+                                <select class="form-control form-select" [(ngModel)]="puertoConfig" (ngModelChange)="cambiarSeleccion()">
+                                    <option value="*">Todos los puertos</option>
+                                    <option *ngFor="let p of c.puertos" [value]="p.clave">{{ p.nombre }}</option>
+                                </select>
+                            </label>
+                            <label>
+                                <small>Tarea</small>
+                                <select class="form-control form-select" [(ngModel)]="tareaConfig" (ngModelChange)="cambiarSeleccion()">
+                                    <option *ngFor="let t of tareas" [value]="t.codigo">{{ t.nombre }}</option>
+                                </select>
+                            </label>
+                            <p class="text-muted mb-0">
+                                {{ puertoConfig === '*' ? 'Aplica a todos los puertos que no tengan su propia configuración.' : 'Lo que pongas aquí manda sobre «Todos los puertos» solo para ' + puertoConfig + '.' }}
+                                Vacío o «Hereda» = toma el valor de {{ puertoConfig === '*' ? 'el .env' : '«Todos los puertos» o del .env' }}.
+                            </p>
+                        </div>
+
+                        <div class="config-grid" *ngIf="efectiva as e">
+                            <div class="campo">
+                                <small>Encendida</small>
+                                <select class="form-control form-select" [(ngModel)]="form.activo" [disabled]="!c.esquema017">
+                                    <option value="hereda">Hereda</option><option value="si">Sí</option><option value="no">No</option>
+                                </select>
+                                <span class="efectivo">Ahora: {{ e.activa ? 'sí' : 'no' }} · {{ origen('activa') }}{{ !c.env.habilitada ? ' · IA_ENABLED=false apaga todo' : '' }}</span>
+                            </div>
+                            <div class="campo" *ngIf="tareaConfig === 'analista_turno' || tareaConfig === 'resumen_turno'">
+                                <small>Modo sombra</small>
+                                <select class="form-control form-select" [(ngModel)]="form.modoSombra" [disabled]="!c.esquema017">
+                                    <option value="hereda">Hereda</option><option value="si">Sí: solo propone</option><option value="no">No: publica</option>
+                                </select>
+                                <span class="efectivo">Ahora: {{ e.modoSombra ? 'sombra' : 'publica' }} · {{ origen('modoSombra') }}</span>
+                            </div>
+                            <div class="campo">
+                                <small>Tope de llamadas por día</small>
+                                <input type="number" class="form-control" min="1" max="2000" [(ngModel)]="form.topeLlamadasDia" [placeholder]="'hereda (' + e.topeLlamadasDia + ')'" [disabled]="!c.esquema017">
+                                <span class="efectivo">Ahora: {{ e.topeLlamadasDia }} · {{ origen('topeLlamadasDia') }}</span>
+                            </div>
+                            <div class="campo">
+                                <small>Tope de tokens por día</small>
+                                <input type="number" class="form-control" min="10000" step="10000" [(ngModel)]="form.topeTokensDia" [placeholder]="'hereda (' + e.topeTokensDia + ')'" [disabled]="!c.esquema017">
+                                <span class="efectivo">Ahora: {{ e.topeTokensDia | number }} · {{ origen('topeTokensDia') }}</span>
+                            </div>
+                            <div class="campo" *ngIf="tareaConfig === 'analista_turno'">
+                                <small>Confianza mínima (0–1)</small>
+                                <input type="number" class="form-control" min="0" max="1" step="0.05" [(ngModel)]="form.confianzaMinima" [placeholder]="'hereda (' + e.confianzaMinima + ')'" [disabled]="!c.esquema017">
+                                <span class="efectivo">Ahora: {{ e.confianzaMinima }} · {{ origen('confianzaMinima') }}</span>
+                            </div>
+                            <div class="campo ancho" *ngIf="tareaConfig === 'analista_turno'">
+                                <small>Tipos de alerta que se publican</small>
+                                <label class="check"><input type="checkbox" [(ngModel)]="form.tiposHeredan" [disabled]="!c.esquema017"> Hereda</label>
+                                <div class="tipos" *ngIf="!form.tiposHeredan">
+                                    <label class="check" *ngFor="let t of ['todos'].concat(c.tiposAlerta)">
+                                        <input type="checkbox" [(ngModel)]="form.tipos[t]" (ngModelChange)="t === 'todos' && marcarTodos()"
+                                            [disabled]="!c.esquema017 || (t !== 'todos' && form.tipos['todos'])"> {{ nombreTipo(t) }}
+                                    </label>
+                                </div>
+                                <span class="efectivo">Ahora: {{ e.tiposPublicar.map(nombreTipo).join(', ') }} · {{ origen('tiposPublicar') }}</span>
+                            </div>
+                        </div>
+                        <div class="acciones-config">
+                            <small class="text-muted" *ngIf="filaActual?.modificadoPor">Modificada por {{ filaActual?.modificadoPor }} · {{ filaActual?.fechaModificacionIso | date: 'dd/MM/yyyy HH:mm' }}</small>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="restablecerConfig()" [disabled]="!c.esquema017 || !filaActual || trabajando.has('guardar-config')">Todo hereda</button>
+                            <button type="button" class="btn btn-sm btn-primary" (click)="guardarConfig()" [disabled]="!c.esquema017 || trabajando.has('guardar-config')">
+                                {{ trabajando.has('guardar-config') ? 'Guardando...' : 'Guardar' }}
+                            </button>
+                        </div>
+                        <small class="text-muted">Los cambios aplican en el siguiente turno del analista (máx. 1 min de caché), sin reiniciar el API.</small>
+                    </ng-container>
+                </ng-container>
+
+                <!-- ═════════════ PROMPTS ═════════════ -->
+                <ng-container *ngIf="vista === 'prompts'">
+                    <app-data-loader *ngIf="!prompts" [isLoading]="true" message="Leyendo los prompts..."></app-data-loader>
+                    <ng-container *ngIf="prompts as pr">
+                        <div class="aviso" *ngIf="!pr.disponible">Falta aplicar la migración <code>015_analisis_ia.sql</code>: solo se ve el prompt incorporado.</div>
+                        <div class="selector">
+                            <label>
+                                <small>Tarea</small>
+                                <select class="form-control form-select" [(ngModel)]="tareaPrompts" (ngModelChange)="borrador = null">
+                                    <option *ngFor="let t of tareas" [value]="t.codigo">{{ t.nombre }}</option>
+                                </select>
+                            </label>
+                            <p class="mb-0" *ngIf="activo">En uso: <strong>{{ activo.origen === 'incorporado' ? 'incorporado' : 'TCL_IAPrompts' }} v{{ activo.version }}</strong></p>
+                            <button type="button" class="btn btn-sm btn-primary ms-auto" (click)="nuevaVersion()" [disabled]="!pr.disponible">Nueva versión</button>
+                        </div>
+
+                        <div class="borrador" *ngIf="borrador as b">
+                            <h6>Nueva versión de {{ b.codigoTarea }} (queda como BORRADOR)</h6>
+                            <div class="config-grid">
+                                <label class="campo"><small>Modelo</small><input class="form-control" [(ngModel)]="b.modelo"></label>
+                                <label class="campo"><small>Temperatura</small><input type="number" class="form-control" min="0" max="1" step="0.05" [(ngModel)]="b.temperatura"></label>
+                                <label class="campo"><small>Máx. tokens de salida</small><input type="number" class="form-control" min="200" max="8000" [(ngModel)]="b.maxTokens"></label>
+                                <label class="campo ancho"><small>Nota (qué cambia)</small><input class="form-control" maxlength="400" [(ngModel)]="b.nota"></label>
+                            </div>
+                            <label class="campo-texto"><small>Instrucciones del sistema ({{ b.codigoTarea === 'resumen_turno' ? marcadores.resumen : marcadores.analista }} se reemplazan)</small>
+                                <textarea class="form-control mono" rows="12" [(ngModel)]="b.sistema"></textarea></label>
+                            <label class="campo-texto"><small>Esquema de salida (herramienta JSON)</small>
+                                <textarea class="form-control mono" rows="8" [(ngModel)]="b.esquemaSalida"></textarea></label>
+                            <div class="acciones-config">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="borrador = null">Cancelar</button>
+                                <button type="button" class="btn btn-sm btn-primary" (click)="guardarBorrador()" [disabled]="trabajando.has('crear-prompt')">Crear borrador</button>
+                            </div>
+                        </div>
+
+                        <div class="versiones">
+                            <div class="version" *ngFor="let v of versiones" [ngClass]="'est-' + v.estado">
+                                <div class="version-titulo">
+                                    <strong>v{{ v.version }}</strong>
+                                    <span class="estado" [ngClass]="v.estado === 'ACTIVO' ? 'activa' : v.estado === 'BORRADOR' ? 'sombra' : 'apagada'">{{ v.estado }}</span>
+                                    <span class="text-muted">{{ v.modelo }} · temp {{ v.temperatura }} · {{ v.maxTokens }} tokens</span>
+                                    <small class="text-muted ms-auto">{{ v.creadoPor }} · {{ v.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</small>
+                                </div>
+                                <p class="mb-1" *ngIf="v.nota">{{ v.nota }}</p>
+                                <div class="acciones-config">
+                                    <button type="button" class="btn btn-sm btn-link" (click)="alternarSistema(v.id!)">{{ verSistema === v.id ? 'Ocultar' : 'Ver' }} instrucciones</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="nuevaVersion(v)">Copiar a nueva</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" *ngIf="v.estado === 'ACTIVO'" (click)="cambiarEstado(v, 'RETIRADO')" [disabled]="trabajando.has('prompt|' + v.id)">Retirar (vuelve el incorporado)</button>
+                                    <button type="button" class="btn btn-sm btn-success" *ngIf="v.estado !== 'ACTIVO'" (click)="cambiarEstado(v, 'ACTIVO')" [disabled]="trabajando.has('prompt|' + v.id)">Activar</button>
+                                </div>
+                                <pre class="mono" *ngIf="verSistema === v.id">{{ v.sistema }}</pre>
+                            </div>
+                            <div class="version est-INCORPORADO" *ngIf="incorporado as inc">
+                                <div class="version-titulo">
+                                    <strong>Incorporado v{{ inc.version }}</strong>
+                                    <span class="estado" [ngClass]="activo?.origen === 'incorporado' ? 'activa' : 'apagada'">{{ activo?.origen === 'incorporado' ? 'EN USO' : 'RESPALDO' }}</span>
+                                    <span class="text-muted">{{ inc.modelo }} · temp {{ inc.temperatura }} · {{ inc.maxTokens }} tokens</span>
+                                </div>
+                                <p class="mb-1 text-muted">El que trae el código. Se usa cuando no hay una versión ACTIVA en la tabla.</p>
+                                <div class="acciones-config">
+                                    <button type="button" class="btn btn-sm btn-link" (click)="alternarSistema('inc')">{{ verSistema === 'inc' ? 'Ocultar' : 'Ver' }} instrucciones</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="nuevaVersion(inc)" [disabled]="!pr.disponible">Copiar a nueva</button>
+                                </div>
+                                <pre class="mono" *ngIf="verSistema === 'inc'">{{ inc.sistema }}</pre>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <!-- ═════════════ ASISTENTE Y MARCO DE ALCANCE (fase 5) ═════════════ -->
+                <ng-container *ngIf="vista === 'asistente'">
+                    <app-data-loader *ngIf="!asistente" [isLoading]="true" message="Leyendo las preguntas..."></app-data-loader>
+                    <ng-container *ngIf="asistente as a">
+                        <div class="aviso" *ngIf="!a.disponible">Falta aplicar la migración <code>018_ia_asistente.sql</code>: el asistente responde, pero no guarda las preguntas ni aplica el tope por usuario.</div>
+                        <div class="tarjetas" *ngIf="a.conteos as c">
+                            <div class="tarjeta"><small>Preguntas ({{ a.dias }} días)</small><strong>{{ c.total }}</strong><span>{{ c.errores }} con error del servicio</span></div>
+                            <div class="tarjeta ok"><small>Dentro del alcance</small><strong>{{ c.dentro }}</strong><span>{{ c.sinDatos }} sin datos suficientes</span></div>
+                            <div class="tarjeta warn"><small>Frontera</small><strong>{{ c.frontera }}</strong><span>clima, TRM, noticias: solo efecto operativo</span></div>
+                            <div class="tarjeta off"><small>Fuera del alcance</small><strong>{{ c.fuera }}</strong><span>rechazadas sin llamar al asistente</span></div>
+                            <div class="tarjeta"><small>Útil (votos)</small><strong>{{ c.utilPct === null ? '—' : c.utilPct + ' %' }}</strong><span>tope {{ resumen?.env?.topePreguntasUsuarioDia || '—' }} por usuario/día</span></div>
+                        </div>
+                    </ng-container>
+
+                    <div class="bloque">
+                        <h6>Probar el marco de alcance (sin costo)</h6>
+                        <div class="selector">
+                            <input class="form-control" style="flex: 1 1 320px" [(ngModel)]="preguntaPrueba" (keyup.enter)="probar()" placeholder="Escribe una pregunta, p. ej. ¿quién ganó la Eurocopa?">
+                            <button type="button" class="btn btn-sm btn-outline-primary" (click)="probar()" [disabled]="trabajando.has('probar')">Probar</button>
+                        </div>
+                        <p class="mb-0" *ngIf="resultadoPrueba as rp">
+                            <span class="estado" [ngClass]="rp.decision === 'fuera' ? 'apagada' : rp.decision === 'dentro' ? 'activa' : 'sombra'">{{ rp.decision }}</span>
+                            {{ rp.tema ? 'tema ' + rp.tema : '' }} {{ rp.categoria ? '· ' + rp.categoria : '' }} · {{ rp.motivo }}
+                            <small class="text-muted d-block" *ngIf="rp.nota">{{ rp.nota }}</small>
+                        </p>
+                    </div>
+
+                    <div class="bloque">
+                        <div class="selector">
+                            <h6 class="mb-0">Preguntas recientes</h6>
+                            <select class="form-control form-select" style="max-width: 220px" [(ngModel)]="filtroDecision" (ngModelChange)="cargarAsistente()">
+                                <option value="">Todas</option><option value="dentro">Dentro</option><option value="frontera">Frontera</option><option value="fuera">Fuera</option>
+                            </select>
+                        </div>
+                        <div class="tabla-scroll" *ngIf="asistente?.preguntas?.length">
+                            <table class="table table-sm tabla-ia">
+                                <thead><tr><th>Hora</th><th>Usuario</th><th>Puerto</th><th>Pregunta</th><th>Decisión</th><th>Estado</th><th>Herramientas</th><th>Voto</th></tr></thead>
+                                <tbody>
+                                    <tr *ngFor="let q of asistente.preguntas">
+                                        <td><small>{{ q.fecha | date: 'dd/MM HH:mm' }}</small></td>
+                                        <td><small>{{ q.usuario }}</small></td>
+                                        <td><small>{{ q.puerto || 'Todos' }}</small></td>
+                                        <td [title]="q.respuesta || ''">{{ q.pregunta }}<small class="text-warning d-block" *ngIf="q.verificacion">⚠ {{ q.verificacion }}</small></td>
+                                        <td><span class="estado" [ngClass]="q.decision === 'fuera' ? 'apagada' : q.decision === 'dentro' ? 'activa' : 'sombra'" [title]="q.motivo || ''">{{ q.decision }}</span>
+                                            <small class="text-muted d-block">{{ q.origenDecision }}{{ q.tema ? ' · ' + q.tema : '' }}</small></td>
+                                        <td><small>{{ q.estado }}</small></td>
+                                        <td><small>{{ q.herramientas?.length ? (q.herramientas | slice: 0 : 3).map(nombreHerramienta).join(', ') : '—' }}</small></td>
+                                        <td>{{ q.util === true ? '👍' : q.util === false ? '👎' : '' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <small class="text-muted" *ngIf="asistente && !asistente.preguntas?.length">Sin preguntas en el periodo.</small>
+                    </div>
+
+                    <div class="bloque" *ngIf="alcance as al">
+                        <div class="selector">
+                            <h6 class="mb-0">Marco de alcance</h6>
+                            <small class="text-muted">Siempre fuera (reglas fijas): {{ al.fueraEvidente.join(', ') }}</small>
+                            <button type="button" class="btn btn-sm btn-primary ms-auto" (click)="editarTema()" [disabled]="!al.disponible">Nuevo tema</button>
+                        </div>
+                        <div class="aviso" *ngIf="!al.disponible">Falta la migración <code>018_ia_asistente.sql</code> para ajustar el marco. Se usa el incorporado.</div>
+
+                        <div class="borrador" *ngIf="temaEdicion as t">
+                            <h6>{{ t.nuevo ? 'Nuevo tema' : 'Ajustar «' + t.nombre + '»' }}</h6>
+                            <div class="config-grid">
+                                <label class="campo"><small>Código</small><input class="form-control" [(ngModel)]="t.codigo" [disabled]="!t.nuevo" placeholder="astilleros"></label>
+                                <label class="campo"><small>Nombre</small><input class="form-control" [(ngModel)]="t.nombre"></label>
+                                <label class="campo"><small>Ámbito</small>
+                                    <select class="form-control form-select" [(ngModel)]="t.ambito"><option value="dentro">Dentro</option><option value="frontera">Frontera (solo efecto operativo)</option><option value="fuera">Fuera</option></select></label>
+                                <label class="campo"><small>Activo</small><select class="form-control form-select" [(ngModel)]="t.activo"><option [ngValue]="true">Sí</option><option [ngValue]="false">No</option></select></label>
+                                <label class="campo ancho"><small>Descripción (la leen el filtro y el asistente)</small><input class="form-control" maxlength="600" [(ngModel)]="t.descripcion"></label>
+                            </div>
+                            <label class="campo-texto"><small>Palabras clave (separadas por coma; sin tildes o con, da igual)</small><textarea class="form-control" rows="3" [(ngModel)]="t.palabras"></textarea></label>
+                            <label class="campo-texto"><small>Ejemplos de preguntas (uno por línea; se muestran como sugerencias)</small><textarea class="form-control" rows="3" [(ngModel)]="t.ejemplos"></textarea></label>
+                            <div class="acciones-config">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="temaEdicion = null">Cancelar</button>
+                                <button type="button" class="btn btn-sm btn-primary" (click)="guardarTema()" [disabled]="trabajando.has('tema')">Guardar</button>
+                            </div>
+                        </div>
+
+                        <div class="versiones">
+                            <div class="version" *ngFor="let t of al.temas" [class.est-RETIRADO]="t.activo === false">
+                                <div class="version-titulo">
+                                    <strong>{{ t.nombre }}</strong>
+                                    <span class="estado" [ngClass]="t.ambito === 'dentro' ? 'activa' : t.ambito === 'frontera' ? 'sombra' : 'apagada'">{{ ambitoTexto(t.ambito) }}</span>
+                                    <span class="text-muted">{{ t.origen === 'incorporado' ? 'incorporado' : t.origen === 'ajustado' ? 'ajustado' : 'nuevo' }}{{ t.activo === false ? ' · apagado' : '' }}</span>
+                                    <span class="ms-auto d-flex gap-2">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="editarTema(t)" [disabled]="!al.disponible">Ajustar</button>
+                                        <button type="button" class="btn btn-sm" [ngClass]="t.activo === false ? 'btn-success' : 'btn-outline-danger'" (click)="alternarTema(t)" [disabled]="!al.disponible || trabajando.has('tema')">
+                                            {{ t.activo === false ? 'Encender' : 'Apagar' }}</button>
+                                    </span>
+                                </div>
+                                <p class="mb-1">{{ t.descripcion }}</p>
+                                <small class="text-muted">{{ (t.palabras || []).length }} palabras clave · {{ (t.ejemplos || []).slice(0, 2).join(' · ') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

@@ -51,6 +51,7 @@ import { GRUPOS_CAPAS, visibilidadPorCapaMapLibre } from './mapa-capas';
 import { esPosicion, esPoligonoValido, hacerCircular, convertirWKT_ACirculo, calcularBboxGeoJSON, procesarInfraestructuraWkt, marcadoresDeInfraestructura } from './mapa-geometria';
 import { generarContenidoPopup, ContextoPopup } from './mapa-popups';
 import { agregarFuentesYCapas } from './mapa-capas-maplibre';
+import { AnalistaIAComponent } from '../../panel-ia/analista-ia/analista-ia.component';
 
 const INFRA_THEME = {
     puerto: { fill: '#cbd5e1', line: '#475569', circle: '#cbd5e1' },
@@ -85,7 +86,7 @@ export type TipoMapaBase = 'outdoor' | 'terreno' | 'satelite';
 @Component({
     selector: 'app-mapa-logistico',
     standalone: true,
-    imports: [CommonModule, EmbudoLlegadaComponent, RecorridoPanelComponent, TablaTclComponent],
+    imports: [CommonModule, EmbudoLlegadaComponent, RecorridoPanelComponent, TablaTclComponent, AnalistaIAComponent],
     templateUrl: './mapa-logistico.component.html',
     styleUrls: ['./mapa-logistico.component.scss']
 })
@@ -94,6 +95,20 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
     /** Raíz del widget: es lo que se amplía (pantalla completa del navegador, el mismo mapa sin crear otro). */
     @ViewChild('raizMapa') raizMapa?: ElementRef<HTMLElement>;
     public pantallaCompleta = false;
+
+    // Analista IA flotante (2026-10-24): botón arriba a la derecha en vez de un widget al lado del mapa.
+    // El widget queda montado (oculto) para que el número del botón se actualice solo.
+    public iaAbierto = false;
+    public puertoIA: string | null = null;
+    public iaConteo = { alertas: 0, criticas: 0 };
+
+    public alternarIA(): void {
+        this.iaAbierto = !this.iaAbierto;
+    }
+
+    public actualizarConteoIA(c: { alertas: number; criticas: number }): void {
+        this.iaConteo = c;
+    }
 
     @Input() widgetConfig: any;
     @Input()
@@ -424,6 +439,8 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
      * y se vuelven a pedir las capas filtradas por el puerto nuevo.
      */
     private cambiarPuertoMapa(puerto: string): boolean {
+        const clave = String(puerto || '').trim();
+        this.puertoIA = clave && clave.toUpperCase() !== 'ALL' ? clave : null;
         if (!this._mapaService.establecerPuerto(puerto)) return false;
         this.salirRecorrido();
         this._alertasMapa.iniciar(puerto);

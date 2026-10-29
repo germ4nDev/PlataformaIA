@@ -33,6 +33,8 @@
                         <i class="feather icon-menu"></i>
                     </div>
 
+                    <i [class]="'icono-pestana ' + obtenerIconoPestana(pestana.codigoPestana)"></i>
+
                     <div class="widget-info d-flex flex-column align-items-start flex-grow-1 overflow-hidden">
                         <h6 class="titulo-item fw-bold">{{ pestana.nombrePestana ||
                             pestana.codigoPestana }}</h6>

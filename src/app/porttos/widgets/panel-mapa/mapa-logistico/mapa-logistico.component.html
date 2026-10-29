@@ -35,6 +35,18 @@
             <i class="feather icon-alert-triangle"></i><span>{{ avisoEventosViales }}</span>
         </div>
 
+        <!-- Analista IA flotante: botón arriba a la derecha y el panel sobre el mapa (no le quita espacio) -->
+        <button type="button" class="fab-ia" *ngIf="puertoIA" [class.abierto]="iaAbierto" [class.con-panel-fs]="pantallaCompleta"
+            (click)="alternarIA()" [title]="iaAbierto ? 'Cerrar Analista IA' : 'Analista IA'" [attr.aria-expanded]="iaAbierto">
+            <span class="fab-ia-sello" *ngIf="!iaAbierto">IA</span>
+            <i class="feather icon-x" *ngIf="iaAbierto"></i>
+            <span class="fab-ia-badge" *ngIf="!iaAbierto && iaConteo.alertas > 0" [class.critica]="iaConteo.criticas > 0">{{ iaConteo.alertas > 9 ? '9+' : iaConteo.alertas }}</span>
+        </button>
+        <div class="panel-ia-flotante" *ngIf="puertoIA" [class.abierto]="iaAbierto" [class.con-panel-fs]="pantallaCompleta">
+            <app-analista-ia [widgetConfig]="{ type: 'PTT_IA_ANALISTA_MAPA', titulo: 'ANALISTA IA', puerto: puertoIA }"
+                (conteoAlertas)="actualizarConteoIA($event)"></app-analista-ia>
+        </div>
+
         <!-- 2. MENÚ Y CONTENIDO FLOTANTE (Drill-down) -->
         <div class="porttos-config-menu">
 

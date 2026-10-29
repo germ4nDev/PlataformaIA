@@ -66,7 +66,6 @@ export class InicioSuitesComponent implements OnInit {
     ingresaSuiteaplicacion(suite: PTLSuiteAPModel) {
         this._permisosService.inicializarPermisosPorDefecto().subscribe({
             next: (permisosCargados) => {
-                console.log('✅ Permisos listos para la aplicación. Navegando...', permisosCargados);
                 this._localStorageService.setSuiteLocalStorage(suite);
                 this._themeStorage.saveThemeSettings()
                 this.router.navigate([suite.rutaInicio])

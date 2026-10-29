@@ -47,14 +47,12 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
         private router: Router
     ) {
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-        console.log('no hay suscriptor suscriptor');
     }
 
     ngOnInit(): void {
         this.suscriptores = [];
         console.log('ingresa a la plataforma');
         this.currentUser = this._localStorageService.getCurrentUserLocalStorage();
-        console.log('currentUser', this.currentUser);
         const usuariosSC = this.currentUser.usuariosSC;
         usuariosSC.forEach((user: any) => {
             user.suscriptores.forEach((susc: any) => {
@@ -62,8 +60,6 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
                 this.suscriptores.push(susc)
             });
         });
-
-        console.log('suscriptores', this.suscriptores);
     }
 
     ngOnDestroy(): void {

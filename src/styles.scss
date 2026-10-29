@@ -1619,6 +1619,13 @@ hr.detail-separator {
     margin: 1rem;
 }
 
+.image-logo-apps {
+    display: block;
+    width: 300px;
+    margin: 1rem;
+    filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.25));
+}
+
 .color-chip {
     width: 50px;
     height: 25px;
@@ -2251,4 +2258,11 @@ gridster-item {
             }
         }
     }
+}
+
+// Sello IA en las notificaciones del mapa (alertas tempranas del analista, categoría ia_temprana · fase 3).
+// El título ya llega como «🧠 IA · …» desde el API; aquí solo el borde violeta que las distingue del resto.
+#toast-container>.ngx-toastr.toast-ia {
+    border-left: 4px solid #7c5cff;
+    box-shadow: 0 0 0 1px rgba(124, 92, 255, 0.45), 0 4px 14px rgba(124, 92, 255, 0.25);
 }

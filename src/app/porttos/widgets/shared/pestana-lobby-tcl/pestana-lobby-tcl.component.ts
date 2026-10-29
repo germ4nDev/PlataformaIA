@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 // 🟢 1. Importamos el CDK de Drag & Drop
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LocalStorageService } from 'src/app/theme/shared/service';
+import { iconoPestana } from '../iconos-pestana';
 
 @Component({
     selector: 'app-pestana-lobby-tcl',
@@ -127,15 +128,9 @@ export class PestanaLobbyTclComponent implements OnChanges {
         this.cerrar.emit();
     }
 
+    /** Ícono de la pestaña: el mismo de la barra de pestañas (pieza común widgets/shared/iconos-pestana.ts). */
     obtenerIconoPestana(codigoPestana: string): string {
-        const diccionarioIconos: { [key: string]: string } = {
-            'TLC_MARITIMO_001': 'fas fa-ship text-info',
-            'TLC_VIRTUAL_GATE_001': 'fas fa-truck text-warning',
-            'TLC_CONTENEDORES_001': 'fas fa-box text-success',
-            'TLC_MAPA_001': 'fas fa-map-marked-alt text-danger',
-            'TLC_NOTICIAS_001': 'fas fa-newspaper text-primary'
-        };
-        return diccionarioIconos[codigoPestana] || 'fas fa-th-large text-secondary';
+        return iconoPestana(codigoPestana);
     }
 
     onCheckboxToggle(pestana: any, isChecked: boolean) {

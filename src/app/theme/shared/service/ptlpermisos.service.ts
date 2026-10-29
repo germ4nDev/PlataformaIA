@@ -73,74 +73,79 @@ export class PtlPermisosService {
 
     cargarPermisosUsuarioYEmpresa(codigoUsuarioSC: string, codigoEmpresaSC: string): Observable<string[]> {
         const currentUser = this._localStorageService.getCurrentUserLocalStorage();
+        const navsettings = this._localStorageService.getNavSettingsLocalStorage();
+        if (navsettings) {
+            if (!currentUser || !currentUser.usuariosSC) {
+                this.limpiarPermisos();
+                return of([]);
+            }
 
-        if (!currentUser || !currentUser.usuariosSC) {
-            this.limpiarPermisos();
-            return of([]);
-        }
+            let rolesDeEstaEmpresa: any[] = [];
+            const usuSC = currentUser.usuariosSC.find((u: any) => u.codigoUsuarioSC === codigoUsuarioSC);
 
-        let rolesDeEstaEmpresa: any[] = [];
-        const usuSC = currentUser.usuariosSC.find((u: any) => u.codigoUsuarioSC === codigoUsuarioSC);
+            if (usuSC && usuSC.suscriptores) {
+                for (const susc of usuSC.suscriptores) {
+                    if (susc.empresasAsignadas) {
+                        const empresaEncontrada = susc.empresasAsignadas.find((e: any) => e.codigoEmpresaSC === codigoEmpresaSC);
 
-        if (usuSC && usuSC.suscriptores) {
-            for (const susc of usuSC.suscriptores) {
-                if (susc.empresasAsignadas) {
-                    const empresaEncontrada = susc.empresasAsignadas.find((e: any) => e.codigoEmpresaSC === codigoEmpresaSC);
+                        if (empresaEncontrada && empresaEncontrada.rolesAsignados) {
+                            rolesDeEstaEmpresa = empresaEncontrada.rolesAsignados;
+                            const nombresDeRoles = rolesDeEstaEmpresa.map((rol: any) => rol.nombreRolLegible);
 
-                    if (empresaEncontrada && empresaEncontrada.rolesAsignados) {
-                        rolesDeEstaEmpresa = empresaEncontrada.rolesAsignados;
-                        const nombresDeRoles = rolesDeEstaEmpresa.map((rol: any) => rol.nombreRolLegible);
+                            this._rolesAutorizados.next(nombresDeRoles);
+                            this._codigosRolesActuales = rolesDeEstaEmpresa.map((rol: any) => rol.codigoRole);
 
-                        this._rolesAutorizados.next(nombresDeRoles);
-                        this._codigosRolesActuales = rolesDeEstaEmpresa.map((rol: any) => rol.codigoRole);
-
-                        console.group('%c1. Roles encontrados en Storage', 'color: #007bff; font-weight: bold;');
-                        console.log(`🛡️ Empresa: ${codigoEmpresaSC}`, rolesDeEstaEmpresa);
-                        console.log(`👑 Roles Legibles cargados para el Guard:`, nombresDeRoles);
-                        console.groupEnd();
-                        break;
+                            console.group('%c1. Roles encontrados en Storage', 'color: #007bff; font-weight: bold;');
+                            console.log(`🛡️ Empresa: ${codigoEmpresaSC}`, rolesDeEstaEmpresa);
+                            console.log(`👑 Roles Legibles cargados para el Guard:`, nombresDeRoles);
+                            console.groupEnd();
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        if (rolesDeEstaEmpresa.length === 0) {
-            this.limpiarPermisos();
+            if (rolesDeEstaEmpresa.length === 0) {
+                this.limpiarPermisos();
+                return of([]);
+            }
+
+            const peticionesActividades = rolesDeEstaEmpresa.map((rol: any) =>
+                this._actividadesRolesService.getRegistroByCodeRole(rol.codigoRole).pipe(take(1))
+            );
+
+            return forkJoin(peticionesActividades).pipe(
+                map((respuestasActividades: any) => {
+                    const actividadesSet = new Set<string>();
+
+                    respuestasActividades.forEach((resp: any, index: number) => {
+                        const actividades = Array.isArray(resp) ? resp : (resp.data || []);
+
+                        actividades.forEach((ar: any) => {
+                            const actividadMaestraActiva = ar.actividad ? ar.actividad.estadoActividad === true : true;
+
+                            if (ar.permiso === true && actividadMaestraActiva) {
+                                const permisoLegible = ar.actividad?.llavePermiso || ar.codigoActividad;
+                                actividadesSet.add(permisoLegible);
+                            }
+                        });
+                    });
+
+                    return Array.from(actividadesSet);
+                }),
+                tap((actividadesFinales: string[]) => {
+                    // 1. Actualiza la RAM y Menú
+                    this._actividadesAutorizadas.next(actividadesFinales);
+                    this._navigationService.getNavigationItems();
+
+                    currentUser.usuario.permisos = actividadesFinales;
+                    this._localStorageService.setCurrentUserLocalStorage(currentUser);
+                })
+            );
+        } else {
             return of([]);
         }
 
-        const peticionesActividades = rolesDeEstaEmpresa.map((rol: any) =>
-            this._actividadesRolesService.getRegistroByCodeRole(rol.codigoRole).pipe(take(1))
-        );
-
-        return forkJoin(peticionesActividades).pipe(
-            map((respuestasActividades: any) => {
-                const actividadesSet = new Set<string>();
-
-                respuestasActividades.forEach((resp: any, index: number) => {
-                    const actividades = Array.isArray(resp) ? resp : (resp.data || []);
-
-                    actividades.forEach((ar: any) => {
-                        const actividadMaestraActiva = ar.actividad ? ar.actividad.estadoActividad === true : true;
-
-                        if (ar.permiso === true && actividadMaestraActiva) {
-                            const permisoLegible = ar.actividad?.llavePermiso || ar.codigoActividad;
-                            actividadesSet.add(permisoLegible);
-                        }
-                    });
-                });
-
-                return Array.from(actividadesSet);
-            }),
-            tap((actividadesFinales: string[]) => {
-                // 1. Actualiza la RAM y Menú
-                this._actividadesAutorizadas.next(actividadesFinales);
-                this._navigationService.getNavigationItems();
-
-                currentUser.usuario.permisos = actividadesFinales;
-                this._localStorageService.setCurrentUserLocalStorage(currentUser);
-            })
-        );
     }
 
     tienePermiso(codigoPermiso: string): boolean {

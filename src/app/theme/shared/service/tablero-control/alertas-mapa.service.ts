@@ -173,8 +173,12 @@ export class AlertasMapaService implements OnDestroy {
 
     private mostrar(a: AlertaMapa): void {
         const mensaje = a.simulado ? `${a.mensaje} · simulado` : a.mensaje;
-        const ref = this.toastr[a.nivel](mensaje, a.titulo, this.opciones(a.nivel));
-        ref?.onTap?.subscribe(() => this.enfocar(a));
+        // Las alertas tempranas del analista IA llevan su sello (borde violeta y etiqueta IA: estilos en styles.scss)
+        const opciones = a.categoria === 'ia_temprana'
+            ? { ...this.opciones(a.nivel), toastClass: 'ngx-toastr toast-ia' }
+            : this.opciones(a.nivel);
+        const ref = this.toastr[a.nivel](mensaje, a.titulo, opciones);
+        ref?.onTap?.subscribe(() => this.enfocar(a));   // sin coordenadas (p. ej. IA): el mapa no se mueve
         this.contar(ref);
     }
 

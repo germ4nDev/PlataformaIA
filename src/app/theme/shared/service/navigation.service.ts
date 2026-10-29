@@ -138,26 +138,55 @@ export class NavigationService implements OnInit, OnDestroy {
         return [nodoSuite];
     }
 
+    // getNavigationItems(): void {
+    //     const navSettings = this._localStorageService.getObject<any>('navsettings') || {};
+    //     if (navSettings) {
+    //         this.aplicacion = navSettings.aplicacion || '';
+    //         this.suite = navSettings.suite || '';
+
+    //         const mods: any[] = []
+    //         console.log('************** modulos aplicacion', this.aplicacion.modulos);
+
+    //         this.aplicacion.modulos.forEach((mod: any) => {
+    //             const idx = mods.findIndex(x => x.codigoModulo == mod.codigoModulo);
+    //             if (idx == -1) {
+    //                 if (mod.codigoSuite == this.suite.codigoSuite) {
+    //                     mods.push(mod);
+    //                 }
+    //             }
+    //         });
+
+    //         const menu = this.getAplicacionSuiteItems(mods);
+    //         this.menuSubject.next(menu);
+    //     }
+
+    // }
     getNavigationItems(): void {
-        const navSettings = this._localStorageService.getObject<any>('navsettings') || {};
+        const navSettings = this._localStorageService.getObject<any>('navsettings');
 
-        this.aplicacion = navSettings.aplicacion || '';
-        this.suite = navSettings.suite || '';
+        // 1. Validamos que navSettings, aplicacion y el arreglo de modulos existan realmente
+        if (navSettings && navSettings.aplicacion && Array.isArray(navSettings.aplicacion.modulos)) {
+            this.aplicacion = navSettings.aplicacion;
+            this.suite = navSettings.suite || {};
 
-        const mods: any[] = []
-        console.log('************** modulos aplicacion', this.aplicacion.modulos);
+            const mods: any[] = [];
+            console.log('************** modulos aplicacion', this.aplicacion.modulos);
 
-        this.aplicacion.modulos.forEach((mod: any) => {
-            const idx = mods.findIndex(x => x.codigoModulo == mod.codigoModulo);
-            if (idx == -1) {
-                if (mod.codigoSuite == this.suite.codigoSuite) {
-                    mods.push(mod);
+            this.aplicacion.modulos.forEach((mod: any) => {
+                const idx = mods.findIndex(x => x.codigoModulo == mod.codigoModulo);
+                if (idx == -1) {
+                    if (mod.codigoSuite == this.suite.codigoSuite) {
+                        mods.push(mod);
+                    }
                 }
-            }
-        });
+            });
 
-        const menu = this.getAplicacionSuiteItems(mods);
-        this.menuSubject.next(menu);
+            const menu = this.getAplicacionSuiteItems(mods);
+            this.menuSubject.next(menu);
+        } else {
+            // 2. Si no hay aplicación seleccionada aún (ej. recién logueado), emitimos menú vacío para evitar errores
+            this.menuSubject.next([]);
+        }
     }
 
     navigateNodoMenu(url: any) {

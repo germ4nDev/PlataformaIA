@@ -125,6 +125,14 @@ const routes: Routes = [
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR'] }
             },
             {
+                // Capa de análisis con IA, fase 4: configuración por puerto y tarea, prompts y métricas
+                path: 'ia-admin-panel',
+                loadComponent: () => import('./administacion/ia-admin-panel/ia-admin-panel.component')
+                    .then(c => c.IaAdminPanelComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR'] }
+            },
+            {
                 path: 'cron-monitor',
                 loadComponent: () => import('./administacion/cron-monitor/cron-monitor.component')
                     .then(c => c.CronMonitorComponent),

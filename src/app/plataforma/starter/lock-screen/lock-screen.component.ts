@@ -6,16 +6,15 @@ import { FullScreenSliderComponent } from "src/app/theme/shared/components/fulls
 import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
 
 @Component({
-  selector: 'app-lock-screen',
-  standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, FullScreenSliderComponent, LanguageSelectorComponent],
-  templateUrl: './lock-screen.component.html',
-  styleUrl: './lock-screen.component.scss'
+    selector: 'app-lock-screen',
+    standalone: true,
+    imports: [CommonModule, RouterModule, TranslateModule, FullScreenSliderComponent, LanguageSelectorComponent],
+    templateUrl: './lock-screen.component.html',
+    styleUrl: './lock-screen.component.scss'
 })
 export class LockScreenComponent {
-    constructor(private router: Router) {
+    constructor(private router: Router) { }
 
-    }
     unlokScreen() {
         this.router.navigate(['/starter/unlock-screen']);
     }

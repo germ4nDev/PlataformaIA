@@ -25,8 +25,6 @@ import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.ser
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
 import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
 
-const base_url = environment.apiUrl
-
 @Component({
     selector: 'app-inicio-aplicaciones',
     standalone: true,
@@ -35,12 +33,9 @@ const base_url = environment.apiUrl
     styleUrl: './inicio-aplicaciones.component.scss'
 })
 export class InicioAplicacionesComponent implements OnInit, OnDestroy {
-    public appCode: string = '';
+    subscriptions = new Subscription();
     aplicacionesSub?: Subscription;
     aplicaciones: PTLAplicacionModel[] = [];
-    suscriptor: any;
-    suscImagenes: string = '';
-    subscriptions = new Subscription();
     roles: PTLRoleAPModel[] = [];
     usuariosRoles: PTLUsuarioRoleAPModel[] = [];
     usuariosSC: PTLUsuarioSCModel[] = [];
@@ -48,8 +43,12 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     actividades: PTLActividadModel[] = []
     actividadesRoles: PTLActividadRoleModel[] = []
     ModulosPQ: PTLModuloPQModel[] = []
-    retorno: number = 0
     modulos: PTLModuloAP[] = []
+    public appCode: string = '';
+    retorno: number = 0
+    suscriptor: any;
+    suscImagenes: string = '';
+    logoUrl: string = '';
 
     constructor(
         private router: Router,
@@ -75,11 +74,14 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         let modulosPaquete: any[] = []
         this._localStorageService.removeObject('navsettings');
         this.suscriptor = this._localStorageService.getObject<any>('suscriptor');
+        const susPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         paqsSuscriptor = this.suscriptor.paquetesActivos || []
+
         paqsSuscriptor.forEach(paq => {
             const mods = paq.modulosPaquete || []
             modulosPaquete.push(...mods)
         });
+
         let aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
         this.ModulosPQ = modulosPaquete
         this.modulos = this._modulosService.getModulosActuales()
@@ -87,25 +89,31 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales()
         this.usuariosSC = this._usuariosSCRolesService.getUsuariosSCActuales()
         let apps: any[] = [];
+
         modulosPaquete.forEach((item: any) => {
             if (item.codigoAplicacion) {
                 const idx = apps.findIndex(x => x.codigoAplicacion == item.codigoAplicacion)
                 if (idx == -1) {
                     const aplicacion = aplicaciones.find(x => x.codigoAplicacion == item.codigoAplicacion) || {}
-                    const imagen = aplicacion.imagenInicio || 'no-imagen.png'
+                    const imagen = aplicacion.imagenInicio || 'no-imagen.png';
+                    const imagenLogo = aplicacion.imagenLogoB || 'no-imagen.png';
+                    aplicacion.imagenLogo = this._uploadService.getFilePath(susPlataforma, 'aplicaciones', imagenLogo) || 'no-image.png';
                     aplicacion.imagenInicio = this._uploadService.getFilePath(this.suscImagenes, 'aplicaciones', imagen)
                     const modsApp = modulosPaquete.filter(x => x.codigoAplicacion == item.codigoAplicacion);
+
                     modsApp.forEach(mod => {
                         const modData = this.modulos.find(x => x.codigoModulo == mod.codigoModulo)
                         const modSubs = this.modulos.filter(x => x.codigoPadre == mod.codigoModulo)
                         mod.modulo = modData
                         mod.submodulos = modSubs
                     });
+
                     aplicacion.modulos = modsApp
                     apps.push(aplicacion)
                 }
             }
         });
+
         this._localStorageService.setObject('aplicaciones', apps);
         this.aplicaciones = apps;
     }
@@ -121,20 +129,14 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         const aplicaciones = this._localStorageService.getObject<any>('aplicaciones');
 
         const appSeleccionada = apps.find((x: { codigoAplicacion: string | undefined }) => x.codigoAplicacion == app.codigoAplicacion);
-        console.log('aplicacion seleccionada', appSeleccionada);
 
         const usuSC = this.usuariosSC.find((x: any) => x.codigoUsuario == current.usuario.codigoUsuario);
         const rolesApp = this.roles.filter((x: any) => x.codigoAplicacion == appSeleccionada.codigoAplicacion);
         const usuarioRoles = this.usuariosRoles.filter((x: any) => x.codigoUsuarioSC == usuSC?.codigoUsuarioSC);
-        console.log('============= listado de rolesApp', rolesApp);
 
-        // 1. Inicializamos el mapa para los widgets permitidos de ESTA aplicación
         const widgetsPermitidosGlobales = new Map();
         const listaWidgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
-        console.log('============= listado de widgets maestros', listaWidgetsMaestros);
-
         const listaWidgetsRoles = this._widgetsRolesService.getWidgetRolesActuales() || [];
-        console.log('============= listado de widgets roles', listaWidgetsRoles);
 
         usuarioRoles.forEach((usuRole: any) => {
             const role = rolesApp.find((x: any) => x.codigoRole == usuRole.codigoRole);
@@ -156,8 +158,6 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
 
         current.usuario.roles = usuarioRoles;
         current.usuario.widgets = Array.from(widgetsPermitidosGlobales.values());
-        console.log('============= listado de current.usuario.roles', current.usuario.roles);
-        console.log('============= listado de current.usuario.widgets', current.usuario.widgets);
 
         if (current.usuario.layout && typeof current.usuario.layout === 'string') {
             try {
@@ -187,8 +187,6 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
 
         this._permisosService.inicializarPermisosPorDefecto().subscribe({
             next: (permisos) => {
-                console.log('✅ Motor de permisos encendido y sockets activos. Navegando a la app...', permisos);
-
                 this._localStorageService.removeObject('suscriptor');
                 this._localStorageService.removeObject('contexto');
                 this._localStorageService.removeObject('aplicaciones');

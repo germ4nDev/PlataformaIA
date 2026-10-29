@@ -1,0 +1,204 @@
+<app-widget-shell [titulo]="widgetConfig?.titulo || 'ANALISTA IA'"
+    [subtitulo]="'Alertas tempranas y tendencias · ' + (datos?.nombre || puerto || 'sin puerto')"
+    icono="feather icon-cpu" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origenIA">
+
+    <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
+        <span class="tc-badge" [ngClass]="estadoCapa.clase" [title]="estadoCapa.detalle">{{ estadoCapa.texto }}</span>
+        <span class="tc-badge badge-danger" *ngIf="alertas.length">{{ alertas.length }} alerta{{ alertas.length === 1 ?
+            '' : 's' }}</span>
+    </div>
+
+    <div *ngIf="!puerto" class="ia-vacio text-muted">
+        <i class="feather icon-map-pin fs-3 mb-2 opacity-50"></i>Elige un puerto en el filtro para ver el análisis.
+    </div>
+    <div *ngIf="puerto && cargando" class="ia-vacio text-muted">
+        <div class="spinner-border spinner-border-sm text-info mb-2" role="status"></div>Consultando al analista...
+    </div>
+    <div *ngIf="puerto && !cargando && error && !datos" class="ia-vacio text-muted text-center px-3">
+        <i class="feather icon-alert-triangle mb-2"></i>{{ error }}
+    </div>
+
+    <div *ngIf="datos" class="ia-cuerpo">
+        <div class="ia-aviso"
+            *ngIf="!datos.estado.disponible || !datos.estado.habilitada || datos.estado.cortacircuitoAbierto || datos.estado.modoSombra">
+            <i class="feather icon-info me-1"></i>{{ estadoCapa.detalle }}
+        </div>
+
+        <nav class="ia-vistas" role="tablist">
+            <button type="button" role="tab" [class.activa]="vista === 'alertas'" (click)="cambiarVista('alertas')">
+                Alertas<span class="ia-cuenta" *ngIf="alertas.length">{{ alertas.length }}</span>
+            </button>
+            <button type="button" role="tab" [class.activa]="vista === 'tendencias'"
+                (click)="cambiarVista('tendencias')">Tendencias</button>
+            <button type="button" role="tab" [class.activa]="vista === 'turno'"
+                (click)="cambiarVista('turno')">Turno</button>
+        </nav>
+
+        <!-- ── Alertas (fase 3) ── -->
+        <ng-container *ngIf="vista === 'alertas'">
+            <p class="ia-resumen" *ngIf="datos.resumen">
+                <span class="ia-sello">IA</span>{{ datos.resumen.explicacion || datos.resumen.titulo }}
+            </p>
+
+            <div *ngIf="!alertas.length" class="ia-sin-alertas text-muted">
+                <i class="feather icon-check-circle me-1"></i>Sin alertas tempranas vigentes{{ filtrado ? ' para esta
+                pestaña' : '' }}.
+                <span *ngIf="ocultas > 0"> ({{ ocultas }} de otras áreas)</span>
+            </div>
+
+            <div class="ia-lista">
+                <article *ngFor="let a of alertas; trackBy: trackId" class="ia-alerta"
+                    [ngClass]="'sev-' + (a.severidad || 'info')" (click)="alternar(a)">
+                    <header class="d-flex justify-content-between align-items-start gap-2">
+                        <div class="ia-titulo">
+                            <span class="ia-sello">IA</span><strong>{{ a.titulo }}</strong>
+                        </div>
+                        <span class="ia-estado" [ngClass]="'est-' + a.estado">{{ nombreEstado(a.estado) }}</span>
+                    </header>
+                    <div class="ia-meta">
+                        <span><i class="feather icon-tag"></i>{{ nombreTipo(a.tipo) }}</span>
+                        <span *ngIf="horizonte(a)"><i class="feather icon-clock"></i>{{ horizonte(a) }}</span>
+                        <span *ngIf="confianza(a)"><i class="feather icon-target"></i>confianza {{ confianza(a)
+                            }}</span>
+                        <span *ngIf="a.entidad" class="text-truncate"><i class="feather icon-crosshair"></i>{{ a.entidad
+                            }}</span>
+                    </div>
+                    <p class="ia-explicacion" [class.recortada]="expandida !== a.id">{{ a.explicacion }}</p>
+                    <ng-container *ngIf="expandida === a.id || isEnfoque">
+                        <p class="ia-accion" *ngIf="a.accionSugerida"><i
+                                class="feather icon-arrow-right-circle me-1"></i>{{ a.accionSugerida }}</p>
+                        <div class="ia-evidencia">
+                            <span *ngFor="let e of a.evidencia" class="ia-chip" [title]="e">{{ evidencia(e) }}</span>
+                        </div>
+                    </ng-container>
+                    <footer class="d-flex align-items-center gap-2 mt-1" *ngIf="votable(a)">
+                        <small class="text-muted me-auto">¿Te sirvió esta alerta?</small>
+                        <button type="button" class="btn btn-sm ia-voto util" [disabled]="votando.has(a.id)"
+                            (click)="votar(a, true, $event)">
+                            <i class="feather icon-thumbs-up"></i> Útil
+                        </button>
+                        <button type="button" class="btn btn-sm ia-voto no-era" [disabled]="votando.has(a.id)"
+                            (click)="votar(a, false, $event)">
+                            <i class="feather icon-thumbs-down"></i> No era
+                        </button>
+                    </footer>
+                </article>
+            </div>
+
+            <div class="ia-tendencias" *ngIf="tendencias.length">
+                <div class="ia-subtitulo">Lecturas del analista</div>
+                <div *ngFor="let t of tendencias; trackBy: trackId" class="ia-tendencia">
+                    <i class="feather" [ngClass]="flecha(t)"></i><span>{{ t.titulo }}</span>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- ── Tendencias 24 h · 7 d · 30 d (fase 4, sin modelo) ── -->
+        <ng-container *ngIf="vista === 'tendencias'">
+            <div class="ia-ventanas">
+                <button type="button" *ngFor="let w of ventanas" [class.activa]="ventana === w.codigo"
+                    (click)="cambiarVentana(w.codigo)">{{ w.nombre }}</button>
+            </div>
+            <div *ngIf="cargandoTendencias" class="ia-sin-alertas text-muted">
+                <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>Calculando
+                tendencias...
+            </div>
+            <div *ngIf="!cargandoTendencias && tendenciasKpi && !tendenciasKpi.disponible"
+                class="ia-sin-alertas text-muted">
+                <i class="feather icon-info me-1"></i>{{ tendenciasKpi.motivo || 'Tendencias no disponibles.' }}
+            </div>
+            <div *ngIf="!cargandoTendencias && tendenciasKpi?.disponible && !kpisVentana.length"
+                class="ia-sin-alertas text-muted">
+                <i class="feather icon-clock me-1"></i>Aún no hay historia suficiente para {{ ventana === '24h' ? '24 h'
+                : ventana === '7d' ? '7 días' : '30 días' }}:
+                las fotos de KPI se toman cada 15 min.
+            </div>
+            <div class="ia-kpis">
+                <div *ngFor="let x of kpisVentana" class="ia-kpi" [ngClass]="'ef-' + x.t.efecto"
+                    [class.relevante]="x.t.relevante" [title]="x.t.lectura">
+                    <div class="ia-kpi-nombre">
+                        <span class="text-truncate">{{ x.kpi.titulo }}</span>
+                        <small *ngIf="x.t.simulado" class="ia-simulado">simulado</small>
+                    </div>
+                    <svg class="ia-spark" viewBox="0 0 100 28" preserveAspectRatio="none" aria-hidden="true">
+                        <path [attr.d]="trazo(x.t.puntos)"></path>
+                    </svg>
+                    <div class="ia-kpi-valor">
+                        <strong>{{ valor(x.t.actual, x.kpi.unidad) }}</strong>
+                        <span class="ia-cambio"><i class="feather" [ngClass]="iconoDireccion(x.t.direccion)"></i>{{
+                            cambio(x.t) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ia-pie" *ngIf="tendenciasKpi?.disponible">
+                Promedio de la ventana frente a {{ ventana === '24h' ? 'las mismas 24 h de la semana anterior' : ventana
+                === '7d' ? 'los 7 días anteriores' : 'los 30 días anteriores' }}
+                <span *ngIf="sinDatosVentana"> · {{ sinDatosVentana }} sin datos</span>
+            </div>
+        </ng-container>
+
+        <!-- ── Cierre de turno y resumen diario (fase 4) ── -->
+        <ng-container *ngIf="vista === 'turno'">
+            <div *ngIf="cargandoResumenes" class="ia-sin-alertas text-muted">
+                <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>Leyendo resúmenes...
+            </div>
+            <div *ngIf="!cargandoResumenes && !resumenesDisponibles" class="ia-sin-alertas text-muted">
+                <i class="feather icon-info me-1"></i>Falta la migración 017 para guardar los resúmenes.
+            </div>
+            <div *ngIf="!cargandoResumenes && resumenesDisponibles && !resumenesTurno.length"
+                class="ia-sin-alertas text-muted">
+                <i class="feather icon-clock me-1"></i>El primer cierre de turno llega cuando termine el turno en curso.
+            </div>
+            <ng-container *ngFor="let r of [ultimoCierre, ultimoDiario]">
+                <section *ngIf="r" class="ia-cierre">
+                    <header>
+                        <span class="ia-subtitulo">{{ r.tipo === 'cierre_turno' ? 'Cierre de turno' : 'Día operativo' }}
+                            · {{ r.contenido.periodo.etiqueta }}</span>
+                        <span class="ia-origen" [class.modelo]="r.contenido.origen === 'modelo'">
+                            {{ r.contenido.origen === 'modelo' ? 'IA' : 'automático' }}
+                        </span>
+                    </header>
+                    <p class="ia-titular">{{ r.contenido.titular || r.titulo }}</p>
+                    <div class="ia-bloque" *ngIf="r.contenido.loQuePaso.length">
+                        <small>Lo que pasó</small>
+                        <ul>
+                            <li *ngFor="let x of r.contenido.loQuePaso">{{ x }}</li>
+                        </ul>
+                    </div>
+                    <div class="ia-bloque" *ngIf="r.contenido.loQueViene.length">
+                        <small>Lo que viene</small>
+                        <ul>
+                            <li *ngFor="let x of r.contenido.loQueViene">{{ x }}</li>
+                        </ul>
+                    </div>
+                    <div class="ia-bloque" *ngIf="r.contenido.vigilar.length">
+                        <small>Vigilar</small>
+                        <ul>
+                            <li *ngFor="let x of r.contenido.vigilar">{{ x }}</li>
+                        </ul>
+                    </div>
+                    <div class="ia-bloque"
+                        *ngIf="r.contenido.tendencias.length && (isEnfoque || r.tipo === 'cierre_turno')">
+                        <small>Tendencias</small>
+                        <ul>
+                            <li *ngFor="let t of r.contenido.tendencias">{{ t.explicacion }}</li>
+                        </ul>
+                    </div>
+                </section>
+            </ng-container>
+        </ng-container>
+
+        <div class="ia-pie">
+            Actualizado {{ ultimaActualizacion | date: 'HH:mm:ss' }}
+            <span *ngIf="datos.estado.ultimoTurno"> · último turno {{ datos.estado.ultimoTurno.fecha | date: 'HH:mm'
+                }}</span>
+            <span *ngIf="error" class="text-warning"> · ⚠ {{ error }}</span>
+        </div>
+    </div>
+
+    <!-- Vista ampliada: historial de 7 días (alertas, tendencias y resúmenes, con su verificación) -->
+    <div detalle-enfoque *ngIf="isEnfoque" class="h-100 d-flex flex-column" style="min-height: 420px;">
+        <app-tabla-tcl [columnas]="columnasHistorial" [filas]="filasHistorial" campoId="id" [ampliada]="true"
+            nombreArchivo="analista-ia-historial"></app-tabla-tcl>
+    </div>
+</app-widget-shell>

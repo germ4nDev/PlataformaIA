@@ -45,6 +45,7 @@ import { GranelDashboardComponent } from './components/granel-dashboard/granel-d
 import { CargaSueltaDashboardComponent } from './components/carga-suelta-dashboard/carga-suelta-dashboard.component';
 import { CapacidadDashboardComponent } from './components/capacidad-dashboard/capacidad-dashboard.component';
 import { NoticiasDashboardComponent } from './components/noticias-dashboard/noticias-dashboard.component';
+import { iconoPestana } from '../widgets/shared/iconos-pestana';
 
 @Component({
     selector: 'app-torre-control',
@@ -283,21 +284,9 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
+    /** Ícono de la pestaña: pieza común con el lobby de pestañas (widgets/shared/iconos-pestana.ts). */
     obtenerIconoPestana(codigoPestana: string): string {
-        const diccionarioIconos: { [key: string]: string } = {
-            'TLC_MARITIMO_001': 'fas fa-ship text-info',
-            'TLC_VIRTUAL_GATE_001': 'fas fa-truck text-warning',
-            'TLC_BODEGAS_001': 'fas fa-th-large text-info',
-            'TLC_CONTENEDORES_001': 'fas fa-box text-success',
-            'TLC_GNL_001': 'fas fa-fire-alt text-danger',
-            'TLC_MAPA_001': 'fas fa-map-marked-alt text-danger',
-            'TLC_NOTICIAS_001': 'fas fa-newspaper text-primary',
-            'TLC_NOTICIAS': 'fas fa-newspaper text-primary',
-            'TLC_GRANEL_001': 'fas fa-seedling text-success',
-            'TLC_SUELTA_001': 'fas fa-car text-warning',
-            'TLC_CAPACIDAD_001': 'fas fa-warehouse text-info'
-        };
-        return diccionarioIconos[codigoPestana] || 'fas fa-th-large text-secondary';
+        return iconoPestana(codigoPestana);
     }
 
     obtenerComponentePara(codigoWidget: string): any {

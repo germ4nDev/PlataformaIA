@@ -74,6 +74,7 @@ import { FeedNoticiasComponent } from '../widgets/panel-noticias/feed-noticias/f
 import { CorredoresNoticiasComponent } from '../widgets/panel-noticias/corredores-noticias/corredores-noticias.component';
 import { ClimaPuertosComponent } from '../widgets/panel-noticias/clima-puertos/clima-puertos.component';
 import { FuentesNoticiasComponent } from '../widgets/panel-noticias/fuentes-noticias/fuentes-noticias.component';
+import { AnalistaIAComponent } from '../widgets/panel-ia/analista-ia/analista-ia.component';
 
 export interface IWidgetRegistryDef {
     componente: Type<unknown>;
@@ -85,6 +86,13 @@ const DEFINICION_TERMINAL_DINAMICA: IWidgetRegistryDef = {
     componente: TerminalSummaryCardComponent,
     defaultCols: 4,
     defaultRows: 3
+};
+
+/** Analista IA (fase 3): un código por pestaña, PTT_IA_ANALISTA_<PESTAÑA> (migración 016). Se resuelve por prefijo. */
+const DEFINICION_ANALISTA_IA: IWidgetRegistryDef = {
+    componente: AnalistaIAComponent,
+    defaultCols: 4,
+    defaultRows: 6
 };
 
 const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
@@ -144,8 +152,10 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_MAE_VIVO_MUELLES': { componente: OcupacionMuellesComponent, defaultCols: 8, defaultRows: 5 },
     'PTT_MAE_VIVO_LLEGADAS': { componente: LlegadasMaritimasComponent, defaultCols: 8, defaultRows: 5 },
     'PTT_MAE_VIVO_TIEMPOS': { componente: TiemposFondeoComponent, defaultCols: 4, defaultRows: 5 },
+    'PTT_IA_ANALISTA_MARITIMO': { componente: TiemposFondeoComponent, defaultCols: 4, defaultRows: 6 },
 
     'PTT_MAP_WGT_LOGISTICO': { componente: MapaLogisticoComponent, defaultCols: 12, defaultRows: 12 },
+    'PTT_IA_ANALISTA_MAPA': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 
     // ==========================================
     // PESTAÑA 2: VIRTUAL GATE (PTT_GATE_)
@@ -168,6 +178,7 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_GATE_PANEL_ESTADO': { componente: GateEstadoCitasComponent, defaultCols: 4, defaultRows: 4 },
     'PTT_GATE_TAB_COLA': { componente: TableColaGateComponent, defaultCols: 12, defaultRows: 6 },
     'PTT_GATE_TABLA_COLA': { componente: TableColaGateComponent, defaultCols: 12, defaultRows: 6 },
+    'PTT_IA_ANALISTA_VIRTUAL_GATE': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 
     // ==========================================
     // PESTAÑA 3: CONTENEDORES (PTT_CONT_)
@@ -183,6 +194,7 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_CONT_CHRT_FREETIME': { componente: ChartDoughnutContComponent, defaultCols: 6, defaultRows: 4 },
     'PTT_CONT_CHRT_NAVIERAS': { componente: ChartDoughnutContComponent, defaultCols: 6, defaultRows: 4 },
     'PTT_CONT_TAB_MOVIMIENTOS': { componente: TableContenedoresComponent, defaultCols: 12, defaultRows: 4 },
+    'PTT_IA_ANALISTA_CONTENEDORES': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 
     // ==========================================
     // PESTAÑA 4: GNL Gas Natural Liquido (PTT_GNL_)
@@ -203,6 +215,7 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_GNL_LINECHART_FLUJO': { componente: GnlFlujoChartComponent, defaultCols: 6, defaultRows: 3 },
     'PTT_GNL_CHART_ALM_EVENT': { componente: GnlAlarmasWidgetComponent, defaultCols: 6, defaultRows: 3 },
     'PTT_GNL_CHART_SPK_TEMP': { componente: GnlTempSparklineWidgetComponent, defaultCols: 6, defaultRows: 3 },
+    'PTT_IA_ANALISTA_GNL': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 
     // ==========================================
     // PESTAÑA 5: BODEGAS (PTT_BOD_)
@@ -215,8 +228,11 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_BOD_CHRT_FLUJO': { componente: ChartBarBodegasComponent, defaultCols: 4, defaultRows: 4 },
     'PTT_BOD_CHRT_CARGA': { componente: ChartDoughnutBodegasComponent, defaultCols: 4, defaultRows: 4 },
     'PTT_BOD_TAB_MOVIMIENTOS': { componente: TableBodegasComponent, defaultCols: 12, defaultRows: 4 },
+    'PTT_IA_ANALISTA_BODEGAS': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 
-    // ── Granel, Carga suelta, Capacidad y Noticias (KPIs por kpi-card-tcl; el resto, widgets de cada pestaña) ──
+    // ==========================================
+    // PESTAÑA 5: Granel, Carga suelta, Capacidad y Noticias (KPIs por kpi-card-tcl; el resto, widgets de cada pestaña) ──
+    // ==========================================
     'PTT_GRA_KPI_AGRICOLA': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
     'PTT_GRA_KPI_MINERAL': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
     'PTT_GRA_KPI_LIQUIDO': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
@@ -227,6 +243,8 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_GRA_PANEL_BODEGAS': { componente: BodegasGranelComponent, defaultCols: 4, defaultRows: 3 },
     'PTT_GRA_CHRT_TENDENCIA': { componente: TendenciaGranelComponent, defaultCols: 4, defaultRows: 3 },
     'PTT_GRA_CHRT_HISTORICO': { componente: HistoricoGranelComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_IA_ANALISTA_GRANEL': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
+
 
     'PTT_SUE_KPI_BREAKBULK': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
     'PTT_SUE_KPI_PROYECTO': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
@@ -240,6 +258,7 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_SUE_CHRT_MARCAS': { componente: MarcasVehiculosComponent, defaultCols: 4, defaultRows: 3 },
     'PTT_SUE_PANEL_INDICADORES': { componente: IndicadoresSueltaComponent, defaultCols: 4, defaultRows: 3 },
     'PTT_SUE_CHRT_HISTORICO': { componente: HistoricoSueltaComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_IA_ANALISTA_SUELTA': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 
     'PTT_CAP_KPI_NODOS': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
     'PTT_CAP_KPI_TEU': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
@@ -249,6 +268,7 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_CAP_CHRT_TRAFICO': { componente: TraficoCapacidadComponent, defaultCols: 4, defaultRows: 3 },
     'PTT_CAP_TAB_NODOS': { componente: NodosCapacidadComponent, defaultCols: 8, defaultRows: 3 },
     'PTT_CAP_CHRT_TENDENCIA': { componente: TendenciaCapacidadComponent, defaultCols: 4, defaultRows: 3 },
+    'PTT_IA_ANALISTA_CAPACIDAD': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 
     'PTT_NOT_KPI_TRM': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
     'PTT_NOT_KPI_NOTICIAS': { componente: KpiCardTclComponent, defaultCols: 3, defaultRows: 2 },
@@ -258,12 +278,9 @@ const BASE_WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = {
     'PTT_NOT_CORREDORES': { componente: CorredoresNoticiasComponent, defaultCols: 4, defaultRows: 5 },
     'PTT_NOT_CLIMA_PUERTOS': { componente: ClimaPuertosComponent, defaultCols: 6, defaultRows: 3 },
     'PTT_NOT_FUENTES': { componente: FuentesNoticiasComponent, defaultCols: 6, defaultRows: 3 },
+    'PTT_IA_ANALISTA_NOTICIAS': { componente: AnalistaIAComponent, defaultCols: 4, defaultRows: 6 },
 };
 
-/**
- * 🟢 PROXY SSOT: Si cualquier parte de la aplicación consulta WIDGET_MAP['TERM_SLOT_X']
- * (para cualquier índice X >= 0) o cualquier KPI dinámico, resuelve el componente automáticamente.
- */
 export const WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = new Proxy(BASE_WIDGET_MAP, {
     get(target, prop: string) {
         if (typeof prop !== 'string') return Reflect.get(target, prop);
@@ -276,6 +293,11 @@ export const WIDGET_MAP: { [key: string]: IWidgetRegistryDef } = new Proxy(BASE_
         // Soporte dinámico infinito para clones de terminales (TERM_SLOT_0 ... TERM_SLOT_N)
         if (key.startsWith('TERM_SLOT_')) {
             return DEFINICION_TERMINAL_DINAMICA;
+        }
+
+        // Analista IA en cualquier pestaña (PTT_IA_ANALISTA, PTT_IA_ANALISTA_MARITIMO, ..._NOTICIAS)
+        if (key.startsWith('PTT_IA_ANALISTA')) {
+            return DEFINICION_ANALISTA_IA;
         }
 
         // Fallback seguro para cualquier KPI nuevo agregado en Base de Datos
