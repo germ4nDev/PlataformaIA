@@ -606,6 +606,11 @@
         filter: invert(1) brightness(2) !important;
     }
 
+    // Sin logo de MapTiler (OT-007); la atribución compacta «i» se queda (la exige OpenStreetMap)
+    .maplibregl-ctrl-logo {
+        display: none !important;
+    }
+
     .maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon,
     .maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
         background-image: none !important;
@@ -653,7 +658,7 @@
 
             &:hover {
                 background: transparent;
-                color: #fff;
+                color: var(--text-color);
             }
         }
 
@@ -668,6 +673,7 @@
                 font-size: 14px;
                 font-weight: 700;
                 text-transform: uppercase;
+                color: var(--text-color);
             }
         }
 
@@ -740,6 +746,17 @@
             background: rgba(189, 54, 47, 0.4);
         }
     }
+}
+
+/* Si usas MapLibre o Mapbox */
+.maplibregl-ctrl-attrib,
+.mapboxgl-ctrl-attrib {
+    display: none !important;
+}
+
+/* Si usas Leaflet */
+.leaflet-control-attribution {
+    display: none !important;
 }
 
 /* ==========================================================================
@@ -884,13 +901,20 @@
     cursor: pointer;
 }
 
-/* Ciclo de vida de los eventos viales (2026-10-26) */
-.aviso-fuente-vial {
+/* Avisos de las fuentes, abajo a la izquierda y apilados (señal AIS 2026-10-29; eventos viales 2026-10-26) */
+.avisos-mapa {
     position: absolute;
     left: 12px;
     bottom: 12px;
     z-index: 5;
     max-width: min(460px, calc(100% - 24px));
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.aviso-fuente-vial {
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -922,6 +946,7 @@
         cursor: default;
     }
 }
+
 // ── Analista IA flotante (2026-10-24): arriba a la derecha, sobre el mapa ─────────────────────────────
 .fab-ia {
     position: absolute;
@@ -941,10 +966,19 @@
     cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
 
-    &:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124, 92, 255, 0.35); }
-    &.abierto { border-color: #7c5cff; }
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(124, 92, 255, 0.35);
+    }
+
+    &.abierto {
+        border-color: #7c5cff;
+    }
+
     // En la vista ampliada el panel lateral usa la esquina: el botón baja
-    &.con-panel-fs { top: 64px; }
+    &.con-panel-fs {
+        top: 64px;
+    }
 
     .fab-ia-sello {
         font-size: 0.72rem;
@@ -972,7 +1006,9 @@
         background: #f59e0b;
         border: 2px solid var(--card-background);
 
-        &.critica { background: #dc3545; }
+        &.critica {
+            background: #dc3545;
+        }
     }
 }
 
@@ -994,12 +1030,26 @@
     pointer-events: none;
     transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
 
-    &.abierto { visibility: visible; opacity: 1; transform: none; pointer-events: auto; }
-    &.con-panel-fs { top: 121px; height: min(620px, calc(100% - 140px)); }
+    &.abierto {
+        visibility: visible;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
 
-    ::ng-deep app-analista-ia { display: block; height: 100%; }
+    &.con-panel-fs {
+        top: 121px;
+        height: min(620px, calc(100% - 140px));
+    }
+
+    ::ng-deep app-analista-ia {
+        display: block;
+        height: 100%;
+    }
 }
 
 @media (max-width: 600px) {
-    .panel-ia-flotante { width: calc(100% - 30px); }
+    .panel-ia-flotante {
+        width: calc(100% - 30px);
+    }
 }

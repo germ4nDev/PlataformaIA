@@ -14,6 +14,8 @@ import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fulls
 import { AuthenticationService, ThemeService, UploadFilesService } from 'src/app/theme/shared/service'
 import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.model'
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
+import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service';
+import { suiteDelDominio } from 'src/app/plataforma/dominios/nucleo';
 @Component({
     selector: 'app-inicio-suites',
     standalone: true,
@@ -37,7 +39,8 @@ export class InicioSuitesComponent implements OnInit {
         private _themeStorage: ThemeService,
         private _suitesService: PtlSuitesAPService,
         private _uploadService: UploadFilesService,
-        private _permisosService: PtlPermisosService
+        private _permisosService: PtlPermisosService,
+        private _contextoDominio: ContextoDominioService
     ) {
         this.suscImagenes = this._localStorageService.getSuscriptorPlataformaLocalStorage();
     }
@@ -61,6 +64,10 @@ export class InicioSuitesComponent implements OnInit {
         });
 
         this.suites = suits;
+
+        // Multidominio (OT-012): en el dominio de una aplicación se entra directo a su suite (la del dominio o la única)
+        const directa = suiteDelDominio(this._contextoDominio.contexto, suits);
+        if (directa) this.ingresaSuiteaplicacion(directa);
     }
 
     ingresaSuiteaplicacion(suite: PTLSuiteAPModel) {
@@ -68,7 +75,8 @@ export class InicioSuitesComponent implements OnInit {
             next: (permisosCargados) => {
                 this._localStorageService.setSuiteLocalStorage(suite);
                 this._themeStorage.saveThemeSettings()
-                this.router.navigate([suite.rutaInicio])
+                // Multidominio (OT-012): el dominio puede fijar su propia ruta de inicio
+                this.router.navigate([this._contextoDominio.contexto.rutaInicio || suite.rutaInicio])
             }
         });
 

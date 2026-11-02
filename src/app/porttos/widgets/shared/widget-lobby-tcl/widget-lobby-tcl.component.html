@@ -4,14 +4,24 @@
         <div>
             <h3 class="titulo-panel fw-bold fs-5 text-uppercase">Catálogo de Widgets</h3>
         </div>
-        <button type="button" class="btn-cerrar" (click)="cerrar.emit()">
-            <i class="feather icon-x"></i>
-        </button>
+        <!-- Todos (de la categoría activa) y cerrar, a la derecha, como en el Gestor de Pestañas (2026-10-30) -->
+        <div class="d-flex align-items-center gap-2">
+            <label class="seleccionar-categoria" *ngIf="widgetsFiltrados.length"
+                [title]="todosCategoriaSeleccionados ? 'Quitar todos los widgets de ' + tabActiva : 'Agregar todos los widgets de ' + tabActiva">
+                <input class="minimal-checkbox" type="checkbox" [checked]="todosCategoriaSeleccionados"
+                    [indeterminate]="algunosCategoriaSeleccionados"
+                    (change)="seleccionarCategoria($any($event.target).checked)">
+                <span>Todos <small>({{ activosEnCategoria }}/{{ widgetsFiltrados.length }})</small></span>
+            </label>
+            <button type="button" class="btn-cerrar" (click)="cerrar.emit()">
+                <i class="feather icon-x"></i>
+            </button>
+        </div>
     </div>
 
     <div class="widgets-lobby-body">
 
-        <!-- TABS DE CATEGORÍAS + seleccionar todos los widgets de la categoría activa -->
+        <!-- TABS DE CATEGORÍAS («Todos» está en el encabezado) -->
         <div
             class="barra-categorias d-flex align-items-center gap-3 mb-3 pb-2 border-bottom border-secondary border-opacity-25">
             <div class="tabs-scroll-container d-flex gap-2 flex-grow-1">
@@ -20,13 +30,6 @@
                     <i class="feather icon-layers me-2"></i> {{ cat }}
                 </button>
             </div>
-            <label class="seleccionar-categoria" *ngIf="widgetsFiltrados.length"
-                [title]="todosCategoriaSeleccionados ? 'Quitar todos los widgets de ' + tabActiva : 'Agregar todos los widgets de ' + tabActiva">
-                <input class="minimal-checkbox" type="checkbox" [checked]="todosCategoriaSeleccionados"
-                    [indeterminate]="algunosCategoriaSeleccionados"
-                    (change)="seleccionarCategoria($any($event.target).checked)">
-                <span>Todos <small>({{ activosEnCategoria }}/{{ widgetsFiltrados.length }})</small></span>
-            </label>
         </div>
 
         <!-- CUADRÍCULA DE 2 COLUMNAS -->

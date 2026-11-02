@@ -11,6 +11,8 @@ export class PTLSliderInicioModel {
         public codigoUsuarioCreacion?: string,
         public fechaCreacion?: string,
         public codigoUsuarioModificacion?: string,
-        public fechaModificacion?: string
+        public fechaModificacion?: string,
+        /** Aplicación del slide (migración 027, CC-104); null = general, para todos los dominios */
+        public codigoAplicacion?: string | null
     ) { }
 }

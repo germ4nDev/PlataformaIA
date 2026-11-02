@@ -30,9 +30,15 @@
         <!-- 1. EL LIENZO DEL MAPA -->
         <div #mapContainer id="map"></div>
 
-        <!-- Aviso: la última sincronización con TomTom falló en alguna zona (ciclo de vida de eventos viales) -->
-        <div class="aviso-fuente-vial" *ngIf="avisoEventosViales" role="status">
-            <i class="feather icon-alert-triangle"></i><span>{{ avisoEventosViales }}</span>
+        <div class="avisos-mapa">
+            <!-- Aviso: el AIS no reporta posiciones en la caja del puerto (datos honestos, OT-007) -->
+            <div class="aviso-fuente-vial" *ngIf="avisoSenalAis" role="status">
+                <i class="feather icon-radio"></i><span>{{ avisoSenalAis }}</span>
+            </div>
+            <!-- Aviso: la última sincronización con TomTom falló en alguna zona (ciclo de vida de eventos viales) -->
+            <div class="aviso-fuente-vial" *ngIf="avisoEventosViales" role="status">
+                <i class="feather icon-alert-triangle"></i><span>{{ avisoEventosViales }}</span>
+            </div>
         </div>
 
         <!-- Analista IA flotante: botón arriba a la derecha y el panel sobre el mapa (no le quita espacio) -->

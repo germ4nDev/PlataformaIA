@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
 import { map, tap } from 'rxjs/operators';
@@ -74,6 +74,17 @@ export class PtlSlidersInicioService {
                 console.log('sliders del sistema', slidersOrdenadas);
                 this._sliders.next(slidersOrdenadas)
             })
+        )
+    }
+
+    /**
+     * Slides de un login (CC-104): `para` = codigoAplicacion del dominio (sus slides activos o, si no tiene, los generales)
+     * o 'general'. No toca la lista compartida (slider$), que sigue siendo la de la gestión.
+     */
+    slidesPara(para: string | null): Observable<PTLSliderInicioModel[]> {
+        const params = new HttpParams().set('para', para || 'general')
+        return this.http.get(`${base_url}/sliders`, { params }).pipe(
+            map((resp: any) => (resp?.sliders || []) as PTLSliderInicioModel[])
         )
     }
 

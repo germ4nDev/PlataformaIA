@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, Subscription, shareReplay, map, tap } from
 import { environment } from 'src/environments/environment';
 import { VISIBILIDAD_INICIAL } from 'src/app/porttos/widgets/panel-mapa/mapa-logistico/mapa-capas';
 import { SocketService } from '../sockets.service';
+import { SenalAis } from './senal-ais';
 
 /** Aviso del API cuando un evento vial aparece o se despeja (sala puerto:{P}:mapa). */
 const EVENTO_CAMBIO_VIALES = 'eventos-viales-cambio';
@@ -33,6 +34,9 @@ export class MapaGeneralService {
     // ==========================================================
     private navesSubject = new BehaviorSubject<any>(null);
     public naves$ = this.navesSubject.asObservable().pipe(shareReplay(1));
+    /** Estado de la señal AIS del puerto (utils/senal-ais.js del API): en_vivo | sin_senal | sin_registro, o null */
+    private senalAisSubject = new BehaviorSubject<SenalAis | null>(null);
+    public senalAis$ = this.senalAisSubject.asObservable();
 
     private infraSubject = new BehaviorSubject<any>(null);
     public infra$ = this.infraSubject.asObservable().pipe(shareReplay(1));
@@ -170,6 +174,7 @@ export class MapaGeneralService {
     public getCapaNaves(): Observable<any> {
         return this.http.get<any>(`${base_url}/mapa-general/naves`, { params: this.paramsPuerto() }).pipe(
             tap(resp => {
+                if (resp.success) this.senalAisSubject.next(resp.senal ?? null);
                 if (resp.success && resp.data) {
                     this.navesSubject.next(resp.data);
                     this.actualizarGemelo('CAPA_NAVES', resp.data);

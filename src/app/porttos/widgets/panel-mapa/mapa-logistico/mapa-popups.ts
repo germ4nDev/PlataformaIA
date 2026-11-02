@@ -218,7 +218,7 @@ export function generarContenidoPopup(layerId: string, feature: any, ctx: Contex
 
             let htmlVial = `
                 <div class="PORTTOS-popup-header">
-                    <h3>🚨 ${tipo}</h3>
+                    <h3 class="PORTTOS-titulo-encabezado">🚨 ${tipo}</h3>
                     <span class="PORTTOS-badge ${sevBadgeClass}">${sevText}</span>
                 </div>
                 <div class="PORTTOS-popup-body">

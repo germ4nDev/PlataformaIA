@@ -233,13 +233,14 @@
                                                         </ng-container>
                                                     </ng-container>
 
+                                                    <!-- Segunda imagen (p. ej. tema oscuro del widget): su propio campo, no la primera (OT-015, CC-113) -->
                                                     <ng-container *ngSwitchCase="'capture2'">
                                                         <ng-container [ngSwitch]="row.tipo">
-                                                            <img *ngSwitchCase="'capture'" [src]="row.capture"
+                                                            <img *ngSwitchCase="'capture'" [src]="row.capture2"
                                                                 [alt]="'Capture'" class="capture-table" />
                                                             <div *ngSwitchCase="'video'" class="video-table">
                                                                 <app-video-player
-                                                                    [src]="row.capture"></app-video-player>
+                                                                    [src]="row.capture2"></app-video-player>
                                                             </div>
                                                             <div *ngSwitchDefault>
                                                                 <a [href]="row[detailColumn.capture]" target="_blank"

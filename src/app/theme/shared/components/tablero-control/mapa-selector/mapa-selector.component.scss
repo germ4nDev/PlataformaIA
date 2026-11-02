@@ -8,6 +8,12 @@
     display: none !important;
 }
 
+/* Sin logo de MapTiler, como el mapa logístico de la web y de la app (OT-007, CC-111; decisión del usuario 2026-11-02).
+   El mapa lo crea MapLibre fuera de la plantilla del componente: hace falta ::ng-deep. */
+:host ::ng-deep .maplibregl-ctrl-logo {
+    display: none !important;
+}
+
 .cursor-pointer {
     cursor: pointer !important;
 }

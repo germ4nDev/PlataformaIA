@@ -25,6 +25,7 @@ import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from './ptlsuscriptores.service';
 import { SocketService } from './sockets.service';
+import { EmbebidoService } from './embebido.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService implements OnDestroy {
@@ -57,7 +58,8 @@ export class AuthenticationService implements OnDestroy {
         private _empresasSCService: PtlEmpresasScService,
         private _rolesService: PTLRolesAPService,
         private _socketService: SocketService,
-        private _usuarioRolesService: PtlusuariosRolesApService
+        private _usuarioRolesService: PtlusuariosRolesApService,
+        private _embebido: EmbebidoService
     ) {
         console.log('************ SERVICIO DE AUTENTICACION ACTIVO');
 
@@ -224,7 +226,27 @@ export class AuthenticationService implements OnDestroy {
         this.loggedInSubject.next(true);
     }
 
+    /** Modo embebido (OT-014): la sesión la entrega la app; GET /api/auth/renew trae el usuario (la web no registra otra sesión). */
+    renovarSesion(): Observable<{ token: string; usuario: any }> {
+        return this.http.get<{ token: string; usuario: any }>(`${environment.apiUrl}/auth/renew`);
+    }
+
+    /** Modo embebido (OT-014): deja activa la sesión ya armada (dispara la carga de datos de AppComponent, como el login). */
+    iniciarSesionEmbebida(user: CurrentUserModel): void {
+        this.setSession(user);
+    }
+
     public logout() {
+        // Modo embebido (OT-014): el cierre lo hace la app (sesión única compartida); la web solo avisa y suelta su socket
+        if (this._embebido.activo) {
+            this._socketService.disconnect();
+            this._embebido.cerrarSesion('usuario');
+            this._localstorageService.setLogOut();
+            this.currentUserSubject.next(null);
+            this.loggedInSubject.next(false);
+            return;
+        }
+
         const currentUser = this._localstorageService.getCurrentUserLocalStorage();
         const codigoUsuario = currentUser.usuario.codigoUsuario;
 

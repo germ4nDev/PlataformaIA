@@ -7,6 +7,8 @@ import { PTLSliderInicioModel } from '../../_helpers/models/PTLSliderInicio.mode
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LocalStorageService, UploadFilesService } from '../../service';
+import { ContextoDominioService } from '../../service/contexto-dominio.service';
+import { LeyendaSlide, leyendaDeSlide } from './leyenda';
 
 const base_url = environment.apiUrl;
 
@@ -20,6 +22,12 @@ const base_url = environment.apiUrl;
 export class FullScreenSliderComponent implements OnInit, OnDestroy {
     @Input() tipoSlider: number = 0;
     @Input() slides: any[] = [];
+    /** CC-104: título y texto de cada slide (nombre y descripción de la gestión) sobre la imagen, con pausa */
+    @Input() leyendas = false;
+    /** CC-104: ocupa su contenedor en vez de toda la ventana (login de pantalla dividida) */
+    @Input() contenido = false;
+    pausado = false;
+    private subs = new Subscription();
     autoSlideInterval: number = 7000;
     registrosSub?: Subscription;
     registros: PTLSliderInicioModel[] = [];
@@ -32,7 +40,8 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
     constructor(
         private _sliderService: PtlSlidersInicioService,
         private _localStorageService: LocalStorageService,
-        private _uploadService: UploadFilesService
+        private _uploadService: UploadFilesService,
+        private _contextoDominio: ContextoDominioService
     ) {
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     }
@@ -73,23 +82,9 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
     // }
     ngOnInit(): void {
         if (this.tipoSlider == 1) {
-            this.images = this._sliderService.getSlidersActuales();
-            console.log('slides', this.images);
-
-            this._sliderService.slider$.subscribe(data => {
-                data.forEach((slider: any) => {
-                    slider.imageSlider = this._uploadService.getFilePath(this.suscriptor, 'sliders', slider.urlSlider);
-                    console.log('slides', slider.imageSlider);
-                });
-
-                this.images = data;
-                console.log('Slides actualizados reactivamente:', this.slides);
-
-                // AQUÍ ESTÁ LA SOLUCIÓN: Iniciar el slider después de recibir los datos
-                this.startAutoSlide();
-            });
-
-            this._sliderService.cargarSliders().subscribe();
+            // CC-104: slides del dominio (su aplicación o, si no tiene, los generales); se recargan cuando la gestión los cambia
+            this.cargarSlidesDelDominio();
+            this.subs.add(this._sliderService.slidersChange$.subscribe(() => this.cargarSlidesDelDominio()));
 
         } else if (this.tipoSlider == 2) {
             const newImage = {
@@ -114,10 +109,35 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // Limpiar el temporizador al destruir el componente
-        this.images = this._sliderService.getSlidersActuales();
-        console.log('slides', this.images);
+        // Limpiar el temporizador y las suscripciones al destruir el componente
+        this.subs.unsubscribe();
         this.stopAutoSlide();
+    }
+
+    /** Slides del login de este dominio (PTLSliderInicio.codigoAplicacion, migración 027): sin aplicación → generales. */
+    private cargarSlidesDelDominio(): void {
+        const para = this._contextoDominio.contexto?.codigoAplicacion || null;
+        this.subs.add(this._sliderService.slidesPara(para).subscribe({
+            next: (data) => {
+                const activos = (data || []).filter((s: any) => s.estadoSlider !== false);
+                activos.forEach((slider: any) => {
+                    slider.imageSlider = this._uploadService.getFilePath(this.suscriptor, 'sliders', slider.urlSlider);
+                });
+                this.images = activos;
+                this.currentIndex = 0;
+                this.resetAutoSlide();   // antes se abría un temporizador nuevo en cada carga y el slider se aceleraba
+            },
+            error: () => { /* sin slides: queda el fondo; el login sigue funcionando */ }
+        }));
+    }
+
+    get leyenda(): LeyendaSlide {
+        return leyendaDeSlide(this.images[this.currentIndex]);
+    }
+
+    alternarPausa(): void {
+        this.pausado = !this.pausado;
+        if (this.pausado) this.stopAutoSlide(); else this.startAutoSlide();
     }
 
     consultarRegistros() {
@@ -147,7 +167,9 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
     }
 
     private startAutoSlide(): void {
-        if (this.images.length > 1 && this.autoSlideInterval > 0) {
+        this.stopAutoSlide();
+        const sinMovimiento = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        if (!this.pausado && !sinMovimiento && this.images.length > 1 && this.autoSlideInterval > 0) {
             this.intervalId = setInterval(() => {
                 this.nextImage();
             }, this.autoSlideInterval);
@@ -177,6 +199,7 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
     goToImage(index: number): void {
         if (index >= 0 && index < this.images.length) {
             this.currentIndex = index;
+            this.resetAutoSlide();
         }
     }
 

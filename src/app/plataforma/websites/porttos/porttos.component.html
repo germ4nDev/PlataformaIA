@@ -1,1 +1,6 @@
-<p>porttos works!</p>
+<div class="pp" #contenedor>
+  <a class="saltar" href="#contenido-portal" (click)="saltar($event)">Saltar al contenido</a>
+  <pp-encabezado [config]="config$ | async" />
+  <main id="contenido-portal" tabindex="-1"><router-outlet /></main>
+  <pp-pie [config]="config$ | async" />
+</div>

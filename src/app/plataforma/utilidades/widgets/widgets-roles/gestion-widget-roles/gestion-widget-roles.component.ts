@@ -22,6 +22,7 @@ import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.m
 import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service';
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
 import { v4 as uuidv4 } from 'uuid';
+import { rolesParaWidget } from '../../nucleo';
 
 @Component({
     selector: 'app-gestion-widget-roles',
@@ -94,6 +95,26 @@ export class GestionWidgetRolesComponent implements OnInit, OnDestroy {
 
         this.cargarRegistros(this.codigoWidget);
 
+        // Al entrar directo (recarga de la página) los catálogos en memoria vienen vacíos: se piden al API.
+        if (!this.widgetMaestro.codigoWidget && this.codigoWidget !== 'nuevo') {
+            this.subscriptions.add(this._widgetsMaestroService.getWidgetById(this.codigoWidget).subscribe({
+                next: (resp: any) => { this.widgetMaestro = resp?.widget || this.widgetMaestro; this.cargarRegistros(this.codigoWidget); },
+                error: (err: any) => console.error('No se pudo cargar el widget', err)
+            }));
+        }
+        if (!this.roles?.length) {
+            this.subscriptions.add(this._rolesService.cargarRegistros().subscribe({
+                next: () => { this.roles = this._rolesService.getRolesActuales() || []; this.cargarRegistros(this.codigoWidget); },
+                error: (err: any) => console.error('No se pudieron cargar los roles', err)
+            }));
+        }
+        if (!this.widgetsRoles.length) {
+            this.subscriptions.add(this._widgetsRolesService.widgetsRoles$.subscribe((rels: any[]) => {
+                if (rels?.length) { this.widgetsRoles = rels; this.cargarRegistros(this.codigoWidget); }
+            }));
+            this.subscriptions.add(this._widgetsRolesService.cargarRegistros().subscribe());
+        }
+
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
                 this.isLocked = true;
@@ -115,33 +136,8 @@ export class GestionWidgetRolesComponent implements OnInit, OnDestroy {
 
         if (!this.roles?.length || !codigoWidgetActual || !this.widgetMaestro) return;
 
-        this.rolesConCheck = this.roles
-            // 🟢 1. Soporte para booleanos (true) y bits de SQL (1)
-            .filter(rol => rol.estadoRole === true)
-            .map(rol => {
-
-                // 🟢 2. Búsqueda flexible (usamos == para ignorar conflictos de string/number)
-                const relacionPuente = this.widgetsRoles.find(wr =>
-                    // Validamos ambos nombres por si el backend lo devuelve diferente
-                    (wr.codigoRol == rol.codigoRole || wr.codigoRole == rol.codigoRole) &&
-                    wr.codigoWidget == codigoWidgetActual
-                );
-
-                // 🟢 3. Asignación segura del checkbox
-                let isChecked = false;
-                if (relacionPuente) {
-                    // Si la relación existe, verificamos que esté activa (true o 1).
-                    // Si el backend no envía el 'estadoRelacion', asumimos true solo porque la relación existe.
-                    if (relacionPuente.estadoRelacion === true || relacionPuente.estadoRelacion === 1 || relacionPuente.estadoRelacion === undefined) {
-                        isChecked = true;
-                    }
-                }
-
-                return {
-                    ...rol,
-                    checked: isChecked
-                };
-            });
+        // Solo los roles activos de la aplicación del widget (antes salían los de todas las aplicaciones de la plataforma).
+        this.rolesConCheck = rolesParaWidget(this.roles, this.widgetsRoles, { ...this.widgetMaestro, codigoWidget: codigoWidgetActual });
 
         console.log('✅ Roles procesados para los checkboxes del widget:', this.rolesConCheck);
     }
@@ -167,10 +163,15 @@ export class GestionWidgetRolesComponent implements OnInit, OnDestroy {
                 next: (resp: any) => {
                     console.log('Sincronización exitosa', resp);
                     this._swalAlertService.getAlertSuccess(this.translate.instant('WIDGETS.CREATESUCCESSFULLY'));
+                    // Refresca la copia en memoria (la tabla de Widgets por rol y esta pantalla la usan).
+                    this._widgetsRolesService.cargarRegistros().subscribe();
                     this._localStorageService.setObject('regId', this.codigoWidget)
                     this.router.navigate(['/utilidades/widgets-roles']);
                 },
-                error: (err: any) => console.error('Error al sincronizar roles de widget', err)
+                error: (err: any) => {
+                    console.error('Error al sincronizar roles de widget', err);
+                    this._swalAlertService.getAlertError(this.translate.instant('WIDGETS.GESTION.ERRORGUARDAR'));
+                }
             });
     }
 

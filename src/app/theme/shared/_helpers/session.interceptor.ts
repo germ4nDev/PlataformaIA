@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../service';
+import { EmbebidoService } from '../service/embebido.service';
 
 @Injectable()
 export class SessionInterceptor implements HttpInterceptor {
@@ -22,6 +23,13 @@ export class SessionInterceptor implements HttpInterceptor {
                     const router = this.injector.get(Router);
 
                     if (router.url.includes('/login')) {
+                        return throwError(() => error);
+                    }
+
+                    // Modo embebido (OT-014): la app cierra la sesión y muestra su login; la web no navega
+                    const embebido = this.injector.get(EmbebidoService);
+                    if (embebido.activo) {
+                        embebido.cerrarSesion('expirada');
                         return throwError(() => error);
                     }
 

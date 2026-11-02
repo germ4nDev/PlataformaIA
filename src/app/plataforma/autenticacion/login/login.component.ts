@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, OnInit, OnDestroy, inject } from '@angular/core'
+import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service'
+import { loginDeDominio } from 'src/app/plataforma/dominios/nucleo'
 import { CommonModule } from '@angular/common'
 import { RouterModule, Router, ActivatedRoute } from '@angular/router'
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms'
@@ -36,6 +38,7 @@ import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/P
 import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model'
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model'
 import { catchError, tap, switchMap, map } from 'rxjs/operators';
+import { armarUsuariosSC, normalizarListasSesion } from 'src/app/plataforma/sesion/nucleo';
 import { of, forkJoin, take } from 'rxjs';
 import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUser.model'
 import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model'
@@ -98,6 +101,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     remember: boolean = false
     idiomas: PTLIdioma[] = []
     showPassword = false // Variable reactiva para el ícono del ojo
+    // Multidominio (OT-012): el login muestra la marca del dominio (porttos.co → Porttos); sin marca, el título de siempre
+    readonly marcaDominio = inject(ContextoDominioService).contexto.marca.nombre;
+    // CC-104: en un dominio de aplicación con portal, pantalla dividida con el diseño del portal; si no, el login de siempre
+    readonly loginDominio = loginDeDominio(inject(ContextoDominioService).contexto);
     //#endregion VARIABLES
 
     constructor(
@@ -216,70 +223,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
                     if (!data) return;
 
-                    const listaUsuariosSC = data.usuariosSC.usuariosSC || data.usuariosSC.usuarios || data.usuariosSC || [];
-                    const listaUsuariosEmpresasSC = data.usuariosEmpresasSC.usuariosEmpresasSC || data.usuariosEmpresasSC || [];
-                    const listaEmpresasSC = data.empresasSC.empresasSC || data.empresasSC.empresas || data.empresasSC || [];
-                    const listaSuscriptores = data.suscriptores.suscriptores || data.suscriptores || [];
-                    const listaPaquetesSC = data.paquetesSC.paquetesSC || data.paquetesSC || [];
-                    const listaModulosPQ = data.modulosPQ.modulosPQ || data.modulosPQ || [];
-                    const listaUsuarioRoles = data.usuariosRoles.usuariosRoles || data.usuariosRoles.usuarioRole || data.usuariosRoles || [];
-                    const listaRolesMaestros = data.rolesMaestros.roles || data.rolesMaestros.data || data.rolesMaestros || [];
-
-                    const suscUsu = listaUsuariosSC.filter((x: any) => x.codigoUsuario === data.currentUser.usuario?.codigoUsuario);
-
-                    if (suscUsu.length > 0) {
-                        suscUsu.forEach((usuSC: any) => {
-
-                            const suscs = listaSuscriptores.filter((x: any) => x.codigoSuscriptor === usuSC.codigoSuscriptor);
-
-                            suscs.forEach((susc: any) => {
-
-                                const usuEmps = listaUsuariosEmpresasSC.filter((x: any) => x.codigoUsuarioSC === usuSC.codigoUsuarioSC);
-                                const empresasDeEsteSuscriptor: any[] = [];
-
-                                usuEmps.forEach((usuEmp: any) => {
-                                    const emp = listaEmpresasSC.find((x: any) => x.codigoEmpresaSC === usuEmp.codigoEmpresaSC);
-
-                                    if (emp && emp.codigoSuscriptor === susc.codigoSuscriptor) {
-                                        usuEmp.empresa = emp;
-
-                                        const rolesDeEstaEmpresa = listaUsuarioRoles.filter((rol: any) =>
-                                            rol.codigoUsuarioSC === usuSC.codigoUsuarioSC &&
-                                            rol.codigoEmpresaSC === emp.codigoEmpresaSC &&
-                                            rol.estadoUsuarioRole === true
-                                        );
-
-                                        const rolesEnriquecidos = rolesDeEstaEmpresa.map((rolUsuario: any) => {
-                                            const detalleRol = listaRolesMaestros.find((r: any) => r.codigoRole === rolUsuario.codigoRole);
-
-                                            return {
-                                                ...rolUsuario,
-                                                detalleRole: detalleRol || null,
-                                                nombreRolLegible: detalleRol ? detalleRol.nombreRole : 'DESCONOCIDO'
-                                            };
-                                        });
-
-                                        usuEmp.rolesAsignados = rolesEnriquecidos;
-                                        empresasDeEsteSuscriptor.push(usuEmp);
-                                    }
-                                });
-
-                                susc.empresasAsignadas = empresasDeEsteSuscriptor;
-
-                                susc.paquetesActivos = listaPaquetesSC.filter((paq: any) =>
-                                    paq.codigoSuscriptor === susc.codigoSuscriptor &&
-                                    paq.estadoLicencia === true
-                                );
-
-                                susc.paquetesActivos.forEach((paq: any) => {
-                                    const mods = listaModulosPQ.filter((mod: any) => mod.codigoPaquete === paq.codigoPaquete);
-                                    paq.modulosPaquete = mods;
-                                });
-                            });
-
-                            usuSC.suscriptores = suscs;
-                        });
-                    }
+                    // Árbol usuario → suscriptores → empresas (roles) y paquetes (módulos): pieza común (plataforma/sesion/nucleo, CC-109)
+                    const suscUsu = armarUsuariosSC(data.currentUser.usuario?.codigoUsuario, normalizarListasSesion(data));
 
                     this.currentUser.usuariosSC = suscUsu;
 

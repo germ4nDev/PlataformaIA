@@ -23,6 +23,7 @@ import { DashboardService } from 'src/app/theme/shared/service/tablero-control/d
 import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
 import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
+import { EmbebidoService } from 'src/app/theme/shared/service/embebido.service';
 import { PtlpestanasService } from 'src/app/theme/shared/service/ptlpestanas.service';
 import { LayoutService } from 'src/app/theme/shared/service/layout.service';
 
@@ -45,7 +46,7 @@ import { GranelDashboardComponent } from './components/granel-dashboard/granel-d
 import { CargaSueltaDashboardComponent } from './components/carga-suelta-dashboard/carga-suelta-dashboard.component';
 import { CapacidadDashboardComponent } from './components/capacidad-dashboard/capacidad-dashboard.component';
 import { NoticiasDashboardComponent } from './components/noticias-dashboard/noticias-dashboard.component';
-import { iconoPestana } from '../widgets/shared/iconos-pestana';
+import { colorPestana, iconoPestana } from '../widgets/shared/iconos-pestana';
 
 @Component({
     selector: 'app-torre-control',
@@ -112,8 +113,14 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         private _layoutService: LayoutService,
         private _pestanasService: PtlpestanasService,
         private _swalAlertService: SwalAlertService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private _embebido: EmbebidoService
     ) { }
+
+    /** Modo embebido (OT-014): la app recuerda el puerto y la pestaña para la próxima apertura (fuera de la app no hace nada). */
+    private avisarEstado(): void {
+        if (this.pestanaActiva) this._embebido.avisar('estado', { puerto: this.puertoActivo, pestana: this.pestanaActiva });
+    }
 
     ngOnInit(): void {
         this.arrancarEntornoGlobal();
@@ -142,6 +149,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
                             : puerto.id_puerto || puerto.id || 'BUENAVENTURA';
                     this.puertoActivo = puertoStr.trim().toUpperCase();
                     this._torreService.setPuerto(this.puertoActivo);
+                    this.avisarEstado();
                 })
         );
 
@@ -236,6 +244,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
                             // Liberamos el candado
                             this.entornoListo = true;
+                            this.avisarEstado();
                             this.cdr.detectChanges();
                         });
                 } else {
@@ -263,6 +272,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         this._localStoragoService.setCurrentUserLocalStorage(current);
 
         this.filtrarWidgetsParaLobby(nuevaPestana);
+        this.avisarEstado();
         this.cdr.detectChanges();
     }
 
@@ -284,9 +294,14 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    /** Ícono de la pestaña: pieza común con el lobby de pestañas (widgets/shared/iconos-pestana.ts). */
-    obtenerIconoPestana(codigoPestana: string): string {
-        return iconoPestana(codigoPestana);
+    /** Ícono de la pestaña: pieza común con el lobby de pestañas (widgets/shared/iconos-pestana.ts); el de la BD si lo hay. */
+    obtenerIconoPestana(codigoPestana: string, pestana?: any): string {
+        return iconoPestana(codigoPestana, pestana);
+    }
+
+    /** Color de la pestaña guardado en la BD (migración 020) o null (manda la clase del ícono). */
+    obtenerColorPestana(pestana?: any): string | null {
+        return colorPestana(pestana);
     }
 
     obtenerComponentePara(codigoWidget: string): any {

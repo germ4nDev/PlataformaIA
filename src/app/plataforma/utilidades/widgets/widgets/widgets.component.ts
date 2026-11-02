@@ -27,6 +27,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service'
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
 import { PTLWidgetMaestroModel } from 'src/app/theme/shared/_helpers/models/PTLWidgetMaestro.model'
+import { camposDelWidget, canalDelWidget } from '../nucleo'
 
 @Component({
     selector: 'app-widgets',
@@ -68,6 +69,7 @@ export class WidgetsComponent implements OnInit, OnDestroy {
     filtroDescripcionSubject = new BehaviorSubject<string>('')
     filtroPestanaSubject = new BehaviorSubject<string>('')
     filtroEstadoSubject = new BehaviorSubject<string>('')
+    filtroCanalSubject = new BehaviorSubject<string>('')
     suscriptor: string = ''
     tipoMedia: string = ''
     video: string = ''
@@ -136,11 +138,12 @@ export class WidgetsComponent implements OnInit, OnDestroy {
 
                     newWdgt.nomInicial = newWdgt.inicial ? 'Por Defecto' : 'Seleccion';
                     newWdgt.nomEstado = newWdgt.estadoWidget ? 'Activo' : 'Inactivo';
+                    newWdgt.nomCanal = canalDelWidget(newWdgt);
                     newWdgt.capture = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_light);
                     newWdgt.capture2 = this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_dark);
                     newWdgt.imagen = this.isDarkMode ?
                         this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_dark) :
-                        this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_loght)
+                        this._uploadService.getFilePath(this.suscriptor, 'widgets', newWdgt.imagenWidget_light)
                     newWdgt.tipo = 'capture';
 
                     const accionesPermitidas: any[] = [];
@@ -201,17 +204,20 @@ export class WidgetsComponent implements OnInit, OnDestroy {
             this.filtroFilasSubject,
             this.filtroDescripcionSubject,
             this.filtroPestanaSubject,
-            this.filtroEstadoSubject
+            this.filtroEstadoSubject,
+            this.filtroCanalSubject
         ]).pipe(
-            map(([wdgts, codigo, nombre, columnas, filas, descripcion, pestana, estado]) => {
+            map(([wdgts, codigo, nombre, columnas, filas, descripcion, pestana, estado, canal]) => {
                 let filteredWidgets = wdgts;
+                // Filtros de texto: contiene, sin distinguir mayúsculas (antes exigían el valor exacto).
+                const contiene = (valor: any, texto: string) => String(valor ?? '').toLowerCase().includes(texto.toLowerCase());
 
                 if (codigo !== '') {
-                    filteredWidgets = filteredWidgets.filter(app => app.codigoWidget === codigo);
+                    filteredWidgets = filteredWidgets.filter(app => contiene(app.codigoWidget, codigo));
                 }
 
                 if (nombre !== '') {
-                    filteredWidgets = filteredWidgets.filter(app => app.nombreWidget === nombre);
+                    filteredWidgets = filteredWidgets.filter(app => contiene(app.nombreWidget, nombre));
                 }
 
                 if (columnas !== '') {
@@ -222,13 +228,17 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     filteredWidgets = filteredWidgets.filter(app => app.defaultRows === Number(filas));
                 }
 
-                if (estado !== '') {
+                if (estado !== '' && estado !== 'todos') {
                     const estadoBoolean = estado === 'true';
                     filteredWidgets = filteredWidgets.filter(app => app.estadoWidget === estadoBoolean);
                 }
 
                 if (pestana !== '') {
-                    filteredWidgets = filteredWidgets.filter(app => app.pestana === nombre);
+                    filteredWidgets = filteredWidgets.filter(app => contiene(app.codigoPestana, pestana));
+                }
+
+                if (canal === 'movil' || canal === 'web') {
+                    filteredWidgets = filteredWidgets.filter(app => !!app.movil === (canal === 'movil'));
                 }
 
                 if (descripcion) {
@@ -271,6 +281,10 @@ export class WidgetsComponent implements OnInit, OnDestroy {
         this.filtroFilasSubject.next(value)
     }
 
+    onFiltroCanalChangeClick(evento: any): void {
+        this.filtroCanalSubject.next(evento.target.value)
+    }
+
     onFiltroPestanaChangeClick(evento: any): void {
         const value = evento.target.value
         this.filtroPestanaSubject.next(value)
@@ -297,6 +311,11 @@ export class WidgetsComponent implements OnInit, OnDestroy {
             name: 'nomInicial',
             header: 'WIDGETS.INICIAL',
             type: 'estado'
+        },
+        {
+            name: 'nomCanal',
+            header: 'WIDGETS.CANAL',
+            type: 'text'
         },
         {
             name: 'nomEstado',
@@ -344,7 +363,8 @@ export class WidgetsComponent implements OnInit, OnDestroy {
         {
             name: 'capture2',
             header: 'WIDGETS.IMAGENDARK',
-            type: 'capture'
+            // 'capture2': la tabla pinta row.capture2 (la imagen oscura); con 'capture' repetía la clara (OT-015, CC-113)
+            type: 'capture2'
         }
     ]
 
@@ -417,16 +437,10 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     this.translate.instant('PLATAFORMA.CANCEL')
                 ).subscribe(result => {
                     if (result) {
+                        // Registro completo: el API valida todos los campos obligatorios (antes faltaban tipo, pestaña,
+                        // aplicación, suite, posición y anclaje y el cambio de estado siempre fallaba).
                         const widgt = {
-                            widgetId: widget.widgetId,
-                            codigoWidget: widget.codigoWidget,
-                            nombreWidget: widget.nombreWidget,
-                            descripcionWidget: widget.descripcionWidget,
-                            imagenWidget_light: widget.imagenWidget_light,
-                            imagenWidget_dark: widget.imagenWidget_dark,
-                            defaultCols: widget.defaultCols,
-                            defaultRows: widget.defaultRows,
-                            pestana: widget.pestana,
+                            ...camposDelWidget(widget),
                             estadoWidget: widget.estadoWidget == true ? false : true,
                             codigoUsuarioModificacion: this._localStorageService.getCurrentUserLocalStorage().usuario.codigoUsuario,
                             fechaModificacion: new Date().toISOString(),
@@ -442,7 +456,8 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                                     descripcionLog: this.translate.instant('WIDGETS.ELIMINAREXITOSA') + ' ' + resp.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalService.getAlertSuccess(this.translate.instant('WIDGETS.ELIMINARERROR'));
+                                // Éxito con su texto (antes mostraba «No se pudo actualizar el widget» aunque sí cambiaba; OT-015, CC-113)
+                                this._swalService.getAlertSuccess(this.translate.instant('WIDGETS.UPDATESUCCSESSFULLY'));
                                 this.setupWidgetsStream()
                             },
                             error: (err: any) => {
@@ -452,7 +467,8 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                                     descripcionLog: this.translate.instant('WIDGETS.ELIMINARERROR') + ' ' + err.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalService.getAlertSuccess(this.translate.instant('WIDGETS.ELIMINARERROR') + ' ' + err.mensaje)
+                                this._swalService.getAlertError(this.translate.instant('WIDGETS.UPDATEERROR')
+                                    + (err?.error?.msg ? ': ' + err.error.msg : ''))
                                 this.setupWidgetsStream()
                                 console.error('Error eliminando', err)
                             }

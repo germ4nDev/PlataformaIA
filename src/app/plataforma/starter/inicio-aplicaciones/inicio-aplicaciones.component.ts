@@ -24,6 +24,10 @@ import { Subscription } from 'rxjs';
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service'
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
 import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
+import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service'
+import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service'
+import { aplicacionesDelDominio } from 'src/app/plataforma/dominios/nucleo'
+import { contextoDeUsuario, rolesYWidgetsDeAplicacion } from 'src/app/plataforma/sesion/nucleo'
 
 @Component({
     selector: 'app-inicio-aplicaciones',
@@ -63,7 +67,9 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         private _widgetsRolesService: PtlWidgetsRolesService,
         private _permisosService: PtlPermisosService,
         private _localStorageService: LocalStorageService,
-        private _uploadService: UploadFilesService
+        private _uploadService: UploadFilesService,
+        private _contextoDominio: ContextoDominioService,
+        private _swalService: SwalAlertService
     ) {
         console.log('no hay suscriptor suscriptor')
         this.suscImagenes = this._localStorageService.getSuscriptorPlataformaLocalStorage();
@@ -114,8 +120,21 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
             }
         });
 
+        // Multidominio (OT-012): en el dominio de una aplicación solo se ofrece esa, y se entra directo
+        const ctx = this._contextoDominio.contexto;
+        apps = aplicacionesDelDominio(ctx, apps);
+
         this._localStorageService.setObject('aplicaciones', apps);
         this.aplicaciones = apps;
+
+        if (ctx.tipo === 'aplicacion') {
+            if (apps.length === 1) {
+                this.ingresarPlataforma(apps[0]);
+            } else {
+                this._swalService.getAlertError(`Este suscriptor no tiene ${ctx.marca.nombre || 'esta aplicación'} en sus paquetes.`);
+                this.router.navigate(['/starter/inicio-suscriptores']);
+            }
+        }
     }
 
     ngOnDestroy(): void {
@@ -130,34 +149,19 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
 
         const appSeleccionada = apps.find((x: { codigoAplicacion: string | undefined }) => x.codigoAplicacion == app.codigoAplicacion);
 
-        const usuSC = this.usuariosSC.find((x: any) => x.codigoUsuario == current.usuario.codigoUsuario);
-        const rolesApp = this.roles.filter((x: any) => x.codigoAplicacion == appSeleccionada.codigoAplicacion);
-        const usuarioRoles = this.usuariosRoles.filter((x: any) => x.codigoUsuarioSC == usuSC?.codigoUsuarioSC);
-
-        const widgetsPermitidosGlobales = new Map();
-        const listaWidgetsMaestros = this._widgetsMaestroService.getWidgetsActuales() || [];
-        const listaWidgetsRoles = this._widgetsRolesService.getWidgetRolesActuales() || [];
-
-        usuarioRoles.forEach((usuRole: any) => {
-            const role = rolesApp.find((x: any) => x.codigoRole == usuRole.codigoRole);
-            usuRole.role = role;
-
-            if (role) {
-                const asignacionesDeEsteRol = listaWidgetsRoles.filter((wr: any) =>
-                    wr.codigoRole === role.codigoRole && wr.estadoRelacion === true
-                );
-
-                asignacionesDeEsteRol.forEach((asignacion: any) => {
-                    const widgetMaestro = listaWidgetsMaestros.find((w: any) => w.codigoWidget === asignacion.codigoWidget);
-                    if (widgetMaestro) {
-                        widgetsPermitidosGlobales.set(widgetMaestro.codigoWidget, widgetMaestro);
-                    }
-                });
-            }
+        // Roles del usuario en la aplicación y sus widgets: pieza común (plataforma/sesion/nucleo, CC-109)
+        const { roles, widgets } = rolesYWidgetsDeAplicacion({
+            codigoUsuario: current.usuario.codigoUsuario,
+            codigoAplicacion: appSeleccionada.codigoAplicacion,
+            usuariosSC: this.usuariosSC,
+            roles: this.roles,
+            usuariosRoles: this.usuariosRoles,
+            widgetsMaestro: this._widgetsMaestroService.getWidgetsActuales() || [],
+            widgetsRoles: this._widgetsRolesService.getWidgetRolesActuales() || []
         });
 
-        current.usuario.roles = usuarioRoles;
-        current.usuario.widgets = Array.from(widgetsPermitidosGlobales.values());
+        current.usuario.roles = roles;
+        current.usuario.widgets = widgets;
 
         if (current.usuario.layout && typeof current.usuario.layout === 'string') {
             try {
@@ -170,10 +174,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
 
         this._localStorageService.setCurrentUserLocalStorage(current);
 
-        const contexto = {
-            codigoEmpresaSC: current?.usuariosSC?.[0]?.suscriptores?.[0]?.empresasAsignadas?.[0]?.codigoEmpresaSC || '',
-            codigoUsuarioSC: current?.usuariosSC?.[0]?.codigoUsuarioSC || ''
-        };
+        const contexto = contextoDeUsuario(current);
 
         const navsettings = {
             aplicacion: appSeleccionada,

@@ -29,6 +29,7 @@ import { PtltiposWidgetService } from 'src/app/theme/shared/service/ptltipos-wid
 import { PTLTipoWidgetModel } from 'src/app/theme/shared/_helpers/models/PTLTipoWidget.model'
 import { PtlpestanasService } from 'src/app/theme/shared/service/ptlpestanas.service'
 import { PTLPestanaModel } from 'src/app/theme/shared/_helpers/models/PTLPestana.model'
+import { camposDelWidget } from '../../nucleo'
 
 @Component({
     selector: 'app-gestion-widget',
@@ -76,7 +77,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
     roles: PTLRoleAPModel[] = []
     rolesFiltrado: PTLRoleAPModel[] = []
     tiposWidget: PTLTipoWidgetModel[] = []
-    pestanas: PTLPestanaModel[] = []
+    pestanas: any[] = []
     widgetRoles: any[] = []
     todosLosRoles: any[] = []
     tipoRolSeleccionado: string = ''
@@ -109,7 +110,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                 next: (resp: any) => {
                     // console.log('respuesta carga widget', resp);
                     this.usuario = resp.widget
-                    this.FormRegistro = resp.widget
+                    this.FormRegistro = { ...resp.widget, movil: resp.widget.movil === true || resp.widget.movil === 1 }
                     this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'widgets', resp.widget.imagenWidget_light)
                     this.selectedFileUrlDark = this._uploadService.getFilePath(this.suscPlataforma, 'widgets', resp.widget.imagenWidget_dark)
                     this.fileName = resp.widget.imagenWidget_light;
@@ -146,6 +147,9 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
             this.FormRegistro.codigoTipo = '';
             this.FormRegistro.layoutVersion = 0;
             this.FormRegistro.offsetY = 0;
+            this.FormRegistro.movil = false;
+            this.FormRegistro.estadoWidget = true;
+            this.FormRegistro.inicial = false;
             //   console.log('formRegistro original', this.FormRegistro);
         }
     }
@@ -156,8 +160,18 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
     consultarPestanas() {
         this._pestanasService.getPestanas().subscribe(data => {
             console.log('***** [COMPONENTE] pestanas', data);
-            this.pestanas = data.pestanas;
+            this.pestanas = data.pestanas || [];
+            this.completarAplicacionDesdePestana();
         });
+    }
+
+    /** La aplicación y la suite del widget son las de su pestaña (PTLPestanas): el API las exige y el formulario no las pedía. */
+    completarAplicacionDesdePestana() {
+        const p = (this.pestanas || []).find((x: any) => x.codigoPestana === this.FormRegistro.codigoPestana);
+        if (p) {
+            this.FormRegistro.codigoAplicacion = p.codigoAplicacion;
+            this.FormRegistro.codigoSuite = p.codigoSuite;
+        }
     }
 
     actualizarDescripcionRegistro(nuevoContenido: string): void {
@@ -172,33 +186,32 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
     onCodigoPestanaClick(event: any) {
         console.log('Codigo PESTANA', event.target.value);
         this.FormRegistro.codigoPestana = event.target.value;
+        this.completarAplicacionDesdePestana();
+    }
+
+    /** Sube la imagen del widget a la carpeta 'widgets' del suscriptor y devuelve el nombre guardado. */
+    private subirImagen(file: File, alTerminar: (nombre: string) => void) {
+        const objUpload = { susc: this._localStorageService.getSuscriptorPlataformaLocalStorage(), tipo: 'widgets', id: '0' }
+        this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+            next: (path: any) => {
+                const nombre = path?.data?.respuesta?.fileName
+                if (nombre) alTerminar(nombre)
+            },
+            error: () => this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+        })
     }
 
     onFileSelectedClick(event: any) {
         const file: File = event.target.files[0]
-        const codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        const objUpload = {
-            susc: codigo,
-            tipo: 'widgets',
-            id: '0'
-        }
-        console.log('objUpload', objUpload);
         if (file) {
             const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrl = e.target.result
-            }
+            reader.onload = (e: any) => { this.selectedFileUrl = e.target.result }
             reader.readAsDataURL(file)
-            // this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-            //     next: (path: any) => {
-            //         //   console.log('resultado++++++++++++++++', path);
-            //         this.fileName = path.nombreArchivo
-            //         this.FormRegistro.imagenWidget_light = path.nombreArchivo
-            //     },
-            //     error: () => {
-            //         this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
-            //     }
-            // })
+            // Antes la subida estaba comentada: la imagen nunca llegaba al servidor y el widget quedaba con 'no-imagen.png'.
+            this.subirImagen(file, (nombre) => {
+                this.fileName = nombre
+                this.FormRegistro.imagenWidget_light = nombre
+            })
         } else {
             this.selectedFileUrl = null
             this.userPhotoUrl = ''
@@ -207,32 +220,17 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
 
     onFileSelectedDarkClick(event: any) {
         const file: File = event.target.files[0]
-        const codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        const objUpload = {
-            susc: codigo,
-            tipo: 'widgets',
-            id: '0'
-        }
-        // console.log('objUpload', objUpload);
         if (file) {
             const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrl = e.target.result
-            }
+            // Antes pintaba la vista previa en la imagen clara (selectedFileUrl).
+            reader.onload = (e: any) => { this.selectedFileUrlDark = e.target.result }
             reader.readAsDataURL(file)
-            // this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-            //     next: (path: any) => {
-            //         //   console.log('resultado++++++++++++++++', path);
-            //         this.fileNameDark = path.nombreArchivo
-            //         this.FormRegistro.imagenWidget_dark = path.nombreArchivo
-            //     },
-            //     error: () => {
-            //         this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
-            //     }
-            // })
+            this.subirImagen(file, (nombre) => {
+                this.fileNameDark = nombre
+                this.FormRegistro.imagenWidget_dark = nombre
+            })
         } else {
-            this.selectedFileUrl = null
-            this.userPhotoUrl = ''
+            this.selectedFileUrlDark = null
         }
     }
     btnGestionarRegistroClick(form: any) {
@@ -240,7 +238,15 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
         // if (!form.valid) {
         //   return;
         // }
-        const registroData = form.value as PTLWidgetMaestroModel
+        // Registro completo: lo del formulario sobre lo cargado, con la aplicación y la suite de la pestaña y el canal.
+        this.completarAplicacionDesdePestana()
+        const registroData = camposDelWidget({ ...this.FormRegistro, ...form.value }) as PTLWidgetMaestroModel
+        registroData.movil = this.FormRegistro.movil === true
+        if (!registroData.codigoWidget || !registroData.nombreWidget || !registroData.codigoPestana || !registroData.codigoTipo
+            || !registroData.codigoAplicacion || !registroData.codigoSuite || !registroData.anclajeTipo) {
+            this._swalAlertService.getAlertError(this._translate.instant('WIDGETS.GESTION.FALTANCAMPOS'))
+            return
+        }
         registroData.imagenWidget_light = this.fileName !== '' ? this.fileName : 'no-imagen.png'
         registroData.imagenWidget_dark = this.fileNameDark !== '' ? this.fileNameDark : 'no-imagen.png'
         const version = registroData.layoutVersion || 0;
@@ -310,13 +316,10 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                         descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.mensaje
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'))
-                    const objUpload = {
-                        susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
-                        tipo: 'usuarios',
-                        file: this.fileName
-                    }
-                    this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'))
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.INSERTUSERERROR'))
+                    // Antes borraba un archivo de la carpeta 'usuarios' con el nombre de la imagen del widget.
+                    // La imagen subida se conserva: sirve si se corrige el formulario y se guarda otra vez.
+                    const detalle = err?.error?.details?.map((d: any) => d.campo).join(', ') || err?.error?.msg || ''
+                    this._swalAlertService.getAlertError(this._translate.instant('WIDGETS.GESTION.ERRORGUARDAR') + (detalle ? ': ' + detalle : ''))
                 }
             })
         }

@@ -96,3 +96,111 @@
     background-color: #fff;
     transform: scale(1.2);
 }
+/* 6. CC-104: dentro de su contenedor (login de pantalla dividida) y leyenda del slide */
+.slider-container--contenido {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.slider-container--contenido .image-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(6, 13, 26, .55) 0%, rgba(6, 13, 26, 0) 28%, rgba(6, 13, 26, .35) 55%, rgba(6, 13, 26, .92) 100%);
+}
+
+.slider-leyenda {
+    position: absolute;
+    left: clamp(24px, 5vw, 64px);
+    right: clamp(24px, 5vw, 64px);
+    bottom: 88px;
+    z-index: 1010;
+    max-width: 640px;
+    color: #EAF1FB;
+}
+
+.slider-leyenda__titulo {
+    margin: 0 0 12px;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(26px, 3.2vw, 42px);
+    line-height: 1.15;
+    color: #EAF1FB;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, .45);
+}
+
+.slider-leyenda__texto {
+    margin: 0;
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.6;
+    color: #D4DEEC;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, .5);
+}
+
+.indicators--leyenda {
+    left: clamp(24px, 5vw, 64px);
+    bottom: 36px;
+    transform: none;
+    align-items: center;
+}
+
+.indicators--leyenda .indicator-dot {
+    width: 28px;
+    height: 4px;
+    border-radius: 2px;
+    border: 0;
+    background-color: rgba(234, 241, 251, .35);
+}
+
+.indicators--leyenda .indicator-dot.active {
+    width: 44px;
+    background-color: #F28A3C;
+    transform: none;
+}
+
+.slider-pausa {
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(234, 241, 251, .45);
+    background: rgba(6, 13, 26, .45);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.slider-pausa__barras {
+    width: 10px;
+    height: 12px;
+    border-left: 3px solid #EAF1FB;
+    border-right: 3px solid #EAF1FB;
+}
+
+.slider-pausa__play {
+    width: 0;
+    height: 0;
+    margin-left: 3px;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 10px solid #EAF1FB;
+}
+
+.indicator-dot:focus-visible,
+.slider-pausa:focus-visible {
+    outline: 2px solid #7DB6FF;
+    outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+    .slider-leyenda { bottom: 64px; }
+    .slider-leyenda__texto { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .indicators--leyenda { bottom: 24px; }
+}

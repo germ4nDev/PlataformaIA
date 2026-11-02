@@ -73,7 +73,7 @@ export class GestionColorComponent implements OnInit {
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
         this.navCollapsedMob = false;
         this.colorNavId = this._localStorageService.getObject<string>('regId') || 'nuevo';
-        if (this.colorNavId) {
+        if (this.colorNavId != 'nuevo') {
             this.modoEdicion = true;
             this._registrosService.getRegistroById(this.colorNavId).subscribe({
                 next: (resp: any) => {
@@ -83,7 +83,7 @@ export class GestionColorComponent implements OnInit {
                     this.iColor = this.FormRegistro.iconosColor || '#1e3a8a';
                     this.bHColor = this.FormRegistro.buttonsHoverColor || '#1e3a8a';
                     console.log('formRegistro', this.FormRegistro);
-                    this.colorNavId = this.FormRegistro.codigoColor || '';
+                    this.colorNavId = this.FormRegistro.codigoColorSetting || '';
                 },
                 error: (err) => {
                     this._swalAlertService.getAlertError('No se pudo obtener el colorSetting por ' + err);
@@ -112,7 +112,7 @@ export class GestionColorComponent implements OnInit {
             this._localStorageService.removeFormRegistro();
         }
         if (this.modoEdicion == false) {
-            this.FormRegistro.codigoColor = uuidv4()
+            this.FormRegistro.codigoColorSetting = uuidv4()
             console.log('FormRegistro loading', this.FormRegistro)
         }
     }
@@ -141,9 +141,22 @@ export class GestionColorComponent implements OnInit {
         if (!form.valid) {
             return;
         }
+
+        const registroData = form.value as PTLColorSettingModel
+        registroData.navbarColor = this.FormRegistro.navbarColor;
+        registroData.textoColor = this.FormRegistro.textoColor;
+        registroData.iconosColor = this.FormRegistro.iconosColor;
+        registroData.estadoColor = this.FormRegistro.estadoColor;
+        registroData.buttonsHoverColor = this.FormRegistro.buttonsHoverColor;
+        console.log('datos del registro', registroData);
         if (this.modoEdicion) {
             if (this.colorNavId != '') {
-                this._registrosService.putModificarRegistro(this.FormRegistro, this.colorNavId).subscribe({
+                registroData.codigoColorSetting = this.FormRegistro.codigoColorSetting;
+                registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
+                registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+                registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+                registroData.fechaModificacion = new Date().toISOString()
+                this._registrosService.putModificarRegistro(registroData, registroData.codigoColorSetting || '').subscribe({
                     next: (resp: any) => {
                         if (resp.ok) {
                             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
@@ -162,8 +175,12 @@ export class GestionColorComponent implements OnInit {
             }
         } else {
             console.log('formRegistro a insertar', this.FormRegistro);
-            this.FormRegistro.codigoColor = uuidv4();
-            this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+            registroData.codigoColorSetting = uuidv4();
+            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
+            registroData.fechaCreacion = new Date().toISOString()
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
+            registroData.fechaModificacion = new Date().toISOString()
+            this._registrosService.postCrearRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
                         this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));

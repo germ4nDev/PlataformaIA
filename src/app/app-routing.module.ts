@@ -6,18 +6,29 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 // import { AuthGuard } from './theme/shared/_helpers/auth.guard';
+import { inicioPorDominioGuard } from './theme/shared/_helpers/inicio-dominio.guard';
+import { rutaPorDominioGuard } from './theme/shared/_helpers/ruta-dominio.guard';
 
 const routes: Routes = [
     {
         path: '',
         component: AdminComponent,
         // canActivateChild: [AuthGuard],
+        // Multidominio (OT-012): en el dominio de una aplicación, solo sus rutas (la consola y las demás apps no)
+        canActivateChild: [rutaPorDominioGuard],
         // canLoad: [AuthGuard],
         children: [
             {
+                // Raíz: porttos.co (sin sesión) → portal; cualquier otro dominio → login, como siempre (OT-010)
                 path: '',
-                redirectTo: '/autenticacion/login',
-                pathMatch: 'full'
+                pathMatch: 'full',
+                canActivate: [inicioPorDominioGuard],
+                children: []
+            },
+            {
+                // Modo embebido (OT-014): la web dentro de la app Porttos (tableta); la sesión la entrega la app
+                path: 'embebido',
+                loadComponent: () => import('./plataforma/embebido/embebido.component').then((c) => c.EmbebidoComponent)
             },
             {
                 path: 'administracion-bd',

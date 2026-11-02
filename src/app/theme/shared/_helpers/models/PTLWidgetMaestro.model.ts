@@ -6,6 +6,8 @@ export class PTLWidgetMaestroModel {
         public codigoWidget?: string,
         public codigoTipo?: string,
         public codigoPestana?: string,
+        public codigoAplicacion?: string,
+        public codigoSuite?: string,
         public nombreWidget?: string,
         public descripcionWidget?: string,
         public imagenWidget_light?: string,
@@ -21,11 +23,14 @@ export class PTLWidgetMaestroModel {
         public inicial?: boolean,
         public estadoWidget?: boolean,
         public layoutVersion?: number,
+        /** Widget para el teléfono (migración 028): solo la app en el teléfono lo muestra; la web y la tableta no. */
+        public movil?: boolean,
 
         // 🟡 Campos Auxiliares para la UI (Tablas, Modales, Selecciones)
         public checked?: boolean,
         public nomInicial?: string,
         public nomEstado?: string,
+        public nomCanal?: string,
         public _roles?: any,
         public _acciones?: any,
 

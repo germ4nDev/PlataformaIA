@@ -256,10 +256,11 @@
                                     }}</label>
                                 <br>
                                 <img *ngIf="selectedFileUrlDark" [src]="selectedFileUrlDark" class="image-preview" />
-                                <input type="file" #fileInput id="imagenWidget_dark" style="display: none;"
+                                <!-- Referencia propia: con #fileInput repetido, este botón abría el selector de la imagen clara -->
+                                <input type="file" #fileInputDark id="imagenWidget_dark" style="display: none;"
                                     accept="image/*" (change)="onFileSelectedDarkClick($event)">
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                                    (click)="fileInput.click()">
+                                    (click)="fileInputDark.click()">
                                     <i class="feather icon-upload me-2"></i>
                                     {{ 'PLATAFORMA.SELECTFILE' | translate }}
                                 </button>
@@ -302,6 +303,29 @@
                                         <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
                                     </label>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Canal (migración 028): un widget de teléfono solo lo muestra la app en el teléfono;
+                             la web y la tableta no lo ofrecen. Los roles se asignan igual en «Widgets por rol». -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'WIDGETS.GESTION.CANAL' | translate }}</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input name="movil" type="radio" [value]="false"
+                                            [(ngModel)]="FormRegistro.movil" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'WIDGETS.CANALWEB' | translate }}</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="movil" type="radio" [value]="true"
+                                            [(ngModel)]="FormRegistro.movil" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'WIDGETS.CANALMOVIL' | translate }}</label>
+                                    </label>
+                                </div>
+                                <small class="text-muted">{{ 'WIDGETS.GESTION.CANALAYUDA' | translate }}</small>
                             </div>
                         </div>
                     </div>

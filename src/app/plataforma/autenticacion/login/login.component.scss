@@ -147,3 +147,182 @@
         }
     }
 }
+/* ==========================================================================
+   CC-104 · LOGIN CON EL DISEÑO DEL PORTAL (dominio de aplicación con portal: porttos.co)
+   Pantalla dividida: slides con su leyenda a la izquierda y el formulario en un panel azul noche a la derecha.
+   Mismos colores y letras del portal (porttos.component.scss). La consola y los demás dominios no cambian.
+   ========================================================================== */
+.plafaforma-auth-screen.login-portal {
+    --lp-fondo: #060D1A;
+    --lp-panel: #0D1A2E;
+    --lp-campo: #08111F;
+    --lp-borde: #1F3354;
+    --lp-texto: #EAF1FB;
+    --lp-suave: #A9B9D0;
+    --lp-acento: #F28A3C;
+    --lp-primario: #2563C9;
+    --lp-primario-hover: #1E54AD;
+    --lp-foco: #7DB6FF;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(400px, 480px);
+    justify-content: stretch;
+    align-items: stretch;
+    height: 100vh;
+    height: 100dvh;
+    overflow: auto;
+    background-color: var(--lp-fondo);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    .login-portal__escena {
+        position: relative;
+        overflow: hidden;
+        min-height: 100%;
+        background: radial-gradient(circle at 30% 20%, #122340, var(--lp-fondo) 70%);
+    }
+
+    .login-portal__volver {
+        position: absolute;
+        top: 24px;
+        left: clamp(24px, 5vw, 64px);
+        z-index: 1020;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(234, 241, 251, .35);
+        background: rgba(6, 13, 26, .55);
+        color: var(--lp-texto);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        backdrop-filter: blur(6px);
+
+        &:hover { border-color: var(--lp-texto); }
+        &:focus-visible { outline: 2px solid var(--lp-foco); outline-offset: 3px; }
+    }
+
+    .navbar { z-index: 1030; pointer-events: none; }
+    .navbar .nav-right { pointer-events: auto; }
+
+    .plafaforma-auth-card {
+        max-width: none;
+        min-height: 100%;
+        margin: 0;
+        padding: 88px clamp(28px, 4vw, 52px) 40px;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: var(--lp-panel) !important;
+        border: 0 !important;
+        border-left: 1px solid var(--lp-borde) !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        p, label, .cr, span { color: var(--lp-texto) !important; }
+        .text-muted { color: var(--lp-suave) !important; }
+        .feather { color: var(--lp-suave) !important; }
+
+        .link-label {
+            color: var(--lp-acento) !important;
+            &:focus-visible { outline: 2px solid var(--lp-foco); outline-offset: 2px; border-radius: 4px; }
+        }
+
+        .form-control,
+        .form-input,
+        .input-group-text {
+            min-height: 48px;
+            background-color: var(--lp-campo) !important;
+            color: var(--lp-texto) !important;
+            border: 1px solid var(--lp-borde) !important;
+
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus,
+            &:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 30px var(--lp-campo) inset !important;
+                -webkit-text-fill-color: var(--lp-texto) !important;
+            }
+        }
+
+        .form-control::placeholder { color: #7F90AA; }
+        .form-control:focus { box-shadow: 0 0 0 3px rgba(125, 182, 255, .35) !important; border-color: var(--lp-foco) !important; }
+        .input-group > :first-child { border-radius: 10px 0 0 10px; }
+        .input-group > .form-control:last-of-type:not(:first-child),
+        .input-group > :last-child { border-radius: 0 10px 10px 0; }
+
+        .plafaforma-auth-btn {
+            height: 48px;
+            border-radius: 10px;
+            font-family: 'Poppins', system-ui, sans-serif;
+            font-weight: 600;
+            background-color: var(--lp-primario);
+            color: #fff;
+
+            span { color: #fff !important; }
+            &:hover { background-color: var(--lp-primario-hover); filter: none; box-shadow: 0 8px 22px rgba(37, 99, 201, .35); }
+            &:focus-visible { outline: 2px solid var(--lp-foco); outline-offset: 3px; }
+            &:disabled { background-color: #1B2B45; color: #7F90AA; span { color: #7F90AA !important; } }
+        }
+    }
+
+    .login-portal__encabezado { margin-bottom: 28px; }
+    .login-portal__logo { display: block; height: 40px; width: auto; margin-bottom: 36px; }
+    .login-portal__marca {
+        margin: 0 0 36px;
+        font-family: 'Poppins', system-ui, sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+    }
+    .login-portal__antetitulo {
+        margin: 0 0 8px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--lp-acento) !important;
+    }
+    .login-portal__titulo {
+        margin: 0 0 8px;
+        font-family: 'Poppins', system-ui, sans-serif;
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--lp-texto);
+    }
+    .login-portal__subtitulo { margin: 0; font-size: 15px; color: var(--lp-suave) !important; }
+
+    .login-enlaces { gap: 0; }
+    .login-enlaces p { margin-bottom: 4px; font-size: 14px; }
+
+    .login-portal__acceso {
+        margin: 24px 0 0;
+        padding-top: 20px;
+        border-top: 1px solid var(--lp-borde);
+        text-align: center;
+        font-size: 14px;
+        color: var(--lp-suave) !important;
+    }
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(260px, 40vh) auto;
+
+        .login-portal__escena { min-height: 0; }
+        .login-portal__volver { top: 16px; left: 16px; }
+        .plafaforma-auth-card {
+            min-height: 0;
+            padding: 32px 20px 40px;
+            border-left: 0 !important;
+            border-top: 1px solid var(--lp-borde) !important;
+        }
+        .login-portal__logo { margin-bottom: 24px; }
+        .login-portal__titulo { font-size: 26px; }
+    }
+}
+
+/* El ojo de la clave es un botón (CC-104): mismo aspecto que el ícono de antes */
+.login-ver-clave { cursor: pointer; }

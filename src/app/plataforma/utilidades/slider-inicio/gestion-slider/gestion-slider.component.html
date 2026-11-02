@@ -59,6 +59,18 @@
                                 </label>
                             </div>
                         </div>
+                        <!-- CC-104: slides por aplicación (migración 027). General = para todos los dominios -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="codigoAplicacion">{{ 'PLATAFORMA.SLIDERS.APLICACION' | translate }}</label>
+                                <select class="form-control form-input" id="codigoAplicacion" name="codigoAplicacion"
+                                    [(ngModel)]="FormRegistro.codigoAplicacion">
+                                    <option [ngValue]="null">{{ 'PLATAFORMA.SLIDERS.GENERAL' | translate }}</option>
+                                    <option *ngFor="let a of aplicaciones$ | async" [ngValue]="a.codigoAplicacion">{{ a.nombreAplicacion }}</option>
+                                </select>
+                                <small class="form-text text-muted">{{ 'PLATAFORMA.SLIDERS.APLICACION_AYUDA' | translate }}</small>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'PLATAFORMA.SLIDERS.DESCRIPTION' | translate }}</label>

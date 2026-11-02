@@ -1,4 +1,4 @@
-<div class="slider-container">
+<div class="slider-container" [class.slider-container--contenido]="contenido">
 
     <div class="image-wrapper">
         <img *ngFor="let imageUrl of images; let i = index" [ngSrc]="imageUrl.imageSlider?? ''" [fill]="true"
@@ -6,9 +6,20 @@
             [ngClass]="{ 'active': i === currentIndex }" class="slider-image" (error)="onImageError($event, i)">
     </div>
 
-    <div class="indicators" *ngIf="images.length > 1">
+    <!-- CC-104: leyenda del slide (texto plano de la gestión; nunca HTML) -->
+    <div class="slider-leyenda" *ngIf="leyendas && images.length" aria-live="polite">
+        <h2 class="slider-leyenda__titulo" *ngIf="leyenda.titulo">{{ leyenda.titulo }}</h2>
+        <p class="slider-leyenda__texto" *ngIf="leyenda.texto">{{ leyenda.texto }}</p>
+    </div>
+
+    <div class="indicators" [class.indicators--leyenda]="leyendas" *ngIf="images.length > 1">
         <button *ngFor="let image of images; let i = index" [ngClass]="{ 'active': i === currentIndex }"
             (click)="goToImage(i)" class="indicator-dot" [attr.aria-label]="'Ir a la imagen ' + (i + 1)">
+        </button>
+        <button *ngIf="leyendas" type="button" class="slider-pausa" (click)="alternarPausa()"
+            [attr.aria-label]="pausado ? 'Reanudar' : 'Pausar'" [attr.aria-pressed]="pausado">
+            <span *ngIf="!pausado" class="slider-pausa__barras" aria-hidden="true"></span>
+            <span *ngIf="pausado" class="slider-pausa__play" aria-hidden="true"></span>
         </button>
     </div>
 

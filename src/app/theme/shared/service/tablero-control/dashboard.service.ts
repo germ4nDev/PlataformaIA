@@ -126,7 +126,8 @@ export class DashboardService implements OnInit, OnDestroy {
             confirmButtonText: 'Sí, Sincronizar', cancelButtonText: 'Más tarde'
         }).then((result) => {
             if (result.isConfirmed) {
-                this.http.post(`http://localhost:3000${alerta.endpointAccion}`, {}).subscribe({
+                // endpointAccion trae la ruta completa (/api/...): se usa la raíz del API del ambiente, nunca localhost (2026-10-29)
+                this.http.post(`${environment.sctUrl}${alerta.endpointAccion}`, {}).subscribe({
                     next: (res: any) => Swal.fire('¡Sincronizado!', 'Los históricos de Supertransporte están al día.', 'success'),
                     error: (err) => Swal.fire('Error', 'No se pudo conectar con datos.gov.co', 'error')
                 });

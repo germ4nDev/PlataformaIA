@@ -7,7 +7,8 @@ import { GradientConfig } from 'src/app/app-config'
 // project import
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
 import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { LocalStorageService, PtlSlidersInicioService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service'
+import { LocalStorageService, PtlAplicacionesService, PtlSlidersInicioService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service'
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
@@ -28,7 +29,9 @@ import { v4 as uuidv4 } from 'uuid'
 export class GestionSliderComponent implements OnInit {
     // private props
     @Output() toggleSidebar = new EventEmitter<void>()
-    FormRegistro: PTLSliderInicioModel = new PTLSliderInicioModel()
+    FormRegistro: PTLSliderInicioModel = Object.assign(new PTLSliderInicioModel(), { codigoAplicacion: null })
+    // CC-104: a qué aplicación pertenece el slide (null = general); el login de un dominio de aplicación muestra los suyos
+    aplicaciones$!: Observable<PTLAplicacionModel[]>
     menuItems!: Observable<NavigationItem[]>
     gradientConfig: any
     navCollapsed: boolean = false
@@ -64,7 +67,8 @@ export class GestionSliderComponent implements OnInit {
         private _navigationService: NavigationService,
         private _uploadService: UploadFilesService,
         private _localStorageService: LocalStorageService,
-        private _swalService: SwalAlertService
+        private _swalService: SwalAlertService,
+        private _aplicacionesService: PtlAplicacionesService
     ) {
         this.isSubmit = false
         GradientConfig.header_fixed_layout = true
@@ -80,6 +84,7 @@ export class GestionSliderComponent implements OnInit {
                 next: (resp: any) => {
                     console.log('respuesta', resp);
                     this.FormRegistro = resp.sliderInicio
+                    this.FormRegistro.codigoAplicacion = resp.sliderInicio?.codigoAplicacion ?? null
                     this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'sliders', resp.sliderInicio.urlSlider)
                 },
                 error: err => {
@@ -92,6 +97,8 @@ export class GestionSliderComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.aplicaciones$ = this._aplicacionesService.aplicaciones$
+        this._aplicacionesService.cargarAplicaciones().subscribe({ error: () => { /* sin lista: queda «General» */ } })
         this._navigationService.getNavigationItems()
         this.menuItems = this._navigationService.menuItems$
         this._layoutInitializer.applyLayout()
@@ -150,7 +157,14 @@ export class GestionSliderComponent implements OnInit {
         if (!form.valid) {
             return
         }
-        const registroData = form.value as PTLSliderInicioModel
+        // CC-104: el estado y la aplicación salen del modelo (el radio del estado se llama «option» en el formulario
+        // y su valor no llegaba al API: un slide no se podía desactivar desde aquí)
+        const registroData = {
+            ...form.value,
+            estadoSlider: this.FormRegistro.estadoSlider !== false,
+            codigoAplicacion: this.FormRegistro.codigoAplicacion || null
+        } as PTLSliderInicioModel
+        delete (registroData as any).option
 
         if (this.modoEdicion) {
             registroData.codigoSlider = this.FormRegistro.codigoSlider
@@ -177,6 +191,7 @@ export class GestionSliderComponent implements OnInit {
             registroData.codigoSlider = uuidv4()
             registroData.urlSlider = this.FormRegistro.urlSlider
             registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
+            registroData.codigoUsuarioCreacion = registroData.codigoUsuarioModificacion
             registroData.fechaModificacion = new Date().toISOString()
             this._registrosService.postCrearRegistro(registroData).subscribe({
                 next: (resp: any) => {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 // 🟢 1. Importamos el CDK de Drag & Drop
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LocalStorageService } from 'src/app/theme/shared/service';
-import { iconoPestana } from '../iconos-pestana';
+import { colorPestana, iconoPestana } from '../iconos-pestana';
 
 @Component({
     selector: 'app-pestana-lobby-tcl',
@@ -129,8 +129,13 @@ export class PestanaLobbyTclComponent implements OnChanges {
     }
 
     /** Ícono de la pestaña: el mismo de la barra de pestañas (pieza común widgets/shared/iconos-pestana.ts). */
-    obtenerIconoPestana(codigoPestana: string): string {
-        return iconoPestana(codigoPestana);
+    obtenerIconoPestana(codigoPestana: string, pestana?: any): string {
+        return iconoPestana(codigoPestana, pestana);
+    }
+
+    /** Color de la pestaña guardado en la BD (migración 020) o null (manda la clase del ícono). */
+    obtenerColorPestana(pestana?: any): string | null {
+        return colorPestana(pestana);
     }
 
     onCheckboxToggle(pestana: any, isChecked: boolean) {

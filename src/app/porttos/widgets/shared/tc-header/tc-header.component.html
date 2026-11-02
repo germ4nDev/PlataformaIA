@@ -93,7 +93,8 @@
                 <!-- Renglón Superior: Iconos, Idioma, Perfil y Reloj -->
                 <ul class="tc-toolbar-nav d-flex align-items-center mb-0 list-unstyled gap-2">
 
-                    <li class="nav-item">
+                    <!-- Dentro de la app (modo embebido, OT-014) no hay menú principal: la app tiene el suyo -->
+                    <li class="nav-item" *ngIf="!embebido">
                         <button type="button" class="btn-navbar-porttos" (click)="goBack($event)"
                             title="Menú Principal">
                             <i class="feather icon-home"></i>

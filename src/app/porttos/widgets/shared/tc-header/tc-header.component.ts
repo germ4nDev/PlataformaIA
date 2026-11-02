@@ -22,6 +22,7 @@ import { MapaGeneralService } from 'src/app/theme/shared/service/tablero-control
 import { PuertosService } from 'src/app/theme/shared/service/tablero-control/puertos.service';
 import { GnlStateService } from 'src/app/theme/shared/service/tablero-control/gnl-state.service';
 import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service';
+import { EmbebidoService } from 'src/app/theme/shared/service/embebido.service';
 import { Puerto } from 'src/app/theme/shared/_helpers/models/tablero-control/puerto.model';
 
 @Component({
@@ -61,6 +62,8 @@ export class TcHeaderComponent implements OnInit, OnDestroy {
     public newPuerto: Puerto = new Puerto();
     public mostrarLobby: boolean = false;
     logoEmpresa: string = 'assets/images/logo.png';
+    /** Dentro de la app Porttos (OT-014): sin botón de menú principal. */
+    readonly embebido: boolean;
     suscriptor: string = '';
 
     public horaActual: string = '';
@@ -77,8 +80,10 @@ export class TcHeaderComponent implements OnInit, OnDestroy {
         private _localStorageService: LocalStorageService,
         private _filtroTableroService: FiltroTableroService,
         private _uploadService: UploadFilesService,
-        private _gnlState: GnlStateService
+        private _gnlState: GnlStateService,
+        _embebido: EmbebidoService
     ) {
+        this.embebido = _embebido.activo;
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         const navSettings: any = this._localStorageService.getObject('navsettings')
         const aplicacion = navSettings.aplicacion;

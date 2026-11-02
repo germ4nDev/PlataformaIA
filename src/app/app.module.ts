@@ -37,6 +37,12 @@ import { APP_INITIALIZER } from '@angular/core';
 import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
 import { lastValueFrom } from 'rxjs';
 import { SessionInterceptor } from './theme/shared/_helpers/session.interceptor';
+import { ContextoDominioService } from './theme/shared/service/contexto-dominio.service';
+
+// Multidominio (OT-012): el contexto del dominio se resuelve antes de las rutas (nunca bloquea: tiene respaldo en 4 s)
+export function inicializarContextoDominio(contexto: ContextoDominioService) {
+    return () => contexto.cargar();
+}
 
 const config: SocketIoConfig = {
     url: environment.sctUrl,
@@ -115,6 +121,12 @@ export function HttpLoaderFactory(http: HttpClient) {
             provide: APP_INITIALIZER,
             useFactory: inicializarSeguridadApp,
             deps: [PtlPermisosService],
+            multi: true
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: inicializarContextoDominio,
+            deps: [ContextoDominioService],
             multi: true
         },
         {

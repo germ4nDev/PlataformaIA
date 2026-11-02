@@ -22,6 +22,7 @@ import {
     PtlusuariosEmpresasScService,
     PtlusuariosRolesApService,
     PtlusuariosScService,
+    PtlColoresSettingsService,
     ThemeService
 } from './theme/shared/service'
 import { PtlActividadesService } from './theme/shared/service/ptlactividades.service'
@@ -57,6 +58,8 @@ import { WidgetsService } from './theme/shared/service/tablero-control/widgets.s
 import { LayoutService } from './theme/shared/service/layout.service'
 import { PtlpestanasService } from './theme/shared/service/ptlpestanas.service'
 import { PtltiposWidgetService } from './theme/shared/service/ptltipos-widget.service'
+import { esRutaPublica } from './plataforma/websites/porttos/nucleo'
+import { esRutaEmbebida } from './plataforma/embebido/nucleo'
 
 @Component({
     selector: 'app-root',
@@ -104,6 +107,7 @@ export class AppComponent implements OnInit {
         private _pestanasService: PTLModulosPaqueteService,
         private _tiposWidgetService: PtltiposWidgetService,
         private _modulosPaqueteService: PTLModulosPaqueteService,
+        private _coloresSettingsService: PtlColoresSettingsService,
 
         private _puertosService: PuertosService,
         private _terminalesService: TerminalesService,
@@ -128,10 +132,14 @@ export class AppComponent implements OnInit {
             this._themeService.setDarkTheme(themeSettings.isDarkTheme)
         }
         const token = this._localStorageService.getTokenLocalStorage()
-        if (token) {
+        // En una ruta pública un token vencido cuenta como sin sesión: cargar datos protegidos daría 401 y el interceptor sacaría al login
+        // /embebido (OT-014) tampoco va al login: espera la sesión de la app
+        const publica = esRutaPublica(window.location.pathname) || esRutaEmbebida(window.location.pathname)
+        if (token && !(publica && this._authenticationService.isTokenExpired(token))) {
             console.log('AppComponent: Token detectado en carga, iniciando carga de datos...')
             this.loadProtectedData()
-        } else {
+        } else if (!publica) {
+            // Sin sesión al login, salvo en las rutas públicas (portal porttos.co en /websites; la raíz la decide inicioPorDominioGuard)
             this.router.navigate(['autenticacion/login'])
         }
         this._authenticationService.isLoggedIn$.subscribe(isLoggedIn => {
@@ -272,6 +280,10 @@ export class AppComponent implements OnInit {
         this._layoutService.cargarRegistros().subscribe(
             () => console.log('** Layouts cargados y guardados en el servicio'),
             err => console.error('Error al cargar Layouts', err)
+        )
+        this._coloresSettingsService.cargarColoresSettings().subscribe(
+            () => console.log('** coloresSettings cargados y guardados en el servicio'),
+            err => console.error('Error al cargar coloresSettings', err)
         )
         //================================
         // PORTTOS

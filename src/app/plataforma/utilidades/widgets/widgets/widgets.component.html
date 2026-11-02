@@ -40,7 +40,7 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'WIDGETS.FILTROS.FILTROPESTANA' | translate }}</small>
-                        <input type="number" (keyup)="onFiltroPestanaChangeClick($event)"
+                        <input type="text" (keyup)="onFiltroPestanaChangeClick($event)"
                             class="form-control form-input"
                             placeholder="{{ 'WIDGETS.FILTROS.PESTANAHOLDER' | translate }}" />
                     </div>
@@ -56,6 +56,14 @@
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'WIDGETS.FILTROS.FILTROCANAL' | translate }}</small>
+                        <select (change)="onFiltroCanalChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="web">{{ 'WIDGETS.CANALWEB' | translate }}</option>
+                            <option value="movil">{{ 'WIDGETS.CANALMOVIL' | translate }}</option>
                         </select>
                     </div>
                 </div>

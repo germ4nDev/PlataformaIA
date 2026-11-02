@@ -740,15 +740,14 @@
     }
 }
 
-/* Seleccionar todos los widgets de la categoría activa (estilo común en ../_lobby-comun.scss) */
-.barra-categorias {
-    .tabs-scroll-container {
-        min-width: 0;
-    }
+/* Seleccionar todos los widgets de la categoría activa: en el encabezado, como el Gestor de Pestañas
+   (estilo común en ../_lobby-comun.scss; movido de la barra de categorías el 2026-10-30) */
+.barra-categorias .tabs-scroll-container {
+    min-width: 0;
+}
 
-    .seleccionar-categoria {
-        @include lobby.seleccionar-todos;
-    }
+.lobby-header .seleccionar-categoria {
+    @include lobby.seleccionar-todos;
 }
 
 /* Tarjetas: no crecen más que su columna (2026-10-26) */

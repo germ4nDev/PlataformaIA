@@ -35,6 +35,7 @@ import { VACIO, eventosEntre, fechaDelSegundo, fotogramaRecorrido } from './mapa
 import { ThemeService } from '../../../../theme/shared/service/theme.service';
 import { LocalStorageService, SocketService } from 'src/app/theme/shared/service';
 import { MapaGeneralService } from '../../../../theme/shared/service/tablero-control/mapa-general.service';
+import { textoSenalAis } from 'src/app/theme/shared/service/tablero-control/senal-ais';
 import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
 import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
 import { PuertosService } from 'src/app/theme/shared/service/tablero-control/puertos.service';
@@ -247,6 +248,8 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
 
     /** Aviso sobre el mapa cuando la última sincronización con TomTom falló en alguna zona. */
     public avisoEventosViales: string | null = null;
+    /** «Sin señal AIS desde …» cuando la capa de naves del puerto sale vacía porque la fuente no reporta (OT-007) */
+    public avisoSenalAis: string | null = null;
 
     /** Despeje manual desde el popup: el API lo pasa a DESPEJADO y la capa se recarga. */
     private readonly alPulsarEnPopup = (ev: Event): void => {
@@ -1052,7 +1055,10 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
             setTimeout(() => clearInterval(comprobarDimensiones), 3000);
         });
 
-        // this.map.addControl(new maplibregl.NavigationControl(), 'top-right');
+        // OT-007 (2026-10-29): zoom + / − sin brújula (la rotación no se usa) y atribución compacta («i»): la licencia de
+        // OpenStreetMap exige mostrarla siempre. Arriba a la derecha está el botón IA; abajo a la izquierda, los avisos.
+        this.map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+        // this.map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
     }
 
     /**
@@ -1276,6 +1282,10 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                     this.renderizarNavesFusionadas();
                 }
             })
+        );
+
+        this.subs.add(
+            this._mapaService.senalAis$.subscribe((s) => (this.avisoSenalAis = textoSenalAis(s)))
         );
 
         this.subs.add(

@@ -238,6 +238,7 @@ import { Router } from '@angular/router';
 import { SocketService } from './sockets.service';
 import { LocalStorageService } from './local-storage.service';
 import { SwalAlertService } from './swal-alert.service';
+import { EmbebidoService } from './embebido.service';
 
 @Injectable({
     providedIn: 'root'
@@ -424,6 +425,9 @@ export class SocketManagerService {
             console.warn('⚠️ [MANAGER] ¡Cierre forzado! Sesión abierta en otro navegador.');
 
             if (this.socketService) this.socketService.disconnect();
+
+            // Modo embebido (OT-014): la app recibe el aviso y hace su cierre (con su propio mensaje en el login)
+            if (this.injector.get(EmbebidoService).cerrarSesion('reemplazada')) return;
 
             localStorage.setItem('alerta_expiracion', 'Se ha iniciado sesión con tu usuario desde otro dispositivo o pestaña. Por tu seguridad, esta sesión ha sido cerrada.');
 
