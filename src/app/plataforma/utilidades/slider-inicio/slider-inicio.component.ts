@@ -23,7 +23,9 @@ import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
 import { environment } from 'src/environments/environment'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
-import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service'
+import { LocalStorageService, PtlAplicacionesService, UploadFilesService } from 'src/app/theme/shared/service'
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 const base_url = environment.apiUrl
 //#endregion IMPORTS
@@ -31,7 +33,7 @@ const base_url = environment.apiUrl
 @Component({
     selector: 'app-slider-inicio',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
     templateUrl: './slider-inicio.component.html',
     styleUrl: './slider-inicio.component.scss'
 })
@@ -41,6 +43,7 @@ export class SliderInicioComponent implements OnInit {
     slidersTransformadas$: Observable<PTLSliderInicioModel[]> = of([])
     slidersFiltradas$: Observable<PTLSliderInicioModel[]> = of([])
     sliders: PTLSliderInicioModel[] = []
+    aplicaciones: PTLAplicacionModel[] = []
     subscriptions = new Subscription()
 
     filtroNombreSubject = new BehaviorSubject<string>('todos')
@@ -62,6 +65,7 @@ export class SliderInicioComponent implements OnInit {
         private _navigationService: NavigationService,
         private _swalService: SwalAlertService,
         private _registrosService: PtlSlidersInicioService,
+        private _aplicacionesService: PtlAplicacionesService,
         private _languageService: LanguageService,
         private _localStorageService: LocalStorageService,
         private _uploadService: UploadFilesService
@@ -73,6 +77,7 @@ export class SliderInicioComponent implements OnInit {
         this._navigationService.getNavigationItems()
         this.menuItems = this._navigationService.menuItems$
         console.log('elementos menu componente', this.menuItems)
+        this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
         this.setupSlidersStream()
         this.subscriptions.add(
             this._registrosService.cargarSliders().subscribe(
@@ -131,6 +136,8 @@ export class SliderInicioComponent implements OnInit {
                 const transformedSliders = slids.map((slider: any) => {
                     console.log('data slider', slider)
                     slider.nomEstado = slider.estadoSlider == true ? 'Activo' : 'Inactivo'
+                    const app = this.aplicaciones.filter(x => x.codigoAplicacion == slider.codigoAplicacion)[0];
+                    slider.nomAplicacion = app.nombreAplicacion;
                     const tipoMedia = this.getFileType(this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider))
                     if (tipoMedia == 'capture') {
                         slider.urlSlider = this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider)
@@ -184,6 +191,11 @@ export class SliderInicioComponent implements OnInit {
             name: 'urlSlider',
             header: 'SLIDER.SLIDER',
             type: 'image'
+        },
+        {
+            name: 'nomAplicacion',
+            header: 'SLIDER.NOMBREAPP',
+            type: 'text'
         },
         {
             name: 'nombreSlider',

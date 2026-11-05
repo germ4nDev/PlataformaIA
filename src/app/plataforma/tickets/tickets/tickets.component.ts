@@ -36,6 +36,7 @@ const base_url = environment.apiUrl
 import Swal from 'sweetalert2'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
     selector: 'app-tickets',
@@ -48,7 +49,8 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
         DatatableComponent,
         NavContentComponent,
         NavBarComponent,
-        DataLoaderComponent
+        DataLoaderComponent,
+        TableDataComponent
     ],
     templateUrl: './tickets.component.html',
     styleUrl: './tickets.component.scss'

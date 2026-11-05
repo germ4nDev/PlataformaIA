@@ -13,14 +13,24 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ tituloPagina }}
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ tituloPagina }}</span>
+                            <span *ngIf="modoEdicion">{{ tituloPagina }}</span>
+                            <span class="titulo-container"> - {{ 'SUSCRIPTOR.USUARIOSROLES.GESTION.TITLE' | translate
+                                }}</span>
                         </h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ tituloPagina }}</h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'SUSCRIPTOR.USUARIOSROLES.GESTION.TITLEDESCRIPTION' | translate }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
@@ -37,6 +47,7 @@
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
 
             <div class="card-body form-scroll-wrapper">

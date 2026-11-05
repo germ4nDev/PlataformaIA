@@ -52,7 +52,8 @@
 </app-widget-shell> -->
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '📍 Distribución 10 km'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Camiones en radio de influencia portuaria'"
-    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
+    [origen]="data?.origen">
 
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase">
@@ -85,10 +86,10 @@
                 style="min-height: 150px;">
                 <canvas #doughnutGateCanvas></canvas>
                 <div class="position-absolute text-center" style="pointer-events: none;">
-                    <span class="d-block fw-bolder text-white" style="font-size: 1.05rem;">
+                    <span class="titulo-container d-block fw-bolder" style="font-size: 1.05rem;">
                         {{ totalCamiones | number:'1.0-0' }}
                     </span>
-                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">Camiones</small>
+                    <small class="titulo-container text-uppercase" style="font-size: 0.62rem;">Camiones</small>
                 </div>
             </div>
 
@@ -100,9 +101,9 @@
                         <span class="rounded-circle flex-shrink-0" [style.background-color]="item.color"
                             style="width: 9px; height: 9px; display: inline-block;">
                         </span>
-                        <span class="fw-medium text-light text-truncate">{{ item.label }}</span>
+                        <span class="titulo-container fw-medium text-truncate">{{ item.label }}</span>
                     </div>
-                    <span class="fw-bold text-info ms-2">{{ item.porcentaje }}%</span>
+                    <span class="titulo-container fw-bold ms-2">{{ item.porcentaje }}%</span>
                 </div>
             </div>
 

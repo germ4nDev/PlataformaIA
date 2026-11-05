@@ -23,11 +23,12 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PtllogActividadesService } from 'src/app/theme/shared/service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
     selector: 'app-versiones',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
     templateUrl: './versiones.component.html',
     styleUrl: './versiones.component.scss'
 })

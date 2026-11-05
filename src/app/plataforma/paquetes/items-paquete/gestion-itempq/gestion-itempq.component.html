@@ -13,13 +13,22 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'MODULOS.GESTION.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'MODULOS.UPDATE' | translate }}</h4>
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario mb-1">
+                            <span *ngIf="!modoEdicion">{{ 'ITEMSPQ.GESTION.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'ITEMSPQ.GESTION.UPDATE' | translate }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0 text-muted">
+                            {{ 'ITEMSPQ.GESTION.TITLEDESCRIPTION' | translate }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
@@ -39,7 +48,9 @@
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0">
             </div>
+
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
@@ -197,13 +208,13 @@
                                         <input name="estadoItem" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoItem" />
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estadoItem" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoItem" />
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

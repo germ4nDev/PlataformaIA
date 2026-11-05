@@ -32,11 +32,11 @@
                 <div class="reporte-item d-flex flex-column shadow-sm"
                     *ngFor="let alerta of alertas; trackBy: trackByAlerta" [ngClass]="'tipo-' + alerta.tipo">
 
-                    <div class="r-titulo mb-1 text-white fw-bold d-flex align-items-center gap-1"
+                    <div class="r-titulo mb-1 titulo-container fw-bold d-flex align-items-center gap-1"
                         style="font-size: 0.75rem;">
                         <span>{{ alerta.icono }}</span> {{ alerta.titulo }}
                     </div>
-                    <div class="r-desc text-muted mb-0" style="font-size: 0.70rem; line-height: 1.3;">
+                    <div class="r-desc titulo-container mb-0" style="font-size: 0.70rem; line-height: 1.3;">
                         {{ alerta.descripcion }}
                     </div>
 

@@ -162,22 +162,22 @@ export class PorttosChartHelper {
         return {
             backgroundColor: PorttosChartHelper.cssVar(
                 '--chart-tooltip-bg',
-                '#ffffff',
+                'texto-panel',
                 '--widget-background'
             ),
             titleColor: PorttosChartHelper.cssVar(
                 '--chart-tooltip-title',
-                '#212529',
+                '--text-subtitulo-color',
                 '--widget-text'
             ),
             bodyColor: PorttosChartHelper.cssVar(
                 '--chart-tooltip-body',
-                '#464e57',
+                'subtitulo-container',
                 '--widget-subtitle'
             ),
             borderColor: PorttosChartHelper.cssVar(
                 '--chart-tooltip-border',
-                '#cecdcd',
+                'subtitulo-container',
                 '--widget-border'
             ),
             borderWidth: 1,

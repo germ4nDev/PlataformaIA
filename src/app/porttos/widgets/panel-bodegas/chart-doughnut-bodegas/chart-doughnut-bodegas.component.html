@@ -1,6 +1,7 @@
 <app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || '🌾 Inventario por Tipo de Carga'"
     [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Participación volumétrica en bodegas y silos'"
-    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
+    [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
+    [origen]="data?.origen">
 
     <!-- PROYECCIÓN AL HEADER -->
     <div acciones-extra class="d-flex align-items-center">
@@ -34,10 +35,10 @@
                 style="min-height: 150px;">
                 <canvas #doughnutBodegasCanvas></canvas>
                 <div class="position-absolute text-center pointer-events-none">
-                    <span class="d-block fw-bolder chart-center-value" style="font-size: 1.05rem;">
+                    <span class="titulo-container d-block fw-bolder" style="font-size: 1.05rem;">
                         {{ totalInventarioTon | number:'1.0-0' }}
                     </span>
-                    <small class="text-muted text-uppercase" style="font-size: 0.62rem;">Toneladas</small>
+                    <small class="titulo-container text-uppercase" style="font-size: 0.62rem;">Toneladas</small>
                 </div>
             </div>
 
@@ -49,9 +50,10 @@
                         <span class="rounded-circle flex-shrink-0" [style.background-color]="item.color"
                             style="width: 9px; height: 9px; display: inline-block;">
                         </span>
-                        <span class="fw-medium text-truncate chart-legend-label">{{ item.label }}</span>
+                        <span class="titulo-container fw-medium text-truncate">{{ item.label
+                            }}</span>
                     </div>
-                    <span class="fw-bold text-info ms-2">{{ item.porcentaje }}%</span>
+                    <span class="titulo-container fw-bold ms-2">{{ item.porcentaje }}%</span>
                 </div>
             </div>
         </div>

@@ -28,6 +28,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
     selector: 'app-modulos',
@@ -40,7 +41,8 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
         NavBarComponent,
         NavContentComponent,
         DatatableComponent,
-        DataLoaderComponent
+        DataLoaderComponent,
+        TableDataComponent
     ],
     templateUrl: './modulos.component.html',
     styleUrl: './modulos.component.scss'

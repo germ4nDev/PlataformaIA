@@ -25,6 +25,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { LocalStorageService, PtlidiomasService, UploadFilesService } from 'src/app/theme/shared/service'
 import { PTLIdioma } from 'src/app/theme/shared/_helpers/models/PTLIdioma.model'
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 const base_url = environment.apiUrl
 //#endregion IMPORTS
@@ -40,7 +41,8 @@ const base_url = environment.apiUrl
     NavBarComponent,
     NavContentComponent,
     DatatableComponent,
-    DataLoaderComponent
+    DataLoaderComponent,
+    TableDataComponent
   ],
   templateUrl: './idiomas.component.html',
   styleUrl: './idiomas.component.scss'
@@ -69,7 +71,7 @@ export class IdiomasComponent implements OnInit, OnDestroy {
   idiomasFiltradas$: Observable<PTLIdioma[]> = of([])
   idiomas: PTLIdioma[] = []
 
-  constructor (
+  constructor(
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
@@ -82,7 +84,7 @@ export class IdiomasComponent implements OnInit, OnDestroy {
     this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
-  ngOnInit () {
+  ngOnInit() {
     this._navigationService.getNavigationItems()
     this.menuItems = this._navigationService.menuItems$
     console.log('elementos menu componente', this.menuItems)
@@ -98,17 +100,17 @@ export class IdiomasComponent implements OnInit, OnDestroy {
     )
   }
 
-  ngOnDestroy (): void {
+  ngOnDestroy(): void {
     this.subscriptions.unsubscribe()
   }
 
-  consultarRegistros () {
+  consultarRegistros() {
     this.idiomas = this._languageService.getRegistrosActuales()
     this.registrosFiltrado = this.idiomas
     console.log('registrosFiltrado', this.registrosFiltrado)
   }
 
-  setupRegistrosStream (): void {
+  setupRegistrosStream(): void {
     // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
     // if (!suscriptor || !suscriptor.codigoSuscriptor) {
     //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
@@ -193,36 +195,36 @@ export class IdiomasComponent implements OnInit, OnDestroy {
     }
   ]
 
-  onFiltroCodigoChangeClick (evento: any): void {
+  onFiltroCodigoChangeClick(evento: any): void {
     const value = evento.target.value
     this.filtroCodigoSubject.next(value)
   }
 
-  onFiltroNombreChangeClick (evento: any): void {
+  onFiltroNombreChangeClick(evento: any): void {
     const value = evento.target.value
     this.filtroNombreSubject.next(value)
   }
 
-  onFiltroEstadoChangeClick (evento: any): void {
+  onFiltroEstadoChangeClick(evento: any): void {
     const value = evento.target.value
     this.filtroEstadoSubject.next(value)
   }
 
-  getEstado (estado: boolean): string {
+  getEstado(estado: boolean): string {
     return estado ? 'Activo' : 'Inactivo'
   }
 
-  OnNuevoRegistroClick () {
+  OnNuevoRegistroClick() {
     this._localStorageService.setObject('regId', 'nuevo')
     this.router.navigate(['utilidades/gestion-idioma'])
   }
 
-  OnEditarRegistroClick (id: string) {
+  OnEditarRegistroClick(id: string) {
     this._localStorageService.setObject('regId', id)
     this.router.navigate(['utilidades/gestion-idioma'])
   }
 
-  OnEliminarRegistroClick (id: string) {
+  OnEliminarRegistroClick(id: string) {
     const idioma = this.registrosFiltrado.filter(x => x.codigoIdioma == id)[0]
     Swal.fire({
       title: this.translate.instant('USUARIOS.ELIMINARTITULO'),
@@ -254,7 +256,7 @@ export class IdiomasComponent implements OnInit, OnDestroy {
     })
   }
 
-  toggleNav (): void {
+  toggleNav(): void {
     this.toggleSidebar.emit()
   }
 }

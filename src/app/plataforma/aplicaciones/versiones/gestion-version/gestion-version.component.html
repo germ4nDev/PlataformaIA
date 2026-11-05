@@ -16,13 +16,24 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'VERSIONES.GESTION.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'VERSIONES.UPDATE' | translate }}</h4>
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'VERSIONES.GESTION.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'VERSIONES.GESTION.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> - {{ 'VERSIONES.GESTION.TITLE' | translate
+                                }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'VERSIONES.GESTION.TITLEDESCRIPTION' | translate }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
@@ -42,7 +53,9 @@
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
+
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
@@ -55,8 +68,10 @@
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="">{{ 'VERSIONES.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
-                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{ app.nombreAplicacion }}</option>
+                                    <option value="">{{ 'VERSIONES.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    </option>
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{
+                                        app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
@@ -152,13 +167,13 @@
                                         <input name="estadoVersion" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoVersion" />
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estadoVersion" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoVersion" />
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

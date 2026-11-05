@@ -22,11 +22,12 @@ import { PTLScriptsService } from 'src/app/theme/shared/service/ptlscripts.servi
 import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service'
 
 import Swal from 'sweetalert2'
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
   selector: 'app-scripts',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
   templateUrl: './scripts.component.html',
   styleUrl: './scripts.component.scss'
 })
@@ -47,7 +48,7 @@ export class ScriptsComponent implements OnInit {
   activeTab: 'menu' | 'filters' | 'main' = 'menu'
   datatableElement!: DataTableDirective
 
-  constructor (
+  constructor(
     private router: Router,
     private translate: TranslateService,
     private _scriptsService: PTLScriptsService,
@@ -58,7 +59,7 @@ export class ScriptsComponent implements OnInit {
     this.gradientConfig = GradientConfig
   }
 
-  ngOnInit () {
+  ngOnInit() {
     this._navigationService.getNavigationItems()
     this.menuItems$ = this._navigationService.menuItems$
     console.log('elementos menu componente', this.menuItems$)
@@ -66,7 +67,7 @@ export class ScriptsComponent implements OnInit {
     this.consultarRegistros()
   }
 
-  consultarRegistros () {
+  consultarRegistros() {
     this.registrosSub = this._scriptsService
       .getRegistros()
       .pipe(
@@ -125,17 +126,17 @@ export class ScriptsComponent implements OnInit {
     }
   ]
 
-  OnNuevoRegistroClick () {
+  OnNuevoRegistroClick() {
     this._localStorageService.setObject('regId', 'nuevo')
     this.router.navigate(['/administracion-bd/gestion-script'])
   }
 
-  OnEditarRegistroClick (id: any) {
+  OnEditarRegistroClick(id: any) {
     this._localStorageService.setObject('regId', id)
     this.router.navigate(['/administracion-bd/gestion-script'])
   }
 
-  OnEliminarRegistroClick (evento: any) {
+  OnEliminarRegistroClick(evento: any) {
     const id = typeof evento === 'string' ? evento : evento?.codigoScript || evento?.id
     Swal.fire({
       title: this.translate.instant('SCRIPTS.ELIMINARTITULO'),
@@ -175,7 +176,7 @@ export class ScriptsComponent implements OnInit {
     })
   }
 
-  onFiltroNombreChangeClick (evento: any) {
+  onFiltroNombreChangeClick(evento: any) {
     console.log('filtrar el NOMBRE ', evento.target.value)
     const textoFiltro = evento.target.value.toLowerCase()
     if (!textoFiltro) {
@@ -185,7 +186,7 @@ export class ScriptsComponent implements OnInit {
     }
   }
 
-  onFiltroDescripcionChangeClick (evento: any) {
+  onFiltroDescripcionChangeClick(evento: any) {
     console.log('filtrar la descripcion ', evento.target.value)
     const textoFiltro = evento.target.value.toLowerCase()
     if (!textoFiltro) {
@@ -195,7 +196,7 @@ export class ScriptsComponent implements OnInit {
     }
   }
 
-  onFiltroEstadoChangeClick (evento: any) {
+  onFiltroEstadoChangeClick(evento: any) {
     console.log('filtrar el estado ', evento.target.value)
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros
@@ -205,7 +206,7 @@ export class ScriptsComponent implements OnInit {
     }
   }
 
-  toggleNav (): void {
+  toggleNav(): void {
     this.toggleSidebar.emit()
   }
 }

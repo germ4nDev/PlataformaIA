@@ -41,7 +41,7 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="slidersFiltradas$ | async as dataFiltrada;">
-                    <app-data-table [data]="dataFiltrada" [idField]="'sliderId'"
+                    <app-table-data [data]="dataFiltrada" [idField]="'sliderId'"
                         [tableTitle]="'SLIDER.TITLE' | translate" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showAvatar]="true" [showImage]="false" [showNewButton]="true" [showViewButton]="false"
@@ -49,7 +49,7 @@
                         [newButtonLabel]="'SLIDER.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                         (deleteRecord)="OnEliminarRegistroClick($event)">
-                    </app-data-table>
+                    </app-table-data>
                 </ng-container>
             </div>
         </div>

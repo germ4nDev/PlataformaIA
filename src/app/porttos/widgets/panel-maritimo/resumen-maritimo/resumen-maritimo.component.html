@@ -15,23 +15,22 @@
 
         <!-- Estado Vacío -->
         <div *ngIf="!data?.metricas || data?.metricas.length === 0"
-            class="d-flex justify-content-center align-items-center h-100 text-muted small py-3">
+            class="d-flex justify-content-center align-items-center h-100 titulo-container small py-3">
             No hay métricas disponibles en este momento.
         </div>
 
         <!-- Grid de Tarjetas -->
-        <div class="resumen-maritimo-grid pb-2" *ngIf="data?.metricas?.length > 0">
+        <!-- <div class="resumen-maritimo-grid pb-2" *ngIf="data?.metricas?.length > 0">
             <div class="resumen-maritimo-card" *ngFor="let kpi of data?.metricas">
                 <span class="c-titulo text-uppercase">{{ kpi.label }}</span>
 
-                <!-- 🟢 Descomentado y protegido: Si hay valor, lo muestra con estilo -->
-                <span class="c-valor text-white fw-bold mb-1" *ngIf="kpi.valor">{{ kpi.valor }}</span>
+                <span class="c-valor fw-bold mb-1" *ngIf="kpi.valor">{{ kpi.valor }}</span>
 
                 <span class="c-sub fw-medium" [ngClass]="kpi.claseTendencia || 'text-muted'">
                     {{ kpi.tendencia || '--' }}
                 </span>
             </div>
-        </div>
+        </div> -->
 
     </div>
 

@@ -1,37 +1,7 @@
-<!-- <app-widget-shell [titulo]="data.titulo || 'RESUMEN SEMANAL MARÍTIMO'"
-    [subtitulo]="data.subtitulo || 'Indicadores clave de los últimos 7 días'"
-    [icono]="data.icono || 'feather icon-calendar'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
-
-    <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge badge-info text-uppercase">
-            Semanal
-        </span>
-    </div>
-
-    <div
-        class="w-100 h-100 pt-2 animate__animated animate__fadeIn d-flex flex-column justify-content-center overflow-auto custom-scrollbar pe-2">
-
-        <div *ngIf="metricas.length === 0"
-            class="d-flex justify-content-center align-items-center h-100 text-muted small py-3">
-            No hay métricas disponibles para esta semana.
-        </div>
-
-        <div class="resumen-maritimo-grid pb-2" *ngIf="metricas.length > 0">
-            <div class="resumen-maritimo-card" *ngFor="let metrica of metricas">
-                <span class="c-titulo text-uppercase">{{ metrica.label || '--' }}</span>
-                <span class="c-valor text-white">{{ metrica.valor || '--' }}</span>
-                <span class="c-sub fw-medium" [ngClass]="metrica.claseTendencia || 'text-muted'">
-                    {{ metrica.tendencia || '--' }}
-                </span>
-            </div>
-        </div>
-
-    </div>
-
-</app-widget-shell> -->
 <app-widget-shell [titulo]="data.titulo || 'RESUMEN SEMANAL MARÍTIMO'"
     [subtitulo]="data.subtitulo || 'Indicadores clave de los últimos 7 días'"
-    [icono]="data.icono || 'feather icon-calendar'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
+    [icono]="data.icono || 'feather icon-calendar'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
+    [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
@@ -61,7 +31,7 @@
         <div class="resumen-maritimo-grid pb-2" *ngIf="!isLoading && metricas.length > 0">
             <div class="resumen-maritimo-card" *ngFor="let metrica of metricas; trackBy: trackByMetrica">
                 <span class="c-titulo text-uppercase">{{ metrica.label || '--' }}</span>
-                <span class="c-valor text-white">{{ metrica.valor || '--' }}</span>
+                <span class="c-valor">{{ metrica.valor || '--' }}</span>
                 <span class="c-sub fw-medium" [ngClass]="metrica.claseTendencia || 'text-muted'">
                     {{ metrica.tendencia || '--' }}
                 </span>

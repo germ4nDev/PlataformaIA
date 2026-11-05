@@ -16,14 +16,24 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PLATAFORMA.SLIDERS.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PLATAFORMA.SLIDERS.UPDATE' | translate }}
+
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'PLATAFORMA.SLIDERS.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'PLATAFORMA.SLIDERS.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> - {{ 'PLATAFORMA.SLIDERS.TITLE' | translate }}</span>
                         </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'PLATAFORMA.SLIDERS.TITLEDESCRIPTION' | translate }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
@@ -40,11 +50,13 @@
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
+
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreAplicacion">{{ 'PLATAFORMA.SLIDERS.NAME' |
                                     translate }}</label>
@@ -59,16 +71,24 @@
                                 </label>
                             </div>
                         </div>
-                        <!-- CC-104: slides por aplicación (migración 027). General = para todos los dominios -->
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label" for="codigoAplicacion">{{ 'PLATAFORMA.SLIDERS.APLICACION' | translate }}</label>
-                                <select class="form-control form-input" id="codigoAplicacion" name="codigoAplicacion"
-                                    [(ngModel)]="FormRegistro.codigoAplicacion">
-                                    <option [ngValue]="null">{{ 'PLATAFORMA.SLIDERS.GENERAL' | translate }}</option>
-                                    <option *ngFor="let a of aplicaciones$ | async" [ngValue]="a.codigoAplicacion">{{ a.nombreAplicacion }}</option>
+                                <label class="form-control-label" for="codigoAplicacion"> {{
+                                    'MODULOS.GESTION.APLICACION' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoAplicacion"
+                                    id="codigoAplicacion"
+                                    [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
+                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
+                                    (change)="onAplicacionChangeClick($event)">
+                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERAPLICACION' | translate }} </option>
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of apps"> {{
+                                        app.nombreAplicacion }}</option>
                                 </select>
-                                <small class="form-text text-muted">{{ 'PLATAFORMA.SLIDERS.APLICACION_AYUDA' | translate }}</small>
+                                <label
+                                    *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'MODULOS.GESTION.REQUERIDOAPLICACION' | translate }}
+                                </label>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -88,17 +108,18 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'PLATAFORMA.SLIDERS.GESTION.FOTO' | translate }}</label>
-                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview">
-                                <div class="file-input-wrapper">
-                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                                        {{ 'Seleccionar archivo' | translate }}
-                                    </label>
-                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
-                                        id="fileUploadInput" class="form-control form-input d-none" name="urlSlider">
-                                </div>
+                                <br>
+                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview" />
+                                <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"
+                                    (change)="onFileSelectedClick($event)">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInput.click()">
+                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    {{ 'PLATAFORMA.SELECTFILE' | translate }}
+                                </button>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -109,14 +130,14 @@
                                         <input name="option" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoSlider">
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
                                     </label>
 
                                     <label class="radio-button">
                                         <input name="option" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoSlider">
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

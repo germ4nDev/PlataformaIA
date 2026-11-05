@@ -4,7 +4,7 @@
     Description: Lo que el login y la entrada a una aplicación hacían en línea, como pieza común sin Angular ni red:
       - normalizarListasSesion: las respuestas de los servicios (cada una con su propia envoltura) a arreglos.
       - armarUsuariosSC: usuario → suscriptores → empresas asignadas (con sus roles) y paquetes activos (con sus módulos).
-      - rolesYWidgetsDeAplicacion: roles del usuario en la aplicación y widgets que esos roles permiten.
+      - rolesYWidgetsDeAplicacion: roles del usuario en la aplicación y widgets que esos roles permiten (widgetsDeRoles).
       - contextoDeUsuario: empresa y usuario de suscriptor por defecto (los primeros).
     Lo usan el login, la entrada a una aplicación y el modo embebido de la app (la tableta).
 */
@@ -92,22 +92,32 @@ export interface DatosRolesAplicacion {
 export function rolesYWidgetsDeAplicacion(d: DatosRolesAplicacion): { roles: any[]; widgets: any[] } {
   const usuSC = d.usuariosSC.find((x) => x.codigoUsuario == d.codigoUsuario);
   const rolesApp = d.roles.filter((x) => x.codigoAplicacion == d.codigoAplicacion);
-  const permitidos = new Map<string, any>();
   const roles = d.usuariosRoles
     .filter((x) => x.codigoUsuarioSC == usuSC?.codigoUsuarioSC)
-    .map((usuRole) => {
-      const role = rolesApp.find((x) => x.codigoRole == usuRole.codigoRole);
-      if (role) {
-        d.widgetsRoles
-          .filter((wr) => wr.codigoRole === role.codigoRole && wr.estadoRelacion === true)
-          .forEach((asignacion) => {
-            const widget = d.widgetsMaestro.find((w) => w.codigoWidget === asignacion.codigoWidget);
-            if (widget) permitidos.set(widget.codigoWidget, widget);
-          });
-      }
-      return { ...usuRole, role };
+    .map((usuRole) => ({ ...usuRole, role: rolesApp.find((x) => x.codigoRole == usuRole.codigoRole) }));
+  return { roles, widgets: widgetsDeRoles(roles, d.widgetsRoles, d.widgetsMaestro) };
+}
+
+/**
+ * Widgets del maestro que permiten los roles del usuario (los de `rolesYWidgetsDeAplicacion`: solo cuentan los que traen `role`,
+ * activos), por relaciones activas de PTLWidgetsRoles, sin repetir. Con él se recalculan los permisos en vivo cuando cambia
+ * Widgets por rol (regla 18, fase 2).
+ */
+export function widgetsDeRoles(rolesUsuario: any[], widgetsRoles: any[], widgetsMaestro: any[]): any[] {
+  const inactivo = (v: unknown) => v === false || v === 0 || String(v) === '0' || String(v).toLowerCase() === 'false';
+  const codigos = new Set(
+    (rolesUsuario || [])
+      .filter((r) => r?.role && !inactivo(r.estadoUsuarioRole) && !inactivo(r.role.estadoRole))
+      .map((r) => r.role.codigoRole)
+  );
+  const permitidos = new Map<string, any>();
+  (widgetsRoles || [])
+    .filter((wr) => codigos.has(wr.codigoRole) && wr.estadoRelacion === true)
+    .forEach((asignacion) => {
+      const widget = (widgetsMaestro || []).find((w) => w.codigoWidget === asignacion.codigoWidget);
+      if (widget) permitidos.set(widget.codigoWidget, widget);
     });
-  return { roles, widgets: Array.from(permitidos.values()) };
+  return Array.from(permitidos.values());
 }
 
 /** Empresa y usuario de suscriptor por defecto (los primeros del árbol), como los usa la navegación. */

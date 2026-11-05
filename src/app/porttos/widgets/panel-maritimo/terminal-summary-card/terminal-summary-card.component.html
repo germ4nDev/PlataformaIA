@@ -4,13 +4,15 @@
     [icono]="data.icono || 'feather icon-anchor'" [tituloFooter]="'TIEMPO MEDIO ESPERA VIRTUAL'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
-    <!-- ACCIONES EXTRA (Arriba a la derecha) -->
-    <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="!cargandoIA">
+    <!-- Estado de la terminal: una sola vez. En la vista ampliada va en el encabezado (hay espacio); en la tarjeta va
+         debajo del encabezado para que el nombre de la terminal se lea completo -->
+    <ng-template #estadoTerminal>
         <span class="tc-badge rounded-pill bg-transparent"
             [ngClass]="data.status === 'warning' ? 'border-warning text-warning' : 'border-success text-success'">
             {{ data.status === 'warning' ? 'CONGESTIONADO' : 'OPERATIVO' }}
         </span>
-        <span class="tc-badge rounded-pill border border-danger text-danger bg-transparent" *ngIf="data.badgeCount">
+        <span class="tc-badge rounded-pill border border-danger text-danger bg-transparent" *ngIf="data.badgeCount"
+            title="Muelles ocupados / muelles de la terminal">
             {{ data.badgeCount }}
         </span>
         <span class="tc-badge rounded-pill bg-transparent" *ngIf="data.aisDisponible"
@@ -18,12 +20,18 @@
             [title]="'Confirmados por AIS: ' + (data.kpis?.confirmadosAis || 0) + ' · Sin confirmar: ' + (data.kpis?.sinConfirmarAis || 0) + ' · Diferencias: ' + (data.kpis?.discrepanciasAis || 0)">
             AIS {{ data.kpis?.confirmadosAis || 0 }}/{{ data.kpis?.motonaves || 0 }}
         </span>
+    </ng-template>
+
+    <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="!cargandoIA && isEnfoque">
+        <ng-container *ngTemplateOutlet="estadoTerminal"></ng-container>
     </div>
 
     <!-- CUERPO PRINCIPAL DEL WIDGET (Los muelles / docks) -->
     <div *ngIf="!cargandoIA" class="terminal-wrapper animate__animated animate__fadeIn">
+        <div *ngIf="!isEnfoque" class="estado-terminal d-flex align-items-center flex-wrap gap-2 mb-2">
+            <ng-container *ngTemplateOutlet="estadoTerminal"></ng-container>
+        </div>
         <ng-container *ngIf="!mostrarTabla">
-            <br>
             <div class="docks-container-wrapper w-100">
                 <div class="docks-grid" [ngClass]="(data.docks?.length || 0) > 4 ? 'grid-panal' : 'grid-bloques'">
                     <div *ngFor="let muelle of data.docks" class="dock-box" [ngClass]="muelle?.class || 'default-dock'"
@@ -47,8 +55,7 @@
                     </div>
                 </div>
             </div>
-            <br>
-            <p class="legend-text" *ngIf="data.legend">{{ data.legend }}</p>
+            <p class="legend-text mt-2" *ngIf="leyenda">{{ leyenda }}</p>
         </ng-container>
     </div>
 
@@ -67,18 +74,6 @@
             <small class="kpi-lbl text-muted">{{ data.kpis?.metricLabel || 'TM HOY' }}</small>
         </div>
     </div>
-
-    <!-- 🚨 ESTOS BADGES SE IRÁN A LA DERECHA AUTOMÁTICAMENTE -->
-    <ng-container badges-enfoque>
-        <span class="tc-badge rounded-pill bg-transparent fs-6"
-            [ngClass]="data.status === 'warning' ? 'border-warning text-warning' : 'border-success text-success'">
-            {{ data.status === 'warning' ? 'CONGESTIONADO' : 'OPERATIVO' }}
-        </span>
-        <span class="tc-badge rounded-pill border border-danger text-danger bg-transparent fs-6 ms-2"
-            *ngIf="data.badgeCount">
-            {{ data.badgeCount }}
-        </span>
-    </ng-container>
 
     <!-- ESTA ES LA TABLA QUE AHORA TENDRÁ SCROLL -->
     <div detalle-enfoque class="w-100 pb-3">

@@ -29,12 +29,13 @@ import Swal from 'sweetalert2';
 
 import { environment } from 'src/environments/environment';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 const base_url = environment.apiUrl;
 
 @Component({
     selector: 'app-seguimientos',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
     templateUrl: './seguimientos.component.html',
     styleUrl: './seguimientos.component.scss'
 })

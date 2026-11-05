@@ -1,6 +1,7 @@
 <app-widget-shell [titulo]="data?.titulo || '🏢 Saturación de Bodegas y Silos'"
     [subtitulo]="data?.subtitulo || 'Ocupación física frente a capacidad nominal (Ton)'"
-    [icono]="data?.icono || 'feather icon-home'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen" [lienzo]="true">
+    [icono]="data?.icono || 'feather icon-home'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
+    [origen]="data?.origen" [lienzo]="true">
 
     <!-- PROYECCIÓN AL HEADER: Estado global de saturación -->
     <div acciones-extra class="d-flex align-items-center gap-2">
@@ -31,14 +32,15 @@
                         <span class="badge bg-dark border border-secondary text-info" style="font-size: 0.65rem;">
                             {{ bod.codigo_bodega }}
                         </span>
-                        <span class="fw-bold text-white text-truncate" style="font-size: 0.84rem;">
+                        <span class="fw-bold titulo-container text-truncate" style="font-size: 0.84rem;">
                             {{ bod.nombre_bodega }}
                         </span>
                     </div>
 
                     <div class="d-flex align-items-center gap-2 flex-shrink-0">
                         <span class="fw-bolder" [style.color]="bod.colorBarra" style="font-size: 0.9rem;">
-                            {{ bod.ocupacion_pct !== null ? (bod.ocupacion_pct | number:'1.0-1') + '%' : 'Sin capacidad' }}
+                            {{ bod.ocupacion_pct !== null ? (bod.ocupacion_pct | number:'1.0-1') + '%' : 'Sin capacidad'
+                            }}
                         </span>
                         <span class="badge rounded-pill px-2 py-1" [ngClass]="bod.claseBadge"
                             style="font-size: 0.62rem;">
@@ -95,7 +97,8 @@
         </div>
         <p *ngIf="notaSerie" class="detalle-ayuda">{{ notaSerie }}</p>
         <div class="detalle-grafica" *ngIf="serieLabels.length">
-            <app-grafica-tcl tipo="linea" [labels]="serieLabels" [series]="seriesOcupacion" unidad="%" [isEnfoque]="true"></app-grafica-tcl>
+            <app-grafica-tcl tipo="linea" [labels]="serieLabels" [series]="seriesOcupacion" unidad="%"
+                [isEnfoque]="true"></app-grafica-tcl>
         </div>
     </div>
 </app-widget-shell>

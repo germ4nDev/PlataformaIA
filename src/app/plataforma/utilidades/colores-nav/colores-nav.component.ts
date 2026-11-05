@@ -21,12 +21,13 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 import { PTLColorSettingModel } from 'src/app/theme/shared/_helpers/models/PTLColorSetting.model';
 import { LocalStorageService, PtlColoresSettingsService } from 'src/app/theme/shared/service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 //#endregion IMPORTS
 
 @Component({
     selector: 'app-colores-nav',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
     templateUrl: './colores-nav.component.html',
     styleUrl: './colores-nav.component.scss'
 })

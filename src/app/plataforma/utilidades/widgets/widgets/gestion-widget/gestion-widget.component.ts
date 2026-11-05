@@ -150,6 +150,8 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
             this.FormRegistro.movil = false;
             this.FormRegistro.estadoWidget = true;
             this.FormRegistro.inicial = false;
+            // Anclaje por defecto: relativo (el más común del catálogo); se cambia en la lista (OT-015, CC-114)
+            this.FormRegistro.anclajeTipo = 'RELATIVO';
             //   console.log('formRegistro original', this.FormRegistro);
         }
     }
@@ -266,7 +268,8 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                             descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR') + ', ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'))
+                        // Texto del widget (antes «El Usuario se modificó correctamente»; OT-015, CC-114)
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('WIDGETS.UPDATESUCCSESSFULLY'))
                         this.router.navigate(['/utilidades/widgets'])
                     } else {
                         const logData = {
@@ -302,7 +305,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                             descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTUSERSUCCESS'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('WIDGETS.GESTION.CREADO'))
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/utilidades/widgets'])

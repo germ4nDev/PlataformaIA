@@ -23,12 +23,13 @@ import { GradientConfig } from 'src/app/app-config';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
 import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclases-ticket.service';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 
 @Component({
     selector: 'app-clases-ticket',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, DatatableComponent, NavContentComponent, NavBarComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, DatatableComponent, NavContentComponent, NavBarComponent, TableDataComponent],
     templateUrl: './clases-ticket.component.html',
     styleUrl: './clases-ticket.component.scss'
 })

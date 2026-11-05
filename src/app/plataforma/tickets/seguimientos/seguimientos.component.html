@@ -26,7 +26,8 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'TICKETS.SEGUIMIENTOS.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
+                            class="form-control form-input"
                             placeholder="{{ 'TICKETS.SEGUIMIENTOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
@@ -47,26 +48,16 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-data-table
-                        [data]="dataFiltrada"
-                        [idField]="'codigoSeguimiento'"
-                        [tableTitle]="'TICKETS.SEGUIMIENTOS.TITLE' | translate"
-                        [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros"
-                        [showActions]="true"
-                        [showBackButton]="codigoRegistro !== '0'"
-                        [showNewButton]="true"
-                        [showViewButton]="false"
-                        [showEditButton]="true"
-                        [showDeleteButton]="true"
-                        [showDetail]="true"
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoSeguimiento'"
+                        [tableTitle]="'TICKETS.SEGUIMIENTOS.TITLE' | translate" [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true"
+                        [showBackButton]="codigoRegistro !== '0'" [showNewButton]="true" [showViewButton]="false"
+                        [showEditButton]="true" [showDeleteButton]="true" [showDetail]="true" [showSearchBox]="false"
                         [newButtonLabel]="'TICKETS.SEGUIMIENTOS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        (newRecord)="OnNuevoRegistroClick()"
-                        (backRecord)="OnBackRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        (backRecord)="OnBackRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                         (deleteRecord)="OnEliminarRegistroClick($event)">
-                    </app-data-table>
+                    </app-table-data>
                 </ng-container>
             </div>
         </div>

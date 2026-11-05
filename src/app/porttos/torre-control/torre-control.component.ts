@@ -47,6 +47,8 @@ import { CargaSueltaDashboardComponent } from './components/carga-suelta-dashboa
 import { CapacidadDashboardComponent } from './components/capacidad-dashboard/capacidad-dashboard.component';
 import { NoticiasDashboardComponent } from './components/noticias-dashboard/noticias-dashboard.component';
 import { colorPestana, iconoPestana } from '../widgets/shared/iconos-pestana';
+import { WidgetsPermitidosService } from 'src/app/theme/shared/service/widgets-permitidos.service';
+import { widgetVisible } from 'src/app/plataforma/sesion/nucleo';
 
 @Component({
     selector: 'app-torre-control',
@@ -114,7 +116,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         private _pestanasService: PtlpestanasService,
         private _swalAlertService: SwalAlertService,
         private cdr: ChangeDetectorRef,
-        private _embebido: EmbebidoService
+        private _embebido: EmbebidoService,
+        private _permisosWidgets: WidgetsPermitidosService
     ) { }
 
     /** Modo embebido (OT-014): la app recuerda el puerto y la pestaña para la próxima apertura (fuera de la app no hace nada). */
@@ -151,6 +154,14 @@ export class TorreControlComponent implements OnInit, OnDestroy {
                     this._torreService.setPuerto(this.puertoActivo);
                     this.avisarEstado();
                 })
+        );
+
+        // Cambió Widgets por rol: el catálogo se vuelve a filtrar (el tablero lo rearma cada pestaña)
+        this.subs.add(
+            this._permisosWidgets.cambios$.subscribe(() => {
+                if (this.pestanaActiva) this.filtrarWidgetsParaLobby(this.pestanaActiva);
+                this.cdr.detectChanges();
+            })
         );
 
         this.subs.add(
@@ -333,6 +344,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
             this.lsWidgets = this._widgetsService.getWidgetsActuales() || [];
         }
 
+        const permisos = this._permisosWidgets.permisos();
         this.widgetsParaElLobby = (this.lsWidgets || []).filter((w: any) => {
             const estadoValido =
                 w.estadoWidget === true ||
@@ -340,7 +352,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
                 w.estadoWidget === 1 ||
                 w.estado === 1;
             const pestanaWidget = w.codigoPestana || w.codigo_pestana || '';
-            return estadoValido && pestanaWidget === nuevaPestana;
+            // Regla 18: solo lo que permite el rol del usuario y, en la web y la tableta, sin los de teléfono
+            return estadoValido && pestanaWidget === nuevaPestana && widgetVisible(w.codigoWidget || w.codigo_widget, permisos, 'web');
         });
     }
 
@@ -553,7 +566,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
     guardarConfiguracionTablero(): void {
         const hijo = this.pestanaHijaActiva;
-        const dashboardActual: any[] = hijo?.dashboard || [];
+        // Los widgets ocultos por permiso (regla 18) se guardan con el resto: no se borran del layout del usuario
+        const dashboardActual: any[] = [...(hijo?.dashboard || []), ...(hijo?.ocultosPorPermiso || [])];
 
         if (!dashboardActual || dashboardActual.length === 0) return;
 

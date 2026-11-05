@@ -20,11 +20,14 @@
         - opcionesGridster()       ajustes de la cuadrícula sobre los comunes
         - alDestruir()             limpieza propia (destroy$ ya se completa en la base)
 */
-import { ChangeDetectorRef, Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { LayoutMetadataEngineService } from 'src/app/theme/shared/service/layout-metadata-engine.service';
 import { LocalStorageService } from 'src/app/theme/shared/service';
+import { WidgetsPermitidosService } from 'src/app/theme/shared/service/widgets-permitidos.service';
+import { separarPorPermiso } from 'src/app/plataforma/sesion/nucleo';
 import { WIDGET_MAP } from '../../widget-registry';
 
 export type WidgetEnCuadricula = GridsterItem & {
@@ -66,8 +69,14 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
     public dashboard: WidgetEnCuadricula[] = [];
     public cargando = true;
     public hayCambiosSinGuardar = false;
+    /**
+     * Widgets del layout que el rol del usuario no permite (o de teléfono, regla 18): no se pintan, pero torre-control los
+     * vuelve a guardar con el layout para que reaparezcan en su sitio si vuelve el permiso.
+     */
+    public ocultosPorPermiso: any[] = [];
     private construyendoLayout = false;
     protected readonly destroy$ = new Subject<void>();
+    protected readonly permisosWidgets = inject(WidgetsPermitidosService);
 
     constructor(
         protected layoutEngine: LayoutMetadataEngineService,
@@ -82,6 +91,10 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
     ngOnInit(): void {
         this.alIniciar();
         if (this.lsWidgets?.length && !this.dashboard.length) this.inicializarLayoutPorPuerto();
+        // Cambió Widgets por rol (o el maestro): se rearma con el layout de la sesión, que conserva los ocultos
+        this.permisosWidgets.cambios$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.lsWidgets?.length) this.inicializarLayoutPorPuerto();
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -182,7 +195,10 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
                 layout = await this.obtenerLayoutBaseTab();
                 this.localStorageService.guardarLayoutPestanaEnSesion(cacheKey, layout);
             }
-            this.dashboard = this.armarDashboard(layout || [], puerto);
+            // Widgets por rol y por canal (regla 18): la sesión guarda el layout completo; solo se pinta lo permitido
+            const { visibles, ocultos } = separarPorPermiso(layout || [], this.permisosWidgets.permisos(), 'web');
+            this.ocultosPorPermiso = ocultos;
+            this.dashboard = this.armarDashboard(visibles, puerto);
             this.despuesDeArmar(puerto);
         } catch (error) {
             console.error(`❌ [${this.nombrePestana}] Error construyendo el layout:`, error);

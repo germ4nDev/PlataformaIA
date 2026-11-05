@@ -19,11 +19,12 @@ import Swal from 'sweetalert2'
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
     selector: 'app-conexciones',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
     templateUrl: './conexiones.component.html',
     styleUrl: './conexiones.component.scss'
 })

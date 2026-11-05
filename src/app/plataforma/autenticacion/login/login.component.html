@@ -5,7 +5,8 @@
     <section class="login-portal__escena" [attr.aria-label]="'AUTENTICACION.LOGIN.PORTAL_ESCENA' | translate">
         <app-full-screen-slider [tipoSlider]="1" [leyendas]="true" [contenido]="true"></app-full-screen-slider>
         <a class="login-portal__volver" [routerLink]="loginDominio.rutaPortal">
-            <i class="feather icon-arrow-left" aria-hidden="true"></i>{{ 'AUTENTICACION.LOGIN.PORTAL_VOLVER' | translate }}
+            <i class="feather icon-arrow-left" aria-hidden="true"></i>{{ 'AUTENTICACION.LOGIN.PORTAL_VOLVER' | translate
+            }}
         </a>
     </section>
     } @else {
@@ -25,13 +26,15 @@
             @if (loginDominio.portal) {
             <div class="login-portal__encabezado">
                 @if (loginDominio.logo) {
-                <img class="login-portal__logo" [src]="loginDominio.logo" [alt]="loginDominio.marca || ''" width="148" height="40" />
+                <img class="login-portal__logo" [src]="loginDominio.logo" [alt]="loginDominio.marca || ''" width="148"
+                    height="40" />
                 } @else if (loginDominio.marca) {
                 <p class="login-portal__marca">{{ loginDominio.marca }}</p>
                 }
                 <p class="login-portal__antetitulo">{{ 'AUTENTICACION.LOGIN.PORTAL_ANTETITULO' | translate }}</p>
                 <h1 class="login-portal__titulo">{{ 'AUTENTICACION.LOGIN.PORTAL_TITULO' | translate }}</h1>
-                <p class="login-portal__subtitulo">{{ 'AUTENTICACION.LOGIN.PORTAL_SUBTITULO' | translate: { marca: loginDominio.marca || '' } }}</p>
+                <p class="login-portal__subtitulo">{{ 'AUTENTICACION.LOGIN.PORTAL_SUBTITULO' | translate: { marca:
+                    loginDominio.marca || '' } }}</p>
             </div>
             } @else {
             <div class="plafaforma-auth-header text-center">
@@ -57,7 +60,8 @@
             </div>
             <div class="input-group mb-4">
                 <span class="input-group-text form-input" id="basic-addon2"><i class="feather icon-lock"></i></span>
-                <input id="password" [type]="showPassword ? 'text' : 'password'" placeholder="{{ 'AUTENTICACION.LOGIN.PASSWORD' | translate }}"
+                <input id="password" [type]="showPassword ? 'text' : 'password'"
+                    placeholder="{{ 'AUTENTICACION.LOGIN.PASSWORD' | translate }}"
                     [attr.aria-label]="'AUTENTICACION.LOGIN.PASSWORD' | translate" autocomplete="current-password"
                     formControlName="password" class="form-control form-input"
                     [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }" />
@@ -108,7 +112,8 @@
 
         @if (loginDominio.acceso; as acceso) {
         <p class="login-portal__acceso">{{ 'AUTENTICACION.LOGIN.PORTAL_SIN_ACCESO' | translate }}
-            <a [routerLink]="acceso.ruta" [queryParams]="acceso.query" class="link-label">{{ 'AUTENTICACION.LOGIN.PORTAL_SOLICITAR' | translate }}</a>
+            <a [routerLink]="acceso.ruta" [queryParams]="acceso.query" class="link-label">{{
+                'AUTENTICACION.LOGIN.PORTAL_SOLICITAR' | translate }}</a>
         </p>
         } @else {
         <app-social-networks></app-social-networks>

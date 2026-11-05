@@ -22,11 +22,12 @@ import { PTLTiposScriptsService } from 'src/app/theme/shared/service/ptltipos-sc
 import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
 
 import Swal from 'sweetalert2';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
     selector: 'app-tipos-scripts',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
     templateUrl: './tipos-scripts.component.html',
     styleUrl: './tipos-scripts.component.scss'
 })

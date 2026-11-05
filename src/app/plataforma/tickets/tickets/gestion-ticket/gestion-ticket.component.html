@@ -12,13 +12,23 @@
     </aside>
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'TICKETS.TICKETS.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'TICKETS.TICKETS.UPDATE' | translate }}</h4>
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'TICKETS.TICKETS.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'TICKETS.TICKETS.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> - {{ 'TICKETS.TICKETS.TITLE' | translate }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'TICKETS.TICKETS.TITLEDESCRIPTION' | translate }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
@@ -38,7 +48,9 @@
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
+
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
@@ -65,8 +77,10 @@
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled>{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
-                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{app.nombreAplicacion }}</option>
+                                    <option value="" disabled>{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERAPLICACION' |
+                                        translate }}</option>
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                        {{app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
@@ -134,7 +148,8 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'TICKETS.TICKETS.GESTION.DESCRIPTION' | translate }}</label>
+                                <label class="form-label">{{ 'TICKETS.TICKETS.GESTION.DESCRIPTION' | translate
+                                    }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcionTicket ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionTicket"
@@ -181,7 +196,8 @@
                                     [ngClass]="{ 'is-invalid': !codigoClase.valid && (codigoClase.dirty || codigoClase.touched || isSubmit) }"
                                     #codigoClase="ngModel" required [(ngModel)]="FormRegistro.codigoClase"
                                     (change)="onModuloChangeClick($event)">
-                                    <option value="">{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERCLASETICKET' | translate }}</option>
+                                    <option value="">{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERCLASETICKET' | translate }}
+                                    </option>
                                     <option [value]="cla.codigoClase" *ngFor="let cla of clasesTicket">
                                         {{ cla.claseTicket }}</option>
                                 </select>
@@ -202,7 +218,8 @@
                                     #codigoUsuarioAsignado="ngModel" required
                                     [(ngModel)]="FormRegistro.codigoUsuarioAsignado"
                                     (change)="onModuloChangeClick($event)">
-                                    <option value="">{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERUSUARIOASIGNADO' | translate }}
+                                    <option value="">{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERUSUARIOASIGNADO' | translate
+                                        }}
                                     </option>
                                     <option [value]="usu.codigoUsuario" *ngFor="let usu of usuarios">
                                         {{ usu.nombreUsuario }}</option>
@@ -223,7 +240,8 @@
                                     [ngClass]="{ 'is-invalid': !prioridad.valid && (prioridad.dirty || prioridad.touched || isSubmit) }"
                                     #prioridad="ngModel" required [(ngModel)]="FormRegistro.prioridad"
                                     (change)="onPrioridadChangeClick($event)">
-                                    <option value="">{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERPRIORIDAD' | translate }}</option>
+                                    <option value="">{{ 'TICKETS.TICKETS.GESTION.PLACEHOLDERPRIORIDAD' | translate }}
+                                    </option>
                                     <option [value]="pri.prioridad" *ngFor="let pri of prioridades">
                                         {{ pri.prioridad }}</option>
                                 </select>
@@ -235,7 +253,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="estadoTicket">{{ 'TICKETS.TICKETS.GESTION.STATUS' | translate }}</label>
+                                <label class="form-control-label" for="estadoTicket">{{ 'TICKETS.TICKETS.GESTION.STATUS'
+                                    | translate }}</label>
                                 <select class="form-control form-input" style="cursor: pointer;" name="estadoTicket"
                                     id="estadoTicket"
                                     [ngClass]="{ 'is-invalid': !estadoTicket.valid && (estadoTicket.dirty || estadoTicket.touched || isSubmit) }"
@@ -272,24 +291,22 @@
                         </div>
                         <div class="col-md-12"><br>
                             <div class="text-center">
-                                <h4 class="datatable-title">{{ 'TICKETS.TICKETS.GESTION.ELEMENTOSTICKET' | translate }}</h4>
+                                <h4 class="datatable-title">{{ 'TICKETS.TICKETS.GESTION.ELEMENTOSTICKET' | translate }}
+                                </h4>
                             </div><br>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'TICKETS.TICKETS.GESTION.CAPTURA' | translate }}</label>
-                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview">
-                                <div class="file-input-wrapper">
-                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                                        {{ 'Seleccionar archivo' | translate }}
-                                    </label>
-                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
-                                        id="fileUploadInput" class="form-control form-input d-none"
-                                        name="capturaTicket">
-                                    <span class="file-name" [ngClass]="{'has-file': fileName}">
-                                        {{ fileName || ('TICKETS.TICKETS.GESTION.CAPTURAHOLDER' | translate) }}
-                                    </span>
-                                </div>
+                                <br>
+                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview" />
+                                <input type="file" #fileInput id="capturaTicket" style="display: none;" accept="image/*"
+                                    (change)="onFileSelectedClick($event)">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                                    (click)="fileInput.click()">
+                                    <i class="feather icon-upload me-2"></i> <!-- Opcional: un icono -->
+                                    {{ 'TICKETS.TICKETS.GESTION.CAPTURAHOLDER' | translate }}
+                                </button>
                             </div>
                         </div>
                     </div>

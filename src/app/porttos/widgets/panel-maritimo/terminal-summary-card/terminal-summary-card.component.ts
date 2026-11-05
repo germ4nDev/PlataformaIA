@@ -204,6 +204,14 @@ export class TerminalSummaryCardComponent implements OnInit, AfterViewInit, OnCh
         };
     }
 
+    /** Descripción de la terminal como texto: en la BD viene con etiquetas HTML (<p>…</p>) y se veían en crudo. */
+    get leyenda(): string {
+        const texto = String(this.data.legend || '');
+        const div = document.createElement('div');
+        div.innerHTML = texto;
+        return (div.textContent || '').replace(/\s+/g, ' ').trim();
+    }
+
     get cargandoIA(): boolean {
         return this.cargandoDatos && !this.datosAutonomosSQL && !this.datosVivos;
     }

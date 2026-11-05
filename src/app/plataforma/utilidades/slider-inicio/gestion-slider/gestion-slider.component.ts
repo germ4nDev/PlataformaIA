@@ -32,6 +32,7 @@ export class GestionSliderComponent implements OnInit {
     FormRegistro: PTLSliderInicioModel = Object.assign(new PTLSliderInicioModel(), { codigoAplicacion: null })
     // CC-104: a qué aplicación pertenece el slide (null = general); el login de un dominio de aplicación muestra los suyos
     aplicaciones$!: Observable<PTLAplicacionModel[]>
+    apps: PTLAplicacionModel[] = []
     menuItems!: Observable<NavigationItem[]>
     gradientConfig: any
     navCollapsed: boolean = false
@@ -77,6 +78,7 @@ export class GestionSliderComponent implements OnInit {
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
         this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         this.navCollapsedMob = false
+        this.FormRegistro.codigoAplicacion = ''
         this.sliderId = this._localStorageService.getObject<string>('regId') || 'nuevo'
         if (this.sliderId != 'nuevo') {
             this.modoEdicion = true
@@ -93,6 +95,7 @@ export class GestionSliderComponent implements OnInit {
             })
         } else {
             this.modoEdicion = false
+            this.FormRegistro.codigoAplicacion = '';
         }
     }
 
@@ -100,6 +103,7 @@ export class GestionSliderComponent implements OnInit {
         this.aplicaciones$ = this._aplicacionesService.aplicaciones$
         this._aplicacionesService.cargarAplicaciones().subscribe({ error: () => { /* sin lista: queda «General» */ } })
         this._navigationService.getNavigationItems()
+        this.apps = this._aplicacionesService.getBAplicacionesActuales();
         this.menuItems = this._navigationService.menuItems$
         this._layoutInitializer.applyLayout()
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
@@ -115,6 +119,16 @@ export class GestionSliderComponent implements OnInit {
             this.FormRegistro = form
             this._localStorageService.removeFormRegistro()
         }
+    }
+
+    onAplicacionChangeClick(event: any) {
+        console.log('evento seleccionada', event);
+        const value = event.target.value;
+        console.log('value seleccionada', value);
+        const app = this.apps.filter(x => x.codigoAplicacion == value)[0]
+        this.FormRegistro.codigoAplicacion = app.codigoAplicacion || ''
+        console.log('aplicacion seleccionada', app);
+        console.log('aplicacion formRegistro', this.FormRegistro);
     }
 
     actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -140,7 +154,7 @@ export class GestionSliderComponent implements OnInit {
             this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
                 next: (path: any) => {
                     console.log('resultado', path)
-                    this.FormRegistro.urlSlider = path.fileName
+                    this.FormRegistro.urlSlider = path.data.respuesta.fileName
                 },
                 error: () => {
                     this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
@@ -187,7 +201,7 @@ export class GestionSliderComponent implements OnInit {
                 }
             })
         } else {
-            console.log('creacion');
+            console.log('creacion', registroData);
             registroData.codigoSlider = uuidv4()
             registroData.urlSlider = this.FormRegistro.urlSlider
             registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''

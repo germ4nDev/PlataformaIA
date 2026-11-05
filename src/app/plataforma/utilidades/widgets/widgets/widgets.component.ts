@@ -398,7 +398,7 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     text: this.translate.instant('WIDGETS.ELIMINARTEXTO'),
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+                    confirmButtonText: this.translate.instant('WIDGETS.ELIMINARBTN'), // retira (inactiva), no borra (CC-114)
                     cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
                 }).then(result => {
                     if (result.isConfirmed) {
@@ -494,7 +494,7 @@ export class WidgetsComponent implements OnInit, OnDestroy {
             text: this.translate.instant('WIDGETS.ELIMINARTEXTO'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+            confirmButtonText: this.translate.instant('WIDGETS.ELIMINARBTN'), // retira (inactiva), no borra (CC-114)
             cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {

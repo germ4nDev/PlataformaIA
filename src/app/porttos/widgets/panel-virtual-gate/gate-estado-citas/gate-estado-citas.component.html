@@ -22,11 +22,11 @@
             <!-- 1. Barras de Progreso Dinámicas -->
             <div class="progress-list flex-grow-1 pe-2 custom-scrollbar overflow-auto">
                 <div class="progress-item" *ngFor="let item of barrasProgreso; trackBy: trackByBarra">
-                    <span class="p-label">{{ item.label }}</span>
+                    <span class="titulo-container">{{ item.label }}</span>
                     <div class="p-track">
                         <div class="p-fill" [ngClass]="item.colorClass" [style.width.%]="item.percent"></div>
                     </div>
-                    <span class="p-value">{{ item.value }}</span>
+                    <span class="titulo-container">{{ item.value }}</span>
                 </div>
             </div>
 
@@ -40,7 +40,8 @@
                 <div class="d-flex justify-content-between" *ngIf="terminalesPie.length; else sinTerminales">
                     <div class="kpi-item" *ngFor="let t of terminalesPie; let i = index; trackBy: trackByTerminal"
                         [class.border-start]="i > 0" style="border-color: rgba(255,255,255,0.05) !important;">
-                        <span class="kpi-val" [ngClass]="colorEspera(t.esperaPromedioMin)">{{ t.esperaPromedioMin != null ? t.esperaPromedioMin + 'm' : '—' }}</span>
+                        <span class="kpi-val" [ngClass]="colorEspera(t.esperaPromedioMin)">{{ t.esperaPromedioMin !=
+                            null ? t.esperaPromedioMin + 'm' : '—' }}</span>
                         <span class="kpi-lbl" [title]="t.terminal">{{ t.terminal }}</span>
                     </div>
                 </div>

@@ -12,14 +12,23 @@
     </aside>
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'USUARIOS.USUARIOS.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'USUARIOS.USUARIOS.UPDATE' | translate }}
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'USUARIOS.USUARIOS.NEW' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'USUARIOS.USUARIOS.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> - Usuario Plataforma</span>
                         </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            Configure la información general, descripción y recursos visuales del paquete.
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
@@ -39,7 +48,9 @@
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
+
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
@@ -188,13 +199,13 @@
                                         <input name="estadoUsuario" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoUsuario" />
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estadoUsuario" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoUsuario" />
                                         <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
