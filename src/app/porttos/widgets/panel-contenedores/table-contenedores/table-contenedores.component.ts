@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -39,7 +40,7 @@ export interface IMovimientoContenedor {
 @Component({
     selector: 'app-table-contenedores',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './table-contenedores.component.html',
     styleUrls: ['./table-contenedores.component.scss'],
     encapsulation: ViewEncapsulation.None

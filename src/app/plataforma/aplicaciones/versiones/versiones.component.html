@@ -63,7 +63,7 @@
                     [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true"
                     [showSearchBox]="false" [newButtonLabel]="'VERSIONES.NEW' | translate" [showSearchBox]="false"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_VERSIONES_CREAR" permisoEdit="ACT_VERSIONES_MODIFICAR" permisoDelete="ACT_VERSIONES_ELIMINAR">
                 </app-table-data>
             </div>
         </div>

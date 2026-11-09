@@ -40,8 +40,7 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'WIDGETS.FILTROS.FILTROPESTANA' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroPestanaChangeClick($event)"
-                            class="form-control form-input"
+                        <input type="text" (keyup)="onFiltroPestanaChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'WIDGETS.FILTROS.PESTANAHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
@@ -63,7 +62,8 @@
                         <select (change)="onFiltroCanalChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="web">{{ 'WIDGETS.CANALWEB' | translate }}</option>
-                            <option value="movil">{{ 'WIDGETS.CANALMOVIL' | translate }}</option>
+                            <option value="telefono">{{ 'WIDGETS.CANALMOVIL' | translate }}</option>
+                            <option value="ambos">{{ 'WIDGETS.CANALAMBOS' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -76,13 +76,15 @@
             <div class="card-body">
                 <ng-container *ngIf="widgetssFiltradas$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoWidget'"
-                        [tableTitle]="'WIDGETS.TITLE' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
-                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'WIDGETS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaWidgetClick()"
-                        (editRecord)="OnEditarWidgetClick($event)" (deleteRecord)="OnEliminarWidgetClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)">
+                        [tableTitle]="'WIDGETS.TITLE' | translate" [tableSubtitle]="'WIDGETS.SUBTITULO' | translate"
+                        [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
+                        [showEditButton]="false" [showDeleteButton]="false" [showSearchBox]="false"
+                        [newButtonLabel]="'WIDGETS.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        (newRecord)="OnNuevaWidgetClick()" (editRecord)="OnEditarWidgetClick($event)"
+                        (deleteRecord)="OnEliminarWidgetClick($event)"
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_WDGT_CREAR"
+                        permisoEdit="ACT_WDGT_MODIFICAR" permisoDelete="ACT_WDGT_ELIMINAR">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>

@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -85,7 +86,7 @@ export class GestionTipoComponent implements OnInit {
                 }
             },
             error: () => {
-                Swal.fire('Error', 'No se pudo cargar la información del tipo de script', 'error');
+                Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_TIPO.NO_SE_PUDO_CARGAR_LA'), 'error');
                 this.volver();
             }
         });
@@ -108,23 +109,23 @@ export class GestionTipoComponent implements OnInit {
         if (this.esNuevo) {
             this._tiposScriptsService.postCrearRegistro(tipoData).subscribe({
                 next: () => {
-                    Swal.fire('Éxito', 'Tipo de script creado correctamente', 'success');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.EXITO'), traducir('WEB.GESTION_TIPO.TIPO_DE_SCRIPT_CREADO_CORRECTAMENTE'), 'success');
                     this.volver();
                 },
                 error: (err) => {
                     console.error(err);
-                    Swal.fire('Error', 'Ocurrió un error al crear el tipo de script', 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_TIPO.OCURRIO_UN_ERROR_AL_CREAR'), 'error');
                 }
             });
         } else {
             this._tiposScriptsService.putModificarRegistro(tipoData).subscribe({
                 next: () => {
-                    Swal.fire('Éxito', 'Tipo de script actualizado correctamente', 'success');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.EXITO'), traducir('WEB.GESTION_TIPO.TIPO_DE_SCRIPT_ACTUALIZADO_CORRECTAMENTE'), 'success');
                     this.volver();
                 },
                 error: (err) => {
                     console.error(err);
-                    Swal.fire('Error', 'Ocurrió un error al actualizar el tipo de script', 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_TIPO.OCURRIO_UN_ERROR_AL_ACTUALIZAR'), 'error');
                 }
             });
         }

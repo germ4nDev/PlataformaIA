@@ -73,7 +73,7 @@
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showSearchBox]="false"
                         [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'MODULOS.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_MODULOS_CREAR" permisoEdit="ACT_MODULOS_MODIFICAR" permisoDelete="ACT_MODULOS_ELIMINAR">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>

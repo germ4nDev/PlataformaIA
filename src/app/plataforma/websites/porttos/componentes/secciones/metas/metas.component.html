@@ -1,0 +1,21 @@
+<section class="bloque">
+  <div class="contenedor">
+    <pp-encabezado-seccion [s]="s" />
+    <div class="rejilla rejilla--metas">
+      @for (e of s.elementos; track $index) {
+        <article class="meta">
+          @if (e.titulo) { <h3 class="meta__indicador">{{ e.titulo }}</h3> }
+          <div class="meta__cifras">
+            @if (e.detalle) {
+              <p class="meta__par"><span class="meta__rotulo">{{ 'WEB.METAS.LINEA_BASE' | translate }}</span><span class="meta__desde">{{ e.detalle }}</span></p>
+              <span class="meta__flecha" aria-hidden="true"><pp-icono nombre="flecha" [tamano]="22" /></span>
+            }
+            @if (e.valor) { <p class="meta__par"><span class="meta__rotulo">{{ 'WEB.METAS.META' | translate }}</span><strong class="meta__hasta">{{ e.valor }}</strong></p> }
+          </div>
+          @if (e.texto) { <p class="meta__mide">{{ e.texto }}</p> }
+        </article>
+      }
+    </div>
+    @if (s.cuerpo) { <p class="nota-fuente">{{ s.cuerpo }}</p> }
+  </div>
+</section>

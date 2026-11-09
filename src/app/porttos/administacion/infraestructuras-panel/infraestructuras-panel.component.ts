@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -285,7 +286,7 @@ export class InfraestructurasPanelComponent implements OnInit, OnDestroy {
                             descripcionLog: this.translate.instant('INFRAESTRUCTURAS.ELIMINARERROR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('Error', this.translate.instant('INFRAESTRUCTURAS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('INFRAESTRUCTURAS.ELIMINARERROR'), 'error')
                     }
                 })
             }

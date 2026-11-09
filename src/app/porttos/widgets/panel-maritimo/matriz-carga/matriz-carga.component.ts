@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -36,7 +37,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-matriz-carga',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './matriz-carga.component.html',
     styleUrls: ['./matriz-carga.component.scss'],
     encapsulation: ViewEncapsulation.None

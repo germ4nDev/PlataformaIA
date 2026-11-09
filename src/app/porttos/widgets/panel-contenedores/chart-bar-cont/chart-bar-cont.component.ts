@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -32,7 +34,7 @@ import {
 @Component({
     selector: 'app-chart-bar-contenedores',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent],
     templateUrl: './chart-bar-cont.component.html',
     styleUrls: ['./chart-bar-cont.component.scss']
 })
@@ -162,7 +164,7 @@ export class ChartBarContComponent implements OnInit, AfterViewInit, OnChanges, 
                     conteoPorTipo.set(tipo, (conteoPorTipo.get(tipo) || 0) + 1);
                 });
                 this.labels = Array.from(conteoPorTipo.keys());
-                this.datasets = [{ label: 'Movimientos', data: Array.from(conteoPorTipo.values()), color: '#00d4ff' }];
+                this.datasets = [{ label: traducir('PORTTOS.CHART_BAR_CONT.MOVIMIENTOS_2'), data: Array.from(conteoPorTipo.values()), color: '#00d4ff' }];
             } else {
                 this.labels = [];
                 this.datasets = [];

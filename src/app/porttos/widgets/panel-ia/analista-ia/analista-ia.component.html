@@ -1,18 +1,18 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'ANALISTA IA'"
-    [subtitulo]="'Alertas tempranas y tendencias · ' + (datos?.nombre || puerto || 'sin puerto')"
+<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || 'ANALISTA IA'"
+    [subtitulo]="('PORTTOS.ANALISTA_IA.ALERTAS_TEMPRANAS_Y_TENDENCIAS' | translate) + (datos?.nombre || puerto || ('PORTTOS.ANALISTA_IA.SIN_PUERTO' | translate))"
     icono="feather icon-cpu" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origenIA">
 
     <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
-        <span class="tc-badge" [ngClass]="estadoCapa.clase" [title]="estadoCapa.detalle">{{ estadoCapa.texto }}</span>
-        <span class="tc-badge badge-danger" *ngIf="alertas.length">{{ alertas.length }} alerta{{ alertas.length === 1 ?
-            '' : 's' }}</span>
+        <span class="tc-badge" [ngClass]="estadoCapa.clase" [title]="estadoCapa.detalle">{{ (estadoCapa.texto | translate) }}</span>
+        <span class="tc-badge badge-danger" *ngIf="alertas.length">{{ 'PORTTOS.ANALISTA_IA.ALERTA' | translate: { p0: alertas.length, p1: alertas.length === 1 ?
+            '' : 's' } }}</span>
     </div>
 
     <div *ngIf="!puerto" class="ia-vacio text-muted">
-        <i class="feather icon-map-pin fs-3 mb-2 opacity-50"></i>Elige un puerto en el filtro para ver el análisis.
+        <i class="feather icon-map-pin fs-3 mb-2 opacity-50"></i>{{ 'PORTTOS.ANALISTA_IA.ELIGE_UN_PUERTO_EN_EL' | translate }}
     </div>
     <div *ngIf="puerto && cargando" class="ia-vacio text-muted">
-        <div class="spinner-border spinner-border-sm text-info mb-2" role="status"></div>Consultando al analista...
+        <div class="spinner-border spinner-border-sm text-info mb-2" role="status"></div>{{ 'PORTTOS.ANALISTA_IA.CONSULTANDO_AL_ANALISTA' | translate }}
     </div>
     <div *ngIf="puerto && !cargando && error && !datos" class="ia-vacio text-muted text-center px-3">
         <i class="feather icon-alert-triangle mb-2"></i>{{ error }}
@@ -26,24 +26,24 @@
 
         <nav class="ia-vistas" role="tablist">
             <button type="button" role="tab" [class.activa]="vista === 'alertas'" (click)="cambiarVista('alertas')">
-                Alertas<span class="ia-cuenta" *ngIf="alertas.length">{{ alertas.length }}</span>
+                {{ 'PORTTOS.ANALISTA_IA.ALERTAS' | translate }}<span class="ia-cuenta" *ngIf="alertas.length">{{ alertas.length }}</span>
             </button>
             <button type="button" role="tab" [class.activa]="vista === 'tendencias'"
-                (click)="cambiarVista('tendencias')">Tendencias</button>
+                (click)="cambiarVista('tendencias')">{{ 'PORTTOS.ANALISTA_IA.TENDENCIAS' | translate }}</button>
             <button type="button" role="tab" [class.activa]="vista === 'turno'"
-                (click)="cambiarVista('turno')">Turno</button>
+                (click)="cambiarVista('turno')">{{ 'PORTTOS.ANALISTA_IA.TURNO' | translate }}</button>
         </nav>
 
         <!-- ── Alertas (fase 3) ── -->
         <ng-container *ngIf="vista === 'alertas'">
             <p class="ia-resumen" *ngIf="datos.resumen">
-                <span class="ia-sello">IA</span>{{ datos.resumen.explicacion || datos.resumen.titulo }}
+                <span class="ia-sello">{{ 'PORTTOS.COMUN.IA' | translate }}</span>{{ datos.resumen.explicacion || (datos.resumen.titulo | translate) }}
             </p>
 
             <div *ngIf="!alertas.length" class="ia-sin-alertas text-muted">
-                <i class="feather icon-check-circle me-1"></i>Sin alertas tempranas vigentes{{ filtrado ? ' para esta
-                pestaña' : '' }}.
-                <span *ngIf="ocultas > 0"> ({{ ocultas }} de otras áreas)</span>
+                <i class="feather icon-check-circle me-1"></i>{{ 'PORTTOS.ANALISTA_IA.SIN_ALERTAS_TEMPRANAS_VIGENTES' | translate: { p0: filtrado ? ' para esta
+                pestaña' : '' } }}
+                <span *ngIf="ocultas > 0"> {{ 'PORTTOS.ANALISTA_IA.DE_OTRAS_AREAS' | translate: { p0: ocultas } }}</span>
             </div>
 
             <div class="ia-lista">
@@ -51,15 +51,14 @@
                     [ngClass]="'sev-' + (a.severidad || 'info')" (click)="alternar(a)">
                     <header class="d-flex justify-content-between align-items-start gap-2">
                         <div class="ia-titulo">
-                            <span class="ia-sello">IA</span><strong>{{ a.titulo }}</strong>
+                            <span class="ia-sello">{{ 'PORTTOS.COMUN.IA' | translate }}</span><strong>{{ (a.titulo | translate) }}</strong>
                         </div>
                         <span class="ia-estado" [ngClass]="'est-' + a.estado">{{ nombreEstado(a.estado) }}</span>
                     </header>
                     <div class="ia-meta">
                         <span><i class="feather icon-tag"></i>{{ nombreTipo(a.tipo) }}</span>
                         <span *ngIf="horizonte(a)"><i class="feather icon-clock"></i>{{ horizonte(a) }}</span>
-                        <span *ngIf="confianza(a)"><i class="feather icon-target"></i>confianza {{ confianza(a)
-                            }}</span>
+                        <span *ngIf="confianza(a)"><i class="feather icon-target"></i>{{ 'PORTTOS.ANALISTA_IA.CONFIANZA' | translate: { p0: confianza(a) } }}</span>
                         <span *ngIf="a.entidad" class="text-truncate"><i class="feather icon-crosshair"></i>{{ a.entidad
                             }}</span>
                     </div>
@@ -72,23 +71,23 @@
                         </div>
                     </ng-container>
                     <footer class="d-flex align-items-center gap-2 mt-1" *ngIf="votable(a)">
-                        <small class="text-muted me-auto">¿Te sirvió esta alerta?</small>
+                        <small class="text-muted me-auto">{{ 'PORTTOS.ANALISTA_IA.TE_SIRVIO_ESTA_ALERTA' | translate }}</small>
                         <button type="button" class="btn btn-sm ia-voto util" [disabled]="votando.has(a.id)"
                             (click)="votar(a, true, $event)">
-                            <i class="feather icon-thumbs-up"></i> Útil
+                            <i class="feather icon-thumbs-up"></i> {{ 'PORTTOS.ANALISTA_IA.UTIL' | translate }}
                         </button>
                         <button type="button" class="btn btn-sm ia-voto no-era" [disabled]="votando.has(a.id)"
                             (click)="votar(a, false, $event)">
-                            <i class="feather icon-thumbs-down"></i> No era
+                            <i class="feather icon-thumbs-down"></i> {{ 'PORTTOS.ANALISTA_IA.NO_ERA' | translate }}
                         </button>
                     </footer>
                 </article>
             </div>
 
             <div class="ia-tendencias" *ngIf="tendencias.length">
-                <div class="ia-subtitulo">Lecturas del analista</div>
+                <div class="ia-subtitulo">{{ 'PORTTOS.ANALISTA_IA.LECTURAS_DEL_ANALISTA' | translate }}</div>
                 <div *ngFor="let t of tendencias; trackBy: trackId" class="ia-tendencia">
-                    <i class="feather" [ngClass]="flecha(t)"></i><span>{{ t.titulo }}</span>
+                    <i class="feather" [ngClass]="flecha(t)"></i><span>{{ (t.titulo | translate) }}</span>
                 </div>
             </div>
         </ng-container>
@@ -100,25 +99,23 @@
                     (click)="cambiarVentana(w.codigo)">{{ w.nombre }}</button>
             </div>
             <div *ngIf="cargandoTendencias" class="ia-sin-alertas text-muted">
-                <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>Calculando
-                tendencias...
+                <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>{{ 'PORTTOS.ANALISTA_IA.CALCULANDO_TENDENCIAS' | translate }}
             </div>
             <div *ngIf="!cargandoTendencias && tendenciasKpi && !tendenciasKpi.disponible"
                 class="ia-sin-alertas text-muted">
-                <i class="feather icon-info me-1"></i>{{ tendenciasKpi.motivo || 'Tendencias no disponibles.' }}
+                <i class="feather icon-info me-1"></i>{{ tendenciasKpi.motivo || ('PORTTOS.ANALISTA_IA.TENDENCIAS_NO_DISPONIBLES' | translate) }}
             </div>
             <div *ngIf="!cargandoTendencias && tendenciasKpi?.disponible && !kpisVentana.length"
                 class="ia-sin-alertas text-muted">
-                <i class="feather icon-clock me-1"></i>Aún no hay historia suficiente para {{ ventana === '24h' ? '24 h'
-                : ventana === '7d' ? '7 días' : '30 días' }}:
-                las fotos de KPI se toman cada 15 min.
+                <i class="feather icon-clock me-1"></i>{{ 'PORTTOS.ANALISTA_IA.AUN_NO_HAY_HISTORIA_SUFICIENTE' | translate: { p0: ventana === '24h' ? '24 h'
+                : ventana === '7d' ? '7 días' : '30 días' } }}
             </div>
             <div class="ia-kpis">
                 <div *ngFor="let x of kpisVentana" class="ia-kpi" [ngClass]="'ef-' + x.t.efecto"
                     [class.relevante]="x.t.relevante" [title]="x.t.lectura">
                     <div class="ia-kpi-nombre">
-                        <span class="text-truncate">{{ x.kpi.titulo }}</span>
-                        <small *ngIf="x.t.simulado" class="ia-simulado">simulado</small>
+                        <span class="text-truncate">{{ (x.kpi.titulo | translate) }}</span>
+                        <small *ngIf="x.t.simulado" class="ia-simulado">{{ 'PORTTOS.ANALISTA_IA.SIMULADO' | translate }}</small>
                     </div>
                     <svg class="ia-spark" viewBox="0 0 100 28" preserveAspectRatio="none" aria-hidden="true">
                         <path [attr.d]="trazo(x.t.puntos)"></path>
@@ -131,55 +128,55 @@
                 </div>
             </div>
             <div class="ia-pie" *ngIf="tendenciasKpi?.disponible">
-                Promedio de la ventana frente a {{ ventana === '24h' ? 'las mismas 24 h de la semana anterior' : ventana
-                === '7d' ? 'los 7 días anteriores' : 'los 30 días anteriores' }}
-                <span *ngIf="sinDatosVentana"> · {{ sinDatosVentana }} sin datos</span>
+                {{ 'PORTTOS.ANALISTA_IA.PROMEDIO_DE_LA_VENTANA_FRENTE' | translate: { p0: ventana === '24h' ? 'las mismas 24 h de la semana anterior' : ventana
+                === '7d' ? 'los 7 días anteriores' : 'los 30 días anteriores' } }}
+                <span *ngIf="sinDatosVentana"> {{ 'PORTTOS.ANALISTA_IA.SIN_DATOS' | translate: { p0: sinDatosVentana } }}</span>
             </div>
         </ng-container>
 
         <!-- ── Cierre de turno y resumen diario (fase 4) ── -->
         <ng-container *ngIf="vista === 'turno'">
             <div *ngIf="cargandoResumenes" class="ia-sin-alertas text-muted">
-                <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>Leyendo resúmenes...
+                <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>{{ 'PORTTOS.ANALISTA_IA.LEYENDO_RESUMENES' | translate }}
             </div>
             <div *ngIf="!cargandoResumenes && !resumenesDisponibles" class="ia-sin-alertas text-muted">
-                <i class="feather icon-info me-1"></i>Falta la migración 017 para guardar los resúmenes.
+                <i class="feather icon-info me-1"></i>{{ 'PORTTOS.ANALISTA_IA.FALTA_LA_MIGRACION_017_PARA' | translate }}
             </div>
             <div *ngIf="!cargandoResumenes && resumenesDisponibles && !resumenesTurno.length"
                 class="ia-sin-alertas text-muted">
-                <i class="feather icon-clock me-1"></i>El primer cierre de turno llega cuando termine el turno en curso.
+                <i class="feather icon-clock me-1"></i>{{ 'PORTTOS.ANALISTA_IA.EL_PRIMER_CIERRE_DE_TURNO' | translate }}
             </div>
             <ng-container *ngFor="let r of [ultimoCierre, ultimoDiario]">
                 <section *ngIf="r" class="ia-cierre">
                     <header>
-                        <span class="ia-subtitulo">{{ r.tipo === 'cierre_turno' ? 'Cierre de turno' : 'Día operativo' }}
-                            · {{ r.contenido.periodo.etiqueta }}</span>
+                        <span class="ia-subtitulo">{{ r.tipo === 'cierre_turno' ? ('PORTTOS.IA_ADMIN_PANEL.CIERRE_DE_TURNO' | translate) : ('PORTTOS.ANALISTA_IA.DIA_OPERATIVO' | translate) }}
+                            · {{ (r.contenido.periodo.etiqueta | translate) }}</span>
                         <span class="ia-origen" [class.modelo]="r.contenido.origen === 'modelo'">
-                            {{ r.contenido.origen === 'modelo' ? 'IA' : 'automático' }}
+                            {{ r.contenido.origen === 'modelo' ? 'IA' : ('PORTTOS.ANALISTA_IA.AUTOMATICO' | translate) }}
                         </span>
                     </header>
-                    <p class="ia-titular">{{ r.contenido.titular || r.titulo }}</p>
+                    <p class="ia-titular">{{ r.contenido.titular || (r.titulo | translate) }}</p>
                     <div class="ia-bloque" *ngIf="r.contenido.loQuePaso.length">
-                        <small>Lo que pasó</small>
+                        <small>{{ 'PORTTOS.ANALISTA_IA.LO_QUE_PASO' | translate }}</small>
                         <ul>
                             <li *ngFor="let x of r.contenido.loQuePaso">{{ x }}</li>
                         </ul>
                     </div>
                     <div class="ia-bloque" *ngIf="r.contenido.loQueViene.length">
-                        <small>Lo que viene</small>
+                        <small>{{ 'PORTTOS.ANALISTA_IA.LO_QUE_VIENE' | translate }}</small>
                         <ul>
                             <li *ngFor="let x of r.contenido.loQueViene">{{ x }}</li>
                         </ul>
                     </div>
                     <div class="ia-bloque" *ngIf="r.contenido.vigilar.length">
-                        <small>Vigilar</small>
+                        <small>{{ 'PORTTOS.ANALISTA_IA.VIGILAR' | translate }}</small>
                         <ul>
                             <li *ngFor="let x of r.contenido.vigilar">{{ x }}</li>
                         </ul>
                     </div>
                     <div class="ia-bloque"
                         *ngIf="r.contenido.tendencias.length && (isEnfoque || r.tipo === 'cierre_turno')">
-                        <small>Tendencias</small>
+                        <small>{{ 'PORTTOS.ANALISTA_IA.TENDENCIAS' | translate }}</small>
                         <ul>
                             <li *ngFor="let t of r.contenido.tendencias">{{ t.explicacion }}</li>
                         </ul>
@@ -189,9 +186,8 @@
         </ng-container>
 
         <div class="ia-pie">
-            Actualizado {{ ultimaActualizacion | date: 'HH:mm:ss' }}
-            <span *ngIf="datos.estado.ultimoTurno"> · último turno {{ datos.estado.ultimoTurno.fecha | date: 'HH:mm'
-                }}</span>
+            {{ 'PORTTOS.ANALISTA_IA.ACTUALIZADO' | translate: { p0: (ultimaActualizacion | date: 'HH:mm:ss') } }}
+            <span *ngIf="datos.estado.ultimoTurno"> {{ 'PORTTOS.ANALISTA_IA.ULTIMO_TURNO' | translate: { p0: (datos.estado.ultimoTurno.fecha | date: 'HH:mm') } }}</span>
             <span *ngIf="error" class="text-warning"> · ⚠ {{ error }}</span>
         </div>
     </div>

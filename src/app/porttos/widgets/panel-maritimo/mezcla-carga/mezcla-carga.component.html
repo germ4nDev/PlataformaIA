@@ -1,5 +1,5 @@
-<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'MEZCLA POR TIPO DE CARGA'"
-    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Distribución de toneladas movilizadas por tipo de carga'"
+<app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || 'MEZCLA POR TIPO DE CARGA'"
+    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.MEZCLA_CARGA.DISTRIBUCION_DE_TONELADAS_MOVILIZADAS_PO' | translate)"
     [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origenMaritimo]="widgetConfig">
 
@@ -13,14 +13,14 @@
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top: 0; left: 0; z-index: 10;">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted small">Consultando distribución marítima...</span>
+            <span class="text-muted small">{{ 'PORTTOS.MEZCLA_CARGA.CONSULTANDO_DISTRIBUCION_MARITIMA' | translate }}</span>
         </div>
 
         <!-- Estado Vacío -->
         <div *ngIf="!cargando && sinDatos"
             class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
             <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
-            Sin distribución de carga disponible para este puerto.
+            {{ 'PORTTOS.MEZCLA_CARGA.SIN_DISTRIBUCION_DE_CARGA_DISPONIBLE' | translate }}
         </div>
 
         <!-- Dona + Leyenda Lateral -->
@@ -44,7 +44,7 @@
                         <span class="rounded-circle flex-shrink-0" [style.background-color]="item.color"
                             style="width: 9px; height: 9px; display: inline-block;">
                         </span>
-                        <span class="titulo-container fw-medium text-truncate" [title]="item.label">{{ item.label
+                        <span class="titulo-container fw-medium text-truncate" [title]="(item.label | translate)">{{ (item.label | translate)
                             }}</span>
                     </div>
                     <span class="titulo-container fw-bold text-info ms-2">{{ item.porcentaje }}%</span>

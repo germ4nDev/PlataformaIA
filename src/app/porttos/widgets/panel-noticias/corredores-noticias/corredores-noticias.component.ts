@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -18,7 +19,7 @@ import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tc
 @Component({
     selector: 'app-corredores-noticias',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, BarrasSaturacionTclComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, BarrasSaturacionTclComponent, TablaTclComponent],
     templateUrl: './corredores-noticias.component.html',
     styleUrls: ['./corredores-noticias.component.scss']
 })
@@ -36,12 +37,12 @@ export class CorredoresNoticiasComponent extends WidgetTableroBase<TableroNotici
 
     // Vista ampliada (2026-10-25): todos los eventos del día por corredor
     public readonly columnasEventos: ColumnaTabla[] = [
-        { campo: 'corredor', titulo: 'Corredor', tipo: 'principal' },
-        { campo: 'tipo', titulo: 'Evento', tipo: 'estado' },
-        { campo: 'sector', titulo: 'Sector' },
-        { campo: 'severidad', titulo: 'Severidad' },
-        { campo: 'desde', titulo: 'Desde', tipo: 'hora' },
-        { campo: 'descripcion', titulo: 'Descripción' }
+        { campo: 'corredor', titulo: 'PORTTOS.CORREDORES_NOTICIAS.CORREDOR', tipo: 'principal' },
+        { campo: 'tipo', titulo: 'PORTTOS.CORREDORES_NOTICIAS.EVENTO', tipo: 'estado' },
+        { campo: 'sector', titulo: 'PORTTOS.CORREDORES_NOTICIAS.SECTOR' },
+        { campo: 'severidad', titulo: 'PORTTOS.CORREDORES_NOTICIAS.SEVERIDAD' },
+        { campo: 'desde', titulo: 'PORTTOS.CORREDORES_NOTICIAS.DESDE', tipo: 'hora' },
+        { campo: 'descripcion', titulo: 'PORTTOS.CORREDORES_NOTICIAS.DESCRIPCION' }
     ];
     public eventos: any[] = [];
 

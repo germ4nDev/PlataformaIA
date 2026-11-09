@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
@@ -19,7 +20,7 @@ import { suiteDelDominio } from 'src/app/plataforma/dominios/nucleo';
 @Component({
     selector: 'app-inicio-suites',
     standalone: true,
-    imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
+    imports: [TranslateModule, NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
     templateUrl: './inicio-suites.component.html',
     styleUrl: './inicio-suites.component.scss'
 })

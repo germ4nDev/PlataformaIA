@@ -57,7 +57,7 @@
                         [showDeleteButton]="true" [showBackButton]="true" [showSearchBox]="false"
                         (viewRecord)="OnViewRegistroClick($event)" (newRecord)="OnNuevoRegistroClick()"
                         (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (option1Record)="OnOption1Click($event)" (backRecord)="OnRegresarClick($event)">
+                        (option1Record)="OnOption1Click($event)" (backRecord)="OnRegresarClick($event)" permisoNew="ACT_REQUERIMIENTOS_CREAR" permisoEdit="ACT_REQUERIMIENTOS_MODIFICAR" permisoDelete="ACT_REQUERIMIENTOS_ELIMINAR">
                     </app-table-data>
                 </ng-container>
             </div>

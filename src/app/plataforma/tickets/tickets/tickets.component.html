@@ -100,7 +100,7 @@
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showSearchBox]="false"
                         [showDeleteButton]="true" (viewRecord)="OnViewRegistroClick($event)"
                         (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)" (option1Record)="OnOption1Click($event)">
+                        (deleteRecord)="OnEliminarRegistroClick($event)" (option1Record)="OnOption1Click($event)" permisoNew="ACT_TICKETS_CREAR" permisoEdit="ACT_TICKETS_MODIFICAR" permisoDelete="ACT_TICKETS_ELIMINAR">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>

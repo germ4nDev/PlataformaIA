@@ -70,10 +70,10 @@ export const TIPOS_SECCION: readonly TipoSeccion[] = Object.freeze(
 
 /** Motivos de Contáctenos: mismas claves que MOTIVOS del API (utils/portal/portal.js). No hay registro abierto. */
 export const MOTIVOS: readonly { clave: string; etiqueta: string }[] = Object.freeze([
-  { clave: 'DEMOSTRACION', etiqueta: 'Solicitar una demostración' },
-  { clave: 'ACCESO', etiqueta: 'Solicitar acceso con un plan' },
-  { clave: 'INFORMACION', etiqueta: 'Información general' },
-  { clave: 'SOPORTE', etiqueta: 'Soporte a un usuario existente' },
+  { clave: 'DEMOSTRACION', etiqueta: 'WEB.PORTAL.SOLICITAR_UNA_DEMOSTRACION' },
+  { clave: 'ACCESO', etiqueta: 'WEB.PORTAL.SOLICITAR_ACCESO_CON_UN_PLAN' },
+  { clave: 'INFORMACION', etiqueta: 'WEB.PORTAL.INFORMACION_GENERAL' },
+  { clave: 'SOPORTE', etiqueta: 'WEB.PORTAL.SOPORTE_A_UN_USUARIO_EXISTENTE' },
 ]);
 
 /**
@@ -220,7 +220,7 @@ export function menuDe<T extends { ruta: string }>(menu: readonly T[], config: C
 
 /** Motivos de Contáctenos: con los planes apagados, «Solicitar acceso» a secas (misma clave ACCESO). */
 export function motivosDe(config: ConfigPortal | null | undefined): readonly { clave: string; etiqueta: string }[] {
-  return planesActivos(config) ? MOTIVOS : MOTIVOS.map((m) => (m.clave === 'ACCESO' ? { ...m, etiqueta: 'Solicitar acceso' } : m));
+  return planesActivos(config) ? MOTIVOS : MOTIVOS.map((m) => (m.clave === 'ACCESO' ? { ...m, etiqueta: 'WEB.ENCABEZADO.SOLICITAR_ACCESO' } : m));
 }
 
 /** Tarjeta de un perfil: si su valor es el código de un plan → «Plan recomendado: <plan>»; si no, la propuesta (p. ej. el sector público). */
@@ -228,7 +228,7 @@ export function accionDePerfil(e: ElementoPortal, planes: readonly PlanPortal[] 
   const plan = planes.find((p) => p.codigo === String(e.valor || '').trim().toUpperCase());
   if (plan) return { texto: `Plan recomendado: ${plan.nombre}`, url: e.url || '/planes' };
   if (!e.url) return null;
-  return { texto: e.valor ? `Ver la propuesta para el ${e.valor.charAt(0).toLowerCase()}${e.valor.slice(1)}` : 'Ver más', url: e.url };
+  return { texto: e.valor ? `Ver la propuesta para el ${e.valor.charAt(0).toLowerCase()}${e.valor.slice(1)}` : 'WEB.PORTAL.VER_MAS', url: e.url };
 }
 
 export function puntosDe(texto: string | null | undefined): string[] {
@@ -325,5 +325,5 @@ export function accionMovil(config: ConfigPortal | null | undefined, sistema: Si
   { texto: string; tienda: string | null } | null {
   if (!sistema) return null;
   const propia = tiendasDe(config, sistema).find((t) => t.propia);
-  return propia?.url ? { texto: 'Descargar la app', tienda: propia.url } : { texto: 'App móvil', tienda: null };
+  return propia?.url ? { texto: 'WEB.PORTAL.DESCARGAR_LA_APP', tienda: propia.url } : { texto: 'WEB.PIE.APP_MOVIL', tienda: null };
 }

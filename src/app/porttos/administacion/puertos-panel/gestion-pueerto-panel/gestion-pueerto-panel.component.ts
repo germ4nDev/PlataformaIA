@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -101,7 +102,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                     // this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'widgets', resp.aplicacion.imagenInicio)
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el puerto', 'error')
+                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_PUEERTO_PANEL.NO_SE_PUDO_OBTENER_EL'), 'error')
                 }
             })
         }
@@ -227,7 +228,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('PUERTOS.CREATESUCCSESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo actualizar el puertto')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_PUEERTO_PANEL.NO_SE_PUDO_ACTUALIZAR_EL'))
                 }
             })
         } else {
@@ -249,7 +250,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('PUERTOS.ELIMINAREXITOSA')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo crear el puerto')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_PUEERTO_PANEL.NO_SE_PUDO_CREAR_EL'))
                 }
             })
         }

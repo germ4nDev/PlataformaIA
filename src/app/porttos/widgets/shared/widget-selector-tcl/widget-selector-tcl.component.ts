@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, Output, EventEmitter, Type, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -8,7 +9,7 @@ import { WIDGET_MAP } from '../../../torre-control/widget-registry';
 @Component({
     selector: 'app-widget-selector-tcl',
     standalone: true,
-    imports: [
+    imports: [TranslateModule, 
         CommonModule,
         WidgetShellComponent,
         WidgetHeaderComponent

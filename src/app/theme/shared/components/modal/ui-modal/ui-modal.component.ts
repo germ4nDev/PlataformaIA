@@ -1,8 +1,11 @@
 // Angular Import
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-ui-modal',
+  standalone: true, // OT-023 fase 5 (regla 21)
+  imports: [CommonModule],
   templateUrl: './ui-modal.component.html',
   styleUrls: ['./ui-modal.component.scss'],
   encapsulation: ViewEncapsulation.None

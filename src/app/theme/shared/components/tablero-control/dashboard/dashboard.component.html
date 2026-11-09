@@ -2,12 +2,12 @@
 
     <header class="dashboard-header">
         <div class="header-titles">
-            <h1 class="title">Torre de Control Logística 4.0</h1>
-            <p class="subtitle">Plataforma de Visibilidad y Agentes IA</p>
+            <h1 class="title">{{ 'WEB.DASHBOARD.TORRE_DE_CONTROL_LOGISTICA_4' | translate }}</h1>
+            <p class="subtitle">{{ 'WEB.DASHBOARD.PLATAFORMA_DE_VISIBILIDAD_Y_AGENTES' | translate }}</p>
         </div>
 
         <div class="header-controls">
-            <label for="nodoOperativo">Nodo Operativo:</label>
+            <label for="nodoOperativo">{{ 'WEB.DASHBOARD.NODO_OPERATIVO' | translate }}</label>
             <select id="nodoOperativo" class="form-select">
                 <option value="buenaventura">Buenaventura (SPRBUN / TCBUEN)</option>
             </select>
@@ -16,22 +16,22 @@
 
     <nav class="dashboard-nav-tabs">
         <button class="tab-btn active">
-            <span class="icon">🛳️</span> Operación Marítima
+            <span class="icon">🛳️</span> {{ 'WEB.DASHBOARD.OPERACION_MARITIMA' | translate }}
         </button>
         <button class="tab-btn">
-            <span class="icon">🚛</span> Gate & Bodegas
+            <span class="icon">🚛</span> {{ 'WEB.DASHBOARD.GATE_BODEGAS' | translate }}
         </button>
         <button class="tab-btn">
-            <span class="icon">📈</span> Analítica RNDC
+            <span class="icon">📈</span> {{ 'WEB.DASHBOARD.ANALITICA_RNDC' | translate }}
         </button>
         <button class="tab-btn">
-            <span class="icon">🧠</span> Ingesta IA
+            <span class="icon">🧠</span> {{ 'WEB.DASHBOARD.INGESTA_IA' | translate }}
         </button>
     </nav>
 
     <main class="dashboard-content">
         <div class="maritime-grid">
-            <p>Cargando datos de la operación...</p>
+            <p>{{ 'WEB.DASHBOARD.CARGANDO_DATOS_DE_LA_OPERACION' | translate }}</p>
         </div>
     </main>
 

@@ -167,7 +167,7 @@ export class MaritimoService {
                 // 1. Si es uno de los KPIs de Marítimo
                 if (codigoWidget.startsWith('PTT_MAE_KPI_')) {
                     return kpis[codigoWidget] || {
-                        titulo: 'Métrica Marítima',
+                        titulo: 'WEB.MARITIMO_SERVICE.METRICA_MARITIMA',
                         valor: 0,
                         subtitulo: `Puerto ${puertoFinal}`,
                         colorBorde: 'borde-cyan'

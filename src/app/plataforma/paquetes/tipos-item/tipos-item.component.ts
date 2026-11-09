@@ -213,13 +213,13 @@ export class TiposItemComponent implements OnInit, OnDestroy {
     toggleNav(): void { this.toggleSidebar.emit(); }
 
     columnasTipos: ColumnMetadata[] = [
-        { name: 'claseIconoTabla', header: 'Ícono', type: 'icon' },
-        { name: 'nombreTipo', header: 'Nombre del Tipo', type: 'text' },
+        { name: 'claseIconoTabla', header: 'WEB.TIPOS_ITEM.ICONO', type: 'icon' },
+        { name: 'nombreTipo', header: 'WEB.TIPOS_ITEM.NOMBRE_DEL_TIPO', type: 'text' },
         { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoTipoItem', header: 'Código Interno', type: 'text' },
-        { name: 'descripcionTipo', header: 'Descripción', type: 'text' }
+        { name: 'codigoTipoItem', header: 'WEB.TIPOS_ITEM.CODIGO_INTERNO', type: 'text' },
+        { name: 'descripcionTipo', header: 'WEB.TIPOS_ITEM.DESCRIPCION', type: 'text' }
     ];
 }

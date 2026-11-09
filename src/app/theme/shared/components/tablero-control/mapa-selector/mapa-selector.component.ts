@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // // import { Component, forwardRef, ElementRef, ViewChild, OnDestroy, HostBinding, Input, OnInit, Output, EventEmitter } from '@angular/core';
 // // import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 // // import { CommonModule } from '@angular/common';
@@ -12,7 +13,7 @@
 // // @Component({
 // //     selector: 'app-mapa-selector',
 // //     standalone: true,
-// //     imports: [CommonModule],
+// //     imports: [TranslateModule, CommonModule],
 // //     templateUrl: './mapa-selector.component.html',
 // //     styleUrls: ['./mapa-selector.component.scss'],
 // //     providers: [
@@ -520,7 +521,7 @@ import {
 @Component({
     selector: 'app-mapa-selector',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, TranslateModule],
     templateUrl: './mapa-selector.component.html',
     styleUrls: ['./mapa-selector.component.scss'],
     providers: [

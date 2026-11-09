@@ -64,7 +64,7 @@
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'MUELLES.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_MUELLES_CREAR" permisoEdit="ACT_MUELLES_MODIFICAR" permisoDelete="ACT_MUELLES_ELIMINAR">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>

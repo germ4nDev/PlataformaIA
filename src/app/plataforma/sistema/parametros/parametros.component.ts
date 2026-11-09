@@ -236,15 +236,15 @@ export class ParametrosComponent implements OnInit, OnDestroy {
 
     // 🟢 Columnas de la Tabla Principal
     columnasRegistros: ColumnMetadata[] = [
-        { name: 'llaveParametro', header: 'Llave Lógica (ID)', type: 'text' },
-        { name: 'nombreParametro', header: 'Nombre Visible', type: 'text' },
-        { name: 'valorParametro', header: 'Valor Asignado', type: 'text' },
-        { name: 'tipoDato', header: 'Tipo de Dato', type: 'text' },
-        { name: 'nomEstado', header: 'Estado', type: 'estado' }
+        { name: 'llaveParametro', header: 'WEB.PARAMETROS.LLAVE_LOGICA_ID', type: 'text' },
+        { name: 'nombreParametro', header: 'WEB.GESTION_PARAMETRO.NOMBRE_VISIBLE', type: 'text' },
+        { name: 'valorParametro', header: 'WEB.GESTION_PARAMETRO.VALOR_ASIGNADO', type: 'text' },
+        { name: 'tipoDato', header: 'WEB.PARAMETROS.TIPO_DE_DATO', type: 'text' },
+        { name: 'nomEstado', header: 'WEB.WDG_KPI_APLICACIONES.ESTADO', type: 'estado' }
     ];
 
     // 🟢 Columnas del Detalle (Opcional si enciendes el showDetail="true" en el HTML)
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'descripcionParametro', header: 'Descripción Detallada', type: 'text' }
+        { name: 'descripcionParametro', header: 'WEB.GESTION_ITEM.DESCRIPCION_DETALLADA', type: 'text' }
     ];
 }

@@ -3,15 +3,15 @@
     <div class="panel-header">
 
         <div class="header-titles">
-            <h3>{{ data?.titulo || title || 'NUEVO WIDGET' }}</h3>
+            <h3>{{ (data?.titulo | translate) || (title | translate) || 'NUEVO WIDGET' }}</h3>
             <p class="subtitle" *ngIf="data?.subtitulo || subtitle">
-                {{ data?.subtitulo || subtitle }}
+                {{ (data?.subtitulo | translate) || subtitle }}
             </p>
         </div>
 
         <div class="header-actions-container">
 
-            <button class="btn-maximizar" (click)="maximizar()" title="Ver en pantalla completa">
+            <button class="btn-maximizar" (click)="maximizar()" [title]="'PORTTOS.WIEGET_BASE.VER_EN_PANTALLA_COMPLETA' | translate">
                 <i class="feather icon-maximize" data-feather="maximize"></i>
             </button>
         </div>
@@ -20,7 +20,7 @@
 
     <div class="panel-body">
 
-        <p style="color: #94a3b8; text-align: center; margin-top: 2rem;">Contenido del widget...</p>
+        <p style="color: #94a3b8; text-align: center; margin-top: 2rem;">{{ 'PORTTOS.WIEGET_BASE.CONTENIDO_DEL_WIDGET' | translate }}</p>
 
     </div>
 

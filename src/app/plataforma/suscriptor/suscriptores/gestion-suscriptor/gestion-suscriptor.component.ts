@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
@@ -16,7 +17,7 @@ import {
     SwalAlertService,
     UploadFilesService
 } from 'src/app/theme/shared/service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
@@ -41,7 +42,7 @@ import { PTLTipoPagoModel } from 'src/app/theme/shared/_helpers/models/PTLTiposP
 @Component({
     selector: 'app-gestion-suscriptor',
     standalone: true,
-    imports: [CommonModule, SharedModule, NarikCustomValidatorsModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NarikCustomValidatorsModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-suscriptor.component.html',
     styleUrl: './gestion-suscriptor.component.scss'
 })
@@ -330,7 +331,7 @@ export class GestionSuscriptorComponent implements OnInit {
                         descripcionLog: this.translate.instant('SUSCRIPTORES.CREATEERROR')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError('No se pudo actualizar el Suscriptor')
+                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_SUSCRIPTOR.NO_SE_PUDO_ACTUALIZAR_EL'))
                 }
             });
         } else {

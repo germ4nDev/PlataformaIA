@@ -81,9 +81,7 @@
             <div class="card-body form-scroll-wrapper">
                 <div class="col-md-12" *ngIf="rolesConCheck.length > 0">
                     <div class="text-center flex flex-col justify-center"><br />
-                        <h4 class="titulo-container">{{ 'WIDGETSROLESROLES.GESTION.TITLE' | translate }} Roles asociados
-                            al
-                            Widget</h4>
+                        <h4 class="titulo-container">{{ 'WEB.GESTION_WIDGET_ROLES.ROLES_ASOCIADOS_AL_WIDGET' | translate: { p0: ('WIDGETSROLESROLES.GESTION.TITLE' | translate) } }}</h4>
                         <!-- Se muestra el nombre del widget o su código como fallback -->
                         <h6 class="subtitulo-container"> {{ widgetMaestro.nombreWidget || widgetMaestro.codigoWidget }}
                         </h6><br>

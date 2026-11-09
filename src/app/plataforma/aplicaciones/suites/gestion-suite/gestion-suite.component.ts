@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
@@ -90,7 +91,7 @@ export class GestionSuiteComponent implements OnInit {
                     this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suites', resp.suite.imagenInicio)
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la suite por, ', 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SUITE.NO_SE_PUDO_OBTENER_LA'), 'error')
                 }
             })
         } else {

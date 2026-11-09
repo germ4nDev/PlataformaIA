@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -23,7 +24,7 @@ import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUs
 @Component({
     selector: 'app-inicio-suscriptores',
     standalone: true,
-    imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
+    imports: [TranslateModule, NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
     templateUrl: './inicio-suscriptores.component.html',
     styleUrl: './inicio-suscriptores.component.scss'
 })

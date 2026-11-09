@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -7,7 +8,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-kpi-paquetes',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './wdg-kpi-paquetes.component.html',
     styleUrls: ['./wdg-kpi-paquetes.component.scss']
 })

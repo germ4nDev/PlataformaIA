@@ -4,6 +4,8 @@
     Utilidad común de la vista ampliada: descarga filas como CSV (separador ';' y BOM, para que Excel en español lo
     abra con tildes y columnas bien separadas). La usan tabla-tcl y cualquier widget con detalle exportable.
 */
+import { traducir } from 'src/app/theme/shared/i18n/traducir';
+
 export interface ColumnaCsv { campo: string; titulo: string }
 
 const celda = (v: any): string => {
@@ -13,7 +15,7 @@ const celda = (v: any): string => {
 };
 
 export function filasACsv(columnas: ColumnaCsv[], filas: any[]): string {
-    const encabezado = columnas.map((c) => celda(c.titulo)).join(';');
+    const encabezado = columnas.map((c) => celda(traducir(c.titulo))).join(';'); // el título puede ser una llave i18n (regla 22)
     const cuerpo = (filas || []).map((f) => columnas.map((c) => celda(f?.[c.campo])).join(';'));
     return [encabezado, ...cuerpo].join('\r\n');
 }

@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 const iconosLogistica: { id: string; url: string }[] = [];
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -53,6 +55,7 @@ import { esPosicion, esPoligonoValido, hacerCircular, convertirWKT_ACirculo, cal
 import { generarContenidoPopup, ContextoPopup } from './mapa-popups';
 import { agregarFuentesYCapas } from './mapa-capas-maplibre';
 import { AnalistaIAComponent } from '../../panel-ia/analista-ia/analista-ia.component';
+import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
 
 const INFRA_THEME = {
     puerto: { fill: '#cbd5e1', line: '#475569', circle: '#cbd5e1' },
@@ -67,19 +70,19 @@ const INFRA_THEME = {
 };
 
 export const NOMENCLATURA_ENTIDADES = [
-    { id: 'naves', label: 'Motonaves en tránsito', color: '#00E5FF' },
-    { id: 'clima', label: 'Alertas IDEAM', color: '#8b5cf6' },
-    { id: 'accidentes', label: 'Incidentes Viales', color: '#ef4444' },
-    { id: 'terrestre', label: 'Flota Terrestre', color: '#10b981' },
-    { id: 'peajes', label: 'Peajes (Control)', color: '#eab308' }
+    { id: 'naves', label: traducir('PORTTOS.MAPA_LOGISTICO.MOTONAVES_EN_TRANSITO'), color: '#00E5FF' },
+    { id: 'clima', label: traducir('PORTTOS.MAPA_LOGISTICO.ALERTAS_IDEAM'), color: '#8b5cf6' },
+    { id: 'accidentes', label: traducir('PORTTOS.MAPA_LOGISTICO.INCIDENTES_VIALES'), color: '#ef4444' },
+    { id: 'terrestre', label: traducir('PORTTOS.MAPA_LOGISTICO.FLOTA_TERRESTRE'), color: '#10b981' },
+    { id: 'peajes', label: traducir('PORTTOS.MAPA_LOGISTICO.PEAJES_CONTROL'), color: '#eab308' }
 ];
 
 export const ESTADOS_OPERATIVOS = [
-    { id: 'libre', label: 'Libre / Fluido', color: '#22c55e' },
-    { id: 'ocupado', label: 'Ocupado / Capacidad Media', color: '#facc15' },
-    { id: 'congestionado', label: 'Congestionado / Retraso', color: '#f59e0b' },
-    { id: 'critico', label: 'Crítico / Bloqueado', color: '#dc2626' },
-    { id: 'desocupado', label: 'Desocupado / Sin Operación', color: '#94a3b8' }
+    { id: 'libre', label: traducir('PORTTOS.MAPA_LOGISTICO.LIBRE_FLUIDO'), color: '#22c55e' },
+    { id: 'ocupado', label: traducir('PORTTOS.MAPA_LOGISTICO.OCUPADO_CAPACIDAD_MEDIA'), color: '#facc15' },
+    { id: 'congestionado', label: traducir('PORTTOS.MAPA_LOGISTICO.CONGESTIONADO_RETRASO'), color: '#f59e0b' },
+    { id: 'critico', label: traducir('PORTTOS.MAPA_LOGISTICO.CRITICO_BLOQUEADO'), color: '#dc2626' },
+    { id: 'desocupado', label: traducir('PORTTOS.MAPA_LOGISTICO.DESOCUPADO_SIN_OPERACION'), color: '#94a3b8' }
 ];
 
 export type TipoMapaBase = 'outdoor' | 'terreno' | 'satelite';
@@ -87,7 +90,7 @@ export type TipoMapaBase = 'outdoor' | 'terreno' | 'satelite';
 @Component({
     selector: 'app-mapa-logistico',
     standalone: true,
-    imports: [CommonModule, EmbudoLlegadaComponent, RecorridoPanelComponent, TablaTclComponent, AnalistaIAComponent],
+    imports: [TranslateModule, CommonModule, EmbudoLlegadaComponent, RecorridoPanelComponent, TablaTclComponent, AnalistaIAComponent],
     templateUrl: './mapa-logistico.component.html',
     styleUrls: ['./mapa-logistico.component.scss']
 })
@@ -236,6 +239,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         private _maritimoVivo: MaritimoVivoService,
         private _recorridoMapa: RecorridoMapaService,
         private cdr: ChangeDetectorRef,
+        private _permisos: PtlPermisosService,
         private _zone: NgZone
     ) {
         this.isDark = this._localStorage.getThemeSettings()?.isDarkTheme || false;
@@ -1369,7 +1373,10 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
     }
 
     private contextoPopup(): ContextoPopup {
-        return { isDark: this.isDark, ultimaFlotaGeoJson: this.ultimaFlotaGeoJson, ultimosIncidentes: this.ultimosIncidentes };
+        return {
+            isDark: this.isDark, ultimaFlotaGeoJson: this.ultimaFlotaGeoJson, ultimosIncidentes: this.ultimosIncidentes,
+            puedeDespejar: this._permisos.tienePermiso('ACT_EVENTOS_DESPEJAR')
+        };
     }
 
     private getStyle(): string {
@@ -1427,35 +1434,35 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
     public filasPanel: Record<string, any[]> = { buques: [], camiones: [], muelles: [], alertas: [], geocercas: [] };
     private refrescoPanel?: any;
     public readonly pestanasPanel: Array<{ id: 'buques' | 'camiones' | 'muelles' | 'alertas' | 'geocercas'; nombre: string; icono: string }> = [
-        { id: 'buques', nombre: 'Buques', icono: 'feather icon-anchor' },
-        { id: 'camiones', nombre: 'Camiones', icono: 'feather icon-truck' },
-        { id: 'muelles', nombre: 'Muelles', icono: 'feather icon-grid' },
-        { id: 'alertas', nombre: 'Alertas', icono: 'feather icon-bell' },
-        { id: 'geocercas', nombre: 'Geocercas', icono: 'feather icon-target' }
+        { id: 'buques', nombre: 'PORTTOS.MAPA_LOGISTICO.BUQUES', icono: 'feather icon-anchor' },
+        { id: 'camiones', nombre: 'PORTTOS.CHART_DOUGHNUT.CAMIONES', icono: 'feather icon-truck' },
+        { id: 'muelles', nombre: 'PORTTOS.MAPA_LOGISTICO.MUELLES', icono: 'feather icon-grid' },
+        { id: 'alertas', nombre: 'PORTTOS.IA_ADMIN_PANEL.ALERTAS', icono: 'feather icon-bell' },
+        { id: 'geocercas', nombre: 'PORTTOS.MAPA_LOGISTICO.GEOCERCAS', icono: 'feather icon-target' }
     ];
     public readonly columnasPanel: Record<string, ColumnaTabla[]> = {
         buques: [
-            { campo: 'nombre', titulo: 'Nave', tipo: 'principal' }, { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-            { campo: 'velocidad', titulo: 'Vel.', tipo: 'numero', decimales: 1, unidad: 'kn' }, { campo: 'terminal', titulo: 'Terminal' },
+            { campo: 'nombre', titulo: 'PORTTOS.COMUN.NAVE', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+            { campo: 'velocidad', titulo: 'PORTTOS.MAPA_LOGISTICO.VEL', tipo: 'numero', decimales: 1, unidad: 'kn' }, { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
             { campo: 'eta', titulo: 'ETA', tipo: 'fecha' }, { campo: 'mmsi', titulo: 'MMSI' }
         ],
         camiones: [
-            { campo: 'placa', titulo: 'Placa', tipo: 'principal' }, { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-            { campo: 'velocidad', titulo: 'Vel.', tipo: 'numero', unidad: 'km/h' }, { campo: 'tipo', titulo: 'Tipo' }, { campo: 'conductor', titulo: 'Conductor' }
+            { campo: 'placa', titulo: 'PORTTOS.TABLE_COLA_GATE.PLACA', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+            { campo: 'velocidad', titulo: 'PORTTOS.MAPA_LOGISTICO.VEL', tipo: 'numero', unidad: 'km/h' }, { campo: 'tipo', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO' }, { campo: 'conductor', titulo: 'PORTTOS.MAPA_LOGISTICO.CONDUCTOR' }
         ],
         muelles: [
-            { campo: 'terminal', titulo: 'Terminal' }, { campo: 'muelle', titulo: 'Muelle', tipo: 'principal' }, { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-            { campo: 'nave', titulo: 'Nave' }, { campo: 'horasAtracada', titulo: 'Atracada', tipo: 'numero', decimales: 1, unidad: 'h' },
-            { campo: 'proximo', titulo: 'Próximo' }, { campo: 'proximoEnHoras', titulo: 'En', tipo: 'numero', decimales: 1, unidad: 'h' }
+            { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' }, { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+            { campo: 'nave', titulo: 'PORTTOS.COMUN.NAVE' }, { campo: 'horasAtracada', titulo: 'PORTTOS.COMUN.ATRACADA', tipo: 'numero', decimales: 1, unidad: 'h' },
+            { campo: 'proximo', titulo: 'PORTTOS.MAPA_LOGISTICO.PROXIMO' }, { campo: 'proximoEnHoras', titulo: 'En', tipo: 'numero', decimales: 1, unidad: 'h' }
         ],
         alertas: [
-            { campo: 'nivel', titulo: 'Nivel', tipo: 'estado' }, { campo: 'titulo', titulo: 'Alerta', tipo: 'principal' },
-            { campo: 'mensaje', titulo: 'Detalle' }, { campo: 'fecha', titulo: 'Hora', tipo: 'fecha' }, { campo: 'simulado', titulo: 'Simulada', tipo: 'si-no' }
+            { campo: 'nivel', titulo: 'PORTTOS.MAPA_LOGISTICO.NIVEL', tipo: 'estado' }, { campo: 'titulo', titulo: 'PORTTOS.MAPA_LOGISTICO.ALERTA', tipo: 'principal' },
+            { campo: 'mensaje', titulo: 'PORTTOS.MAPA_LOGISTICO.DETALLE' }, { campo: 'fecha', titulo: 'PORTTOS.IA_ADMIN_PANEL.HORA', tipo: 'fecha' }, { campo: 'simulado', titulo: 'PORTTOS.MAPA_LOGISTICO.SIMULADA', tipo: 'si-no' }
         ],
         geocercas: [
-            { campo: 'nombre', titulo: 'Geocerca', tipo: 'principal' }, { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-            { campo: 'camiones', titulo: 'Camiones', tipo: 'numero' }, { campo: 'enRuta', titulo: 'En ruta', tipo: 'numero' },
-            { campo: 'detenidos', titulo: 'Detenidos', tipo: 'numero' }, { campo: 'naves', titulo: 'Naves', tipo: 'numero' }
+            { campo: 'nombre', titulo: 'PORTTOS.MAPA_LOGISTICO.GEOCERCA', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+            { campo: 'camiones', titulo: 'PORTTOS.CHART_DOUGHNUT.CAMIONES', tipo: 'numero' }, { campo: 'enRuta', titulo: 'PORTTOS.MAPA_LOGISTICO.EN_RUTA', tipo: 'numero' },
+            { campo: 'detenidos', titulo: 'PORTTOS.MAPA_LOGISTICO.DETENIDOS', tipo: 'numero' }, { campo: 'naves', titulo: 'PORTTOS.MAPA_LOGISTICO.NAVES', tipo: 'numero' }
         ]
     };
 
@@ -1471,7 +1478,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         const p = (f: any) => f?.properties || {};
         this.filasPanel = {
             buques: Array.from(this.navesActuales.values()).map((f: any, i) => ({
-                id: p(f).mmsi || `nave-${i}`, nombre: p(f).nombre_motonave || p(f).mmsi || 'Desconocida', mmsi: p(f).mmsi || null,
+                id: p(f).mmsi || `nave-${i}`, nombre: p(f).nombre_motonave || p(f).mmsi || 'PORTTOS.MAPA_LOGISTICO.DESCONOCIDA', mmsi: p(f).mmsi || null,
                 estado: p(f).estado_ais || p(f).estado_inferido || p(f).estado_nave || null, velocidad: p(f).velocidad ?? null,
                 terminal: p(f).id_terminal || p(f).terminal || null, eta: p(f).eta || null, coordenadas: punto(f)
             })),
@@ -1488,7 +1495,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 id: a.id, nivel: a.nivel, titulo: a.titulo, mensaje: a.mensaje, fecha: a.fecha, simulado: a.simulado, coordenadas: a.coordenadas
             })),
             geocercas: (this.ultimasGeocercasKpiGeoJson?.features || []).map((f: any, i: number) => ({
-                id: p(f).id_faro || `geocerca-${i}`, nombre: p(f).nombre_faro || p(f).nombre || 'Geocerca', estado: p(f).estado_kpi || null,
+                id: p(f).id_faro || `geocerca-${i}`, nombre: p(f).nombre_faro || p(f).nombre || 'PORTTOS.MAPA_LOGISTICO.GEOCERCA', estado: p(f).estado_kpi || null,
                 camiones: p(f).total_camiones ?? null, enRuta: p(f).camiones_ruta ?? null, detenidos: p(f).camiones_detenidos ?? null,
                 naves: p(f).total_naves ?? null, coordenadas: punto(f)
             }))

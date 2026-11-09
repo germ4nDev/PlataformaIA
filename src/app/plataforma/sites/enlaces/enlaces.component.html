@@ -66,8 +66,7 @@
           [exportLabel]="'PLATAFORMA.EXCEL' | translate"
           (newRecord)="OnNuevoRegistroClick()"
           (editRecord)="OnEditarRegistroClick($event)"
-          (deleteRecord)="OnEliminarRegistroClick($event)"
-        >
+          (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_ENLACES_CREAR" permisoEdit="ACT_ENLACES_MODIFICAR" permisoDelete="ACT_ENLACES_ELIMINAR">
         </app-data-table>
       </div>
     </div>

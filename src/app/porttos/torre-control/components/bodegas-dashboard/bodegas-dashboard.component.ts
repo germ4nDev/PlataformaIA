@@ -3,6 +3,7 @@
     Component: Bodegas Dashboard (pestaña TLC_BODEGAS_001) · Layout Manager común (PestanaGridsterBase)
     Al cambiar de puerto limpia la caché de BodegasService; los widgets traen sus datos solos.
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
@@ -14,7 +15,7 @@ import { PestanaGridsterBase } from '../pestana-gridster/pestana-gridster.base';
 @Component({
     selector: 'app-bodegas-dashboard',
     standalone: true,
-    imports: [CommonModule, GridsterComponent, GridsterItemComponent],
+    imports: [CommonModule, GridsterComponent, GridsterItemComponent, TranslateModule],
     templateUrl: '../pestana-gridster/pestana-gridster.component.html',
     styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })

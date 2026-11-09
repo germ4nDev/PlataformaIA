@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'Distribución de Paquetes'"
-    [subtitulo]="widgetConfig?.subtitulo || 'Market Share'" [icono]="widgetConfig?.icono || 'feather icon-pie-chart'"
+<app-widget-shell [titulo]="widgetConfig?.titulo || ('WEB.WDG_PAQUETES_DGT.DISTRIBUCION_DE_PAQUETES' | translate)"
+    [subtitulo]="widgetConfig?.subtitulo || ('WEB.WDG_PAQUETES_DGT.MARKET_SHARE' | translate)" [icono]="widgetConfig?.icono || 'feather icon-pie-chart'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- 🟢 1. PROYECCIÓN AL HEADER DEL SHELL (Badge Morado) -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-purple text-uppercase">
-            Market Share
+            {{ 'WEB.WDG_PAQUETES_DGT.MARKET_SHARE' | translate }}
         </span>
     </div>
 

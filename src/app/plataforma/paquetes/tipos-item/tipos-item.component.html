@@ -18,12 +18,12 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">Filtros de Tipos</h6>
+                    <h6 class="filtros-title">{{ 'WEB.TIPOS_ITEM.FILTROS_DE_TIPOS' | translate }}</h6>
 
                     <div class="filtro">
-                        <small>Filtrar por Nombre</small>
+                        <small>{{ 'WEB.TIPOS_ITEM.FILTRAR_POR_NOMBRE' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="Buscar tipo de ítem..." />
+                            [placeholder]="'WEB.TIPOS_ITEM.BUSCAR_TIPO_DE_ITEM' | translate" />
                     </div>
 
                     <div class="filtro">
@@ -45,7 +45,7 @@
             <div class="card-body">
                 <ng-container *ngIf="_tiposFiltrados$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoTipoItem'"
-                        [tableTitle]="'Categorías / Tipos de Ítems'" [metadataColumns]="columnasTipos"
+                        [tableTitle]="('WEB.TIPOS_ITEM.CATEGORIAS_TIPOS_DE_ITEMS' | translate)" [metadataColumns]="columnasTipos"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
                         [showDeleteButton]="false" [showSearchBox]="false"

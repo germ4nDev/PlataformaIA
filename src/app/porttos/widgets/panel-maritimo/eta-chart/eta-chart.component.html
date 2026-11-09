@@ -27,13 +27,13 @@
     </div>
 
 </app-widget-shell> -->
-<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'REPORTE ETA VS ATA'"
-    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Desviación media (horas) entre arribo estimado y atraque real'"
+<app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || 'REPORTE ETA VS ATA'"
+    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.ETA_CHART.DESVIACION_MEDIA_HORAS_ENTRE_ARRIBO' | translate)"
     [icono]="data?.icono || 'feather icon-clock'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge badge-info text-uppercase" title="Estimated Time of Arrival vs Actual Time of Arrival">
-            Atraques
+        <span class="tc-badge badge-info text-uppercase" [title]="'PORTTOS.ETA_CHART.ESTIMATED_TIME_OF_ARRIVAL_VS' | translate">
+            {{ 'PORTTOS.ETA_CHART.ATRAQUES' | translate }}
         </span>
     </div>
 
@@ -42,7 +42,7 @@
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top: 0; left: 0; z-index: 10;">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">Calculando desviación ETA vs ATA...</span>
+            <span class="text-muted" style="font-size: 0.8rem;">{{ 'PORTTOS.ETA_CHART.CALCULANDO_DESVIACION_ETA_VS_ATA' | translate }}</span>
         </div>
 
         <!-- Canvas Chart.js unificado -->
@@ -55,7 +55,7 @@
         <div *ngIf="!cargando && !tieneDatos"
             class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted">
             <i class="feather icon-clock fs-2 mb-2 opacity-50"></i>
-            <span style="font-size: 0.8rem;">Sin registros de desviación ETA/ATA en este puerto.</span>
+            <span style="font-size: 0.8rem;">{{ 'PORTTOS.ETA_CHART.SIN_REGISTROS_DE_DESVIACION_ETA' | translate }}</span>
         </div>
     </div>
 

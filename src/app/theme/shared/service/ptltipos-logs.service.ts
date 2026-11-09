@@ -21,7 +21,7 @@ export class PTLTiposLogsService {
     ) { }
 
     getRegistros() {
-        const url = `${base_url}/tipos-log`;
+        const url = `${base_url}/tipos-logs`; // OT-021: el API monta /api/tipos-logs (antes solo /api/tios-logs)
         return this.http.get(url).pipe(
             map((resp: any) => {
                 console.log('servicio de tiposlogs', resp);

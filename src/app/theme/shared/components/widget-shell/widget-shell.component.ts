@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../service/tablero-control/dashboard.service';
@@ -6,7 +7,7 @@ import { OrigenDato, OrigenDatoTclComponent } from '../origen-dato/origen-dato.c
 @Component({
     selector: 'app-widget-shell',
     standalone: true,
-    imports: [CommonModule, OrigenDatoTclComponent],
+    imports: [TranslateModule, CommonModule, OrigenDatoTclComponent],
     templateUrl: './widget-shell.component.html',
     styleUrls: ['./widget-shell.component.scss']
 })

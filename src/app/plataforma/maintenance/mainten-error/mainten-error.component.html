@@ -10,7 +10,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 1074.392 584.231"
             >
-              <title>page not found</title>
+              <title>{{ 'WEB.MAINTEN_ERROR.PAGE_NOT_FOUND' | translate }}</title>
               <ellipse cx="540.64346" cy="549.3094" rx="527.5" ry="34.9216" fill="#f2f2f2" />
               <path
                 d="M583.47969,324.89424c-85.94407,0-147.651,55.13938-147.651,183.79791,0,145.813,61.70691,184.41057,147.651,184.41057s151.327-42.27352,151.327-184.41057C734.80664,356.75255,669.42376,324.89424,583.47969,324.89424Zm.56495,319.80837c-59.52686,0-90.62592-34.92288-90.62592-135.9163,0-89.11185,32.37209-136.10461,91.899-136.10461s91.899,30.86774,91.899,136.10461C677.21663,607.23367,643.5715,644.70261,584.04464,644.70261Z"
@@ -258,10 +258,10 @@
               <circle cx="460.946" cy="355.1155" r="5" fill="#ff5370" opacity="0.3" />
             </svg>
           </div>
-          <h5 class="my-4">Oops! Page not found!</h5>
-          <p class="text-muted">illustration by <a href="https://undraw.co/search">undraw.co</a></p>
+          <h5 class="my-4">{{ 'WEB.MAINTEN_ERROR.OOPS_PAGE_NOT_FOUND' | translate }}</h5>
+          <p class="text-muted">{{ 'WEB.MAINTEN_ERROR.ILLUSTRATION_BY' | translate }} <a href="https://undraw.co/search">undraw.co</a></p>
           <button class="btn waves-effect waves-light btn-danger mb-4" [routerLink]="['/dashboard/analytics/']"
-            ><i class="feather icon-refresh-ccw me-2"></i>Home</button
+            ><i class="feather icon-refresh-ccw me-2"></i>{{ 'WEB.COMUN.HOME' | translate }}</button
           >
         </div>
       </div>

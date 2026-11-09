@@ -35,10 +35,7 @@ const routes: Routes = [
                 loadChildren: () =>
                     import('./plataforma/administracion-bd/administracion-bd.module').then((module) => module.AdministracionBDModule)
             },
-            {
-                path: 'layout',
-                loadChildren: () => import('./plataforma/layout/layout.module').then((module) => module.LayoutModule)
-            },
+            // 2026-11-09 (usuario): páginas de ejemplo de diseño de la plantilla retiradas a _respaldos/2026-11-09_paginas-ejemplo
             {
                 path: 'suscriptor',
                 loadChildren: () => import('./plataforma/suscriptor/suscriptor.module').then((module) => module.SuscriptorModule)

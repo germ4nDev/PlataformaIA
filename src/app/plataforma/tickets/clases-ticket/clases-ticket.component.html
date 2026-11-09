@@ -56,7 +56,7 @@
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         [showDeleteButton]="true" [showSearchBox]="false" (viewRecord)="OnViewRegistroClick($event)"
                         (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)">
+                        (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_CLASESTK_CREAR" permisoEdit="ACT_CLASESTK_MODIFICAR" permisoDelete="ACT_CLASESTK_ELIMINAR">
                     </app-table-data>
                 </ng-container>
             </div>

@@ -1,0 +1,9 @@
+@if (s.elementos.length) {
+  <section class="cifras" [attr.aria-label]="s.titulo || null">
+    <div class="contenedor cifras__rejilla">
+      @for (e of s.elementos; track $index) {
+        <div class="cifra"><span class="cifra__valor">{{ e.valor }}</span><span class="cifra__texto">{{ e.texto }}</span></div>
+      }
+    </div>
+  </section>
+}

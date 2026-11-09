@@ -52,11 +52,86 @@
         </div>
     </div>
 </div> -->
-<div class="tc-header-layout d-flex align-items-center justify-content-between w-100">
+<!-- ======================================================================
+     TELÉFONO CON LA WEB EMBEBIDA (OT-017, CC-123): barra con ☰, logo y puerto; el puerto, las pestañas, las acciones del tablero
+     (lo que hacía el engranaje) y el idioma van en el menú lateral. La web y la tableta usan el encabezado de siempre (abajo).
+     ====================================================================== -->
+<ng-container *ngIf="telefono">
+    <div class="tel-barra">
+        <button type="button" class="tel-icono-btn" (click)="abrirMenu()" [attr.aria-expanded]="menuAbierto"
+            [attr.aria-label]="'TORRE_CONTROL.MENU_TELEFONO.ABRIR' | translate">
+            <i class="feather icon-menu"></i>
+        </button>
+        <img class="tel-logo" [src]="logoEmpresa" alt="Porttos" />
+        <button type="button" class="tel-chip-puerto" (click)="abrirMenu()">
+            <i class="feather icon-anchor"></i>{{ nodoSeleccionado }}
+        </button>
+        <div class="tel-perfil">
+            <app-profile-drp></app-profile-drp>
+        </div>
+    </div>
+
+    <div class="tel-fondo" *ngIf="menuAbierto" (click)="cerrarMenu()"></div>
+
+    <aside class="tel-menu" [class.abierto]="menuAbierto" [attr.aria-hidden]="!menuAbierto">
+        <div class="tel-menu-cabecera">
+            <img class="tel-logo" [src]="logoEmpresa" alt="Porttos" />
+            <button type="button" class="tel-icono-btn" (click)="cerrarMenu()"
+                [attr.aria-label]="'TORRE_CONTROL.MENU_TELEFONO.CERRAR' | translate">
+                <i class="feather icon-x"></i>
+            </button>
+        </div>
+
+        <div class="tel-menu-cuerpo">
+            <small class="tel-seccion">{{ 'TORRE_CONTROL.HEADER.FT_PUERTO' | translate }}</small>
+            <select class="tc-dropdown tel-select" [(ngModel)]="nodoSeleccionado" (change)="onCambioNodo($event); cerrarMenu()">
+                <option *ngFor="let nodo of listaCiudadesPortuarias" [value]="nodo.id_puerto">{{ nodo.id_puerto }}</option>
+            </select>
+
+            <ng-container *ngIf="esPestanaGnl">
+                <small class="tel-seccion">{{ 'TORRE_CONTROL.MENU_TELEFONO.BRAZO' | translate }}</small>
+                <select class="tc-dropdown tel-select" [(ngModel)]="brazoSeleccionado" (change)="onCambioBrazo($event)">
+                    <option value="TODOS">{{ 'TORRE_CONTROL.MENU_TELEFONO.CONSOLIDADO' | translate }}</option>
+                    <option *ngFor="let brazo of listaBrazos" [value]="brazo">{{ brazo }}</option>
+                </select>
+            </ng-container>
+
+            <small class="tel-seccion">{{ 'TORRE_CONTROL.MENU_TELEFONO.PESTANAS' | translate }}</small>
+            <nav class="tel-lista">
+                <button type="button" *ngFor="let pestana of pestanas" class="tel-item"
+                    [class.activo]="pestanaActiva === pestana.codigoPestana" (click)="elegirPestana(pestana.codigoPestana)">
+                    <i [class]="icono(pestana)" [style.color]="color(pestana)"></i>
+                    <span>{{ pestana.nombrePestana }}</span>
+                </button>
+            </nav>
+
+            <small class="tel-seccion">{{ 'TORRE_CONTROL.MENU_TELEFONO.TABLERO' | translate }}</small>
+            <nav class="tel-lista">
+                <button type="button" class="tel-item" (click)="accion(abrirCatalogo)">
+                    <i class="feather icon-plus"></i><span>{{ 'TORRE_CONTROL.MENU_TELEFONO.WIDGETS' | translate }}</span>
+                </button>
+                <!-- Pestañas del teléfono (CC-125): se eligen y ordenan entre las que tienen widgets de teléfono y se guardan en el
+                     dispositivo; la preferencia de pestañas de la web no se toca (regla 17) -->
+                <button type="button" class="tel-item" (click)="accion(abrirPestanas)">
+                    <i class="feather icon-layers"></i><span>{{ 'TORRE_CONTROL.MENU_TELEFONO.PERSONALIZAR_PESTANAS' | translate }}</span>
+                </button>
+                <!-- Sin candado en el teléfono (CC-124): el layout es fijo; solo se eligen widgets y se restaura -->
+                <button type="button" class="tel-item" (click)="accion(restaurar)">
+                    <i class="feather icon-refresh-cw"></i><span>{{ 'TORRE_CONTROL.MENU_TELEFONO.RESTAURAR' | translate }}</span>
+                </button>
+            </nav>
+
+            <small class="tel-seccion">{{ 'TORRE_CONTROL.MENU_TELEFONO.IDIOMA' | translate }}</small>
+            <div class="tel-idioma"><app-language-selector></app-language-selector></div>
+        </div>
+    </aside>
+</ng-container>
+
+<div *ngIf="!telefono" class="tc-header-layout d-flex align-items-center justify-content-between w-100">
 
     <!-- Título y Subtítulo a la izquierda -->
     <div class="tc-title-section">
-        <img id="main-logo" src="{{ logoEmpresa }}" alt="logo-img" class="logo" />
+        <img id="main-logo" src="{{ logoEmpresa }}" [alt]="'PORTTOS.TC_HEADER.LOGO_IMG' | translate" class="logo" />
     </div>
 
     <!-- Contenedor derecho -->
@@ -66,9 +141,9 @@
             <!-- 🟢 FILTRO DE BRAZO (Solo visible cuando la pestaña activa es GNL) -->
             <div *ngIf="esPestanaGnl" class="tc-filtro-puerto-wrapper animate__animated animate__fadeIn">
                 <div class="tc-filtro-puerto">
-                    <small class="titulo-filtro">Filtrar Brazo</small>
+                    <small class="titulo-filtro">{{ 'PORTTOS.TC_HEADER.FILTRAR_BRAZO' | translate }}</small>
                     <select class="tc-dropdown" [(ngModel)]="brazoSeleccionado" (change)="onCambioBrazo($event)">
-                        <option value="TODOS">🌐 Vista General (Consolidado)</option>
+                        <option value="TODOS">{{ 'PORTTOS.TC_HEADER.VISTA_GENERAL_CONSOLIDADO' | translate }}</option>
                         <option *ngFor="let brazo of listaBrazos" [value]="brazo">
                             🔧 {{ brazo }}
                         </option>
@@ -96,7 +171,7 @@
                     <!-- Dentro de la app (modo embebido, OT-014) no hay menú principal: la app tiene el suyo -->
                     <li class="nav-item" *ngIf="!embebido">
                         <button type="button" class="btn-navbar-porttos" (click)="goBack($event)"
-                            title="Menú Principal">
+                            [title]="'PORTTOS.TC_HEADER.MENU_PRINCIPAL' | translate">
                             <i class="feather icon-home"></i>
                         </button>
                     </li>

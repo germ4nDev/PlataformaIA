@@ -5,6 +5,7 @@
     Telemetría desacoplada en GnlStateService: se une a la sala GNL del puerto, delega cada pulso del socket al estado
     y pinta los KPI PTT_GNL_KPI_* con la telemetría filtrada por brazo.
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
@@ -19,7 +20,7 @@ import { PestanaGridsterBase, WidgetEnCuadricula } from '../pestana-gridster/pes
 @Component({
     selector: 'app-gnl-dashboard',
     standalone: true,
-    imports: [CommonModule, GridsterComponent, GridsterItemComponent],
+    imports: [CommonModule, GridsterComponent, GridsterItemComponent, TranslateModule],
     templateUrl: '../pestana-gridster/pestana-gridster.component.html',
     styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,7 +7,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 @Component({
   selector: 'app-chat-msg',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgScrollbarModule],
+  imports: [TranslateModule, CommonModule, FormsModule, NgScrollbarModule],
   templateUrl: './chat-msg.component.html',
   styleUrls: ['./chat-msg.component.scss']
 })

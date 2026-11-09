@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +18,7 @@ import { GraficaTclComponent, SerieGrafica } from '../../shared/grafica-tcl/graf
 @Component({
     selector: 'app-tendencia-capacidad',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
     templateUrl: './tendencia-capacidad.component.html',
     styleUrls: ['./tendencia-capacidad.component.scss']
 })

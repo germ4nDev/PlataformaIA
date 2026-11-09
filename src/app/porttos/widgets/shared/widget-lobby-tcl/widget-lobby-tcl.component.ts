@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, Output, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service';
@@ -5,7 +6,7 @@ import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/se
 @Component({
     selector: 'app-widget-lobby-tcl',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './widget-lobby-tcl.component.html',
     styleUrls: ['./widget-lobby-tcl.component.scss']
 })

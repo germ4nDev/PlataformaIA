@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -37,11 +38,14 @@ import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuar
 import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
 import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model'
 import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model'
+import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.model'
+
+import { AsignacionRolesUsuarioComponent } from './asignacion-roles-usuario/asignacion-roles-usuario.component'
 
 @Component({
     selector: 'app-gestion-usuario',
     standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent, AsignacionRolesUsuarioComponent],
     templateUrl: './gestion-usuario.component.html',
     styleUrl: './gestion-usuario.component.scss'
 })
@@ -49,6 +53,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     @Output() toggleSidebar = new EventEmitter<void>()
     usuario: PTLUsuarioModel = new PTLUsuarioModel()
     FormRegistro: PTLUsuarioModel = new PTLUsuarioModel()
+    navSettings: NavSettings = new NavSettings()
     form: undefined
     isSubmit: boolean = false
     menuItems!: Observable<NavigationItem[]>
@@ -119,6 +124,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     ) {
         this.isSubmit = false
         this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        this.navSettings = this._localStorageService.getNavSettingsLocalStorage()
         const registroId = this._localStorageService.getObject<string>('regId') || ''
         if (registroId != 'nuevo') {
             // console.log('me llena el Id', registroId);
@@ -133,20 +139,10 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                     this.FormRegistro.claveUsuario = ''
                     this.FormRegistro.claveNew = ''
                     this.FormRegistro.claveConfirm = ''
-                    this._usuariosRolesService.getRegistroByCodigoUsuario(registroId).subscribe((respRel: any) => {
-                        this.FormRegistro.rolesUsuario = this.consultarRolesUsuario(registroId)
-                        this.userRoles = this.FormRegistro.rolesUsuario
-                        console.log('rolesUsuario', this.FormRegistro.rolesUsuario);
-                        if (this.modoEdicion) {
-                            this.cargarRolesAsociados(registroId)
-                        } else {
-                            this.tipoRolSeleccionado = 'plataforma'
-                            this.consultarRoles()
-                        }
-                    })
+                    // CC-134 (decisión del usuario): los roles se asignan solo en Suscriptores › Usuarios › Roles; aquí ya no se consultan
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error')
                 }
             })
         } else {
@@ -196,23 +192,8 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     }
 
     validarClaveActual(claveActual: any) {
-        // console.log('validar la clave', claveActual);
         const userName = this.FormRegistro.userNameUsuario || ''
-        // console.log('validar el usuario', userName, claveActual);
-        // console.log('data el usuario', this.FormRegistro);
-        this._authService.verificarClaveActual(userName, claveActual).subscribe((data: any) => {
-            console.log('data', data);
-            // if (data.ok == true) {
-            //     if (this.FormRegistro.usuarioId === data.usuario.usuarioId) {
-            //         this.isClaveActual = false
-            //         //   console.log('respuesta perfil', data);
-            //     }
-            // } else {
-            //     this.FormRegistro.claveNew = ''
-            //     this.FormRegistro.claveConfirm = ''
-            //     this.isClaveActual = true
-            // }
-        })
+        this.FormRegistro.claveActual = claveActual;
     }
 
     actualizarDescripcionRegistro(nuevoContenido: string): void {
@@ -360,35 +341,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         }
     }
 
-    cargarRolesAsociados(codigoUsuario: string) {
-        this._usuariosRolesService.getRegistroByCodigoUsuario(codigoUsuario).subscribe({
-            next: (resp: any) => {
-                if (resp.ok && Array.isArray(resp.usuarioRole)) {
-                    // 1. Guardar todos los IDs que ya tiene el usuario (mezcla)
-                    this.rolesAsignadosAlUsuario = resp.usuarioRole.map((ur: any) => ur.codigoRole)
-
-                    // 2. Intentar pre-configurar la vista basada en el primer rol de suscriptor encontrado
-                    const rolSuscriptor = resp.usuarioRole.find((ur: any) => ur.codigoAplicacion && ur.codigoAplicacion !== '')
-
-                    if (rolSuscriptor) {
-                        this.tipoRolSeleccionado = 'suscriptor'
-                        this.codAplicacion = rolSuscriptor.codigoAplicacion
-                        this.codSuite = rolSuscriptor.codigoSuite
-
-                        // Cargar suites disponibles para esa app y luego mostrar los roles
-                        const app = this.aplicaciones.find(x => x.codigoAplicacion == this.codAplicacion)
-                        this.suitesApp = app ? this.suites.filter(x => x.codigoAplicacion == app.codigoAplicacion) : []
-
-                        this.consultarRoles(this.codAplicacion, this.codSuite)
-                    } else {
-                        // Si no hay ninguno de suscriptor, por defecto mostrar plataforma
-                        this.tipoRolSeleccionado = 'plataforma'
-                        this.consultarRoles()
-                    }
-                }
-            }
-        })
-    }
+    // CC-134: retirado (los roles se asignan en Suscriptores › Usuarios › Roles; copia en _respaldos/2026-11-07_roles-gestion-usuario)
 
     btnAsociarTodosRolesClick() {
         const todosSeleccionados = this.roles.every((r: any) => r.checked)
@@ -400,128 +353,72 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
 
     btnGestionarUsuarioClick(form: any) {
         this.isSubmit = true
-        // if (!form.valid) {
-        //   return;
-        // }
-        if (this.rolesAsignadosAlUsuario.length === 0) {
-            this._swalAlertService.getAlertError('Debe seleccionar al menos un rol.')
-            return
-        }
 
         const registroData = form.value as PTLUsuarioModel
+        this.codSuscriptor = this.navSettings.suscriptor?.codigoSuscriptor || ''
+        registroData.codigoSuscriptor = this.codSuscriptor
+        registroData.isOnline = false;
+        registroData.ultimaConexion = '';
+        console.log('clave actual', this.FormRegistro.claveActual);
+        console.log('clave usuario', this.claveUsuario);
+        console.log('nombre usuario', this.FormRegistro.nombreUsuario);
 
         if (this.modoEdicion) {
             // MODIFICAR REGISTRO
-            if (this.FormRegistro.claveUsuario != '') {
-                if (this.FormRegistro.claveNew == this.FormRegistro.claveConfirm) {
-                    registroData.claveUsuario = this.FormRegistro.claveNew
-                    registroData.fotoUsuario = this.fileName
-                    registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-                    registroData.fechaModificacion = new Date().toISOString()
-                    this._registrosService.actualizarUsuarioClave(registroData).subscribe({
-                        next: (resp: any) => {
-                            if (resp.ok) {
-                                this.procesarRelaciones(registroData.codigoUsuario!)
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR') + ', ' + resp.mensaje
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'))
-                                this.router.navigate(['/autenticacion/login'])
-                            } else {
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '501',
-                                    descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + resp.mensaje
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalAlertService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'))
-                            }
-                        },
-                        error: (err: any) => {
-                            console.error(err)
-                            const logData = {
-                                codigoTipoLog: '',
-                                codigoRespuesta: '501',
-                                descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.mensaje
-                            }
-                            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                            this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'))
+            if (this.FormRegistro.claveUsuario == '') {
+                this.FormRegistro.claveUsuario = this.claveUsuario
+            }
+            console.log('************* fotoUsuario', this.FormRegistro.fotoUsuario)
+            registroData.claveUsuario = this.FormRegistro.claveUsuario || ''
+            registroData.fotoUsuario = this.FormRegistro.fotoUsuario
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            registroData.fechaModificacion = new Date().toISOString()
+            this._registrosService.actualizarUsuarioDatos(registroData).subscribe({
+                next: (resp: any) => {
+                    // this.procesarUsuarioSuscriptor(usuarioSC, 1)
+                    if (resp.ok) {
+                        const logData = {
+                            codigoTipoLog: '',
+                            codigoRespuesta: '201',
+                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
                         }
-                    })
-                } else {
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'))
+                        this.router.navigate(['/usuarios/usuarios'])
+                    }
+                },
+                error: (err: any) => {
+                    console.error(err)
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.mensaje
                     }
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.PASSWORDSERROR'))
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'))
+                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'))
                 }
-            } else {
-                if (this.FormRegistro.claveUsuario == '') {
-                    this.FormRegistro.claveUsuario = this.claveUsuario
-                }
-                console.log('************* fotoUsuario', this.FormRegistro.fotoUsuario)
-                registroData.claveUsuario = this.FormRegistro.claveUsuario
-                registroData.fotoUsuario = this.FormRegistro.fotoUsuario
-                registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-                registroData.fechaModificacion = new Date().toISOString()
-                this._registrosService.actualizarUsuarioDatos(registroData).subscribe({
-                    next: (resp: any) => {
-                        const usuarioSC = {
-                            codigoSuscriptor: this.FormRegistro.codigoSuscriptor,
-                            codigoUsuario: registroData.codigoUsuario
-                        }
-                        this.procesarUsuarioSuscriptor(usuarioSC, 1)
-                        this.procesarRelaciones(registroData.codigoUsuario!)
-                        if (resp.ok) {
-                            const logData = {
-                                codigoTipoLog: '',
-                                codigoRespuesta: '201',
-                                descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-                            }
-                            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                            this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'))
-                            this.router.navigate(['/usuarios/usuarios'])
-                        }
-                    },
-                    error: (err: any) => {
-                        console.error(err)
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.mensaje
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'))
-                        this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'))
-                    }
-                })
-            }
+            })
         } else {
             // INSERTAR REGISTRO
-            registroData.claveUsuario = this.FormRegistro.claveUsuario
+            registroData.claveUsuario = this.FormRegistro.claveActual || ''
             registroData.codigoUsuario = uuidv4()
             registroData.fotoUsuario = this.fileName !== '' ? this.fileName : 'no-imagen.png'
             registroData.fechaCreacion = new Date().toISOString()
             registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            const usuarioSC = {
+                codigoSuscriptor: this.FormRegistro.codigoSuscriptor,
+                codigoUsuario: registroData.codigoUsuario
+            }
             this._registrosService.crearUsuario(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        const usuarioSC = {
-                            codigoSuscriptor: this.FormRegistro.codigoSuscriptor,
-                            codigoUsuario: registroData.codigoUsuario
-                        }
                         this.procesarUsuarioSuscriptor(usuarioSC, 2)
-                        this.procesarRelaciones(registroData.codigoUsuario || '')
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                        // const logData = {
+                        //     codigoTipoLog: '',
+                        //     codigoRespuesta: '201',
+                        //     descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                        // }
+                        // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                         this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTUSERSUCCESS'))
                         form.resetForm()
                         this.isSubmit = false
@@ -580,35 +477,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         }
     }
 
-    procesarRelaciones(codigoUsuario: string) {
-        this._usuariosRolesService.deleteRolesPorUsuario(codigoUsuario).subscribe({
-            next: () => {
-                // Usamos los IDs que tenemos en la lista global de pestañas
-                const rolesSeleccionados = this.todosLosRoles.filter(r => this.rolesAsignadosAlUsuario.includes(r.codigoRole))
-                // console.log('++++++QUEMETRAEEE++++', rolesSeleccionados)
-                rolesSeleccionados.forEach(role => {
-                    const nuevaRelacion = {
-                        codigoUsuarioSC: codigoUsuario,
-                        codigoRole: role.codigoRole,
-                        codigoEmpresaSC: '',
-                        codigoAplicacion: role.codigoAplicacion || '',
-                        codigoSuite: role.codigoSuite || '',
-                        tipoRol: role.tipoRol || 'suscriptor',
-                        estadoUsuarioRole: true,
-                        codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
-                        fechaCreacion: new Date().toISOString(),
-                        codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
-                        fechaModificacion: new Date().toISOString()
-                    }
-
-                    this._usuariosRolesService.postUsuarioRole(nuevaRelacion).subscribe({
-                        next: () => console.log(`Rol ${role.nombreRole} asignado correctamente`),
-                        error: err => console.error('Error asociando rol', err)
-                    })
-                })
-            }
-        })
-    }
+    // CC-134: retirado (los roles se asignan en Suscriptores › Usuarios › Roles; copia en _respaldos/2026-11-07_roles-gestion-usuario)
 
     toggleRolSeleccionado(rol: any) {
         if (rol.checked) {

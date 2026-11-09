@@ -1,7 +1,6 @@
 // import { AdministracionBDModule } from './plataforma/administracion-bd/administracion-bd.module';
 // Angular Import
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -25,6 +24,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common
 import { ToastrModule } from 'ngx-toastr';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { crearCargadorTraducciones } from './theme/shared/i18n/cargador-traducciones';
 import { LanguageSelectorComponent } from './theme/shared/components/language-selector/language-selector.component';
 import { NavContentComponent } from './theme/layout/admin/navigation/nav-content/nav-content.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -64,9 +64,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-    declarations: [AppComponent, GuestComponent],
+    // OT-023 fase 5: AppComponent y GuestComponent son standalone; AppModule solo aporta proveedores (main.ts)
     imports: [
-        BrowserModule,
+        GuestComponent,
         AppRoutingModule,
         SharedModule,
         FormsModule,
@@ -90,7 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
             defaultLanguage: 'es',
             loader: {
                 provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
+                // OT-027: el JSON del build y encima el que administra Utilidades › Traducciones en el API
+                useFactory: crearCargadorTraducciones,
                 deps: [HttpClient]
             }
         }),
@@ -135,6 +136,6 @@ export function HttpLoaderFactory(http: HttpClient) {
             multi: true
         }
     ],
-    bootstrap: [AppComponent]
+    // OT-023 fase 5: sin bootstrap ni BrowserModule; main.ts arranca AppComponent con bootstrapApplication e importProvidersFrom(AppModule)
 })
 export class AppModule { }

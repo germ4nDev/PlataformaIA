@@ -226,8 +226,8 @@ export class RolesComponent implements OnInit {
                     return {
                         ...role,
                         '_acciones': [
-                            { accion: 'INACTIVAR', letra: 'I', color: '#a02525', tooltip: (this.translate.instant('ROLES.INACTIVAR')) },
-                            { accion: 'USUARIOS', letra: 'U', color: '#a025a0', tooltip: (this.translate.instant('ROLES.USUARIOSROLE')) }
+                            { accion: 'INACTIVAR', permiso: 'ACT_ROLES_MODIFICAR', letra: 'I', color: '#a02525', tooltip: (this.translate.instant('ROLES.INACTIVAR')) },
+                            { accion: 'USUARIOS', permiso: 'ACT_USUSC_ROLES', letra: 'U', color: '#a025a0', tooltip: (this.translate.instant('ROLES.USUARIOSROLE')) }
                         ],
                     } as PTLRoleAPModel;
                 });

@@ -10,6 +10,8 @@ export interface ContextoPopup {
     isDark: boolean;
     ultimaFlotaGeoJson: any;
     ultimosIncidentes: any;
+    /** CC-132: muestra «Marcar como despejado» solo con ACT_EVENTOS_DESPEJAR (sin el dato, como antes) */
+    puedeDespejar?: boolean;
 }
 
 const ENTIDADES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
@@ -253,7 +255,7 @@ export function generarContenidoPopup(layerId: string, feature: any, ctx: Contex
                     <span class="PORTTOS-label">📡 Fuente:</span>
                     <span class="PORTTOS-value">${manual ? 'Reporte manual' : 'TomTom'}${haceMin !== null ? ` · visto hace ${haceMin} min` : ''}</span>
                 </div>`;
-            if (manual && data.id) {
+            if (manual && data.id && ctx.puedeDespejar !== false) {
                 // Código codificado (sin comillas ni < >): el mapa lo decodifica al pulsar
                 htmlVial += `<button type="button" class="PORTTOS-btn-despejar" data-despejar="${encodeURIComponent(String(data.id))}">✅ Marcar como despejado</button>`;
             }

@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -97,7 +98,7 @@ export class GestionBibliotecaComponent implements OnInit {
                     this.codeBiblioteca = resp.biblioteca.codigoBiblioteca
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la Biblioteca', 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_BIBLIOTECA.NO_SE_PUDO_OBTENER_LA'), 'error')
                 }
             })
         } else {
@@ -245,7 +246,7 @@ export class GestionBibliotecaComponent implements OnInit {
                         descripcionLog: this.translate.instant('BIBLIOTECA.UPDATEERROR')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError('No se pudo actualizar la Biblioteca')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_BIBLIOTECA.NO_SE_PUDO_ACTUALIZAR_LA'))
                 }
             })
         } else {
@@ -281,7 +282,7 @@ export class GestionBibliotecaComponent implements OnInit {
                         descripcionLog: this.translate.instant('BIBLIOTECA.CREATEERROR')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError('No se pudo crear la Biblioteca')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_BIBLIOTECA.NO_SE_PUDO_CREAR_LA'))
                 }
             })
         }

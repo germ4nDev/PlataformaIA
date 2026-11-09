@@ -1,3 +1,5 @@
+import { traducir } from '../../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
@@ -8,7 +10,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-facturacion-area',
     standalone: true,
-    imports: [CommonModule, NgChartsModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, NgChartsModule, WidgetShellComponent],
     templateUrl: './wdg-facturacion-area.component.html',
     styleUrl: './wdg-facturacion-area.component.scss'
 })
@@ -25,19 +27,19 @@ export class WdgFacturacionAreaComponent implements OnInit {
         labels: [],
         datasets: [
             {
-                label: 'Licencias Anuales',
+                label: traducir('WEB.WDG_FACTURACION_AREA.LICENCIAS_ANUALES'),
                 data: [],
                 borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.3)',
                 fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
             },
             {
-                label: 'Renovaciones Sem./Trim.',
+                label: traducir('WEB.WDG_FACTURACION_AREA.RENOVACIONES_SEM_TRIM'),
                 data: [],
                 borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.3)',
                 fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
             },
             {
-                label: 'Suscripciones Mensuales',
+                label: traducir('WEB.WDG_FACTURACION_AREA.SUSCRIPCIONES_MENSUALES'),
                 data: [],
                 borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.3)',
                 fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6

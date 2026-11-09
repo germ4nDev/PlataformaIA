@@ -1,0 +1,8 @@
+@if (destino; as d) {
+  @if (d.tipo === 'interno') {
+    <a [class]="clase" [routerLink]="d.ruta" [queryParams]="d.query"><ng-container *ngTemplateOutlet="contenido" /></a>
+  } @else {
+    <a [class]="clase" [href]="d.href" target="_blank" rel="noopener"><ng-container *ngTemplateOutlet="contenido" /></a>
+  }
+}
+<ng-template #contenido><ng-content /></ng-template>

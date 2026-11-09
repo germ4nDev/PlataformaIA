@@ -1,9 +1,10 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -22,7 +23,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 @Component({
     selector: 'app-gestion-servidor',
     standalone: true,
-    imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-servidor.component.html',
     styleUrl: './gestion-servidor.component.scss'
 })
@@ -69,7 +70,7 @@ export class GestionServidorComponent {
                     console.log('datos del FormRegistro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el servidor', 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SERVIDOR.NO_SE_PUDO_OBTENER_EL'), 'error');
                 }
             });
         } else {
@@ -132,7 +133,7 @@ export class GestionServidorComponent {
                             descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
                     }
                 },
                 error: (err: any) => {
@@ -143,7 +144,7 @@ export class GestionServidorComponent {
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                     console.error(err);
-                    Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
                 }
             });
         } else {
@@ -176,7 +177,7 @@ export class GestionServidorComponent {
                         descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
                 }
             });
         }

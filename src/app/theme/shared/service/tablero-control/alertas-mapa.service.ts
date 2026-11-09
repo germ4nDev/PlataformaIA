@@ -1,3 +1,4 @@
+import { traducir } from '../../i18n/traducir';
 /*
     Author: German Valencia
     Servicio: Alertas del mapa (fase 1)
@@ -165,7 +166,7 @@ export class AlertasMapaService implements OnDestroy {
             this.cola = [];
             this.mostrar(primera);
             const n = resto.length;
-            this.contar(this.toastr.info('Ver la bitácora de alertas del mapa', `+${n} alerta${n === 1 ? '' : 's'} más`, this.opciones('info')));
+            this.contar(this.toastr.info(traducir('WEB.ALERTAS_MAPA_SERVICE.VER_LA_BITACORA_DE_ALERTAS'), `+${n} alerta${n === 1 ? '' : 's'} más`, this.opciones('info')));
             return;
         }
         this.mostrar(this.cola.shift()!);

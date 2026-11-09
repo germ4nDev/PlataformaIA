@@ -1,5 +1,6 @@
 // Angular Import
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 // project import
 import { CustomsThemeService } from '../../../service/customs-theme.service';
@@ -7,6 +8,8 @@ import { GradientConfig } from 'src/app/app-config';
 
 @Component({
   selector: 'app-animation-modal',
+  standalone: true, // OT-023 fase 5 (regla 21)
+  imports: [CommonModule],
   templateUrl: './animation-modal.component.html',
   styleUrls: ['./animation-modal.component.scss'],
   encapsulation: ViewEncapsulation.None

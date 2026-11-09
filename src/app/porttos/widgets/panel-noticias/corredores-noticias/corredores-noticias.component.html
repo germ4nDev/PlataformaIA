@@ -1,4 +1,4 @@
-<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [lienzo]="true" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+<app-widget-shell [titulo]="(titulo | translate)" [origen]="origenTablero" [lienzo]="true" [subtitulo]="(subtitulo | translate)" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
     <div acciones-extra class="d-flex align-items-center gap-2"></div>
     <div class="cuerpo">

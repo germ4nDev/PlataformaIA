@@ -42,13 +42,15 @@
             <div class="card-body">
                 <ng-container *ngIf="slidersFiltradas$ | async as dataFiltrada;">
                     <app-table-data [data]="dataFiltrada" [idField]="'sliderId'"
-                        [tableTitle]="'SLIDER.TITLE' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showAvatar]="true" [showImage]="false" [showNewButton]="true" [showViewButton]="false"
-                        [showSearchBox]="false" [showEditButton]="true" [showDeleteButton]="true"
-                        [newButtonLabel]="'SLIDER.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)">
+                        [tableTitle]="'SLIDER.TITLE' | translate" [tableSubtitle]="'SLIDER.SUBTITULO' | translate"
+                        [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true" [showActions]="true" [showAvatar]="true" [showImage]="false"
+                        [showNewButton]="true" [showViewButton]="false" [showSearchBox]="false" [showEditButton]="true"
+                        [showDeleteButton]="true" [newButtonLabel]="'SLIDER.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
+                        permisoNew="ACT_SLIDER_CREAR" permisoEdit="ACT_SLIDER_MODIFICAR"
+                        permisoDelete="ACT_SLIDER_ELIMINAR">
                     </app-table-data>
                 </ng-container>
             </div>

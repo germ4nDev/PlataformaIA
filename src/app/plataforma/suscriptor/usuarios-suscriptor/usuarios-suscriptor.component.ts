@@ -237,7 +237,7 @@ export class UsuariosSuscriptorComponent implements OnInit {
                             accion: 'ROLES',
                             letra: 'R',
                             color: '#c41dd3',
-                            tooltip: this.translate.instant('USUARIOS.ROLES')
+                            tooltip: this.translate.instant('USUARIOS.USUARIOS.ROLES')
                         });
                     }
 

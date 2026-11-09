@@ -213,15 +213,15 @@ export class ItemsComponent implements OnInit, OnDestroy {
     toggleNav(): void { this.toggleSidebar.emit(); }
 
     columnasItems: ColumnMetadata[] = [
-        { name: 'nombreItem', header: 'Nombre del Ítem', type: 'text' },
-        { name: 'nomTipoItem', header: 'Tipo', type: 'text' },
-        { name: 'costoItem', header: 'Costo', type: 'price' },
-        { name: 'valorUnitario', header: 'Precio Unitario', type: 'price' },
+        { name: 'nombreItem', header: 'WEB.ITEMS.NOMBRE_DEL_ITEM', type: 'text' },
+        { name: 'nomTipoItem', header: 'WEB.ITEMS.TIPO', type: 'text' },
+        { name: 'costoItem', header: 'WEB.ITEMS.COSTO', type: 'price' },
+        { name: 'valorUnitario', header: 'WEB.ITEMS.PRECIO_UNITARIO', type: 'price' },
         { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoValor', header: 'Código Interno', type: 'text' },
-        { name: 'descripcionValor', header: 'Descripción', type: 'text' }
+        { name: 'codigoValor', header: 'WEB.ITEMS.CODIGO_INTERNO', type: 'text' },
+        { name: 'descripcionValor', header: 'WEB.ITEMS.DESCRIPCION', type: 'text' }
     ];
 }

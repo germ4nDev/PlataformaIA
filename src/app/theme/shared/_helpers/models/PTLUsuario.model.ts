@@ -12,6 +12,8 @@ export class PTLUsuarioModel {
         public fotoUsuario?: string,
         public usuarioAdministrador?: boolean,
         public estadoUsuario?: boolean,
+        public isOnline?: boolean,
+        public ultimaConexion?: string,
         public checked?: boolean,
         public nomEstado?: string,
         public claveActual?: string,

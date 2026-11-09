@@ -1,7 +1,8 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { param } from 'jquery';
 import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -25,7 +26,7 @@ import { v4 as uuidv4 } from 'uuid';
 @Component({
     selector: 'app-gestion-requerimiento',
     standalone: true,
-    imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-requerimiento.component.html',
     styleUrl: './gestion-requerimiento.component.scss'
 })
@@ -78,7 +79,7 @@ export class GestionRequerimientoComponent {
                     console.log('formRegistro requerimiento', this.FormRegistro);
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener el requerimiento.');
+                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_REQUERIMIENTO.NO_SE_PUDO_OBTENER_EL'));
                 }
             });
         } else {

@@ -64,7 +64,7 @@
                         [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
                         [newButtonLabel]="'FAROS.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         (newRecord)="OnNuevaRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)">
+                        (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_FAROS_CREAR" permisoEdit="ACT_FAROS_MODIFICAR" permisoDelete="ACT_FAROS_ELIMINAR">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>

@@ -45,10 +45,10 @@ import { ChartDoughnutBodegasComponent } from '../widgets/panel-bodegas/chart-do
 import { TableBodegasComponent } from '../widgets/panel-bodegas/table-bodegas/table-bodegas.component';
 
 // Marítimo en vivo (AIS + DIMAR)
-import { KpisMaritimoVivoComponent } from '../widgets/panel-maritimo-vivo/kpis-vivo/kpis-maritimo-vivo.component';
+import { KpisMaritimoVivoComponent } from '../widgets/panel-maritimo-vivo/kpis-maritimo-vivo/kpis-maritimo-vivo.component';
 import { ColaFondeoComponent } from '../widgets/panel-maritimo-vivo/cola-fondeo/cola-fondeo.component';
 import { OcupacionMuellesComponent } from '../widgets/panel-maritimo-vivo/ocupacion-muelles/ocupacion-muelles.component';
-import { LlegadasMaritimasComponent } from '../widgets/panel-maritimo-vivo/llegadas/llegadas-maritimas.component';
+import { LlegadasMaritimasComponent } from '../widgets/panel-maritimo-vivo/llegadas-maritimas/llegadas-maritimas.component';
 import { TiemposFondeoComponent } from '../widgets/panel-maritimo-vivo/tiempos-fondeo/tiempos-fondeo.component';
 
 // Pestañas Granel, Carga suelta, Capacidad y Noticias (migración 013; datos en TablerosPestanasService)

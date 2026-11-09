@@ -5,6 +5,7 @@
     Precarga la cola del gate al iniciar y al cambiar de puerto. Los KPI PTT_GATE_KPI_* sin registro propio usan
     la tarjeta de PTT_GATE_KPI_OP (KpiCardTclComponent).
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterComponent, GridsterItemComponent, GridsterConfig } from 'angular-gridster2';
@@ -17,7 +18,7 @@ import { PestanaGridsterBase } from '../pestana-gridster/pestana-gridster.base';
 @Component({
     selector: 'app-virtual-gate-dashboard',
     standalone: true,
-    imports: [CommonModule, GridsterComponent, GridsterItemComponent],
+    imports: [CommonModule, GridsterComponent, GridsterItemComponent, TranslateModule],
     templateUrl: '../pestana-gridster/pestana-gridster.component.html',
     styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })

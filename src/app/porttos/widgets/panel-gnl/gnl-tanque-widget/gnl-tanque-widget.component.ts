@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -23,7 +24,7 @@ import { GnlStateService, ITelemetriaGNL } from 'src/app/theme/shared/service/ta
 @Component({
     selector: 'app-gnl-tanque-widget',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent],
     templateUrl: './gnl-tanque-widget.component.html',
     styleUrls: ['./gnl-tanque-widget.component.scss']
 })
@@ -92,7 +93,7 @@ export class GnlTanqueWidgetComponent implements OnInit, OnChanges, OnDestroy {
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'Ocupación de Planta',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_TANQUE_WIDGET.OCUPACION_DE_PLANTA',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||

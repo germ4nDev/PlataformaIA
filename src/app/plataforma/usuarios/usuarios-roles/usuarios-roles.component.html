@@ -79,7 +79,7 @@
                         [tooltipOption1]="'USUARIOS.CAMBIARCLAVE' | translate" [showBackButton]="true"
                         [newButtonLabel]="'USUARIOS.USUARIOSROLES.NEW' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (deleteRecord)="OnEliminarRegistroClick($event)" (option1Record)="OnOption1Click($event)"
-                        (backRecord)="OnRegresarClick($event)">
+                        (backRecord)="OnRegresarClick($event)" permisoNew="ACT_USUSC_ROLES" permisoDelete="ACT_USUSC_ROLES">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>
@@ -110,11 +110,11 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <div class="text-center">
-                        <h6 class="filtros-title">Filtrar Usuarios</h6>
+                        <h6 class="filtros-title">{{ 'WEB.USUARIOS_ROLES.FILTRAR_USUARIOS' | translate }}</h6>
                     </div>
 
                     <div class="filtro">
-                        <small>Suscriptor</small>
+                        <small>{{ 'WEB.USUARIOS_ROLES.SUSCRIPTOR' | translate }}</small>
                         <select (change)="onFiltroSuscriptorChangeClick($event)" class="form-control form-select"
                             style="cursor: pointer">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
@@ -149,7 +149,7 @@
                         [showDeleteButton]="true" [showSearchBox]="false" [showBackButton]="true"
                         [newButtonLabel]="'USUARIOS.USUARIOSROLES.NEW' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" (backRecord)="OnRegresarClick($event)">
+                        (accionPrincipalClick)="onAccionPrincipal($event)" (backRecord)="OnRegresarClick($event)" permisoNew="ACT_USUSC_ROLES" permisoDelete="ACT_USUSC_ROLES">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import videojs from 'video.js'
@@ -5,7 +6,7 @@ import videojs from 'video.js'
 @Component({
   selector: 'app-video-player',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslateModule, CommonModule],
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.scss']
 })

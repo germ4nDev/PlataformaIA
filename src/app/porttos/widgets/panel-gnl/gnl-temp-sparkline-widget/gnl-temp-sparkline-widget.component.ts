@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -18,7 +20,7 @@ Chart.register(...registerables);
 @Component({
     selector: 'app-gnl-temp-sparkline-widget',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent],
     templateUrl: './gnl-temp-sparkline-widget.component.html',
     styleUrls: ['./gnl-temp-sparkline-widget.component.scss']
 })
@@ -122,7 +124,7 @@ export class GnlTempSparklineWidgetComponent implements OnInit, AfterViewInit, O
                 labels: [],
                 datasets: [
                     {
-                        label: 'Temperatura °C',
+                        label: traducir('PORTTOS.GNL_TEMP_SPARKLINE_WIDGET.TEMPERATURA_C'),
                         data: [],
                         borderColor: '#00d4ff',
                         borderWidth: 3,

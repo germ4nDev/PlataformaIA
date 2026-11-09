@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +19,7 @@ import { GraficaTclComponent, SerieGrafica } from '../../shared/grafica-tcl/graf
 @Component({
     selector: 'app-trafico-capacidad',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
     templateUrl: './trafico-capacidad.component.html',
     styleUrls: ['./trafico-capacidad.component.scss']
 })
@@ -40,8 +42,8 @@ export class TraficoCapacidadComponent extends WidgetTableroBase<TableroCapacida
         this.labels = d?.trafico.labels || [];
         const hay = (d?.trafico.ingresos || []).some((v) => v > 0) || (d?.trafico.salidas || []).some((v) => v > 0);
         this.series = hay ? [
-            { label: 'Entradas', data: d!.trafico.ingresos, color: '#2f96b4' },
-            { label: 'Salidas', data: d!.trafico.salidas, color: '#51a351' }
+            { label: traducir('PORTTOS.TRAFICO_CAPACIDAD.ENTRADAS'), data: d!.trafico.ingresos, color: '#2f96b4' },
+            { label: traducir('PORTTOS.TRAFICO_CAPACIDAD.SALIDAS'), data: d!.trafico.salidas, color: '#51a351' }
         ] : [];
     }
 

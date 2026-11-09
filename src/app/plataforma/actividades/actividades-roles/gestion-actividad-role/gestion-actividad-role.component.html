@@ -56,8 +56,7 @@
             <div class="card-body form-scroll-wrapper">
                 <div class="col-md-12" *ngIf="rolesConCheck.length > 0">
                     <div class="text-center flex flex-col justify-center"><br />
-                        <h4 class="titulo-container">{{ 'ACTIVIDADESROLES.GESTION.TITLE' | translate }} Roles asociados
-                            a la Actividad</h4>
+                        <h4 class="titulo-container">{{ 'WEB.GESTION_ACTIVIDAD_ROLE.ROLES_ASOCIADOS_A_LA_ACTIVIDAD' | translate: { p0: ('ACTIVIDADESROLES.GESTION.TITLE' | translate) } }}</h4>
                         <h6 class="subtitulo-container"> {{ actividad.actividad }}</h6><br>
                         <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                             (click)="btnAsociarTodosClick()">

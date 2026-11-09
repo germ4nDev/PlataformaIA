@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -38,7 +39,7 @@ import {
 @Component({
     selector: 'app-chart-stacked-bar-cont',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent],
     templateUrl: './chart-stacked-bar-cont.component.html',
     styleUrls: ['./chart-stacked-bar-cont.component.scss']
 })

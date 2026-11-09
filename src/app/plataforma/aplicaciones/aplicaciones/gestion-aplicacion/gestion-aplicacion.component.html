@@ -57,7 +57,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'APLICACIONES.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoAplicacion"
-                                    placeholder="Código de la Aplicación"
+                                    [placeholder]="'WEB.GESTION_APLICACION.CODIGO_DE_LA_APLICACION' | translate"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     readonly />

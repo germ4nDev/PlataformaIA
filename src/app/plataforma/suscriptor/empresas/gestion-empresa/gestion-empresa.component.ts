@@ -1,9 +1,10 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import {
@@ -40,7 +41,7 @@ import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpre
 @Component({
     selector: 'app-gestion-empresa',
     standalone: true,
-    imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-empresa.component.html',
     styleUrl: './gestion-empresa.component.scss'
 })
@@ -108,7 +109,7 @@ export class GestionEmpresaComponent {
                     console.log('datos del FormRegistro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la empresa', 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_EMPRESA.NO_SE_PUDO_OBTENER_LA'), 'error');
                 }
             });
         } else {

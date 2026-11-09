@@ -57,7 +57,7 @@
                     [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true"
                     [showSearchBox]="false" [newButtonLabel]="'TIPOSGALERIA.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoTipoClick()"
-                    (editRecord)="OnEditarTipoClick($event)" (deleteRecord)="OnEliminarTipoClick($event)">
+                    (editRecord)="OnEditarTipoClick($event)" (deleteRecord)="OnEliminarTipoClick($event)" permisoNew="ACT_TIPOSGAL_CREAR" permisoEdit="ACT_TIPOSGAL_MODIFICAR" permisoDelete="ACT_TIPOSGAL_ELIMINAR">
                 </app-data-table>
             </ng-container>
         </div>

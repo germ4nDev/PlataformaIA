@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -100,7 +101,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                     console.log('data registro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el Infraestructura', 'error')
+                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_INFRAESTRUCTURA.NO_SE_PUDO_OBTENER_EL'), 'error')
                 }
             })
         }
@@ -256,7 +257,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                         descripcionLog: this.translate.instant('MUELLES.CREATESUCCSESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo actualizar el Infraestructura')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_INFRAESTRUCTURA.NO_SE_PUDO_ACTUALIZAR_EL'))
                 }
             })
         } else {
@@ -278,7 +279,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                         descripcionLog: this.translate.instant('MUELLES.ELIMINAREXITOSA')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo crear el Infraestructura')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_INFRAESTRUCTURA.NO_SE_PUDO_CREAR_EL'))
                 }
             })
         }

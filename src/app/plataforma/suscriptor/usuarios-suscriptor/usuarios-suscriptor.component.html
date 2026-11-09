@@ -58,7 +58,7 @@
                         [cargandoExcel]="cargandoExcel" (excelUpload)="procesarArchivoExcel($event)"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (backRecord)="OnBackButtonClic($event)" (accionPrincipalClick)="onAccionPrincipal($event)">
+                        (backRecord)="OnBackButtonClic($event)" (accionPrincipalClick)="onAccionPrincipal($event)" permisoEdit="ACT_USUSC_CAMBIAR" permisoDelete="ACT_USUSC_ELIMINAR" permisoUpload="ACT_USUSC_CARGUE">
                     </app-table-data>
                 </ng-container>
 
@@ -80,7 +80,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title">{{ 'USUARIOS.CAMBIOCLAVE.TITULO' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-custom" aria-label="Close"
+                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate"
                     (click)="cerrarModal()"></button>
             </div>
 

@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Output } from '@angular/core'
 import { NgForm } from '@angular/forms'
@@ -100,7 +101,7 @@ export class GestionItempqComponent {
                     console.log('modulos paquete', itemsPaquete)
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener los Items del Paquete.')
+                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_ITEMPQ.NO_SE_PUDO_OBTENER_LOS'))
                 }
             })
         } else {

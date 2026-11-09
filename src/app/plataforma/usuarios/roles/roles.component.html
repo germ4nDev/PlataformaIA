@@ -71,7 +71,7 @@
                         <small>{{ ROLES.FILTROS.DECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ ROLES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.ROLES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ ROLES.FILTROS.ESTADO' | translate }}</small>
@@ -98,7 +98,7 @@
                         [showDeleteButton]="false" [showSearchBox]="false" [showBackButton]="false"
                         [newButtonLabel]="'ROLES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)">
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_ROLES_CREAR" permisoEdit="ACT_ROLES_MODIFICAR">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>

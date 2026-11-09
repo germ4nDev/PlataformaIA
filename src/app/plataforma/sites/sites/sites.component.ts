@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -167,7 +168,7 @@ export class SitesComponent implements OnInit {
             this.consultarSitios();
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('SITIOS.ELIMINARERROR'), 'error');
+            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('SITIOS.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });

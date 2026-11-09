@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -170,8 +171,8 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                             'Permiso Otorgado': ar.permiso ? 'Sí' : 'No',
                             'Fecha Asignación': ar.fechaCreacion ? new Date(ar.fechaCreacion).toLocaleDateString() : 'N/A',
                             '_acciones': [
-                                { accion: 'EDITAR', letra: 'E', color: '#dc3545', tooltip: this.translate.instant('ACTIVIDADES.ELIMINARTEXTO') },
-                                { accion: 'REMOVER', letra: 'R', color: '#28a745', tooltip: this.translate.instant('ACTIVIDADES.RENOVARTEXTO') }
+                                { accion: 'EDITAR', permiso: 'ACT_ACT_MODIFICAR', letra: 'E', color: '#dc3545', tooltip: this.translate.instant('ACTIVIDADES.ELIMINARTEXTO') },
+                                { accion: 'REMOVER', permiso: 'ACT_ACT_ELIMINAR', letra: 'R', color: '#28a745', tooltip: this.translate.instant('ACTIVIDADES.RENOVARTEXTO') }
                             ]
                         };
                     });
@@ -179,9 +180,9 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                     return {
                         ...actividad,
                         '_acciones': [
-                            { accion: 'MODIFICAR', letra: 'M', color: '#223dd6', tooltip: (this.translate.instant('ACTIVIDADES.MODIFICAR')) },
-                            { accion: 'ELIMINAR', letra: 'E', color: '#e41a1a', tooltip: (this.translate.instant('ACTIVIDADES.ELIMINAR')) },
-                            { accion: 'ROLES', letra: 'R', color: '#28a745', tooltip: (this.translate.instant('ACTIVIDADES.ROLES')) }
+                            { accion: 'MODIFICAR', permiso: 'ACT_ACT_MODIFICAR', letra: 'M', color: '#223dd6', tooltip: (this.translate.instant('ACTIVIDADES.MODIFICAR')) },
+                            { accion: 'ELIMINAR', permiso: 'ACT_ACT_ELIMINAR', letra: 'E', color: '#e41a1a', tooltip: (this.translate.instant('ACTIVIDADES.ELIMINAR')) },
+                            { accion: 'ROLES', permiso: 'ACT_ROLES_PERMISOS', letra: 'R', color: '#28a745', tooltip: (this.translate.instant('ACTIVIDADES.ROLES')) }
                         ],
                     };
                 });
@@ -399,7 +400,7 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                                     descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
                                 };
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
+                                this._swalAlertService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
                             }
                         });
                     }

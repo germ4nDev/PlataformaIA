@@ -1,0 +1,38 @@
+@if (estado$ | async; as e) {
+  @if (e.cargando) {
+    <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>{{ 'WEB.PAGINA.CARGANDO' | translate }}</div>
+  } @else if (e.error) {
+    <div class="estado estado--error" role="alert">
+      <p>{{ e.error }}</p>
+      <button type="button" class="boton boton--secundario" (click)="reintentar()">{{ 'WEB.PAGINA.REINTENTAR' | translate }}</button>
+    </div>
+  } @else { @if (e.dato; as v) {
+    @for (s of v.pagina.secciones; track s.codigo; let i = $index) {
+      @switch (tipo(s.tipo)) {
+        @case ('hero') { <pp-seccion-hero [s]="s" [grande]="v.pagina.pagina === 'inicio' && i === 0" /> }
+        @case ('cifras') { <pp-seccion-cifras [s]="s" /> }
+        @case ('tarjetas') { <pp-seccion-tarjetas [s]="s" /> }
+        @case ('tableros') { <pp-seccion-tableros [s]="s" /> }
+        @case ('destacado') { <pp-seccion-destacado [s]="s" /> }
+        @case ('cta') { <pp-seccion-cta [s]="s" /> }
+        @case ('pasos') { <pp-seccion-pasos [s]="s" /> }
+        @case ('lista') { <pp-seccion-lista [s]="s" /> }
+        @case ('texto') { <pp-seccion-texto [s]="s" /> }
+        @case ('perfiles') { <pp-seccion-perfiles [s]="s" [planes]="v.planes?.dato?.planes || []" /> }
+        @case ('metas') { <pp-seccion-metas [s]="s" /> }
+        @case ('niveles') { <pp-seccion-niveles [s]="s" /> }
+        @case ('app') { <pp-seccion-app [s]="s" [config]="v.config" /> }
+      }
+      @if (i === 0 && v.bloque === 'puertos') { <pp-puertos-vivo /> }
+      @if (i === 0 && v.bloque === 'planes') {
+        @if (v.planes?.cargando) { <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>{{ 'WEB.PAGINA.CARGANDO' | translate }}</div> }
+        @if (v.planes?.error) { <div class="estado estado--error" role="alert"><p>{{ v.planes?.error }}</p></div> }
+        @if (v.planes?.dato; as planes) { <pp-planes [datos]="planes" /> }
+      }
+      @if (i === 0 && v.bloque === 'contacto') {
+        <pp-contacto [config]="v.config" [planes]="v.planes?.dato?.planes || []" />
+      }
+    }
+    <pp-preguntas [preguntas]="v.preguntas" />
+  } }
+}

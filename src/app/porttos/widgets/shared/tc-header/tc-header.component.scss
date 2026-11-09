@@ -230,3 +230,184 @@
         transform: translateY(0);
     }
 }
+
+/* ==========================================================================
+   TELÉFONO CON LA WEB EMBEBIDA (OT-017, CC-123)
+   Barra con ☰, logo de Porttos, puerto activo y perfil; el puerto, las pestañas, las acciones del tablero (lo que hacía el
+   engranaje) y el idioma van en un menú lateral, con el diseño del menú nativo de la app. Solo con el canal 'telefono'
+   (clase del host); la web y la tableta siguen con el encabezado de arriba (regla 17).
+   ========================================================================== */
+:host(.tc-header-telefono) {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 1060;
+
+    .tel-barra {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 56px;
+        padding: 0 10px;
+        background-color: var(--app-navbar-color, #1a4a81);
+        color: var(--app-iconos-color, #ffffff);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .tel-logo {
+        height: 30px;
+        width: auto;
+        max-width: 130px;
+        object-fit: contain;
+        filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.25));
+    }
+
+    .tel-icono-btn {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border: 0;
+        border-radius: 10px;
+        background: transparent;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+
+        i {
+            font-size: 1.4rem;
+        }
+    }
+
+    .tel-chip-puerto {
+        margin-left: auto;
+        min-width: 0;
+        max-width: 45%;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.12);
+        color: inherit;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tel-perfil {
+        flex-shrink: 0;
+
+        ::ng-deep .drp-user {
+            margin: 0;
+
+            img.wid-40 {
+                width: 34px;
+                height: 34px;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+            }
+        }
+    }
+
+    .tel-fondo {
+        position: fixed;
+        inset: 0;
+        z-index: 1070;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .tel-menu {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1080;
+        width: min(78vw, 320px);
+        display: flex;
+        flex-direction: column;
+        background: var(--card-background);
+        color: var(--text-color);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+        transform: translateX(-105%);
+        transition: transform 0.22s ease;
+
+        &.abierto {
+            transform: translateX(0);
+        }
+    }
+
+    .tel-menu-cabecera {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 10px 0 16px;
+        background-color: var(--app-navbar-color, #1a4a81);
+        color: var(--app-iconos-color, #ffffff);
+    }
+
+    .tel-menu-cuerpo {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 8px 12px 24px;
+    }
+
+    .tel-seccion {
+        display: block;
+        margin: 18px 4px 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-subtitle-color);
+    }
+
+    .tel-select {
+        width: 100% !important;
+        font-weight: 700;
+    }
+
+    .tel-lista {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .tel-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        min-height: 46px;
+        padding: 8px 12px;
+        border: 0;
+        border-left: 4px solid transparent;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--text-color);
+        font-size: 0.95rem;
+        text-align: left;
+
+        i {
+            width: 22px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        &.activo {
+            background-color: var(--app-navbar-color, #1a4a81);
+            border-left-color: #0dc8e9;
+            color: #ffffff;
+            font-weight: 700;
+        }
+    }
+
+    .tel-idioma {
+        padding: 0 4px;
+    }
+}

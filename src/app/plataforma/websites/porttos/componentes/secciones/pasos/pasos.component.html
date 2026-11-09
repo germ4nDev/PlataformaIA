@@ -1,0 +1,25 @@
+<section class="bloque">
+  <div class="contenedor">
+    <pp-encabezado-seccion [s]="s" />
+    <ol class="pasos" [class.pasos--fechas]="conFechas" role="list">
+      @for (e of s.elementos; track $index) {
+        @if (conFechas) {
+          <li class="fase" [class.fase--destacada]="e.icono === 'destacado'">
+            @if (e.valor) { <p class="fase__fecha">{{ e.valor }}</p> }
+            @if (e.titulo) { <h3 class="fase__titulo">{{ $index }}. {{ e.titulo }}</h3> }
+            @if (puntos(e.texto).length > 1) {
+              <ul class="fase__puntos">@for (p of puntos(e.texto); track $index) { <li>{{ p }}</li> }</ul>
+            } @else if (e.texto) { <p class="paso__texto">{{ e.texto }}</p> }
+          </li>
+        } @else {
+          <li class="paso">
+            <span class="paso__numero" aria-hidden="true">{{ e.valor || ($index + 1) }}</span>
+            @if (e.titulo) { <h3 class="paso__titulo">{{ e.titulo }}</h3> }
+            @if (e.texto) { <p class="paso__texto">{{ e.texto }}</p> }
+          </li>
+        }
+      }
+    </ol>
+    @if (s.cuerpo) { <p class="nota-fuente">{{ s.cuerpo }}</p> }
+  </div>
+</section>

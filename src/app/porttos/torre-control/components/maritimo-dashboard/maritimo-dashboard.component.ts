@@ -6,6 +6,7 @@
     tiene sus tarjetas (TERM_SLOT_n), pide el layout base con ellas. Cada slot se resuelve con la tarjeta de terminal
     y recibe su terminal. Al terminar, hidrata los widgets no autónomos con el resumen operativo (datosVivos).
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterComponent, GridsterConfig, GridsterItemComponent } from 'angular-gridster2';
@@ -24,7 +25,7 @@ const esCodigoTerminal = (codigo: string): boolean =>
 @Component({
     selector: 'app-maritimo-dashboard',
     standalone: true,
-    imports: [CommonModule, GridsterComponent, GridsterItemComponent],
+    imports: [CommonModule, GridsterComponent, GridsterItemComponent, TranslateModule],
     templateUrl: '../pestana-gridster/pestana-gridster.component.html',
     styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })

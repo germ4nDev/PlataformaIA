@@ -29,7 +29,7 @@ export class SelectorEmpresaComponent implements OnInit {
 
     private cargarEmpresasDelContexto(): void {
         const currentUser = this._localStorage.getCurrentUserLocalStorage();
-        const contexto = this._localStorage.getObject<any>('contexto');
+        const contexto = this._localStorage.getNavSettingsLocalStorage()?.contexto || this._localStorage.getObject<any>('contexto');
 
         if (!currentUser || !contexto) return;
 
@@ -47,10 +47,11 @@ export class SelectorEmpresaComponent implements OnInit {
     }
 
     public onCambioEmpresa(): void {
-        const contexto = this._localStorage.getObject<any>('contexto');
+        const contexto = this._localStorage.getNavSettingsLocalStorage()?.contexto || this._localStorage.getObject<any>('contexto');
         if (!contexto || !this.empresaSeleccionada) return;
 
         const cont = {
+            ...contexto,
             codigoEmpresaSC: this.empresaSeleccionada,
             codigoUsuarioSC: contexto.codigoUsuarioSC
         }

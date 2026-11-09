@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -33,7 +35,7 @@ Chart.register(...registerables);
 @Component({
     selector: 'app-gnl-flujo-chart',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent, GraficaTclComponent, RangoTclComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent, GraficaTclComponent, RangoTclComponent, TablaTclComponent],
     templateUrl: './gnl-flujo-chart.component.html',
     styleUrls: ['./gnl-flujo-chart.component.scss']
 })
@@ -76,11 +78,11 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
     public filasBrazos: any[] = [];
     public resumenHistorial: { volumen: number; energia: number; presion: number | null; alarmas: number } | null = null;
     public readonly columnasBrazos: ColumnaTabla[] = [
-        { campo: 'brazo', titulo: 'Brazo', tipo: 'principal' },
-        { campo: 'volumenM3', titulo: 'Volumen', tipo: 'numero', decimales: 1, unidad: 'm³' },
-        { campo: 'energiaMmbtu', titulo: 'Energía', tipo: 'numero', decimales: 1, unidad: 'MMBTU' },
-        { campo: 'participacion', titulo: 'Participación', tipo: 'avance' },
-        { campo: 'horasConFlujo', titulo: 'Horas con flujo', tipo: 'numero', decimales: 0 }
+        { campo: 'brazo', titulo: 'PORTTOS.GNL_FLUJO_CHART.BRAZO', tipo: 'principal' },
+        { campo: 'volumenM3', titulo: 'PORTTOS.GNL_FLUJO_CHART.VOLUMEN_2', tipo: 'numero', decimales: 1, unidad: 'm³' },
+        { campo: 'energiaMmbtu', titulo: 'PORTTOS.GNL_FLUJO_CHART.ENERGIA_2', tipo: 'numero', decimales: 1, unidad: 'MMBTU' },
+        { campo: 'participacion', titulo: 'PORTTOS.GNL_FLUJO_CHART.PARTICIPACION', tipo: 'avance' },
+        { campo: 'horasConFlujo', titulo: 'PORTTOS.GNL_FLUJO_CHART.HORAS_CON_FLUJO', tipo: 'numero', decimales: 0 }
     ];
 
     constructor(
@@ -155,7 +157,7 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
         const brazos = h.porBrazo || [];
         this.seriesHistorial = brazos.length > 1
             ? brazos.map((b) => ({ label: b.brazo, data: b.volumenM3 }))
-            : [{ label: 'Volumen', data: h.volumenM3 || [] }];
+            : [{ label: traducir('PORTTOS.GNL_FLUJO_CHART.VOLUMEN_2'), data: h.volumenM3 || [] }];
 
         const volumen = suma(h.volumenM3 || []);
         const presiones = (h.presionPsi || []).filter((v): v is number => v !== null && v !== undefined);
@@ -220,11 +222,11 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'Histórico de Flujo (m³/h)',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_FLUJO_CHART.HISTORICO_DE_FLUJO_M_H',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||
-                'Caudal de GNL en tiempo real (SCADA)',
+                'PORTTOS.GNL_FLUJO_CHART.CAUDAL_DE_GNL_EN_TIEMPO',
             historialLabels: [...this.historialLabels],
             historialValores: [...this.historialValores],
             energiaTotal: this.energiaTotal,
@@ -367,7 +369,7 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
                 labels: [],
                 datasets: [
                     {
-                        label: 'Flujo',
+                        label: traducir('PORTTOS.GATE_VALIDACION.FLUJO'),
                         data: [],
                         borderColor: '#00d4ff',
                         borderWidth: grosorLinea,

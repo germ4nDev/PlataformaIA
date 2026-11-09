@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
@@ -87,7 +88,7 @@ export class GestionParametroComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: () => {
-                    this._swalAlertService.getAlertConfirmError('No se pudo obtener el parámetro del sistema');
+                    this._swalAlertService.getAlertConfirmError(traducir('WEB.GESTION_PARAMETRO.NO_SE_PUDO_OBTENER_EL'));
                 }
             });
         }

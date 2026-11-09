@@ -49,6 +49,8 @@ import { NoticiasDashboardComponent } from './components/noticias-dashboard/noti
 import { colorPestana, iconoPestana } from '../widgets/shared/iconos-pestana';
 import { WidgetsPermitidosService } from 'src/app/theme/shared/service/widgets-permitidos.service';
 import { widgetVisible } from 'src/app/plataforma/sesion/nucleo';
+import { llavePestanasTelefono, ordenarPestanasTelefono, pestanasConWidgets, tamanoTelefono } from 'src/app/plataforma/embebido/nucleo';
+import { LayoutTelefonoService } from 'src/app/theme/shared/service/layout-telefono.service';
 
 @Component({
     selector: 'app-torre-control',
@@ -86,6 +88,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
     public puertoActivo: string = 'BUENAVENTURA';
     public usuarioActivoId: string = 'SISTEMA_DEFAULT';
+    /** Teléfono (CC-126): pestañas con widgets de teléfono = las que salen mientras el usuario no elija en el dispositivo. */
+    private pestanasConWidgetsTelefono: any[] = [];
 
     public tableroBloqueado: boolean = true;
     public hayCambiosSinGuardar: boolean = false;
@@ -117,7 +121,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
         private _swalAlertService: SwalAlertService,
         private cdr: ChangeDetectorRef,
         private _embebido: EmbebidoService,
-        private _permisosWidgets: WidgetsPermitidosService
+        private _permisosWidgets: WidgetsPermitidosService,
+        private _layoutTelefono: LayoutTelefonoService
     ) { }
 
     /** Modo embebido (OT-014): la app recuerda el puerto y la pestaña para la próxima apertura (fuera de la app no hace nada). */
@@ -214,7 +219,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
                     this._layoutService
                         .obtenerPreferenciasPestanas(this.usuarioActivoId)
-                        .subscribe((resPrefs: any) => {
+                        .subscribe(async (resPrefs: any) => {
                             if (resPrefs?.ok && Array.isArray(resPrefs.data) && resPrefs.data.length > 0) {
                                 const preferenciasUnicas = resPrefs.data.filter(
                                     (pref: any, index: number, self: any[]) =>
@@ -235,6 +240,9 @@ export class TorreControlComponent implements OnInit, OnDestroy {
                             } else {
                                 this.pestanasVisibles = this.lsPestanas.slice(0, 3);
                             }
+
+                            // Teléfono (OT-017): solo las pestañas con widgets de teléfono para el usuario
+                            if (this.esTelefono) this.pestanasVisibles = await this.pestanasDelTelefono();
 
                             navSettings.pestanas = this.pestanasVisibles;
                             this._localStoragoService.setNavSettingsLocalStorage(navSettings);
@@ -271,6 +279,49 @@ export class TorreControlComponent implements OnInit, OnDestroy {
      * 2. NAVEGACIÓN Y ESTADO DE UI
      * ==========================================
      */
+    /** Dentro de la app en un teléfono (OT-017): rejilla de 4 columnas y layout propio. La web y la tableta: false. */
+    get esTelefono(): boolean {
+        return this._embebido.esTelefono;
+    }
+
+    /**
+     * Teléfono (CC-125, CC-126): el catálogo es el mismo listado de pestañas de la web (lsPestanas); si el usuario eligió en este
+     * dispositivo, salen esas y en su orden; si no, las que tienen widgets de teléfono. No usa ni toca la preferencia de la web.
+     */
+    private async pestanasDelTelefono(): Promise<any[]> {
+        try {
+            const resumen = await this._layoutTelefono.pestanas();
+            this.pestanasConWidgetsTelefono = pestanasConWidgets(this.lsPestanas, resumen);
+            return ordenarPestanasTelefono(this.lsPestanas, this.leerPestanasTelefono(), this.pestanasConWidgetsTelefono);
+        } catch (error) {
+            console.error('❌ [TorreControl] No se pudieron leer las pestañas del teléfono:', error);
+            return [];
+        }
+    }
+
+    /** Teléfono (CC-125): elección de pestañas guardada en el dispositivo (localStorage del marco), por usuario. */
+    private leerPestanasTelefono(): string[] | null {
+        try {
+            const crudo = localStorage.getItem(llavePestanasTelefono(this.usuarioActivoId));
+            return crudo ? JSON.parse(crudo) : null;
+        } catch (_) {
+            return null;
+        }
+    }
+
+    /** Teléfono (CC-125): guarda en el dispositivo y aplica; la preferencia de pestañas de la web no se toca (regla 17). */
+    private guardarPestanasTelefono(seleccion: any[]): void {
+        const codigos = (Array.isArray(seleccion) ? seleccion : []).map((p: any) => p?.codigoPestana || p).filter(Boolean);
+        try {
+            localStorage.setItem(llavePestanasTelefono(this.usuarioActivoId), JSON.stringify(codigos));
+        } catch (_) { /* sin almacenamiento: se aplica en esta sesión */ }
+        this.pestanasVisibles = ordenarPestanasTelefono(this.lsPestanas, codigos, this.pestanasConWidgetsTelefono);
+        if (this.pestanasVisibles.length && !this.pestanasVisibles.find((p) => p.codigoPestana === this.pestanaActiva)) {
+            this.cambiarPestana(this.pestanasVisibles[0].codigoPestana);
+        }
+        this.cdr.detectChanges();
+    }
+
     cambiarPestana(nuevaPestana: string): void {
         // Si había cambios de widgets o posiciones en la pestaña actual, los guardamos ANTES de cambiar
         if (this.hayCambiosSinGuardar || this.pestanaHijaActiva?.hayCambiosSinGuardar) {
@@ -353,7 +404,9 @@ export class TorreControlComponent implements OnInit, OnDestroy {
                 w.estado === 1;
             const pestanaWidget = w.codigoPestana || w.codigo_pestana || '';
             // Regla 18: solo lo que permite el rol del usuario y, en la web y la tableta, sin los de teléfono
-            return estadoValido && pestanaWidget === nuevaPestana && widgetVisible(w.codigoWidget || w.codigo_widget, permisos, 'web');
+            // Teléfono (OT-017): solo 'telefono' y 'ambos'
+            return estadoValido && pestanaWidget === nuevaPestana
+                && widgetVisible(w.codigoWidget || w.codigo_widget, permisos, this.esTelefono ? 'telefono' : 'web');
         });
     }
 
@@ -399,6 +452,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
                         // 🟢 Leemos también WIDGET_MAP como respaldo de dimensiones de fábrica
                         const defRegistry = WIDGET_MAP[codigoTipo];
 
+                        // Teléfono (OT-017): tamaño de la rejilla de 4 columnas (mismo cálculo del API)
+                        const tamanoTel = this.esTelefono ? tamanoTelefono(widgetMaster) : null;
                         const nuevoItem: any = {
                             ...widgetMaster,
                             id: idUnico,
@@ -418,6 +473,7 @@ export class TorreControlComponent implements OnInit, OnDestroy {
                                 defRegistry?.defaultRows ??
                                 3
                             ),
+                            ...(tamanoTel || {}),
                             x: 0,
                             y: 0,
                             data: {
@@ -462,6 +518,13 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
         // 2. Obtenemos la lista actualizada definitiva de la pestaña hija
         const dashboardFinal: any[] = hijo?.dashboard || [];
+        // Teléfono (OT-017): nada más ancho que sus 4 columnas (por si la pestaña agregó con el tamaño de la web)
+        if (this.esTelefono) {
+            for (const w of dashboardFinal) {
+                w.cols = Math.min(4, Math.max(1, Number(w.cols) || 2));
+                w.x = Math.min(4 - w.cols, Math.max(0, Number(w.x) || 0));
+            }
+        }
 
         this.lsLayout = dashboardFinal.map((w: any) => ({
             ...w,
@@ -497,6 +560,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
      * como navSettings.layout en LocalStorage.
      */
     sincronizarMovimientoEnCache(dashboardActual?: any[]): void {
+        // Teléfono (OT-017): su layout vive en /api/layout-telefono; no se toca la caché del layout de la web
+        if (this.esTelefono) return;
         const lista = dashboardActual || this.pestanaHijaActiva?.dashboard || [];
         if (!lista) return;
 
@@ -561,11 +626,20 @@ export class TorreControlComponent implements OnInit, OnDestroy {
             this.guardarConfiguracionTablero();
         }
         this.mostrarLobby = false;
+        // Teléfono (CC-123): sin engranaje no queda la grilla de botones; se cierra el panel
+        if (this.esTelefono) this.menuConfigAbierto = false;
         this.cdr.detectChanges();
     }
 
     guardarConfiguracionTablero(): void {
         const hijo = this.pestanaHijaActiva;
+        // Teléfono (OT-017): se guarda en /api/layout-telefono; el layout de la web (/api/layout) no se toca
+        if (this.esTelefono) {
+            hijo?.guardarLayoutTelefono?.()
+                .then(() => { this.hayCambiosSinGuardar = false; })
+                .catch((err: any) => console.error('❌ [TorreControl] No se pudo guardar el layout del teléfono:', err?.error || err));
+            return;
+        }
         // Los widgets ocultos por permiso (regla 18) se guardan con el resto: no se borran del layout del usuario
         const dashboardActual: any[] = [...(hijo?.dashboard || []), ...(hijo?.ocultosPorPermiso || [])];
 
@@ -637,6 +711,22 @@ export class TorreControlComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Teléfono (CC-123): el menú lateral del encabezado abre los catálogos. Allí no hay engranaje, así que se abre su panel
+     * directamente en el catálogo; al cerrarlo se cierra todo el panel. En la web el encabezado sigue igual (CC-122).
+     */
+    abrirCatalogoDesdeEncabezado(): void {
+        if (this.esTelefono) this.menuConfigAbierto = true;
+        this.abrirLobbyModal();
+    }
+
+    /** Teléfono (CC-125): catálogo de pestañas desde el menú lateral; guarda en el dispositivo (guardarPestanasTelefono). */
+    abrirPestanasDesdeEncabezado(): void {
+        if (this.esTelefono) this.menuConfigAbierto = true;
+        this.abrirLobbyPestanas();
+    }
+
+
+    /**
      * El modal crea una instancia nueva del widget: se le entrega el contexto completo para que consulte el mismo
      * puerto que el tablero (antes llegaba solo {type, data} y los widgets caían en BUENAVENTURA). Lo que el widget
      * mande en data se aplana en widgetConfig (data se conserva por compatibilidad) y data.datosVivos va como input.
@@ -688,6 +778,11 @@ export class TorreControlComponent implements OnInit, OnDestroy {
     }
 
     guardarPreferenciasPestanas(codigosSeleccionados: any[]): void {
+        // Teléfono (CC-125): su elección vive en el dispositivo; no se guarda la preferencia de la web
+        if (this.esTelefono) {
+            this.guardarPestanasTelefono(codigosSeleccionados);
+            return;
+        }
         if (Array.isArray(codigosSeleccionados) && codigosSeleccionados.length > 0) {
             this.pestanasVisibles = codigosSeleccionados
                 .map((codigo) =>
@@ -711,6 +806,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
     cerrarLobbyPestanas(): void {
         this.mostrarLobbyPestanas = false;
+        // Teléfono (CC-123): sin engranaje no queda la grilla de botones; se cierra el panel
+        if (this.esTelefono) this.menuConfigAbierto = false;
         this.cdr.detectChanges();
     }
 
@@ -752,6 +849,14 @@ export class TorreControlComponent implements OnInit, OnDestroy {
             .subscribe((result) => {
                 if (result) {
                     this.menuConfigAbierto = false;
+
+                    // Teléfono (OT-017): vuelve al por defecto del teléfono sin recargar; el de la web no se toca
+                    if (this.esTelefono) {
+                        this.pestanaHijaActiva?.restablecerLayoutTelefono?.()
+                            .then(() => this.cdr.detectChanges())
+                            .catch((err: any) => console.error('❌ [TorreControl] No se pudo restablecer el layout del teléfono:', err?.error || err));
+                        return;
+                    }
 
                     // 1. Limpiamos LocalStorage (navSettings.layout)
                     const prefs = this._localStoragoService.getNavSettingsLocalStorage() || {};

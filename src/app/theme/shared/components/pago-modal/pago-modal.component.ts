@@ -1,3 +1,5 @@
+import { traducir } from '../../i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common'; // 🟢 Importación clave para Standalone
@@ -14,7 +16,7 @@ declare global {
 @Component({
     selector: 'app-pago-modal',
     standalone: true, // 🟢 Declaración Standalone
-    imports: [CommonModule], // 🟢 Importamos dependencias directamente aquí
+    imports: [TranslateModule, CommonModule], // 🟢 Importamos dependencias directamente aquí
     templateUrl: './pago-modal.component.html',
     styleUrls: ['./pago-modal.component.scss']
 })
@@ -85,7 +87,7 @@ export class PagoModalComponent implements OnDestroy {
                 },
                 onError: (error: any) => {
                     console.error('Error en el Brick de MP:', error);
-                    Swal.fire('Aviso', 'Ocurrió un error al cargar la pasarela segura.', 'warning');
+                    Swal.fire(traducir('WEB.PAGO_MODAL.AVISO'), traducir('WEB.PAGO_MODAL.OCURRIO_UN_ERROR_AL_CARGAR'), 'warning');
                 }
             }
         };
@@ -111,13 +113,13 @@ export class PagoModalComponent implements OnDestroy {
 
             this.http.post(url, payload).subscribe({
                 next: (resp: any) => {
-                    Swal.fire('¡Pago Exitoso!', 'Tu transacción fue procesada y aprobada correctamente.', 'success');
+                    Swal.fire(traducir('WEB.PAGO_MODAL.PAGO_EXITOSO'), traducir('WEB.PAGO_MODAL.TU_TRANSACCION_FUE_PROCESADA_Y'), 'success');
                     this.onPagoExitoso.emit(resp);
                     this.cerrar();
                     resolve();
                 },
                 error: (err) => {
-                    Swal.fire('Pago Rechazado', err.error?.msg || 'Error procesando el pago con el banco.', 'error');
+                    Swal.fire(traducir('WEB.PAGO_MODAL.PAGO_RECHAZADO'), err.error?.msg || traducir('WEB.PAGO_MODAL.ERROR_PROCESANDO_EL_PAGO_CON'), 'error');
                     reject();
                 }
             });

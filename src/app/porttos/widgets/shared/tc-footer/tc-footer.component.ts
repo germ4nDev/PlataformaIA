@@ -1,10 +1,11 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-tc-footer',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './tc-footer.component.html',
     styleUrls: ['./tc-footer.component.scss']
 })

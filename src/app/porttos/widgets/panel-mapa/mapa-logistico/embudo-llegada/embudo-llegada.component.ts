@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Componente de presentación: Embudo de llegada de naves (panel del mapa logístico)
@@ -10,7 +11,7 @@ import { CodigoEtapaEmbudo, EmbudoLlegada, EtapaEmbudo } from 'src/app/theme/sha
 @Component({
     selector: 'app-embudo-llegada',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './embudo-llegada.component.html',
     styleUrls: ['./embudo-llegada.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

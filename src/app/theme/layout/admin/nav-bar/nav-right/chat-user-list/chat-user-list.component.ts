@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +8,7 @@ import { FriendComponent } from '../chat-user-list/friend/friend.component';
 @Component({
   selector: 'app-chat-user-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgScrollbarModule, FriendComponent],
+  imports: [TranslateModule, CommonModule, FormsModule, NgScrollbarModule, FriendComponent],
   templateUrl: './chat-user-list.component.html',
   styleUrls: ['./chat-user-list.component.scss']
 })

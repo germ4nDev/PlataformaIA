@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -90,7 +91,7 @@ export class GestionItemComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: () => {
-                    this._swalAlertService.getAlertConfirmError('No se pudo obtener el item con ese codigo');
+                    this._swalAlertService.getAlertConfirmError(traducir('WEB.GESTION_ITEM.NO_SE_PUDO_OBTENER_EL'));
                 }
             });
         }

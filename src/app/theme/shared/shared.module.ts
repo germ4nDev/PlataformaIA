@@ -54,7 +54,8 @@ const bootstrap = [
     NgScrollbarModule,
     AlertComponent,
     bootstrap,
-    NgClickOutsideDirective
+    NgClickOutsideDirective,
+    SpinnerComponent // OT-023 fase 5: standalone
   ],
   exports: [
     CommonModule,
@@ -74,6 +75,6 @@ const bootstrap = [
     NgClickOutsideDirective,
     TranslateModule
   ],
-  declarations: [DataFilterPipe, TodoListRemoveDirective, TodoCardCompleteDirective, SpinnerComponent]
+  declarations: [DataFilterPipe, TodoListRemoveDirective, TodoCardCompleteDirective]
 })
 export class SharedModule {}

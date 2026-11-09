@@ -42,14 +42,14 @@
     </div>
 
 </app-widget-shell> -->
-<app-widget-shell [titulo]="data.titulo || 'REPORTES OPERATIVOS'"
-    [subtitulo]="data.subtitulo || 'Registro de novedades y eventos'" [icono]="data.icono || 'feather icon-file-text'"
+<app-widget-shell [titulo]="(data.titulo | translate) || 'REPORTES OPERATIVOS'"
+    [subtitulo]="(data.subtitulo | translate) || ('PORTTOS.REPORTES_OPERATIVOS.REGISTRO_DE_NOVEDADES_Y_EVENTOS' | translate)" [icono]="data.icono || 'feather icon-file-text'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-secondary text-uppercase">
-            Novedades · {{ reportes.length }}
+            {{ 'PORTTOS.REPORTES_OPERATIVOS.NOVEDADES' | translate: { p0: reportes.length } }}
         </span>
     </div>
 
@@ -61,13 +61,13 @@
             <!-- Estado Cargando -->
             <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
                 <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-                Consultando boletines y reportes operativos...
+                {{ 'PORTTOS.REPORTES_OPERATIVOS.CONSULTANDO_BOLETINES_Y_REPORTES_OPERATI' | translate }}
             </div>
 
             <!-- Estado Vacío -->
             <div *ngIf="!isLoading && reportes.length === 0"
                 class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
-                <i class="feather icon-check-circle me-2 text-success"></i> No hay reportes operativos recientes.
+                <i class="feather icon-check-circle me-2 text-success"></i> {{ 'PORTTOS.REPORTES_OPERATIVOS.NO_HAY_REPORTES_OPERATIVOS_RECIENTES' | translate }}
             </div>
 
             <!-- Iteración de Reportes -->
@@ -79,10 +79,10 @@
                     <!-- Contenido (Título y Descripción) -->
                     <div class="reporte-content pe-3">
                         <h6 class="r-titulo mb-1 text-white fw-bold" style="font-size: 0.85rem;">
-                            {{ reporte.titulo }}
+                            {{ (reporte.titulo | translate) }}
                         </h6>
                         <p class="r-desc text-muted mb-0" style="font-size: 0.75rem; line-height: 1.3;">
-                            {{ reporte.descripcion }}
+                            {{ (reporte.descripcion | translate) }}
                         </p>
                     </div>
 

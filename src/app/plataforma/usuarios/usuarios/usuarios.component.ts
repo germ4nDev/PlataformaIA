@@ -257,10 +257,10 @@ export class UsuariosComponent implements OnInit {
                     return {
                         ...user,
                         '_acciones': [
-                            { accion: 'INACTIVAR', letra: 'I', color: '#ff0000', tooltip: (this.translate.instant('USUARIOS.INACTIVAR')) },
-                            { accion: 'CAMBIAR', letra: 'C', color: '#25a042', tooltip: (this.translate.instant('USUARIOS.CAMBIAR')) },
-                            { accion: 'RESETEAR', letra: 'R', color: '#d3751d', tooltip: (this.translate.instant('USUARIOS.RESERTEAR')) },
-                            { accion: 'ROLES', letra: 'R', color: '#c41dd3', tooltip: (this.translate.instant('USUARIOS.ROLES')) }
+                            { accion: 'INACTIVAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'I', color: '#ff0000', tooltip: (this.translate.instant('USUARIOS.INACTIVAR')) },
+                            { accion: 'CAMBIAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'C', color: '#25a042', tooltip: (this.translate.instant('USUARIOS.CAMBIAR')) },
+                            { accion: 'RESETEAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'R', color: '#d3751d', tooltip: (this.translate.instant('USUARIOS.RESERTEAR')) },
+                            { accion: 'ROLES', permiso: 'ACT_USUSC_ROLES', letra: 'R', color: '#c41dd3', tooltip: (this.translate.instant('USUARIOS.USUARIOS.ROLES')) }
                         ],
                     } as PTLUsuarioModel;
                 });

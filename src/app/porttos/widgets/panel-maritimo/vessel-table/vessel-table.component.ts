@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -28,25 +29,25 @@ import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tc
 
 /** Vista ampliada (Fase 3): todo el line-up que trae el API, con búsqueda, orden y CSV. */
 const COLUMNAS_AMPLIADAS: ColumnaTabla[] = [
-    { campo: 'motonave', titulo: 'Motonave', tipo: 'principal' },
-    { campo: 'naviera', titulo: 'Línea / agencia' },
-    { campo: 'viaje', titulo: 'Viaje' },
-    { campo: 'terminal', titulo: 'Terminal' },
-    { campo: 'muelle', titulo: 'Muelle' },
-    { campo: 'eslora', titulo: 'Eslora', tipo: 'numero', decimales: 0, unidad: 'm' },
+    { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE', tipo: 'principal' },
+    { campo: 'naviera', titulo: 'PORTTOS.VESSEL_TABLE.LINEA_AGENCIA' },
+    { campo: 'viaje', titulo: 'PORTTOS.VESSEL_TABLE.VIAJE' },
+    { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+    { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE' },
+    { campo: 'eslora', titulo: 'PORTTOS.VESSEL_TABLE.ESLORA', tipo: 'numero', decimales: 0, unidad: 'm' },
     { campo: 'eta', titulo: 'ETA' },
-    { campo: 'fechaAtraque', titulo: 'ATA / atraque' },
-    { campo: 'zarpe', titulo: 'Zarpe' },
-    { campo: 'carga', titulo: 'Carga' },
-    { campo: 'estadoTexto', titulo: 'Estado', tipo: 'estado' },
-    { campo: 'atrasada', titulo: 'ETA vencida', tipo: 'si-no', alinear: 'centro' },
-    { campo: 'novedades', titulo: 'Novedades' }
+    { campo: 'fechaAtraque', titulo: 'PORTTOS.VESSEL_TABLE.ATA_ATRAQUE_2' },
+    { campo: 'zarpe', titulo: 'PORTTOS.VESSEL_TABLE.ZARPE' },
+    { campo: 'carga', titulo: 'PORTTOS.VESSEL_TABLE.CARGA' },
+    { campo: 'estadoTexto', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+    { campo: 'atrasada', titulo: 'PORTTOS.VESSEL_TABLE.ETA_VENCIDA', tipo: 'si-no', alinear: 'centro' },
+    { campo: 'novedades', titulo: 'PORTTOS.VESSEL_TABLE.NOVEDADES' }
 ];
 
 @Component({
     selector: 'app-vessel-table',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent, TablaTclComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './vessel-table.component.html',
     styleUrls: ['./vessel-table.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -175,7 +176,7 @@ export class VesselTableComponent implements OnInit, OnChanges, OnDestroy {
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'REPORTE DE MOTONAVES · 72H',
-            subtitulo: raw.subtitulo || 'Programación de arribos, fondeo y atraques',
+            subtitulo: raw.subtitulo || 'PORTTOS.VESSEL_TABLE.PROGRAMACION_DE_ARRIBOS_FONDEO_Y',
             icono: raw.icono || 'feather icon-anchor',
             motonaves: motonavesNormalizadas
         };

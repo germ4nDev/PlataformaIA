@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || '🚛 Cola de Camiones'"
-    [subtitulo]="widgetConfig?.subtitulo || 'Todos los Tipos de Carga'" [icono]="'feather icon-truck'"
+<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.TABLE_COLA_GATE.COLA_DE_CAMIONES' | translate)"
+    [subtitulo]="(widgetConfig?.subtitulo | translate) || ('PORTTOS.TABLE_COLA_GATE.TODOS_LOS_TIPOS_DE_CARGA' | translate)" [icono]="'feather icon-truck'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origen">
 
     <!-- Badge indicador en el Header -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
-            Logística Terrestre · {{ listaCitas.length || 0 }} Unidades
+            {{ 'PORTTOS.TABLE_COLA_GATE.LOGISTICA_TERRESTRE_UNIDADES' | translate: { p0: (listaCitas.length || 0) } }}
         </span>
     </div>
 
@@ -18,14 +18,14 @@
                 <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
                     <tr class="text-muted font-weight-bold text-uppercase"
                         style="font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <th class="pb-2">Placa</th>
-                        <th class="pb-2">Transportador</th>
-                        <th class="pb-2">Tipo Carga</th>
-                        <th class="pb-2">Operación</th>
-                        <th class="pb-2">Terminal</th>
-                        <th class="pb-2">Cita / Espera</th>
-                        <th class="pb-2">Ubicación</th>
-                        <th class="pb-2 text-center">Estado</th>
+                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.PLACA' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.TRANSPORTADOR' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.TIPO_CARGA' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.COMUN.OPERACION' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.COMUN.TERMINAL' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.CITA_ESPERA' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.UBICACION' | translate }}</th>
+                        <th class="pb-2 text-center">{{ 'PORTTOS.COMUN.ESTADO' | translate }}</th>
                     </tr>
                 </thead>
 
@@ -34,7 +34,7 @@
                     <tr *ngIf="cargando && (!listaCitas || listaCitas.length === 0)">
                         <td colspan="8" class="text-center text-muted py-5">
                             <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
-                            Sincronizando cola de camiones en Virtual Gate...
+                            {{ 'PORTTOS.TABLE_COLA_GATE.SINCRONIZANDO_COLA_DE_CAMIONES_EN' | translate }}
                         </td>
                     </tr>
 
@@ -63,7 +63,7 @@
                                 'text-warning': (cita.tiempo_espera_minutos || 0) >= 25 && (cita.tiempo_espera_minutos || 0) < 45,
                                 'text-success': (cita.tiempo_espera_minutos || 0) < 25
                             }">
-                                {{ cita.tiempo_espera_minutos || 0 }} min
+                                {{ 'PORTTOS.TABLE_COLA_GATE.MIN' | translate: { p0: (cita.tiempo_espera_minutos || 0) } }}
                             </span>
                         </td>
 
@@ -85,7 +85,7 @@
                     <tr *ngIf="!cargando && (!listaCitas || listaCitas.length === 0)">
                         <td colspan="8" class="text-center text-muted py-5">
                             <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                            No hay camiones registrados en la cola para este puerto.
+                            {{ 'PORTTOS.TABLE_COLA_GATE.NO_HAY_CAMIONES_REGISTRADOS_EN' | translate }}
                         </td>
                     </tr>
                 </tbody>

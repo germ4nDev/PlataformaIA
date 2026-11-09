@@ -22,6 +22,7 @@ import { VideoPlayerComponent } from '../video-player/video-player.component'
 import { LanguageService } from '../../service/lenguage.service';
 import { Subscription } from 'rxjs';
 import { AppPermisoDirective } from '../../directive/app-permiso.directive';
+import { PtlPermisosService } from '../../service/ptlpermisos.service';
 
 @Component({
     selector: 'app-table-data',
@@ -52,6 +53,8 @@ export class TableDataComponent implements OnInit, OnChanges, AfterViewInit {
     @Input() permisoView: string = '';
     @Input() permisoEdit: string = '';
     @Input() permisoDelete: string = '';
+    /** OT-020 (CC-131): llave de los botones de carga (Excel y modal de cargue masivo) */
+    @Input() permisoUpload: string = '';
 
     @Input() showDetail: boolean = false
     @Input() showSearchBox: boolean = true
@@ -107,7 +110,8 @@ export class TableDataComponent implements OnInit, OnChanges, AfterViewInit {
     constructor(
         private sanitizer: DomSanitizer,
         private _languageService: LanguageService,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private _permisosService: PtlPermisosService
     ) { }
 
     ngAfterViewInit(): void { }
@@ -347,6 +351,11 @@ export class TableDataComponent implements OnInit, OnChanges, AfterViewInit {
         this.filterValues[column] = target.value
         this.currentPage = 1
         this.applyFiltersAndPagination()
+    }
+
+    /** OT-020 (CC-131): oculta las acciones de fila cuya llave (btn.permiso) no tiene el usuario; sin llave se muestra */
+    accionesVisibles(acciones: any[] | null | undefined): any[] {
+        return (acciones || []).filter((b: any) => !b?.permiso || this._permisosService.tienePermiso(b.permiso));
     }
 
     onNewRecord(): void {

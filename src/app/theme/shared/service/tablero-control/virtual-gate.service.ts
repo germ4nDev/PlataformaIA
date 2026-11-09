@@ -156,10 +156,10 @@ export class VirtualGateService {
             PTT_GATE_KPI_SUELTA: { titulo: 'CARGA SUELTA (TON)', valor: n(r.totalCargaSuelta), subtitulo: r.subtituloCargaSuelta || '', colorBorde: 'borde-green' },
             PTT_GATE_KPI_RORO: { titulo: 'VEHÍCULOS RO-RO', valor: n(r.totalRoro), subtitulo: r.subtituloRoro || '', colorBorde: 'borde-teal' },
             PTT_GATE_KPI_BODEGAS: { titulo: 'SATURACIÓN BODEGAS', valor: r.saturacionBodegas || '—', subtitulo: r.subtituloBodegas || '', colorBorde: 'borde-purple' },
-            PTT_GATE_KPI_SUB_CONT: { titulo: 'CAMIONES CONTENEDOR', valor: n(r.subContenedores), subtitulo: 'Citas de contenedores', colorBorde: 'borde-amarillo' },
-            PTT_GATE_KPI_SUB_GRANEL: { titulo: 'CAMIONES GRANEL', valor: n(r.subGranel), subtitulo: 'Citas de granel', colorBorde: 'borde-naranja' },
-            PTT_GATE_KPI_SUB_SUELTA: { titulo: 'CAMIONES CARGA SUELTA', valor: n(r.subCargaSuelta), subtitulo: 'Citas de carga suelta', colorBorde: 'borde-green' },
-            PTT_GATE_KPI_SUB_NINERAS: { titulo: 'NIÑERAS / RO-RO', valor: n(r.subNineras), subtitulo: 'Citas de vehículos', colorBorde: 'borde-teal' }
+            PTT_GATE_KPI_SUB_CONT: { titulo: 'CAMIONES CONTENEDOR', valor: n(r.subContenedores), subtitulo: 'WEB.VIRTUAL_GATE_SERVICE.CITAS_DE_CONTENEDORES', colorBorde: 'borde-amarillo' },
+            PTT_GATE_KPI_SUB_GRANEL: { titulo: 'CAMIONES GRANEL', valor: n(r.subGranel), subtitulo: 'WEB.VIRTUAL_GATE_SERVICE.CITAS_DE_GRANEL', colorBorde: 'borde-naranja' },
+            PTT_GATE_KPI_SUB_SUELTA: { titulo: 'CAMIONES CARGA SUELTA', valor: n(r.subCargaSuelta), subtitulo: 'WEB.VIRTUAL_GATE_SERVICE.CITAS_DE_CARGA_SUELTA', colorBorde: 'borde-green' },
+            PTT_GATE_KPI_SUB_NINERAS: { titulo: 'NIÑERAS / RO-RO', valor: n(r.subNineras), subtitulo: 'WEB.VIRTUAL_GATE_SERVICE.CITAS_DE_VEHICULOS', colorBorde: 'borde-teal' }
         };
         return mapa[codigo] ?? null;
     }

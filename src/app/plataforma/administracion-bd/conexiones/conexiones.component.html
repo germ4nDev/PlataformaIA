@@ -63,7 +63,7 @@
                     [showSearchBox]="false" [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                     [showDeleteButton]="true" [newButtonLabel]="'CONEXIONES.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_CONEXIONES_CREAR" permisoEdit="ACT_CONEXIONES_MODIFICAR" permisoDelete="ACT_CONEXIONES_ELIMINAR">
                 </app-table-data>
             </div>
         </div>

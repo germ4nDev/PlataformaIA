@@ -755,7 +755,7 @@ export class TerminalSummaryAdapter {
 
                 return {
                     id: (m.id || m.label || 'Muelle'), // Mantiene "M-1" para el HTML
-                    label: (m.id || m.label || 'Muelle'),
+                    label: (m.id || m.label || 'WEB.TERMINAL_SUMMARY_ADAPTER.MUELLE'),
                     especialidad: m.esp || m.especialidad || 'General',
                     calado: m.calado || m.draft || '-',
                     barcoAtracado: barcoEnMuelle ? barcoEnMuelle.motonave : null,

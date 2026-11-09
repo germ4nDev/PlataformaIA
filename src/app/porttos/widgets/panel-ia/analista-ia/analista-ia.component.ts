@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -61,7 +62,7 @@ const NOMBRE_ESTADO: Record<string, string> = {
 @Component({
     selector: 'app-analista-ia',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './analista-ia.component.html',
     styleUrls: ['./analista-ia.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -336,15 +337,15 @@ export class AnalistaIAComponent implements OnInit, OnChanges, OnDestroy {
     // ── vista ampliada: historial ───────────────────────────────────────────────────────────────────
 
     public readonly columnasHistorial: ColumnaTabla[] = [
-        { campo: 'fechaTexto', titulo: 'Hora', tipo: 'texto', ancho: '120px' },
-        { campo: 'claseTexto', titulo: 'Clase' },
-        { campo: 'tipoTexto', titulo: 'Tipo' },
-        { campo: 'titulo', titulo: 'Hallazgo', tipo: 'principal' },
-        { campo: 'severidadTexto', titulo: 'Severidad', tipo: 'estado' },
-        { campo: 'confianzaPct', titulo: 'Confianza', tipo: 'numero', decimales: 0, unidad: '%' },
-        { campo: 'horizonteTexto', titulo: 'Horizonte' },
-        { campo: 'estadoTexto', titulo: 'Estado', tipo: 'estado' },
-        { campo: 'verificacion', titulo: 'Verificación / motivo' }
+        { campo: 'fechaTexto', titulo: 'PORTTOS.IA_ADMIN_PANEL.HORA', tipo: 'texto', ancho: '120px' },
+        { campo: 'claseTexto', titulo: 'PORTTOS.ANALISTA_IA.CLASE' },
+        { campo: 'tipoTexto', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO' },
+        { campo: 'titulo', titulo: 'PORTTOS.ANALISTA_IA.HALLAZGO', tipo: 'principal' },
+        { campo: 'severidadTexto', titulo: 'PORTTOS.ANALISTA_IA.SEVERIDAD', tipo: 'estado' },
+        { campo: 'confianzaPct', titulo: 'PORTTOS.ANALISTA_IA.CONFIANZA_2', tipo: 'numero', decimales: 0, unidad: '%' },
+        { campo: 'horizonteTexto', titulo: 'PORTTOS.ANALISTA_IA.HORIZONTE' },
+        { campo: 'estadoTexto', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+        { campo: 'verificacion', titulo: 'PORTTOS.ANALISTA_IA.VERIFICACION_MOTIVO' }
     ];
     public filasHistorial: any[] = [];
 

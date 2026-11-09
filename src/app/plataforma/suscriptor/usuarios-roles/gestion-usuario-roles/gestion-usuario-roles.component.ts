@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
@@ -221,7 +222,7 @@ export class GestionUsuarioRolesComponent implements OnInit {
 
     consultarRolesPorFiltro(codApp: string, codSuite: string, codTipoId: string) {
         if (this.esRolSuscriptor && !this.codigoUsuarioSC) {
-            this._swalAlertService.getAlertConfirmWarning('Debe seleccionar un suscriptor primero.');
+            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIO_ROLES.DEBE_SELECCIONAR_UN_SUSCRIPTOR_PRIMERO'));
             this.roles = [];
             return;
         }
@@ -263,14 +264,14 @@ export class GestionUsuarioRolesComponent implements OnInit {
         if (!form.valid) return;
 
         if (this.esRolSuscriptor && !this.codigoUsuarioSC) {
-            this._swalAlertService.getAlertConfirmWarning('Debe seleccionar un suscriptor válido.');
+            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIO_ROLES.DEBE_SELECCIONAR_UN_SUSCRIPTOR_VALIDO'));
             return;
         }
 
         const rolesSeleccionados = this.roles.filter(r => r.checked);
 
         if (rolesSeleccionados.length === 0) {
-            this._swalAlertService.getAlertConfirmWarning('Debe seleccionar al menos un rol.');
+            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIO_ROLES.DEBE_SELECCIONAR_AL_MENOS_UN'));
             return;
         }
 
@@ -294,6 +295,7 @@ export class GestionUsuarioRolesComponent implements OnInit {
 
         const payloadSync = {
             codigoUsuarioSC: this.codigoUsuarioSC,
+            codigoEmpresaSC: this.codigoEmpresaSC, // OT-026: solo se reemplazan los roles de esta empresa
             rolesContexto: rolesContexto,
             roles: rolesParaGuardar
         };

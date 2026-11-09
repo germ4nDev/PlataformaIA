@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Pattern: PORTTOS Smart Widget - Condiciones del Canal (Consumo Autónomo SQL)
@@ -25,7 +26,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-canal-conditions',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './canal-conditions.component.html',
     styleUrls: ['./canal-conditions.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -149,7 +150,7 @@ export class CanalConditionsComponent implements OnInit, OnChanges, OnDestroy {
         return {
             ...origen,
             titulo: origen.titulo || 'CONDICIONES DEL CANAL',
-            subtitulo: origen.subtitulo || 'Reporte meteorológico y estado DIMAR',
+            subtitulo: origen.subtitulo || 'PORTTOS.CANAL_CONDITIONS.REPORTE_METEOROLOGICO_Y_ESTADO_DIMAR',
             icono: origen.icono || 'feather icon-wind',
             marea: mareaTexto,
             visibilidad: visibilidadTexto,

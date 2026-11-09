@@ -102,6 +102,12 @@
     padding-right: 0; // el margen derecho lo da .widgets-lobby-body, igual que el izquierdo
     padding-bottom: 1rem;
 
+    // CC-125: en pantallas de teléfono, una sola columna: se leen los nombres completos y el arrastre de CDK (vertical) ordena bien.
+    // La tableta y la web (más de 600 px) siguen con dos columnas.
+    @media (max-width: 600px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .pestana-list-item {
         position: relative;
         min-width: 0; // la tarjeta no crece más que su columna

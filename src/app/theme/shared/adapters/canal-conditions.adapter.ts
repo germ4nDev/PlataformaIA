@@ -7,7 +7,7 @@ export class CanalConditionsAdapter implements IBaseAdapter<CanalModel> {
         // pero tu modelo sigue siendo el mismo.
         return {
             titulo: 'CONDICIONES DEL CANAL · REPORTE',
-            subtitulo: 'Reporte meteorológico y estado DIMAR',
+            subtitulo: 'WEB.CANAL_CONDITIONS_ADAPTER.REPORTE_METEOROLOGICO_Y_ESTADO_DIMAR',
             marea: `${data.current_tide || 0} m`,
             visibilidad: `${data.visibility || 0} km`,
             viento: data.viento || 'Cerrado',

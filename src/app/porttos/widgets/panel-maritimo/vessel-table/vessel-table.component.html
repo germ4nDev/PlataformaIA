@@ -62,17 +62,17 @@
     </div>
 
 </app-widget-shell> -->
-<app-widget-shell [titulo]="data.titulo || 'REPORTE DE MOTONAVES · 72H'"
-    [subtitulo]="data.subtitulo || 'Programación de arribos y atraques'" [icono]="data.icono || 'feather icon-anchor'"
+<app-widget-shell [titulo]="((data.titulo ?? '') | translate) || 'REPORTE DE MOTONAVES · 72H'"
+    [subtitulo]="((data.subtitulo ?? '') | translate) || ('PORTTOS.VESSEL_TABLE.PROGRAMACION_DE_ARRIBOS_Y_ATRAQUES' | translate)" [icono]="data.icono || 'feather icon-anchor'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center gap-2">
         <span class="tc-badge badge-info text-uppercase">
-            Programación · {{ data.motonaves?.length || 0 }} Naves
+            {{ 'PORTTOS.VESSEL_TABLE.PROGRAMACION_NAVES' | translate: { p0: (data.motonaves?.length || 0) } }}
         </span>
-        <span *ngIf="totalAtrasadas" class="tc-badge badge-eta-vencida text-uppercase" title="ETA vencida sin ATA">
-            {{ totalAtrasadas }} con ETA vencida
+        <span *ngIf="totalAtrasadas" class="tc-badge badge-eta-vencida text-uppercase" [title]="'PORTTOS.VESSEL_TABLE.ETA_VENCIDA_SIN_ATA' | translate">
+            {{ 'PORTTOS.VESSEL_TABLE.CON_ETA_VENCIDA' | translate: { p0: totalAtrasadas } }}
         </span>
     </div>
 
@@ -83,13 +83,13 @@
                 <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
                     <tr class="text-muted font-weight-bold text-uppercase"
                         style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <th class="pb-2">Motonave</th>
-                        <th class="pb-2">Naviera</th>
-                        <th class="pb-2">Terminal</th>
-                        <th class="pb-2">ETA</th>
-                        <th class="pb-2">ATA / Atraque</th>
-                        <th class="pb-2">Carga</th>
-                        <th class="pb-2 text-center">Estado</th>
+                        <th class="pb-2">{{ 'PORTTOS.VESSEL_TABLE.MOTONAVE' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.VESSEL_TABLE.NAVIERA' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.COMUN.TERMINAL' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.VESSEL_TABLE.ETA' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.VESSEL_TABLE.ATA_ATRAQUE' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.VESSEL_TABLE.CARGA' | translate }}</th>
+                        <th class="pb-2 text-center">{{ 'PORTTOS.COMUN.ESTADO' | translate }}</th>
                     </tr>
                 </thead>
 
@@ -98,7 +98,7 @@
                     <tr *ngIf="isLoading">
                         <td colspan="7" class="text-center text-muted py-5">
                             <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
-                            Sincronizando programación de motonaves (72h)...
+                            {{ 'PORTTOS.VESSEL_TABLE.SINCRONIZANDO_PROGRAMACION_DE_MOTONAVES_' | translate }}
                         </td>
                     </tr>
 
@@ -127,7 +127,7 @@
                         <tr *ngIf="!data.motonaves || data.motonaves.length === 0">
                             <td colspan="7" class="text-center text-muted py-5">
                                 <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                                Sin motonaves programadas en las próximas 72h para este puerto.
+                                {{ 'PORTTOS.VESSEL_TABLE.SIN_MOTONAVES_PROGRAMADAS_EN_LAS' | translate }}
                             </td>
                         </tr>
                     </ng-container>

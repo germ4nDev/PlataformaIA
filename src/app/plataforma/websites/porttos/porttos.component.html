@@ -1,5 +1,5 @@
 <div class="pp" #contenedor>
-  <a class="saltar" href="#contenido-portal" (click)="saltar($event)">Saltar al contenido</a>
+  <a class="saltar" href="#contenido-portal" (click)="saltar($event)">{{ 'WEB.PORTTOS.SALTAR_AL_CONTENIDO' | translate }}</a>
   <pp-encabezado [config]="config$ | async" />
   <main id="contenido-portal" tabindex="-1"><router-outlet /></main>
   <pp-pie [config]="config$ | async" />

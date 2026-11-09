@@ -73,16 +73,16 @@
 </div> -->
 <div class="recorrido" [class.dark-theme]="isDark">
     <!-- Pestañas estilo "Segmented Control" tipo macOS -->
-    <div class="tabs-planos" role="group" aria-label="Ventana de tiempo">
+    <div class="tabs-planos" role="group" [attr.aria-label]="'PORTTOS.RECORRIDO_PANEL.VENTANA_DE_TIEMPO' | translate">
         <button type="button" *ngFor="let h of ventanas" [class.activo]="h === horas" (click)="cambiarHoras.emit(h)">
             {{ h }} h
         </button>
     </div>
 
-    <p class="aviso-plano" *ngIf="cargando">Cargando el recorrido…</p>
+    <p class="aviso-plano" *ngIf="cargando">{{ 'PORTTOS.RECORRIDO_PANEL.CARGANDO_EL_RECORRIDO' | translate }}</p>
     <p class="aviso-plano text-error" *ngIf="!cargando && error">{{ error }}</p>
     <p class="aviso-plano" *ngIf="!cargando && !error && vacio">
-        Todavía no hay recorrido guardado en esta ventana. El mapa guarda una muestra por minuto.
+        {{ 'PORTTOS.RECORRIDO_PANEL.TODAVIA_NO_HAY_RECORRIDO_GUARDADO' | translate }}
     </p>
 
     <ng-container *ngIf="recorrido && !cargando && !error && !vacio">
@@ -94,51 +94,50 @@
         <div class="linea-tiempo">
             <div class="marcas">
                 <span *ngFor="let e of recorrido.eventos; trackBy: trackEvento" class="marca-punto"
-                    [ngClass]="'nivel-' + e.nivel" [style.left.%]="pos(e.seg)" [title]="e.titulo"></span>
+                    [ngClass]="'nivel-' + e.nivel" [style.left.%]="pos(e.seg)" [title]="(e.titulo | translate)"></span>
             </div>
             <input type="range" min="0" [max]="duracion" step="10" [value]="segundo"
-                (input)="alMover($any($event.target).value)" aria-label="Momento del recorrido">
+                (input)="alMover($any($event.target).value)" [attr.aria-label]="'PORTTOS.RECORRIDO_PANEL.MOMENTO_DEL_RECORRIDO' | translate">
             <div class="extremos">
                 <span>{{ hora(0) | date: 'HH:mm' : '-0500' }}</span>
-                <span>Ahora</span>
+                <span>{{ 'PORTTOS.RECORRIDO_PANEL.AHORA' | translate }}</span>
             </div>
         </div>
 
         <div class="controles-planos">
-            <button type="button" class="btn-salto" (click)="saltar(-15)" title="15 min atrás"><i
+            <button type="button" class="btn-salto" (click)="saltar(-15)" [title]="'PORTTOS.RECORRIDO_PANEL.15_MIN_ATRAS' | translate"><i
                     class="icon feather icon-rewind"></i></button>
 
             <button type="button" class="btn-play" (click)="alternar.emit()"
-                [title]="reproduciendo ? 'Pausar' : 'Reproducir'">
+                [title]="reproduciendo ? ('PORTTOS.RECORRIDO_PANEL.PAUSAR' | translate) : ('PORTTOS.RECORRIDO_PANEL.REPRODUCIR' | translate)">
                 <i class="icon feather" [ngClass]="reproduciendo ? 'icon-pause' : 'icon-play'"></i>
             </button>
 
-            <button type="button" class="btn-salto" (click)="saltar(15)" title="15 min adelante"><i
+            <button type="button" class="btn-salto" (click)="saltar(15)" [title]="'PORTTOS.RECORRIDO_PANEL.15_MIN_ADELANTE' | translate"><i
                     class="icon feather icon-fast-forward"></i></button>
 
             <div class="velocidades-planas" role="group">
                 <button type="button" *ngFor="let v of velocidades" [class.activo]="v.valor === velocidad"
                     (click)="cambiarVelocidad.emit(v.valor)">
-                    {{ v.etiqueta }}
+                    {{ (v.etiqueta | translate) }}
                 </button>
             </div>
         </div>
 
         <p class="totales-planos">
-            {{ recorrido.totales.naves }} naves · {{ recorrido.totales.camiones }} camiones · {{
-            recorrido.eventos.length }} eventos
+            {{ 'PORTTOS.RECORRIDO_PANEL.NAVES_CAMIONES_EVENTOS' | translate: { p0: recorrido.totales.naves, p1: recorrido.totales.camiones, p2: recorrido.eventos.length } }}
         </p>
 
         <!-- Eventos idénticos a la Bitácora -->
         <div class="eventos-planos" *ngIf="recorrido.eventos.length">
-            <h4>Eventos</h4>
+            <h4>{{ 'PORTTOS.RECORRIDO_PANEL.EVENTOS' | translate }}</h4>
             <button type="button" class="evento-item" *ngFor="let e of recorrido.eventos; trackBy: trackEvento"
                 [ngClass]="'nivel-' + e.nivel" [class.pasado]="e.seg <= segundo" (click)="verEvento.emit(e)"
-                title="Ir a este momento">
+                [title]="'PORTTOS.RECORRIDO_PANEL.IR_A_ESTE_MOMENTO' | translate">
                 <span class="evento-punto"></span>
                 <span class="evento-texto">
-                    <strong>{{ e.titulo }}</strong>
-                    <span *ngIf="e.mensaje">{{ e.mensaje }}</span>
+                    <strong>{{ (e.titulo | translate) }}</strong>
+                    <span *ngIf="e.mensaje">{{ (e.mensaje | translate) }}</span>
                 </span>
                 <span class="evento-hora">{{ hora(e.seg) | date: 'HH:mm' : '-0500' }}</span>
             </button>
@@ -147,7 +146,7 @@
 
     <div class="pie-recorrido">
         <button type="button" class="btn-volver" (click)="salir.emit()">
-            <i class="icon feather icon-radio"></i> Volver a en vivo
+            <i class="icon feather icon-radio"></i> {{ 'PORTTOS.RECORRIDO_PANEL.VOLVER_A_EN_VIVO' | translate }}
         </button>
     </div>
 </div>

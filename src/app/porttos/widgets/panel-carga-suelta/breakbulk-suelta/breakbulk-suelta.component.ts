@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +18,7 @@ import { TablaTclComponent, ColumnaTabla } from '../../shared/tabla-tcl/tabla-tc
 @Component({
     selector: 'app-breakbulk-suelta',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent],
     templateUrl: './breakbulk-suelta.component.html',
     styleUrls: ['./breakbulk-suelta.component.scss']
 })
@@ -29,25 +30,25 @@ export class BreakbulkSueltaComponent extends WidgetTableroBase<TableroCargaSuel
     public filas: any[] = [];
     public readonly mensajeVacio = 'Sin carga suelta activa.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'folio', titulo: 'Folio', tipo: 'principal' },
-        { campo: 'producto', titulo: 'Producto' },
-        { campo: 'cliente', titulo: 'Cliente' },
-        { campo: 'motonave', titulo: 'Motonave' },
-        { campo: 'bultosTexto', titulo: 'Bultos', alinear: 'der' },
+        { campo: 'folio', titulo: 'PORTTOS.BREAKBULK_SUELTA.FOLIO', tipo: 'principal' },
+        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
+        { campo: 'cliente', titulo: 'PORTTOS.TABLE_BODEGAS.CLIENTE' },
+        { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE' },
+        { campo: 'bultosTexto', titulo: 'PORTTOS.BREAKBULK_SUELTA.BULTOS', alinear: 'der' },
         { campo: 'tm', titulo: 'TM', tipo: 'numero' },
-        { campo: 'ubicacion', titulo: 'Ubicación' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' }
+        { campo: 'ubicacion', titulo: 'PORTTOS.TABLE_COLA_GATE.UBICACION' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'naviera', titulo: 'Naviera' },
-        { campo: 'terminal', titulo: 'Terminal' },
-        { campo: 'sentido', titulo: 'Sentido' },
-        { campo: 'pesoUnitarioTm', titulo: 'Peso unitario', tipo: 'numero', decimales: 2, unidad: 't' },
-        { campo: 'dimensiones', titulo: 'Dimensiones' },
-        { campo: 'equipoRequerido', titulo: 'Equipo requerido' },
-        { campo: 'fechaProgramada', titulo: 'Programado', tipo: 'fecha' },
-        { campo: 'simulado', titulo: 'Simulado', tipo: 'si-no' }
+        { campo: 'naviera', titulo: 'PORTTOS.TABLE_CONTENEDORES.NAVIERA' },
+        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+        { campo: 'sentido', titulo: 'PORTTOS.BREAKBULK_SUELTA.SENTIDO' },
+        { campo: 'pesoUnitarioTm', titulo: 'PORTTOS.BREAKBULK_SUELTA.PESO_UNITARIO', tipo: 'numero', decimales: 2, unidad: 't' },
+        { campo: 'dimensiones', titulo: 'PORTTOS.BREAKBULK_SUELTA.DIMENSIONES' },
+        { campo: 'equipoRequerido', titulo: 'PORTTOS.BREAKBULK_SUELTA.EQUIPO_REQUERIDO' },
+        { campo: 'fechaProgramada', titulo: 'PORTTOS.BREAKBULK_SUELTA.PROGRAMADO', tipo: 'fecha' },
+        { campo: 'simulado', titulo: 'PORTTOS.MOTONAVES_GRANEL.SIMULADO', tipo: 'si-no' }
     ];
 
     constructor(tableros: TablerosPestanasService, torre: DashboardService, cdr: ChangeDetectorRef) {

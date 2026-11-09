@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WIDGET_MAP } from 'src/app/plataforma/starter/home/widget-registry';
@@ -5,7 +6,7 @@ import { WIDGET_MAP } from 'src/app/plataforma/starter/home/widget-registry';
 @Component({
     selector: 'app-widget-selector',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './widget-selector.component.html'
 })
 export class WidgetSelectorComponent implements OnInit {

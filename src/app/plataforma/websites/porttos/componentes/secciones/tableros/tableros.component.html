@@ -1,0 +1,19 @@
+<section class="bloque bloque--alterno">
+  <div class="contenedor">
+    <pp-encabezado-seccion [s]="s" />
+    <ul class="rejilla rejilla--tableros" role="list">
+      @for (e of s.elementos; track $index) {
+        <li class="tablero" [style.--acento]="e.color || null">
+          <span class="tablero__icono"><pp-icono [nombre]="e.icono" /></span>
+          <div>
+            @if (e.titulo) { <h3 class="tablero__titulo">{{ e.titulo }}</h3> }
+            @if (e.texto) { <p class="tablero__texto">{{ e.texto }}</p> }
+          </div>
+        </li>
+      }
+    </ul>
+    @if (s.enlace) {
+      <p class="bloque__pie"><pp-enlace [url]="s.enlace.url" clase="enlace-flecha">{{ s.enlace.texto }} →</pp-enlace></p>
+    }
+  </div>
+</section>

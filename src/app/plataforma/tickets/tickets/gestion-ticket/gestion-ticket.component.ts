@@ -1,9 +1,10 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import {
@@ -39,7 +40,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 @Component({
     selector: 'app-gestion-ticket',
     standalone: true,
-    imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-ticket.component.html',
     styleUrl: './gestion-ticket.component.scss'
 })
@@ -122,7 +123,7 @@ export class GestionTicketComponent {
                     // console.log('datos del FormRegistro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el ticket', 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_TICKET.NO_SE_PUDO_OBTENER_EL'), 'error');
                 }
             });
         } else {

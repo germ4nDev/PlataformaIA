@@ -28,29 +28,29 @@
             zona del puerto</small>
     </ng-container>
 </div> -->
-<div class="embudo-cargando" *ngIf="cargando && !embudo">Calculando embudo…</div>
+<div class="embudo-cargando" *ngIf="cargando && !embudo">{{ 'PORTTOS.EMBUDO_LLEGADA.CALCULANDO_EMBUDO' | translate }}</div>
 
 <ng-container *ngIf="embudo">
     <!-- Alertas superiores limpias -->
-    <div class="alerta-plana" *ngIf="!embudo.aisDisponible">Sin datos AIS del puerto: solo se ven avisos DIMAR.</div>
-    <div class="alerta-plana" *ngIf="!embudo.avisosDisponibles">Sin avisos DIMAR: la etapa "Avisadas" queda vacía.</div>
+    <div class="alerta-plana" *ngIf="!embudo.aisDisponible">{{ 'PORTTOS.EMBUDO_LLEGADA.SIN_DATOS_AIS_DEL_PUERTO' | translate }}</div>
+    <div class="alerta-plana" *ngIf="!embudo.avisosDisponibles">{{ 'PORTTOS.EMBUDO_LLEGADA.SIN_AVISOS_DIMAR_LA_ETAPA' | translate }}</div>
     <div class="alerta-plana nivel-error" *ngIf="embudo.criticas.naves > 0">
-        ⛔ {{ embudo.criticas.naves }} nave{{ embudo.criticas.naves === 1 ? '' : 's' }} en estado crítico.
+        {{ 'PORTTOS.EMBUDO_LLEGADA.NAVE_EN_ESTADO_CRITICO' | translate: { p0: embudo.criticas.naves, p1: embudo.criticas.naves === 1 ? '' : 's' } }}
     </div>
     <div class="alerta-plana nivel-warning" *ngIf="embudo.cuelloDeBotella">
-        ⚠ {{ embudo.cuelloDeBotella.texto }}
+        ⚠ {{ (embudo.cuelloDeBotella.texto | translate) }}
     </div>
 
     <!-- Lista de etapas (Estilo Flat) -->
     <div class="lista-plana">
         <button type="button" class="item-plano" *ngFor="let e of embudo.etapas; trackBy: trackEtapa"
             [class.activo]="etapaActiva === e.codigo" [class.cuello]="esCuello(e)" (click)="elegir(e)"
-            [title]="e.descripcion + (e.naves ? ' · clic para verlas' : '')">
+            [title]="(e.descripcion | translate) + (e.naves ? ('PORTTOS.EMBUDO_LLEGADA.CLIC_PARA_VERLAS' | translate) : '')">
 
             <span class="cifra-destacada">{{ e.naves }}</span>
 
             <span class="cuerpo-item">
-                <span class="titulo-item">{{ e.nombre }}</span>
+                <span class="titulo-item">{{ (e.nombre | translate) }}</span>
                 <span class="barra-progreso">
                     <span [style.width.%]="ancho(e)" [ngClass]="'barra-' + e.codigo"></span>
                 </span>
@@ -59,5 +59,5 @@
         </button>
     </div>
 
-    <small class="pie-panel">Toque una etapa para resaltar sus naves · {{ embudo.totalEnPuerto }} en la zona</small>
+    <small class="pie-panel">{{ 'PORTTOS.EMBUDO_LLEGADA.TOQUE_UNA_ETAPA_PARA_RESALTAR' | translate: { p0: embudo.totalEnPuerto } }}</small>
 </ng-container>

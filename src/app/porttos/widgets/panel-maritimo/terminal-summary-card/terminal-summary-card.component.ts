@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -30,7 +31,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-terminal-summary-card',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, TerminalDocksDetailComponent, WidgetShellComponent, TcFooterComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, TerminalDocksDetailComponent, WidgetShellComponent, TcFooterComponent],
     templateUrl: './terminal-summary-card.component.html',
     styleUrls: ['./terminal-summary-card.component.scss'],
     encapsulation: ViewEncapsulation.None

@@ -1,7 +1,7 @@
-    <a href="javascript:" (click)="searchOn = true" class="pop-search" title="Search">
+    <a href="javascript:" (click)="searchOn = true" class="pop-search" [title]="'WEB.NAV_SEARCH.SEARCH' | translate">
       <i class="feather icon-search"></i>
     </a>
     <div class="search-bar" *ngIf="searchOn">
-      <input type="text" class="form-control border-0 shadow-none" placeholder="Search here" />
-      <button (click)="searchOn = false" type="button" class="btn-close close" aria-label="Close"></button>
+      <input type="text" class="form-control border-0 shadow-none" [placeholder]="'WEB.NAV_SEARCH.SEARCH_HERE' | translate" />
+      <button (click)="searchOn = false" type="button" class="btn-close close" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate"></button>
     </div>

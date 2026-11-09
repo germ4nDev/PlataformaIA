@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
@@ -223,10 +224,10 @@ export class DashboardPanelComponent implements OnInit, OnDestroy {
     resetearLayout() {
         // 🟢 Usamos el método reactivo pasándole la descripción, el título y los textos de los botones
         this._swalAlertService.getAlertQuestionRequest(
-            '¿Estás seguro de que deseas restablecer el tablero a su estado original? Perderás tu organización actual.',
-            '¿Restablecer tablero?',
-            'Sí, restablecer',
-            'Cancelar'
+            traducir('PORTTOS.DASHBOARD_PANEL.ESTAS_SEGURO_DE_QUE_DESEAS'),
+            traducir('PORTTOS.DASHBOARD_PANEL.RESTABLECER_TABLERO'),
+            traducir('PORTTOS.DASHBOARD_PANEL.SI_RESTABLECER'),
+            traducir('PORTTOS.IA_ADMIN_PANEL.CANCELAR')
         ).subscribe((confirmado: boolean) => {
 
             // Si el usuario hace clic en "Cancelar" o presiona Escape, 'confirmado' será false

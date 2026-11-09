@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -31,7 +33,7 @@ export interface IBarraEstadoCita {
 @Component({
     selector: 'app-gate-estado-citas',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './gate-estado-citas.component.html',
     styleUrls: ['./gate-estado-citas.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -169,25 +171,25 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
 
             this.listaBarras = [
                 {
-                    label: 'En ventana (OK)',
+                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.EN_VENTANA_OK'),
                     value: confirmadas,
                     percent: Math.round((confirmadas / total) * 100),
                     colorClass: 'bg-success'
                 },
                 {
-                    label: 'En cola virtual',
+                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.EN_COLA_VIRTUAL'),
                     value: enEspera,
                     percent: Math.round((enEspera / total) * 100),
                     colorClass: 'bg-info'
                 },
                 {
-                    label: 'Vencidas / Reagend.',
+                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.VENCIDAS_REAGEND'),
                     value: reagendadas,
                     percent: Math.round((reagendadas / total) * 100),
                     colorClass: 'bg-warning'
                 },
                 {
-                    label: 'Sin cita / Retenidos',
+                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.SIN_CITA_RETENIDOS'),
                     value: canceladas,
                     percent: Math.round((canceladas / total) * 100),
                     colorClass: 'bg-danger'
@@ -222,7 +224,7 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
         this.datosAutonomosSQL = {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'ESTADO DE CITAS',
-            subtitulo: raw.subtitulo || 'Gestión de turnos y accesos por ventana',
+            subtitulo: raw.subtitulo || 'PORTTOS.GATE_ESTADO_CITAS.GESTION_DE_TURNOS_Y_ACCESOS_2',
             icono: raw.icono || 'feather icon-calendar',
             barrasProgreso: this.listaBarras,
             resumen: resumenNormalizado

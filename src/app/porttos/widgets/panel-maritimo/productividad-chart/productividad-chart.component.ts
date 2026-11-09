@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -32,7 +33,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-productividad-chart',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './productividad-chart.component.html',
     styleUrls: ['./productividad-chart.component.scss'],
     encapsulation: ViewEncapsulation.None

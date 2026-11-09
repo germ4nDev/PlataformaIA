@@ -1,12 +1,12 @@
 <div class="PORTTOS-dashboard-container">
     <header class="dashboard-header">
         <div class="header-titles">
-            <h1 class="title">Torre de Control Logística 4.0</h1>
-            <p class="subtitle">Plataforma de Visibilidad y Agentes IA</p>
+            <h1 class="title">{{ 'PORTTOS.PANEL_CONTROL.TORRE_DE_CONTROL_LOGISTICA_4' | translate }}</h1>
+            <p class="subtitle">{{ 'PORTTOS.PANEL_CONTROL.PLATAFORMA_DE_VISIBILIDAD_Y_AGENTES' | translate }}</p>
         </div>
 
         <div class="header-controls">
-            <label for="nodoOperativo">Nodo Operativo:</label>
+            <label for="nodoOperativo">{{ 'PORTTOS.PANEL_CONTROL.NODO_OPERATIVO' | translate }}</label>
             <select id="nodoOperativo" class="form-select">
                 <option value="buenaventura">Buenaventura (SPRBUN / TCBUEN)</option>
             </select>
@@ -53,37 +53,37 @@
     <nav class="dashboard-nav-tabs">
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'operacion_maritima'}"
             (click)="cambiarPestana('operacion_maritima')">
-            <span class="icon">🛳️</span> Operación Marítima
+            <span class="icon">🛳️</span> {{ 'PORTTOS.PANEL_CONTROL.OPERACION_MARITIMA' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'gate_bodegas'}"
             (click)="cambiarPestana('gate_bodegas')">
-            <span class="icon">🏗️</span> Gate & Bodegas
+            <span class="icon">🏗️</span> {{ 'PORTTOS.PANEL_CONTROL.GATE_BODEGAS' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'operacion_terrestre'}"
             (click)="cambiarPestana('operacion_terrestre')">
-            <span class="icon">🚛</span> Operación Terrestre
+            <span class="icon">🚛</span> {{ 'PORTTOS.PANEL_CONTROL.OPERACION_TERRESTRE' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'analitica_rndc'}"
             (click)="cambiarPestana('analitica_rndc')">
-            <span class="icon">📈</span> Analítica RNDC
+            <span class="icon">📈</span> {{ 'PORTTOS.PANEL_CONTROL.ANALITICA_RNDC' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'ingesta_ia'}"
             (click)="cambiarPestana('ingesta_ia')">
-            <span class="icon">🧠</span> Ingesta IA
+            <span class="icon">🧠</span> {{ 'PORTTOS.PANEL_CONTROL.INGESTA_IA' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'seguridad_oea'}"
             (click)="cambiarPestana('seguridad_oea')">
-            <span class="icon">🛡️</span> Seguridad OEA
+            <span class="icon">🛡️</span> {{ 'PORTTOS.PANEL_CONTROL.SEGURIDAD_OEA' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'reportes_gerenciales'}"
             (click)="cambiarPestana('reportes_gerenciales')">
-            <span class="icon">📊</span> Reportes Gerenciales
+            <span class="icon">📊</span> {{ 'PORTTOS.PANEL_CONTROL.REPORTES_GERENCIALES' | translate }}
         </button>
     </nav>
 
@@ -94,7 +94,7 @@
             <div class="terminal-card">
                 <div class="terminal-header">
                     <h3>SPRBUN <span class="sub">SOCIEDAD PORTUARIA REGIONAL</span></h3>
-                    <span class="badge operando">OPERATIVO</span>
+                    <span class="badge operando">{{ 'PORTTOS.PANEL_CONTROL.OPERATIVO' | translate }}</span>
                 </div>
                 <div class="docks-grid">
                     <div class="dock active">M-1</div>
@@ -109,15 +109,15 @@
                 <div class="terminal-mini-stats">
                     <div class="stat">
                         <h4>62%</h4>
-                        <p>OCUPACIÓN</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.OCUPACION' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>5</h4>
-                        <p>MOTONAVES</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.MOTONAVES' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>14.2k</h4>
-                        <p>TM HOY</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.TM_HOY' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
             <div class="terminal-card">
                 <div class="terminal-header">
                     <h3>TCBUEN <span class="sub">TERMINAL DE CONTENEDORES</span></h3>
-                    <span class="badge congestionado">CONGESTIONADO</span>
+                    <span class="badge congestionado">{{ 'PORTTOS.PANEL_CONTROL.CONGESTIONADO' | translate }}</span>
                 </div>
                 <div class="docks-grid">
                     <div class="dock active">N-1</div>
@@ -140,15 +140,15 @@
                 <div class="terminal-mini-stats">
                     <div class="stat">
                         <h4>87%</h4>
-                        <p>OCUPACIÓN</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.OCUPACION' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>7</h4>
-                        <p>MOTONAVES</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.MOTONAVES' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>22.1k</h4>
-                        <p>TEU HOY</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.TEU_HOY' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -156,7 +156,7 @@
             <div class="terminal-card">
                 <div class="terminal-header">
                     <h3>PUERTO AGUADULCE <span class="sub">BAHÍA - MULTIPROPÓSITO</span></h3>
-                    <span class="badge operando">OPERATIVO</span>
+                    <span class="badge operando">{{ 'PORTTOS.PANEL_CONTROL.OPERATIVO' | translate }}</span>
                 </div>
                 <div class="docks-grid">
                     <div class="dock">A-1</div>
@@ -171,15 +171,15 @@
                 <div class="terminal-mini-stats">
                     <div class="stat">
                         <h4>50%</h4>
-                        <p>OCUPACIÓN</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.OCUPACION' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>4</h4>
-                        <p>MOTONAVES</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.MOTONAVES' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>8.7k</h4>
-                        <p>TM HOY</p>
+                        <p>{{ 'PORTTOS.PANEL_CONTROL.TM_HOY' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -189,7 +189,7 @@
 
             <div class="table-container-large">
                 <h3 style="color: white; margin-top: 0; margin-bottom: 20px; font-size: 16px;">
-                    🚢 REPORTE DE MOTONAVES - 72H
+                    {{ 'PORTTOS.PANEL_CONTROL.REPORTE_DE_MOTONAVES_72H' | translate }}
                 </h3>
 
                 <!-- <app-vessel-table [motonaves]="motonavesMaestras"></app-vessel-table> -->
@@ -197,9 +197,9 @@
 
             <div class="chart-container-small">
                 <h3 style="color: white; margin-top: 0; margin-bottom: 20px; font-size: 16px;">
-                    ⏱️ ETA VS ATA
+                    {{ 'PORTTOS.PANEL_CONTROL.ETA_VS_ATA' | translate }}
                 </h3>
-                <p style="color: #8b95a5; font-size: 13px;">(Espacio reservado para gráfica de retrasos)</p>
+                <p style="color: #8b95a5; font-size: 13px;">{{ 'PORTTOS.PANEL_CONTROL.ESPACIO_RESERVADO_PARA_GRAFICA_DE' | translate }}</p>
             </div>
 
         </div>

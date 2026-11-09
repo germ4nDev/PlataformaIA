@@ -57,7 +57,7 @@
                 <ng-container *ngIf="formatosFiltrada$ | async as dataFiltrada">
                     <app-data-table [data]="dataFiltrada" [idField]="'codigoFormato'" [tableTitle]="'FORMATOSGALERIA.TITLE' | translate" [metadataColumns]="columnasFormatos" [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true" [showNewButton]="true"
                         [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'FORMATOSGALERIA.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoFormatoClick()"
-                        (editRecord)="OnEditarFormatoClick($event)" (deleteRecord)="OnEliminarFormatoClick($event)">
+                        (editRecord)="OnEditarFormatoClick($event)" (deleteRecord)="OnEliminarFormatoClick($event)" permisoNew="ACT_FORMATOSGAL_CREAR" permisoEdit="ACT_FORMATOSGAL_MODIFICAR" permisoDelete="ACT_FORMATOSGAL_ELIMINAR">
                     </app-data-table>
                 </ng-container>
             </div>

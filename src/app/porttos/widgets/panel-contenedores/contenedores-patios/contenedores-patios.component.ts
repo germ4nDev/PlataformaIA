@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -34,7 +35,7 @@ export interface IPatioSaturacion {
 @Component({
     selector: 'app-contenedores-patios',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './contenedores-patios.component.html',
     styleUrls: ['./contenedores-patios.component.scss'],
     encapsulation: ViewEncapsulation.None

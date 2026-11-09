@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
 
@@ -19,27 +20,27 @@ dtColumnSearchingOptions: object = {};
       ajax: 'fake-data/datatable-data.json',
       columns: [
         {
-          title: 'Name',
+          title: traducir('WEB.PERFIL_CONFIGURACION.NAME'),
           data: 'name'
         },
         {
-          title: 'Position',
+          title: traducir('WEB.COMUN.POSITION'),
           data: 'position'
         },
         {
-          title: 'Office',
+          title: traducir('WEB.COMUN.OFFICE'),
           data: 'office'
         },
         {
-          title: 'Age',
+          title: traducir('WEB.COMUN.AGE'),
           data: 'age'
         },
         {
-          title: 'Start Date',
+          title: traducir('WEB.COMUN.START_DATE'),
           data: 'date'
         },
         {
-          title: 'Salary',
+          title: traducir('WEB.COMUN.SALARY'),
           data: 'salary'
         }
       ],

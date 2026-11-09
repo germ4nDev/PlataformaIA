@@ -5,7 +5,6 @@ import { PTLFormatoGaleria } from 'src/app/theme/shared/_helpers/models/PTLForma
 import { PTLGaleria } from 'src/app/theme/shared/_helpers/models/PTLGaleria.model'
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
 import { PTLTiposGaleria } from 'src/app/theme/shared/_helpers/models/PTLTiposGaleria.model'
-import { BibliotecaComponent } from 'src/app/theme/shared/components/biblioteca/biblioteca.component'
 import {
   PtlBibliotecasService,
   PtlGaleriasService,
@@ -18,7 +17,7 @@ import { LanguageSelectorComponent } from "src/app/theme/shared/components/langu
 @Component({
   selector: 'app-help-modulos',
   standalone: true,
-  imports: [NavBarComponent, BibliotecaComponent, LanguageSelectorComponent],
+  imports: [NavBarComponent, LanguageSelectorComponent],
   templateUrl: './help-modulos.component.html',
   styleUrl: './help-modulos.component.scss'
 })

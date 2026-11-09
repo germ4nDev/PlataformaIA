@@ -17,28 +17,28 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">Filtros de Parámetros</h6>
+                    <h6 class="filtros-title">{{ 'WEB.PARAMETROS.FILTROS_DE_PARAMETROS' | translate }}</h6>
 
                     <div class="filtro">
-                        <small>Llave Lógica (ID)</small>
+                        <small>{{ 'WEB.PARAMETROS.LLAVE_LOGICA_ID' | translate }}</small>
                         <input type="text" (keyup)="onFiltroLlaveChangeClick($event)" class="form-control form-input"
-                            placeholder="Ej: MARGEN_UTILIDAD..." />
+                            [placeholder]="'WEB.PARAMETROS.EJ_MARGEN_UTILIDAD' | translate" />
                     </div>
 
                     <div class="filtro">
-                        <small>Nombre Visible</small>
+                        <small>{{ 'WEB.PARAMETROS.NOMBRE_VISIBLE' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="Ej: Margen Base..." />
+                            [placeholder]="'WEB.PARAMETROS.EJ_MARGEN_BASE' | translate" />
                     </div>
 
                     <div class="filtro">
-                        <small>Tipo de Dato</small>
+                        <small>{{ 'WEB.PARAMETROS.TIPO_DE_DATO' | translate }}</small>
                         <select (change)="onFiltroTipoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="DECIMAL">DECIMAL (Numérico)</option>
-                            <option value="INTEGER">INTEGER (Entero)</option>
-                            <option value="BOOLEAN">BOOLEAN (Lógico)</option>
-                            <option value="STRING">STRING (Texto)</option>
+                            <option value="DECIMAL">{{ 'WEB.PARAMETROS.DECIMAL_NUMERICO' | translate }}</option>
+                            <option value="INTEGER">{{ 'WEB.PARAMETROS.INTEGER_ENTERO' | translate }}</option>
+                            <option value="BOOLEAN">{{ 'WEB.PARAMETROS.BOOLEAN_LOGICO' | translate }}</option>
+                            <option value="STRING">{{ 'WEB.PARAMETROS.STRING_TEXTO' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
 
                 <ng-container *ngIf="parametrosFiltrados$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoParametro'"
-                        [tableTitle]="'Parámetros del Sistema'" [metadataColumns]="columnasRegistros"
+                        [tableTitle]="('WEB.PARAMETROS.PARAMETROS_DEL_SISTEMA' | translate)" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
                         [showDeleteButton]="false" [showSearchBox]="false"

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // Angular Import
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { GradientConfig } from 'src/app/app-config';
@@ -10,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-configuration',
 standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './configuration.component.html',
   styleUrls: ['./configuration.component.scss'],
   encapsulation: ViewEncapsulation.None

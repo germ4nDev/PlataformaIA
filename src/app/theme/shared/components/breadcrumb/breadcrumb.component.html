@@ -6,10 +6,10 @@
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item m-b-10">
                             @if (type === 'theme2') {
-                                <a [routerLink]="['/dashboard/analytics/']" title="Home"><i class="feather icon-home"></i></a>
+                                <a [routerLink]="['/dashboard/analytics/']" [title]="'WEB.BREADCRUMB.HOME' | translate"><i class="feather icon-home"></i></a>
                             }
                             @if (type === 'theme1') {
-                                <a [routerLink]="['/dashboard/analytics/']">Home</a>
+                                <a [routerLink]="['/dashboard/analytics/']">{{ 'WEB.BREADCRUMB.HOME' | translate }}</a>
                             }
                         </li>
                         @for (breadcrumb of navigationList; track breadcrumb) {

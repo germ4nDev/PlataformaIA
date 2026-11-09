@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
@@ -231,10 +232,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     resetearLayout() {
         // 🟢 Usamos el método reactivo pasándole la descripción, el título y los textos de los botones
         this._swalAlertService.getAlertQuestionRequest(
-            '¿Estás seguro de que deseas restablecer el tablero a su estado original? Perderás tu organización actual.',
-            '¿Restablecer tablero?',
-            'Sí, restablecer',
-            'Cancelar'
+            traducir('WEB.HOME.ESTAS_SEGURO_DE_QUE_DESEAS'),
+            traducir('WEB.HOME.RESTABLECER_TABLERO'),
+            traducir('WEB.HOME.SI_RESTABLECER'),
+            traducir('WEB.MAPA_SELECTOR.CANCELAR')
         ).subscribe((confirmado: boolean) => {
 
             // Si el usuario hace clic en "Cancelar" o presiona Escape, 'confirmado' será false

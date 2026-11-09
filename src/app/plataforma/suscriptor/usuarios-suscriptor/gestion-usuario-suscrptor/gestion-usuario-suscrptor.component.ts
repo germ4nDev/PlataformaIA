@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 
 // /* eslint-disable @angular-eslint/use-lifecycle-interface */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -649,7 +650,7 @@ export class GestionUsuarioSuscrptorComponent {
                     this.vincularDatosEdicion();
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener el usuarioSC');
+                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_USUARIO_SUSCRPTOR.NO_SE_PUDO_OBTENER_EL'));
                 }
             });
         } else {

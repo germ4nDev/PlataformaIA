@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -11,7 +12,7 @@ import { WidgetShellComponent } from '../widget-shell/widget-shell.component';
 @Component({
     selector: 'app-wdg-base', // Cambiar por tu selector real (ej. app-wdg-ventas)
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './wdg-base.component.html',
     styleUrl: './wdg-base.component.scss' // 💡 TIP: Borra esta línea si no vas a usar SCSS personalizado
 })

@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
@@ -80,7 +81,7 @@ export class GestionVersionComponent implements OnInit {
                     console.log('formRegisto', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la suite por, ', 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_VERSION.NO_SE_PUDO_OBTENER_LA'), 'error');
                 }
             });
         } else {
@@ -171,7 +172,7 @@ export class GestionVersionComponent implements OnInit {
         this.isSubmit = true;
         const descripcionValida = this.FormRegistro.descripcionVersion && this.FormRegistro.descripcionVersion.trim() !== '';
         if (!descripcionValida) {
-            Swal.fire('Atención', this.translate.instant('VERSIONES.GESTION.REQUERIDODESCRIPCION'), 'warning');
+            Swal.fire(traducir('WEB.GESTION_VERSION.ATENCION'), this.translate.instant('VERSIONES.GESTION.REQUERIDODESCRIPCION'), 'warning');
             return;
         }
         if (!form.valid) {
@@ -203,12 +204,12 @@ export class GestionVersionComponent implements OnInit {
                         Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
                         this.router.navigate(['/aplicaciones/versiones']);
                     } else {
-                        Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
                     }
                 },
                 error: (err: any) => {
                     console.error(err);
-                    Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
                 }
             });
         } else {
@@ -229,7 +230,7 @@ export class GestionVersionComponent implements OnInit {
                 },
                 error: (err: any) => {
                     console.error(err);
-                    Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
                 }
             });
         }

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -35,7 +36,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-mezcla-carga',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent, KpiFormatPipe],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent, KpiFormatPipe],
     templateUrl: './mezcla-carga.component.html',
     styleUrls: ['./mezcla-carga.component.scss']
 })

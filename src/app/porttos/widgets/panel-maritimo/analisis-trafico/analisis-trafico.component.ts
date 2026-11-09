@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -35,7 +36,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-analisis-trafico',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './analisis-trafico.component.html',
     styleUrls: ['./analisis-trafico.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -183,7 +184,7 @@ export class AnalisisTraficoComponent implements OnInit, AfterViewInit, OnChange
         this.datosAutonomosSQL = {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'ANÁLISIS DE TRÁFICO PORTUARIO · SUPERTRANSPORTE',
-            subtitulo: raw.subtitulo || 'Evolución mensual (24 meses) por tipo de carga y KPIs macro',
+            subtitulo: raw.subtitulo || 'PORTTOS.ANALISIS_TRAFICO.EVOLUCION_MENSUAL_24_MESES_POR',
             icono: raw.icono || 'feather icon-trending-up',
             kpisTop,
             chartEvolucion

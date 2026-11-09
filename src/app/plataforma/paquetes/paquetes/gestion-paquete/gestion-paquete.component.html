@@ -24,10 +24,10 @@
                         <h4 class="titulo-formulario">
                             <span *ngIf="!modoEdicion">{{ 'PAQUETES.GESTION.NEW' | translate }}</span>
                             <span *ngIf="modoEdicion">{{ 'PAQUETES.UPDATE' | translate }}</span>
-                            <span class="titulo-container"> - Paquete Comercial</span>
+                            <span class="titulo-container"> {{ 'WEB.GESTION_PAQUETE.PAQUETE_COMERCIAL' | translate }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            Configure la información general, descripción y recursos visuales del paquete.
+                            {{ 'WEB.GESTION_PAQUETE.CONFIGURE_LA_INFORMACION_GENERAL_DESCRIP' | translate }}
                         </h6>
                     </div>
 
@@ -44,7 +44,7 @@
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">{{ 'PAQUETES.GESTION.CREATE' | translate }} <i
                                     class="feather icon-plus ms-2"></i></span>
-                            <span *ngIf="isSaving">Guardando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.COMUN.GUARDANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
 
@@ -53,7 +53,7 @@
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">{{ 'PAQUETES.UPDATE' | translate }} <i
                                     class="feather icon-edit ms-2"></i></span>
-                            <span *ngIf="isSaving">Actualizando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.COMUN.ACTUALIZANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
                     </div>
@@ -74,7 +74,7 @@
                                 <input type="text" class="form-control form-input bg-light" id="codigoPaquete"
                                     formControlName="codigoPaquete" readonly
                                     placeholder="{{ 'PAQUETES.GESTION.PLACEHOLDERCODE' | translate }}" />
-                                <small class="text-muted">Generado automáticamente.</small>
+                                <small class="text-muted">{{ 'WEB.GESTION_PAQUETE.GENERADO_AUTOMATICAMENTE' | translate }}</small>
                             </div>
                         </div>
 
@@ -87,7 +87,7 @@
                                     formControlName="nombrePaquete"
                                     [ngClass]="{ 'is-invalid': f['nombrePaquete'].invalid && (f['nombrePaquete'].dirty || f['nombrePaquete'].touched || isSubmit) }"
                                     placeholder="{{ 'PAQUETES.GESTION.PLACEHOLDERNAME' | translate }}" />
-                                <small class="text-muted">Nombre comercial del paquete.</small>
+                                <small class="text-muted">{{ 'WEB.GESTION_PAQUETE.NOMBRE_COMERCIAL_DEL_PAQUETE' | translate }}</small>
 
                                 <label
                                     *ngIf="f['nombrePaquete'].invalid && (f['nombrePaquete'].dirty || f['nombrePaquete'].touched || isSubmit)"
@@ -110,8 +110,7 @@
 
                                 <!-- 🟢 Input oculto que recibe el valor y mantiene la validación -->
                                 <input type="hidden" formControlName="descripcionPaquete">
-                                <small class="text-muted mt-1 d-block">Puede usar negritas o listas para estructurar
-                                    mejor la instrucción del parámetro.</small>
+                                <small class="text-muted mt-1 d-block">{{ 'WEB.GESTION_PAQUETE.PUEDE_USAR_NEGRITAS_O_LISTAS' | translate }}</small>
                                 <label
                                     *ngIf="f['descripcionPaquete'].invalid && (f['descripcionPaquete'].dirty || f['descripcionPaquete'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback d-block mt-1">
@@ -133,8 +132,7 @@
 
                                 <!-- 🟢 Input oculto que recibe el valor y mantiene la validación -->
                                 <input type="hidden" formControlName="acuerdoLicencia">
-                                <small class="text-muted mt-1 d-block">Puede usar negritas o listas para estructurar
-                                    mejor la instrucción del parámetro.</small>
+                                <small class="text-muted mt-1 d-block">{{ 'WEB.GESTION_PAQUETE.PUEDE_USAR_NEGRITAS_O_LISTAS' | translate }}</small>
                                 <label
                                     *ngIf="f['acuerdoLicencia'].invalid && (f['acuerdoLicencia'].dirty || f['acuerdoLicencia'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback d-block mt-1">

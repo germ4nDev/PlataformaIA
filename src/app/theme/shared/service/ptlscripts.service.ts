@@ -45,7 +45,8 @@ export class PTLScriptsService {
   }
 
   putModificarRegistro(script: PTLScriptsModel) {
-    const url = `${base_url}/scripts`;
+    // OT-021: el API espera el código en la ruta (PUT /api/scripts/:id)
+    const url = `${base_url}/scripts/${script.codigoScript}`;
     return this.http.put(url, script).pipe(
       map((resp: any) => {
         console.log('data de script modificada', resp);

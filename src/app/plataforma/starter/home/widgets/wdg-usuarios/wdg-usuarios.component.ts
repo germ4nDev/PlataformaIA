@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -9,7 +10,7 @@ import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboa
 @Component({
     selector: 'app-wdg-usuarios',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './wdg-usuarios.component.html',
     styleUrls: ['./wdg-usuarios.component.scss'] // 🟢 Asegurado el enlace a los estilos
 })

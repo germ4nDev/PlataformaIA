@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -32,7 +33,7 @@ export function tonoEstado(estado: string | null | undefined): 'info' | 'exito' 
 @Component({
     selector: 'app-tabla-tcl',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './tabla-tcl.component.html',
     styleUrls: ['./tabla-tcl.component.scss']

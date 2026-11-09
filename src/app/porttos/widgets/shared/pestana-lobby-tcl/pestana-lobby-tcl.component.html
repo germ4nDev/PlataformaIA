@@ -2,19 +2,19 @@
 <div class="lobby-contenedor-maestro">
     <div class="lobby-header">
         <div>
-            <h6 class="tipulo-panel fw-bold fs-5 text-uppercase">Gestor de Pestañas</h6>
+            <h6 class="tipulo-panel fw-bold fs-5 text-uppercase">{{ 'PORTTOS.PESTANA_LOBBY_TCL.GESTOR_DE_PESTANAS' | translate }}</h6>
         </div>
 
         <!-- 🟢 CONTENEDOR PARA AGRUPAR LOS DOS BOTONES A LA DERECHA -->
         <div class="d-flex align-items-center gap-2">
             <!-- Todas las pestañas (mismo control que "Todos" del lobby de widgets) -->
             <label class="seleccionar-todas" *ngIf="pestanasProcesadas.length"
-                [title]="todasActivas ? 'Quitar todas las pestañas' : 'Mostrar todas las pestañas'">
+                [title]="todasActivas ? ('PORTTOS.PESTANA_LOBBY_TCL.QUITAR_TODAS_LAS_PESTANAS' | translate) : ('PORTTOS.PESTANA_LOBBY_TCL.MOSTRAR_TODAS_LAS_PESTANAS' | translate)">
                 <input class="minimal-checkbox" type="checkbox" [checked]="todasActivas"
                     [indeterminate]="algunasActivas" (change)="seleccionarTodas($any($event.target).checked)">
-                <span>Todas <small>({{ pestanasActivasCount }}/{{ pestanasProcesadas.length }})</small></span>
+                <span>{{ 'PORTTOS.COMUN.TODAS' | translate }} <small>({{ pestanasActivasCount }}/{{ pestanasProcesadas.length }})</small></span>
             </label>
-            <button type="button" class="btn-cerrar" (click)="cerrar.emit()" [title]="'Cerrar Ventana'">
+            <button type="button" class="btn-cerrar" (click)="cerrar.emit()" [title]="('PORTTOS.PESTANA_LOBBY_TCL.CERRAR_VENTANA' | translate)">
                 <i class="feather icon-x"></i>
             </button>
         </div>
@@ -29,7 +29,7 @@
 
                 <div class="d-flex align-items-center gap-3 w-100">
                     <div cdkDragHandle (click)="$event.stopPropagation()" class="drag-handle text-muted"
-                        title="Arrastrar para reordenar">
+                        [title]="'PORTTOS.PESTANA_LOBBY_TCL.ARRASTRAR_PARA_REORDENAR' | translate">
                         <i class="feather icon-menu"></i>
                     </div>
 

@@ -163,7 +163,7 @@ export class EmpresasComponent implements OnInit {
 
                     const accionesPermitidas: any[] = [];
 
-                    const puedeModificar = permisos.includes('ACT_SUSCPAQ_MODIFICAR');
+                    const puedeModificar = permisos.includes('ACT_SUSCEMP_MODIFICAR');
                     if (puedeModificar) {
                         accionesPermitidas.push({
                             accion: 'MODIFICAR',
@@ -177,7 +177,7 @@ export class EmpresasComponent implements OnInit {
                     const colorEmpresa = newEmpresa.estadoEmpresa ? '#dc3545' : '#13af2d';
                     const tooltipEmpresa = newEmpresa.estadoEmpresa ? this.translate.instant('SUSCRIPTOR.EMPRESAS.INACTIVAR') : this.translate.instant('SUSCRIPTOR.EMPRESAS.ACTIVAR');
 
-                    const puedeEliminar = permisos.includes('ACT_SUSCPAQ_ELIMINAR');
+                    const puedeEliminar = permisos.includes('ACT_SUSCEMP_ELIMINAR');
                     if (puedeEliminar) {
                         accionesPermitidas.push({
                             accion: 'ELIMINAR',

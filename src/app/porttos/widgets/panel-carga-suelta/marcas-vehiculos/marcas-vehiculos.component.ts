@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +19,7 @@ import { GraficaTclComponent, SerieGrafica } from '../../shared/grafica-tcl/graf
 @Component({
     selector: 'app-marcas-vehiculos',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
     templateUrl: './marcas-vehiculos.component.html',
     styleUrls: ['./marcas-vehiculos.component.scss']
 })
@@ -38,7 +40,7 @@ export class MarcasVehiculosComponent extends WidgetTableroBase<TableroCargaSuel
 
     protected alRecibir(d: TableroCargaSuelta | null): void {
         this.labels = d?.marcas.labels || [];
-        this.series = [{ label: 'Unidades', data: d?.marcas.valores || [], color: '#2f96b4' }];
+        this.series = [{ label: traducir('PORTTOS.MARCAS_VEHICULOS.UNIDADES'), data: d?.marcas.valores || [], color: '#2f96b4' }];
     }
 
     protected override alCambiarTamano(): void {

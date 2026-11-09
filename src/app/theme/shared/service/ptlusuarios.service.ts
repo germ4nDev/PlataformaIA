@@ -98,7 +98,8 @@ export class PTLUsuariosService {
 
     verificarClaveActual(codigo: string, clave: string) {
         const validacion = { codigoAdministrador: codigo, claveActual: clave }
-        return this.http.post(`${environment.apiUrl}/usuarios/validar`, { validacion }).pipe(
+        // OT-021: la ruta es /usuarios/validate-password y el API lee codigoAdministrador y claveActual del cuerpo (sin envoltorio)
+        return this.http.post(`${environment.apiUrl}/usuarios/validate-password`, validacion).pipe(
             tap(susc => {
                 if (!susc) {
                     throw new Error('Usuairo no válido')
@@ -221,22 +222,24 @@ export class PTLUsuariosService {
 
     actualizarUsuarioDatos(usuario: PTLUsuarioModel) {
         const codigoUser = usuario.codigoUsuario || ''
-        this.getUsuarioById(codigoUser).subscribe((usu: any) => {
-            let imagenUsuario = ''
-            if (usu.usuario.fotoUsuario !== '') {
-                imagenUsuario = usu.usuario.fotoUsuario
-                if (imagenUsuario !== usuario.fotoUsuario) {
-                    const objUpload = {
-                        susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '',
-                        tipo: 'usuarios',
-                        file: imagenUsuario
-                    }
-                    this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'))
-                }
-            }
-        })
+        // this.getUsuarioById(codigoUser).subscribe((usu: any) => {
+        //     let imagenUsuario = ''
+        //     if (usu.usuario.fotoUsuario !== '') {
+        //         imagenUsuario = usu.usuario.fotoUsuario
+        //         if (imagenUsuario !== usuario.fotoUsuario) {
+        //             const objUpload = {
+        //                 susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '',
+        //                 tipo: 'usuarios',
+        //                 file: imagenUsuario
+        //             }
+        //             this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'))
+        //         }
+        //     }
+        // })
         // const url = `${base_url}/usuarios`;
-        const url = `${base_url}/usuarios/datos/${usuario.codigoUsuario}`
+        console.log('modificar usuario servicio', usuario);
+
+        const url = `${base_url}/usuarios/${codigoUser}`
         return this.http.put(url, usuario).pipe(
             map((resp: any) => {
                 console.log('data de usuario modificacda', resp)

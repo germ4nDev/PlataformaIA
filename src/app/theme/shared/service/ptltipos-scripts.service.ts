@@ -45,7 +45,8 @@ export class PTLTiposScriptsService {
   }
 
   putModificarRegistro(tipoScript: PTLTiposScriptsModel) {
-    const url = `${base_url}/tipos-scripts`;
+    // OT-021: el API espera el código en la ruta (PUT /api/tipos-scripts/:id)
+    const url = `${base_url}/tipos-scripts/${tipoScript.codigoTipoScript}`;
     return this.http.put(url, tipoScript).pipe(
       map((resp: any) => {
         console.log('data de tipo de script modificada', resp);

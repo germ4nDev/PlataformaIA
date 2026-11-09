@@ -122,7 +122,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'CONEXIONES.GESTION.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoConexion"
-                                    placeholder="Código de la Conexión"
+                                    [placeholder]="'WEB.GESTION_CONEXION.CODIGO_DE_LA_CONEXION' | translate"
                                     [ngClass]="{ 'is-invalid': !codigoConexion.valid && (codigoConexion.dirty || codigoConexion.touched || isSubmit) }"
                                     #codigoConexion="ngModel" required [(ngModel)]="FormRegistro.codigoConexion"
                                     readonly />

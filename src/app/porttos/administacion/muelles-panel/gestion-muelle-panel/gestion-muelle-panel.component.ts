@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -102,7 +103,7 @@ export class GestionMuellePanelComponent implements OnInit {
                     console.log('data registro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el Muelle', 'error')
+                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_MUELLE_PANEL.NO_SE_PUDO_OBTENER_EL'), 'error')
                 }
             })
         }
@@ -259,7 +260,7 @@ export class GestionMuellePanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('MUELLES.CREATESUCCSESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo actualizar el muelle')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_MUELLE_PANEL.NO_SE_PUDO_ACTUALIZAR_EL'))
                 }
             })
         } else {
@@ -281,7 +282,7 @@ export class GestionMuellePanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('MUELLES.ELIMINAREXITOSA')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo crear el Muelle')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_MUELLE_PANEL.NO_SE_PUDO_CREAR_EL'))
                 }
             })
         }

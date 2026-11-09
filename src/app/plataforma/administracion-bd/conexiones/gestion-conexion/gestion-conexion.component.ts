@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { CommonModule } from '@angular/common'
@@ -86,7 +87,7 @@ export class GestionConexionComponent {
                     console.log('datos del FormRegistro', this.FormRegistro)
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el rol', 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_CONEXION.NO_SE_PUDO_OBTENER_EL'), 'error')
                 }
             })
         } else {
@@ -218,7 +219,7 @@ export class GestionConexionComponent {
                             descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error')
+                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error')
                     }
                 },
                 error: (err: any) => {
@@ -229,7 +230,7 @@ export class GestionConexionComponent {
                         descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error')
                 }
             })
         } else {
@@ -263,7 +264,7 @@ export class GestionConexionComponent {
                         descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error')
                 }
             })
         }

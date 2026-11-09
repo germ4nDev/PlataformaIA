@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, OnDestroy, OnInit } from '@angular/core'
@@ -32,7 +33,7 @@ import { contextoDeUsuario, rolesYWidgetsDeAplicacion } from 'src/app/plataforma
 @Component({
     selector: 'app-inicio-aplicaciones',
     standalone: true,
-    imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
+    imports: [TranslateModule, NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
     templateUrl: './inicio-aplicaciones.component.html',
     styleUrl: './inicio-aplicaciones.component.scss'
 })

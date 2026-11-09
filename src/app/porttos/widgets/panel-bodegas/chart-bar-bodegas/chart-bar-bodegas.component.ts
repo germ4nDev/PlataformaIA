@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -29,7 +31,7 @@ import { PorttosChartHelper } from 'src/app/theme/shared/_helpers/chart.helper';
 @Component({
     selector: 'app-chart-bar-bodegas',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent],
     templateUrl: './chart-bar-bodegas.component.html',
     styleUrls: ['./chart-bar-bodegas.component.scss']
 })
@@ -189,12 +191,12 @@ export class ChartBarBodegasComponent implements OnInit, AfterViewInit, OnChange
                 isEnfoque: this.isEnfoque,
                 datasets: [
                     {
-                        label: 'Ingreso (Descargue Buque)',
+                        label: traducir('PORTTOS.CHART_BAR_BODEGAS.INGRESO_DESCARGUE_BUQUE'),
                         data: this.serieEntradas,
                         color: '#00d4ff'
                     },
                     {
-                        label: 'Salida (Despacho Camión)',
+                        label: traducir('PORTTOS.CHART_BAR_BODEGAS.SALIDA_DESPACHO_CAMION'),
                         data: this.serieSalidas,
                         color: '#10b981'
                     }

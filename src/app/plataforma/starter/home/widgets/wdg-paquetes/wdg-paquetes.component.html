@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'Paquetes por Suscriptor'"
-    [subtitulo]="widgetConfig?.subtitulo || 'Plataforma'" [icono]="widgetConfig?.icono || 'feather icon-package'"
+<app-widget-shell [titulo]="widgetConfig?.titulo || ('WEB.WDG_PAQUETES.PAQUETES_POR_SUSCRIPTOR' | translate)"
+    [subtitulo]="widgetConfig?.subtitulo || ('WEB.WDG_PAQUETES.PLATAFORMA' | translate)" [icono]="widgetConfig?.icono || 'feather icon-package'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- 🟢 1. PROYECCIÓN AL HEADER: Botón de Refresh -->
     <div acciones-extra class="d-flex align-items-center gap-2">
         <!-- Reutilizamos tu lógica, pero con el diseño de botón del header -->
-        <button class="tc-action-btn" (click)="cargarMetricasReales()" title="Recargar datos">
+        <button class="tc-action-btn" (click)="cargarMetricasReales()" [title]="'WEB.WDG_PAQUETES.RECARGAR_DATOS' | translate">
             <i class="feather icon-refresh-cw"></i>
         </button>
     </div>
@@ -15,7 +15,7 @@
         <div class="flex-grow-1 overflow-auto pe-2 w-100 h-100 mt-2 custom-scrollbar">
 
             <div *ngIf="paquetesUnificados.length === 0" class="text-center text-muted py-4 small">
-                No hay paquetes registrados.
+                {{ 'WEB.WDG_PAQUETES.NO_HAY_PAQUETES_REGISTRADOS' | translate }}
             </div>
 
             <div *ngFor="let item of paquetesUnificados" class="mb-4">
@@ -51,7 +51,7 @@
     </ng-container>
 
     <div *ngIf="isEnfoque" class="w-100 h-100 p-2 d-flex flex-column animate__animated animate__fadeIn">
-        <p class="text-muted small mb-3">Distribución proporcional de paquetes activos e inactivos por cliente.</p>
+        <p class="text-muted small mb-3">{{ 'WEB.WDG_PAQUETES.DISTRIBUCION_PROPORCIONAL_DE_PAQUETES_AC' | translate }}</p>
         <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
     </div>
 

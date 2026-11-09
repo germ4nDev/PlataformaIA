@@ -6,7 +6,8 @@ import {
     EventEmitter,
     OnInit,
     OnDestroy,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    HostBinding
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +25,7 @@ import { GnlStateService } from 'src/app/theme/shared/service/tablero-control/gn
 import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service';
 import { EmbebidoService } from 'src/app/theme/shared/service/embebido.service';
 import { Puerto } from 'src/app/theme/shared/_helpers/models/tablero-control/puerto.model';
+import { colorPestana, iconoPestana } from '../iconos-pestana';
 
 @Component({
     selector: 'app-tc-header',
@@ -46,9 +48,20 @@ export class TcHeaderComponent implements OnInit, OnDestroy {
     @Input() tableroBloqueado: boolean = true;
     @Input() pestanaActiva: string = '';
 
+    /** Teléfono (CC-123): pestañas visibles para el menú lateral (las de la Torre de Control). */
+    @Input() pestanas: any[] = [];
+
     @Output() toggleBloqueo = new EventEmitter<void>();
     @Output() abrirCatalogo = new EventEmitter<void>();
     @Output() nodoCambiado = new EventEmitter<string>();
+    /** Teléfono (CC-123): acciones del menú lateral (lo que en la web hace la barra de pestañas y el engranaje). */
+    @Output() pestanaElegida = new EventEmitter<string>();
+    /** Teléfono (CC-125): abre el catálogo de pestañas del teléfono (elección guardada en el dispositivo). */
+    @Output() abrirPestanas = new EventEmitter<void>();
+    @Output() restaurar = new EventEmitter<void>();
+
+    /** Teléfono (CC-123): menú lateral abierto. */
+    public menuAbierto: boolean = false;
 
     // Estado del Filtro de Brazo (Exclusivo para pestaña GNL)
     public brazoSeleccionado: string = 'TODOS';
@@ -64,6 +77,8 @@ export class TcHeaderComponent implements OnInit, OnDestroy {
     logoEmpresa: string = 'assets/images/logo.png';
     /** Dentro de la app Porttos (OT-014): sin botón de menú principal. */
     readonly embebido: boolean;
+    /** Teléfono con la web embebida (OT-017): barra con ☰, logo y puerto, y menú lateral (CC-123). La tableta no cambia. */
+    @HostBinding('class.tc-header-telefono') readonly telefono: boolean;
     suscriptor: string = '';
 
     public horaActual: string = '';
@@ -84,6 +99,7 @@ export class TcHeaderComponent implements OnInit, OnDestroy {
         _embebido: EmbebidoService
     ) {
         this.embebido = _embebido.activo;
+        this.telefono = _embebido.esTelefono;
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         const navSettings: any = this._localStorageService.getObject('navsettings')
         const aplicacion = navSettings.aplicacion;
@@ -209,6 +225,37 @@ export class TcHeaderComponent implements OnInit, OnDestroy {
         this._dashboardService.cargarMapaPortuario().subscribe((mapa: any) => {
             this.mapaPortuario = mapa.data;
         });
+    }
+
+    // ---------- Teléfono (CC-123): menú lateral ----------
+    abrirMenu(): void {
+        this.menuAbierto = true;
+        this.cdr.detectChanges();
+    }
+
+    cerrarMenu(): void {
+        this.menuAbierto = false;
+        this.cdr.detectChanges();
+    }
+
+    elegirPestana(codigoPestana: string): void {
+        this.cerrarMenu();
+        this.pestanaElegida.emit(codigoPestana);
+    }
+
+    /** Cierra el menú y avisa a la Torre de Control (catálogo, pestañas, bloqueo o restaurar). */
+    accion(salida: EventEmitter<void>): void {
+        this.cerrarMenu();
+        salida.emit();
+    }
+
+    /** Ícono y color de la pestaña: la misma pieza común que usa la barra de pestañas de la web. */
+    icono(pestana: any): string {
+        return iconoPestana(pestana?.codigoPestana, pestana);
+    }
+
+    color(pestana: any): string | null {
+        return colorPestana(pestana);
     }
 
     dispararCatalogo(): void {

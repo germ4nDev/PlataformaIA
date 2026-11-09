@@ -65,7 +65,7 @@
                         [showDeleteButton]="true" [showSearchBox]="false"
                         [newButtonLabel]="'TERMINALES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         (newRecord)="OnNuevaAplicaicionClick()" (editRecord)="OnEditarAplicaicionClick($event)"
-                        (deleteRecord)="OnEliminarAplicaicionClick($event)">
+                        (deleteRecord)="OnEliminarAplicaicionClick($event)" permisoNew="ACT_TERMINALES_CREAR" permisoEdit="ACT_TERMINALES_MODIFICAR" permisoDelete="ACT_TERMINALES_ELIMINAR">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>

@@ -1,30 +1,29 @@
-<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [lienzo]="true" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+<app-widget-shell [titulo]="(titulo | translate)" [origen]="origenTablero" [lienzo]="true" [subtitulo]="(subtitulo | translate)" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
-    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="filas.length">{{ operando
-            }} operando</span></div>
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="filas.length">{{ 'PORTTOS.MOTONAVES_GRANEL.OPERANDO' | translate: { p0: operando } }}</span></div>
     <div class="cuerpo">
         <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!filas.length"
             [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
         <div class="contenido" *ngIf="!cargando && !error && !(!filas.length)">
-            <app-tabla-tcl [columnas]="columnas" [filas]="filas" [ampliada]="isEnfoque" [columnasAmpliadas]="columnasAmpliadas" [nombreArchivo]="titulo"
+            <app-tabla-tcl [columnas]="columnas" [filas]="filas" [ampliada]="isEnfoque" [columnasAmpliadas]="columnasAmpliadas" [nombreArchivo]="(titulo | translate)"
                 [seleccionable]="isEnfoque" [idSeleccionado]="seleccion?.id ?? null" (filaClick)="seleccionar($event)"></app-tabla-tcl>
         </div>
     </div>
     <!-- Vista ampliada: avance hora a hora de la motonave elegida -->
     <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
         <div class="detalle-cabecera">
-            <h6 class="detalle-titulo">Avance {{ seleccion ? '· ' + seleccion.motonave : '' }}</h6>
+            <h6 class="detalle-titulo">{{ 'PORTTOS.MOTONAVES_GRANEL.AVANCE' | translate: { p0: seleccion ? '· ' + seleccion.motonave : '' } }}</h6>
             <app-rango-tcl [valor]="horas" [deshabilitado]="!seleccion" (cambio)="cambiarHoras($event)"></app-rango-tcl>
         </div>
-        <p *ngIf="!seleccion" class="detalle-ayuda">Pulsa una motonave de la tabla para ver su avance hora a hora frente al ritmo que necesita para terminar a tiempo.</p>
+        <p *ngIf="!seleccion" class="detalle-ayuda">{{ 'PORTTOS.MOTONAVES_GRANEL.PULSA_UNA_MOTONAVE_DE_LA' | translate }}</p>
         <p *ngIf="errorAvance" class="detalle-ayuda text-warning">{{ errorAvance }}</p>
         <ng-container *ngIf="seleccion && avance?.operacion as o">
             <div class="detalle-resumen">
-                <span>Operadas <strong>{{ o.operadas | number: '1.0-0' }}</strong> de {{ o.total | number: '1.0-0' }} t</span>
-                <span>Pendiente <strong>{{ o.pendiente | number: '1.0-0' }}</strong> t</span>
-                <span *ngIf="avance?.ritmoNecesarioTmh != null">Ritmo necesario <strong>{{ avance?.ritmoNecesarioTmh | number: '1.0-0' }}</strong> t/h</span>
-                <span *ngIf="o.finEstimado">Fin estimado {{ o.finEstimado | date: 'dd/MM HH:mm' : '-0500' }}</span>
-                <span *ngIf="o.simulado" class="text-warning">Simulado</span>
+                <span>{{ 'PORTTOS.MOTONAVES_GRANEL.OPERADAS' | translate }} <strong>{{ o.operadas | number: '1.0-0' }}</strong> {{ 'PORTTOS.MOTONAVES_GRANEL.DE_T' | translate: { p0: (o.total | number: '1.0-0') } }}</span>
+                <span>{{ 'PORTTOS.MOTONAVES_GRANEL.PENDIENTE' | translate }} <strong>{{ o.pendiente | number: '1.0-0' }}</strong> t</span>
+                <span *ngIf="avance?.ritmoNecesarioTmh != null">{{ 'PORTTOS.MOTONAVES_GRANEL.RITMO_NECESARIO' | translate }} <strong>{{ avance?.ritmoNecesarioTmh | number: '1.0-0' }}</strong> t/h</span>
+                <span *ngIf="o.finEstimado">{{ 'PORTTOS.MOTONAVES_GRANEL.FIN_ESTIMADO' | translate: { p0: (o.finEstimado | date: 'dd/MM HH:mm' : '-0500') } }}</span>
+                <span *ngIf="o.simulado" class="text-warning">{{ 'PORTTOS.MOTONAVES_GRANEL.SIMULADO' | translate }}</span>
             </div>
             <div class="detalle-grafica">
                 <app-grafica-tcl tipo="linea" [labels]="avance?.labels || []" [series]="seriesAvance" unidad="t" [isEnfoque]="true"></app-grafica-tcl>

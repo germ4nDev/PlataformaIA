@@ -54,7 +54,7 @@
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="false" [showSearchBox]="false"
                         [showBackButton]="true" (newRecord)="OnNuevoRegistroClick()"
-                        (backRecord)="OnRegresarClick($event)" (accionPrincipalClick)="onAccionPrincipal($event)">>
+                        (backRecord)="OnRegresarClick($event)" (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_ROLES_PERMISOS">>
                     </app-table-data>
                 </ng-container>
 

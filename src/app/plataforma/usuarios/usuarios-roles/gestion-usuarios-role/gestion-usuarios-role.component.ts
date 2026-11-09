@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
@@ -31,6 +32,7 @@ import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSusc
 import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model';
+import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.model';
 //#endregion IMPORTS
 
 @Component({
@@ -43,11 +45,13 @@ import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/P
 export class GestionUsuariosRoleComponent implements OnInit {
     @Output() toggleSidebar = new EventEmitter<void>();
     menuItems!: Observable<NavigationItem[]>;
+    navSettings: NavSettings = new NavSettings()
 
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
     lockMessage: string = '';
     tituloPagina: string = '';
+    codSuscriptor: string = '';
 
     // Variables de pivote y datos base
     codigoRoleBase: string = '';
@@ -86,6 +90,7 @@ export class GestionUsuariosRoleComponent implements OnInit {
     ) {
         this.isSubmit = false;
         this.codigoRoleBase = this._localStorageService.getObject<string>('regId') || '';
+        this.navSettings = this._localStorageService.getNavSettingsLocalStorage()
     }
 
     ngOnInit() {
@@ -189,14 +194,14 @@ export class GestionUsuariosRoleComponent implements OnInit {
         this.isSubmit = true;
 
         if (!this.codigoRoleBase) {
-            this._swalAlertService.getAlertConfirmWarning('No hay un rol base seleccionado.');
+            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIOS_ROLE.NO_HAY_UN_ROL_BASE'));
             return;
         }
 
         const usuariosSeleccionados = this.usuariosMostrados.filter(u => u.checked);
 
         if (usuariosSeleccionados.length === 0 && this.usuariosMostrados.length === 0) {
-            this._swalAlertService.getAlertConfirmWarning('Debe buscar y seleccionar al menos un usuario.');
+            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIOS_ROLE.DEBE_BUSCAR_Y_SELECCIONAR_AL'));
             return;
         }
 
@@ -204,6 +209,7 @@ export class GestionUsuariosRoleComponent implements OnInit {
 
         // 1. Contexto visual: todos los usuarios listados tras el filtro
         const usuariosContexto = this.usuariosMostrados.map(u => u.codigoUsuarioSC);
+        this.codSuscriptor = this.navSettings.suscriptor?.codigoSuscriptor || ''
 
         // 2. Limpiar y estructurar el payload para BulkInsert
         const relacionesParaGuardar = usuariosSeleccionados.map(usu => ({
@@ -215,11 +221,14 @@ export class GestionUsuariosRoleComponent implements OnInit {
             codigoAplicacion: this.rolActual.codigoAplicacion || null,
             codigoSuite: this.rolActual.codigoSuite || null,
             estadoUsuarioRole: true,
+            isOnline: true,
+            ultimaConexion: '',
             codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
             fechaCreacion: new Date().toISOString()
         }));
 
         const payloadSync = {
+            codigoSuscriptor: this.codSuscriptor,
             codigoRole: this.codigoRoleBase,
             usuariosContexto: usuariosContexto,
             relaciones: relacionesParaGuardar

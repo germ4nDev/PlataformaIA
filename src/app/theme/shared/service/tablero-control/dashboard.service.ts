@@ -1,3 +1,4 @@
+import { traducir } from '../../i18n/traducir';
 /*
     Author: German Valencia
     Component: Dashboard Service (El Gobernador Central de Telemetría)
@@ -123,20 +124,20 @@ export class DashboardService implements OnInit, OnDestroy {
         Swal.fire({
             title: alerta.titulo, text: alerta.mensaje, icon: alerta.nivel,
             showCancelButton: true, confirmButtonColor: '#3b82f6', cancelButtonColor: '#64748b',
-            confirmButtonText: 'Sí, Sincronizar', cancelButtonText: 'Más tarde'
+            confirmButtonText: traducir('WEB.DASHBOARD_SERVICE.SI_SINCRONIZAR'), cancelButtonText: traducir('WEB.DASHBOARD_SERVICE.MAS_TARDE')
         }).then((result) => {
             if (result.isConfirmed) {
                 // endpointAccion trae la ruta completa (/api/...): se usa la raíz del API del ambiente, nunca localhost (2026-10-29)
                 this.http.post(`${environment.sctUrl}${alerta.endpointAccion}`, {}).subscribe({
-                    next: (res: any) => Swal.fire('¡Sincronizado!', 'Los históricos de Supertransporte están al día.', 'success'),
-                    error: (err) => Swal.fire('Error', 'No se pudo conectar con datos.gov.co', 'error')
+                    next: (res: any) => Swal.fire(traducir('WEB.DASHBOARD_SERVICE.SINCRONIZADO'), traducir('WEB.DASHBOARD_SERVICE.LOS_HISTORICOS_DE_SUPERTRANSPORTE_ESTAN'), 'success'),
+                    error: (err) => Swal.fire(traducir('WEB.DASHBOARD_SERVICE.ERROR'), traducir('WEB.DASHBOARD_SERVICE.NO_SE_PUDO_CONECTAR_CON'), 'error')
                 });
             }
         });
     }
 
     ejecutarSincronizacion() {
-        this.toastr.info('Sincronizando con Supertransporte...', 'Procesando', { timeOut: 2000 });
+        this.toastr.info(traducir('WEB.DASHBOARD_SERVICE.SINCRONIZANDO_CON_SUPERTRANSPORTE'), traducir('WEB.DASHBOARD_SERVICE.PROCESANDO'), { timeOut: 2000 });
         this._ingestaService.actualizarHistoricoSuperTrasnporte();
     }
 

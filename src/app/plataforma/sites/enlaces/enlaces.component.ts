@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
@@ -159,7 +160,7 @@ export class EnlacesComponent implements OnInit {
             this.registros = this.registros.filter((s) => s.enlaceId !== id.id);
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('SITIOS.ENLACES.ELIMINARERROR'), 'error');
+            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('SITIOS.ENLACES.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });

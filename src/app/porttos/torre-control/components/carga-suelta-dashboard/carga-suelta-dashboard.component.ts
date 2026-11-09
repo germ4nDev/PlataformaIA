@@ -3,6 +3,7 @@
     Component: Carga suelta y vehículos Dashboard (pestaña TLC_SUELTA_001) · Layout Manager común (PestanaGridsterBase)
     Los widgets se registran en widget-registry.ts y traen sus datos solos (TablerosPestanasService).
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
@@ -13,7 +14,7 @@ import { PestanaGridsterBase } from '../pestana-gridster/pestana-gridster.base';
 @Component({
     selector: 'app-carga-suelta-dashboard',
     standalone: true,
-    imports: [CommonModule, GridsterComponent, GridsterItemComponent],
+    imports: [CommonModule, GridsterComponent, GridsterItemComponent, TranslateModule],
     templateUrl: '../pestana-gridster/pestana-gridster.component.html',
     styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })

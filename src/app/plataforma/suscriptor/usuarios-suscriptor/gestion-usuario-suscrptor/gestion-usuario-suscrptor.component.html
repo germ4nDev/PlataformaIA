@@ -228,7 +228,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">Foto Usuario</label>
+                                <label class="form-label">{{ 'WEB.GESTION_USUARIO_SUSCRPTOR.FOTO_USUARIO' | translate }}</label>
                                 <br>
                                 <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview" />
                                 <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +18,7 @@ import { TablaTclComponent, ColumnaTabla } from '../../shared/tabla-tcl/tabla-tc
 @Component({
     selector: 'app-roro-suelta',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent],
     templateUrl: './roro-suelta.component.html',
     styleUrls: ['./roro-suelta.component.scss']
 })
@@ -29,20 +30,20 @@ export class RoroSueltaComponent extends WidgetTableroBase<TableroCargaSuelta> {
     public filas: any[] = [];
     public readonly mensajeVacio = 'Sin buques Ro-Ro en operación ni programados.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'motonave', titulo: 'Motonave', tipo: 'principal' },
-        { campo: 'naviera', titulo: 'Naviera' },
-        { campo: 'total', titulo: 'Vehículos', tipo: 'numero' },
-        { campo: 'avancePct', titulo: 'Avance', tipo: 'avance', ancho: '110px' },
+        { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE', tipo: 'principal' },
+        { campo: 'naviera', titulo: 'PORTTOS.TABLE_CONTENEDORES.NAVIERA' },
+        { campo: 'total', titulo: 'PORTTOS.RORO_SUELTA.VEHICULOS', tipo: 'numero' },
+        { campo: 'avancePct', titulo: 'PORTTOS.RORO_SUELTA.AVANCE', tipo: 'avance', ancho: '110px' },
         { campo: 'eta', titulo: 'ETA', tipo: 'fecha' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' }
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'terminal', titulo: 'Terminal' },
-        { campo: 'muelle', titulo: 'Muelle' },
-        { campo: 'producto', titulo: 'Producto' },
-        { campo: 'operadas', titulo: 'Operadas', tipo: 'numero' },
-        { campo: 'simulado', titulo: 'Simulado', tipo: 'si-no' }
+        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+        { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE' },
+        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
+        { campo: 'operadas', titulo: 'PORTTOS.MOTONAVES_GRANEL.OPERADAS', tipo: 'numero' },
+        { campo: 'simulado', titulo: 'PORTTOS.MOTONAVES_GRANEL.SIMULADO', tipo: 'si-no' }
     ];
 
     constructor(tableros: TablerosPestanasService, torre: DashboardService, cdr: ChangeDetectorRef) {

@@ -1,3 +1,4 @@
+import { traducir } from '../../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -29,7 +30,7 @@ import { PtltiposWidgetService } from 'src/app/theme/shared/service/ptltipos-wid
 import { PTLTipoWidgetModel } from 'src/app/theme/shared/_helpers/models/PTLTipoWidget.model'
 import { PtlpestanasService } from 'src/app/theme/shared/service/ptlpestanas.service'
 import { PTLPestanaModel } from 'src/app/theme/shared/_helpers/models/PTLPestana.model'
-import { camposDelWidget } from '../../nucleo'
+import { camposDelWidget, canalDelFormulario } from '../../nucleo'
 
 @Component({
     selector: 'app-gestion-widget',
@@ -110,14 +111,14 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                 next: (resp: any) => {
                     // console.log('respuesta carga widget', resp);
                     this.usuario = resp.widget
-                    this.FormRegistro = { ...resp.widget, movil: resp.widget.movil === true || resp.widget.movil === 1 }
+                    this.FormRegistro = { ...resp.widget, canal: canalDelFormulario(resp.widget) }
                     this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'widgets', resp.widget.imagenWidget_light)
                     this.selectedFileUrlDark = this._uploadService.getFilePath(this.suscPlataforma, 'widgets', resp.widget.imagenWidget_dark)
                     this.fileName = resp.widget.imagenWidget_light;
                     this.fileNameDark = resp.widget.imagenWidget_dark;
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error')
                 }
             })
         } else {
@@ -147,7 +148,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
             this.FormRegistro.codigoTipo = '';
             this.FormRegistro.layoutVersion = 0;
             this.FormRegistro.offsetY = 0;
-            this.FormRegistro.movil = false;
+            this.FormRegistro.canal = 'web';
             this.FormRegistro.estadoWidget = true;
             this.FormRegistro.inicial = false;
             // Anclaje por defecto: relativo (el más común del catálogo); se cambia en la lista (OT-015, CC-114)
@@ -243,7 +244,8 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
         // Registro completo: lo del formulario sobre lo cargado, con la aplicación y la suite de la pestaña y el canal.
         this.completarAplicacionDesdePestana()
         const registroData = camposDelWidget({ ...this.FormRegistro, ...form.value }) as PTLWidgetMaestroModel
-        registroData.movil = this.FormRegistro.movil === true
+        registroData.canal = canalDelFormulario({ canal: this.FormRegistro.canal })
+        registroData.movil = registroData.canal === 'telefono'
         if (!registroData.codigoWidget || !registroData.nombreWidget || !registroData.codigoPestana || !registroData.codigoTipo
             || !registroData.codigoAplicacion || !registroData.codigoSuite || !registroData.anclajeTipo) {
             this._swalAlertService.getAlertError(this._translate.instant('WIDGETS.GESTION.FALTANCAMPOS'))

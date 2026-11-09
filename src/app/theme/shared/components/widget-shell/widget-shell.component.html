@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between w-100"
         [ngClass]="isEnfoque ? 'align-items-center border-bottom border-secondary border-opacity-25 pb-3 mb-1' : 'shell-header align-items-start mb-2'">
 
-        <div class="d-flex align-items-center gap-3 overflow-hidden pe-2">
+        <div class="shell-titulo-bloque d-flex align-items-center gap-3 overflow-hidden pe-2">
 
             <div *ngIf="icono" class="d-flex justify-content-center align-items-center rounded-3 flex-shrink-0"
                 [ngClass]="isEnfoque ? 'border border-secondary border-opacity-25' : 'shell-icon-box'"
@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()" [title]="isEnfoque ? 'Cerrar vista ampliada' : 'Ampliar'">
+            <button class="tc-action-btn btn-maximizar" (click)="maximizarWidget()" [title]="isEnfoque ? ('WEB.WIDGET_SHELL.CERRAR_VISTA_AMPLIADA' | translate) : ('WEB.KPI_SHELL.AMPLIAR' | translate)">
                 <i [ngClass]="isEnfoque ? 'feather icon-minimize' : 'feather icon-maximize'"></i>
             </button>
 

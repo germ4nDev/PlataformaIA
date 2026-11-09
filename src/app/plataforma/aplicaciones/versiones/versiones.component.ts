@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -240,7 +241,7 @@ export class VersionesComponent implements OnInit {
                             descripcionLog: this.translate.instant('VERSIONES.ELIMINARERROR') + ' ' + err.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire('Error', this.translate.instant('VERSIONES.ELIMINARERROR'), 'error');
+                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('VERSIONES.ELIMINARERROR'), 'error');
                     }
                 });
             }

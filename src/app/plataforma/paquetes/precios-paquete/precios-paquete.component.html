@@ -29,9 +29,9 @@
                         <small>{{ 'PRECIOS.FILTROS.MONEDA' | translate }}</small>
                         <select (change)="onFiltroMonedaChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="COP">COP</option>
-                            <option value="USD">USD</option>
-                            <option value="MXN">MXN</option>
+                            <option value="COP">{{ 'WEB.PRECIOS_PAQUETE.COP' | translate }}</option>
+                            <option value="USD">{{ 'WEB.PRECIOS_PAQUETE.USD' | translate }}</option>
+                            <option value="MXN">{{ 'WEB.PRECIOS_PAQUETE.MXN' | translate }}</option>
                         </select>
                     </div>
 
@@ -39,8 +39,8 @@
                         <small>{{ 'PRECIOS.FILTROS.ESTADO' | translate }}</small>
                         <select (change)="onFiltroEstadoPrecioChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">Configurado</option>
-                            <option value="false">Sin Configurar</option>
+                            <option value="true">{{ 'WEB.PRECIOS_PAQUETE.CONFIGURADO' | translate }}</option>
+                            <option value="false">{{ 'WEB.PRECIOS_PAQUETE.SIN_CONFIGURAR' | translate }}</option>
                         </select>
                     </div>
                 </div>

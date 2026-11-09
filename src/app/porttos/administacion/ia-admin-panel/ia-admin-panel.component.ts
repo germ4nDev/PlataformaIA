@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /*
     Author: German Valencia
     Componente: Administración IA (capa de análisis con IA, fase 4)
@@ -29,6 +30,7 @@ import {
     AdminConfigIA, AdminPromptsIA, AdminResumenIA, AnalisisIAService, ConfigEfectivaIA, FilaConfigIA, PromptIA
 } from 'src/app/theme/shared/service/tablero-control/analisis-ia.service';
 import { NOMBRE_TIPO_IA } from '../../widgets/panel-ia/analista-ia/analista-ia.component';
+import { AppPermisoDirective } from '../../../theme/shared/directive/app-permiso.directive';
 
 type Vista = 'resumen' | 'config' | 'prompts' | 'asistente';
 type Triestado = 'hereda' | 'si' | 'no';
@@ -46,7 +48,7 @@ interface FormConfig {
 @Component({
     selector: 'app-ia-admin-panel',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, NavContentComponent, NavBarComponent, DataLoaderComponent],
+    imports: [AppPermisoDirective, CommonModule, FormsModule, TranslateModule, NavContentComponent, NavBarComponent, DataLoaderComponent],
     templateUrl: './ia-admin-panel.component.html',
     styleUrls: ['./ia-admin-panel.component.scss']
 })
@@ -134,15 +136,15 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
 
     estadoTarea(t: ConfigEfectivaIA | undefined): { texto: string; clase: string } {
         if (!t) return { texto: '—', clase: '' };
-        if (!this.resumen?.env?.habilitada) return { texto: 'IA apagada', clase: 'apagada' };
-        if (!t.activa) return { texto: 'Apagada', clase: 'apagada' };
-        return t.modoSombra ? { texto: 'Modo sombra', clase: 'sombra' } : { texto: 'Publicando', clase: 'activa' };
+        if (!this.resumen?.env?.habilitada) return { texto: 'PORTTOS.IA_ADMIN_PANEL.IA_APAGADA', clase: 'apagada' };
+        if (!t.activa) return { texto: 'PORTTOS.REGLAS_ALERTAS_PANEL.APAGADA', clase: 'apagada' };
+        return t.modoSombra ? { texto: 'PORTTOS.IA_ADMIN_PANEL.MODO_SOMBRA', clase: 'sombra' } : { texto: 'PORTTOS.IA_ADMIN_PANEL.PUBLICANDO', clase: 'activa' };
     }
 
     analizar(puerto: string): void {
         this.accion(`analizar|${puerto}`, this.ia.analizar(puerto), (r) => {
             const msg = r?.estado === 'OK' ? `${r.hallazgos ?? 0} hallazgo(s) nuevos, ${r.actualizadas ?? 0} actualizados` : `${r?.estado}: ${r?.motivo || ''}`;
-            this.toastr.info(msg, `Análisis · ${puerto}`);
+            this.toastr.info(msg, traducir('PORTTOS.IA_ADMIN_PANEL.ANALISIS_PUERTO', { puerto }));
             this.cargarResumen();
         });
     }
@@ -196,7 +198,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('guardar-config', this.ia.adminGuardarConfig(fila), (c) => {
             this.config = c;
             this.armarForm();
-            this.toastr.success(`${this.puertoConfig === '*' ? 'Todos los puertos' : this.puertoConfig} · ${this.tareaConfig}`, 'Configuración guardada');
+            this.toastr.success(`${this.puertoConfig === '*' ? 'Todos los puertos' : this.puertoConfig} · ${this.tareaConfig}`, traducir('PORTTOS.IA_ADMIN_PANEL.CONFIGURACION_GUARDADA'));
         });
     }
 
@@ -204,7 +206,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('guardar-config', this.ia.adminRestablecerConfig(this.puertoConfig, this.tareaConfig), (c) => {
             this.config = c;
             this.armarForm();
-            this.toastr.info('Todo vuelve a heredar', 'Configuración restablecida');
+            this.toastr.info(traducir('PORTTOS.IA_ADMIN_PANEL.TODO_VUELVE_A_HEREDAR'), traducir('PORTTOS.IA_ADMIN_PANEL.CONFIGURACION_RESTABLECIDA'));
         });
     }
 
@@ -264,7 +266,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('crear-prompt', this.ia.adminCrearPrompt(this.borrador), (p) => {
             this.prompts = this.mezclar(p);
             this.borrador = null;
-            this.toastr.success(`Versión ${p.creado?.version} creada como BORRADOR`, 'Prompt');
+            this.toastr.success(traducir('PORTTOS.IA_ADMIN_PANEL.VERSION_BORRADOR', { version: p.creado?.version }), traducir('PORTTOS.IA_ADMIN_PANEL.PROMPT'));
         });
     }
 
@@ -272,7 +274,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         if (!v.id) return;
         this.accion(`prompt|${v.id}`, this.ia.adminEstadoPrompt(v.id, estado), (p) => {
             this.prompts = this.mezclar(p);
-            this.toastr.success(estado === 'ACTIVO' ? `Versión ${v.version} activa` : `Versión ${v.version} retirada`, 'Prompt');
+            this.toastr.success(estado === 'ACTIVO' ? traducir('PORTTOS.IA_ADMIN_PANEL.VERSION_ACTIVA', { version: v.version }) : traducir('PORTTOS.IA_ADMIN_PANEL.VERSION_RETIRADA', { version: v.version }), traducir('PORTTOS.IA_ADMIN_PANEL.PROMPT'));
         });
     }
 
@@ -338,7 +340,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('tema', this.ia.adminGuardarTema(dto), (a) => {
             this.alcance = a;
             this.temaEdicion = null;
-            this.toastr.success(dto.nombre, 'Marco de alcance actualizado');
+            this.toastr.success(dto.nombre, traducir('PORTTOS.IA_ADMIN_PANEL.MARCO_DE_ALCANCE_ACTUALIZADO'));
         });
     }
 
@@ -360,6 +362,6 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
     }
 
     private error(e: any, titulo: string): void {
-        this.toastr.error(e?.error?.msg || e?.message || 'Error', titulo);
+        this.toastr.error(e?.error?.msg || e?.message || traducir('PORTTOS.CRON_MONITOR.ERROR'), titulo);
     }
 }

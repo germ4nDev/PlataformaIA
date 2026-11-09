@@ -57,6 +57,12 @@ export class PTLSuscriptoresService {
         )
     }
 
+    /** OT-026: aplicaciones que el suscriptor tiene en paquetes con licencia activa (asignación de roles del usuario). */
+    getAplicaciones(codigoSuscriptor: string): Observable<{ codigoAplicacion: string; nombreAplicacion: string }[]> {
+        const url = `${base_url}/suscriptores/${encodeURIComponent(codigoSuscriptor)}/aplicaciones`
+        return this.http.get(url).pipe(map((resp: any) => (resp?.aplicaciones || []) as { codigoAplicacion: string; nombreAplicacion: string }[]))
+    }
+
     getRegistros() {
         console.log('Consultando y ordenando registros del servidor...')
         const url = `${base_url}/suscriptores`

@@ -1,7 +1,8 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -16,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 @Component({
     selector: 'app-gestion-clases-ticket',
     standalone: true,
-    imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-clases-ticket.component.html',
     styleUrl: './gestion-clases-ticket.component.scss'
 })
@@ -63,7 +64,7 @@ export class GestionClasesTicketComponent {
                     console.log('formRegistro Clase', this.FormRegistro);
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener la clase.');
+                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_CLASES_TICKET.NO_SE_PUDO_OBTENER_LA'));
                 }
             });
         } else {

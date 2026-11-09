@@ -55,7 +55,7 @@
                   type="text"
                   class="form-control form-input"
                   name="codigoBiblioteca"
-                  placeholder="Código de la Biblioteca"
+                  [placeholder]="'WEB.GESTION_BIBLIOTECA.CODIGO_DE_LA_BIBLIOTECA' | translate"
                   [ngClass]="{ 'is-invalid': !codigoBiblioteca.valid && (codigoBiblioteca.dirty || codigoBiblioteca.touched || isSubmit) }"
                   #codigoBiblioteca="ngModel"
                   required

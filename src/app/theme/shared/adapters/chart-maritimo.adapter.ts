@@ -1,3 +1,4 @@
+import { traducir } from '../i18n/traducir';
 import { IBaseAdapter } from './base.adapter';
 
 export class ChartMaritimoAdapter implements IBaseAdapter<any> {
@@ -126,12 +127,12 @@ export class ChartMaritimoAdapter implements IBaseAdapter<any> {
             labels: labels, // <-- Esto reemplaza a chartLabels para alinear la salida
             datasets: [
                 {
-                    label: 'ETA planeada (h)',
+                    label: traducir('WEB.CHART_MARITIMO_ADAPTER.ETA_PLANEADA_H'),
                     data: dataEta,
                     backgroundColor: '#3b82f6'
                 },
                 {
-                    label: 'Retraso real (h)',
+                    label: traducir('WEB.CHART_MARITIMO_ADAPTER.RETRASO_REAL_H'),
                     data: dataRetraso,
                     backgroundColor: '#ef4444'
                 }

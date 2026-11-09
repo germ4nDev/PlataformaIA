@@ -55,7 +55,7 @@
                     [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showDetail]="true"
                     [showSearchBox]="false" [newButtonLabel]="'SCRIPTS.NEW' | translate" [showSearchBox]="false"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_SCRIPTS_CREAR" permisoEdit="ACT_SCRIPTS_MODIFICAR" permisoDelete="ACT_SCRIPTS_ELIMINAR">
                 </app-table-data>
             </div>
         </div>

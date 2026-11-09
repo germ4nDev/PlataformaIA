@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -14,7 +15,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-terminal-docks-detail',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './terminal-docks-detail.component.html',
     styleUrls: ['./terminal-docks-detail.component.scss'],
     encapsulation: ViewEncapsulation.None

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -34,7 +35,7 @@ export interface AlarmaEvento {
 @Component({
     selector: 'app-gnl-alarmas-widget',
     standalone: true,
-    imports: [CommonModule, DatePipe, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DatePipe, DecimalPipe, WidgetShellComponent],
     templateUrl: './gnl-alarmas-widget.component.html',
     styleUrls: ['./gnl-alarmas-widget.component.scss']
 })
@@ -106,7 +107,7 @@ export class GnlAlarmasWidgetComponent implements OnInit, OnChanges, OnDestroy {
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'Bitácora de Eventos',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_ALARMAS_WIDGET.BITACORA_DE_EVENTOS',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||

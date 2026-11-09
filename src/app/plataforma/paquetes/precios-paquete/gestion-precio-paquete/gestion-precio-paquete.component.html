@@ -25,8 +25,7 @@
                             <span class="text-dark fw-bold"> - {{ nombrePaquete }}</span>
                         </h4>
                         <h6 class="subtitulo-container mb-0 text-muted">
-                            Ingrese el Costo Interno y el Valor de Venta mensual. Los planes trimestrales, semestrales y
-                            anuales se calcularán automáticamente.
+                            {{ 'WEB.GESTION_PRECIO_PAQUETE.INGRESE_EL_COSTO_INTERNO_Y' | translate }}
                         </h6>
                     </div>
 
@@ -43,7 +42,7 @@
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">{{ 'PRECIOS.GESTION.CREATE' | translate }} <i
                                     class="feather icon-plus ms-2"></i></span>
-                            <span *ngIf="isSaving">Guardando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.COMUN.GUARDANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
 
@@ -52,7 +51,7 @@
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">{{ 'PLATAFORMA.MODIFICAR' | translate }} <i
                                     class="feather icon-edit ms-2"></i></span>
-                            <span *ngIf="isSaving">Actualizando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.COMUN.ACTUALIZANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
                     </div>
@@ -67,36 +66,34 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="costoBaseMensual"> Costo Base Mensual
-                                    (Interno)</label>
+                                <label class="form-control-label" for="costoBaseMensual"> {{ 'WEB.GESTION_PRECIO_PAQUETE.COSTO_BASE_MENSUAL_INTERNO' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="costoBaseMensual"
                                     formControlName="costoBaseMensual"
                                     [ngClass]="{ 'is-invalid': f['costoBaseMensual'].invalid && (f['costoBaseMensual'].dirty || f['costoBaseMensual'].touched || isSubmit) }"
-                                    placeholder="Ej: 20000.00" mask="separator.2" thousandSeparator="," prefix="$ " />
-                                <small class="text-muted">Costo operativo mensual para mantener este paquete.</small>
+                                    [placeholder]="'WEB.GESTION_PRECIO_PAQUETE.EJ_20000_00' | translate" mask="separator.2" thousandSeparator="," prefix="$ " />
+                                <small class="text-muted">{{ 'WEB.GESTION_PRECIO_PAQUETE.COSTO_OPERATIVO_MENSUAL_PARA_MANTENER' | translate }}</small>
 
                                 <label
                                     *ngIf="f['costoBaseMensual'].invalid && (f['costoBaseMensual'].dirty || f['costoBaseMensual'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El costo base es requerido y debe ser mayor o igual a 0.
+                                    {{ 'WEB.GESTION_PRECIO_PAQUETE.EL_COSTO_BASE_ES_REQUERIDO' | translate }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="valorBaseMensual"> Valor Base Mensual
-                                    (Venta)</label>
+                                <label class="form-control-label" for="valorBaseMensual"> {{ 'WEB.GESTION_PRECIO_PAQUETE.VALOR_BASE_MENSUAL_VENTA' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="valorBaseMensual"
                                     formControlName="valorBaseMensual"
                                     [ngClass]="{ 'is-invalid': f['valorBaseMensual'].invalid && (f['valorBaseMensual'].dirty || f['valorBaseMensual'].touched || isSubmit) }"
-                                    placeholder="Ej: 100000.00" mask="separator.2" thousandSeparator="," prefix="$ " />
-                                <small class="text-muted">Valor a cobrar al cliente por 1 mes de uso.</small>
+                                    [placeholder]="'WEB.GESTION_PRECIO_PAQUETE.EJ_100000_00' | translate" mask="separator.2" thousandSeparator="," prefix="$ " />
+                                <small class="text-muted">{{ 'WEB.GESTION_PRECIO_PAQUETE.VALOR_A_COBRAR_AL_CLIENTE' | translate }}</small>
 
                                 <label
                                     *ngIf="f['valorBaseMensual'].invalid && (f['valorBaseMensual'].dirty || f['valorBaseMensual'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El valor de venta es requerido y debe ser mayor o igual a 0.
+                                    {{ 'WEB.GESTION_PRECIO_PAQUETE.EL_VALOR_DE_VENTA_ES' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -106,9 +103,9 @@
                                 <label class="form-control-label" for="precioSetup"> {{ 'PRECIOS.GESTION.SETUP' |
                                     translate }}</label>
                                 <input type="text" class="form-control form-input" id="precioSetup"
-                                    formControlName="precioSetup" placeholder="Ej: 50000.00 (Opcional)"
+                                    formControlName="precioSetup" [placeholder]="'WEB.GESTION_PRECIO_PAQUETE.EJ_50000_00_OPCIONAL' | translate"
                                     mask="separator.2" thousandSeparator="," prefix="$ " />
-                                <small class="text-muted">Costo único de instalación o setup inicial.</small>
+                                <small class="text-muted">{{ 'WEB.GESTION_PRECIO_PAQUETE.COSTO_UNICO_DE_INSTALACION_O' | translate }}</small>
                             </div>
                         </div>
 

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
@@ -13,7 +14,7 @@ const base_url = environment.apiUrl;
 @Component({
     selector: 'app-slider',
     standalone: true,
-    imports: [CommonModule, NgOptimizedImage],
+    imports: [TranslateModule, CommonModule, NgOptimizedImage],
     templateUrl: './slider.component.html',
     styleUrl: './slider.component.scss'
 })

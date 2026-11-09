@@ -56,7 +56,7 @@
                         [newButtonLabel]="'TICKETS.SEGUIMIENTOS.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (backRecord)="OnBackRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)">
+                        (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_SEGUIMIENTOS_CREAR" permisoEdit="ACT_SEGUIMIENTOS_MODIFICAR" permisoDelete="ACT_SEGUIMIENTOS_ELIMINAR">
                     </app-table-data>
                 </ng-container>
             </div>

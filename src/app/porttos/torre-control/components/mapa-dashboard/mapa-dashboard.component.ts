@@ -4,6 +4,7 @@
     El layout del mapa no depende del puerto: al cambiarlo se actualiza en sitio, sin destruir el mapa (destruirlo
     causaba un parpadeo antes del vuelo de cámara). El mapa hace su propia transición.
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterComponent, GridsterConfig, GridsterItemComponent, GridType } from 'angular-gridster2';
@@ -14,7 +15,7 @@ import { PestanaGridsterBase } from '../pestana-gridster/pestana-gridster.base';
 @Component({
     selector: 'app-mapa-dashboard',
     standalone: true,
-    imports: [CommonModule, GridsterComponent, GridsterItemComponent],
+    imports: [CommonModule, GridsterComponent, GridsterItemComponent, TranslateModule],
     templateUrl: '../pestana-gridster/pestana-gridster.component.html',
     styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })

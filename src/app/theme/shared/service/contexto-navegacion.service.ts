@@ -65,8 +65,12 @@ export class ContextoNavegacionService {
 
             if (rawNavSettings) {
                 try {
+                    // Suscriptor y empresa: los del contexto de permisos (PtlpermisosService) si existe; validarPermiso del API
+                    // usa los roles del usuario en esa empresa (CC-128)
+                    const ctxPermisos = rawNavSettings?.contexto;
                     contextoNav = {
-                        codigoSuscriptor: rawNavSettings?.suscriptor.codigoSuscriptor || null,
+                        codigoSuscriptor: ctxPermisos?.codigoSuscriptor || rawNavSettings?.suscriptor?.codigoSuscriptor || null,
+                        codigoEmpresaSC: ctxPermisos?.codigoEmpresaSC || null,
                         codigoAplicacion: rawNavSettings?.aplicacion.codigoAplicacion || null,
                         codigoSuite: rawNavSettings?.suite.codigoSuite || null,
                         codigoModulo: rawNavSettings?.modulo.codigoModulo || null

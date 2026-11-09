@@ -1,0 +1,7 @@
+@if (s.antetitulo || s.titulo || s.subtitulo) {
+  <header class="encabezado-seccion">
+    @if (s.antetitulo) { <p class="antetitulo">{{ s.antetitulo }}</p> }
+    @if (s.titulo) { <h2 class="titulo-seccion">{{ s.titulo }}</h2> }
+    @if (s.subtitulo) { <p class="subtitulo-seccion">{{ s.subtitulo }}</p> }
+  </header>
+}

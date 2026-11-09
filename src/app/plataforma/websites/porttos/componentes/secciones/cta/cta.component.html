@@ -1,0 +1,15 @@
+<section class="bloque">
+  <div class="contenedor">
+    <div class="cta">
+      @if (s.antetitulo) { <p class="antetitulo">{{ s.antetitulo }}</p> }
+      @if (s.titulo) { <h2 class="cta__titulo">{{ s.titulo }}</h2> }
+      @if (s.subtitulo) { <p class="cta__texto">{{ s.subtitulo }}</p> }
+      <div class="acciones acciones--centro">
+        @if (s.enlace) { <pp-enlace [url]="s.enlace.url" clase="boton boton--primario">{{ s.enlace.texto }}</pp-enlace> }
+        @for (e of s.elementos; track $index) {
+          @if (e.url && e.titulo) { <pp-enlace [url]="e.url" clase="boton boton--secundario">{{ e.titulo }}</pp-enlace> }
+        }
+      </div>
+    </div>
+  </div>
+</section>

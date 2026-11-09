@@ -1,0 +1,24 @@
+<section class="bloque bloque--pegado">
+  <div class="contenedor">
+    <pp-encabezado-seccion [s]="s" />
+    <div class="rejilla rejilla--perfiles">
+      @for (e of s.elementos; track $index) {
+        <article class="perfil" [style.--color-perfil]="e.color || null">
+          <div class="perfil__cabeza">
+            @if (e.icono) { <span class="perfil__icono"><pp-icono [nombre]="e.icono" /></span> }
+            @if (e.titulo) { <h3 class="perfil__titulo">{{ e.titulo }}</h3> }
+          </div>
+          @if (e.detalle) {
+            <div class="perfil__bloque"><p class="perfil__rotulo perfil__rotulo--preocupa">{{ 'WEB.PERFILES.LO_QUE_LE_PREOCUPA' | translate }}</p><p>{{ e.detalle }}</p></div>
+          }
+          @if (e.texto) {
+            <div class="perfil__bloque"><p class="perfil__rotulo">{{ 'WEB.PERFILES.LO_QUE_VE_EN_PORTTOS' | translate }}</p><p>{{ e.texto }}</p></div>
+          }
+          @if (accion(e); as a) {
+            <pp-enlace [url]="a.url" clase="perfil__accion">{{ a.texto }} <span aria-hidden="true">→</span></pp-enlace>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>

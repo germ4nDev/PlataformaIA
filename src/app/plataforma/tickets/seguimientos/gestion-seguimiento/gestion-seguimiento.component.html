@@ -113,7 +113,7 @@
                                     {{ 'TICKETS.SEGUIMIENTOS.GESTION.FECHASEGUIMIENTO' | translate }}
                                 </label>
                                 <div class="input-group">
-                                    <input class="form-control form-input" placeholder="yyyy-mm-dd" name="fecha"
+                                    <input class="form-control form-input" [placeholder]="'WEB.COMUN.YYYY_MM_DD' | translate" name="fecha"
                                         id="fecha" [(ngModel)]="FormRegistro.fecha" ngbDatepicker #d="ngbDatepicker"
                                         (dateSelect)="onDateChange()" required />
                                     <div class="input-group-append">

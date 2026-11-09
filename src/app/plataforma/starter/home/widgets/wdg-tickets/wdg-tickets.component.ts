@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -10,7 +11,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-tickets',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './wdg-tickets.component.html',
     styleUrls: ['./wdg-tickets.component.scss'] // 🟢 Aseguramos el styleUrls
 })

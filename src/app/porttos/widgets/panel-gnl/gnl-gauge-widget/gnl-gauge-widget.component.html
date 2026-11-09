@@ -44,8 +44,8 @@
     </div>
 
 </app-widget-shell> -->
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'Presión de Línea'"
-    [subtitulo]="widgetConfig?.subtitulo || 'TELEMETRÍA SCADA'" [icono]="'feather icon-compass'" [isEnfoque]="isEnfoque"
+<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.GNL_GAUGE_WIDGET.PRESION_DE_LINEA' | translate)"
+    [subtitulo]="(widgetConfig?.subtitulo | translate) || 'TELEMETRÍA SCADA'" [icono]="'feather icon-compass'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()" [origen]="origen$ | async">
 
     <div class="scada-widget-inner w-100 h-100 d-flex flex-column justify-content-between p-2"
@@ -90,7 +90,7 @@
 
         <!-- Footer -->
         <div class="scada-footer text-center py-1">
-            <span class="temp-label text-muted">Temp. Ducto:</span>
+            <span class="temp-label text-muted">{{ 'PORTTOS.GNL_GAUGE_WIDGET.TEMP_DUCTO' | translate }}</span>
             <span class="temp-value fw-bold text-info">{{ temperaturaActual | number:'1.2-2' }} °C</span>
         </div>
 

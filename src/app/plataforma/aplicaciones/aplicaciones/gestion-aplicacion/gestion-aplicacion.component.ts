@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -123,7 +124,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.selectedFileUrlIcono = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenIcono) || 'no-image.png';
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error')
                 }
             })
         }
@@ -360,7 +361,7 @@ export class GestionAplicacionComponent implements OnInit {
                         descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo actualizar la Aplicación')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_APLICACION.NO_SE_PUDO_ACTUALIZAR_LA'))
                 }
             })
         } else {
@@ -402,7 +403,7 @@ export class GestionAplicacionComponent implements OnInit {
                         descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo crear la Aplicación')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_APLICACION.NO_SE_PUDO_CREAR_LA'))
                 }
             })
         }

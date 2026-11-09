@@ -42,7 +42,7 @@ const routes: Routes = [
             {
                 path: 'gestion-tipos-galeria',
                 loadComponent: () =>
-                    import('./tipos-galeria/gestion-tiposGaleria/gestion-tipos-galeria.component').then(m => m.GestionTiposGaleriaComponent),
+                    import('./tipos-galeria/gestion-tipos-galeria/gestion-tipos-galeria.component').then(m => m.GestionTiposGaleriaComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },

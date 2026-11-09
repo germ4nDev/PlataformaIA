@@ -1,12 +1,12 @@
-<app-widget-shell [titulo]="data.titulo || 'RESUMEN SEMANAL MARÍTIMO'"
-    [subtitulo]="data.subtitulo || 'Indicadores clave de los últimos 7 días'"
+<app-widget-shell [titulo]="(data.titulo | translate) || 'RESUMEN SEMANAL MARÍTIMO'"
+    [subtitulo]="(data.subtitulo | translate) || ('PORTTOS.REPORTE_SEMANAL_MARITIMO.INDICADORES_CLAVE_DE_LOS_ULTIMOS' | translate)"
     [icono]="data.icono || 'feather icon-calendar'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-info text-uppercase">
-            Semanal
+            {{ 'PORTTOS.REPORTE_SEMANAL_MARITIMO.SEMANAL' | translate }}
         </span>
     </div>
 
@@ -17,20 +17,20 @@
         <!-- Estado Cargando -->
         <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small py-3">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            Consolidando indicadores de los últimos 7 días...
+            {{ 'PORTTOS.REPORTE_SEMANAL_MARITIMO.CONSOLIDANDO_INDICADORES_DE_LOS_ULTIMOS' | translate }}
         </div>
 
         <!-- Estado Vacío -->
         <div *ngIf="!isLoading && metricas.length === 0"
             class="d-flex flex-column justify-content-center align-items-center h-100 text-muted small py-3">
             <i class="feather icon-calendar fs-3 mb-2 opacity-50"></i>
-            No hay métricas disponibles para esta semana.
+            {{ 'PORTTOS.REPORTE_SEMANAL_MARITIMO.NO_HAY_METRICAS_DISPONIBLES_PARA' | translate }}
         </div>
 
         <!-- Grid de Tarjetas -->
         <div class="resumen-maritimo-grid pb-2" *ngIf="!isLoading && metricas.length > 0">
             <div class="resumen-maritimo-card" *ngFor="let metrica of metricas; trackBy: trackByMetrica">
-                <span class="c-titulo text-uppercase">{{ metrica.label || '--' }}</span>
+                <span class="c-titulo text-uppercase">{{ (metrica.label | translate) || '--' }}</span>
                 <span class="c-valor">{{ metrica.valor || '--' }}</span>
                 <span class="c-sub fw-medium" [ngClass]="metrica.claseTendencia || 'text-muted'">
                     {{ metrica.tendencia || '--' }}

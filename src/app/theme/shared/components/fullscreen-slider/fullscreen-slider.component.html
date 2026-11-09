@@ -14,10 +14,10 @@
 
     <div class="indicators" [class.indicators--leyenda]="leyendas" *ngIf="images.length > 1">
         <button *ngFor="let image of images; let i = index" [ngClass]="{ 'active': i === currentIndex }"
-            (click)="goToImage(i)" class="indicator-dot" [attr.aria-label]="'Ir a la imagen ' + (i + 1)">
+            (click)="goToImage(i)" class="indicator-dot" [attr.aria-label]="('WEB.FULLSCREEN_SLIDER.IR_A_LA_IMAGEN' | translate) + (i + 1)">
         </button>
         <button *ngIf="leyendas" type="button" class="slider-pausa" (click)="alternarPausa()"
-            [attr.aria-label]="pausado ? 'Reanudar' : 'Pausar'" [attr.aria-pressed]="pausado">
+            [attr.aria-label]="pausado ? ('WEB.FULLSCREEN_SLIDER.REANUDAR' | translate) : ('WEB.FULLSCREEN_SLIDER.PAUSAR' | translate)" [attr.aria-pressed]="pausado">
             <span *ngIf="!pausado" class="slider-pausa__barras" aria-hidden="true"></span>
             <span *ngIf="pausado" class="slider-pausa__play" aria-hidden="true"></span>
         </button>

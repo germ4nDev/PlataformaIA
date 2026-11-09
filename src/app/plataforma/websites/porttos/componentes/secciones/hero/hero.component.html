@@ -1,0 +1,13 @@
+<section class="hero" [class.hero--grande]="grande" [style.--hero-fondo]="fondoCss">
+  <div class="contenedor hero__contenido">
+    @if (s.antetitulo) { <p class="antetitulo">{{ s.antetitulo }}</p> }
+    @if (s.titulo) { <h1 class="hero__titulo">{{ s.titulo }}</h1> }
+    @if (s.subtitulo) { <p class="hero__subtitulo">{{ s.subtitulo }}</p> }
+    <div class="acciones">
+      @if (s.enlace) { <pp-enlace [url]="s.enlace.url" clase="boton boton--primario">{{ s.enlace.texto }}</pp-enlace> }
+      @for (e of s.elementos; track $index) {
+        @if (e.url && e.titulo) { <pp-enlace [url]="e.url" clase="boton boton--secundario">{{ e.titulo }}</pp-enlace> }
+      }
+    </div>
+  </div>
+</section>

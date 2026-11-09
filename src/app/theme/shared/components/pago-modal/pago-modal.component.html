@@ -3,7 +3,7 @@
     <div class="modal-content">
 
         <div class="modal-header">
-            <h3>Completar Transacción</h3>
+            <h3>{{ 'WEB.PAGO_MODAL.COMPLETAR_TRANSACCION' | translate }}</h3>
             <button class="close-btn" (click)="cerrar()">&times;</button>
         </div>
 
@@ -11,7 +11,7 @@
 
             <div *ngIf="cargandoBrick" class="loader-container">
                 <div class="spinner"></div>
-                <p>Cargando pasarela segura...</p>
+                <p>{{ 'WEB.PAGO_MODAL.CARGANDO_PASARELA_SEGURA' | translate }}</p>
             </div>
 
             <div id="paymentBrick_container" [class.oculto]="cargandoBrick"></div>

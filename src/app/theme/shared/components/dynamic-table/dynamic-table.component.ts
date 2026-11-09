@@ -1,10 +1,11 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dynamic-table',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './dynamic-table.component.html',
     styleUrls: ['./dynamic-table.component.scss']
 })

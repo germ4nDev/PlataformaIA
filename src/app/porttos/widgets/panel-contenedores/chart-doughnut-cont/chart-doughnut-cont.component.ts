@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -32,7 +33,7 @@ import {
 @Component({
     selector: 'app-chart-doughnut-cont',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent],
     templateUrl: './chart-doughnut-cont.component.html',
     styleUrls: ['./chart-doughnut-cont.component.scss']
 })

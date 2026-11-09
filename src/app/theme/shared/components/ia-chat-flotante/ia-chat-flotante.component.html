@@ -2,10 +2,10 @@
     <div class="panel-ia-header-sidebar" (click)="alternarSidebar()">
         <div class="d-flex align-items-center justify-content-between w-100">
             <div class="d-flex align-items-center gap-2">
-                <span class="asis-sello">IA</span>
+                <span class="asis-sello">{{ 'WEB.IA_CHAT_FLOTANTE.IA' | translate }}</span>
                 <div class="titulos-header">
                     <label>{{ 'PLATAFORMA.IATITULO' | translate }}</label><br>
-                    <span class="text-muted-sidebar">Operación portuaria{{ puerto ? ' · ' + puerto : '' }}</span>
+                    <span class="text-muted-sidebar">{{ 'WEB.IA_CHAT_FLOTANTE.OPERACION_PORTUARIA' | translate: { p0: puerto ? ' · ' + puerto : '' } }}</span>
                 </div>
             </div>
             <span class="flecha-indicadora">{{ sidebarAbierto ? '▼' : '▲' }}</span>
@@ -14,7 +14,7 @@
 
     <div class="panel-ia-sliding-content">
         <div class="p-2 text-center">
-            <small class="texto-ia">Pregunta por la operación: buques, gate, carga, bodegas, indicadores, alertas o conceptos del puerto.</small>
+            <small class="texto-ia">{{ 'WEB.IA_CHAT_FLOTANTE.PREGUNTA_POR_LA_OPERACION_BUQUES' | translate }}</small>
         </div>
         <div class="panel-ia-footer-sidebar">
             <div class="input-group-sidebar" style="padding: 10px;">
@@ -24,32 +24,32 @@
                     <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="enviarConsulta()" [disabled]="cargando || !promptUsuario.trim()">
                         {{ 'PLATAFORMA.ENVIAR' | translate }}
                     </button>
-                    <button type="button" class="btn btn-link btn-sm" *ngIf="historialInteracciones.length" (click)="abrirModal()">Ver conversación</button>
+                    <button type="button" class="btn btn-link btn-sm" *ngIf="historialInteracciones.length" (click)="abrirModal()">{{ 'WEB.IA_CHAT_FLOTANTE.VER_CONVERSACION' | translate }}</button>
                 </div>
             </div>
         </div>
         <div *ngIf="cargando" class="text-center p-2 text-muted asis-pequeno">
-            <span class="spinner-border spinner-border-sm me-1" role="status"></span> Consultando los datos de Porttos...
+            <span class="spinner-border spinner-border-sm me-1" role="status"></span> {{ 'WEB.IA_CHAT_FLOTANTE.CONSULTANDO_LOS_DATOS_DE_PORTTOS' | translate }}
         </div>
     </div>
 </div>
 
 <div class="asis-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
-    <div class="asis-modal" (click)="$event.stopPropagation()" role="dialog" aria-label="Asistente de Porttos">
+    <div class="asis-modal" (click)="$event.stopPropagation()" role="dialog" [attr.aria-label]="'WEB.IA_CHAT_FLOTANTE.ASISTENTE_DE_PORTTOS' | translate">
         <header class="asis-encabezado">
             <div>
-                <h5><span class="asis-sello">IA</span>Asistente de Porttos</h5>
-                <small>{{ puerto ? 'Puerto: ' + puerto : 'Todos los puertos' }} · solo temas del proceso logístico portuario · respuestas con datos de Porttos</small>
+                <h5><span class="asis-sello">{{ 'WEB.IA_CHAT_FLOTANTE.IA' | translate }}</span>{{ 'WEB.IA_CHAT_FLOTANTE.ASISTENTE_DE_PORTTOS' | translate }}</h5>
+                <small>{{ 'WEB.IA_CHAT_FLOTANTE.SOLO_TEMAS_DEL_PROCESO_LOGISTICO' | translate: { p0: puerto ? 'Puerto: ' + puerto : 'Todos los puertos' } }}</small>
             </div>
             <div class="d-flex gap-2 align-items-start">
-                <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="historialInteracciones.length" (click)="nuevaConversacion()">Nueva</button>
-                <button type="button" class="asis-cerrar" (click)="cerrarModal()" aria-label="Cerrar">✕</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="historialInteracciones.length" (click)="nuevaConversacion()">{{ 'WEB.IA_CHAT_FLOTANTE.NUEVA' | translate }}</button>
+                <button type="button" class="asis-cerrar" (click)="cerrarModal()" [attr.aria-label]="'WEB.IA_CHAT_FLOTANTE.CERRAR' | translate">✕</button>
             </div>
         </header>
 
         <div class="asis-cuerpo" #cuerpo>
             <div class="asis-vacio" *ngIf="!historialInteracciones.length">
-                <p>Hola. Respondo sobre la operación de los puertos con los datos de Porttos. Por ejemplo:</p>
+                <p>{{ 'WEB.IA_CHAT_FLOTANTE.HOLA_RESPONDO_SOBRE_LA_OPERACION' | translate }}</p>
                 <button type="button" class="asis-sugerencia" *ngFor="let e of ejemplos" (click)="usarSugerencia(e)">{{ e }}</button>
             </div>
 
@@ -58,23 +58,23 @@
 
                 <div class="asis-respuesta" [ngClass]="'dec-' + (i.resultado?.decision || 'dentro')">
                     <div *ngIf="i.cargando" class="asis-pequeno text-muted">
-                        <span class="spinner-border spinner-border-sm me-1" role="status"></span> Consultando tableros, tendencias y alertas...
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span> {{ 'WEB.IA_CHAT_FLOTANTE.CONSULTANDO_TABLEROS_TENDENCIAS_Y_ALERTA' | translate }}
                     </div>
                     <div *ngIf="i.error" class="asis-aviso error">{{ i.error }}</div>
 
                     <ng-container *ngIf="i.resultado as r">
                         <div class="asis-etiquetas">
                             <span class="asis-etiqueta" *ngIf="mensajeEstado(i) as m" [ngClass]="'est-' + r.estado">{{ m }}</span>
-                            <span class="asis-etiqueta frontera" *ngIf="r.decision === 'frontera'" title="Se responde solo su efecto en la operación">Contexto operativo</span>
+                            <span class="asis-etiqueta frontera" *ngIf="r.decision === 'frontera'" [title]="'WEB.IA_CHAT_FLOTANTE.SE_RESPONDE_SOLO_SU_EFECTO' | translate">{{ 'WEB.IA_CHAT_FLOTANTE.CONTEXTO_OPERATIVO' | translate }}</span>
                         </div>
                         <div class="asis-texto-respuesta" [innerHTML]="r.respuesta | markdown"></div>
 
                         <div class="asis-aviso" *ngIf="r.verificacion && !r.verificacion.ok">
-                            ⚠ Estas cifras no aparecen en los datos consultados: {{ r.verificacion.sinRespaldo.join(', ') }}. Verifícalas en el tablero.
+                            {{ 'WEB.IA_CHAT_FLOTANTE.ESTAS_CIFRAS_NO_APARECEN_EN' | translate: { p0: r.verificacion.sinRespaldo.join(', ') } }}
                         </div>
 
                         <div class="asis-fuentes" *ngIf="r.fuentes?.length">
-                            <small>Fuentes:</small>
+                            <small>{{ 'WEB.IA_CHAT_FLOTANTE.FUENTES' | translate }}</small>
                             <span class="asis-fuente" *ngFor="let f of r.fuentes" [title]="f.detalle">{{ etiqueta(f.herramienta) }}<em *ngIf="f.detalle"> · {{ f.detalle }}</em></span>
                         </div>
 
@@ -83,9 +83,9 @@
                         </div>
 
                         <div class="asis-votos" *ngIf="r.id && (r.estado === 'RESPONDIDA' || r.estado === 'SIN_DATOS')">
-                            <small class="text-muted">¿Te sirvió?</small>
-                            <button type="button" class="asis-voto" [class.marcado]="i.voto === true" [disabled]="i.voto !== null" (click)="votar(i, true)">👍 Útil</button>
-                            <button type="button" class="asis-voto" [class.marcado]="i.voto === false" [disabled]="i.voto !== null" (click)="votar(i, false)">👎 No era</button>
+                            <small class="text-muted">{{ 'WEB.IA_CHAT_FLOTANTE.TE_SIRVIO' | translate }}</small>
+                            <button type="button" class="asis-voto" [class.marcado]="i.voto === true" [disabled]="i.voto !== null" (click)="votar(i, true)">{{ 'WEB.IA_CHAT_FLOTANTE.UTIL' | translate }}</button>
+                            <button type="button" class="asis-voto" [class.marcado]="i.voto === false" [disabled]="i.voto !== null" (click)="votar(i, false)">{{ 'WEB.IA_CHAT_FLOTANTE.NO_ERA' | translate }}</button>
                             <small class="text-muted ms-auto">{{ i.fecha | date: 'HH:mm' }}</small>
                         </div>
                     </ng-container>
@@ -95,7 +95,7 @@
 
         <footer class="asis-pie">
             <input type="text" class="form-control" [(ngModel)]="promptUsuario" (keyup.enter)="enviarConsulta()" maxlength="1000"
-                placeholder="Pregunta por la operación portuaria..." [disabled]="cargando" />
+                [placeholder]="'WEB.IA_CHAT_FLOTANTE.PREGUNTA_POR_LA_OPERACION_PORTUARIA' | translate" [disabled]="cargando" />
             <button type="button" class="btn btn-primary" (click)="enviarConsulta()" [disabled]="cargando || !promptUsuario.trim()">
                 {{ 'PLATAFORMA.ENVIAR' | translate }}
             </button>

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { IWidget } from '../../../../theme/shared/interfaces/torre-control/widget.interface';
 import { CommonModule } from '@angular/common';
@@ -5,7 +6,7 @@ import { CommonModule } from '@angular/common';
 @Component({
     selector: 'app-table-widget',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './table-widget.component.html',
     styleUrl: './table-widget.component.scss',
     encapsulation: ViewEncapsulation.None

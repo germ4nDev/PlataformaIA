@@ -2,16 +2,16 @@
 
     <div class="lobby-header">
         <div>
-            <h3 class="titulo-panel fw-bold fs-5 text-uppercase">Catálogo de Widgets</h3>
+            <h3 class="titulo-panel fw-bold fs-5 text-uppercase">{{ 'PORTTOS.WIDGET_LOBBY_TCL.CATALOGO_DE_WIDGETS' | translate }}</h3>
         </div>
         <!-- Todos (de la categoría activa) y cerrar, a la derecha, como en el Gestor de Pestañas (2026-10-30) -->
         <div class="d-flex align-items-center gap-2">
             <label class="seleccionar-categoria" *ngIf="widgetsFiltrados.length"
-                [title]="todosCategoriaSeleccionados ? 'Quitar todos los widgets de ' + tabActiva : 'Agregar todos los widgets de ' + tabActiva">
+                [title]="todosCategoriaSeleccionados ? ('PORTTOS.WIDGET_LOBBY_TCL.QUITAR_TODOS_LOS_WIDGETS_DE' | translate) + tabActiva : ('PORTTOS.WIDGET_LOBBY_TCL.AGREGAR_TODOS_LOS_WIDGETS_DE' | translate) + tabActiva">
                 <input class="minimal-checkbox" type="checkbox" [checked]="todosCategoriaSeleccionados"
                     [indeterminate]="algunosCategoriaSeleccionados"
                     (change)="seleccionarCategoria($any($event.target).checked)">
-                <span>Todos <small>({{ activosEnCategoria }}/{{ widgetsFiltrados.length }})</small></span>
+                <span>{{ 'PORTTOS.WIDGET_LOBBY_TCL.TODOS' | translate }} <small>({{ activosEnCategoria }}/{{ widgetsFiltrados.length }})</small></span>
             </label>
             <button type="button" class="btn-cerrar" (click)="cerrar.emit()">
                 <i class="feather icon-x"></i>
@@ -65,7 +65,7 @@
                         <!-- Descripción que se expande con scroll invisible en hover -->
                         <div class="desc-container">
                             <p class="desc-texto mb-0 text-light small">
-                                {{ widget.descripcionWidget || 'Habilita este widget para visualizar sus métricas.' }}
+                                {{ widget.descripcionWidget || ('PORTTOS.WIDGET_LOBBY_TCL.HABILITA_ESTE_WIDGET_PARA_VISUALIZAR' | translate) }}
                             </p>
                         </div>
                     </div>

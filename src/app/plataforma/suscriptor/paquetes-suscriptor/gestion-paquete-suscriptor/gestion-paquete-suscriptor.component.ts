@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -175,7 +176,7 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
             this.FormRegistro.precioPaquete = paquete?.precioPaquete || 0
             console.log('datos del paquete', paquete);
         } else {
-            this._swalAlertService.getAlertConfirmError('El Paquete seleccionado ya esta asociado al Suscriptor')
+            this._swalAlertService.getAlertConfirmError(traducir('WEB.GESTION_PAQUETE_SUSCRIPTOR.EL_PAQUETE_SELECCIONADO_YA_ESTA'))
         }
     }
 

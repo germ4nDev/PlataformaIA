@@ -1,0 +1,13 @@
+<section class="bloque bloque--alterno">
+  <div class="contenedor">
+    <pp-encabezado-seccion [s]="s" />
+    <ul class="fichas" role="list">
+      @for (e of s.elementos; track $index) {
+        <li class="ficha"><pp-icono [nombre]="e.icono || 'check'" [tamano]="18" />{{ e.titulo || e.texto }}</li>
+      }
+    </ul>
+    @if (s.enlace) {
+      <div class="acciones acciones--arriba"><pp-enlace [url]="s.enlace.url" clase="boton boton--acento">{{ s.enlace.texto }}</pp-enlace></div>
+    }
+  </div>
+</section>

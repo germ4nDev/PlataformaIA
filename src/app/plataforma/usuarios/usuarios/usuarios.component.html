@@ -74,7 +74,7 @@
                         [uploadModalLabel]="'Cargar Excel' | translate" (uploadModalClick)="abrirModalCargueMasivo()"
                         (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                         (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)">
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_USR_CREAR" permisoEdit="ACT_USR_ACTUALIZAR" permisoDelete="ACT_USR_ELIMINAR" permisoUpload="ACT_USR_CARGUE">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>
@@ -95,7 +95,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title">{{ 'USUARIOS.CAMBIOCLAVE.TITULO' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-custom" aria-label="Close"
+                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate"
                     (click)="cerrarModal()"></button>
             </div>
 
@@ -154,7 +154,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title">{{ 'USUARIOS.CARGUEMASIVO.TITULO' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-custom" aria-label="Close"
+                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate"
                     (click)="cerrarModalCargueMasivo()"></button>
             </div>
 
@@ -191,7 +191,7 @@
                                     <!-- 2. El Botón Estilizado -->
                                     <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                                         (click)="fileInputModal.click()">
-                                        Seleccionar Archivo
+                                        {{ 'WEB.USUARIOS.SELECCIONAR_ARCHIVO' | translate }}
                                     </button>
 
                                     <!-- 3. Indicador Visual del Archivo Seleccionado -->
@@ -199,7 +199,7 @@
                                         📄 {{ archivoExcelSeleccionado.name }}
                                     </span>
                                     <span class="ms-3 text-muted" *ngIf="!archivoExcelSeleccionado">
-                                        No se ha seleccionado archivo
+                                        {{ 'WEB.USUARIOS.NO_SE_HA_SELECCIONADO_ARCHIVO' | translate }}
                                     </span>
 
                                 </div>

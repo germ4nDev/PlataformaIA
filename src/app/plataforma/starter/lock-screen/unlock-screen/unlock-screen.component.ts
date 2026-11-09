@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
 import { Component, OnInit } from '@angular/core';
@@ -101,7 +102,7 @@ export class UnlockScreenComponent implements OnInit {
                 if (!resp.ok) {
                     Swal.fire({
                         title: resp.msg,
-                        text: 'La dirección de correo electrónico ingresada no se encuentra registrada en nuestro sistema!',
+                        text: traducir('WEB.UNLOCK_SCREEN.LA_DIRECCION_DE_CORREO_ELECTRONICO'),
                         icon: 'error',
                         showCloseButton: true
                     });
@@ -116,7 +117,7 @@ export class UnlockScreenComponent implements OnInit {
             catchError((err) => {
                 this.loading = false;
                 this.error = err;
-                Swal.fire('Error', err, 'error');
+                Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), err, 'error');
                 return of(null);
             })
         ).subscribe();

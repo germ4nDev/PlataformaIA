@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
@@ -160,7 +161,7 @@ export class ContenidosComponent implements OnInit {
             this.consultarRegistros();
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('SITIOS.CONTENIDOS.ELIMINARERROR'), 'error');
+            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('SITIOS.CONTENIDOS.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });

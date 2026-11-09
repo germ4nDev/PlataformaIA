@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -35,7 +36,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-toneladas-chart',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './toneladas-chart.component.html',
     styleUrls: ['./toneladas-chart.component.scss'],
     encapsulation: ViewEncapsulation.None

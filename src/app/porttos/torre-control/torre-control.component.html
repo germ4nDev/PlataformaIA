@@ -1,14 +1,18 @@
 <!-- HEADER GLOBAL -->
-<app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="'Plataforma de Logística y Gestión Portuaria'"
+<app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="('PORTTOS.TORRE_CONTROL.PLATAFORMA_DE_LOGISTICA_Y_GESTION' | translate)"
     [pestanaActiva]="pestanaActiva" [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()"
-    (abrirCatalogo)="mostrarLobby = true">
+    (abrirCatalogo)="abrirCatalogoDesdeEncabezado()" [pestanas]="pestanasVisibles"
+    (pestanaElegida)="cambiarPestana($event)" (abrirPestanas)="abrirPestanasDesdeEncabezado()"
+    (restaurar)="restaurarTableroDefault()">
 </app-tc-header>
 
-<div class="tc-dashboard-container d-flex flex-column" style="position: relative; height: calc(100vh - 110px);">
+<div class="tc-dashboard-container d-flex flex-column" style="position: relative;"
+    [style.height]="esTelefono ? 'calc(100vh - 56px)' : 'calc(100vh - 110px)'">
 
     <!-- BARRA DE TABS SUPERIOR -->
-    <div class="main-tabs-wrapper d-flex justify-content-between align-items-center mb-3 w-100 gap-3">
-        <div class="d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0" style="scrollbar-width: none;">
+    <!-- Teléfono (CC-123): sin barra de pestañas ni engranaje (están en el menú lateral del encabezado); el panel de los catálogos sigue aquí -->
+    <div class="main-tabs-wrapper d-flex justify-content-between align-items-center mb-3 w-100 gap-3" [class.tc-telefono]="esTelefono">
+        <div *ngIf="!esTelefono" class="d-flex align-items-center flex-grow-1 overflow-auto m-0 p-0" style="scrollbar-width: none;">
             <button *ngFor="let pestana of pestanasVisibles" type="button" class="tabs-container btn-main-tab m-0"
                 [class.active]="pestanaActiva === pestana.codigoPestana"
                 (click)="cambiarPestana(pestana.codigoPestana)">
@@ -24,8 +28,8 @@
         <div class="d-flex align-items-center gap-2 flex-shrink-0">
             <div class="porttos-config-menu position-relative">
 
-                <button type="button" class="border-0 shadow-none btn-menu fab-principal" (click)="toggleMenuConfig()"
-                    [class.activo]="menuConfigAbierto" title="Configuración del Tablero">
+                <button *ngIf="!esTelefono" type="button" class="border-0 shadow-none btn-menu fab-principal" (click)="toggleMenuConfig()"
+                    [class.activo]="menuConfigAbierto" [title]="'PORTTOS.TORRE_CONTROL.CONFIGURACION_DEL_TABLERO' | translate">
                     <i class="icon feather" [ngClass]="menuConfigAbierto ? 'icon-x' : 'icon-settings'"></i>
                 </button>
 
@@ -34,16 +38,17 @@
                     <!-- VISTA 1: Grilla de Botones -->
                     <ng-container *ngIf="!mostrarLobby && !mostrarLobbyPestanas">
                         <div class="config-grid">
-                            <button (click)="mostrarLobbyPestanas = true" title="Personalizar Pestañas">
+                            <button (click)="mostrarLobbyPestanas = true" [title]="'PORTTOS.TORRE_CONTROL.PERSONALIZAR_PESTANAS' | translate">
                                 <i class="icon feather icon-layers"></i>
                             </button>
-                            <button (click)="mostrarLobby = true" title="Personalizar Widgets de la Pestaña">
+                            <!-- abrirLobbyModal() marca en el catálogo lo que ya está en el tablero (CC-122; en el teléfono no hay caché) -->
+                            <button (click)="abrirLobbyModal()" [title]="'PORTTOS.TORRE_CONTROL.PERSONALIZAR_WIDGETS_DE_LA_PESTANA' | translate">
                                 <i class="icon feather icon-plus"></i>
                             </button>
-                            <button (click)="toggleBloqueoTablero(); toggleMenuConfig()" title="Bloquear/Desbloquear">
+                            <button (click)="toggleBloqueoTablero(); toggleMenuConfig()" [title]="'PORTTOS.TORRE_CONTROL.BLOQUEAR_DESBLOQUEAR' | translate">
                                 <i class="icon feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
                             </button>
-                            <button (click)="restaurarTableroDefault(); toggleMenuConfig()" title="Restaurar Tablero">
+                            <button (click)="restaurarTableroDefault(); toggleMenuConfig()" [title]="'PORTTOS.TORRE_CONTROL.RESTAURAR_TABLERO' | translate">
                                 <i class="icon feather icon-refresh-cw"></i>
                             </button>
                         </div>
@@ -147,8 +152,8 @@
         <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100"
             style="min-height: 300px;">
             <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
-            <h5 class="text-white">Iniciando Centro de Control Portuario...</h5>
-            <small class="text-secondary">Descargando configuraciones y catálogo de widgets.</small>
+            <h5 class="text-white">{{ 'PORTTOS.TORRE_CONTROL.INICIANDO_CENTRO_DE_CONTROL_PORTUARIO' | translate }}</h5>
+            <small class="text-secondary">{{ 'PORTTOS.TORRE_CONTROL.DESCARGANDO_CONFIGURACIONES_Y_CATALOGO_D' | translate }}</small>
         </div>
     </ng-template>
 

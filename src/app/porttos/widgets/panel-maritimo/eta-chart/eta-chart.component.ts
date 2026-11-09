@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -34,7 +36,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-eta-chart',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './eta-chart.component.html',
     styleUrls: ['./eta-chart.component.scss']
 })
@@ -156,7 +158,7 @@ export class EtaChartComponent implements OnInit, AfterViewInit, OnChanges, OnDe
             this.datasets = raw.datasets.map((ds: any, idx: number) => {
                 const dataNum = (ds.data || []).map((v: any) => Number(v || 0));
                 return {
-                    label: ds.label || 'Retraso prom. (h)',
+                    label: ds.label || traducir('PORTTOS.ETA_CHART.RETRASO_PROM_H'),
                     data: dataNum,
                     color:
                         ds.backgroundColor ||
@@ -180,7 +182,7 @@ export class EtaChartComponent implements OnInit, AfterViewInit, OnChanges, OnDe
                 valores.length > 0
                     ? [
                         {
-                            label: 'Retraso prom. (h)',
+                            label: traducir('PORTTOS.ETA_CHART.RETRASO_PROM_H'),
                             data: valores,
                             color: valores.map((v: number) =>
                                 v >= 3.5 ? '#ef4444' : v >= 2.0 ? '#f59e0b' : '#00d4ff'

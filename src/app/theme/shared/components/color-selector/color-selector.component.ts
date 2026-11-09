@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +11,7 @@ interface Setting {
 @Component({
   selector: 'app-color-selector',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './color-selector.component.html',
   styleUrl: './color-selector.component.scss'
 })

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -32,7 +33,7 @@ export interface IResumenValidacionGate {
 @Component({
     selector: 'app-gate-validacion',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './gate-validacion.component.html',
     styleUrls: ['./gate-validacion.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -170,7 +171,7 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || '🛡 Pre-Gate · Validación',
-            subtitulo: raw.subtitulo || 'Control de enturnamiento y validación documental',
+            subtitulo: raw.subtitulo || 'PORTTOS.GATE_VALIDACION.CONTROL_DE_ENTURNAMIENTO_Y_VALIDACION',
             icono: raw.icono || 'feather icon-check-square',
             resumen: resumenNormalizado
         };
@@ -179,12 +180,12 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
     // ---------------------------------------------------------------- vista ampliada (2026-10-24)
 
     public readonly columnasObservadas: ColumnaTabla[] = [
-        { campo: 'placa', titulo: 'Placa', tipo: 'principal' },
-        { campo: 'transportador', titulo: 'Transportador' },
-        { campo: 'terminal', titulo: 'Terminal' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-        { campo: 'fallas', titulo: 'Falla en', tipo: 'lista' },
-        { campo: 'sinDato', titulo: 'Sin dato en', tipo: 'lista' }
+        { campo: 'placa', titulo: 'PORTTOS.TABLE_COLA_GATE.PLACA', tipo: 'principal' },
+        { campo: 'transportador', titulo: 'PORTTOS.TABLE_COLA_GATE.TRANSPORTADOR' },
+        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+        { campo: 'fallas', titulo: 'PORTTOS.GATE_VALIDACION.FALLA_EN', tipo: 'lista' },
+        { campo: 'sinDato', titulo: 'PORTTOS.GATE_VALIDACION.SIN_DATO_EN', tipo: 'lista' }
     ];
 
     /** Aprobadas / fallidas / sin dato por tipo de validación (lo calcula el API). */

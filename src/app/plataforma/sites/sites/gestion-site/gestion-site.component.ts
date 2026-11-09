@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
@@ -72,7 +73,7 @@ export class GestionSiteComponent implements OnInit {
             console.log('respuesta componente', this.FormRegistro);
           },
           error: () => {
-            Swal.fire('Error', 'No se pudo obtener el sitio', 'error');
+            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SITE.NO_SE_PUDO_OBTENER_EL'), 'error');
           }
         });
       } else {
@@ -147,12 +148,12 @@ export class GestionSiteComponent implements OnInit {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
             this.router.navigate(['/sites/sites']);
           } else {
-            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
         }
       });
     } else {
@@ -167,7 +168,7 @@ export class GestionSiteComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+          Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
         }
       });
     }

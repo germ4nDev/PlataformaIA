@@ -1,5 +1,5 @@
-<app-widget-shell [titulo]="data?.titulo || 'Ocupación de Planta'"
-    [subtitulo]="data?.subtitulo || 'GOLAR FREEZE - BRAZOS 1 Y 2'" [icono]="'feather icon-database'"
+<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.GNL_TANQUE_WIDGET.OCUPACION_DE_PLANTA' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || 'GOLAR FREEZE - BRAZOS 1 Y 2'" [icono]="'feather icon-database'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- PROYECCIÓN AL HEADER: Segmento y estado de Válvula SCADA -->
@@ -33,15 +33,15 @@
                 {{ nivelOcupacion | number:'1.0-1' }}%
             </h2>
             <span class="text-white fw-bold" style="font-size: 0.85rem;">
-                {{ volumenActualM3 | number:'1.0-0' }} m³ almacenados
+                {{ 'PORTTOS.GNL_TANQUE_WIDGET.M_ALMACENADOS' | translate: { p0: (volumenActualM3 | number:'1.0-0') } }}
             </span>
             <span class="small text-muted mt-1">
-                Capacidad: {{ capacidadMaximaM3 | number:'1.0-0' }} m³
+                {{ 'PORTTOS.GNL_TANQUE_WIDGET.CAPACIDAD_M' | translate: { p0: (capacidadMaximaM3 | number:'1.0-0') } }}
             </span>
             <span class="small mt-1" [ngClass]="estadoBomba === 1 ? 'text-success' : 'text-muted'"
                 style="font-size: 0.72rem;">
                 <i class="feather icon-activity me-1"></i>
-                Bomba: {{ estadoBomba === 1 ? 'EN LÍNEA' : 'STANDBY' }}
+                {{ 'PORTTOS.GNL_TANQUE_WIDGET.BOMBA' | translate: { p0: estadoBomba === 1 ? 'EN LÍNEA' : 'STANDBY' } }}
             </span>
         </div>
 

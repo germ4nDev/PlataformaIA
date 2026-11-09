@@ -70,8 +70,8 @@
                         <!-- Header Usuarios -->
                         <div class="col-md-12" *ngIf="usuariosMostrados.length > 0">
                             <div class="text-center flex flex-col justify-center"><br />
-                                <h4 class="titulo-container">Usuarios Filtrados</h4>
-                                <h6 class="subtitulo-container">Seleccione los usuarios para asignarles el rol</h6><br>
+                                <h4 class="titulo-container">{{ 'WEB.GESTION_USUARIOS_ROLE.USUARIOS_FILTRADOS' | translate }}</h4>
+                                <h6 class="subtitulo-container">{{ 'WEB.GESTION_USUARIOS_ROLE.SELECCIONE_LOS_USUARIOS_PARA_ASIGNARLES' | translate }}</h6><br>
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                     (click)="btnAsociarTodosClick()">
                                     {{ 'PLATAFORMA.ALLDATA' | translate }}
@@ -101,7 +101,7 @@
                         <!-- Mensaje Vacio -->
                         <div class="col-md-12" *ngIf="usuariosMostrados.length === 0 && codigoSuscriptor !== ''">
                             <div class="alert alert-warning text-center mt-3">
-                                No se encontraron usuarios con los parámetros seleccionados.
+                                {{ 'WEB.GESTION_USUARIOS_ROLE.NO_SE_ENCONTRARON_USUARIOS_CON' | translate }}
                             </div>
                         </div>
                     </div>

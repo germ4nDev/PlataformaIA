@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -98,7 +99,7 @@ export class GestionTerminalPanelComponent implements OnInit {
                     console.log('data registro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el Terminal', 'error')
+                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_TERMINAL_PANEL.NO_SE_PUDO_OBTENER_EL'), 'error')
                 }
             })
         }
@@ -218,7 +219,7 @@ export class GestionTerminalPanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('TerminalS.CREATESUCCSESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo actualizar el puertto')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_TERMINAL_PANEL.NO_SE_PUDO_ACTUALIZAR_EL'))
                 }
             })
         } else {
@@ -240,7 +241,7 @@ export class GestionTerminalPanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('TerminalS.ELIMINAREXITOSA')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo crear el Terminal')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_TERMINAL_PANEL.NO_SE_PUDO_CREAR_EL'))
                 }
             })
         }

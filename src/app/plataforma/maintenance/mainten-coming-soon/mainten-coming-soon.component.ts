@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // angular import
 import { Component } from '@angular/core';
 
@@ -7,7 +8,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-mainten-coming-soon',
   standalone: true,
-  imports: [RouterModule],
+  imports: [TranslateModule, RouterModule],
   templateUrl: './mainten-coming-soon.component.html',
   styleUrls: ['./mainten-coming-soon.component.scss']
 })

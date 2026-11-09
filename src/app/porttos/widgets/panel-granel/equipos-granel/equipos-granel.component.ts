@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +18,7 @@ import { TablaTclComponent, ColumnaTabla } from '../../shared/tabla-tcl/tabla-tc
 @Component({
     selector: 'app-equipos-granel',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent],
     templateUrl: './equipos-granel.component.html',
     styleUrls: ['./equipos-granel.component.scss']
 })
@@ -29,18 +30,18 @@ export class EquiposGranelComponent extends WidgetTableroBase<TableroGranel> {
     public filas: any[] = [];
     public readonly mensajeVacio = 'Sin equipos de granel registrados.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'codigo', titulo: 'Equipo', tipo: 'principal' },
-        { campo: 'descripcion', titulo: 'Tipo' },
-        { campo: 'motonave', titulo: 'Motonave asignada' },
-        { campo: 'producto', titulo: 'Producto' },
-        { campo: 'rendimientoTmh', titulo: 'Rendimiento', tipo: 'numero', unidad: 't/h' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' }
+        { campo: 'codigo', titulo: 'PORTTOS.EQUIPOS_GRANEL.EQUIPO', tipo: 'principal' },
+        { campo: 'descripcion', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO' },
+        { campo: 'motonave', titulo: 'PORTTOS.EQUIPOS_GRANEL.MOTONAVE_ASIGNADA' },
+        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
+        { campo: 'rendimientoTmh', titulo: 'PORTTOS.PRODUCTIVIDAD_CHART.RENDIMIENTO', tipo: 'numero', unidad: 't/h' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'tipo', titulo: 'Código de tipo' },
-        { campo: 'terminal', titulo: 'Terminal' },
-        { campo: 'capacidadTmh', titulo: 'Nominal', tipo: 'numero', unidad: 't/h' },
+        { campo: 'tipo', titulo: 'PORTTOS.EQUIPOS_GRANEL.CODIGO_DE_TIPO' },
+        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+        { campo: 'capacidadTmh', titulo: 'PORTTOS.EQUIPOS_GRANEL.NOMINAL', tipo: 'numero', unidad: 't/h' },
         { campo: 'rendimientoPct', titulo: '% del nominal', tipo: 'numero', unidad: '%' }
     ];
     get operando(): number { return this.filas.filter((f) => f.estado === 'OPERANDO').length; }

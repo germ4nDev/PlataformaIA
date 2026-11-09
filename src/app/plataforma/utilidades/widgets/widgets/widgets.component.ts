@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef, isDevMode } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -27,7 +28,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service'
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
 import { PTLWidgetMaestroModel } from 'src/app/theme/shared/_helpers/models/PTLWidgetMaestro.model'
-import { camposDelWidget, canalDelWidget } from '../nucleo'
+import { camposDelWidget, canalDelFormulario, canalDelWidget } from '../nucleo'
 
 @Component({
     selector: 'app-widgets',
@@ -237,8 +238,8 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                     filteredWidgets = filteredWidgets.filter(app => contiene(app.codigoPestana, pestana));
                 }
 
-                if (canal === 'movil' || canal === 'web') {
-                    filteredWidgets = filteredWidgets.filter(app => !!app.movil === (canal === 'movil'));
+                if (canal === 'web' || canal === 'telefono' || canal === 'ambos') {
+                    filteredWidgets = filteredWidgets.filter(app => canalDelFormulario(app) === canal);
                 }
 
                 if (descripcion) {
@@ -420,7 +421,7 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                                     descripcionLog: this.translate.instant('WIDGETS.ELIMINARERROR')
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                Swal.fire('Error', this.translate.instant('WIDGETS.ELIMINARERROR'), 'error')
+                                Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('WIDGETS.ELIMINARERROR'), 'error')
                             }
                         })
                     }
@@ -516,7 +517,7 @@ export class WidgetsComponent implements OnInit, OnDestroy {
                             descripcionLog: this.translate.instant('WIDGETS.ELIMINARERROR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('Error', this.translate.instant('WIDGETS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('WIDGETS.ELIMINARERROR'), 'error')
                     }
                 })
             }

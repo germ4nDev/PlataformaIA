@@ -4,8 +4,8 @@
 
         <span class="status-badge" [ngClass]="estado">
             <i class="fas fa-circle status-dot"></i>
-            {{ estado === 'operando' ? 'Operación Normal' : (estado === 'congestion' ? 'Alta Congestión' :
-            'Mantenimiento') }}
+            {{ estado === 'operando' ? ('WEB.TERMINAL_PANEL.OPERACION_NORMAL' | translate) : (estado === 'congestion' ? ('WEB.TERMINAL_PANEL.ALTA_CONGESTION' | translate) :
+          ('WEB.TERMINAL_PANEL.MANTENIMIENTO' | translate)o') }}
         </span>
     </div>
 

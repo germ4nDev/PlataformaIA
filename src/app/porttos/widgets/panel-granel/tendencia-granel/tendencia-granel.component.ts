@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -18,7 +20,7 @@ import { RangoTclComponent } from '../../shared/rango-tcl/rango-tcl.component';
 @Component({
     selector: 'app-tendencia-granel',
     standalone: true,
-    imports: [RangoTclComponent, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
+    imports: [TranslateModule, RangoTclComponent, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent],
     templateUrl: './tendencia-granel.component.html',
     styleUrls: ['./tendencia-granel.component.scss']
 })
@@ -41,7 +43,7 @@ export class TendenciaGranelComponent extends WidgetTableroBase<TableroGranel> {
 
     protected alRecibir(d: TableroGranel | null): void {
         this.labels = d?.tendencia.labels || [];
-        this.series = [{ label: 'Toneladas por hora', data: d?.tendencia.valores || [], color: '#51a351', relleno: true }];
+        this.series = [{ label: traducir('PORTTOS.TENDENCIA_GRANEL.TONELADAS_POR_HORA'), data: d?.tendencia.valores || [], color: '#51a351', relleno: true }];
         this.pico = d?.tendencia.pico || null;
         this.total = d?.tendencia.total24h || 0;
     }

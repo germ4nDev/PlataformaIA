@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -55,10 +56,10 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
     DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
 
     ETIPOS_FARO = [
-        { id: 'PEAJE', label: 'Peaje', color: '#22c55e' },
-        { id: 'PUNTO_CONTROL', label: 'Punto de Control', color: '#facc15' },
-        { id: 'ZONA_TERRESTRE', label: 'Zona Terrestre', color: '#f59e0b' },
-        { id: 'ZONA_MARITIMA', label: 'Zona Marítima', color: '#dc2626' }
+        { id: 'PEAJE', label: traducir('PORTTOS.COMUN.PEAJE'), color: '#22c55e' },
+        { id: 'PUNTO_CONTROL', label: traducir('PORTTOS.COMUN.PUNTO_DE_CONTROL'), color: '#facc15' },
+        { id: 'ZONA_TERRESTRE', label: traducir('PORTTOS.COMUN.ZONA_TERRESTRE'), color: '#f59e0b' },
+        { id: 'ZONA_MARITIMA', label: traducir('PORTTOS.COMUN.ZONA_MARITIMA'), color: '#dc2626' }
     ];
 
     moduloTituloExcel: string = ''
@@ -136,7 +137,7 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
 
                     // Evitar errores si this.ETIPOS_FARO no encuentra coincidencia
                     const tipoFaro = this.ETIPOS_FARO.find(x => x.id == fr.tipo_faro);
-                    fr.nomTipo = tipoFaro ? tipoFaro.label : 'Desconocido';
+                    fr.nomTipo = tipoFaro ? traducir(tipoFaro.label) : traducir('PORTTOS.COMUN.DESCONOCIDO');
 
                     // 1. Manejo seguro de ubicacion_geo (El marcador/punto central)
                     const geoUbicacion = fr.ubicacion_geo?.features?.[0]?.geometry;
@@ -298,7 +299,7 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
                             descripcionLog: this.translate.instant('faros.ELIMINARERROR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('Error', this.translate.instant('faros.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('faros.ELIMINARERROR'), 'error')
                     }
                 })
             }

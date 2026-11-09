@@ -6,16 +6,19 @@
       - esperarSesion(): avisa 'listo' cada segundo hasta que la app entregue la sesión (o se agote el tiempo).
       - avisar(): mensaje a la app (solo a sus orígenes).
       - cerrarSesion(motivo): una sola vez; borra la sesión de la pestaña y la app hace su cierre de siempre.
+      - canal (OT-017): 'tableta' (la web tal cual) o 'telefono' (rejilla de 4 columnas y layout propio). Lo fija la sesión que
+        entrega la app y se recuerda en la pestaña; fuera del marco siempre 'tableta'. esTelefono = embebida y canal 'telefono'.
     Contrato y validaciones en plataforma/embebido/nucleo.
 */
 import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import {
-    MotivoCierreEmbebido, SesionEntregada, TipoMensajeWeb, esRutaEmbebida, leerSesionEntregada, mensajeParaApp,
+    CanalEmbebido, MotivoCierreEmbebido, SesionEntregada, canalEntregado, TipoMensajeWeb, esRutaEmbebida, leerSesionEntregada, mensajeParaApp,
     origenAppPermitido, origenesDestino
 } from 'src/app/plataforma/embebido/nucleo';
 
 const LLAVE_MODO = 'modoEmbebido';
+const LLAVE_CANAL = 'canalEmbebido';
 
 @Injectable({ providedIn: 'root' })
 export class EmbebidoService {
@@ -25,6 +28,22 @@ export class EmbebidoService {
 
     constructor(private zona: NgZone) {
         this.activo = this.detectar();
+    }
+
+    /** Canal de la app que embebe la web; fuera del marco, 'tableta'. */
+    get canal(): CanalEmbebido {
+        if (!this.activo) return 'tableta';
+        try { return canalEntregado(sessionStorage.getItem(LLAVE_CANAL)); } catch (_) { return 'tableta'; }
+    }
+
+    /** true solo dentro de la app en un teléfono (OT-017). La tableta y la web nunca. */
+    get esTelefono(): boolean {
+        return this.activo && this.canal === 'telefono';
+    }
+
+    fijarCanal(canal: CanalEmbebido): void {
+        if (!this.activo) return;
+        try { sessionStorage.setItem(LLAVE_CANAL, canalEntregado(canal)); } catch (_) { /* sin almacenamiento */ }
     }
 
     esperarSesion(tiempoMs = 20000): Promise<SesionEntregada> {

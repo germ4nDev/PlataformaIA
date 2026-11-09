@@ -384,7 +384,7 @@ html {
 }
 
 .content-scroll-wrapper {
-    height: calc(100vh - 90px);
+    height: calc(100vh - 80px);
     overflow-y: hidden;
     overflow-x: hidden;
 }
@@ -2267,4 +2267,99 @@ gridster-item {
 #toast-container>.ngx-toastr.toast-ia {
     border-left: 4px solid #7c5cff;
     box-shadow: 0 0 0 1px rgba(124, 92, 255, 0.45), 0 4px 14px rgba(124, 92, 255, 0.25);
+}
+
+/* ==========================================================================
+   Pantallas de administración (patrón lista y gestión, regla 19): el card del menú (.aside-left) y el del contenido (.content-area)
+   empiezan y terminan a la misma altura. La fila ocupa el alto que deja la barra superior y cada card la llena (2026-11-09, usuario).
+   Reemplaza los altos sueltos (calc(100vh - 80px) del card de la tabla, -1rem de .card-table y el alto según el contenido del menú).
+   ========================================================================== */
+:root {
+    --alto-barra-admin: 60px; /* alto de .navbar (nav-bar.component.scss) */
+    --margen-cards-admin: 0.5rem;
+}
+
+/* La barra trae margin-bottom: 1rem; aquí se quita para que el espacio de arriba sea el mismo de los lados y de abajo. */
+app-nav-bar:has(+ .layout-wrapper > .aside-left) .navbar {
+    margin-bottom: 0 !important;
+}
+
+.layout-wrapper:has(> .aside-left) {
+    height: calc(100vh - var(--alto-barra-admin));
+    align-items: stretch;
+    gap: var(--margen-cards-admin);
+    padding: var(--margen-cards-admin);
+    box-sizing: border-box;
+
+    > .aside-left,
+    > .content-area {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    > .aside-left > .card,
+    > .content-area > .card {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto !important;
+        margin: 0 !important;
+        overflow: hidden;
+    }
+
+    > .content-area > .card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* El cuerpo no hace scroll: la tabla toma el alto que sobra (título, barra y paginación quedan fijos)
+       y solo ella se desplaza cuando hay más filas de las que caben. Reemplaza el alto fijo de 66vh de .content-g67. */
+    > .content-area > .card > .card-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto; /* formularios de gestión: scroll normal si no caben */
+    }
+
+    > .content-area > .card > .card-body:has(app-table-data) {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        > *,
+        app-table-data,
+        .datatables-wrapper {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .datatables-wrapper > :not(.content-g67) {
+            flex: 0 0 auto;
+        }
+
+        .datatables-wrapper > br {
+            display: none;
+        }
+
+        .content-g67 {
+            flex: 1 1 auto;
+            min-height: 0;
+            height: auto !important;
+            margin-bottom: var(--margen-cards-admin);
+        }
+
+        .content-g67 > .tableFixHead {
+            max-height: none;
+        }
+    }
+
+    > .aside-left .filtros-scroll-wrapper,
+    > .aside-left .nav-scroll-wrapper {
+        height: auto;
+        max-height: 100%;
+    }
 }

@@ -323,23 +323,29 @@
                             </div>
                         </div>
 
-                        <!-- Canal (migración 028): un widget de teléfono solo lo muestra la app en el teléfono;
-                             la web y la tableta no lo ofrecen. Los roles se asignan igual en «Widgets por rol». -->
+                        <!-- Canal (migración 030, OT-017): web y tableta, solo teléfono o los tres equipos.
+                             Los roles se asignan igual en «Widgets por rol». -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'WIDGETS.GESTION.CANAL' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
-                                        <input name="movil" type="radio" [value]="false"
-                                            [(ngModel)]="FormRegistro.movil" />
+                                        <input name="canal" type="radio" value="web"
+                                            [(ngModel)]="FormRegistro.canal" />
                                         <div class="radio-circle"></div>
                                         <span class="radio-label">{{ 'WIDGETS.CANALWEB' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
-                                        <input name="movil" type="radio" [value]="true"
-                                            [(ngModel)]="FormRegistro.movil" />
+                                        <input name="canal" type="radio" value="telefono"
+                                            [(ngModel)]="FormRegistro.canal" />
                                         <div class="radio-circle"></div>
                                         <span class="radio-label">{{ 'WIDGETS.CANALMOVIL' | translate }}</span>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="canal" type="radio" value="ambos"
+                                            [(ngModel)]="FormRegistro.canal" />
+                                        <div class="radio-circle"></div>
+                                        <span class="radio-label">{{ 'WIDGETS.CANALAMBOS' | translate }}</span>
                                     </label>
                                 </div>
                                 <small class="text-muted">{{ 'WIDGETS.GESTION.CANALAYUDA' | translate }}</small>

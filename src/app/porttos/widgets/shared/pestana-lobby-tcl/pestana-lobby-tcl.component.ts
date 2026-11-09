@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // 🟢 1. Importamos el CDK de Drag & Drop
@@ -9,7 +10,7 @@ import { colorPestana, iconoPestana } from '../iconos-pestana';
     selector: 'app-pestana-lobby-tcl',
     standalone: true,
     // 🟢 2. Lo añadimos a los imports
-    imports: [CommonModule, DragDropModule],
+    imports: [TranslateModule, CommonModule, DragDropModule],
     templateUrl: './pestana-lobby-tcl.component.html',
     styleUrls: ['./pestana-lobby-tcl.component.scss']
 })

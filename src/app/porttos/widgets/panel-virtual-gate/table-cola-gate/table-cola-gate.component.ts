@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,7 +12,7 @@ import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tc
 @Component({
     selector: 'app-table-cola-gate',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './table-cola-gate.component.html',
     styleUrls: ['./table-cola-gate.component.scss']
 })
@@ -22,24 +23,24 @@ export class TableColaGateComponent implements OnInit, OnChanges, OnDestroy {
 
     /** Vista ampliada (2026-10-24): todas las columnas que ya trae cada cita, con búsqueda, orden y CSV. */
     public readonly columnasDetalle: ColumnaTabla[] = [
-        { campo: 'placa', titulo: 'Placa', tipo: 'principal' },
-        { campo: 'conductor', titulo: 'Conductor' },
-        { campo: 'transportador', titulo: 'Transportador' },
-        { campo: 'tipo_carga', titulo: 'Carga' },
-        { campo: 'operacion', titulo: 'Operación' },
-        { campo: 'terminal', titulo: 'Terminal' },
-        { campo: 'fecha_hora_cita', titulo: 'Cita', tipo: 'fecha' },
-        { campo: 'franja_horaria', titulo: 'Franja' },
-        { campo: 'tiempo_espera_minutos', titulo: 'Espera', tipo: 'numero', unidad: 'min' },
-        { campo: 'ubicacion', titulo: 'Ubicación' },
-        { campo: 'distancia_km', titulo: 'Distancia', tipo: 'numero', decimales: 1, unidad: 'km' },
-        { campo: 'distancia_estimada', titulo: 'Dist. estimada', tipo: 'si-no' },
-        { campo: 'peso_bascula_ton', titulo: 'Báscula', tipo: 'numero', decimales: 1, unidad: 't' },
+        { campo: 'placa', titulo: 'PORTTOS.TABLE_COLA_GATE.PLACA', tipo: 'principal' },
+        { campo: 'conductor', titulo: 'PORTTOS.TABLE_COLA_GATE.CONDUCTOR' },
+        { campo: 'transportador', titulo: 'PORTTOS.TABLE_COLA_GATE.TRANSPORTADOR' },
+        { campo: 'tipo_carga', titulo: 'PORTTOS.VESSEL_TABLE.CARGA' },
+        { campo: 'operacion', titulo: 'PORTTOS.COMUN.OPERACION' },
+        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+        { campo: 'fecha_hora_cita', titulo: 'PORTTOS.TABLE_COLA_GATE.CITA', tipo: 'fecha' },
+        { campo: 'franja_horaria', titulo: 'PORTTOS.TABLE_COLA_GATE.FRANJA' },
+        { campo: 'tiempo_espera_minutos', titulo: 'PORTTOS.TABLE_COLA_GATE.ESPERA', tipo: 'numero', unidad: 'min' },
+        { campo: 'ubicacion', titulo: 'PORTTOS.TABLE_COLA_GATE.UBICACION' },
+        { campo: 'distancia_km', titulo: 'PORTTOS.TABLE_COLA_GATE.DISTANCIA', tipo: 'numero', decimales: 1, unidad: 'km' },
+        { campo: 'distancia_estimada', titulo: 'PORTTOS.TABLE_COLA_GATE.DIST_ESTIMADA', tipo: 'si-no' },
+        { campo: 'peso_bascula_ton', titulo: 'PORTTOS.TABLE_COLA_GATE.BASCULA', tipo: 'numero', decimales: 1, unidad: 't' },
         { campo: 'ocr', titulo: 'OCR', tipo: 'estado' },
-        { campo: 'biometria', titulo: 'Biometría', tipo: 'estado' },
-        { campo: 'documental', titulo: 'Documental', tipo: 'estado' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-        { campo: 'imputados', titulo: 'Sin dato en', tipo: 'lista' }
+        { campo: 'biometria', titulo: 'PORTTOS.TABLE_COLA_GATE.BIOMETRIA', tipo: 'estado' },
+        { campo: 'documental', titulo: 'PORTTOS.TABLE_COLA_GATE.DOCUMENTAL', tipo: 'estado' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+        { campo: 'imputados', titulo: 'PORTTOS.TABLE_COLA_GATE.SIN_DATO_EN', tipo: 'lista' }
     ];
 
     /** Filas de la vista ampliada: validaciones como Aprobada / Fallida / Sin dato. */

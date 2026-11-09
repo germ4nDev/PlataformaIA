@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, inject } from '@angular/core'
+import { TranslateService } from '@ngx-translate/core'
+import { registrarTraductor } from './theme/shared/i18n/traducir'
+import { RouterOutlet } from '@angular/router'
+import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component'
 import { NavigationEnd, Router } from '@angular/router'
 import {
     AuthenticationService,
@@ -63,10 +67,14 @@ import { esRutaEmbebida } from './plataforma/embebido/nucleo'
 
 @Component({
     selector: 'app-root',
+  standalone: true, // OT-023 fase 5 (regla 21)
+  imports: [RouterOutlet, SpinnerComponent],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+    // Regla 22 (OT-025): traducir() de los .ts usa el mismo TranslateService de las plantillas
+    private readonly _traduccion = (() => { const t = inject(TranslateService); registrarTraductor((k, p) => t.instant(k, p)); return t; })()
     usuario: string = ''
 
     constructor(

@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Componente de presentación: gráfica de los widgets de pestaña (dona, barras o línea) con PorttosChartHelper,
@@ -14,7 +16,7 @@ export interface SerieGrafica { label: string; data: Array<number | null>; color
 @Component({
     selector: 'app-grafica-tcl',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './grafica-tcl.component.html',
     styleUrls: ['./grafica-tcl.component.scss']
@@ -63,13 +65,13 @@ export class GraficaTclComponent implements AfterViewInit, OnChanges, OnDestroy 
         } else if (this.tipo === 'linea') {
             this.chart = PorttosChartHelper.renderizarLinea(this.lienzo, this.chart, {
                 labels: this.labels, unidad: this.unidad, isEnfoque: this.isEnfoque,
-                datasets: this.series.map((s) => ({ label: s.label, data: s.data as number[], color: Array.isArray(s.color) ? s.color[0] : s.color, relleno: s.relleno }))
+                datasets: this.series.map((s) => ({ label: traducir(s.label), data: s.data as number[], color: Array.isArray(s.color) ? s.color[0] : s.color, relleno: s.relleno }))
             });
         } else {
             this.chart = PorttosChartHelper.renderizarBarras(this.lienzo, this.chart, {
                 labels: this.labels, unidad: this.unidad, apilado: this.apilado, horizontal: this.horizontal, isEnfoque: this.isEnfoque,
                 mostrarLeyenda: this.series.length > 1,
-                datasets: this.series.map((s) => ({ label: s.label, data: s.data.map((v) => v ?? 0), color: s.color }))
+                datasets: this.series.map((s) => ({ label: traducir(s.label), data: s.data.map((v) => v ?? 0), color: s.color }))
             });
         }
     }

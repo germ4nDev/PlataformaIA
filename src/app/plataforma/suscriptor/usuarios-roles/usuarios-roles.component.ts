@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
@@ -201,7 +202,7 @@ export class UsuariosRolesComponent implements OnInit {
                     return {
                         ...usuarioRole,
                         '_acciones': [{
-                            accion: 'INACTIVAR',
+                            accion: 'INACTIVAR', permiso: 'ACT_USUSC_ROLES',
                             letra: isActivo ? 'I' : 'A',
                             color: isActivo ? '#13af2d' : '#13af2d',
                             tooltip: isActivo ? this.translate.instant('USUARIOSROLES.INACTIVAR') : this.translate.instant('USUARIOSROLES.ACTIVAR')
@@ -417,7 +418,7 @@ export class UsuariosRolesComponent implements OnInit {
                             descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
+                        this._swalAlertService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
                     }
                 });
             }

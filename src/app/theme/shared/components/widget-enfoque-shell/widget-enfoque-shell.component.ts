@@ -1,10 +1,11 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-widget-enfoque-shell',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './widget-enfoque-shell.component.html',
     styleUrls: ['./widget-enfoque-shell.component.scss']
 })

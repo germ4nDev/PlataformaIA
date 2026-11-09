@@ -80,7 +80,7 @@
                         [showDeleteButton]="false" (viewRecord)="OnViewRegistroClick($event)"
                         [showDetailActions]="true" (newRecord)="OnNuevoRegistroClick()"
                         (accionSubtablaClick)="onAccionSubtabla($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)">
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_ACT_CREAR">
                     </app-table-data>
                 </ng-container>
 

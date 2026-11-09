@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // Angular Import
 import { Component, Input } from '@angular/core';
 
@@ -18,7 +19,7 @@ interface titleType {
 @Component({
   selector: 'app-breadcrumb',
   standalone: true,
-  imports: [RouterModule],
+  imports: [TranslateModule, RouterModule],
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss']
 })

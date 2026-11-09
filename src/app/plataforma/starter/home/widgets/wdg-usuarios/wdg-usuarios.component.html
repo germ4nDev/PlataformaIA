@@ -1,12 +1,12 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'Usuarios Conectados'"
-    [subtitulo]="widgetConfig?.subtitulo || 'Sesiones Activas'" [icono]="widgetConfig?.icono || 'feather icon-users'"
+<app-widget-shell [titulo]="widgetConfig?.titulo || ('WEB.WDG_USUARIOS.USUARIOS_CONECTADOS' | translate)"
+    [subtitulo]="widgetConfig?.subtitulo || ('WEB.WDG_USUARIOS.SESIONES_ACTIVAS' | translate)" [icono]="widgetConfig?.icono || 'feather icon-users'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- PROYECCIÓN AL HEADER: Badge de En Vivo (Verde) -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase d-flex align-items-center gap-1">
             <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem;"></span>
-            En vivo
+            {{ 'WEB.COMUN.EN_VIVO' | translate }}
         </span>
     </div>
 
@@ -17,8 +17,7 @@
         <h1 class="valor-contador text-white fw-bold mb-0" style="font-size: 3.5rem; letter-spacing: -2px;">
             {{ totalConectados }}
         </h1>
-        <span class="text-muted text-uppercase mt-1" style="font-size: 0.65rem; letter-spacing: 1px;">Activos
-            ahora</span>
+        <span class="text-muted text-uppercase mt-1" style="font-size: 0.65rem; letter-spacing: 1px;">{{ 'WEB.WDG_USUARIOS.ACTIVOS_AHORA' | translate }}</span>
 
         <div class="d-flex align-items-center justify-content-center mt-3">
             <div class="d-flex align-items-center">
@@ -37,7 +36,7 @@
                 </div>
             </div>
             <span class="text-muted ms-2 small" style="font-size: 0.75rem;">
-                {{ usuariosConectados.length === 1 ? '1 sesión activa' : usuariosConectados.length + ' sesiones activas'
+                {{ usuariosConectados.length === 1 ? ('WEB.WDG_USUARIOS.1_SESION_ACTIVA' | translate) : usuariosConectados.length +('WEB.WDG_USUARIOS.SESIONES_ACTIVAS_2' | translate)'
                 }}
             </span>
         </div>
@@ -48,10 +47,9 @@
     <div *ngIf="isEnfoque" class="w-100 h-100 p-2 overflow-auto animate__animated animate__fadeIn">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <p class="text-muted small mb-0">Auditoría en tiempo real de las sesiones activas, ubicación de navegación y
-                tiempo de permanencia.</p>
+            <p class="text-muted small mb-0">{{ 'WEB.WDG_USUARIOS.AUDITORIA_EN_TIEMPO_REAL_DE' | translate }}</p>
             <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill">
-                Total Activos: {{ totalConectados }}
+                {{ 'WEB.WDG_USUARIOS.TOTAL_ACTIVOS' | translate: { p0: totalConectados } }}
             </span>
         </div>
 
@@ -60,11 +58,11 @@
                 <thead>
                     <tr class="text-uppercase text-muted"
                         style="border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.75rem;">
-                        <th class="pb-2">Usuario & Rol</th>
-                        <th class="pb-2">Identificación / Correo</th>
-                        <th class="pb-2">Módulo / Aplicación</th>
-                        <th class="text-center pb-2">Tiempo de Sesión</th>
-                        <th class="text-center pb-2">Estado</th>
+                        <th class="pb-2">{{ 'WEB.WDG_USUARIOS.USUARIO_ROL' | translate }}</th>
+                        <th class="pb-2">{{ 'WEB.WDG_USUARIOS.IDENTIFICACION_CORREO' | translate }}</th>
+                        <th class="pb-2">{{ 'WEB.WDG_USUARIOS.MODULO_APLICACION' | translate }}</th>
+                        <th class="text-center pb-2">{{ 'WEB.WDG_USUARIOS.TIEMPO_DE_SESION' | translate }}</th>
+                        <th class="text-center pb-2">{{ 'WEB.WDG_USUARIOS.ESTADO' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,7 +114,7 @@
                         <td class="text-center py-3">
                             <span
                                 class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-1 rounded-pill">
-                                En Línea
+                                {{ 'WEB.WDG_USUARIOS.EN_LINEA' | translate }}
                             </span>
                         </td>
                     </tr>

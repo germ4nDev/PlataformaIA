@@ -21,10 +21,10 @@
                     <div class="d-flex flex-column pe-3">
                         <h4 class="titulo-formulario">
                             <span>{{ 'MODULOS.GESTION.NEW' | translate }}</span>
-                            <span class="titulo-container"> - Asignación al Paquete</span>
+                            <span class="titulo-container"> {{ 'WEB.GESTION_MODULOPQ.ASIGNACION_AL_PAQUETE' | translate }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            Seleccione la aplicación y suite para asignar sus módulos al paquete comercial.
+                            {{ 'WEB.GESTION_MODULOPQ.SELECCIONE_LA_APLICACION_Y_SUITE' | translate }}
                         </h6>
                     </div>
 
@@ -40,7 +40,7 @@
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">{{ 'MODULOS.GESTION.CREATE' | translate }} <i
                                     class="feather icon-save ms-2"></i></span>
-                            <span *ngIf="isSaving">Asignando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.GESTION_MODULOPQ.ASIGNANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
                     </div>
@@ -89,22 +89,21 @@
                                 <label
                                     *ngIf="f['codigoSuite'].invalid && (f['codigoSuite'].dirty || f['codigoSuite'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    Debe seleccionar una suite.
+                                    {{ 'WEB.GESTION_MODULOPQ.DEBE_SELECCIONAR_UNA_SUITE' | translate }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-12 mt-3" *ngIf="modulosPadre.length > 0">
                             <div class="text-center flex flex-col justify-center"><br />
-                                <h4 class="titulo-container">Modulos asociados al Paquete</h4>
-                                <h6 class="subtitulo-container"> Asocie todos los modulos que van a ser incluidos en el
-                                    Paquete
+                                <h4 class="titulo-container">{{ 'WEB.GESTION_MODULOPQ.MODULOS_ASOCIADOS_AL_PAQUETE' | translate }}</h4>
+                                <h6 class="subtitulo-container"> {{ 'WEB.GESTION_MODULOPQ.ASOCIE_TODOS_LOS_MODULOS_QUE' | translate }}
                                 </h6><br />
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                     (click)="btnAsociarTodosClick()">
                                     <i class="feather me-2"
                                         [ngClass]="todosSeleccionados ? 'icon-minus-square' : 'icon-check-square'"></i>
-                                    {{ todosSeleccionados ? 'Deseleccionar Todos' : 'Seleccionar Todos' }}
+                                    {{ todosSeleccionados ? ('WEB.GESTION_MODULOPQ.DESELECCIONAR_TODOS' | translate) : ('WEB.GESTION_MODULOPQ.SELECCIONAR_TODOS' | translate) }}
                                 </button>
                                 <br /><br />
                             </div>

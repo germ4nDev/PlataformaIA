@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -23,7 +24,7 @@ import { GnlStateService, ITelemetriaGNL } from 'src/app/theme/shared/service/ta
 @Component({
     selector: 'app-gnl-odometro-widget',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent],
     templateUrl: './gnl-odometro-widget.component.html',
     styleUrls: ['./gnl-odometro-widget.component.scss']
 })
@@ -93,7 +94,7 @@ export class GnlOdometroWidgetComponent implements OnInit, OnChanges, OnDestroy 
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'Energía Transferida',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_ODOMETRO_WIDGET.ENERGIA_TRANSFERIDA',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||

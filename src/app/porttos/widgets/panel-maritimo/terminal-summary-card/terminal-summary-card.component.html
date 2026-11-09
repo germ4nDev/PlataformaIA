@@ -1,6 +1,6 @@
 <!-- 🚨 1. EL SHELL DEBE ESTAR SIEMPRE ACTIVO, le pasamos el estado isEnfoque -->
-<app-widget-shell [titulo]="data.nombreTerminal || data.nombre || 'Terminal Marítimo'"
-    [subtitulo]="data.descripcionTerminal || data.descripcion || 'Operación Portuaria'"
+<app-widget-shell [titulo]="data.nombreTerminal || (data.nombre | translate) || ('PORTTOS.TERMINAL_SUMMARY_CARD.TERMINAL_MARITIMO' | translate)"
+    [subtitulo]="data.descripcionTerminal || (data.descripcion | translate) || ('PORTTOS.TERMINAL_SUMMARY_CARD.OPERACION_PORTUARIA' | translate)"
     [icono]="data.icono || 'feather icon-anchor'" [tituloFooter]="'TIEMPO MEDIO ESPERA VIRTUAL'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
@@ -12,12 +12,12 @@
             {{ data.status === 'warning' ? 'CONGESTIONADO' : 'OPERATIVO' }}
         </span>
         <span class="tc-badge rounded-pill border border-danger text-danger bg-transparent" *ngIf="data.badgeCount"
-            title="Muelles ocupados / muelles de la terminal">
+            [title]="'PORTTOS.TERMINAL_SUMMARY_CARD.MUELLES_OCUPADOS_MUELLES_DE_LA' | translate">
             {{ data.badgeCount }}
         </span>
         <span class="tc-badge rounded-pill bg-transparent" *ngIf="data.aisDisponible"
             [ngClass]="(data.kpis?.discrepanciasAis || 0) > 0 ? 'border-danger text-danger' : 'border-success text-success'"
-            [title]="'Confirmados por AIS: ' + (data.kpis?.confirmadosAis || 0) + ' · Sin confirmar: ' + (data.kpis?.sinConfirmarAis || 0) + ' · Diferencias: ' + (data.kpis?.discrepanciasAis || 0)">
+            [title]="('PORTTOS.TERMINAL_SUMMARY_CARD.CONFIRMADOS_POR_AIS' | translate) + (data.kpis?.confirmadosAis || 0) + ('PORTTOS.TERMINAL_SUMMARY_CARD.SIN_CONFIRMAR' | translate) + (data.kpis?.sinConfirmarAis || 0) + ('PORTTOS.TERMINAL_SUMMARY_CARD.DIFERENCIAS' | translate) + (data.kpis?.discrepanciasAis || 0)">
             AIS {{ data.kpis?.confirmadosAis || 0 }}/{{ data.kpis?.motonaves || 0 }}
         </span>
     </ng-template>
@@ -35,10 +35,10 @@
             <div class="docks-container-wrapper w-100">
                 <div class="docks-grid" [ngClass]="(data.docks?.length || 0) > 4 ? 'grid-panal' : 'grid-bloques'">
                     <div *ngFor="let muelle of data.docks" class="dock-box" [ngClass]="muelle?.class || 'default-dock'"
-                        [title]="(muelle?.label || muelle?.id) + (muelle?.barcoAtracado ? ' - ' + muelle.barcoAtracado : (muelle?.class === 'maintenance' ? ' - Mantenimiento' : ' - Disponible')) + (muelle?.ais?.texto && muelle.ais.estado !== 'LIBRE' && muelle.ais.estado !== 'SIN_DATOS' ? ' · ' + muelle.ais.texto : '')">
+                        [title]="((muelle?.label | translate) || muelle?.id) + (muelle?.barcoAtracado ? ' - ' + muelle.barcoAtracado : (muelle?.class === 'maintenance' ? ('PORTTOS.TERMINAL_SUMMARY_CARD.MANTENIMIENTO' | translate) : ('PORTTOS.TERMINAL_SUMMARY_CARD.DISPONIBLE' | translate))) + (muelle?.ais?.texto && muelle.ais.estado !== 'LIBRE' && muelle.ais.estado !== 'SIN_DATOS' ? ' · ' + (muelle.ais.texto | translate) : '')">
                         <span class="dock-ais" *ngIf="muelle?.ais && muelle.ais.estado !== 'LIBRE' && muelle.ais.estado !== 'SIN_DATOS'"
                             [ngClass]="'ais-' + (muelle.ais.estado | lowercase)"></span>
-                        <span class="dock-id fw-bold">{{ muelle?.label || muelle?.nombre || muelle?.id }}</span>
+                        <span class="dock-id fw-bold">{{ (muelle?.label | translate) || (muelle?.nombre | translate) || muelle?.id }}</span>
 
                         <div class="dock-extended-info">
                             <span class="dock-ship" [ngClass]="muelle?.barcoAtracado ? 'text-white' : 'text-muted'">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <p class="legend-text mt-2" *ngIf="leyenda">{{ leyenda }}</p>
+            <p class="legend-text mt-2" *ngIf="leyenda">{{ (leyenda | translate) }}</p>
         </ng-container>
     </div>
 
@@ -63,11 +63,11 @@
     <div tc-footer class="panel-footer kpis-bottom-row d-flex justify-content-around">
         <div class="kpi-item text-center">
             <h4 class="kpi-val text-info mb-0">{{ data.kpis?.ocupacion || '0%' }}</h4>
-            <small class="kpi-lbl text-muted">OCUPACIÓN</small>
+            <small class="kpi-lbl text-muted">{{ 'PORTTOS.TERMINAL_SUMMARY_CARD.OCUPACION' | translate }}</small>
         </div>
         <div class="kpi-item text-center">
             <h4 class="kpi-val text-warning mb-0">{{ data.kpis?.motonaves || '0' }}</h4>
-            <small class="kpi-lbl text-muted">MOTONAVES</small>
+            <small class="kpi-lbl text-muted">{{ 'PORTTOS.TERMINAL_SUMMARY_CARD.MOTONAVES' | translate }}</small>
         </div>
         <div class="kpi-item text-center">
             <h4 class="kpi-val text-success mb-0">{{ data.kpis?.metricValue || '0' }}</h4>

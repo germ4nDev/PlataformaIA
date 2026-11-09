@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Pattern: PORTTOS Componente - Portal público porttos.co dentro de la web (OT-010, CC-095)
@@ -12,13 +13,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { catchError, filter, of } from 'rxjs';
 import { PortalPorttosService } from 'src/app/theme/shared/service/portal-porttos.service';
-import { EncabezadoComponent } from './componentes/encabezado.component';
-import { PieComponent } from './componentes/pie.component';
+import { EncabezadoComponent } from './componentes/encabezado/encabezado.component';
+import { PieComponent } from './componentes/pie/pie.component';
 
 @Component({
   selector: 'app-porttos',
   standalone: true,
-  imports: [AsyncPipe, RouterOutlet, EncabezadoComponent, PieComponent],
+  imports: [TranslateModule, AsyncPipe, RouterOutlet, EncabezadoComponent, PieComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: './porttos.component.html',

@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /*
     Author: German Valencia
     Componente: Reglas de alertas del mapa (Administración)
@@ -19,6 +20,7 @@ import { PuertosService } from 'src/app/theme/shared/service/tablero-control/pue
 import {
     ReglasAlertasService, RespuestaReglas, ReglaCatalogo, FilaConfigAlerta
 } from 'src/app/theme/shared/service/tablero-control/reglas-alertas.service';
+import { AppPermisoDirective } from '../../../theme/shared/directive/app-permiso.directive';
 
 type Origen = 'puerto' | 'global' | 'defecto';
 
@@ -36,7 +38,7 @@ interface FilaEdicion {
 @Component({
     selector: 'app-reglas-alertas-panel',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, NavContentComponent, NavBarComponent, DataLoaderComponent],
+    imports: [AppPermisoDirective, CommonModule, FormsModule, TranslateModule, NavContentComponent, NavBarComponent, DataLoaderComponent],
     templateUrl: './reglas-alertas-panel.component.html',
     styleUrls: ['./reglas-alertas-panel.component.scss']
 })
@@ -82,7 +84,7 @@ export class ReglasAlertasPanelComponent implements OnInit, OnDestroy {
             next: (r) => this.aplicar(r),
             error: () => {
                 this.cargando = false;
-                this.toastr.error('No se pudieron leer las reglas de alertas', 'Reglas de alertas');
+                this.toastr.error(traducir('PORTTOS.REGLAS_ALERTAS_PANEL.NO_SE_PUDIERON_LEER_LAS'), traducir('PORTTOS.REGLAS_ALERTAS_PANEL.REGLAS_DE_ALERTAS'));
             }
         }));
     }
@@ -105,12 +107,12 @@ export class ReglasAlertasPanelComponent implements OnInit, OnDestroy {
         fila.guardando = true;
         this.subs.add(this._reglasService.guardar(dto).subscribe({
             next: (r) => {
-                this.toastr.success(`${fila.regla.nombre}${this.puerto === '*' ? ' (global)' : ` · ${this.puerto}`}`, 'Regla guardada');
+                this.toastr.success(`${fila.regla.nombre}${this.puerto === '*' ? ' (global)' : ` · ${this.puerto}`}`, traducir('PORTTOS.REGLAS_ALERTAS_PANEL.REGLA_GUARDADA'));
                 this.aplicar(r);
             },
             error: (e) => {
                 fila.guardando = false;
-                this.toastr.error(e?.error?.msg || 'No se pudo guardar la regla', fila.regla.nombre);
+                this.toastr.error(e?.error?.msg || traducir('PORTTOS.REGLAS_ALERTAS_PANEL.NO_SE_PUDO_GUARDAR_LA'), fila.regla.nombre);
             }
         }));
     }
@@ -119,12 +121,12 @@ export class ReglasAlertasPanelComponent implements OnInit, OnDestroy {
         fila.guardando = true;
         this.subs.add(this._reglasService.restablecer(fila.regla.codigo, this.puerto).subscribe({
             next: (r) => {
-                this.toastr.info(`${fila.regla.nombre} vuelve a la configuración global`, 'Regla restablecida');
+                this.toastr.info(traducir('PORTTOS.REGLAS_ALERTAS_PANEL.VUELVE_A_GLOBAL', { regla: fila.regla.nombre }), traducir('PORTTOS.REGLAS_ALERTAS_PANEL.REGLA_RESTABLECIDA'));
                 this.aplicar(r);
             },
             error: (e) => {
                 fila.guardando = false;
-                this.toastr.error(e?.error?.msg || 'No se pudo restablecer la regla', fila.regla.nombre);
+                this.toastr.error(e?.error?.msg || traducir('PORTTOS.REGLAS_ALERTAS_PANEL.NO_SE_PUDO_RESTABLECER_LA'), fila.regla.nombre);
             }
         }));
     }

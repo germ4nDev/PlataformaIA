@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -18,7 +20,7 @@ import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tc
 @Component({
     selector: 'app-saturacion-capacidad',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, GraficaTclComponent, TablaTclComponent],
     templateUrl: './saturacion-capacidad.component.html',
     styleUrls: ['./saturacion-capacidad.component.scss']
 })
@@ -40,20 +42,20 @@ export class SaturacionCapacidadComponent extends WidgetTableroBase<TableroCapac
 
     // Vista ampliada (2026-10-24): por categoría, promedio simple frente a ponderado por capacidad y cobertura
     public readonly columnasCategorias: ColumnaTabla[] = [
-        { campo: 'nombre', titulo: 'Categoría', tipo: 'principal' },
-        { campo: 'nodos', titulo: 'Nodos', tipo: 'numero' },
-        { campo: 'conDato', titulo: 'Con dato', tipo: 'numero' },
-        { campo: 'promedio', titulo: 'Promedio simple', tipo: 'numero', decimales: 1, unidad: '%' },
-        { campo: 'ponderado', titulo: 'Ponderado por capacidad', tipo: 'numero', decimales: 1, unidad: '%' },
-        { campo: 'criticos', titulo: 'Críticos', tipo: 'numero' }
+        { campo: 'nombre', titulo: 'PORTTOS.SATURACION_CAPACIDAD.CATEGORIA', tipo: 'principal' },
+        { campo: 'nodos', titulo: 'PORTTOS.SATURACION_CAPACIDAD.NODOS', tipo: 'numero' },
+        { campo: 'conDato', titulo: 'PORTTOS.SATURACION_CAPACIDAD.CON_DATO', tipo: 'numero' },
+        { campo: 'promedio', titulo: 'PORTTOS.SATURACION_CAPACIDAD.PROMEDIO_SIMPLE', tipo: 'numero', decimales: 1, unidad: '%' },
+        { campo: 'ponderado', titulo: 'PORTTOS.SATURACION_CAPACIDAD.PONDERADO_POR_CAPACIDAD', tipo: 'numero', decimales: 1, unidad: '%' },
+        { campo: 'criticos', titulo: 'PORTTOS.SATURACION_CAPACIDAD.CRITICOS', tipo: 'numero' }
     ];
     public readonly columnasNodos: ColumnaTabla[] = [
-        { campo: 'nombre', titulo: 'Nodo', tipo: 'principal' },
-        { campo: 'operador', titulo: 'Operador' },
-        { campo: 'capacidadTexto', titulo: 'Capacidad' },
-        { campo: 'ocupacionPct', titulo: 'Ocupación', tipo: 'numero', decimales: 1, unidad: '%' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-        { campo: 'fechaDato', titulo: 'Dato de', tipo: 'fecha' }
+        { campo: 'nombre', titulo: 'PORTTOS.SATURACION_CAPACIDAD.NODO', tipo: 'principal' },
+        { campo: 'operador', titulo: 'PORTTOS.SATURACION_CAPACIDAD.OPERADOR' },
+        { campo: 'capacidadTexto', titulo: 'PORTTOS.SATURACION_CAPACIDAD.CAPACIDAD' },
+        { campo: 'ocupacionPct', titulo: 'PORTTOS.SATURACION_CAPACIDAD.OCUPACION', tipo: 'numero', decimales: 1, unidad: '%' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+        { campo: 'fechaDato', titulo: 'PORTTOS.SATURACION_CAPACIDAD.DATO_DE', tipo: 'fecha' }
     ];
     public filasCategorias: any[] = [];
     public categoriaElegida: string | null = null;
@@ -64,7 +66,7 @@ export class SaturacionCapacidadComponent extends WidgetTableroBase<TableroCapac
     protected alRecibir(d: TableroCapacidad | null): void {
         const valores = d?.saturacion.valores || [];
         this.labels = d?.saturacion.labels || [];
-        this.series = [{ label: 'Ocupación promedio', data: valores, color: valores.map(this.color) }];
+        this.series = [{ label: traducir('PORTTOS.SATURACION_CAPACIDAD.OCUPACION_PROMEDIO'), data: valores, color: valores.map(this.color) }];
         this.todosNodos = d?.nodos || [];
         this.cobertura = d?.cobertura || null;
         this.filasCategorias = (d?.categorias || []).map((c) => {

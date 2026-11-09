@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Pattern: PORTTOS Página - Portal (OT-010)
@@ -14,23 +15,23 @@ import { BehaviorSubject, Observable, combineLatest, of, switchMap, tap, catchEr
 import { ConfigPortal, PaginaPortal, PlanesPortal, PreguntaPortal, componenteDeSeccion, metaDePagina } from 'src/app/plataforma/websites/porttos/nucleo';
 import { PortalPorttosService } from 'src/app/theme/shared/service/portal-porttos.service';
 import { Estado, conEstado } from 'src/app/theme/shared/service/portal-porttos.service';
-import { SeccionHeroComponent } from '../componentes/secciones/hero.component';
-import { SeccionCifrasComponent } from '../componentes/secciones/cifras.component';
-import { SeccionTarjetasComponent } from '../componentes/secciones/tarjetas.component';
-import { SeccionTablerosComponent } from '../componentes/secciones/tableros.component';
-import { SeccionDestacadoComponent } from '../componentes/secciones/destacado.component';
-import { SeccionCtaComponent } from '../componentes/secciones/cta.component';
-import { SeccionPasosComponent } from '../componentes/secciones/pasos.component';
-import { SeccionListaComponent } from '../componentes/secciones/lista.component';
-import { SeccionTextoComponent } from '../componentes/secciones/texto.component';
-import { PlanesComponent } from '../componentes/planes.component';
-import { PreguntasComponent } from '../componentes/preguntas.component';
-import { ContactoComponent } from '../componentes/contacto.component';
-import { SeccionPerfilesComponent } from '../componentes/secciones/perfiles.component';
-import { SeccionMetasComponent } from '../componentes/secciones/metas.component';
-import { SeccionNivelesComponent } from '../componentes/secciones/niveles.component';
-import { PuertosVivoComponent } from '../componentes/puertos-vivo.component';
-import { SeccionAppComponent } from '../componentes/secciones/app.component';
+import { SeccionHeroComponent } from '../componentes/secciones/hero/hero.component';
+import { SeccionCifrasComponent } from '../componentes/secciones/cifras/cifras.component';
+import { SeccionTarjetasComponent } from '../componentes/secciones/tarjetas/tarjetas.component';
+import { SeccionTablerosComponent } from '../componentes/secciones/tableros/tableros.component';
+import { SeccionDestacadoComponent } from '../componentes/secciones/destacado/destacado.component';
+import { SeccionCtaComponent } from '../componentes/secciones/cta/cta.component';
+import { SeccionPasosComponent } from '../componentes/secciones/pasos/pasos.component';
+import { SeccionListaComponent } from '../componentes/secciones/lista/lista.component';
+import { SeccionTextoComponent } from '../componentes/secciones/texto/texto.component';
+import { PlanesComponent } from '../componentes/planes/planes.component';
+import { PreguntasComponent } from '../componentes/preguntas/preguntas.component';
+import { ContactoComponent } from '../componentes/contacto/contacto.component';
+import { SeccionPerfilesComponent } from '../componentes/secciones/perfiles/perfiles.component';
+import { SeccionMetasComponent } from '../componentes/secciones/metas/metas.component';
+import { SeccionNivelesComponent } from '../componentes/secciones/niveles/niveles.component';
+import { PuertosVivoComponent } from '../componentes/puertos-vivo/puertos-vivo.component';
+import { SeccionAppComponent } from '../componentes/secciones/app/app.component';
 
 interface Vista {
     pagina: PaginaPortal;
@@ -43,52 +44,15 @@ interface Vista {
 @Component({
     selector: 'pp-pagina',
     standalone: true,
-    imports: [
+    imports: [TranslateModule, 
         AsyncPipe, SeccionHeroComponent, SeccionCifrasComponent, SeccionTarjetasComponent, SeccionTablerosComponent,
         SeccionDestacadoComponent, SeccionCtaComponent, SeccionPasosComponent, SeccionListaComponent, SeccionTextoComponent,
         PlanesComponent, PreguntasComponent, ContactoComponent, SeccionPerfilesComponent, SeccionMetasComponent,
         SeccionNivelesComponent, PuertosVivoComponent, SeccionAppComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-    @if (estado$ | async; as e) {
-      @if (e.cargando) {
-        <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>Cargando…</div>
-      } @else if (e.error) {
-        <div class="estado estado--error" role="alert">
-          <p>{{ e.error }}</p>
-          <button type="button" class="boton boton--secundario" (click)="reintentar()">Reintentar</button>
-        </div>
-      } @else { @if (e.dato; as v) {
-        @for (s of v.pagina.secciones; track s.codigo; let i = $index) {
-          @switch (tipo(s.tipo)) {
-            @case ('hero') { <pp-seccion-hero [s]="s" [grande]="v.pagina.pagina === 'inicio' && i === 0" /> }
-            @case ('cifras') { <pp-seccion-cifras [s]="s" /> }
-            @case ('tarjetas') { <pp-seccion-tarjetas [s]="s" /> }
-            @case ('tableros') { <pp-seccion-tableros [s]="s" /> }
-            @case ('destacado') { <pp-seccion-destacado [s]="s" /> }
-            @case ('cta') { <pp-seccion-cta [s]="s" /> }
-            @case ('pasos') { <pp-seccion-pasos [s]="s" /> }
-            @case ('lista') { <pp-seccion-lista [s]="s" /> }
-            @case ('texto') { <pp-seccion-texto [s]="s" /> }
-            @case ('perfiles') { <pp-seccion-perfiles [s]="s" [planes]="v.planes?.dato?.planes || []" /> }
-            @case ('metas') { <pp-seccion-metas [s]="s" /> }
-            @case ('niveles') { <pp-seccion-niveles [s]="s" /> }
-            @case ('app') { <pp-seccion-app [s]="s" [config]="v.config" /> }
-          }
-          @if (i === 0 && v.bloque === 'puertos') { <pp-puertos-vivo /> }
-          @if (i === 0 && v.bloque === 'planes') {
-            @if (v.planes?.cargando) { <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>Cargando…</div> }
-            @if (v.planes?.error) { <div class="estado estado--error" role="alert"><p>{{ v.planes?.error }}</p></div> }
-            @if (v.planes?.dato; as planes) { <pp-planes [datos]="planes" /> }
-          }
-          @if (i === 0 && v.bloque === 'contacto') {
-            <pp-contacto [config]="v.config" [planes]="v.planes?.dato?.planes || []" />
-          }
-        }
-        <pp-preguntas [preguntas]="v.preguntas" />
-      } }
-    }`,
+    templateUrl: './pagina.component.html',
+  styleUrl: './pagina.component.scss',
 })
 export class PaginaComponent {
     private readonly api = inject(PortalPorttosService);

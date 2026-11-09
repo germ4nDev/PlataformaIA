@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 // import { CommonModule } from '@angular/common'
 // import { Component, EventEmitter, Output } from '@angular/core'
 // import { Router, ActivatedRoute } from '@angular/router'
@@ -509,7 +510,7 @@ export class GestionModulopqComponent implements OnInit, OnDestroy {
 
         const seleccionados = this.modulosPadre.filter(x => x.checked);
         if (seleccionados.length === 0) {
-            this._swalAlertService.getAlertError('Debe seleccionar al menos un módulo para el paquete.');
+            this._swalAlertService.getAlertError(traducir('WEB.GESTION_MODULOPQ.DEBE_SELECCIONAR_AL_MENOS_UN'));
             return;
         }
 

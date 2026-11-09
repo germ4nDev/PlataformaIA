@@ -36,13 +36,16 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-table-data [data]="registrosFiltrado" [idField]="'colorNavId'"
-                    [tableTitle]="'PLATAFORMA.COLORSETTING.TITLE' | translate" [metadataColumns]="columnasRegistros"
-                    [detailColumns]="[]" [detailTitles]="[]" [showDetail]="false" [showActions]="true"
-                    [showAvatar]="false" [showImage]="false" [showNewButton]="true" [showViewButton]="false"
-                    [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
+                    [tableTitle]="'PLATAFORMA.COLORSETTING.TITLE' | translate"
+                    [tableSubtitle]="'PLATAFORMA.COLORSETTING.SUBTITULO' | translate"
+                    [metadataColumns]="columnasRegistros" [detailColumns]="[]" [detailTitles]="[]" [showDetail]="false"
+                    [showActions]="true" [showAvatar]="false" [showImage]="false" [showNewButton]="true"
+                    [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
                     [newButtonLabel]="'PLATAFORMA.COLORSETTING.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
+                    permisoNew="ACT_COLORES_CREAR" permisoEdit="ACT_COLORES_MODIFICAR"
+                    permisoDelete="ACT_COLORES_ELIMINAR">
                 </app-table-data>
             </div>
         </div>

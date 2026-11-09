@@ -18,10 +18,10 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3">
                     <div class="filtro">
-                        <small>Configuración de</small>
+                        <small>{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.CONFIGURACION_DE' | translate }}</small>
                         <select class="form-control form-select" [ngModel]="puerto" (ngModelChange)="cambiarPuerto($event)">
-                            <option value="*">Todos los puertos (global)</option>
-                            <option *ngFor="let p of puertos" [value]="p.id">{{ p.nombre }}</option>
+                            <option value="*">{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.TODOS_LOS_PUERTOS_GLOBAL' | translate }}</option>
+                            <option *ngFor="let p of puertos" [value]="p.id">{{ (p.nombre | translate) }}</option>
                         </select>
                     </div>
                 </div>
@@ -34,21 +34,20 @@
             <div class="card-body">
                 <div class="reglas-encabezado">
                     <div>
-                        <h5>Reglas de alertas del mapa</h5>
+                        <h5>{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.REGLAS_DE_ALERTAS_DEL_MAPA' | translate }}</h5>
                         <p class="text-muted mb-0">
-                            {{ puerto === '*' ? 'Configuración global: aplica a todos los puertos que no tengan una propia.' :
-                               'Configuración de ' + puerto + ': lo que guardes aquí sobreescribe la global solo para este puerto.' }}
+                            {{ puerto === '*' ? ('PORTTOS.REGLAS_ALERTAS_PANEL.CONFIGURACION_GLOBAL_APLICA_A_TODOS' | translate) :
+                               ('PORTTOS.REGLAS_ALERTAS_PANEL.CONFIGURACION_DE_2' | translate) + puerto + ('PORTTOS.REGLAS_ALERTAS_PANEL.LO_QUE_GUARDES_AQUI_SOBREESCRIBE' | translate) }}
                         </p>
                     </div>
                     <select class="form-control form-select selector-puerto" [ngModel]="puerto" (ngModelChange)="cambiarPuerto($event)">
-                        <option value="*">Todos los puertos (global)</option>
-                        <option *ngFor="let p of puertos" [value]="p.id">{{ p.nombre }}</option>
+                        <option value="*">{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.TODOS_LOS_PUERTOS_GLOBAL' | translate }}</option>
+                        <option *ngFor="let p of puertos" [value]="p.id">{{ (p.nombre | translate) }}</option>
                     </select>
                 </div>
 
                 <div class="aviso-migracion" *ngIf="!cargando && !persistencia">
-                    Falta aplicar la migración <code>011_alertas_mapa.sql</code>. Las alertas funcionan con los valores por
-                    defecto que se ven abajo, pero no se pueden modificar ni se guarda la bitácora.
+                    {{ 'PORTTOS.REGLAS_ALERTAS_PANEL.FALTA_APLICAR_LA_MIGRACION' | translate }} <code>011_alertas_mapa.sql</code>{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.LAS_ALERTAS_FUNCIONAN_CON_LOS' | translate }}
                 </div>
 
                 <app-data-loader *ngIf="cargando" [isLoading]="true" message="Cargando reglas de alertas..."></app-data-loader>
@@ -56,12 +55,12 @@
                 <div class="tabla-reglas" *ngIf="!cargando">
                     <div class="regla" *ngFor="let f of filas; trackBy: trackRegla" [class.apagada]="!f.activa">
                         <div class="regla-titulo">
-                            <label class="interruptor" [title]="f.activa ? 'Activa' : 'Apagada'">
+                            <label class="interruptor" [title]="f.activa ? ('PORTTOS.REGLAS_ALERTAS_PANEL.ACTIVA' | translate) : ('PORTTOS.REGLAS_ALERTAS_PANEL.APAGADA' | translate)">
                                 <input type="checkbox" [(ngModel)]="f.activa" [disabled]="!f.editable || f.guardando">
                                 <span></span>
                             </label>
                             <div>
-                                <strong>{{ f.regla.nombre }}</strong>
+                                <strong>{{ (f.regla.nombre | translate) }}</strong>
                                 <small class="text-muted d-block">{{ f.regla.niveles }}</small>
                             </div>
                             <span class="origen" [ngClass]="'origen-' + f.origen">{{ etiquetaOrigen(f.origen) }}</span>
@@ -69,24 +68,24 @@
 
                         <div class="regla-campos">
                             <label class="campo" *ngFor="let u of f.regla.umbrales; let i = index">
-                                <small>{{ u.etiqueta }}</small>
+                                <small>{{ (u.etiqueta | translate) }}</small>
                                 <input type="number" class="form-control" min="0" [(ngModel)]="f.umbrales[i]"
                                     [disabled]="!f.editable || f.guardando" [placeholder]="u.defecto">
                             </label>
                             <label class="campo">
-                                <small>No repetir antes de (min)</small>
+                                <small>{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.NO_REPETIR_ANTES_DE_MIN' | translate }}</small>
                                 <input type="number" class="form-control" min="1" max="1440" [(ngModel)]="f.enfriamiento"
                                     [disabled]="!f.editable || f.guardando">
                             </label>
                         </div>
 
                         <div class="regla-acciones">
-                            <small class="text-muted" *ngIf="f.modificada">Modificada: {{ f.modificada }}</small>
-                            <small class="text-muted" *ngIf="puerto !== '*' && !f.regla.porPuerto">Solo se configura globalmente</small>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="puerto !== '*' && f.origen === 'puerto'"
-                                (click)="restablecer(f)" [disabled]="f.guardando">Usar la global</button>
-                            <button type="button" class="btn btn-sm btn-primary" (click)="guardar(f)" [disabled]="!f.editable || f.guardando">
-                                {{ f.guardando ? 'Guardando...' : 'Guardar' }}
+                            <small class="text-muted" *ngIf="f.modificada">{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.MODIFICADA' | translate: { p0: f.modificada } }}</small>
+                            <small class="text-muted" *ngIf="puerto !== '*' && !f.regla.porPuerto">{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.SOLO_SE_CONFIGURA_GLOBALMENTE' | translate }}</small>
+                            <ng-container *appPermiso="'ACT_ALERTAS_REGLAS'"><button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="puerto !== '*' && f.origen === 'puerto'"
+                                (click)="restablecer(f)" [disabled]="f.guardando">{{ 'PORTTOS.REGLAS_ALERTAS_PANEL.USAR_LA_GLOBAL' | translate }}</button></ng-container>
+                            <button *appPermiso="'ACT_ALERTAS_REGLAS'" type="button" class="btn btn-sm btn-primary" (click)="guardar(f)" [disabled]="!f.editable || f.guardando">
+                                {{ f.guardando ? ('PORTTOS.REGLAS_ALERTAS_PANEL.GUARDANDO' | translate) : ('PORTTOS.IA_ADMIN_PANEL.GUARDAR' | translate) }}
                             </button>
                         </div>
                     </div>

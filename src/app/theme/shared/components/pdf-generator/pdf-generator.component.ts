@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import jsPDF from 'jspdf';
@@ -6,9 +7,9 @@ import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-pdf-generator',
   standalone: true,
-  imports: [CommonModule],
-  template: './pdf-generatpr.component.html',
-  styles: './pdf-generator.component.scss'
+  imports: [TranslateModule, CommonModule],
+  templateUrl: './pdf-generator.component.html',
+  styleUrl: './pdf-generator.component.scss'
 })
 export class PdfGeneratorComponent {
   @ViewChild('pdfContent') pdfContent!: ElementRef;

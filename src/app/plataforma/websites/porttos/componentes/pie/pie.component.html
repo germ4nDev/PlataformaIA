@@ -1,0 +1,18 @@
+<footer class="pie">
+  <div class="contenedor pie__rejilla">
+    <div>
+      <img src="assets/images/porttos/porttos-principal-negativo.png" alt="Porttos" width="132" height="36" loading="lazy" />
+      @if (config?.textoPie) { <p class="pie__texto">{{ config?.textoPie }}</p> }
+      @if (config?.correoContacto) { <a class="pie__correo" [href]="'mailto:' + config?.correoContacto">{{ config?.correoContacto }}</a> }
+      <p class="pie__app">{{ 'WEB.PIE.APP_MOVIL' | translate }}</p>
+      <pp-tiendas [config]="config" [compactas]="true" />
+    </div>
+    <nav [attr.aria-label]="'WEB.PIE.PIE_DE_PAGINA' | translate">
+      <ul role="list" class="pie__menu">
+        @for (i of menu; track i.ruta) { <li><a [routerLink]="i.ruta">{{ (i.etiqueta | translate) }}</a></li> }
+        @if (!movil && config?.rutaIngreso) { <li><pp-enlace [url]="config?.rutaIngreso" base="">{{ 'WEB.PIE.INICIAR_SESION' | translate }}</pp-enlace></li> }
+      </ul>
+    </nav>
+  </div>
+  <p class="contenedor pie__legal">© {{ anio }} Porttos</p>
+</footer>

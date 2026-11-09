@@ -55,7 +55,7 @@
                     [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showDetail]="true"
                     [showSearchBox]="false" [newButtonLabel]="'TIPOSCRIPTS.NEW' | translate" [showSearchBox]="false"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_TIPOSSCRIPT_CREAR" permisoEdit="ACT_TIPOSSCRIPT_MODIFICAR" permisoDelete="ACT_TIPOSSCRIPT_ELIMINAR">
                 </app-table-data>
             </div>
         </div>

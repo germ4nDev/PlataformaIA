@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -19,7 +21,7 @@ import { RangoTclComponent } from '../../shared/rango-tcl/rango-tcl.component';
 @Component({
     selector: 'app-nodos-capacidad',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent, GraficaTclComponent, RangoTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent, GraficaTclComponent, RangoTclComponent],
     templateUrl: './nodos-capacidad.component.html',
     styleUrls: ['./nodos-capacidad.component.scss']
 })
@@ -34,23 +36,23 @@ export class NodosCapacidadComponent extends WidgetTableroBase<TableroCapacidad>
     public categoria: string | null = null;
     public readonly mensajeVacio = 'No hay nodos en el catálogo de capacidad de este puerto.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'nombre', titulo: 'Nodo', tipo: 'principal' },
-        { campo: 'categoriaNombre', titulo: 'Categoría' },
-        { campo: 'operador', titulo: 'Operador' },
-        { campo: 'capacidadTexto', titulo: 'Capacidad' },
-        { campo: 'ocupacionPct', titulo: 'Ocupación', tipo: 'numero', decimales: 1, unidad: '%' },
-        { campo: 'operaciones', titulo: 'Operaciones', tipo: 'lista' },
-        { campo: 'ingresosH', titulo: 'Entran/h', tipo: 'numero' },
-        { campo: 'salidasH', titulo: 'Salen/h', tipo: 'numero' },
-        { campo: 'esperaMin', titulo: 'Espera', tipo: 'numero', unidad: 'min' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' }
+        { campo: 'nombre', titulo: 'PORTTOS.NODOS_CAPACIDAD.NODO', tipo: 'principal' },
+        { campo: 'categoriaNombre', titulo: 'PORTTOS.NODOS_CAPACIDAD.CATEGORIA' },
+        { campo: 'operador', titulo: 'PORTTOS.NODOS_CAPACIDAD.OPERADOR' },
+        { campo: 'capacidadTexto', titulo: 'PORTTOS.NODOS_CAPACIDAD.CAPACIDAD' },
+        { campo: 'ocupacionPct', titulo: 'PORTTOS.NODOS_CAPACIDAD.OCUPACION', tipo: 'numero', decimales: 1, unidad: '%' },
+        { campo: 'operaciones', titulo: 'PORTTOS.NODOS_CAPACIDAD.OPERACIONES', tipo: 'lista' },
+        { campo: 'ingresosH', titulo: 'PORTTOS.NODOS_CAPACIDAD.ENTRAN_H', tipo: 'numero' },
+        { campo: 'salidasH', titulo: 'PORTTOS.NODOS_CAPACIDAD.SALEN_H', tipo: 'numero' },
+        { campo: 'esperaMin', titulo: 'PORTTOS.NODOS_CAPACIDAD.ESPERA', tipo: 'numero', unidad: 'min' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'capacidad', titulo: 'Capacidad (núm.)', tipo: 'numero' },
-        { campo: 'unidad', titulo: 'Unidad' },
-        { campo: 'fechaDato', titulo: 'Dato de', tipo: 'fecha' },
-        { campo: 'simulado', titulo: 'Simulado', tipo: 'si-no' }
+        { campo: 'capacidad', titulo: 'PORTTOS.NODOS_CAPACIDAD.CAPACIDAD_NUM', tipo: 'numero' },
+        { campo: 'unidad', titulo: 'PORTTOS.NODOS_CAPACIDAD.UNIDAD' },
+        { campo: 'fechaDato', titulo: 'PORTTOS.NODOS_CAPACIDAD.DATO_DE', tipo: 'fecha' },
+        { campo: 'simulado', titulo: 'PORTTOS.MOTONAVES_GRANEL.SIMULADO', tipo: 'si-no' }
     ];
     get criticos(): number { return this.todos.filter((n) => n.estado === 'CRÍTICO').length; }
 
@@ -96,13 +98,13 @@ export class NodosCapacidadComponent extends WidgetTableroBase<TableroCapacidad>
             next: (s) => {
                 this.serie = s;
                 this.seriesOcupacion = [
-                    { label: 'Ocupación', data: s.ocupacionPct, color: '#2f96b4', relleno: true },
-                    { label: 'Atención (70 %)', data: s.labels.map(() => 70), color: '#f89406' },
-                    { label: 'Crítico (85 %)', data: s.labels.map(() => 85), color: '#bd362f' }
+                    { label: traducir('PORTTOS.NODOS_CAPACIDAD.OCUPACION'), data: s.ocupacionPct, color: '#2f96b4', relleno: true },
+                    { label: traducir('PORTTOS.NODOS_CAPACIDAD.ATENCION_70'), data: s.labels.map(() => 70), color: '#f89406' },
+                    { label: traducir('PORTTOS.NODOS_CAPACIDAD.CRITICO_85'), data: s.labels.map(() => 85), color: '#bd362f' }
                 ];
                 this.seriesTrafico = [
-                    { label: 'Entran/h', data: s.ingresosH, color: '#51a351' },
-                    { label: 'Salen/h', data: s.salidasH, color: '#2f96b4' }
+                    { label: traducir('PORTTOS.NODOS_CAPACIDAD.ENTRAN_H'), data: s.ingresosH, color: '#51a351' },
+                    { label: traducir('PORTTOS.NODOS_CAPACIDAD.SALEN_H'), data: s.salidasH, color: '#2f96b4' }
                 ];
                 this.errorSerie = null;
                 this.cdr.detectChanges();

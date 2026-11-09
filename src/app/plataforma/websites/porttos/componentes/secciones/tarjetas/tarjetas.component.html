@@ -1,0 +1,15 @@
+<section class="bloque">
+  <div class="contenedor">
+    <pp-encabezado-seccion [s]="s" />
+    <div class="rejilla rejilla--tarjetas">
+      @for (e of s.elementos; track $index) {
+        <article class="tarjeta" [style.--acento]="e.color || null">
+          @if (e.icono) { <span class="tarjeta__icono"><pp-icono [nombre]="e.icono" /></span> }
+          @if (e.valor) { <p class="tarjeta__etiqueta">{{ e.valor }}</p> }
+          @if (e.titulo) { <h3 class="tarjeta__titulo">{{ e.titulo }}</h3> }
+          @if (e.texto) { <p class="tarjeta__texto">{{ e.texto }}</p> }
+        </article>
+      }
+    </div>
+  </div>
+</section>

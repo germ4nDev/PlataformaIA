@@ -1,0 +1,109 @@
+@if (vista$ | async; as v) {
+  <section class="bloque bloque--pegado" [attr.aria-label]="'WEB.PUERTOS_VIVO.DATOS_PUBLICOS_DEL_PUERTO' | translate">
+    <div class="contenedor">
+      @if (v.puertos.length) {
+        <div class="selector-puertos" role="group" [attr.aria-label]="'WEB.PUERTOS_VIVO.PUERTO' | translate">
+          @for (p of v.puertos; track p.id) {
+            <button type="button" class="chip" [attr.aria-pressed]="p.id === v.activo" (click)="elegir(p.id)">{{ (p.nombre | translate) }}</button>
+          }
+        </div>
+      }
+      @if (v.datos?.cargando) {
+        <div class="estado estado--corto" role="status"><span class="girador" aria-hidden="true"></span>{{ 'WEB.PUERTOS_VIVO.CARGANDO' | translate }}</div>
+      } @else if (v.datos?.error) {
+        <div class="estado estado--corto estado--error" role="alert"><p>{{ v.datos?.error }}</p></div>
+      } @else { @if (v.datos?.dato; as d) {
+        <div class="vivo__cabeza">
+          <h2 class="titulo-seccion">{{ (d.puerto.nombre | translate) }}</h2>
+          <p class="vivo__hora">{{ 'WEB.PUERTOS_VIVO.CONSULTADO' | translate: { p0: hora(d.generado) } }}</p>
+        </div>
+        <p class="oculto" role="status">{{ 'WEB.PUERTOS_VIVO.DATOS_DE_CARGADOS' | translate: { p0: d.puerto.nombre } }}</p>
+        <div class="rejilla rejilla--vivo">
+          <article class="dato-vivo">
+            <p class="dato-vivo__rotulo"><pp-icono nombre="via" [tamano]="18" />{{ 'WEB.PUERTOS_VIVO.VIAS_DE_ACCESO' | translate }}</p>
+            @if (d.vias.sinDato) {
+              <p class="dato-vivo__valor dato-vivo__valor--sin">{{ 'WEB.PUERTOS_VIVO.SIN_DATO' | translate }}</p>
+              <p class="dato-vivo__texto">{{ 'WEB.PUERTOS_VIVO.LA_FUENTE_NO_HA_REPORTADO' | translate }}</p>
+            } @else {
+              <p class="dato-vivo__valor" [attr.data-semaforo]="d.vias.semaforo">{{ estadoVia(d.vias.estado) }}</p>
+              <p class="dato-vivo__texto">
+                @if (d.vias.semaforo === null) { {{ 'WEB.PUERTOS_VIVO.TOMTOM_NO_REPORTA_EVENTOS_VIALES' | translate }} }
+                @else { {{ 'WEB.PUERTOS_VIVO.CERCA_DEL_PUERTO' | translate: { p0: d.vias.eventos === 1 ? '1 evento vial vigente' : d.vias.eventos + ' eventos viales vigentes' } }} }
+                @if (d.vias.corredores.length) { {{ 'WEB.PUERTOS_VIVO.CORREDOR_MAS_AFECTADO' | translate: { p0: d.vias.corredores[0].corredor } }} }
+              </p>
+            }
+            <p class="dato-vivo__fuente">{{ 'WEB.PUERTOS_VIVO.FUENTE' | translate: { p0: d.vias.fuente } }}@if (d.vias.lectura) { · {{ hora(d.vias.lectura) }} }</p>
+          </article>
+          <article class="dato-vivo">
+            <p class="dato-vivo__rotulo"><pp-icono nombre="barco" [tamano]="18" />{{ 'WEB.PUERTOS_VIVO.TRAFICO_PORTUARIO_DEL_ULTIMO_MES' | translate }}</p>
+            @if (d.trafico.ultimoMes; as u) {
+              <p class="dato-vivo__valor">{{ toneladas(u.toneladas) }}</p>
+              <p class="dato-vivo__texto">
+                {{ 'WEB.PUERTOS_VIVO.DE' | translate: { p0: mes(u.mes), p1: u.anio } }}
+                @if (variacion(d); as t) { {{ t }}. }
+              </p>
+            } @else {
+              <p class="dato-vivo__valor dato-vivo__valor--sin">{{ 'WEB.PUERTOS_VIVO.SIN_DATO' | translate }}</p>
+              <p class="dato-vivo__texto">{{ 'WEB.PUERTOS_VIVO.AUN_NO_HAY_REPORTES_DE' | translate }}</p>
+            }
+            <p class="dato-vivo__fuente">{{ 'WEB.PUERTOS_VIVO.FUENTE' | translate: { p0: d.trafico.fuente } }}@if (d.trafico.lectura) { {{ 'WEB.PUERTOS_VIVO.ACTUALIZADO' | translate: { p0: hora(d.trafico.lectura) } }} }</p>
+          </article>
+          <article class="dato-vivo">
+            <p class="dato-vivo__rotulo"><pp-icono nombre="clima" [tamano]="18" />{{ 'WEB.PUERTOS_VIVO.CLIMA_Y_MAREA' | translate }}</p>
+            @if (!d.clima.sinDato) {
+              <p class="dato-vivo__valor">{{ 'WEB.PUERTOS_VIVO.C_NUDOS' | translate: { p0: numero(d.clima.temperatura), p1: numero(d.clima.vientoNudos) } }}</p>
+              <p class="dato-vivo__texto">
+                @if (d.clima.tiempo) { {{ d.clima.tiempo }}. }
+                @if (!d.marea.sinDato) { {{ 'WEB.PUERTOS_VIVO.PROXIMA_PLEAMAR' | translate: { p0: hora(d.marea.pleamar) } }}@if (d.marea.nivel) { ({{ d.marea.nivel }}) }. }
+                @else { {{ 'WEB.PUERTOS_VIVO.MAREA_SIN_DATO' | translate }} }
+              </p>
+            } @else {
+              <p class="dato-vivo__valor dato-vivo__valor--sin">{{ 'WEB.PUERTOS_VIVO.SIN_DATO' | translate }}</p>
+              <p class="dato-vivo__texto">
+                {{ 'WEB.PUERTOS_VIVO.EL_SERVICIO_DE_CLIMA_NO' | translate }}
+                @if (!d.marea.sinDato) { {{ 'WEB.PUERTOS_VIVO.PROXIMA_PLEAMAR_2' | translate: { p0: hora(d.marea.pleamar) } }} }
+              </p>
+            }
+            <p class="dato-vivo__fuente">{{ 'WEB.PUERTOS_VIVO.FUENTE_Y' | translate: { p0: d.clima.fuente, p1: d.marea.fuente } }}@if (d.clima.lectura) { · {{ hora(d.clima.lectura) }} }</p>
+          </article>
+        </div>
+
+        @if (!d.trafico.sinDato) {
+          <figure class="grafica-trafico">
+            <figcaption class="grafica-trafico__titulo">
+              <strong>{{ 'WEB.PUERTOS_VIVO.TRAFICO_DE_LOS_ULTIMOS_12' | translate }}</strong>
+              <span>{{ 'WEB.PUERTOS_VIVO.TONELADAS_MOVILIZADAS_POR_MES_FUENTE' | translate: { p0: d.trafico.fuente } }}</span>
+            </figcaption>
+            <div class="grafica-trafico__area" aria-hidden="true">
+              <span class="grafica-trafico__max">{{ toneladas(maximo(d)) }}</span>
+              @for (b of barras(d); track b.anio * 100 + b.mes) {
+                <div class="grafica-trafico__mes">
+                  <div class="grafica-trafico__pista">
+                    @if (b.alto !== null) {
+                      <span class="grafica-trafico__barra" [class.parcial]="b.parcial" [style.height.%]="b.alto"></span>
+                      <span class="grafica-trafico__tip">{{ mes(b.mes) }} {{ b.anio }}: {{ toneladas(b.toneladas) }}@if (b.parcial) { {{ 'WEB.PUERTOS_VIVO.PARCIAL' | translate }} }</span>
+                    }
+                  </div>
+                  <span class="grafica-trafico__etiqueta">{{ (b.etiqueta | translate) }}</span>
+                </div>
+              }
+            </div>
+            @if (d.trafico.mesParcial; as p) {
+              <p class="grafica-trafico__nota"><span class="muestra-parcial" aria-hidden="true"></span>
+                {{ 'WEB.PUERTOS_VIVO.DE_PARCIAL_SUPERTRANSPORTE_AUN_LO' | translate: { p0: mes(p.mes), p1: p.anio } }}</p>
+            }
+            <table class="oculto">
+              <caption>{{ 'WEB.PUERTOS_VIVO.TONELADAS_MOVILIZADAS_POR_MES_EN' | translate: { p0: d.puerto.nombre } }}</caption>
+              <thead><tr><th scope="col">{{ 'WEB.PUERTOS_VIVO.MES' | translate }}</th><th scope="col">{{ 'WEB.PUERTOS_VIVO.TONELADAS' | translate }}</th></tr></thead>
+              <tbody>
+                @for (b of barras(d); track b.anio * 100 + b.mes) {
+                  <tr><th scope="row">{{ mes(b.mes) }} {{ b.anio }}</th><td>{{ toneladas(b.toneladas) || ('WEB.PUERTOS_VIVO.SIN_DATO' | translate) }}@if (b.parcial) { {{ 'WEB.PUERTOS_VIVO.PARCIAL' | translate }} }</td></tr>
+                }
+              </tbody>
+            </table>
+          </figure>
+        }
+      } }
+    </div>
+  </section>
+}

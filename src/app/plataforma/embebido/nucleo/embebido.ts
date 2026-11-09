@@ -8,6 +8,7 @@
                  { ..., tipo: 'error', mensaje }                                           no se pudo entrar
       app → web  { fuente: 'porttos-app', v: 1, tipo: 'sesion', token, codigoSesion, codigoAplicacion?, codigoSuite?, puerto?, pestana? }
                  (codigoSuite: la suite a abrir, p. ej. la del tablero; sin ella, la del dominio o la primera con ruta de inicio)
+                 v 2 (OT-017, compatible): + canal?: 'tableta' | 'telefono'. Sin canal (o v 1) = 'tableta': la web de siempre.
     La sesión es la misma de la app (sesión única): nunca va en la URL y la web no registra otra.
     Solo se aceptan mensajes del marco padre con un origen de la app (https://localhost Android, capacitor://localhost iOS);
     fuera de producción también http://localhost y http://127.0.0.1 (banco de pruebas).
@@ -17,10 +18,14 @@ export const RUTA_EMBEBIDA = '/embebido';
 export const FUENTE_APP = 'porttos-app';
 export const FUENTE_WEB = 'porttos-web';
 export const VERSION_MENSAJES = 1;
+/** Versiones del mensaje 'sesion' que se aceptan de la app (la 2 agrega el canal). */
+export const VERSIONES_APP: readonly number[] = [1, 2];
 export const ORIGENES_APP: readonly string[] = ['https://localhost', 'capacitor://localhost'];
 
 export type TipoMensajeWeb = 'listo' | 'estado' | 'cerrar-sesion' | 'error';
 export type MotivoCierreEmbebido = 'usuario' | 'expirada' | 'reemplazada' | 'sin-acceso';
+/** Equipo de la app que embebe la web: la tableta ve la web tal cual; el teléfono, su rejilla de 4 columnas (OT-017). */
+export type CanalEmbebido = 'tableta' | 'telefono';
 
 export interface SesionEntregada {
   token: string;
@@ -29,6 +34,12 @@ export interface SesionEntregada {
   codigoSuite: string | null;
   puerto: string | null;
   pestana: string | null;
+  canal: CanalEmbebido;
+}
+
+/** Canal entregado por la app: solo 'telefono' cambia algo; cualquier otro valor (o ninguno) es 'tableta'. */
+export function canalEntregado(v: unknown): CanalEmbebido {
+  return String(v ?? '').trim().toLowerCase() === 'telefono' ? 'telefono' : 'tableta';
 }
 
 export function origenAppPermitido(origen: unknown, produccion: boolean): boolean {
@@ -61,7 +72,7 @@ const NOMBRE = /^[\p{L}\p{N} ._-]+$/u;
 export function leerSesionEntregada(data: unknown): SesionEntregada | null {
   if (!data || typeof data !== 'object') return null;
   const m = data as Record<string, unknown>;
-  if (m['fuente'] !== FUENTE_APP || m['tipo'] !== 'sesion' || Number(m['v']) !== VERSION_MENSAJES) return null;
+  if (m['fuente'] !== FUENTE_APP || m['tipo'] !== 'sesion' || !VERSIONES_APP.includes(Number(m['v']))) return null;
   const token = texto(m['token'], 4096, JWT);
   const codigoSesion = texto(m['codigoSesion'], 64, CODIGO);
   if (!token || !codigoSesion) return null;
@@ -72,6 +83,7 @@ export function leerSesionEntregada(data: unknown): SesionEntregada | null {
     codigoSuite: texto(m['codigoSuite'], 64, CODIGO),
     puerto: texto(m['puerto'], 80, NOMBRE),
     pestana: texto(m['pestana'], 80, CODIGO),
+    canal: Number(m['v']) >= 2 ? canalEntregado(m['canal']) : 'tableta',
   };
 }
 

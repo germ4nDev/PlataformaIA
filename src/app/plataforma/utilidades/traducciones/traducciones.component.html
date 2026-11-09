@@ -1,0 +1,80 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'PLATAFORMA.MENU' |
+                    translate }}</button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'PLATAFORMA.FILTERS'
+                    | translate }}</button>
+            </div>
+            @if (activeTab === 'menu') {
+            <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            } @else {
+            <div class="p-3 filtros-scroll-wrapper">
+                <div class="text-center">
+                    <h6 class="filtros-title">{{ 'UTILIDADES.TRADUCCIONES.FILTROS' | translate }}</h6>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'UTILIDADES.TRADUCCIONES.MODULO' | translate }}</small>
+                    <select class="form-control form-input" (change)="alFiltrarModulo($event)">
+                        <option value="todos">{{ 'UTILIDADES.TRADUCCIONES.TODOS_LOS_MODULOS' | translate }}</option>
+                        @for (m of modulos; track m) { <option [value]="m">{{ m }}</option> }
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'UTILIDADES.TRADUCCIONES.BUSCAR' | translate }}</small>
+                    <input type="text" class="form-control form-input" (keyup)="alFiltrarTexto($event)"
+                        [placeholder]="'UTILIDADES.TRADUCCIONES.BUSCAR_AYUDA' | translate" />
+                </div>
+                <div class="filtro form-check">
+                    <input id="sinTraduccion" type="checkbox" class="form-check-input"
+                        (change)="alFiltrarSinTraduccion($event)" />
+                    <label for="sinTraduccion" class="form-check-label">{{ 'UTILIDADES.TRADUCCIONES.SIN_TRADUCCION' |
+                        translate }}</label>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'UTILIDADES.TRADUCCIONES.DESCARGAR' | translate }}</small>
+                    <div class="d-flex gap-2 flex-wrap">
+                        @for (i of idiomas; track i) {
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="descargar(i)">{{ i +
+                            '.json' }}</button>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </aside>
+    <div class="content-area">
+        @if (sinSembrar.length) {
+        <div class="alert alert-warning d-flex align-items-center gap-2 flex-wrap">
+            <span>{{ 'UTILIDADES.TRADUCCIONES.SIN_SEMBRAR' | translate: { idiomas: sinSembrar.join(', ') } }}</span>
+            @for (i of sinSembrar; track i) {
+            <button *appPermiso="'ACT_TRAD_MODIFICAR'" type="button" class="btn btn-sm btn-warning"
+                (click)="sembrar(i)">
+                {{ 'UTILIDADES.TRADUCCIONES.SEMBRAR' | translate: { idioma: i } }}
+            </button>
+            }
+        </div>
+        }
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                @if (!cargando) {
+                <app-table-data [data]="(filtradas$ | async) || []" [idField]="'llave'"
+                    [tableTitle]="'UTILIDADES.TRADUCCIONES.TITULO' | translate"
+                    [tableSubtitle]="'UTILIDADES.TRADUCCIONES.SUBTITULO' | translate" [metadataColumns]="columnas"
+                    [showActions]="true" [showNewButton]="true" [showEditButton]="true" [showDeleteButton]="true"
+                    [showSearchBox]="false" [newButtonLabel]="'UTILIDADES.TRADUCCIONES.NUEVA' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="nueva()" (editRecord)="editar($event)"
+                    (deleteRecord)="eliminar($event)" permisoNew="ACT_TRAD_CREAR" permisoEdit="ACT_TRAD_MODIFICAR"
+                    permisoDelete="ACT_TRAD_ELIMINAR">
+                </app-table-data>
+                } @else {
+                <app-data-loader [isLoading]="true"
+                    [message]="'UTILIDADES.TRADUCCIONES.CARGANDO' | translate"></app-data-loader>
+                }
+            </div>
+        </div>
+    </div>
+</div>

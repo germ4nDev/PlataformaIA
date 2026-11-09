@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // src/app/components/theme-selector/theme-selector.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -9,7 +10,7 @@ import { ThemeService } from '../../service/theme.service';
   standalone: true,
   templateUrl: './theme-selector.component.html',
   styleUrls: ['./theme-selector.component.scss'],
-  imports: [CommonModule, FormsModule]
+  imports: [TranslateModule, CommonModule, FormsModule]
 })
 export class ThemeSelectorComponent implements OnInit {
   isDarkTheme: boolean = false;

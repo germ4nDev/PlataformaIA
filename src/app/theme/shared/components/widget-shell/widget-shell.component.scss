@@ -30,6 +30,25 @@
 .shell-header {
     border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
     padding-bottom: 12px;
+    /* CC-122: si las acciones (badges + ampliar) no caben junto al título, bajan a un segundo renglón en vez de dejar el título
+       en 0 px (pasaba en el teléfono y en los widgets angostos de la web). Con espacio suficiente no cambia nada. */
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+
+    .shell-titulo-bloque {
+        flex: 1 1 0;
+        min-width: 9rem;
+    }
+
+    .shell-actions {
+        margin-left: auto;
+        max-width: 100%;
+
+        > div {
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+    }
 }
 
 .shell-icon-box {

@@ -403,9 +403,8 @@
 
                         <div class="col-md-12" *ngIf="paquetes.length > 0">
                             <div class="text-center flex flex-col justify-center"><br />
-                                <h4 class="titulo-container">Paquetes asociados al Suscriptor</h4>
-                                <h6 class="subtitulo-container"> Asocie todos los paquetes que van a ser incluidos en la
-                                    licencia
+                                <h4 class="titulo-container">{{ 'WEB.GESTION_SUSCRIPTOR.PAQUETES_ASOCIADOS_AL_SUSCRIPTOR' | translate }}</h4>
+                                <h6 class="subtitulo-container"> {{ 'WEB.GESTION_SUSCRIPTOR.ASOCIE_TODOS_LOS_PAQUETES_QUE' | translate }}
                                 </h6>
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                     (click)="btnAsociarTodosClick()">

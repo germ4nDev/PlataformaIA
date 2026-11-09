@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Componente de presentación: lista de ocupación con barra y semáforo (verde < 70 % ≤ amarillo < 85 % ≤ rojo).
@@ -18,7 +19,7 @@ export interface ItemSaturacion {
 @Component({
     selector: 'app-barras-saturacion-tcl',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './barras-saturacion-tcl.component.html',
     styleUrls: ['./barras-saturacion-tcl.component.scss']

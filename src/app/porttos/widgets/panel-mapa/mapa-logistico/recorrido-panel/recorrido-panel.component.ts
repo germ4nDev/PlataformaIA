@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Componente de presentación: panel "Reproducir" del mapa logístico (últimas 6, 12 o 24 h).
@@ -11,7 +12,7 @@ import { VELOCIDADES_RECORRIDO, VENTANAS_RECORRIDO, fechaDelSegundo } from '../m
 @Component({
     selector: 'app-recorrido-panel',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './recorrido-panel.component.html',
     styleUrls: ['./recorrido-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

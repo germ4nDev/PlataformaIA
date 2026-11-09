@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Pattern: PLATAFORMA Component - Entrada del modo embebido (OT-014 fase 1, CC-109; regla 17)
@@ -24,7 +25,7 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service';
 import { EmbebidoService } from 'src/app/theme/shared/service/embebido.service';
 import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
-import { armarUsuariosSC, contextoDeUsuario, listaDe, normalizarListasSesion, rolesYWidgetsDeAplicacion } from '../sesion/nucleo';
+import { armarUsuariosSC, contextoDeUsuario, empresaParaPermisos, listaDe, normalizarListasSesion, rolesYWidgetsDeAplicacion } from '../sesion/nucleo';
 import {
     SesionEntregada, aplicacionEmbebida, currentUserEmbebido, sesionProvisional, suiteEmbebida, suscriptorConAplicacion
 } from './nucleo';
@@ -34,18 +35,9 @@ type Estado = 'fuera' | 'esperando' | 'entrando' | 'error';
 @Component({
     selector: 'app-embebido',
     standalone: true,
-    imports: [CommonModule],
-    template: `
-        <div class="embebido">
-            <ng-container [ngSwitch]="estado">
-                <p *ngSwitchCase="'fuera'">Esta página se abre solo dentro de la app Porttos.</p>
-                <p *ngSwitchCase="'esperando'">Conectando con la app…</p>
-                <p *ngSwitchCase="'entrando'">Cargando el tablero…</p>
-                <p *ngSwitchCase="'error'">{{ mensaje }}</p>
-            </ng-container>
-        </div>`,
-    styles: [`.embebido { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #1f1f1f;
-        color: #cfd6e4; font-size: 1.05rem; padding: 24px; text-align: center; }`]
+    imports: [TranslateModule, CommonModule],
+    templateUrl: './embebido.component.html',
+    styleUrl: './embebido.component.scss'
 })
 export class EmbebidoComponent implements OnInit {
     estado: Estado = 'esperando';
@@ -92,6 +84,8 @@ export class EmbebidoComponent implements OnInit {
     }
 
     private async entrar(sesion: SesionEntregada): Promise<void> {
+        // 0. Canal de la app (OT-017): 'telefono' arma la rejilla de 4 columnas; sin canal, la tableta = la web
+        this._embebido.fijarCanal(sesion.canal);
         // 1. La sesión de la app, provisional, para que el interceptor mande x-token y x-sesion-id
         this._localStorage.setCurrentUserLocalStorage(sesionProvisional(sesion));
         let current = currentUserEmbebido(await firstValueFrom(this._auth.renovarSesion()), sesion);
@@ -140,7 +134,9 @@ export class EmbebidoComponent implements OnInit {
         // 4. Sesión y navegación como al entrar desde el login (sin registrar otra sesión)
         this._localStorage.setCurrentUserLocalStorage(current);
         this._localStorage.setNavSettingsLocalStorage({
-            aplicacion, suite: suite || {}, modulo: {}, contexto: contextoDeUsuario(current), suscriptor, aplicaciones: [aplicacion]
+            aplicacion, suite: suite || {}, modulo: {}, suscriptor, aplicaciones: [aplicacion],
+            // CC-132: la empresa del suscriptor de la aplicación (no la primera del usuario): la usan los permisos y validarPermiso del API
+            contexto: empresaParaPermisos(current['usuariosSC'], null, suscriptor.codigoSuscriptor) || contextoDeUsuario(current)
         } as any);
         this._auth.iniciarSesionEmbebida(current as any);
         this._socket.conectarConUsuario(codigoUsuario, sesion.codigoSesion);

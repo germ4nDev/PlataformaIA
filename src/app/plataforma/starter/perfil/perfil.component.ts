@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -82,7 +83,7 @@ export class PerfilComponent implements OnInit {
                         // this.codeRegistro = resp.aplicacion.codigoAplicacion;
                     },
                     error: () => {
-                        Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error');
+                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error');
                     }
                 });
             } else {
@@ -132,7 +133,7 @@ export class PerfilComponent implements OnInit {
                 },
                 error: () => {
                     this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
-                    alert('Error al subir la imagen');
+                    alert(traducir('WEB.PERFIL.ERROR_AL_SUBIR_LA_IMAGEN'));
                     //   this.selectedFileUrl = null;
                 }
             });

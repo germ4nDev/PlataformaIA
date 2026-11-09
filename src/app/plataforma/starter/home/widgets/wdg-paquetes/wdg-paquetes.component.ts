@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -10,7 +11,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-paquetes',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './wdg-paquetes.component.html',
     styleUrls: ['./wdg-paquetes.component.scss']
 })

@@ -294,20 +294,20 @@
                 <ul class="tc-toolbar-nav d-flex align-items-center mb-0 list-unstyled">
                     <li class="nav-item mr-2">
                         <a href="javascript:void(0)" class="toolbar-btn" [hidden]="isOptionBloqueo"
-                            (click)="onBloqueoClick()" title="Bloqueo/Desbloqueo">
+                            (click)="onBloqueoClick()" [title]="'WEB.TC_HEADER.BLOQUEO_DESBLOQUEO' | translate">
                             <i class="feather" [ngClass]="isBloqueado ? 'icon-lock' : 'icon-unlock'"></i>
                         </a>
                     </li>
 
                     <li class="nav-item mr-2">
-                        <a href="javascript:void(0)" class="toolbar-btn" (click)="goBack()" title="Menú Principal">
+                        <a href="javascript:void(0)" class="toolbar-btn" (click)="goBack()" [title]="'WEB.TC_HEADER.MENU_PRINCIPAL' | translate">
                             <i class="feather icon-home"></i>
                         </a>
                     </li>
 
                     <li class="nav-item mr-2">
                         <a href="javascript:void(0)" class="toolbar-btn" (click)="abrirCatalogo.emit()"
-                            title="Catalogo Widgets">
+                            [title]="'WEB.TC_HEADER.CATALOGO_WIDGETS' | translate">
                             <i class="feather icon-layout"></i>
                         </a>
                     </li>

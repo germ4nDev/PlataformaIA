@@ -3,6 +3,7 @@
     Component: Contenedores Dashboard (pestaña TLC_CONTENEDORES_001) · Layout Manager común (PestanaGridsterBase)
     Precarga el tablero de ContenedoresService al iniciar y limpia su caché al cambiar de puerto.
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridsterComponent, GridsterItemComponent, GridsterConfig } from 'angular-gridster2';
@@ -14,7 +15,7 @@ import { PestanaGridsterBase } from '../pestana-gridster/pestana-gridster.base';
 @Component({
     selector: 'app-contenedores-dashboard',
     standalone: true,
-    imports: [CommonModule, GridsterComponent, GridsterItemComponent],
+    imports: [CommonModule, GridsterComponent, GridsterItemComponent, TranslateModule],
     templateUrl: '../pestana-gridster/pestana-gridster.component.html',
     styleUrls: ['../pestana-gridster/pestana-gridster.component.scss']
 })

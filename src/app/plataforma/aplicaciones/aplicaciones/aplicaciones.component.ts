@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -282,7 +283,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
                             descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error')
                     }
                 })
             }

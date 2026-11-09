@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
@@ -126,7 +127,7 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
                         nombreWidget: this.widgetsMaestros.find(w => w.codigoWidget === widgetRel.codigoWidget)?.nombreWidget || widgetRel.codigoWidget,
                         nomRole: this.roles.find(role => role.codigoRole === widgetRel.codigoRole)?.nombreRole || widgetRel.codigoRole,
                         '_acciones': [{
-                            accion: 'ESTADO',
+                            accion: 'ESTADO', permiso: 'ACT_WDGT_ROLES',
                             letra: isActivo ? 'I' : 'A',
                             color: isActivo ? '#dc3545' : '#13af2d',
                             tooltip: isActivo ? this.translate.instant('WIDGETSROLES.INACTIVAR') : this.translate.instant('WIDGETSROLES.ACTIVAR')
@@ -181,7 +182,9 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
         ).subscribe(result => {
             if (result) {
                 // 🟢 Se utilizan las llaves compuestas requeridas por nuestro backend
-                this._widgetsRolesService.removerRolDeWidget(evento.row.codigoWidget, evento.row.codigoRol).subscribe({
+                const relacionBorrar = this.widgetsRoles.find(x => x.codigoWidget === evento.row.codigoWidget && x.codigoRol === evento.row.codigoRol);
+                if (!relacionBorrar?.codigoWidgetRole) return;
+                this._widgetsRolesService.removerRolDeWidget(relacionBorrar.codigoWidgetRole).subscribe({
                     next: (resp: any) => {
                         if (resp.ok) {
                             this.registrarLog('201', 'WIDGETS.DELETESUCCSESSFULLY');
@@ -190,7 +193,7 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
                     },
                     error: (err: any) => {
                         this.registrarLog('501', 'WIDGETS.DELETEERROR');
-                        this._swalAlertService.getAlertError('No se pudo eliminar el permiso del Widget');
+                        this._swalAlertService.getAlertError(traducir('WEB.WIDGETS_ROLES.NO_SE_PUDO_ELIMINAR_EL'));
                     }
                 });
             }
@@ -210,15 +213,20 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
                     if (!relacion) return;
 
                     // 🟢 DTO adaptado a la tabla PTLWidgets_Roles
+                    // OT-021: el API valida la relación completa (WidgetRoleDTO) y la busca por codigoWidgetRole
+                    const usuario = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || '';
                     const payload = {
+                        codigoWidgetRole: relacion.codigoWidgetRole,
                         codigoWidget: relacion.codigoWidget,
                         codigoRol: relacion.codigoRol,
                         estadoRelacion: !relacion.estadoRelacion,
+                        codigoUsuarioCreacion: relacion.codigoUsuarioCreacion || usuario,
+                        fechaCreacion: relacion.fechaCreacion || new Date().toISOString(),
                         codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || '',
                         fechaModificacion: new Date().toISOString()
                     }
 
-                    this._widgetsRolesService.toggleEstadoRelacion(relacion.codigoWidget, relacion.codigoRol, payload).subscribe({
+                    this._widgetsRolesService.toggleEstadoRelacion(relacion.codigoWidgetRole, payload).subscribe({
                         next: (resp: any) => {
                             if (resp.ok) {
                                 this.registrarLog('201', 'WIDGETS.UPDATESUCCSESSFULLY');
@@ -227,7 +235,7 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
                         },
                         error: (err: any) => {
                             this.registrarLog('501', 'WIDGETS.UPDATEERROR');
-                            this._swalAlertService.getAlertError('No se pudo actualizar el permiso del Widget');
+                            this._swalAlertService.getAlertError(traducir('WEB.WIDGETS_ROLES.NO_SE_PUDO_ACTUALIZAR_EL'));
                         }
                     });
                 }

@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Pattern: PORTTOS Smart Widget - Espera en fondeo por día
@@ -17,7 +19,7 @@ import { formatoDuracion } from '../shared/maritimo-vivo.util';
 @Component({
     selector: 'app-tiempos-fondeo',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './tiempos-fondeo.component.html',
     styleUrls: ['../shared/maritimo-vivo.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -63,7 +65,7 @@ export class TiemposFondeoComponent extends WidgetMaritimoVivoBase<TiemposMariti
         this.grafica = PorttosChartHelper.renderizarBarras(this.lienzo, this.grafica, {
             labels: porDia.map((d) => d.dia.slice(5).split('-').reverse().join('/')),
             datasets: [
-                { label: 'Promedio (h)', data: porDia.map((d) => horas(d.promedioMin)), color: paleta[0] },
+                { label: traducir('PORTTOS.TIEMPOS_FONDEO.PROMEDIO_H'), data: porDia.map((d) => horas(d.promedioMin)), color: paleta[0] },
                 { label: 'P90 (h)', data: porDia.map((d) => horas(d.p90Min)), color: PorttosChartHelper.SEMAFORO.alerta }
             ],
             unidad: 'h',

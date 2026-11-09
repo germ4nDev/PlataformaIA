@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Pattern: PORTTOS Smart Widget - Cola de fondeo en vivo
@@ -16,7 +17,7 @@ import { formatoDuracion, semaforo, Semaforo, UMBRALES_FONDEO } from '../shared/
 @Component({
     selector: 'app-cola-fondeo',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './cola-fondeo.component.html',
     styleUrls: ['../shared/maritimo-vivo.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -52,13 +53,13 @@ export class ColaFondeoComponent extends WidgetMaritimoVivoBase<ResumenMaritimo>
 
     // ---------------------------------------------------------------- vista ampliada (2026-10-24)
     public readonly columnasCola: ColumnaTabla[] = [
-        { campo: 'nombre', titulo: 'Nave', tipo: 'principal' },
+        { campo: 'nombre', titulo: 'PORTTOS.COMUN.NAVE', tipo: 'principal' },
         { campo: 'mmsi', titulo: 'MMSI' },
-        { campo: 'destino', titulo: 'Destino AIS' },
-        { campo: 'horas', titulo: 'En fondeo', tipo: 'numero', decimales: 1, unidad: 'h' },
-        { campo: 'nivelTexto', titulo: 'Nivel', tipo: 'estado' },
-        { campo: 'latitud', titulo: 'Latitud', tipo: 'numero', decimales: 4 },
-        { campo: 'longitud', titulo: 'Longitud', tipo: 'numero', decimales: 4 }
+        { campo: 'destino', titulo: 'PORTTOS.COLA_FONDEO.DESTINO_AIS' },
+        { campo: 'horas', titulo: 'PORTTOS.COLA_FONDEO.EN_FONDEO_2', tipo: 'numero', decimales: 1, unidad: 'h' },
+        { campo: 'nivelTexto', titulo: 'PORTTOS.COLA_FONDEO.NIVEL', tipo: 'estado' },
+        { campo: 'latitud', titulo: 'PORTTOS.COLA_FONDEO.LATITUD', tipo: 'numero', decimales: 4 },
+        { campo: 'longitud', titulo: 'PORTTOS.COLA_FONDEO.LONGITUD', tipo: 'numero', decimales: 4 }
     ];
     public filasCola: any[] = [];
 

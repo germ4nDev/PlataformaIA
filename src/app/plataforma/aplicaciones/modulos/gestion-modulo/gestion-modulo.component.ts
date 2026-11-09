@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'
@@ -92,7 +93,7 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
                     this.consultarMLodulos(this.FormRegistro.codigoSuite)
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener el modulo.')
+                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_MODULO.NO_SE_PUDO_OBTENER_EL'))
                 }
             })
         } else {

@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /*
   Author: German Valencia
   Component: Ingesta Panel (Standalone) - Carga de Documentos IA
@@ -12,12 +13,13 @@ import { NavigationService } from 'src/app/theme/shared/service';
 import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { IngestaService } from 'src/app/theme/shared/service/tablero-control/ingesta.service';
+import { AppPermisoDirective } from '../../../theme/shared/directive/app-permiso.directive';
 import * as XLSX from 'xlsx'; // 🚨 IMPORTANTE: La librería que acabas de instalar
 
 @Component({
     selector: 'app-ingesta-panel',
     standalone: true,
-    imports: [CommonModule, FormsModule, NavBarComponent, NavContentComponent, TranslateModule],
+    imports: [AppPermisoDirective, CommonModule, FormsModule, NavBarComponent, NavContentComponent, TranslateModule],
     templateUrl: './ingesta-panel.component.html',
     styleUrl: './ingesta-panel.component.scss'
 })
@@ -95,7 +97,7 @@ export class IngestaPanelComponent implements OnInit {
         const isValidCsv = (file.type.includes('csv') || file.name.endsWith('.csv')) && this.tipoDocumento === 'TRAFICO';
 
         if (!isValidPDF && !isValidExcel && !isValidCsv) {
-            this.mostrarError(`El archivo no coincide con el formato esperado para ${this.tipoDocumento}.`);
+            this.mostrarError(traducir('PORTTOS.INGESTA_PANEL.FORMATO_NO_COINCIDE', { tipo: this.tipoDocumento }));
             return;
         }
 
@@ -349,7 +351,7 @@ export class IngestaPanelComponent implements OnInit {
                 // Validación de seguridad por si el excel venía vacío
                 if (this.registrosProcesados.length === 0) {
                     this.isUploading = false;
-                    this.mostrarError('El archivo no contiene registros válidos para ingesta.');
+                    this.mostrarError(traducir('PORTTOS.INGESTA_PANEL.EL_ARCHIVO_NO_CONTIENE_REGISTROS'));
                     return;
                 }
                 // 🚨 Ojo: Asegúrate de agregar este método en tu IngestaService
@@ -371,7 +373,7 @@ export class IngestaPanelComponent implements OnInit {
 
             default:
                 this.isUploading = false;
-                this.mostrarError('Tipo de documento no soportado o no seleccionado.');
+                this.mostrarError(traducir('PORTTOS.INGESTA_PANEL.TIPO_DE_DOCUMENTO_NO_SOPORTADO'));
                 return;
         }
 
@@ -389,7 +391,7 @@ export class IngestaPanelComponent implements OnInit {
             },
             error: (err) => {
                 this.isUploading = false;
-                this.mostrarError(err.error?.message || err.error?.msg || 'Error de conexión con el servidor.');
+                this.mostrarError(err.error?.message || err.error?.msg || traducir('PORTTOS.INGESTA_PANEL.ERROR_DE_CONEXION_CON_EL'));
             }
         });
     }

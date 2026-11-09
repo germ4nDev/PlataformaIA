@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -33,7 +35,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-reporte-semanal-maritimo',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './reporte-semanal-maritimo.component.html',
     styleUrls: ['./reporte-semanal-maritimo.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -149,13 +151,13 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
 
         const metricasConstruidas: IMetricaSemanal[] = [
             {
-                label: 'Motonaves atendidas',
+                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.MOTONAVES_ATENDIDAS'),
                 valor: totalMotonaves.toLocaleString('es-CO'),
                 tendencia: 'Acumulado 7 días',
                 claseTendencia: 'text-info'
             },
             {
-                label: 'Toneladas movilizadas',
+                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.TONELADAS_MOVILIZADAS'),
                 valor: totalToneladas >= 1000 ? `${(totalToneladas / 1000).toFixed(1)}k TM` : `${totalToneladas} TM`,
                 tendencia: 'Volumen semanal',
                 claseTendencia: 'text-success'
@@ -164,7 +166,7 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
 
         if (totalTeus > 0) {
             metricasConstruidas.push({
-                label: 'TEU movilizados',
+                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.TEU_MOVILIZADOS'),
                 valor: totalTeus >= 1000 ? `${(totalTeus / 1000).toFixed(1)}k` : totalTeus.toLocaleString('es-CO'),
                 tendencia: 'Contenedores 7d',
                 claseTendencia: 'text-success'
@@ -173,7 +175,7 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
 
         if (totalVehiculos > 0) {
             metricasConstruidas.push({
-                label: 'Vehículos (unid.)',
+                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.VEHICULOS_UNID'),
                 valor: totalVehiculos.toLocaleString('es-CO'),
                 tendencia: 'Operación Ro-Ro',
                 claseTendencia: 'text-warning'
@@ -183,7 +185,7 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'RESUMEN SEMANAL MARÍTIMO',
-            subtitulo: raw.subtitulo || 'Indicadores clave de los últimos 7 días',
+            subtitulo: raw.subtitulo || 'PORTTOS.REPORTE_SEMANAL_MARITIMO.INDICADORES_CLAVE_DE_LOS_ULTIMOS',
             icono: raw.icono || 'feather icon-calendar',
             metricas: metricasConstruidas
         };

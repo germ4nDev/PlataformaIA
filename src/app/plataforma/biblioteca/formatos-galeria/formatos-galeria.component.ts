@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -176,7 +177,7 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
                         Swal.fire(this.translate.instant('FORMATOSGALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success');
                         this.cargarDatos();
                     },
-                    error: () => Swal.fire('Error', this.translate.instant('FORMATOSGALERIA.ELIMINARERROR'), 'error')
+                    error: () => Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('FORMATOSGALERIA.ELIMINARERROR'), 'error')
                 });
             }
         });

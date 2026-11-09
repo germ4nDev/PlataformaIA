@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -92,7 +93,7 @@ export class GestionTipoItemComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener la categoría con ese código');
+                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_TIPO_ITEM.NO_SE_PUDO_OBTENER_LA'));
                     this.btnRegresarClick();
                 }
             });

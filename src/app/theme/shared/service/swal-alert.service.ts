@@ -1,3 +1,4 @@
+import { traducir } from '../i18n/traducir';
 /*
     Author: German Valencia
 */
@@ -128,7 +129,7 @@ export class SwalAlertService implements OnDestroy {
     getAlertConfirmError(descripcion: string) {
         this.fireSwal({
             icon: 'error',
-            title: 'Error',
+            title: traducir('WEB.SWAL_ALERT_SERVICE.ERROR'),
             text: descripcion,
         });
     }
@@ -136,7 +137,7 @@ export class SwalAlertService implements OnDestroy {
     getAlertConfirmSuccess(descripcion: string) {
         this.fireSwal({
             icon: 'success',
-            title: 'Éxito',
+            title: traducir('WEB.SWAL_ALERT_SERVICE.EXITO'),
             text: descripcion,
         });
     }
@@ -152,7 +153,7 @@ export class SwalAlertService implements OnDestroy {
 
         this.fireSwal({
             icon: 'warning',
-            title: 'Advertencia',
+            title: traducir('WEB.SWAL_ALERT_SERVICE.ADVERTENCIA'),
             html: `<ul style="list-style-type: disc; margin: 0; padding-left: 20px; text-align: left;">${listadoIncidencias}</ul>`,
         });
     }

@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -20,7 +22,7 @@ import { RangoTclComponent } from '../../shared/rango-tcl/rango-tcl.component';
 @Component({
     selector: 'app-motonaves-granel',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent, GraficaTclComponent, RangoTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, TablaTclComponent, GraficaTclComponent, RangoTclComponent],
     templateUrl: './motonaves-granel.component.html',
     styleUrls: ['./motonaves-granel.component.scss']
 })
@@ -32,23 +34,23 @@ export class MotonavesGranelComponent extends WidgetTableroBase<TableroGranel> {
     public filas: any[] = [];
     public readonly mensajeVacio = 'No hay motonaves graneleras en operación.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'motonave', titulo: 'Motonave', tipo: 'principal' },
-        { campo: 'terminal', titulo: 'Terminal' },
-        { campo: 'producto', titulo: 'Producto' },
-        { campo: 'tmTotal', titulo: 'TM total', tipo: 'numero' },
-        { campo: 'tmOperadas', titulo: 'TM operadas', tipo: 'numero' },
-        { campo: 'avancePct', titulo: 'Avance', tipo: 'avance', ancho: '120px' },
-        { campo: 'ritmoTmh', titulo: 'Ritmo', tipo: 'numero', unidad: 't/h' },
-        { campo: 'finEstimado', titulo: 'Fin estimado', tipo: 'fecha' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' }
+        { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE', tipo: 'principal' },
+        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
+        { campo: 'tmTotal', titulo: 'PORTTOS.MOTONAVES_GRANEL.TM_TOTAL', tipo: 'numero' },
+        { campo: 'tmOperadas', titulo: 'PORTTOS.MOTONAVES_GRANEL.TM_OPERADAS', tipo: 'numero' },
+        { campo: 'avancePct', titulo: 'PORTTOS.MOTONAVES_GRANEL.AVANCE_2', tipo: 'avance', ancho: '120px' },
+        { campo: 'ritmoTmh', titulo: 'PORTTOS.MOTONAVES_GRANEL.RITMO', tipo: 'numero', unidad: 't/h' },
+        { campo: 'finEstimado', titulo: 'PORTTOS.MOTONAVES_GRANEL.FIN_ESTIMADO_2', tipo: 'fecha' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'muelle', titulo: 'Muelle' },
-        { campo: 'tipo', titulo: 'Tipo', tipo: 'estado' },
-        { campo: 'sentido', titulo: 'Sentido' },
-        { campo: 'equipos', titulo: 'Equipos asignados', tipo: 'lista' },
-        { campo: 'simulado', titulo: 'Simulado', tipo: 'si-no' }
+        { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE' },
+        { campo: 'tipo', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO', tipo: 'estado' },
+        { campo: 'sentido', titulo: 'PORTTOS.MOTONAVES_GRANEL.SENTIDO' },
+        { campo: 'equipos', titulo: 'PORTTOS.MOTONAVES_GRANEL.EQUIPOS_ASIGNADOS', tipo: 'lista' },
+        { campo: 'simulado', titulo: 'PORTTOS.MOTONAVES_GRANEL.SIMULADO', tipo: 'si-no' }
     ];
     get operando(): number { return this.filas.filter((f) => f.estado === 'OPERANDO').length; }
 
@@ -90,9 +92,9 @@ export class MotonavesGranelComponent extends WidgetTableroBase<TableroGranel> {
                 this.avance = a;
                 const ritmo = a.ritmoNecesarioTmh;
                 this.seriesAvance = [
-                    { label: `Operado (${a.unidad})`, data: a.valores || [], color: '#2f96b4', relleno: true },
+                    { label: traducir('PORTTOS.MOTONAVES_GRANEL.OPERADO_UNIDAD', { unidad: a.unidad }), data: a.valores || [], color: '#2f96b4', relleno: true },
                     ...(ritmo !== null && ritmo !== undefined && a.unidad === 't/h'
-                        ? [{ label: 'Ritmo necesario para cerrar a tiempo', data: (a.valores || []).map(() => ritmo), color: '#f89406' }]
+                        ? [{ label: traducir('PORTTOS.MOTONAVES_GRANEL.RITMO_NECESARIO_PARA_CERRAR_A'), data: (a.valores || []).map(() => ritmo), color: '#f89406' }]
                         : [])
                 ];
                 this.cargandoAvance = false;

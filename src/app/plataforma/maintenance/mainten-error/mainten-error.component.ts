@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 // angular import
 import { Component } from '@angular/core';
 
@@ -7,7 +8,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-mainten-error',
   standalone: true,
-  imports: [RouterModule],
+  imports: [TranslateModule, RouterModule],
   templateUrl: './mainten-error.component.html',
   styleUrls: ['./mainten-error.component.scss']
 })

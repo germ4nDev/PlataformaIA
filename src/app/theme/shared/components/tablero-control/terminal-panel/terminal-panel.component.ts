@@ -1,10 +1,11 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-terminal-panel',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './terminal-panel.component.html',
     styleUrls: ['./terminal-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

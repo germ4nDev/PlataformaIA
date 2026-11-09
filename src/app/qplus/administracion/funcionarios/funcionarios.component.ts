@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
@@ -397,7 +398,7 @@ export class FuncionariosComponent {
                             descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('Error', this.translate.instant('MODULOS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('QPLUS.FUNCIONARIOS.ERROR'), this.translate.instant('MODULOS.ELIMINARERROR'), 'error')
                     }
                 })
             }

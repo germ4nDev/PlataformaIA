@@ -44,7 +44,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'GALERIA.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoGaleria"
-                                    placeholder="Código de la Galería"
+                                    [placeholder]="'WEB.GESTION_GALERIA.CODIGO_DE_LA_GALERIA' | translate"
                                     [ngClass]="{ 'is-invalid': !codigoGaleria.valid && (codigoGaleria.dirty || codigoGaleria.touched || isSubmit) }"
                                     #codigoGaleria="ngModel" required [(ngModel)]="FormRegistro.codigoGaleria"
                                     readonly />
@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'GALERIA.BIBLIOTECACODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoBiblioteca"
-                                    placeholder="Código de la Galería"
+                                    [placeholder]="'WEB.GESTION_GALERIA.CODIGO_DE_LA_GALERIA' | translate"
                                     [ngClass]="{ 'is-invalid': !codigoBiblioteca.valid && (codigoBiblioteca.dirty || codigoBiblioteca.touched || isSubmit) }"
                                     #codigoBiblioteca="ngModel" required [(ngModel)]="FormRegistro.codigoBiblioteca"
                                     readonly />
@@ -105,7 +105,7 @@
                                 <label
                                     *ngIf="!codigoTipoGaleria.valid && (codigoTipoGaleria.dirty || codigoTipoGaleria.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El Tipo de Galería es obligatorio
+                                    {{ 'WEB.GESTION_GALERIA.EL_TIPO_DE_GALERIA_ES' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                                 <label
                                     *ngIf="!siglaIdioma.valid && (siglaIdioma.dirty || siglaIdioma.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El Idioma es obligatorio
+                                    {{ 'WEB.GESTION_GALERIA.EL_IDIOMA_ES_OBLIGATORIO' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                                     <div *ngIf="selectedFileType === 'document'"
                                         class="alert alert-secondary d-flex align-items-center">
                                         <i class="feather icon-file-text me-2" style="font-size: 24px"></i>
-                                        <span>Archivo listo para subir: <strong>{{ selectedFileName }}</strong></span>
+                                        <span>{{ 'WEB.GESTION_GALERIA.ARCHIVO_LISTO_PARA_SUBIR' | translate }} <strong>{{ selectedFileName }}</strong></span>
                                     </div>
                                 </div>
                                 <div class="file-input-wrapper">

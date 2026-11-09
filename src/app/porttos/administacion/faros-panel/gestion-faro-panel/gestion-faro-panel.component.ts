@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -60,10 +61,10 @@ export class GestionFaroPanelComponent implements OnInit {
     textoColor: string = 'id_color'
 
     ETIPOS_FARO = [
-        { id: 'PEAJE', label: 'Peaje', color: '#22c55e' },
-        { id: 'PUNTO_CONTROL', label: 'Punto de Control', color: '#facc15' },
-        { id: 'ZONA_TERRESTRE', label: 'Zona Terrestre', color: '#f59e0b' },
-        { id: 'ZONA_MARITIMA', label: 'Zona Marítima', color: '#dc2626' }
+        { id: 'PEAJE', label: traducir('PORTTOS.COMUN.PEAJE'), color: '#22c55e' },
+        { id: 'PUNTO_CONTROL', label: traducir('PORTTOS.COMUN.PUNTO_DE_CONTROL'), color: '#facc15' },
+        { id: 'ZONA_TERRESTRE', label: traducir('PORTTOS.COMUN.ZONA_TERRESTRE'), color: '#f59e0b' },
+        { id: 'ZONA_MARITIMA', label: traducir('PORTTOS.COMUN.ZONA_MARITIMA'), color: '#dc2626' }
     ];
 
     constructor(
@@ -97,7 +98,7 @@ export class GestionFaroPanelComponent implements OnInit {
                     console.log('data registro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el FaroModel', 'error')
+                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_FARO_PANEL.NO_SE_PUDO_OBTENER_EL'), 'error')
                 }
             })
         }
@@ -229,7 +230,7 @@ export class GestionFaroPanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('MUELLES.CREATESUCCSESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo actualizar el faro')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_FARO_PANEL.NO_SE_PUDO_ACTUALIZAR_EL'))
                 }
             })
         } else {
@@ -257,7 +258,7 @@ export class GestionFaroPanelComponent implements OnInit {
                         descripcionLog: this.translate.instant('MUELLES.ELIMINAREXITOSA')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo crear el FaroModel')
+                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_FARO_PANEL.NO_SE_PUDO_CREAR_EL'))
                 }
             })
         }

@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /*
     Author: German Valencia
     Pattern: PORTTOS Smart Widget - Ocupación de muelles en vivo
@@ -15,7 +16,7 @@ import { formatoDuracion } from '../shared/maritimo-vivo.util';
 @Component({
     selector: 'app-ocupacion-muelles',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent, TablaTclComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent, TablaTclComponent],
     templateUrl: './ocupacion-muelles.component.html',
     styleUrls: ['../shared/maritimo-vivo.scss', './ocupacion-muelles.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -30,16 +31,16 @@ export class OcupacionMuellesComponent extends WidgetMaritimoVivoBase<OcupacionM
 
     // ---------------------------------------------------------------- vista ampliada (2026-10-24)
     public readonly columnasMuelles: ColumnaTabla[] = [
-        { campo: 'terminal', titulo: 'Terminal' },
-        { campo: 'muelle', titulo: 'Muelle', tipo: 'principal' },
-        { campo: 'especialidad', titulo: 'Especialidad' },
-        { campo: 'caladoMetros', titulo: 'Calado', tipo: 'numero', decimales: 1, unidad: 'm' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-        { campo: 'naves', titulo: 'Nave(s)', tipo: 'lista' },
-        { campo: 'horasAtracada', titulo: 'Atracada', tipo: 'numero', decimales: 1, unidad: 'h' },
-        { campo: 'fuente', titulo: 'Fuente' },
-        { campo: 'verificacion', titulo: 'Verificación' },
-        { campo: 'proximo', titulo: 'Próximo atraque' },
+        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+        { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE', tipo: 'principal' },
+        { campo: 'especialidad', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.ESPECIALIDAD' },
+        { campo: 'caladoMetros', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.CALADO', tipo: 'numero', decimales: 1, unidad: 'm' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+        { campo: 'naves', titulo: 'PORTTOS.OCUPACION_MUELLES.NAVE_S', tipo: 'lista' },
+        { campo: 'horasAtracada', titulo: 'PORTTOS.COMUN.ATRACADA', tipo: 'numero', decimales: 1, unidad: 'h' },
+        { campo: 'fuente', titulo: 'PORTTOS.OCUPACION_MUELLES.FUENTE' },
+        { campo: 'verificacion', titulo: 'PORTTOS.OCUPACION_MUELLES.VERIFICACION' },
+        { campo: 'proximo', titulo: 'PORTTOS.OCUPACION_MUELLES.PROXIMO_ATRAQUE' },
         { campo: 'proximoEnHoras', titulo: 'En', tipo: 'numero', decimales: 1, unidad: 'h' }
     ];
     public filasMuelles: any[] = [];

@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -111,7 +112,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                     this.codeActividad = resp.actividad.codigoActividad;
                 },
                 error: () => {
-                    this._swalService.getAlertConfirmError('No se pudo obtener la Aplicación')
+                    this._swalService.getAlertConfirmError(traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'))
                 }
             });
         }
@@ -241,7 +242,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                         descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalService.getAlertError('No se pudo actualizar la Actividad');
+                    this._swalService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
                 }
             });
         } else {
@@ -273,7 +274,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                         descripcionLog: this.translate.instant('ACTIVIDADES.CREATEERROR')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalService.getAlertError('No se pudo crear la Actividad');
+                    this._swalService.getAlertError(traducir('WEB.GESTIION_ACTIVIDAD.NO_SE_PUDO_CREAR_LA'));
                 }
             });
         }

@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -201,7 +202,7 @@ export class GestionIdiomaComponent implements OnInit {
                         folto: this.flagIdioma
                     }
                     this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('imagen eliminada correctamente'))
-                    this._swalService.getAlertError('No se pudo actualizar la Aplicación')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_IDIOMA.NO_SE_PUDO_ACTUALIZAR_LA'))
                 }
             })
         } else {
@@ -242,7 +243,7 @@ export class GestionIdiomaComponent implements OnInit {
                     }
                     console.log('borrar imagen', objUpload)
                     this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('imagen eliminada correctamente'))
-                    this._swalService.getAlertError('No se pudo crear la Aplicación')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_IDIOMA.NO_SE_PUDO_CREAR_LA'))
                 }
             })
         }

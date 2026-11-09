@@ -64,7 +64,7 @@
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'PUERTOS.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_PUERTOS_CREAR" permisoEdit="ACT_PUERTOS_MODIFICAR" permisoDelete="ACT_PUERTOS_ELIMINAR">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>

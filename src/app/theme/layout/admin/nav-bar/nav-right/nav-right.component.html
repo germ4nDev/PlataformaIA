@@ -3,7 +3,7 @@
         <li>
             <div class="dropdown icon-style" ngbDropdown placement="auto">
                 <a ngbDropdownToggle href="javascript:" class="icono-tema">
-                    <i class="icon feather icon-bell icon-lg icon-style" title="Notification"></i>
+                    <i class="icon feather icon-bell icon-lg icon-style" [title]="'WEB.NAV_RIGHT.NOTIFICATION' | translate"></i>
                     <span class="badge bg-danger"><span class="sr-only"></span></span>
                 </a>
                 <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
@@ -21,11 +21,11 @@
                         <li class="notification">
                             <div class="media">
                                 <img class="img-radius" src="assets/images/user/avatar-1.jpg"
-                                    alt="Generic placeholder image" />
+                                    [alt]="'WEB.NAV_RIGHT.GENERIC_PLACEHOLDER_IMAGE' | translate" />
                                 <div class="media-body">
                                     <p><strong>John Doe</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock"></i>30 min</span></p>
-                                    <p>New ticket Added</p>
+                                                class="icon feather icon-clock"></i>{{ 'WEB.NAV_RIGHT.30_MIN' | translate }}</span></p>
+                                    <p>{{ 'WEB.NAV_RIGHT.NEW_TICKET_ADDED' | translate }}</p>
                                 </div>
                             </div>
                         </li>
@@ -35,22 +35,22 @@
                         <li class="notification">
                             <div class="media">
                                 <img class="img-radius" src="assets/images/user/avatar-2.jpg"
-                                    alt="Generic placeholder image" />
+                                    [alt]="'WEB.NAV_RIGHT.GENERIC_PLACEHOLDER_IMAGE' | translate" />
                                 <div class="media-body">
                                     <p><strong>Joseph William</strong><span class="n-time text-muted"><i
-                                                data-feather="clock"></i>30 min</span></p>
-                                    <p>Purchase New Theme and make payment</p>
+                                                data-feather="clock"></i>{{ 'WEB.NAV_RIGHT.30_MIN' | translate }}</span></p>
+                                    <p>{{ 'WEB.NAV_RIGHT.PURCHASE_NEW_THEME_AND_MAKE' | translate }}</p>
                                 </div>
                             </div>
                         </li>
                         <li class="notification">
                             <div class="media">
                                 <img class="img-radius" src="assets/images/user/avatar-3.jpg"
-                                    alt="Generic placeholder image" />
+                                    [alt]="'WEB.NAV_RIGHT.GENERIC_PLACEHOLDER_IMAGE' | translate" />
                                 <div class="media-body">
                                     <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock m-r-10"></i>30 min</span></p>
-                                    <p>currently login</p>
+                                                class="icon feather icon-clock m-r-10"></i>{{ 'WEB.NAV_RIGHT.30_MIN' | translate }}</span></p>
+                                    <p>{{ 'WEB.NAV_RIGHT.CURRENTLY_LOGIN' | translate }}</p>
                                 </div>
                             </div>
                         </li>
@@ -64,7 +64,7 @@
         <li (click)="this.visibleUserList = !this.visibleUserList">
             <div class="dropdown">
                 <a href="javascript:void(0)" class="displayChatbox dropdown-toggle icono-tema">
-                    <i class="icon feather icon-mail icon-lg icon-style" title="Mail InBox"></i>
+                    <i class="icon feather icon-mail icon-lg icon-style" [title]="'WEB.NAV_RIGHT.MAIL_INBOX' | translate"></i>
                     <span class="badge bg-success"><span class="sr-only"></span></span>
                 </a>
             </div>

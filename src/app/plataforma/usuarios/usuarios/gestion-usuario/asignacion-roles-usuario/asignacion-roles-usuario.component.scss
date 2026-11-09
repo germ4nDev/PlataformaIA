@@ -1,0 +1,13 @@
+.asignacion-roles {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(128, 128, 128, 0.25);
+
+    &__titulo { margin-bottom: 0.25rem; }
+    &__ayuda, &__vacio { font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.75rem; }
+    &__lista {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+        gap: 0.25rem 1rem;
+    }
+}

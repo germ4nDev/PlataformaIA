@@ -1,12 +1,12 @@
-<app-widget-shell [titulo]="data.titulo || '🎯 IMPLICACIONES OPERATIVAS PARA LA TORRE DE CONTROL'"
-    [subtitulo]="data.subtitulo || 'Impacto en el control de la operación portuaria y terrestre'"
+<app-widget-shell [titulo]="(data.titulo | translate) || '🎯 IMPLICACIONES OPERATIVAS PARA LA TORRE DE CONTROL'"
+    [subtitulo]="(data.subtitulo | translate) || ('PORTTOS.IMPLICACIONES_OPERATIVAS.IMPACTO_EN_EL_CONTROL_DE' | translate)"
     [icono]="data.icono || 'feather icon-alert-circle'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-danger text-uppercase">
-            Directrices · {{ insights.length }}
+            {{ 'PORTTOS.IMPLICACIONES_OPERATIVAS.DIRECTRICES' | translate: { p0: insights.length } }}
         </span>
     </div>
 
@@ -18,14 +18,14 @@
             <!-- Estado Cargando -->
             <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
                 <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-                Evaluando implicaciones operativas del puerto...
+                {{ 'PORTTOS.IMPLICACIONES_OPERATIVAS.EVALUANDO_IMPLICACIONES_OPERATIVAS_DEL_P' | translate }}
             </div>
 
             <!-- Estado Vacío -->
             <div *ngIf="!isLoading && insights.length === 0"
                 class="titulo-containerd-flex justify-content-center align-items-center h-100 text-muted small py-4">
                 <i class="feather icon-check-circle me-2 text-success"></i>
-                No hay implicaciones u observaciones registradas para este puerto.
+                {{ 'PORTTOS.IMPLICACIONES_OPERATIVAS.NO_HAY_IMPLICACIONES_U_OBSERVACIONES' | translate }}
             </div>
 
             <!-- Iteración de Implicaciones / Insights -->
@@ -33,11 +33,11 @@
                 <div class="insight-item" *ngFor="let item of insights; trackBy: trackByInsight">
                     <h4 class="insight-title d-flex align-items-center mb-1">
                         <span class="dot me-2" [ngStyle]="{'background-color': item.color || '#ef4444'}"></span>
-                        {{ item.titulo }}
+                        {{ (item.titulo | translate) }}
                     </h4>
                     <p class="insight-text text-muted mb-0 small ps-3 border-start ms-1"
                         [ngStyle]="{'border-color': item.color || '#ef4444'}">
-                        {{ item.descripcion }}
+                        {{ (item.descripcion | translate) }}
                     </p>
                 </div>
             </ng-container>

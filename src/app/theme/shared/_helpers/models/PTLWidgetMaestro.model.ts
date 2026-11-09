@@ -25,6 +25,8 @@ export class PTLWidgetMaestroModel {
         public layoutVersion?: number,
         /** Widget para el teléfono (migración 028): solo la app en el teléfono lo muestra; la web y la tableta no. */
         public movil?: boolean,
+        /** Canal (migración 030, OT-017): 'web' (web y tableta) | 'telefono' | 'ambos'. Manda sobre movil. */
+        public canal?: string,
 
         // 🟡 Campos Auxiliares para la UI (Tablas, Modales, Selecciones)
         public checked?: boolean,

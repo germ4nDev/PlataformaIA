@@ -1,5 +1,5 @@
-<app-widget-shell [titulo]="data?.titulo || 'Energía Transferida'"
-    [subtitulo]="data?.subtitulo || 'TOTALIZADOR EN MMBTU'" [icono]="'feather icon-zap'" [isEnfoque]="isEnfoque"
+<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.GNL_ODOMETRO_WIDGET.ENERGIA_TRANSFERIDA' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || 'TOTALIZADOR EN MMBTU'" [icono]="'feather icon-zap'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- PROYECCIÓN AL HEADER: Segmento activo -->
@@ -18,7 +18,7 @@
             style="font-size: 0.72rem;">
             <div class="spinner-grow text-warning spinner-grow-sm me-1" role="status"
                 style="width: 0.6rem; height: 0.6rem;"></div>
-            <span>Sincronizando SCADA...</span>
+            <span>{{ 'PORTTOS.GNL_ODOMETRO_WIDGET.SINCRONIZANDO_SCADA' | translate }}</span>
         </div>
 
         <!-- Caja del Odómetro -->
@@ -30,11 +30,11 @@
         <!-- Píldora inferior con estado de facturación y caudal en vivo -->
         <div class="mt-3 d-flex align-items-center gap-2 flex-wrap justify-content-center">
             <div class="tc-badge badge-light-warning">
-                <i class="feather icon-trending-up me-1"></i> Facturación en vivo
+                <i class="feather icon-trending-up me-1"></i> {{ 'PORTTOS.GNL_ODOMETRO_WIDGET.FACTURACION_EN_VIVO' | translate }}
             </div>
 
             <span *ngIf="tieneTelemetria && caudalActual > 0" class="text-muted small" style="font-size: 0.75rem;">
-                · {{ caudalActual | number:'1.2-2' }} m³/h ({{ tasaInstantanea | number:'1.1-1' }} kWh)
+                {{ 'PORTTOS.GNL_ODOMETRO_WIDGET.M_H_KWH' | translate: { p0: (caudalActual | number:'1.2-2'), p1: (tasaInstantanea | number:'1.1-1') } }}
             </span>
         </div>
 

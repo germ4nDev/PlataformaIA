@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -64,7 +65,7 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
                     this.FormRegistro = resp.formatoGaleria
                     this.codeFormato = resp.formatoGaleria.codigoFormato
                 },
-                error: () => Swal.fire('Error', 'No se pudo obtener el Formato', 'error')
+                error: () => Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_FORMATOS_GALERIA.NO_SE_PUDO_OBTENER_EL'), 'error')
             })
         }
     }
@@ -107,7 +108,7 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
                         this.router.navigate(['/biblioteca/formatos-galeria'])
                     }
                 },
-                error: () => this._swalService.getAlertError('No se pudo actualizar')
+                error: () => this._swalService.getAlertError(traducir('WEB.GESTION_FORMATOS_GALERIA.NO_SE_PUDO_ACTUALIZAR'))
             })
         } else {
             form.formatosGaleriaId = 0
@@ -127,7 +128,7 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
                         this.router.navigate(['/biblioteca/formatos-galeria'])
                     }
                 },
-                error: () => this._swalService.getAlertError('No se pudo crear')
+                error: () => this._swalService.getAlertError(traducir('WEB.GESTION_FORMATOS_GALERIA.NO_SE_PUDO_CREAR'))
             })
         }
     }

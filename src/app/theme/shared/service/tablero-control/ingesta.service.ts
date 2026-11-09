@@ -1,3 +1,4 @@
+import { traducir } from '../../i18n/traducir';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -37,11 +38,11 @@ export class IngestaService {
         this.http.post(`${base_url}/tclp-ingesta/historico-supertransporte/sincronizar`, {}).subscribe({
             next: (res: any) => {
                 // Si sale bien, lanzamos un toast de Éxito
-                this.toastr.success(`✅ ${res.data.length || 'Los'} registros históricos fueron guardados.`, 'Auditoría Actualizada');
+                this.toastr.success(`✅ ${res.data.length || 'Los'} registros históricos fueron guardados.`, traducir('WEB.INGESTA_SERVICE.AUDITORIA_ACTUALIZADA'));
             },
             error: (err) => {
                 // Si el portal del gobierno falla
-                this.toastr.error('No se pudo conectar con datos.gov.co', 'Error de Sincronización');
+                this.toastr.error(traducir('WEB.INGESTA_SERVICE.NO_SE_PUDO_CONECTAR_CON'), traducir('WEB.INGESTA_SERVICE.ERROR_DE_SINCRONIZACION'));
             }
         });
     }

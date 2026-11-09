@@ -1,5 +1,5 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'MRR: Ingresos Recurrentes'"
-    [subtitulo]="widgetConfig?.subtitulo || 'Evolución de facturación'"
+<app-widget-shell [titulo]="widgetConfig?.titulo || ('WEB.WDG_FACTURACION_AREA.MRR_INGRESOS_RECURRENTES' | translate)"
+    [subtitulo]="widgetConfig?.subtitulo || ('WEB.WDG_FACTURACION_AREA.EVOLUCION_DE_FACTURACION' | translate)"
     [icono]="widgetConfig?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
 
@@ -7,7 +7,7 @@
     <div acciones-extra class="d-flex align-items-center">
         <!-- Reutilizamos la clase tc-badge para mantener consistencia visual -->
         <span class="tc-badge badge-warning text-uppercase">
-            Financiero
+            {{ 'WEB.WDG_FACTURACION_AREA.FINANCIERO' | translate }}
         </span>
     </div>
 

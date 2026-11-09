@@ -7,12 +7,12 @@
 
     <input type="text" class="form-control form-input"
         [value]="valorSeleccionado || ('PLATAFORMA.NINGUNICONOSELECCIONADO' | translate)" readonly
-        [disabled]="isDisabled" (click)="abrirModal()" style="cursor: pointer;" placeholder="Seleccionar ícono...">
+        [disabled]="isDisabled" (click)="abrirModal()" style="cursor: pointer;" [placeholder]="'WEB.ICON_PICKER.SELECCIONAR_ICONO' | translate">
 
     <!-- Los íconos de la UI estática los dejamos en Feather para no romper tu diseño -->
     <button class="btn btn-primary btn-NuevoRegistro btn-animacion form-input d-flex align-items-center" type="button"
         [disabled]="isDisabled" (click)="abrirModal()">
-        <i class="feather icon-search me-1"></i> Explorar
+        <i class="feather icon-search me-1"></i> {{ 'WEB.ICON_PICKER.EXPLORAR' | translate }}
     </button>
 </div>
 
@@ -31,7 +31,7 @@
                         'PLATAFORMA.ICONOSDISPONIBLES' | translate }}
                     </small>
                 </div>
-                <button type="button" class="custom-close-btn" aria-label="Close" (click)="cerrarModal()">
+                <button type="button" class="custom-close-btn" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate" (click)="cerrarModal()">
                     <i class="feather icon-x"></i>
                 </button>
             </div>

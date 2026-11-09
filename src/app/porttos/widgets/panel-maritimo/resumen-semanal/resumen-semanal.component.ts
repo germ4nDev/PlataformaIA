@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -35,7 +37,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-resumen-semanal',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './resumen-semanal.component.html',
     styleUrl: './resumen-semanal.component.scss',
     encapsulation: ViewEncapsulation.None
@@ -166,7 +168,7 @@ export class ResumenSemanalComponent implements OnInit, AfterViewInit, OnChanges
         if (Array.isArray(raw.labels) && Array.isArray(raw.datasets) && raw.datasets.length > 0) {
             this.labels = raw.labels.map((l: any) => String(l));
             this.datasets = raw.datasets.map((ds: any, idx: number) => ({
-                label: ds.label || 'Arribos',
+                label: ds.label || traducir('PORTTOS.RESUMEN_SEMANAL.ARRIBOS'),
                 data: (ds.data || []).map((v: any) => Number(v || 0)),
                 color: ds.backgroundColor || ds.color || (idx === 0 ? '#00d4ff' : PorttosChartHelper.PALETA_DEFAULT[idx])
             }));
@@ -174,7 +176,7 @@ export class ResumenSemanalComponent implements OnInit, AfterViewInit, OnChanges
             this.labels = raw.labels.map((l: any) => String(l));
             this.datasets = [
                 {
-                    label: 'Arribos',
+                    label: traducir('PORTTOS.RESUMEN_SEMANAL.ARRIBOS'),
                     data: raw.valores.map((v: any) => Number(v || 0)),
                     color: '#00d4ff'
                 }
@@ -193,7 +195,7 @@ export class ResumenSemanalComponent implements OnInit, AfterViewInit, OnChanges
             this.labels = Array.from(conteoPorDia.keys());
             this.datasets = [
                 {
-                    label: 'Arribos Programados',
+                    label: traducir('PORTTOS.RESUMEN_SEMANAL.ARRIBOS_PROGRAMADOS'),
                     data: Array.from(conteoPorDia.values()),
                     color: '#00d4ff'
                 }

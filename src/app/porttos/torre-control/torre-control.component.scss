@@ -518,3 +518,33 @@ gridster::-webkit-scrollbar {
         }
     }
 }
+// Teléfono con la web embebida (CC-123): la barra de pestañas y el engranaje están en el menú lateral del encabezado.
+// Aquí solo queda el panel de los catálogos, fijo bajo la barra y a todo lo ancho. La web y la tableta no cambian.
+.main-tabs-wrapper.tc-telefono {
+    height: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    .porttos-config-menu {
+        position: static;
+    }
+
+    .porttos-config-menu .config-popover,
+    .porttos-config-menu .config-popover:has(.panel-interno) {
+        // styles.scss fija .config-popover con !important (absolute, top y right): aquí se le gana con la misma fuerza
+        position: fixed !important;
+        top: 64px !important;
+        left: 8px !important;
+        right: 8px !important;
+        width: auto !important;
+        max-height: calc(100vh - 80px);
+        z-index: 1090 !important;
+
+        .panel-interno {
+            width: 100%;
+            max-width: 100%;
+            max-height: calc(100vh - 80px);
+            padding: 0 0 16px;
+        }
+    }
+}

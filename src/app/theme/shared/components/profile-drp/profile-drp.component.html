@@ -1,12 +1,12 @@
 <div class="dropdown drp-user" ngbDropdown placement="auto" [autoClose]="'outside'" #profileDrop="ngbDropdown">
     <a href="javascript:void(0)" ngbDropdownToggle>
-        <img src="{{ avatarUsuario }}" class="img-radius wid-40" alt="User-Profile-Image" />
+        <img src="{{ avatarUsuario }}" class="img-radius wid-40" [alt]="'WEB.PROFILE_DRP.USER_PROFILE_IMAGE' | translate" />
     </a>
 
     <div class="dropdown-menu dropdown-menu-end profile-notification drop-menu" ngbDropdownMenu>
         <div class="pro-head">
-            <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" alt="User-Profile-Image" />
-            <a href="javascript:void(0)" class="dud-logout" title="Logout" (click)="logout(); profileDrop.close()">
+            <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" [alt]="'WEB.PROFILE_DRP.USER_PROFILE_IMAGE' | translate" />
+            <a href="javascript:void(0)" class="dud-logout" [title]="'WEB.PROFILE_DRP.LOGOUT' | translate" (click)="logout(); profileDrop.close()">
                 <i class="feather icon-log-out icon-bg"></i>
             </a>
         </div>

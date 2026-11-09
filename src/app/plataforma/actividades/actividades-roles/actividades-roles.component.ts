@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
@@ -119,7 +120,7 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
                         nomActividad: this.actividades.find(app => app.codigoActividad === actRole.codigoActividad)?.actividad || '',
                         nomRole: this.roles.find(role => role.codigoRole === actRole.codigoRole)?.nombreRole || '',
                         '_acciones': [{
-                            accion: 'ESTADO',
+                            accion: 'ESTADO', permiso: 'ACT_ROLES_PERMISOS',
                             letra: isActivo ? 'I' : 'A',
                             color: isActivo ? '#dc3545' : '#13af2d',
                             tooltip: isActivo ? this.translate.instant('ACTIVIDADESROLES.INACTIVAR') : this.translate.instant('ACTIVIDADESROLES.ACTIVAR')
@@ -181,7 +182,7 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
                     },
                     error: (err: any) => {
                         this.registrarLog('501', 'ACTIVIDADES.UPDATEERROR');
-                        this._swalAlertService.getAlertError('No se pudo eliminar la Actividad');
+                        this._swalAlertService.getAlertError(traducir('WEB.ACTIVIDADES_ROLES.NO_SE_PUDO_ELIMINAR_LA'));
                     }
                 });
             }
@@ -220,7 +221,7 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
                         },
                         error: (err: any) => {
                             this.registrarLog('501', 'ACTIVIDADES.UPDATEERROR');
-                            this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
+                            this._swalAlertService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
                         }
                     });
                 }

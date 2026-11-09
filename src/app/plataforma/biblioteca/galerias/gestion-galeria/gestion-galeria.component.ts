@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -120,7 +121,7 @@ export class GestionGaleriaComponent implements OnInit {
                     this.codeGaleria = resp.galeria.codigoGaleria
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la Galería', 'error')
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_GALERIA.NO_SE_PUDO_OBTENER_LA'), 'error')
                 }
             })
         }
@@ -291,7 +292,7 @@ export class GestionGaleriaComponent implements OnInit {
                     console.error(err)
                     const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('GALERIA.UPDATEERROR') }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError('No se pudo actualizar la Galería')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_GALERIA.NO_SE_PUDO_ACTUALIZAR_LA'))
                 }
             })
         } else {
@@ -323,7 +324,7 @@ export class GestionGaleriaComponent implements OnInit {
                     console.error(err)
                     const logData = { codigoTipoLog: '', codigoRespuesta: '500', descripcionLog: this.translate.instant('GALERIA.CREATEERROR') }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError('No se pudo crear la Galería')
+                    this._swalService.getAlertError(traducir('WEB.GESTION_GALERIA.NO_SE_PUDO_CREAR_LA'))
                 }
             })
         }

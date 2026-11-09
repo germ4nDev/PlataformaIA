@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +18,7 @@ import { BarrasSaturacionTclComponent, ItemSaturacion } from '../../shared/barra
 @Component({
     selector: 'app-indicadores-suelta',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, BarrasSaturacionTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent, BarrasSaturacionTclComponent],
     templateUrl: './indicadores-suelta.component.html',
     styleUrls: ['./indicadores-suelta.component.scss']
 })

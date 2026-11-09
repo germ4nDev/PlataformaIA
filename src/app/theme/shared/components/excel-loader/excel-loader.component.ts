@@ -1,3 +1,5 @@
+import { traducir } from '../../i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -7,7 +9,7 @@ import { SwalAlertService } from '../../service/swal-alert.service';
 @Component({
     selector: 'app-excel-uploader',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './excel-loader.component.html',
     styleUrls: ['./excel-loader.component.scss'],
 })
@@ -26,7 +28,7 @@ export class ExcelUploaderComponent {
     onFileChange(event: any): void {
         const target: DataTransfer = <DataTransfer>(event.target);
         if (target.files.length !== 1) {
-            this.swal.getAlertError('Solo puedes seleccionar un archivo a la vez.');
+            this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.SOLO_PUEDES_SELECCIONAR_UN_ARCHIVO'));
             return;
         }
         this.archivoSeleccionado = target.files[0];
@@ -34,7 +36,7 @@ export class ExcelUploaderComponent {
 
     procesarYEnviar(fileInput: HTMLInputElement): void {
         if (!this.archivoSeleccionado || !this.apiUrl || !this.columnsMap) {
-            this.swal.getAlertError('Faltan parámetros de configuración (URL o Mapa de columnas).');
+            this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.FALTAN_PARAMETROS_DE_CONFIGURACION_URL'));
             return;
         }
 
@@ -62,7 +64,7 @@ export class ExcelUploaderComponent {
                 this.enviarApi(dataFormateada, fileInput);
 
             } catch (error) {
-                this.swal.getAlertError('Error al leer el archivo Excel. Verifica el formato.');
+                this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.ERROR_AL_LEER_EL_ARCHIVO'));
                 console.error(error);
             }
         };
@@ -100,7 +102,7 @@ export class ExcelUploaderComponent {
                 this.resetearInput(fileInput);
             },
             error: (err) => {
-                this.swal.getAlertError('Hubo un error al guardar los datos en el servidor.');
+                this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.HUBO_UN_ERROR_AL_GUARDAR'));
                 console.error('Error API:', err);
             }
         });

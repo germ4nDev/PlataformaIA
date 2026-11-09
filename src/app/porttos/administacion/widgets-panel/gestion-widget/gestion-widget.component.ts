@@ -1,3 +1,4 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -60,9 +61,9 @@ export class GestionWidgetComponent implements OnInit {
     suscriptor: string = ''
 
     public listaPestanas: any[] = [
-        { id: 'TLC_MARITIMO_001', nombre: 'Operación Marítima' },
-        { id: 'TLC_TERRESTRE_001', nombre: 'Operación Terrestre' },
-        { id: 'TLC_MAPA_001', nombre: 'Mapa Logístico' }
+        { id: 'TLC_MARITIMO_001', nombre: 'PORTTOS.PANEL_CONTROL.OPERACION_MARITIMA' },
+        { id: 'TLC_TERRESTRE_001', nombre: 'PORTTOS.PANEL_CONTROL.OPERACION_TERRESTRE' },
+        { id: 'TLC_MAPA_001', nombre: 'PORTTOS.GESTION_WIDGET.MAPA_LOGISTICO' }
     ];
 
     constructor(
@@ -95,7 +96,7 @@ export class GestionWidgetComponent implements OnInit {
                     // this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'widgets', resp.widget.thumbnail_url)
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
+                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_WIDGET.NO_SE_PUDO_OBTENER_LA'), 'error')
                 }
             })
         }
@@ -188,7 +189,7 @@ export class GestionWidgetComponent implements OnInit {
                 //     descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
                 // }
                 // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                this._swalService.getAlertError('No se pudo actualizar la Aplicación')
+                this._swalService.getAlertError(traducir('PORTTOS.GESTION_WIDGET.NO_SE_PUDO_ACTUALIZAR_LA'))
             }
         })
     }
@@ -224,7 +225,7 @@ export class GestionWidgetComponent implements OnInit {
                 //     descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
                 // }
                 // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                this._swalService.getAlertError('No se pudo crear la Aplicación')
+                this._swalService.getAlertError(traducir('PORTTOS.GESTION_WIDGET.NO_SE_PUDO_CREAR_LA'))
             }
         })
     }

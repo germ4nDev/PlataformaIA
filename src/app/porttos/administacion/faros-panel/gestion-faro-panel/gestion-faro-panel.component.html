@@ -52,7 +52,7 @@
                                     <option value="">{{ 'FAROS.GESTION.PLACEHOLDERAPLICACION' | translate }}
                                     </option>
                                     <option [value]="trml.id" *ngFor="let trml of ETIPOS_FARO"> {{
-                                        trml.label }}</option>
+                                        (trml.label | translate) }}</option>
                                 </select>
                                 <label *ngIf="!tipo_faro.valid && (tipo_faro.dirty || tipo_faro.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

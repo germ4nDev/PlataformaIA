@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -14,7 +15,7 @@ import { DashboardService } from 'src/app/theme/shared/service/tablero-control/d
 @Component({
     selector: 'app-gnl-gauge-widget',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './gnl-gauge-widget.component.html',
     styleUrls: ['./gnl-gauge-widget.component.scss']
 })

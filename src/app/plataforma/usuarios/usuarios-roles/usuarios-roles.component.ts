@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 // /* eslint-disable @angular-eslint/use-lifecycle-interface */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 // //#region IMPORTS
@@ -509,7 +510,7 @@ export class UsuariosRolesComponent implements OnInit {
                     return {
                         ...ur,
                         '_acciones': [
-                            { accion: 'INACTIVAR', letra: 'I', color: '#3db120', tooltip: (this.translate.instant('USUARIOSROLES.INACTIVAR')) }
+                            { accion: 'INACTIVAR', permiso: 'ACT_USUSC_ROLES', letra: 'I', color: '#3db120', tooltip: (this.translate.instant('USUARIOSROLES.INACTIVAR')) }
                         ],
                     } as PTLUsuarioRoleAPModel;
                 });
@@ -544,10 +545,10 @@ export class UsuariosRolesComponent implements OnInit {
     }
 
     columnasRegistros: ColumnMetadata[] = [
-        { name: 'nomUsuario', header: 'Nombre Usuario', type: 'text' },
-        { name: 'nomSuscriptor', header: 'Suscriptor Asignado', type: 'text' },
-        { name: 'fechaCreacionFormateada', header: 'Fecha Asignación', type: 'text' },
-        { name: 'nomEstado', header: 'Estado', type: 'estado' }
+        { name: 'nomUsuario', header: 'WEB.USUARIOS_ROLES.NOMBRE_USUARIO', type: 'text' },
+        { name: 'nomSuscriptor', header: 'WEB.USUARIOS_ROLES.SUSCRIPTOR_ASIGNADO', type: 'text' },
+        { name: 'fechaCreacionFormateada', header: 'WEB.USUARIOS_ROLES.FECHA_ASIGNACION', type: 'text' },
+        { name: 'nomEstado', header: 'WEB.WDG_KPI_APLICACIONES.ESTADO', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
@@ -593,11 +594,11 @@ export class UsuariosRolesComponent implements OnInit {
                     next: (resp: any) => {
                         if (resp.ok) {
                             this.setupUsuariosStream();
-                            this._swalAlertService.getAlertSuccess('Relación eliminada exitosamente');
+                            this._swalAlertService.getAlertSuccess(traducir('WEB.USUARIOS_ROLES.RELACION_ELIMINADA_EXITOSAMENTE'));
                         }
                     },
                     error: (err: any) => {
-                        this._swalAlertService.getAlertError('No se pudo eliminar la relación');
+                        this._swalAlertService.getAlertError(traducir('WEB.USUARIOS_ROLES.NO_SE_PUDO_ELIMINAR_LA'));
                     }
                 });
             }

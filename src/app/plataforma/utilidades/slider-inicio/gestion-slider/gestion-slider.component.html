@@ -112,7 +112,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'PLATAFORMA.SLIDERS.GESTION.FOTO' | translate }}</label>
                                 <br>
-                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview" />
+                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview" />
                                 <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"
                                     (change)="onFileSelectedClick($event)">
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"

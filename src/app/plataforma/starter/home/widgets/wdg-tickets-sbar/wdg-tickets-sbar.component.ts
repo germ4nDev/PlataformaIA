@@ -1,3 +1,5 @@
+import { traducir } from '../../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
@@ -10,7 +12,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 @Component({
     selector: 'app-wdg-tickets-sbar',
     standalone: true,
-    imports: [CommonModule, NgChartsModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, NgChartsModule, WidgetShellComponent],
     templateUrl: './wdg-tickets-sbar.component.html',
     styleUrls: ['./wdg-tickets-sbar.component.scss']
 })
@@ -26,9 +28,9 @@ export class WdgTicketsSbarComponent implements OnInit {
     public barChartData: ChartConfiguration<'bar'>['data'] = {
         labels: [],
         datasets: [
-            { label: 'Resueltos', data: [], backgroundColor: '#10b981', borderRadius: 4 },
-            { label: 'En Progreso', data: [], backgroundColor: '#f59e0b', borderRadius: 4 },
-            { label: 'Abiertos', data: [], backgroundColor: '#ef4444', borderRadius: 4 }
+            { label: traducir('WEB.WDG_TICKETS.RESUELTOS'), data: [], backgroundColor: '#10b981', borderRadius: 4 },
+            { label: traducir('WEB.WDG_TICKETS_SBAR.EN_PROGRESO'), data: [], backgroundColor: '#f59e0b', borderRadius: 4 },
+            { label: traducir('WEB.WDG_TICKETS.ABIERTOS'), data: [], backgroundColor: '#ef4444', borderRadius: 4 }
         ]
     };
 

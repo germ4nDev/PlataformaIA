@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
@@ -128,13 +129,13 @@ export class PreciosPaqueteComponent implements OnInit, OnDestroy {
                                 tooltip: this.translate.instant('PLATAFORMA.EDITAR')
                             });
                             accionesPermitidas.push({
-                                accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
+                                accion: 'ELIMINAR', permiso: 'ACT_PRECIO_ELIMINAR', letra: 'E', color: '#dd1717',
                                 tooltip: this.translate.instant('PLATAFORMA.DELETE')
                             });
                         } else {
                             // Si NO tiene precio, mostramos Agregar (+)
                             accionesPermitidas.push({
-                                accion: 'AGREGAR', letra: '+', color: '#28a745',
+                                accion: 'AGREGAR', permiso: 'ACT_PRECIO_CREAR', letra: '+', color: '#28a745',
                                 tooltip: this.translate.instant('PLATAFORMA.ADD')
                             });
                         }
@@ -206,11 +207,11 @@ export class PreciosPaqueteComponent implements OnInit, OnDestroy {
                         next: (resp: any) => {
                             const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: 'Precio eliminado' };
                             this._logActividadesService.postCrearRegistro(logData).subscribe();
-                            this._swalService.getAlertSuccess(resp.msg || 'Precio eliminado exitosamente');
+                            this._swalService.getAlertSuccess(resp.msg || traducir('WEB.PRECIOS_PAQUETE.PRECIO_ELIMINADO_EXITOSAMENTE'));
                             this.refreshListas$.next(true); // Recargamos la data de la tabla
                         },
                         error: err => {
-                            this._swalService.getAlertError('Error al eliminar el precio.');
+                            this._swalService.getAlertError(traducir('WEB.PRECIOS_PAQUETE.ERROR_AL_ELIMINAR_EL_PRECIO'));
                         }
                     })
                 );

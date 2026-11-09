@@ -1,9 +1,10 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLSeguimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoTK.model';
@@ -32,7 +33,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 @Component({
     selector: 'app-gestion-seguimiento',
     standalone: true,
-    imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-seguimiento.component.html',
     styleUrl: './gestion-seguimiento.component.scss'
 })
@@ -105,7 +106,7 @@ export class GestionSeguimientoComponent {
                     // console.log('datos del FormRegistro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire('Error', 'No se pudo obtener el seguimiento', 'error');
+                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SEGUIMIENTO.NO_SE_PUDO_OBTENER_EL'), 'error');
                 }
             });
         }

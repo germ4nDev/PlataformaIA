@@ -7,6 +7,8 @@ import { SocketService } from './../service/sockets.service';
 import { NavigationService } from './navigation.service';
 import { SwalAlertService } from './swal-alert.service';
 import { SocketManagerService } from './socket-manager.service';
+import { ContextoNavegacionService } from './contexto-navegacion.service';
+import { empresaParaPermisos } from 'src/app/plataforma/sesion/nucleo/empresa-permisos';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +28,8 @@ export class PtlPermisosService {
         private _navigationService: NavigationService,
         private _swalService: SwalAlertService,
         private _socketService: SocketService,
-        private _socketManager: SocketManagerService
+        private _socketManager: SocketManagerService,
+        private _contextoNavegacion: ContextoNavegacionService
     ) {
         this.inicializarEscuchaSockets();
     }
@@ -57,13 +60,12 @@ export class PtlPermisosService {
             return of([]);
         }
 
-        const usuarioSCDefecto = currentUser?.usuariosSC?.[0];
-        const suscriptorDefecto = usuarioSCDefecto?.suscriptores?.[0];
-        const empresaDefecto = suscriptorDefecto?.empresasAsignadas?.[0];
+        // CC-132: la empresa del suscriptor activo (el de la aplicación abierta), o la ya elegida; misma regla en web, tableta y teléfono
+        const nav: any = this._localStorageService.getNavSettingsLocalStorage();
+        const eleccion = empresaParaPermisos(currentUser.usuariosSC, nav?.contexto, nav?.suscriptor?.codigoSuscriptor);
 
-        if (usuarioSCDefecto && empresaDefecto) {
-            console.log(`🚀 Auto-arranque: Iniciando con la empresa por defecto [${empresaDefecto.codigoEmpresaSC}]`);
-            return this.cargarPermisosUsuarioYEmpresa(usuarioSCDefecto.codigoUsuarioSC, empresaDefecto.codigoEmpresaSC);
+        if (eleccion) {
+            return this.cargarPermisosUsuarioYEmpresa(eleccion.codigoUsuarioSC, eleccion.codigoEmpresaSC);
         } else {
             console.warn('⚠️ Contexto incompleto: Esperando selección de aplicación/empresa.');
             this.limpiarPermisos();
@@ -90,6 +92,11 @@ export class PtlPermisosService {
 
                         if (empresaEncontrada && empresaEncontrada.rolesAsignados) {
                             rolesDeEstaEmpresa = empresaEncontrada.rolesAsignados;
+                            // CC-128: la empresa con la que se calculan los permisos del menú es la misma que valida el API
+                            this._localStorageService.setContextoLocalStorage({
+                                codigoUsuarioSC, codigoSuscriptor: susc.codigoSuscriptor, codigoEmpresaSC
+                            });
+                            this._contextoNavegacion.sincronizarConBackend();
                             const nombresDeRoles = rolesDeEstaEmpresa.map((rol: any) => rol.nombreRolLegible);
 
                             this._rolesAutorizados.next(nombresDeRoles);

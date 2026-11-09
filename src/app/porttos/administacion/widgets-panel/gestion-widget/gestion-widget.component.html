@@ -59,7 +59,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'WIDGETS.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigo_widget"
-                                    placeholder="Código de la Aplicación"
+                                    [placeholder]="'PORTTOS.GESTION_WIDGET.CODIGO_DE_LA_APLICACION' | translate"
                                     [ngClass]="{ 'is-invalid': !codigo_widget.valid && (codigo_widget.dirty || codigo_widget.touched || isSubmit) }"
                                     #codigo_widget="ngModel" required [(ngModel)]="FormRegistro.codigo_widget" />
                                 <label
@@ -108,7 +108,7 @@
                                     <option value="">{{ 'SUITES.GESTION.PLACEHOLDERAPLICACION' | translate }}
                                     </option>
                                     <option [value]="app.id" *ngFor="let app of listaPestanas"> {{
-                                        app.nombre }}</option>
+                                        (app.nombre | translate) }}</option>
                                 </select>
                                 <label *ngIf="!pestana.valid && (pestana.dirty || pestana.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

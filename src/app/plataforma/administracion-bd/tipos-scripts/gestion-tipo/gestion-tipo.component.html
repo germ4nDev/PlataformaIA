@@ -58,14 +58,13 @@
                                 <label class="form-label">{{ 'TIPOSCRIPTS.CODIGO' | translate }} <span
                                         class="text-danger">*</span></label>
                                 <input type="text" class="form-control form-input" formControlName="codigoTipo"
-                                    placeholder="Ej: TIPO_SQL"
+                                    [placeholder]="'WEB.GESTION_TIPO.EJ_TIPO_SQL' | translate"
                                     [ngClass]="{ 'is-invalid': campoNoValido('codigoTipo') }" />
                                 <label *ngIf="campoNoValido('codigoTipo')"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El código es obligatorio.
+                                    {{ 'WEB.GESTION_TIPO.EL_CODIGO_ES_OBLIGATORIO' | translate }}
                                 </label>
-                                <small class="text-muted mt-1 d-block" *ngIf="!esNuevo">El código no se puede
-                                    modificar.</small>
+                                <small class="text-muted mt-1 d-block" *ngIf="!esNuevo">{{ 'WEB.GESTION_TIPO.EL_CODIGO_NO_SE_PUEDE' | translate }}</small>
                             </div>
                         </div>
 
@@ -74,11 +73,11 @@
                                 <label class="form-control-label">{{ 'TIPOSCRIPTS.NOMBRE' | translate }} <span
                                         class="text-danger">*</span></label>
                                 <input type="text" class="form-control form-input" formControlName="nombreTipo"
-                                    placeholder="Ej: Script de Base de Datos"
+                                    [placeholder]="'WEB.GESTION_TIPO.EJ_SCRIPT_DE_BASE_DE' | translate"
                                     [ngClass]="{ 'is-invalid': campoNoValido('nombreTipo') }" />
                                 <label *ngIf="campoNoValido('nombreTipo')"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El nombre es obligatorio.
+                                    {{ 'WEB.COMUN.EL_NOMBRE_ES_OBLIGATORIO' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -87,7 +86,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'TIPOSCRIPTS.DESCRIPCION' | translate }}</label>
                                 <textarea class="form-control form-input" formControlName="descripcionTipo" rows="3"
-                                    placeholder="Escribe una breve descripción..."></textarea>
+                                    [placeholder]="'WEB.GESTION_TIPO.ESCRIBE_UNA_BREVE_DESCRIPCION' | translate"></textarea>
                             </div>
                         </div>
 

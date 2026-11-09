@@ -1,4 +1,4 @@
-<app-widget-shell [titulo]="titulo" [origen]="origenTablero" [subtitulo]="subtitulo" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
+<app-widget-shell [titulo]="(titulo | translate)" [origen]="origenTablero" [subtitulo]="(subtitulo | translate)" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
     <div acciones-extra class="d-flex align-items-center gap-2"></div>
     <div class="cuerpo">
@@ -7,11 +7,10 @@
         <div class="contenido" *ngIf="!cargando && !error && !(!clima.length)">
             <div class="rejilla">
                 <div class="tarjeta" *ngFor="let c of clima; trackBy: porPuerto" [class.actual]="c.puerto === puerto">
-                    <div class="nombre">{{ c.nombre }}</div>
+                    <div class="nombre">{{ (c.nombre | translate) }}</div>
                     <div class="temp">{{ c.temperatura | number: '1.0-0' }}°C</div>
                     <div class="cond">{{ c.condicion }}</div>
-                    <div class="viento" [class.fuerte]="c.vientoNudos >= 20">Viento {{ c.vientoNudos | number: '1.0-0'
-                        }} kn</div>
+                    <div class="viento" [class.fuerte]="c.vientoNudos >= 20">{{ 'PORTTOS.CLIMA_PUERTOS.VIENTO_KN' | translate: { p0: (c.vientoNudos | number: '1.0-0') } }}</div>
                 </div>
             </div>
         </div>

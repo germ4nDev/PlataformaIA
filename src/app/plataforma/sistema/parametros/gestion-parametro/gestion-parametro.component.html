@@ -42,7 +42,7 @@
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">{{ 'PLATAFORMA.GUARDAR' | translate }} <i
                                     class="feather icon-save ms-2"></i></span>
-                            <span *ngIf="isSaving">Guardando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.COMUN.GUARDANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
 
@@ -51,7 +51,7 @@
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">{{ 'PLATAFORMA.MODIFICAR' | translate }} <i
                                     class="feather icon-edit ms-2"></i></span>
-                            <span *ngIf="isSaving">Actualizando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.COMUN.ACTUALIZANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
                     </div>
@@ -65,71 +65,68 @@
 
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="llaveParametro"> Llave Lógica (ID para
-                                    Backend)</label>
+                                <label class="form-control-label" for="llaveParametro"> {{ 'WEB.GESTION_PARAMETRO.LLAVE_LOGICA_ID_PARA_BACKEND' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="llaveParametro"
                                     formControlName="llaveParametro" style="text-transform: uppercase;"
                                     [ngClass]="{ 'is-invalid': f['llaveParametro'].invalid && (f['llaveParametro'].dirty || f['llaveParametro'].touched || isSubmit) }"
-                                    placeholder="Ej: MARGEN_UTILIDAD_BASE" />
-                                <small class="text-muted">Debe ser único. Usado por el código fuente para encontrar el
-                                    valor.</small>
+                                    [placeholder]="'WEB.GESTION_PARAMETRO.EJ_MARGEN_UTILIDAD_BASE' | translate" />
+                                <small class="text-muted">{{ 'WEB.GESTION_PARAMETRO.DEBE_SER_UNICO_USADO_POR' | translate }}</small>
                                 <label
                                     *ngIf="f['llaveParametro'].invalid && (f['llaveParametro'].dirty || f['llaveParametro'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    La llave lógica es obligatoria.
+                                    {{ 'WEB.GESTION_PARAMETRO.LA_LLAVE_LOGICA_ES_OBLIGATORIA' | translate }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreParametro"> Nombre Visible</label>
+                                <label class="form-control-label" for="nombreParametro"> {{ 'WEB.GESTION_PARAMETRO.NOMBRE_VISIBLE' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="nombreParametro"
                                     formControlName="nombreParametro"
                                     [ngClass]="{ 'is-invalid': f['nombreParametro'].invalid && (f['nombreParametro'].dirty || f['nombreParametro'].touched || isSubmit) }"
-                                    placeholder="Ej: Margen Base Global" />
-                                <small class="text-muted">Nombre descriptivo para identificarlo en las tablas.</small>
+                                    [placeholder]="'WEB.GESTION_PARAMETRO.EJ_MARGEN_BASE_GLOBAL' | translate" />
+                                <small class="text-muted">{{ 'WEB.GESTION_PARAMETRO.NOMBRE_DESCRIPTIVO_PARA_IDENTIFICARLO_EN' | translate }}</small>
                                 <label
                                     *ngIf="f['nombreParametro'].invalid && (f['nombreParametro'].dirty || f['nombreParametro'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El nombre es obligatorio.
+                                    {{ 'WEB.COMUN.EL_NOMBRE_ES_OBLIGATORIO' | translate }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="valorParametro"> Valor Asignado</label>
+                                <label class="form-control-label" for="valorParametro"> {{ 'WEB.GESTION_PARAMETRO.VALOR_ASIGNADO' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="valorParametro"
                                     formControlName="valorParametro"
                                     [ngClass]="{ 'is-invalid': f['valorParametro'].invalid && (f['valorParametro'].dirty || f['valorParametro'].touched || isSubmit) }"
-                                    placeholder="Ej: 40 o true" />
-                                <small class="text-muted">El dato real que consumirá el sistema para realizar
-                                    cálculos.</small>
+                                    [placeholder]="'WEB.GESTION_PARAMETRO.EJ_40_O_TRUE' | translate" />
+                                <small class="text-muted">{{ 'WEB.GESTION_PARAMETRO.EL_DATO_REAL_QUE_CONSUMIRA' | translate }}</small>
                                 <label
                                     *ngIf="f['valorParametro'].invalid && (f['valorParametro'].dirty || f['valorParametro'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El valor asignado es obligatorio.
+                                    {{ 'WEB.GESTION_PARAMETRO.EL_VALOR_ASIGNADO_ES_OBLIGATORIO' | translate }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="tipoDato"> Tipo de Dato de Retorno</label>
+                                <label class="form-control-label" for="tipoDato"> {{ 'WEB.GESTION_PARAMETRO.TIPO_DE_DATO_DE_RETORNO' | translate }}</label>
                                 <select class="form-control form-select" id="tipoDato" formControlName="tipoDato"
                                     [ngClass]="{ 'is-invalid': f['tipoDato'].invalid && (f['tipoDato'].dirty || f['tipoDato'].touched || isSubmit) }">
-                                    <option value="" disabled selected>Seleccione el formato...</option>
-                                    <option value="DECIMAL">DECIMAL (Número para operaciones)</option>
-                                    <option value="INTEGER">INTEGER (Número Entero)</option>
-                                    <option value="BOOLEAN">BOOLEAN (Verdadero / Falso)</option>
-                                    <option value="STRING">STRING (Texto o JSON)</option>
+                                    <option value="" disabled selected>{{ 'WEB.GESTION_PARAMETRO.SELECCIONE_EL_FORMATO' | translate }}</option>
+                                    <option value="DECIMAL">{{ 'WEB.GESTION_PARAMETRO.DECIMAL_NUMERO_PARA_OPERACIONES' | translate }}</option>
+                                    <option value="INTEGER">{{ 'WEB.GESTION_PARAMETRO.INTEGER_NUMERO_ENTERO' | translate }}</option>
+                                    <option value="BOOLEAN">{{ 'WEB.GESTION_PARAMETRO.BOOLEAN_VERDADERO_FALSO' | translate }}</option>
+                                    <option value="STRING">{{ 'WEB.GESTION_PARAMETRO.STRING_TEXTO_O_JSON' | translate }}</option>
                                 </select>
-                                <small class="text-muted">Instruye al backend cómo debe transformar este valor.</small>
+                                <small class="text-muted">{{ 'WEB.GESTION_PARAMETRO.INSTRUYE_AL_BACKEND_COMO_DEBE' | translate }}</small>
                                 <label
                                     *ngIf="f['tipoDato'].invalid && (f['tipoDato'].dirty || f['tipoDato'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    Debe seleccionar un tipo de dato.
+                                    {{ 'WEB.GESTION_PARAMETRO.DEBE_SELECCIONAR_UN_TIPO_DE' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -137,19 +134,18 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-control-label" for="descripcionParametro">
-                                    Descripción Detallada (Opcional)
+                                    {{ 'WEB.GESTION_PARAMETRO.DESCRIPCION_DETALLADA_OPCIONAL' | translate }}
                                 </label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="f['descripcionParametro'].value || ''"
                                     (contentHtmlChange)="actualizarDescripcionRegistro($event)">
                                 </app-text-editor>
                                 <input type="hidden" formControlName="descripcionParametro">
-                                <small class="text-muted mt-1 d-block">Puede usar negritas o listas para estructurar
-                                    mejor la instrucción del parámetro.</small>
+                                <small class="text-muted mt-1 d-block">{{ 'WEB.GESTION_PARAMETRO.PUEDE_USAR_NEGRITAS_O_LISTAS' | translate }}</small>
                                 <label
                                     *ngIf="f['descripcionParametro'].invalid && (f['descripcionParametro'].dirty || f['descripcionParametro'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    La descripción excede el límite permitido.
+                                    {{ 'WEB.GESTION_PARAMETRO.LA_DESCRIPCION_EXCEDE_EL_LIMITE' | translate }}
                                 </label>
                             </div>
                         </div>

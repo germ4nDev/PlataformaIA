@@ -53,12 +53,13 @@
                     <!-- Es clave pasar null al idField si la tabla se basa en el evento.row que contiene ambas llaves compuestas -->
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoRol'"
                         [tableTitle]="'WIDGETS.ROLES_TITLE' | translate"
+                        [tableSubtitle]="'WIDGETS.ROLES_SUBTITULO' | translate"
                         [newButtonLabel]="'WIDGETS.NEW_ROLE' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         [metadataColumns]="columnasAplicaciopnes" [metadataDetailColumns]="columnasDetailRegistros"
                         [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
                         [showEditButton]="false" [showSearchBox]="false" [showBackButton]="true"
                         (newRecord)="OnNuevoRegistroClick()" (backRecord)="OnRegresarClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)">
+                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_WDGT_ROLES">
                     </app-table-data>
                 </ng-container>
 

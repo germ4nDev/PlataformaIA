@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -252,7 +253,7 @@ export class GaleriasComponent implements OnInit, OnDestroy {
           error: () => {
             const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('GALERIA.ELIMINARERROR') }
             this._logActividadesService.postCrearRegistro(logData).subscribe()
-            Swal.fire('Error', this.translate.instant('GALERIA.ELIMINARERROR'), 'error')
+            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('GALERIA.ELIMINARERROR'), 'error')
           }
         })
       }

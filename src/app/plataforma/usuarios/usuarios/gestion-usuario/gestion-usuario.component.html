@@ -20,10 +20,10 @@
                         <h4 class="titulo-formulario">
                             <span *ngIf="!modoEdicion">{{ 'USUARIOS.USUARIOS.NEW' | translate }}</span>
                             <span *ngIf="modoEdicion">{{ 'USUARIOS.USUARIOS.UPDATE' | translate }}</span>
-                            <span class="titulo-container"> - Usuario Plataforma</span>
+                            <span class="titulo-container"> {{ 'WEB.GESTION_USUARIO.USUARIO_PLATAFORMA' | translate }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            Configure la información general, descripción y recursos visuales del paquete.
+                            {{ 'WEB.GESTION_USUARIO.CONFIGURE_LA_INFORMACION_GENERAL_DESCRIP' | translate }}
                         </h6>
                     </div>
 
@@ -138,7 +138,7 @@
                                     #claveUsuario="ngModel" required [(ngModel)]="FormRegistro.claveUsuario" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEW' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="claveNew"
@@ -156,7 +156,7 @@
                                     placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRMHOLDER' | translate }}"
                                     #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.DESCRIPTION' | translate
@@ -178,7 +178,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">Foto Usuario</label>
+                                <label class="form-label">{{ 'WEB.GESTION_USUARIO.FOTO_USUARIO' | translate }}</label>
                                 <br>
                                 <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview" />
                                 <input type="file" #fileInput id="fotoUsuario" style="display: none;" accept="image/*"
@@ -212,6 +212,10 @@
                         </div>
                     </div>
                 </form>
+                <!-- OT-026 (usuario, 2026-11-09): roles del usuario por suscriptor → empresa → aplicación -->
+                @if (modoEdicion && FormRegistro.codigoUsuario) {
+                    <app-asignacion-roles-usuario [codigoUsuario]="FormRegistro.codigoUsuario"></app-asignacion-roles-usuario>
+                }
             </div>
         </div>
     </div>

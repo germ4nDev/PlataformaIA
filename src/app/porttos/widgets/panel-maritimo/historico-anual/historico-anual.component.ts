@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -31,7 +33,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-historico-anual',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './historico-anual.component.html',
     styleUrls: ['./historico-anual.component.scss']
 })
@@ -143,7 +145,7 @@ export class HistoricoAnualComponent implements OnInit, AfterViewInit, OnChanges
         } else if (Array.isArray(raw.valores)) {
             this.datasets = [
                 {
-                    label: raw.titulo || 'Toneladas Movilizadas',
+                    label: raw.titulo || traducir('PORTTOS.HISTORICO_ANUAL.TONELADAS_MOVILIZADAS'),
                     data: raw.valores.map((v: any) => Number(v || 0)),
                     color: '#00d4ff',
                     relleno: true

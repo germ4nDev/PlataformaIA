@@ -43,14 +43,14 @@
     </div>
 
 </app-widget-shell> -->
-<app-widget-shell [titulo]="data?.titulo || widgetConfig?.titulo || 'PRODUCTIVIDAD POR TERMINAL (MOVS/H)'"
-    [subtitulo]="data?.subtitulo || widgetConfig?.subtitulo || 'Velocidad de operación por grúa en la jornada'"
+<app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || 'PRODUCTIVIDAD POR TERMINAL (MOVS/H)'"
+    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.PRODUCTIVIDAD_CHART.VELOCIDAD_DE_OPERACION_POR_GRUA' | translate)"
     [icono]="data?.icono || 'feather icon-activity'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
-            Rendimiento
+            {{ 'PORTTOS.PRODUCTIVIDAD_CHART.RENDIMIENTO' | translate }}
         </span>
     </div>
 
@@ -64,14 +64,14 @@
             <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
                 style="top: 0; left: 0; z-index: 10;">
                 <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-                <span class="text-muted" style="font-size: 0.8rem;">Sincronizando curva de productividad...</span>
+                <span class="text-muted" style="font-size: 0.8rem;">{{ 'PORTTOS.PRODUCTIVIDAD_CHART.SINCRONIZANDO_CURVA_DE_PRODUCTIVIDAD' | translate }}</span>
             </div>
 
             <!-- Estado sin datos -->
             <div *ngIf="!cargando && !tieneDatos"
                 class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted">
                 <i class="feather icon-activity fs-2 mb-2 opacity-50"></i>
-                <span style="font-size: 0.8rem;">Sin lecturas de movimientos/hora para este puerto.</span>
+                <span style="font-size: 0.8rem;">{{ 'PORTTOS.PRODUCTIVIDAD_CHART.SIN_LECTURAS_DE_MOVIMIENTOS_HORA' | translate }}</span>
             </div>
 
             <!-- Gráfica Chart.js -->

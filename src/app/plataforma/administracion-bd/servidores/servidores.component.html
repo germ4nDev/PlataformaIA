@@ -52,7 +52,7 @@
                     [showSearchBox]="false" [newButtonLabel]="'CONEXIONES.SERVIDORES.NEW' | translate"
                     [showSearchBox]="false" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                    (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_SERVIDORES_CREAR" permisoEdit="ACT_SERVIDORES_MODIFICAR" permisoDelete="ACT_SERVIDORES_ELIMINAR">
                 </app-table-data>
             </div>
         </div>

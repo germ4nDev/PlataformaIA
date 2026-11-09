@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -17,7 +18,7 @@ import { EstadoWidgetTclComponent } from '../../shared/estado-widget-tcl/estado-
 @Component({
     selector: 'app-fuentes-noticias',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, DatePipe, WidgetShellComponent, EstadoWidgetTclComponent],
     templateUrl: './fuentes-noticias.component.html',
     styleUrls: ['./fuentes-noticias.component.scss']
 })

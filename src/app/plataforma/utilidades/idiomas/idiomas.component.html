@@ -42,13 +42,15 @@
             <div class="card-body">
                 <ng-container *ngIf="idiomasFiltradas$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoIdioma'"
-                        [tableTitle]="'IDIOMAS.TITLE' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showAvatar]="true" [showImage]="false" [showNewButton]="true" [showViewButton]="false"
-                        [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
-                        [newButtonLabel]="'IDIOMAS.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)">
+                        [tableTitle]="'IDIOMAS.TITLE' | translate" [tableSubtitle]="'IDIOMAS.SUBTITULO' | translate"
+                        [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true" [showActions]="true" [showAvatar]="true" [showImage]="false"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
+                        [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'IDIOMAS.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
+                        permisoNew="ACT_IDIOMAS_CREAR" permisoEdit="ACT_IDIOMAS_MODIFICAR"
+                        permisoDelete="ACT_IDIOMAS_ELIMINAR">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>

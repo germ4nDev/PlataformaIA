@@ -45,18 +45,7 @@ export class PtlusuariosRolesApService {
         return this._usuariosRoles.getValue()
     }
 
-    getRolesPorUsuarioYEmpresa(codigoUsuarioSC: string, codigoEmpresaSC: string) {
-        const url = `${base_url}/usuarios-roles/usuario/${codigoUsuarioSC}/empresa/${codigoEmpresaSC}`;
-        return this.http.get(url).pipe(
-            map((resp: any) => {
-                console.log('Roles del usuario por empresa cargados:', resp);
-                return {
-                    ok: true,
-                    usuarioRole: resp.usuariosRoles
-                };
-            })
-        );
-    }
+    // CC-135: retirado getRolesPorUsuarioYEmpresa (llamaba a /usuarios-roles/usuario/:id/empresa/:id, que no existe en el API; sin uso). Copia en _respaldos/2026-11-07_roles-gestion-usuario/paso2
 
     cargarRegistros() {
         console.log('Consultando y ordenando usuariosRoles del servidor...')
@@ -96,31 +85,9 @@ export class PtlusuariosRolesApService {
         )
     }
 
-    getRegistroByCodigoRol(codigoRole: string) {
-        const url = `${base_url}/usuarios-roles/role/${codigoRole}`
-        return this.http.get(url).pipe(
-            map((resp: any) => {
-                console.log('Ahora sí llega la data correcta:', resp)
-                return {
-                    ok: true,
-                    usuarioRole: resp.usuarioRole
-                }
-            })
-        )
-    }
+    // CC-135: retirado getRegistroByCodigoRol (llamaba a /usuarios-roles/role/:id, que no existe en el API; sin uso). Copia en _respaldos/2026-11-07_roles-gestion-usuario/paso2
 
-    getRegistroByCodigoUsuario(codigoUsuarioSC: string) {
-        const url = `${base_url}/usuarios-roles/usuario/${codigoUsuarioSC}`
-        return this.http.get(url).pipe(
-            map((resp: any) => {
-                console.log('Roles del usuario cargados:', resp)
-                return {
-                    ok: true,
-                    usuarioRole: resp.usuarioRole
-                }
-            })
-        )
-    }
+    // CC-134: retirado getRegistroByCodigoUsuario (llamaba GET /usuarios-roles/usuario/:id, que no existe)
 
     postUsuarioRole(data: PTLUsuarioRoleAPModel) {
         console.log('********** crear el usuarioRole', data)
@@ -202,12 +169,5 @@ export class PtlusuariosRolesApService {
         )
     }
 
-    deleteRolesPorUsuario(codigoUsuarioSC: string) {
-        const url = `${base_url}/usuarios-roles/clean-user/${codigoUsuarioSC}`
-        return this.http.delete(url).pipe(
-            map((resp: any) => {
-                return resp
-            })
-        )
-    }
+    // CC-134: retirado deleteRolesPorUsuario (llamaba DELETE /usuarios-roles/clean-user/:id, que no existe)
 }

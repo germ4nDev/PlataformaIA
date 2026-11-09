@@ -43,7 +43,7 @@
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInput" style="cursor: pointer;" class="text-link change-image-label" (change)="onFileSelectedClick($event)">
                                         <i class="feather ms-2 icon-edit-2"></i>
-                                        <span>   Cambiar imagen</span>
+                                        <span>   {{ 'WEB.PERFIL.CAMBIAR_IMAGEN' | translate }}</span>
                                     </label>
                                     <input type="file" (change)="onFileSelectedClick($event)" accept="image/*" id="fileUploadInput"
                                         class="form-control form-input d-none" name="fotoUsuario">

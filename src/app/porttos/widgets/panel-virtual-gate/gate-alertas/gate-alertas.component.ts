@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -32,7 +34,7 @@ export interface IAlertaGate {
 @Component({
     selector: 'app-gate-alertas',
     standalone: true,
-    imports: [CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, CommonModule, WidgetShellComponent],
     templateUrl: './gate-alertas.component.html',
     styleUrls: ['./gate-alertas.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -141,7 +143,7 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                     id: a.id ?? idx,
                     tipo,
                     icono: a.icono || this.resolverIcono(tipo),
-                    titulo: a.titulo || (a.tipo ? `${a.tipo}${a.terminal ? ' · ' + a.terminal : ''}` : 'Incidencia en Gate'),
+                    titulo: a.titulo || (a.tipo ? `${a.tipo}${a.terminal ? ' · ' + a.terminal : ''}` : 'PORTTOS.GATE_ALERTAS.INCIDENCIA_EN_GATE'),
                     descripcion: a.descripcion || a.mensaje || a.detalle || ''
                 };
             });
@@ -157,8 +159,8 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
 
         this.datosAutonomosSQL = {
             ...(Array.isArray(raw) ? {} : raw),
-            titulo: raw.titulo || '⚠ Alertas Operativas',
-            subtitulo: raw.subtitulo || 'Monitoreo de incidencias en tiempo real',
+            titulo: raw.titulo || 'PORTTOS.GATE_ALERTAS.ALERTAS_OPERATIVAS',
+            subtitulo: raw.subtitulo || 'PORTTOS.GATE_ALERTAS.MONITOREO_DE_INCIDENCIAS_EN_TIEMPO',
             icono: raw.icono || 'feather icon-alert-triangle',
             alertas: this.listaAlertas
         };
@@ -179,7 +181,7 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                 id: `sc-${c.id_cita || idx}`,
                 tipo: 'danger',
                 icono: '🛑',
-                titulo: `Camión ${c.placa} — ${c.estado || 'Sin cita'}`,
+                titulo: traducir('PORTTOS.GATE_ALERTAS.CAMION_ESTADO', { placa: c.placa, estado: c.estado || traducir('PORTTOS.GATE_ALERTAS.SIN_CITA') }),
                 descripcion: `${c.ubicacion || 'Pre-gate'} · ${c.transportador || 'Transportador'} (${c.terminal || 'Terminal'})`
             });
         });
@@ -193,8 +195,8 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                 id: 'demora-gate',
                 tipo: 'warning',
                 icono: '⚠️',
-                titulo: `Cola activa en gate ${terminalCritica} (máx. ${maxEspera} min)`,
-                descripcion: `${demorasAltas.length} camiones superan los 25 min de espera virtual`
+                titulo: traducir('PORTTOS.GATE_ALERTAS.COLA_ACTIVA', { terminal: terminalCritica, max: maxEspera }),
+                descripcion: traducir('PORTTOS.GATE_ALERTAS.CAMIONES_SUPERAN_25', { n: demorasAltas.length })
             });
         }
 
@@ -205,8 +207,8 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                 id: 'flujo-info',
                 tipo: 'info',
                 icono: 'ℹ️',
-                titulo: `${enCola.length} unidades en enturnamiento Pre-Gate`,
-                descripcion: 'Dosificación activa por ventana horaria hacia terminales'
+                titulo: traducir('PORTTOS.GATE_ALERTAS.UNIDADES_PREGATE', { n: enCola.length }),
+                descripcion: 'PORTTOS.GATE_ALERTAS.DOSIFICACION_ACTIVA_POR_VENTANA_HORARIA'
             });
         }
 

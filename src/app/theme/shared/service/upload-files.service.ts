@@ -81,7 +81,8 @@ export class UploadFilesService {
     deleteFilePath(objUpload: UploadParams) {
         const userLog = this._localStorageService.getCurrentUserLocalStorage();
         const usu = userLog.usuario.codigoUsuario;
-        const pathUrl = `${base_url}/upload/delete/${objUpload.susc}/${objUpload.tipo || ''}//${usu}/${objUpload.file}`;
+        // OT-021: la ruta del API es DELETE /api/upload/file/:suc/:type/:usu/:fileName (no existía /upload/delete/…)
+        const pathUrl = `${base_url}/upload/file/${objUpload.susc}/${objUpload.tipo}/${usu}/${objUpload.file}`;
 
         return this.http.delete(pathUrl).pipe(
             map((resp: any) => {

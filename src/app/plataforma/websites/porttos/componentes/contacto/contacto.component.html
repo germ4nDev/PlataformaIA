@@ -1,0 +1,99 @@
+<section class="bloque">
+  <div class="contenedor contacto">
+    <div class="panel contacto__formulario">
+      @if (enviado) {
+        <div class="exito" role="status">
+          <span class="exito__icono"><pp-icono nombre="check" [tamano]="32" /></span>
+          <h2>{{ 'WEB.CONTACTO.RECIBIMOS_SU_MENSAJE' | translate }}</h2>
+          @if (config?.tiempoRespuesta) { <p>{{ config?.tiempoRespuesta }}.</p> }
+          <button type="button" class="boton boton--secundario" (click)="nuevo()">{{ 'WEB.CONTACTO.ENVIAR_OTRO_MENSAJE' | translate }}</button>
+        </div>
+      } @else {
+        <form (ngSubmit)="enviar()" novalidate>
+          <div class="campo">
+            <label for="motivo">{{ 'WEB.CONTACTO.MOTIVO' | translate }} <span aria-hidden="true">*</span></label>
+            <select id="motivo" name="motivo" [(ngModel)]="m.motivo" required [attr.aria-invalid]="!!errores['motivo']"
+                    [attr.aria-describedby]="errores['motivo'] ? 'error-motivo' : null">
+              <option value="" disabled>{{ 'WEB.CONTACTO.ESCOJA_UNA_OPCION' | translate }}</option>
+              @for (o of motivos; track o.clave) { <option [value]="o.clave">{{ (o.etiqueta | translate) }}</option> }
+            </select>
+            @if (errores['motivo']) { <p class="campo__error" id="error-motivo">{{ errores['motivo'] }}</p> }
+          </div>
+          @if (planes.length) {
+            <div class="campo">
+              <label for="plan">{{ 'WEB.CONTACTO.PLAN_DE_INTERES' | translate }}</label>
+              <select id="plan" name="plan" [(ngModel)]="m.codigoPlan">
+                <option value="">{{ 'WEB.CONTACTO.NINGUNO_EN_PARTICULAR' | translate }}</option>
+                @for (p of planes; track p.codigo) { <option [value]="p.codigo">{{ (p.nombre | translate) }}</option> }
+              </select>
+            </div>
+          }
+          <div class="campos-dos">
+            <div class="campo">
+              <label for="nombre">{{ 'WEB.CONTACTO.NOMBRE' | translate }} <span aria-hidden="true">*</span></label>
+              <input id="nombre" name="nombre" [(ngModel)]="m.nombre" autocomplete="name" required maxlength="120"
+                     [attr.aria-invalid]="!!errores['nombre']" [attr.aria-describedby]="errores['nombre'] ? 'error-nombre' : null" />
+              @if (errores['nombre']) { <p class="campo__error" id="error-nombre">{{ errores['nombre'] }}</p> }
+            </div>
+            <div class="campo">
+              <label for="empresa">{{ 'WEB.CONTACTO.EMPRESA' | translate }}</label>
+              <input id="empresa" name="empresa" [(ngModel)]="m.empresa" autocomplete="organization" maxlength="160" />
+            </div>
+            <div class="campo">
+              <label for="correo">{{ 'WEB.CONTACTO.CORREO' | translate }} <span aria-hidden="true">*</span></label>
+              <input id="correo" name="correo" type="email" [(ngModel)]="m.correo" autocomplete="email" required maxlength="160"
+                     [attr.aria-invalid]="!!errores['correo']" [attr.aria-describedby]="errores['correo'] ? 'error-correo' : null" />
+              @if (errores['correo']) { <p class="campo__error" id="error-correo">{{ errores['correo'] }}</p> }
+            </div>
+            <div class="campo">
+              <label for="telefono">{{ 'WEB.CONTACTO.TELEFONO' | translate }}</label>
+              <input id="telefono" name="telefono" type="tel" [(ngModel)]="m.telefono" autocomplete="tel" maxlength="40"
+                     [attr.aria-invalid]="!!errores['telefono']" [attr.aria-describedby]="errores['telefono'] ? 'error-telefono' : null" />
+              @if (errores['telefono']) { <p class="campo__error" id="error-telefono">{{ errores['telefono'] }}</p> }
+            </div>
+          </div>
+          <div class="campo">
+            <label for="puerto">{{ 'WEB.CONTACTO.PUERTO_O_ZONA_DE_OPERACION' | translate }}</label>
+            <input id="puerto" name="puerto" [(ngModel)]="m.puerto" maxlength="60" />
+          </div>
+          <div class="campo">
+            <label for="mensaje">{{ 'WEB.CONTACTO.MENSAJE' | translate }} <span aria-hidden="true">*</span></label>
+            <textarea id="mensaje" name="mensaje" rows="5" [(ngModel)]="m.mensaje" required maxlength="4000"
+                      [attr.aria-invalid]="!!errores['mensaje']" [attr.aria-describedby]="errores['mensaje'] ? 'error-mensaje' : null"></textarea>
+            @if (errores['mensaje']) { <p class="campo__error" id="error-mensaje">{{ errores['mensaje'] }}</p> }
+          </div>
+          <!-- Campo trampa: las personas no lo ven ni lo alcanzan con el teclado; un robot lo llena -->
+          <div class="trampa" aria-hidden="true">
+            <label for="sitioWeb">{{ 'WEB.CONTACTO.SITIO_WEB' | translate }}</label>
+            <input id="sitioWeb" name="sitioWeb" [(ngModel)]="m.sitioWeb" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="campo campo--casilla">
+            <input id="aceptaDatos" name="aceptaDatos" type="checkbox" [(ngModel)]="m.aceptaDatos"
+                   [attr.aria-invalid]="!!errores['aceptaDatos']" [attr.aria-describedby]="errores['aceptaDatos'] ? 'error-acepta' : null" />
+            <label for="aceptaDatos">{{ 'WEB.CONTACTO.AUTORIZO_EL_TRATAMIENTO_DE_MIS' | translate }}</label>
+          </div>
+          @if (errores['aceptaDatos']) { <p class="campo__error" id="error-acepta">{{ errores['aceptaDatos'] }}</p> }
+          @if (error) { <p class="alerta" role="alert">{{ error }}</p> }
+          <button type="submit" class="boton boton--primario boton--ancho" [disabled]="enviando">
+            {{ enviando ? ('WEB.CONTACTO.ENVIANDO' | translate) : ('WEB.CONTACTO.ENVIAR_MENSAJE' | translate) }}
+          </button>
+        </form>
+      }
+    </div>
+    <aside class="contacto__lado">
+      @if (config?.correoContacto) {
+        <div class="panel dato-contacto">
+          <span class="dato-contacto__icono"><pp-icono nombre="correo" /></span>
+          <div><p class="dato-contacto__etiqueta">{{ 'WEB.CONTACTO.CORREO' | translate }}</p>
+            <a [href]="'mailto:' + config?.correoContacto">{{ config?.correoContacto }}</a></div>
+        </div>
+      }
+      @if (config?.tiempoRespuesta) {
+        <div class="panel dato-contacto">
+          <span class="dato-contacto__icono"><pp-icono nombre="reloj" /></span>
+          <div><p class="dato-contacto__etiqueta">{{ 'WEB.CONTACTO.TIEMPO_DE_RESPUESTA' | translate }}</p><p>{{ config?.tiempoRespuesta }}</p></div>
+        </div>
+      }
+    </aside>
+  </div>
+</section>

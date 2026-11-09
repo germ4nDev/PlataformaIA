@@ -22,14 +22,14 @@
                 <input type="file" #fileInputExcel style="display: none;" accept=".xlsx, .xls"
                     (change)="onFileExcelSelected($event)">
 
-                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                <button *appPermiso="permisoUpload" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                     (click)="fileInputExcel.click()" [disabled]="cargandoExcel">
-                    {{ cargandoExcel ? 'Procesando...' : 'Cargar Excel ↑' }}
+                    {{ cargandoExcel ? ('WEB.TABLE_DATA.PROCESANDO' | translate) : ('WEB.TABLE_DATA.CARGAR_EXCEL' | translate) }}
                 </button>
             </ng-container>
 
             <ng-container *ngIf="showUploadModalButton">
-                <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                <button *appPermiso="permisoUpload" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                     (click)="onUploadModalClick()">
                     {{ uploadModalLabel }} ↑
                 </button>
@@ -90,13 +90,13 @@
                                         <i [class]="row[column.name] + ' icono-table'"></i>
                                     </span>
                                     <ng-container *ngSwitchCase="'avatar'">
-                                        <img [src]="row[column.name]" [alt]="'Avatar'" class="avatar-table" />
+                                        <img [src]="row[column.name]" [alt]="('WEB.TABLE_DATA.AVATAR' | translate)" class="avatar-table" />
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'image'">
-                                        <img [src]="row[column.name]" [alt]="'Image'" class="image-table" />
+                                        <img [src]="row[column.name]" [alt]="('WEB.TABLE_DATA.IMAGE' | translate)" class="image-table" />
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'capture'">
-                                        <img [src]="row[column.name]" [alt]="'Capture'" class="capture-table" />
+                                        <img [src]="row[column.name]" [alt]="('WEB.TABLE_DATA.CAPTURE' | translate)" class="capture-table" />
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'number'">
                                         <span style="display: block; text-align: right">
@@ -176,7 +176,7 @@
                                     </button>
                                 </ng-container>
 
-                                <button *ngFor="let btn of row._acciones"
+                                <button *ngFor="let btn of accionesVisibles(row._acciones)"
                                     (click)="emitirAccionPrincipal(btn.accion, row)" [title]="btn.tooltip"
                                     class="dt-option-btn" [style.--dt-dynamic-color]="btn.color"
                                     style="cursor: pointer;">
@@ -206,29 +206,29 @@
                                                 <ng-container [ngSwitch]="detailColumn.type">
 
                                                     <ng-container *ngSwitchCase="'avatar'">
-                                                        <img [src]="row[detailColumn.name]" [alt]="'Avatar'"
+                                                        <img [src]="row[detailColumn.name]" [alt]="('WEB.TABLE_DATA.AVATAR' | translate)"
                                                             class="avatar-table" />
                                                     </ng-container>
                                                     <ng-container *ngSwitchCase="'image'">
-                                                        <img [src]="row[detailColumn.name]" [alt]="'Image'"
+                                                        <img [src]="row[detailColumn.name]" [alt]="('WEB.TABLE_DATA.IMAGE' | translate)"
                                                             class="image-table" />
                                                     </ng-container>
                                                     <ng-container *ngSwitchCase="'logo'">
-                                                        <img [src]="row[detailColumn.name]" [alt]="'Image'"
+                                                        <img [src]="row[detailColumn.name]" [alt]="('WEB.TABLE_DATA.IMAGE' | translate)"
                                                             class="logo-table" />
                                                     </ng-container>
 
                                                     <ng-container *ngSwitchCase="'capture'">
                                                         <ng-container [ngSwitch]="row.tipo">
                                                             <img *ngSwitchCase="'capture'" [src]="row.capture"
-                                                                [alt]="'Capture'" class="capture-table" />
+                                                                [alt]="('WEB.TABLE_DATA.CAPTURE' | translate)" class="capture-table" />
                                                             <div *ngSwitchCase="'video'" class="video-table">
                                                                 <app-video-player
                                                                     [src]="row.capture"></app-video-player>
                                                             </div>
                                                             <div *ngSwitchDefault>
                                                                 <a [href]="row[detailColumn.capture]" target="_blank"
-                                                                    style="color: cyan"> Ver archivo </a>
+                                                                    style="color: cyan"> {{ 'WEB.TABLE_DATA.VER_ARCHIVO' | translate }} </a>
                                                             </div>
                                                         </ng-container>
                                                     </ng-container>
@@ -237,14 +237,14 @@
                                                     <ng-container *ngSwitchCase="'capture2'">
                                                         <ng-container [ngSwitch]="row.tipo">
                                                             <img *ngSwitchCase="'capture'" [src]="row.capture2"
-                                                                [alt]="'Capture'" class="capture-table" />
+                                                                [alt]="('WEB.TABLE_DATA.CAPTURE' | translate)" class="capture-table" />
                                                             <div *ngSwitchCase="'video'" class="video-table">
                                                                 <app-video-player
                                                                     [src]="row.capture2"></app-video-player>
                                                             </div>
                                                             <div *ngSwitchDefault>
                                                                 <a [href]="row[detailColumn.capture]" target="_blank"
-                                                                    style="color: cyan"> Ver archivo </a>
+                                                                    style="color: cyan"> {{ 'WEB.TABLE_DATA.VER_ARCHIVO' | translate }} </a>
                                                             </div>
                                                         </ng-container>
                                                     </ng-container>
@@ -338,7 +338,7 @@
                                                                             </ng-container>
                                                                             <th *ngIf="row[detailColumn.name][0]['_acciones'] && showDetailActions"
                                                                                 class="px-3 py-2 text-center text-nowrap">
-                                                                                OPCIONES
+                                                                                {{ 'WEB.TABLE_DATA.OPCIONES' | translate }}
                                                                             </th>
                                                                         </tr>
                                                                     </thead>
@@ -357,7 +357,7 @@
                                                                                 class="px-3 py-2 text-center align-middle"
                                                                                 style="white-space: nowrap;">
                                                                                 <button
-                                                                                    *ngFor="let btn of dataRow['_acciones']"
+                                                                                    *ngFor="let btn of accionesVisibles(dataRow['_acciones'])"
                                                                                     (click)="emitirAccionSubtabla(btn.accion, dataRow, row)"
                                                                                     [title]="btn.tooltip"
                                                                                     class="dt-option-btn"
@@ -373,8 +373,7 @@
                                                         </ng-container>
                                                         <ng-template #noJsonData>
                                                             <div class="text-muted mt-2">
-                                                                <i class="feather icon-info me-1"></i> No hay registros
-                                                                detallados disponibles.
+                                                                <i class="feather icon-info me-1"></i> {{ 'WEB.TABLE_DATA.NO_HAY_REGISTROS_DETALLADOS_DISPONIBLES' | translate }}
                                                             </div>
                                                         </ng-template>
                                                     </ng-container>

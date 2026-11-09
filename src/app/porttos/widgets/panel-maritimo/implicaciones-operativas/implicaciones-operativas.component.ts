@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -33,7 +34,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-implicaciones-operativas',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './implicaciones-operativas.component.html',
     styleUrls: ['./implicaciones-operativas.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -158,7 +159,7 @@ export class ImplicacionesOperativasComponent implements OnInit, OnChanges, OnDe
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || '🎯 IMPLICACIONES OPERATIVAS PARA LA TORRE DE CONTROL',
-            subtitulo: raw.subtitulo || 'Reglas de priorización y alertas derivadas de la estructura de carga',
+            subtitulo: raw.subtitulo || 'PORTTOS.IMPLICACIONES_OPERATIVAS.REGLAS_DE_PRIORIZACION_Y_ALERTAS',
             icono: raw.icono || 'feather icon-alert-circle',
             insights: insightsNormalizados
         };

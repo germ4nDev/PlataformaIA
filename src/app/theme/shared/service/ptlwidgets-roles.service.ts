@@ -101,9 +101,9 @@ export class PtlWidgetsRolesService {
         );
     }
 
-    toggleEstadoRelacion(codigoWidget: string, codigoRol: string, data: any) {
-        // La URL coincide con el endpoint del controlador Node (/:codigoWidget/:codigoRol)
-        const url = `${base_url}/widgets-roles/${codigoWidget}/${codigoRol}`;
+    toggleEstadoRelacion(codigoWidgetRole: string, data: any) {
+        // OT-021: el API actualiza por el código de la relación (PUT /api/widgets-roles/:id)
+        const url = `${base_url}/widgets-roles/${codigoWidgetRole}`;
         return this.http.put(url, data).pipe(
             map((resp: any) => {
                 //console.log('Data de asignación modificada', resp);
@@ -119,8 +119,9 @@ export class PtlWidgetsRolesService {
         );
     }
 
-    removerRolDeWidget(codigoWidget: string, codigoRol: string) {
-        const url = `${base_url}/widgets-roles/${codigoWidget}/${codigoRol}`;
+    removerRolDeWidget(codigoWidgetRole: string) {
+        // OT-021: el API borra por el código de la relación (DELETE /api/widgets-roles/:id)
+        const url = `${base_url}/widgets-roles/${codigoWidgetRole}`;
         return this.http.delete(url).pipe(
             map((resp: any) => {
                 //console.log('Data de asignación eliminada', resp);

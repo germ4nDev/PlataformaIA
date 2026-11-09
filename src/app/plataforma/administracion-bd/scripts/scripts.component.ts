@@ -1,3 +1,4 @@
+import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core'
@@ -168,7 +169,7 @@ export class ScriptsComponent implements OnInit {
               descripcionLog: this.translate.instant('SCRIPTS.ELIMINARERROR') + ' ' + err.mensaje
             }
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire('Error', this.translate.instant('SCRIPTS.ELIMINARERROR'), 'error')
+            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('SCRIPTS.ELIMINARERROR'), 'error')
             console.error('Error eliminando', err)
           }
         })

@@ -21,11 +21,11 @@
                     <!-- Bloque Izquierdo: Título y Subtítulo -->
                     <div class="d-flex flex-column pe-3">
                         <h4 class="titulo-formulario mb-1">
-                            <span *ngIf="!modoEdicion">Nuevo Ítem de Catálogo</span>
-                            <span *ngIf="modoEdicion">Modificar Ítem</span>
+                            <span *ngIf="!modoEdicion">{{ 'WEB.GESTION_ITEM.NUEVO_ITEM_DE_CATALOGO' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'WEB.GESTION_ITEM.MODIFICAR_ITEM' | translate }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0 text-muted">
-                            Configure el valor unitario, costo y detalles del recurso.
+                            {{ 'WEB.GESTION_ITEM.CONFIGURE_EL_VALOR_UNITARIO_COSTO' | translate }}
                         </h6>
                     </div>
 
@@ -43,7 +43,7 @@
                                 }}
                                 <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                             </span>
-                            <span *ngIf="isSaving">Guardando... <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'WEB.COMUN.GUARDANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
                     </div>
@@ -56,7 +56,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoItem">Código del Ítem</label>
+                                <label class="form-control-label" for="codigoItem">{{ 'WEB.GESTION_ITEM.CODIGO_DEL_ITEM' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="codigoItem"
                                     formControlName="codigoItem" readonly />
                                 <!-- <small class="text-muted">ID único generado por el sistema.</small> -->
@@ -64,11 +64,11 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoTipoItem">Categoría / Tipo de Ítem</label>
+                                <label class="form-control-label" for="codigoTipoItem">{{ 'WEB.GESTION_ITEM.CATEGORIA_TIPO_DE_ITEM' | translate }}</label>
                                 <select class="form-control form-select" id="codigoTipoItem"
                                     formControlName="codigoTipoItem"
                                     [ngClass]="{ 'is-invalid': f['codigoTipoItem'].invalid && (f['codigoTipoItem'].dirty || f['codigoTipoItem'].touched || isSubmit) }">
-                                    <option value="" disabled selected>Seleccione el tipo...</option>
+                                    <option value="" disabled selected>{{ 'WEB.GESTION_ITEM.SELECCIONE_EL_TIPO' | translate }}</option>
                                     <option [value]="tipo.codigoTipoItem" *ngFor="let tipo of tiposItem">
                                         {{ tipo.nombreTipo }}
                                     </option>
@@ -77,27 +77,27 @@
                                 <label
                                     *ngIf="f['codigoTipoItem'].invalid && (f['codigoTipoItem'].dirty || f['codigoTipoItem'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    Debe seleccionar una tipo de item.
+                                    {{ 'WEB.GESTION_ITEM.DEBE_SELECCIONAR_UNA_TIPO_DE' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreItem">Nombre Comercial del Ítem</label>
+                                <label class="form-control-label" for="nombreItem">{{ 'WEB.GESTION_ITEM.NOMBRE_COMERCIAL_DEL_ITEM' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="nombreItem"
-                                    formControlName="nombreItem" placeholder="Ej: 1GB Almacenamiento Adicional"
+                                    formControlName="nombreItem" [placeholder]="'WEB.GESTION_ITEM.EJ_1GB_ALMACENAMIENTO_ADICIONAL' | translate"
                                     [ngClass]="{ 'is-invalid': f['nombreItem'].invalid && (f['nombreItem'].dirty || f['nombreItem'].touched || isSubmit) }" />
                                 <!-- <small class="text-muted">ID único generado por el sistema.</small> -->
                                 <label
                                     *ngIf="f['nombreItem'].invalid && (f['nombreItem'].dirty || f['nombreItem'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    El nombre es obligatorio.
+                                    {{ 'WEB.COMUN.EL_NOMBRE_ES_OBLIGATORIO' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="costoItem">Costo Interno</label>
+                                <label class="form-control-label" for="costoItem">{{ 'WEB.GESTION_ITEM.COSTO_INTERNO' | translate }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text form-input">$</span>
                                     <input type="number" step="0.01" class="form-control form-input" id="costoItem"
@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="valorUnitario">Valor Unitario (Venta)</label>
+                                <label class="form-control-label" for="valorUnitario">{{ 'WEB.GESTION_ITEM.VALOR_UNITARIO_VENTA' | translate }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text  form-input">$</span>
                                     <input type="number" step="0.01" class="form-control form-input" id="valorUnitario"
@@ -119,7 +119,7 @@
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label">Descripción Detallada</label>
+                                <label class="form-control-label">{{ 'WEB.GESTION_ITEM.DESCRIPCION_DETALLADA' | translate }}</label>
                                 <app-text-editor [toolbarType]="'completa'"
                                     [contentHtml]="f['descripcionItem'].value || ''"
                                     (contentHtmlChange)="actualizarDescripcionValor($event)">

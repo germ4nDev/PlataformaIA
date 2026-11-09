@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -10,7 +11,7 @@ import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.mo
 @Component({
     selector: 'app-nav-bar',
     standalone: true,
-    imports: [CommonModule, RouterModule, NavRightComponent],
+    imports: [TranslateModule, CommonModule, RouterModule, NavRightComponent],
     templateUrl: './nav-bar.component.html',
     styleUrls: ['./nav-bar.component.scss']
 })

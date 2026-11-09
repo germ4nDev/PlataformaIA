@@ -1,0 +1,41 @@
+@if (puntos.length) {
+  <section class="bloque">
+    <div class="contenedor destacado">
+      <div class="destacado__texto">
+        @if (s.antetitulo) { <p class="antetitulo">{{ s.antetitulo }}</p> }
+        @if (s.titulo) { <h2 class="titulo-seccion">{{ s.titulo }}</h2> }
+        @if (s.subtitulo) { <p class="subtitulo-seccion">{{ s.subtitulo }}</p> }
+        <ul class="lista-check" role="list">
+          @for (e of puntos; track $index) {
+            <li><span class="lista-check__marca"><pp-icono nombre="check" [tamano]="18" /></span>{{ e.titulo || e.texto }}</li>
+          }
+        </ul>
+        <div class="acciones">
+          @if (s.enlace) { <pp-enlace [url]="s.enlace.url" clase="boton boton--primario">{{ s.enlace.texto }}</pp-enlace> }
+          @for (e of botones; track $index) { <pp-enlace [url]="e.url" clase="boton boton--secundario">{{ e.titulo }}</pp-enlace> }
+        </div>
+      </div>
+      <div class="pantallas" aria-hidden="true">
+        <div class="pantalla pantalla--web"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="pantalla pantalla--tableta"><i></i><i></i><i></i><i></i></div>
+        <div class="pantalla pantalla--telefono"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </section>
+} @else {
+  <section class="bloque bloque--banda">
+    <div class="contenedor">
+      <div class="banda">
+        <div class="banda__texto">
+          @if (s.antetitulo) { <p class="antetitulo">{{ s.antetitulo }}</p> }
+          @if (s.titulo) { <h2 class="titulo-seccion">{{ s.titulo }}</h2> }
+          @if (s.subtitulo) { <p class="subtitulo-seccion">{{ s.subtitulo }}</p> }
+        </div>
+        <div class="acciones">
+          @if (s.enlace) { <pp-enlace [url]="s.enlace.url" clase="boton boton--acento">{{ s.enlace.texto }}</pp-enlace> }
+          @for (e of botones; track $index) { <pp-enlace [url]="e.url" clase="boton boton--secundario">{{ e.titulo }}</pp-enlace> }
+        </div>
+      </div>
+    </div>
+  </section>
+}

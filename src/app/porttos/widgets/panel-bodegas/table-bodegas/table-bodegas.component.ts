@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -39,7 +40,7 @@ import { OpcionRango, RangoTclComponent } from '../../shared/rango-tcl/rango-tcl
 @Component({
     selector: 'app-table-bodegas',
     standalone: true,
-    imports: [CommonModule, DecimalPipe, WidgetShellComponent, TablaTclComponent, RangoTclComponent],
+    imports: [TranslateModule, CommonModule, DecimalPipe, WidgetShellComponent, TablaTclComponent, RangoTclComponent],
     templateUrl: './table-bodegas.component.html',
     styleUrls: ['./table-bodegas.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -74,16 +75,16 @@ export class TableBodegasComponent implements OnInit, OnChanges, OnDestroy {
     public notaRango: string | null = null;
     public origenRango: any = null;
     public readonly columnasRango: ColumnaTabla[] = [
-        { campo: 'fechaCreacion', titulo: 'Fecha', tipo: 'fecha' },
-        { campo: 'lote_bl', titulo: 'Lote / BL', tipo: 'principal' },
-        { campo: 'nombre_bodega', titulo: 'Bodega' },
-        { campo: 'producto', titulo: 'Producto' },
-        { campo: 'tipo_operacion', titulo: 'Operación', tipo: 'estado' },
-        { campo: 'toneladas', titulo: 'Toneladas', tipo: 'numero', decimales: 1, unidad: 't' },
-        { campo: 'cliente', titulo: 'Cliente' },
-        { campo: 'dias_almacenaje', titulo: 'Estadía', tipo: 'numero', unidad: 'd' },
-        { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
-        { campo: 'codigoUsuarioCreacion', titulo: 'Registró' }
+        { campo: 'fechaCreacion', titulo: 'PORTTOS.TABLE_BODEGAS.FECHA', tipo: 'fecha' },
+        { campo: 'lote_bl', titulo: 'PORTTOS.TABLE_BODEGAS.LOTE_BL', tipo: 'principal' },
+        { campo: 'nombre_bodega', titulo: 'PORTTOS.TABLE_BODEGAS.BODEGA' },
+        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
+        { campo: 'tipo_operacion', titulo: 'PORTTOS.COMUN.OPERACION', tipo: 'estado' },
+        { campo: 'toneladas', titulo: 'PORTTOS.CHART_DOUGHNUT_BODEGAS.TONELADAS', tipo: 'numero', decimales: 1, unidad: 't' },
+        { campo: 'cliente', titulo: 'PORTTOS.TABLE_BODEGAS.CLIENTE' },
+        { campo: 'dias_almacenaje', titulo: 'PORTTOS.TABLE_BODEGAS.ESTADIA', tipo: 'numero', unidad: 'd' },
+        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
+        { campo: 'codigoUsuarioCreacion', titulo: 'PORTTOS.TABLE_BODEGAS.REGISTRO' }
     ];
 
     cambiarDias(d: number): void {

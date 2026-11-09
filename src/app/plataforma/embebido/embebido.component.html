@@ -1,0 +1,8 @@
+<div class="embebido">
+    <ng-container [ngSwitch]="estado">
+        <p *ngSwitchCase="'fuera'">{{ 'WEB.EMBEBIDO.ESTA_PAGINA_SE_ABRE_SOLO' | translate }}</p>
+        <p *ngSwitchCase="'esperando'">{{ 'WEB.EMBEBIDO.CONECTANDO_CON_LA_APP' | translate }}</p>
+        <p *ngSwitchCase="'entrando'">{{ 'WEB.EMBEBIDO.CARGANDO_EL_TABLERO' | translate }}</p>
+        <p *ngSwitchCase="'error'">{{ mensaje }}</p>
+    </ng-container>
+</div>

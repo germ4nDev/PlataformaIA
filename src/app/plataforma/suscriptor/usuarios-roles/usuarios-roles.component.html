@@ -79,7 +79,7 @@
                         [showEditButton]="false" [showDeleteButton]="true" [showSearchBox]="false"
                         [showBackButton]="true" [newButtonLabel]="'SUSCRIPTORES.USUARIOSROLES.NEW' | translate"
                         (newRecord)="OnNuevoRegistroClick()" (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" (backRecord)="OnRegresarClick($event)">
+                        (accionPrincipalClick)="onAccionPrincipal($event)" (backRecord)="OnRegresarClick($event)" permisoNew="ACT_USUSC_ROLES" permisoDelete="ACT_USUSC_ROLES">
                     </app-table-data>
                 </ng-container>
                 <ng-template #loading>

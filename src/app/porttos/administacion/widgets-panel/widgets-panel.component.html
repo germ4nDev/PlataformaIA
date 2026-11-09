@@ -64,7 +64,7 @@
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'WIDGET.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaWidgetClick()"
-                        (editRecord)="OnEditarWidgetClick($event)" (deleteRecord)="OnEliminarWidgetClick($event)">
+                        (editRecord)="OnEditarWidgetClick($event)" (deleteRecord)="OnEliminarWidgetClick($event)" permisoNew="ACT_WDGT_CREAR" permisoEdit="ACT_WDGT_MODIFICAR" permisoDelete="ACT_WDGT_ELIMINAR">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>

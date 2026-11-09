@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IWidget } from 'src/app/theme/shared/interfaces/torre-control/widget.interface';
@@ -6,7 +7,7 @@ import { DashboardService } from 'src/app/theme/shared/service/tablero-control/d
 @Component({
     selector: 'app-wieget-base',
     standalone: true,
-    imports: [CommonModule],
+    imports: [TranslateModule, CommonModule],
     templateUrl: './wieget-base.component.html',
     styleUrl: './wieget-base.component.scss'
 })

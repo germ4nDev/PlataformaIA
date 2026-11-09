@@ -66,7 +66,7 @@
                         [newButtonLabel]="'INFRAESTRUCTURAS.NEW' | translate"
                         [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaAplicaicionClick()"
                         (editRecord)="OnEditarAplicaicionClick($event)"
-                        (deleteRecord)="OnEliminarAplicaicionClick($event)">
+                        (deleteRecord)="OnEliminarAplicaicionClick($event)" permisoNew="ACT_INFRA_CREAR" permisoEdit="ACT_INFRA_MODIFICAR" permisoDelete="ACT_INFRA_ELIMINAR">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>

@@ -6,11 +6,11 @@
         <div class="plf-cabecera">
             <div class="plf-pestanas">
                 <button type="button" *ngFor="let t of pestanasPanel" [class.activo]="pestanaPanel === t.id"
-                    (click)="pestanaPanel = t.id" [title]="t.nombre">
-                    <i [class]="t.icono"></i> {{ t.nombre }} <span class="plf-n">{{ filasPanel[t.id].length }}</span>
+                    (click)="pestanaPanel = t.id" [title]="(t.nombre | translate)">
+                    <i [class]="t.icono"></i> {{ (t.nombre | translate) }} <span class="plf-n">{{ filasPanel[t.id].length }}</span>
                 </button>
             </div>
-            <button type="button" class="plf-cerrar" (click)="panelLateralAbierto = false" title="Ocultar panel"><i
+            <button type="button" class="plf-cerrar" (click)="panelLateralAbierto = false" [title]="'PORTTOS.MAPA_LOGISTICO.OCULTAR_PANEL' | translate"><i
                     class="feather icon-chevrons-right"></i></button>
         </div>
         <div class="plf-cuerpo">
@@ -18,10 +18,10 @@
                 [ampliada]="true" [tamanoPagina]="30" [nombreArchivo]="'mapa-' + pestanaPanel"
                 (filaClick)="volarAFila($event)"></app-tabla-tcl>
         </div>
-        <div class="plf-pie">Datos en memoria del mapa · se actualiza cada 10 s · pulsa una fila para ir al punto</div>
+        <div class="plf-pie">{{ 'PORTTOS.MAPA_LOGISTICO.DATOS_EN_MEMORIA_DEL_MAPA' | translate }}</div>
     </aside>
     <button type="button" class="plf-abrir" *ngIf="pantallaCompleta && !panelLateralAbierto"
-        (click)="panelLateralAbierto = true" title="Mostrar panel">
+        (click)="panelLateralAbierto = true" [title]="'PORTTOS.MAPA_LOGISTICO.MOSTRAR_PANEL' | translate">
         <i class="feather icon-list"></i>
     </button>
 
@@ -43,8 +43,8 @@
 
         <!-- Analista IA flotante: botón arriba a la derecha y el panel sobre el mapa (no le quita espacio) -->
         <button type="button" class="fab-ia" *ngIf="puertoIA" [class.abierto]="iaAbierto" [class.con-panel-fs]="pantallaCompleta"
-            (click)="alternarIA()" [title]="iaAbierto ? 'Cerrar Analista IA' : 'Analista IA'" [attr.aria-expanded]="iaAbierto">
-            <span class="fab-ia-sello" *ngIf="!iaAbierto">IA</span>
+            (click)="alternarIA()" [title]="iaAbierto ? ('PORTTOS.MAPA_LOGISTICO.CERRAR_ANALISTA_IA' | translate) : ('PORTTOS.MAPA_LOGISTICO.ANALISTA_IA' | translate)" [attr.aria-expanded]="iaAbierto">
+            <span class="fab-ia-sello" *ngIf="!iaAbierto">{{ 'PORTTOS.COMUN.IA' | translate }}</span>
             <i class="feather icon-x" *ngIf="iaAbierto"></i>
             <span class="fab-ia-badge" *ngIf="!iaAbierto && iaConteo.alertas > 0" [class.critica]="iaConteo.criticas > 0">{{ iaConteo.alertas > 9 ? '9+' : iaConteo.alertas }}</span>
         </button>
@@ -58,7 +58,7 @@
 
             <!-- BOTÓN GATILLO PRINCIPAL -->
             <button type="button" class="fab-principal" [class.activo]="estiloBase === 'satelite'"
-                title="Herramientas del Mapa" (click)="toggleMenuConfig()" [class.activo]="menuConfigAbierto">
+                [title]="'PORTTOS.MAPA_LOGISTICO.HERRAMIENTAS_DEL_MAPA' | translate" (click)="toggleMenuConfig()" [class.activo]="menuConfigAbierto">
                 <i class="icon feather icon-map"></i>
 
                 <span class="alertas-badge" *ngIf="alertasSinLeer > 0">{{ alertasSinLeer > 9 ? '9+' :
@@ -72,44 +72,44 @@
                 <ng-container *ngIf="!hayPanelAbierto">
                     <div class="config-grid">
                         <button type="button" (click)="mostrarCapas = true" [class.activo]="mostrarCapas"
-                            title="Capas del Mapa">
+                            [title]="'PORTTOS.MAPA_LOGISTICO.CAPAS_DEL_MAPA' | translate">
                             <i class="icon feather icon-layers"></i>
                         </button>
 
                         <button type="button" (click)="mostrarLeyenda = true" [class.activo]="mostrarLeyenda"
-                            title="Convenciones del Mapa">
+                            [title]="'PORTTOS.MAPA_LOGISTICO.CONVENCIONES_DEL_MAPA' | translate">
                             <i class="icon feather icon-info"></i>
                         </button>
 
                         <button type="button" (click)="mostrarBitacora = true" [class.activo]="mostrarBitacora"
-                            title="Alertas del mapa" class="position-relative">
+                            [title]="'PORTTOS.MAPA_LOGISTICO.ALERTAS_DEL_MAPA' | translate" class="position-relative">
                             <i class="icon feather icon-bell"></i>
                             <span class="alertas-badge" *ngIf="alertasSinLeer > 0">{{ alertasSinLeer > 9 ? '9+' :
                                 alertasSinLeer }}</span>
                         </button>
 
                         <button type="button" (click)="mostrarEmbudo = true" [class.activo]="mostrarEmbudo"
-                            title="Embudo de llegada de naves">
+                            [title]="'PORTTOS.MAPA_LOGISTICO.EMBUDO_DE_LLEGADA_DE_NAVES' | translate">
                             <i class="icon feather icon-filter"></i>
                         </button>
 
                         <button type="button" (click)="mostrarRecorrido = true"
-                            [class.activo]="mostrarRecorrido || modoRecorrido" title="Reproducir las últimas horas">
+                            [class.activo]="mostrarRecorrido || modoRecorrido" [title]="'PORTTOS.MAPA_LOGISTICO.REPRODUCIR_LAS_ULTIMAS_HORAS' | translate">
                             <i class="icon feather icon-film"></i>
                         </button>
 
                         <button type="button" (click)="toggleMapaBase()" [class.activo]="estiloBase === 'satelite'"
-                            title="Alternar Vista Satelital">
+                            [title]="'PORTTOS.MAPA_LOGISTICO.ALTERNAR_VISTA_SATELITAL' | translate">
                             <i class="icon feather"
                                 [ngClass]="estiloBase === 'satelite' ? 'icon-map' : 'icon-globe'"></i>
                         </button>
 
-                        <button type="button" (click)="centrarMapa()" title="Centrar Mapa en Operación">
+                        <button type="button" (click)="centrarMapa()" [title]="'PORTTOS.MAPA_LOGISTICO.CENTRAR_MAPA_EN_OPERACION' | translate">
                             <i class="icon feather icon-crosshair"></i>
                         </button>
 
                         <button type="button" (click)="alternarPantallaCompleta()" [class.activo]="pantallaCompleta"
-                            [title]="pantallaCompleta ? 'Cerrar vista ampliada' : 'Ampliar mapa'">
+                            [title]="pantallaCompleta ? ('PORTTOS.KPI_CARD_TCL.CERRAR_VISTA_AMPLIADA' | translate) : ('PORTTOS.MAPA_LOGISTICO.AMPLIAR_MAPA' | translate)">
                             <i class="icon feather"
                                 [ngClass]="pantallaCompleta ? 'icon-minimize' : 'icon-maximize'"></i>
                         </button>
@@ -118,14 +118,14 @@
                     <!-- Aviso de modo recorrido -->
                     <div class="aviso-recorrido" *ngIf="modoRecorrido">
                         <span class="aviso-punto" [class.pausa]="!reproduciendo"></span>
-                        <span class="aviso-texto">Reproduciendo<strong *ngIf="fechaRecorrido"> · {{ fechaRecorrido |
+                        <span class="aviso-texto">{{ 'PORTTOS.MAPA_LOGISTICO.REPRODUCIENDO' | translate }}<strong *ngIf="fechaRecorrido"> · {{ fechaRecorrido |
                                 date: 'HH:mm' : '-0500' }}</strong></span>
                         <div class="controles-aviso">
                             <button type="button" (click)="alternarReproduccion()" [disabled]="!recorrido"
-                                [title]="reproduciendo ? 'Pausar' : 'Reproducir'">
+                                [title]="reproduciendo ? ('PORTTOS.MAPA_LOGISTICO.PAUSAR' | translate) : ('PORTTOS.MAPA_LOGISTICO.REPRODUCIR' | translate)">
                                 <i class="icon feather" [ngClass]="reproduciendo ? 'icon-pause' : 'icon-play'"></i>
                             </button>
-                            <button type="button" class="aviso-vivo" (click)="salirRecorrido()">En vivo</button>
+                            <button type="button" class="aviso-vivo" (click)="salirRecorrido()">{{ 'PORTTOS.MAPA_LOGISTICO.EN_VIVO' | translate }}</button>
                         </div>
                     </div>
                 </ng-container>
@@ -133,7 +133,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarCapas">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>Visualización de Capas</h3>
+                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.VISUALIZACION_DE_CAPAS' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -171,7 +171,7 @@
                                             [style.border-color]="capa.color"
                                             [style.background-color]="capa.color + '40'"></span>
 
-                                        <span class="capa-nombre">{{ capa.nombre }}</span>
+                                        <span class="capa-nombre">{{ (capa.nombre | translate) }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@
                     <div class="panel-menu">
                         <div class="panel-header">
                             <!-- Usamos h3 igual que en el panel de capas para mantener consistencia -->
-                            <h3>Convenciones del Mapa</h3>
+                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.CONVENCIONES_DEL_MAPA' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -235,14 +235,14 @@
                                     <div class="capa-item" *ngFor="let item of grupo.items">
 
                                         <img *ngIf="item.icono" class="capa-muestra" [src]="iconoLeyenda(item.icono)"
-                                            [alt]="item.texto">
+                                            [alt]="(item.texto | translate)">
 
                                         <!-- Usamos el mismo + '40' para que la transparencia coincida con las capas -->
                                         <span *ngIf="!item.icono" class="capa-muestra capa-muestra-color"
                                             [style.background-color]="item.color + '40'"
                                             [style.border-color]="item.color"></span>
 
-                                        <span class="capa-nombre">{{ item.texto }}</span>
+                                        <span class="capa-nombre">{{ (item.texto | translate) }}</span>
                                     </div>
 
                                 </div>
@@ -277,7 +277,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarBitacora">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>Alertas del mapa</h3>
+                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.ALERTAS_DEL_MAPA' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -286,7 +286,7 @@
                         <div class="contenido-panel">
                             <!-- Mensaje de estado vacío con un poco más de aire -->
                             <p class="text-muted small text-center my-4" *ngIf="!bitacoraAlertas.length">
-                                Sin alertas por ahora en este puerto.
+                                {{ 'PORTTOS.MAPA_LOGISTICO.SIN_ALERTAS_POR_AHORA_EN' | translate }}
                             </p>
 
                             <!-- Contenedor maestro de la lista (Hereda de grupo-capas) -->
@@ -302,8 +302,8 @@
                                         <span class="alerta-punto"></span>
 
                                         <span class="alerta-texto">
-                                            <strong>{{ a.titulo }}</strong>
-                                            <span>{{ a.mensaje }}<em *ngIf="a.simulado"> · simulado</em></span>
+                                            <strong>{{ (a.titulo | translate) }}</strong>
+                                            <span>{{ (a.mensaje | translate) }}<em *ngIf="a.simulado"> {{ 'PORTTOS.MAPA_LOGISTICO.SIMULADO' | translate }}</em></span>
                                         </span>
 
                                         <span class="alerta-hora">{{ a.fecha | date: 'HH:mm' }}</span>
@@ -332,7 +332,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarEmbudo">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>Embudo de Llegada</h3>
+                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.EMBUDO_DE_LLEGADA' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -366,7 +366,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarRecorrido">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>Reproducir Historial</h3>
+                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.REPRODUCIR_HISTORIAL' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>

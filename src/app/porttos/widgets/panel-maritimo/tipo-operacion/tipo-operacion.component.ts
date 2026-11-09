@@ -1,3 +1,5 @@
+import { traducir } from '../../../../theme/shared/i18n/traducir';
+import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /*
     Author: German Valencia
@@ -35,7 +37,7 @@ import { OrigenMaritimoDirective } from '../../shared/origen-maritimo.directive'
 @Component({
     selector: 'app-tipo-operacion',
     standalone: true,
-    imports: [OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
+    imports: [TranslateModule, OrigenMaritimoDirective, CommonModule, WidgetShellComponent],
     templateUrl: './tipo-operacion.component.html',
     styleUrls: ['./tipo-operacion.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -215,18 +217,18 @@ export class TipoOperacionComponent implements OnInit, AfterViewInit, OnChanges,
      */
     private calcularFlujosDesdeSQL(filas: any[]): void {
         const definicionFlujos = [
-            { col: 'importacion', label: 'Importación' },
-            { col: 'exportacion', label: 'Exportación' },
-            { col: 'transbordo', label: 'Transbordo' },
-            { col: 'cabotaje', label: 'Cabotaje' },
-            { col: 'transitoInternacional', label: 'Tránsito Int.' },
-            { col: 'fluvial', label: 'Fluvial' },
-            { col: 'movilizacionesABordo', label: 'Mov. a Bordo' },
-            { col: 'transitoria', label: 'Transitoria' }
+            { col: 'importacion', label: traducir('PORTTOS.TIPO_OPERACION.IMPORTACION') },
+            { col: 'exportacion', label: traducir('PORTTOS.TIPO_OPERACION.EXPORTACION') },
+            { col: 'transbordo', label: traducir('PORTTOS.TIPO_OPERACION.TRANSBORDO') },
+            { col: 'cabotaje', label: traducir('PORTTOS.TIPO_OPERACION.CABOTAJE') },
+            { col: 'transitoInternacional', label: traducir('PORTTOS.TIPO_OPERACION.TRANSITO_INT') },
+            { col: 'fluvial', label: traducir('PORTTOS.TIPO_OPERACION.FLUVIAL') },
+            { col: 'movilizacionesABordo', label: traducir('PORTTOS.TIPO_OPERACION.MOV_A_BORDO') },
+            { col: 'transitoria', label: traducir('PORTTOS.TIPO_OPERACION.TRANSITORIA') }
         ];
 
         const acumulados: Array<{ label: string; total: number }> = definicionFlujos.map((def) => ({
-            label: def.label,
+            label: traducir(def.label),
             total: filas.reduce((acc, f) => acc + Number(f?.[def.col] || 0), 0)
         }));
 

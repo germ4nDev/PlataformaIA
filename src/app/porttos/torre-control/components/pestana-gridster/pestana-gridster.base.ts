@@ -19,7 +19,11 @@
         - obtenerComponentePara()  resolución del componente (también la usa torre-control al agregar desde el lobby)
         - opcionesGridster()       ajustes de la cuadrícula sobre los comunes
         - alDestruir()             limpieza propia (destroy$ ya se completa en la base)
+      Teléfono con la web embebida (OT-017, EmbebidoService.esTelefono): rejilla de 4 columnas con alto de fila proporcional
+      al ancho (plataforma/embebido/nucleo/telefono), layout propio de /api/layout-telefono (solo widgets 'telefono' o 'ambos')
+      y guardado con guardarLayoutTelefono(). En la web y la tableta nada de esto corre: mismas opciones y mismo layout de siempre.
 */
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef, Directive, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
 import { Subject } from 'rxjs';
@@ -28,6 +32,9 @@ import { LayoutMetadataEngineService } from 'src/app/theme/shared/service/layout
 import { LocalStorageService } from 'src/app/theme/shared/service';
 import { WidgetsPermitidosService } from 'src/app/theme/shared/service/widgets-permitidos.service';
 import { separarPorPermiso } from 'src/app/plataforma/sesion/nucleo';
+import { gridsterAItems, itemsAGridster, opcionesGridsterTelefono } from 'src/app/plataforma/embebido/nucleo';
+import { EmbebidoService } from 'src/app/theme/shared/service/embebido.service';
+import { LayoutTelefonoService } from 'src/app/theme/shared/service/layout-telefono.service';
 import { WIDGET_MAP } from '../../widget-registry';
 
 export type WidgetEnCuadricula = GridsterItem & {
@@ -49,8 +56,10 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
     set tableroBloqueado(bloqueado: boolean) {
         this._tableroBloqueado = bloqueado;
         if (this.options?.api) {
-            this.options.draggable = { enabled: !bloqueado };
-            this.options.resizable = { enabled: !bloqueado };
+            // Teléfono (CC-124): layout fijo, siempre sin mover ni cambiar tamaño. La web y la tableta siguen con el candado
+            const editable = !bloqueado && !this.esTelefono;
+            this.options.draggable = { enabled: editable };
+            this.options.resizable = { enabled: editable };
             this.options.api.optionsChanged!();
         }
     }
@@ -77,6 +86,13 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
     private construyendoLayout = false;
     protected readonly destroy$ = new Subject<void>();
     protected readonly permisosWidgets = inject(WidgetsPermitidosService);
+    protected readonly embebido = inject(EmbebidoService);
+    private readonly layoutTelefonoApi = inject(LayoutTelefonoService);
+    /** Solo dentro de la app en un teléfono (OT-017). La web y la tableta: false. */
+    public readonly esTelefono = this.embebido.esTelefono;
+    /** Teléfono: widgets de la pestaña que se pueden agregar (de /api/layout-telefono). */
+    public disponiblesTelefono: any[] = [];
+    private alCambiarTamano = () => this.ajustarAltoFilaTelefono();
 
     constructor(
         protected layoutEngine: LayoutMetadataEngineService,
@@ -89,6 +105,7 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
     // ---------------------------------------------------------------- ciclo de vida
 
     ngOnInit(): void {
+        if (this.esTelefono) window.addEventListener('resize', this.alCambiarTamano);
         this.alIniciar();
         if (this.lsWidgets?.length && !this.dashboard.length) this.inicializarLayoutPorPuerto();
         // Cambió Widgets por rol (o el maestro): se rearma con el layout de la sesión, que conserva los ocultos
@@ -109,6 +126,7 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
     }
 
     ngOnDestroy(): void {
+        if (this.esTelefono) window.removeEventListener('resize', this.alCambiarTamano);
         this.destroy$.next();
         this.destroy$.complete();
         this.alDestruir();
@@ -190,6 +208,10 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
         const cacheKey = `${this.pestanaActiva}_${puerto}`;
         try {
             await this.antesDeArmar(puerto);
+            if (this.esTelefono) {
+                await this.armarLayoutTelefono(puerto);
+                return;
+            }
             let layout = !forzarReconstruccion ? this.localStorageService.getLayoutPestana(cacheKey) : null;
             if (this.necesitaLayoutBase(layout)) {
                 layout = await this.obtenerLayoutBaseTab();
@@ -208,6 +230,42 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
             this.cdr.detectChanges();
             setTimeout(() => this.options?.api?.resize?.(), 50);
         }
+    }
+
+    // ---------------------------------------------------------------- teléfono (OT-017)
+
+    /** Layout de la pestaña en el teléfono: el del usuario o el por defecto, desde /api/layout-telefono. */
+    protected async armarLayoutTelefono(puerto: string): Promise<void> {
+        const datos = await this.layoutTelefonoApi.obtener(this.pestanaActiva);
+        this.disponiblesTelefono = Array.isArray(datos?.disponibles) ? datos.disponibles : [];
+        this.ocultosPorPermiso = [];
+        this.dashboard = this.armarDashboard(itemsAGridster(datos?.items || [], this.lsWidgets), puerto);
+        this.despuesDeArmar(puerto);
+        this.hayCambiosSinGuardar = false;
+    }
+
+    /** Guarda el layout del teléfono (lo que está en pantalla) y rearma con lo que devuelve el API. */
+    async guardarLayoutTelefono(): Promise<void> {
+        if (!this.esTelefono) return;
+        const datos = await this.layoutTelefonoApi.guardar(this.pestanaActiva, gridsterAItems(this.dashboard));
+        this.disponiblesTelefono = Array.isArray(datos?.disponibles) ? datos.disponibles : [];
+        this.hayCambiosSinGuardar = false;
+    }
+
+    /** Vuelve al layout por defecto del teléfono. */
+    async restablecerLayoutTelefono(): Promise<void> {
+        if (!this.esTelefono) return;
+        await this.layoutTelefonoApi.restablecer(this.pestanaActiva);
+        await this.inicializarLayoutPorPuerto(true);
+    }
+
+    /** Alto de fila proporcional al ancho del teléfono (se recalcula al girar o cambiar el tamaño). */
+    protected ajustarAltoFilaTelefono(): void {
+        if (!this.esTelefono || !this.options) return;
+        const { fixedRowHeight } = opcionesGridsterTelefono(window.innerWidth);
+        if (this.options.fixedRowHeight === fixedRowHeight) return;
+        this.options.fixedRowHeight = fixedRowHeight;
+        this.options.api?.optionsChanged?.();
     }
 
     iniciarGridster(): void {
@@ -234,6 +292,8 @@ export abstract class PestanaGridsterBase implements OnInit, OnChanges, OnDestro
             mobileBreakpoint: 960,
             keepFixedHeightInMobile: true,
             ...this.opcionesGridster(),
+            // Teléfono (OT-017): rejilla de 4 columnas sobre todo lo anterior; en la web y la tableta no se aplica
+            ...(this.esTelefono ? opcionesGridsterTelefono(window.innerWidth) : {}),
             itemResizeCallback: () => { if (!this.cargando) this.hayCambiosSinGuardar = true; },
             itemChangeCallback: () => { if (!this.cargando) this.hayCambiosSinGuardar = true; }
         };

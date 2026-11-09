@@ -1,0 +1,9 @@
+<section class="bloque bloque--texto">
+  <div class="contenedor texto">
+    @if (s.antetitulo) { <p class="antetitulo">{{ s.antetitulo }}</p> }
+    @if (s.titulo) { <h2 class="texto__titulo">{{ s.titulo }}</h2> }
+    @if (s.subtitulo) { <p class="subtitulo-seccion">{{ s.subtitulo }}</p> }
+    @for (p of parrafos; track $index) { <p class="texto__parrafo">{{ p }}</p> }
+    @if (s.enlace) { <pp-enlace [url]="s.enlace.url" clase="enlace-flecha">{{ s.enlace.texto }} →</pp-enlace> }
+  </div>
+</section>

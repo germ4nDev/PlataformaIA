@@ -1,5 +1,6 @@
 // Angular Import
 import { Component, Input, OnDestroy, Inject, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 
@@ -8,6 +9,8 @@ import { Spinkit } from './spinkits';
 
 @Component({
   selector: 'app-spinner',
+  standalone: true, // OT-023 fase 5 (regla 21)
+  imports: [CommonModule],
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.scss', './spinkit-css/sk-line-material.scss'],
   encapsulation: ViewEncapsulation.None

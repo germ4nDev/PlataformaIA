@@ -1,0 +1,35 @@
+<section class="bloque bloque--app" [attr.id]="ancla" tabindex="-1">
+  <div class="contenedor">
+    <div class="app">
+      <div class="app__texto">
+        @if (s.antetitulo) { <p class="antetitulo">{{ s.antetitulo }}</p> }
+        @if (s.titulo) { <h2 class="titulo-seccion">{{ s.titulo }}</h2> }
+        @if (s.subtitulo) { <p class="subtitulo-seccion">{{ s.subtitulo }}</p> }
+        <pp-tiendas [config]="config" />
+        @if (s.cuerpo) { <p class="app__nota">{{ s.cuerpo }}</p> }
+        @if (s.enlace) { <pp-enlace [url]="s.enlace.url" clase="boton boton--secundario">{{ s.enlace.texto }}</pp-enlace> }
+      </div>
+      <div class="app__telefono" aria-hidden="true">
+        <div class="telefono">
+          <span class="telefono__barra"></span>
+          <span class="telefono__kpi"></span><span class="telefono__kpi"></span>
+          <span class="telefono__grafica"></span>
+          <span class="telefono__lista"></span>
+          <span class="telefono__menu"><i></i><i></i><i></i><i></i></span>
+        </div>
+      </div>
+    </div>
+    @if (s.elementos.length) {
+      <div class="rejilla rejilla--ventajas">
+        @for (e of s.elementos; track $index) {
+          <article class="tarjeta tarjeta--ventaja" [class.tarjeta--proxima]="!!e.valor" [style.--acento]="e.color || null">
+            @if (e.icono) { <span class="tarjeta__icono"><pp-icono [nombre]="e.icono" /></span> }
+            @if (e.valor) { <p class="tarjeta__etiqueta">{{ e.valor }}</p> }
+            @if (e.titulo) { <h3 class="tarjeta__titulo">{{ e.titulo }}</h3> }
+            @if (e.texto) { <p class="tarjeta__texto">{{ e.texto }}</p> }
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
