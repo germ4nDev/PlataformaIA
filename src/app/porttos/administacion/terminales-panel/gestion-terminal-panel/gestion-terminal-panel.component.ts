@@ -208,7 +208,7 @@ export class GestionTerminalPanelComponent implements OnInit {
                     if (resp.ok) {
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('TerminalS.CREATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/terminales-panel'])
+                        this.router.navigate(['/porttos/terminales-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -230,7 +230,7 @@ export class GestionTerminalPanelComponent implements OnInit {
                     if (resp.ok) {
                         form.resetForm()
                         this._swalService.getAlertSuccess(this.translate.instant('TerminalS.UPDATESUCCSESSFULLY'))
-                        this.router.navigate(['/tablero-control/terminales-panel'])
+                        this.router.navigate(['/porttos/terminales-panel'])
                     }
                 },
                 error: (err: any) => {
@@ -248,7 +248,7 @@ export class GestionTerminalPanelComponent implements OnInit {
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/tablero-control/terminales-panel'])
+        this.router.navigate(['porttos/terminales-panel'])
     }
 
     navMobClick() {

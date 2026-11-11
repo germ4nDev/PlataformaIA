@@ -13,31 +13,51 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.NEW_INFRASTRUCTURE_TYPE' | translate }}
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{
+                                'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.NEW_INFRASTRUCTURE_TYPE' | translate
+                                }}</span>
+                            <span *ngIf="modoEdicion">{{
+                                'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.EDIT_INFRASTRUCTURE_TYPE' |
+                                translate }}</span>
+                            <span class="titulo-container"> -
+                                {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.INFRASTRUCTURE_TYPE_MANAGEMENT' |
+                                translate
+                                }}</span>
                         </h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.EDIT_INFRASTRUCTURE_TYPE' | translate }}
-                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'PPORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.INFRASTRUCTURE_TYPE_DETAILS'
+                            | translate
+                            }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.CREATE_INFRASTRUCTURE_TYPE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.CREATE_INFRASTRUCTURE_TYPE' |
+                            translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.EDIT_INFRASTRUCTURE_TYPE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.EDIT_INFRASTRUCTURE_TYPE' |
+                            translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
 
             <div class="card-body form-scroll-wrapper">
@@ -50,8 +70,7 @@
                                     }}</label>
 
                                 <input class="form-control form-input" id="codigo_tipo" name="codigo_tipo" type="text"
-                                    placeholder="{{ 'COMMON.NAME' | translate }}"
-                                    (input)="onVerificarTipo($event)"
+                                    placeholder="{{ 'COMMON.NAME' | translate }}" (input)="onVerificarTipo($event)"
                                     [ngClass]="{ 'is-invalid': (!codigo_tipo.valid && (codigo_tipo.dirty || codigo_tipo.touched || isSubmit)) || codigo_tipoDuplicado }"
                                     #codigo_tipo="ngModel" required [(ngModel)]="FormRegistro.codigo_tipo" />
 
@@ -74,8 +93,7 @@
                                     }}</label>
 
                                 <input class="form-control form-input" id="nombre" name="nombre" type="text"
-                                    placeholder="{{ 'COMMON.NAME' | translate }}"
-                                    (input)="onVerificarNombre($event)"
+                                    placeholder="{{ 'COMMON.NAME' | translate }}" (input)="onVerificarNombre($event)"
                                     [ngClass]="{ 'is-invalid': (!nombre.valid && (nombre.dirty || nombre.touched || isSubmit)) || nombreDuplicado }"
                                     #nombre="ngModel" required [(ngModel)]="FormRegistro.nombre" />
 
@@ -112,7 +130,9 @@
                                 <label
                                     *ngIf="!descripcion.valid && (descripcion.dirty || descripcion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.INFRASTRUCTURE_TYPE_DESCRIPTION' | translate }}
+                                    {{
+                                    'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.INFRASTRUCTURE_TYPE_DESCRIPTION'
+                                    | translate }}
                                 </label>
                             </div>
                         </div>

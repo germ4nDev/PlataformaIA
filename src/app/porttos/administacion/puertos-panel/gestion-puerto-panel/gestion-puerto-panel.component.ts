@@ -31,13 +31,13 @@ import { ColorSelectorComponent } from "src/app/theme/shared/components/color-se
 // import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 
 @Component({
-    selector: 'app-gestion-aplicacion',
+    selector: 'app-gestion-puerto-panel',
     standalone: true,
     imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent, MapaSelectorComponent, ColorSelectorComponent],
-    templateUrl: './gestion-pueerto-panel.component.html',
-    styleUrl: './gestion-pueerto-panel.component.scss'
+    templateUrl: './gestion-puerto-panel.component.html',
+    styleUrl: './gestion-puerto-panel.component.scss'
 })
-export class GestionPueertoPanelComponent implements OnInit {
+export class GestionPuertoPanelComponent implements OnInit {
     @Output() toggleSidebar = new EventEmitter<void>()
     FormRegistro: Puerto = new Puerto()
     puerto: Puerto = new Puerto()

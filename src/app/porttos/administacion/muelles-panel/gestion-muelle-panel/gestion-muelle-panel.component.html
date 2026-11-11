@@ -13,13 +13,28 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.NEW_BERTH' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.EDIT_BERTH' | translate }}</h4>
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.NEW_BERTH' | translate
+                                }}</span>
+                            <span *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.EDIT_BERTH' |
+                                translate }}</span>
+                            <span class="titulo-container"> -
+                                {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.BERTH_MANAGEMENT' | translate
+                                }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.BERTH_DETAILS' | translate
+                            }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
@@ -36,29 +51,8 @@
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
-
-            <!--
-
-            public id_interno?: string,
-        public id_terminal?: string,
-        public codigo_muelle?: string,
-        public db_id_origen?: string,
-        public especialidad?: string,
-        public calado_metros?: number,
-        public capacidad_reefer?: string,
-        public estado_mantenimiento?: boolean,
-        public geocerca_geo?: any,
-        public descripcion?: string,
-        public activo?: boolean,
-        public puerto?: string,
-        public terminal?: string,
-        public nomEstado?: string,
-        public nomMantenimiento?: string,
-        public usuario_cargue?: string,
-        public fecha_cargue?: string,
-
-        -->
 
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
@@ -68,7 +62,8 @@
                                 <label class="form-control-label" for="puerto"> {{ 'COMMON.PORT'
                                     | translate }}</label>
                                 <select (change)="onPuertoChange($event)" class="form-control form-select">
-                                    <option value="">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.SELECT_PORT' | translate }}</option>
+                                    <option value="">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.SELECT_PORT' |
+                                        translate }}</option>
                                     <option [value]="app.id_puerto" *ngFor="let app of puertos">
                                         {{ app.nombre }}
                                     </option>
@@ -120,7 +115,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="db_id_origen">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.SOURCE_ID' |
+                                <label class="form-control-label" for="db_id_origen">{{
+                                    'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.SOURCE_ID' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="db_id_origen" name="db_id_origen" type="text"
                                     placeholder="{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.BERTH_ID_IN_DATA_SOURCE' | translate }}"
@@ -129,16 +125,19 @@
                                 <label
                                     *ngIf="!db_id_origen.valid && (db_id_origen.dirty || db_id_origen.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.ENTER_SOURCE_ID_FIELD_REQUIRED' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.ENTER_SOURCE_ID_FIELD_REQUIRED' |
+                                    translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="calado_metros">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.DRAFT_M' |
+                                <label class="form-control-label" for="calado_metros">{{
+                                    'PORTTOS.ADMINISTACION.MUELLES_PANEL.DRAFT_M' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="calado_metros" name="calado_metros"
-                                    type="number" placeholder="{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.DRAFT_IN_METERS' | translate }}"
+                                    type="number"
+                                    placeholder="{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.DRAFT_IN_METERS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !calado_metros.valid && (calado_metros.dirty || calado_metros.touched || isSubmit) }"
                                     #calado_metros="ngModel" required [(ngModel)]="FormRegistro.calado_metros" />
                                 <label
@@ -159,7 +158,8 @@
                                 <label
                                     *ngIf="!especialidad.valid && (especialidad.dirty || especialidad.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.ENTER_SPECIALTY_FIELD_REQUIRED' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.ENTER_SPECIALTY_FIELD_REQUIRED' |
+                                    translate }}
                                 </label>
                             </div>
                         </div>
@@ -177,13 +177,14 @@
 
                                 <label *ngIf="!FormRegistro.geocerca_geo && isSubmit"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.DRAW_BERTH_GEOFENCE_ON_MAP_FIELD' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.DRAW_BERTH_GEOFENCE_ON_MAP_FIELD' |
+                                    translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'COMMON.TEXT_COLOR' | translate
+                                <label class="form-control-label">{{ 'COMMON.GEOFENCE_COLOR' | translate
                                     }}</label>
                                 <app-color-selector [initialColor]="FormRegistro.color_ui" [id]="textoColor"
                                     (colorSelected)="OnColorSelectedClick($event)"></app-color-selector>
@@ -214,7 +215,9 @@
                                         <input name="estado_mantenimiento" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estado_mantenimiento" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.OPERATIONAL' | translate }}</span>
+                                        <span class="radio-label">{{
+                                            'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.OPERATIONAL' | translate
+                                            }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estado_mantenimiento" type="radio" [value]="false"

@@ -49,8 +49,8 @@ const routes: Routes = [
             },
             {
                 path: 'gestion-puerto-panel',
-                loadComponent: () => import('./administacion/puertos-panel/gestion-pueerto-panel/gestion-pueerto-panel.component')
-                    .then(c => c.GestionPueertoPanelComponent),
+                loadComponent: () => import('./administacion/puertos-panel/gestion-puerto-panel/gestion-puerto-panel.component')
+                    .then(c => c.GestionPuertoPanelComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
@@ -143,6 +143,13 @@ const routes: Routes = [
                 path: 'gestion-tipo-infraestructura',
                 loadComponent: () => import('./administacion/tipos-infraestructura-panel/gestion-tipo-infraestructura/gestion-tipo-infraestructura.component')
                     .then(c => c.GestionTipoInfraestructuraComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'reglas-alertas',
+                loadComponent: () => import('./administacion/reglas-alertas-panel/reglas-alertas-panel.component')
+                    .then(c => c.ReglasAlertasPanelComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             }

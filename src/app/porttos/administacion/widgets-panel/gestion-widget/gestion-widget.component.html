@@ -13,44 +13,48 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'COMMON.NEW_WIDGET' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'COMMON.UPDATE' | translate }}</h4>
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'COMMON.NEW_WIDGET' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'COMMON.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> -
+                                {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.WIDGET_MANAGEMENT' |
+                                translate
+                                }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.WIDGET_MANAGEMENT_DETAILS'
+                            | translate
+                            }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="btnCearWidgetClick(validationForm)">
-                            {{ 'COMMON.SAVE' | translate }}
+                            (click)="btnGestionarWidgetClick(validationForm)">
+                            {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.CREATE_INFRASTRUCTURE_TYPE' |
+                            translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarWidgetClick(validationForm)">
-                            {{ 'COMMON.UPDATE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.GESTION.EDIT_INFRASTRUCTURE_TYPE' |
+                            translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
-
-            <!-- codigo_widget: string;
-    nombre: string; ---
-    descripcion: string; ----
-    categoria: string; ----
-    componente_angular: string; ====
-    cols_defecto: string; ====
-    rows_defecto: string; ====
-    thumbnail_url: string;
-    captura: string;
-    nomEstado: string;
-    activo: boolean;
-    usuario_cargue: string;
-    fecha_cargue: string;  -->
 
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
@@ -93,7 +97,8 @@
                                     #categoria="ngModel" required [(ngModel)]="FormRegistro.categoria" />
                                 <label *ngIf="!categoria.valid && (categoria.dirty || categoria.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.SELECT_CATEGORY_FIELD_REQUIRED' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.SELECT_CATEGORY_FIELD_REQUIRED' |
+                                    translate }}
                                 </label>
                             </div>
                         </div>
@@ -118,7 +123,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="componente_angular">{{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.COMPONENT' |
+                                <label class="form-control-label" for="componente_angular">{{
+                                    'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.COMPONENT' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="componente_angular" name="componente_angular"
                                     type="text" placeholder="{{ 'COMMON.TRANSLATION_KEY' | translate }}"
@@ -128,13 +134,15 @@
                                 <label
                                     *ngIf="!componente_angular.valid && (componente_angular.dirty || componente_angular.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.ENTER_COMPONENT_FIELD_REQUIRED' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.ENTER_COMPONENT_FIELD_REQUIRED' |
+                                    translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="cols_defecto">{{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.DEFAULT_COLUMNS' |
+                                <label class="form-control-label" for="cols_defecto">{{
+                                    'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.DEFAULT_COLUMNS' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="cols_defecto" name="cols_defecto"
                                     type="number" placeholder="{{ 'COMMON.TRANSLATION_KEY' | translate }}"
@@ -143,13 +151,15 @@
                                 <label
                                     *ngIf="!cols_defecto.valid && (cols_defecto.dirty || cols_defecto.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.ENTER_COLUMNS_FIELD_REQUIRED' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.ENTER_COLUMNS_FIELD_REQUIRED' |
+                                    translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="rows_defecto">{{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.DEFAULT_ROWS' |
+                                <label class="form-control-label" for="rows_defecto">{{
+                                    'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.DEFAULT_ROWS' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="rows_defecto" name="rows_defecto"
                                     type="number" placeholder="{{ 'COMMON.TRANSLATION_KEY' | translate }}"
@@ -158,7 +168,8 @@
                                 <label
                                     *ngIf="!rows_defecto.valid && (rows_defecto.dirty || rows_defecto.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.ENTER_ROWS_FIELD_REQUIRED' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.ENTER_ROWS_FIELD_REQUIRED' |
+                                    translate }}
                                 </label>
                             </div>
                         </div>

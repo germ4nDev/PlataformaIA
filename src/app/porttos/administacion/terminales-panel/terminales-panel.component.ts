@@ -230,17 +230,17 @@ export class TerminalesPanelComponent implements OnInit, OnDestroy {
         }
     ]
 
-    OnNuevaAplicaicionClick(): void {
+    OnNuevaRegistroClick(): void {
         this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['tablero-control/gestion-terminal-panel'])
+        this.router.navigate(['porttos/gestion-terminal-panel'])
     }
 
-    OnEditarAplicaicionClick(id: string): void {
+    OnEditarRegistroClick(id: string): void {
         this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tablero-control/gestion-terminal-panel'])
+        this.router.navigate(['porttos/gestion-terminal-panel'])
     }
 
-    OnEliminarAplicaicionClick(id: string): void {
+    OnEliminarRegistroClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
             title: this.translate.instant('COMMON.ARE_YOU_SURE'),

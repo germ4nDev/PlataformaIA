@@ -13,30 +13,47 @@
 
     <div class="form-area">
         <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.NEW_TERMINAL' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.EDIT_TERMINAL' | translate }}</h4>
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+
+                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.NEW_TERMINAL' |
+                                translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.EDIT_TERMINAL'
+                                | translate }}</span>
+                            <span class="titulo-container"> -
+                                {{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.TERMINAL_MANAGEMENT' | translate
+                                }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">
+                            {{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.TERMINAL_DETAILS' | translate
+                            }}
+                        </h6>
                     </div>
-                    <div class="d-flex">
+
+                    <!-- Bloque Derecho: Botones con Spinners -->
+                    <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.CREATE_TERMINAL' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.CREATE_BERTH' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.EDIT_TERMINAL' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.MUELLES_PANEL.GESTION.EDIT_BERTH' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
                 </div>
+                <hr class="mb-0"><br>
             </div>
+
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
@@ -89,7 +106,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="subtitulo">{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.SUBTITLE' |
+                                <label class="form-control-label" for="subtitulo">{{
+                                    'PORTTOS.ADMINISTACION.TERMINALES_PANEL.SUBTITLE' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="subtitulo" name="subtitulo" type="text"
                                     placeholder="{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.TERMINAL_SUBTITLE' | translate }}"
@@ -103,10 +121,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="unidad_medida">{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.UNIT_MEASURE' |
+                                <label class="form-control-label" for="unidad_medida">{{
+                                    'PORTTOS.ADMINISTACION.TERMINALES_PANEL.UNIT_MEASURE' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="unidad_medida" name="unidad_medida"
-                                    type="text" placeholder="{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.E_G_TEU_TONS' | translate }}"
+                                    type="text"
+                                    placeholder="{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.E_G_TEU_TONS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !unidad_medida.valid && (unidad_medida.dirty || unidad_medida.touched || isSubmit) }"
                                     #unidad_medida="ngModel" required [(ngModel)]="FormRegistro.unidad_medida" />
                                 <label
@@ -123,7 +143,8 @@
                                     |
                                     translate }}</label>
                                 <input class="form-control form-input" id="capacidad_reefer" name="capacidad_reefer"
-                                    type="number" placeholder="{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.REEFER_PLUGS' | translate }}"
+                                    type="number"
+                                    placeholder="{{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.REEFER_PLUGS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !capacidad_reefer.valid && (capacidad_reefer.dirty || capacidad_reefer.touched || isSubmit) }"
                                     #capacidad_reefer="ngModel" required [(ngModel)]="FormRegistro.capacidad_reefer" />
                                 <label
@@ -147,7 +168,9 @@
 
                                 <label *ngIf="!FormRegistro.geocerca_geo && isSubmit"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.DRAW_TERMINAL_GEOFENCE_ON_MAP_FIELD' | translate }}
+                                    {{
+                                    'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.DRAW_TERMINAL_GEOFENCE_ON_MAP_FIELD'
+                                    | translate }}
                                 </label>
                             </div>
                         </div>
@@ -172,7 +195,8 @@
                                 <label
                                     *ngIf="!descripcion.valid && (descripcion.dirty || descripcion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.TERMINAL_DESCRIPTION' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.GESTION.TERMINAL_DESCRIPTION' | translate
+                                    }}
                                 </label>
                             </div>
                         </div>

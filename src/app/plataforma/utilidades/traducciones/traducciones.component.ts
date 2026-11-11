@@ -44,6 +44,7 @@ export class TraduccionesComponent implements OnInit {
     sinSembrar: string[] = [];
     filas: FilaTraduccion[] = [];
     columnas: ColumnMetadata[] = [];
+    columnasDetail: ColumnMetadata[] = [];
     cargando = true;
 
     private readonly filas$ = new BehaviorSubject<FilaTraduccion[]>([]);
@@ -58,7 +59,7 @@ export class TraduccionesComponent implements OnInit {
         private readonly navegacion: NavigationService,
         private readonly avisos: SwalAlertService,
         private readonly traducciones: PtlTraduccionesService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.navegacion.getNavigationItems();
@@ -88,9 +89,11 @@ export class TraduccionesComponent implements OnInit {
                 this.modulos = r.ramas.map((x) => x.modulo).sort();
                 this.filas = r.filas;
                 this.columnas = [
-                    { name: 'llave', header: 'UTILIDADES.TRADUCCIONES.KEY', type: 'text' },
                     ...this.idiomas.map((i) => ({ name: `texto_${i}`, header: i.toUpperCase(), type: 'text' })),
                     { name: 'nomEstado', header: 'UTILIDADES.TRADUCCIONES.USAGE', type: 'text' }
+                ] as ColumnMetadata[];
+                this.columnasDetail = [
+                    { name: 'llave', header: 'UTILIDADES.TRADUCCIONES.KEY', type: 'text' }
                 ] as ColumnMetadata[];
                 this.filas$.next(this.filas);
                 this.cargando = false;
@@ -102,6 +105,15 @@ export class TraduccionesComponent implements OnInit {
             }
         });
     }
+
+    columnasDetailRegistros: ColumnMetadata[] = [
+        { name: 'codigoPaquete', header: 'COMMON.CODE', type: 'text' },
+        { name: 'precioPromocion', header: 'PAQUETES.PROMOTIONAL_PRICE', type: 'price' },
+        { name: 'descripcionPaquete', header: 'COMMON.DESCRIPTION', type: 'text' },
+        { name: 'acuerdoLicencia', header: 'PAQUETES.LICENSE_AGREEMENT', type: 'text' },
+        { name: 'iconoPaquete', header: 'COMMON.ICON', type: 'avatar' },
+        { name: 'imagenPaquete', header: 'COMMON.IMAGE', type: 'image' }
+    ];
 
     /** Idiomas que trae la web y el API todavía no tiene (producción recién desplegada). */
     revisarSembrado(): void {

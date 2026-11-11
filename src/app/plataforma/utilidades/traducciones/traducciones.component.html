@@ -27,18 +27,34 @@
                     <input type="text" class="form-control form-input" (keyup)="alFiltrarTexto($event)"
                         [placeholder]="'UTILIDADES.TRADUCCIONES.KEY_OR_TEXT' | translate" />
                 </div>
-                <div class="filtro form-check">
-                    <input id="sinTraduccion" type="checkbox" class="form-check-input"
+                <div class="checkbox-container custom-check-form">
+                    <input id="sinTraduccion" type="checkbox" class="custom-checkbox"
                         (change)="alFiltrarSinTraduccion($event)" />
-                    <label for="sinTraduccion" class="form-check-label">{{ 'UTILIDADES.TRADUCCIONES.ONLY_THOSE_MISSING_LANGUAGE' |
+                    <label for="sinTraduccion" class="form-check-label">{{
+                        'UTILIDADES.TRADUCCIONES.ONLY_THOSE_MISSING_LANGUAGE' |
                         translate }}</label>
                 </div>
-                <div class="filtro">
+                <!-- <div class="filtro">
                     <small>{{ 'UTILIDADES.TRADUCCIONES.DOWNLOAD_JSON' | translate }}</small>
                     <div class="d-flex gap-2 flex-wrap">
                         @for (i of idiomas; track i) {
-                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="descargar(i)">{{ i +
-                            '.json' }}</button>
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro"
+                                    (click)="descargar(i)">{{ i
+                                    +
+                                    '.json' }}</button>
+                        }
+                    </div>
+                </div> -->
+                <div class="filtro">
+                    <small>{{ 'UTILIDADES.TRADUCCIONES.DOWNLOAD_JSON' | translate }}</small>
+                    <!-- flex-nowrap prohíbe estrictamente el salto de línea -->
+                    <div class="d-flex flex-nowrap gap-2 mt-2">
+                        @for (i of idiomas; track i) {
+                        <!-- m-0 elimina el margin-left rebelde, px-3 reduce ligeramente el padding ancho -->
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro m-0 px-3 w-100"
+                            (click)="descargar(i)">
+                            {{ i + '.json' }}
+                        </button>
                         }
                     </div>
                 </div>
@@ -49,7 +65,8 @@
     <div class="content-area">
         @if (sinSembrar.length) {
         <div class="alert alert-warning d-flex align-items-center gap-2 flex-wrap">
-            <span>{{ 'UTILIDADES.TRADUCCIONES.API_DOES_NOT_HAVE_LANGUAGES_YET' | translate: { idiomas: sinSembrar.join(', ') } }}</span>
+            <span>{{ 'UTILIDADES.TRADUCCIONES.API_DOES_NOT_HAVE_LANGUAGES_YET' | translate: { idiomas:
+                sinSembrar.join(', ') } }}</span>
             @for (i of sinSembrar; track i) {
             <button *appPermiso="'ACT_TRAD_MODIFICAR'" type="button" class="btn btn-sm btn-warning"
                 (click)="sembrar(i)">
@@ -62,13 +79,14 @@
             <div class="card-body">
                 @if (!cargando) {
                 <app-table-data [data]="(filtradas$ | async) || []" [idField]="'llave'"
-                    [tableTitle]="'UTILIDADES.TRADUCCIONES.TRANSLATIONS' | translate"
-                    [tableSubtitle]="'UTILIDADES.TRADUCCIONES.LANGUAGE_KEYS_MODULE_SUBMODULE_KEY' | translate" [metadataColumns]="columnas"
-                    [showActions]="true" [showNewButton]="true" [showEditButton]="true" [showDeleteButton]="true"
-                    [showSearchBox]="false" [newButtonLabel]="'UTILIDADES.TRADUCCIONES.NEW_KEY' | translate"
-                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nueva()" (editRecord)="editar($event)"
-                    (deleteRecord)="eliminar($event)" permisoNew="ACT_TRAD_CREAR" permisoEdit="ACT_TRAD_MODIFICAR"
-                    permisoDelete="ACT_TRAD_ELIMINAR">
+                    [tableTitle]="'UTILIDADES.TRADUCCIONES.TRANSLATIONS' | translate" [showDetail]="true"
+                    [tableSubtitle]="'UTILIDADES.TRADUCCIONES.LANGUAGE_KEYS_MODULE_SUBMODULE_KEY' | translate"
+                    [metadataColumns]="columnas" [metadataDetailColumns]="columnasDetail" [showActions]="true"
+                    [showNewButton]="true" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
+                    [newButtonLabel]="'UTILIDADES.TRADUCCIONES.NEW_KEY' | translate"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nueva()"
+                    (editRecord)="editar($event)" (deleteRecord)="eliminar($event)" permisoNew="ACT_TRAD_CREAR"
+                    permisoEdit="ACT_TRAD_MODIFICAR" permisoDelete="ACT_TRAD_ELIMINAR">
                 </app-table-data>
                 } @else {
                 <app-data-loader [isLoading]="true"
