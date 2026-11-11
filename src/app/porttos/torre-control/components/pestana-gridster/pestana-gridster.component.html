@@ -5,19 +5,19 @@
 <div class="dashboard-wrapper w-100 h-100 position-relative">
     <div *ngIf="cargando" class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5">
         <div class="spinner-border text-info mb-2" role="status"></div>
-        <span class="text-muted small">{{ 'PORTTOS.PESTANA_GRIDSTER.CONSTRUYENDO_TABLERO_DE' | translate: { p0: nombrePestana, p1: puerto } }}</span>
+        <span class="text-muted small">{{ 'PORTTOS.TORRE_CONTROL.COMPONENTS.PESTANA_GRIDSTER.BUILDING_P0_DASHBOARD_P1' | translate: { p0: nombrePestana, p1: puerto } }}</span>
     </div>
 
     <div *ngIf="!cargando && !dashboard.length"
         class="d-flex flex-column justify-content-center align-items-center w-100 h-100 py-5 text-muted">
         <i class="fs-1 mb-2 opacity-50" [ngClass]="iconoVacio"></i>
         <ng-container *ngIf="ocultosPorPermiso.length; else sinConfigurar">
-            <p class="mb-0">{{ 'PORTTOS.PESTANA_GRIDSTER.SIN_WIDGETS_ASIGNADOS_A_TU' | translate: { p0: nombrePestana } }}</p>
-            <small>{{ 'PORTTOS.PESTANA_GRIDSTER.PIDE_AL_ADMINISTRADOR_QUE_LOS' | translate }}</small>
+            <p class="mb-0">{{ 'PORTTOS.TORRE_CONTROL.COMPONENTS.PESTANA_GRIDSTER.NO_WIDGETS_ASSIGNED_YOUR_ROLE_IN' | translate: { p0: nombrePestana } }}</p>
+            <small>{{ 'PORTTOS.TORRE_CONTROL.COMPONENTS.PESTANA_GRIDSTER.ASK_ADMINISTRATOR_ASSIGN_THEM_IN_UTILITIES' | translate }}</small>
         </ng-container>
         <ng-template #sinConfigurar>
-            <p class="mb-0">{{ 'PORTTOS.PESTANA_GRIDSTER.NO_HAY_WIDGETS_CONFIGURADOS_PARA' | translate: { p0: nombrePestana, p1: pestanaActiva } }}</p>
-            <small>{{ 'PORTTOS.PESTANA_GRIDSTER.AGREGALOS_DESDE_EL_CATALOGO_DE' | translate }}</small>
+            <p class="mb-0">{{ 'PORTTOS.TORRE_CONTROL.COMPONENTS.PESTANA_GRIDSTER.NO_WIDGETS_CONFIGURED_P0_TAB_P1' | translate: { p0: nombrePestana, p1: pestanaActiva } }}</p>
+            <small>{{ 'PORTTOS.TORRE_CONTROL.COMPONENTS.PESTANA_GRIDSTER.ADD_THEM_FROM_WIDGET_CATALOG_OR' | translate }}</small>
         </ng-template>
     </div>
 
@@ -30,7 +30,7 @@
                 <div class="pendiente-registro d-flex flex-column justify-content-center align-items-center w-100 h-100 p-3 text-muted rounded">
                     <i class="feather icon-alert-circle text-warning fs-3 mb-2"></i>
                     <span class="fw-bold small">{{ w.type }}</span>
-                    <small class="text-center mt-1">{{ 'PORTTOS.PESTANA_GRIDSTER.WIDGET_PENDIENTE_DE_REGISTRO_EN' | translate }} <code>WIDGET_MAP</code></small>
+                    <small class="text-center mt-1">{{ 'PORTTOS.TORRE_CONTROL.COMPONENTS.PESTANA_GRIDSTER.WIDGET_PENDING_REGISTRATION_IN' | translate }} <code>WIDGET_MAP</code></small>
                 </div>
             </ng-template>
         </gridster-item>

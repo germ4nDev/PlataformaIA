@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="(configData?.titulo | translate) || ('PORTTOS.TABLE_BODEGAS.MOVIMIENTOS_Y_TRAZABILIDAD_DE_LOTES' | translate)"
-    [subtitulo]="(configData?.subtitulo | translate) || ('PORTTOS.TABLE_BODEGAS.CONTROL_DE_RECIBO_DESDE_BUQUE' | translate)"
+<app-widget-shell [titulo]="(configData?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.WAREHOUSE_LOT_MOVEMENTS_TRACEABILITY' | translate)"
+    [subtitulo]="(configData?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.CONTROL_RECEIPT_FROM_SHIP_STORAGE_LAND' | translate)"
     [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="isEnfoque ? (origenRango || configData?.origen) : configData?.origen">
 
     <!-- PROYECCIÓN AL HEADER -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase">
-            {{ 'PORTTOS.TABLE_BODEGAS.LOTES' | translate: { p0: movimientos.length } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.LOTS_P0' | translate: { p0: movimientos.length } }}
         </span>
     </div>
 
@@ -17,14 +17,14 @@
                 <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
                     <tr class="text-muted font-weight-bold text-uppercase"
                         style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <th style="width: 12%;" class="pb-2">{{ 'PORTTOS.TABLE_BODEGAS.LOTE_BL' | translate }}</th>
-                        <th style="width: 18%;" class="pb-2">{{ 'PORTTOS.TABLE_BODEGAS.BODEGA_SILO' | translate }}</th>
-                        <th style="width: 15%;" class="pb-2">{{ 'PORTTOS.TABLE_BODEGAS.PRODUCTO' | translate }}</th>
-                        <th style="width: 15%;" class="pb-2">{{ 'PORTTOS.COMUN.OPERACION' | translate }}</th>
-                        <th style="width: 11%;" class="pb-2 text-end">{{ 'PORTTOS.TABLE_BODEGAS.TONELADAS' | translate }}</th>
-                        <th style="width: 14%;" class="pb-2">{{ 'PORTTOS.TABLE_BODEGAS.CLIENTE' | translate }}</th>
-                        <th style="width: 6%;" class="pb-2 text-center">{{ 'PORTTOS.TABLE_BODEGAS.ESTADIA' | translate }}</th>
-                        <th style="width: 9%; text-align: right;" class="pb-2">{{ 'PORTTOS.COMUN.ESTADO' | translate }}</th>
+                        <th style="width: 12%;" class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.LOT_BL' | translate }}</th>
+                        <th style="width: 18%;" class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.WAREHOUSE_SILO' | translate }}</th>
+                        <th style="width: 15%;" class="pb-2">{{ 'PORTTOS.WIDGETS.PRODUCT' | translate }}</th>
+                        <th style="width: 15%;" class="pb-2">{{ 'PORTTOS.WIDGETS.OPERATION' | translate }}</th>
+                        <th style="width: 11%;" class="pb-2 text-end">{{ 'COMMON.TONS' | translate }}</th>
+                        <th style="width: 14%;" class="pb-2">{{ 'PORTTOS.WIDGETS.CUSTOMER' | translate }}</th>
+                        <th style="width: 6%;" class="pb-2 text-center">{{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.STAY' | translate }}</th>
+                        <th style="width: 9%; text-align: right;" class="pb-2">{{ 'COMMON.STATUS' | translate }}</th>
                     </tr>
                 </thead>
 
@@ -33,7 +33,7 @@
                     <tr *ngIf="cargando">
                         <td colspan="8" class="text-center text-muted py-5">
                             <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
-                            {{ 'PORTTOS.TABLE_BODEGAS.CONSULTANDO_LOTES_ALMACENADOS_EN_BODEGA' | translate }}
+                            {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.CHECKING_LOTS_STORED_IN_WAREHOUSES' | translate }}
                         </td>
                     </tr>
 
@@ -64,7 +64,7 @@
                         <tr *ngIf="movimientos.length === 0">
                             <td colspan="8" class="text-center text-muted py-5">
                                 <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                                {{ 'PORTTOS.TABLE_BODEGAS.NO_HAY_LOTES_NI_MOVIMIENTOS' | translate }}
+                                {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.NO_LOTS_OR_WAREHOUSE_MOVEMENTS_REGISTERED' | translate }}
                             </td>
                         </tr>
                     </ng-container>
@@ -77,7 +77,7 @@
     <!-- Vista ampliada: todos los movimientos del rango, con búsqueda, orden y CSV (reemplaza la tabla del tablero) -->
     <div detalle-enfoque *ngIf="isEnfoque" class="detalle h-100" style="min-height: 440px;">
         <div class="detalle-cabecera">
-            <h6 class="detalle-titulo">{{ 'PORTTOS.TABLE_BODEGAS.MOVIMIENTOS_DE_LOS_ULTIMOS_DIAS' | translate: { p0: dias } }}</h6>
+            <h6 class="detalle-titulo">{{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.MOVEMENTS_IN_LAST_P0_DAYS' | translate: { p0: dias } }}</h6>
             <app-rango-tcl [opciones]="rangosDias" [valor]="dias" (cambio)="cambiarDias($event)"></app-rango-tcl>
         </div>
         <p *ngIf="notaRango" class="detalle-ayuda">{{ notaRango }}</p>

@@ -1,15 +1,15 @@
 <app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || 'OCUPACIÓN DE MUELLES'"
-    [subtitulo]="('PORTTOS.OCUPACION_MUELLES.ATRAQUES_EN_TIEMPO_REAL_AIS' | translate) + puerto" icono="feather icon-grid"
+    [subtitulo]="('PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.REAL_TIME_BERTHINGS_AIS_GEOFENCES' | translate) + puerto" icono="feather icon-grid"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origenVivo">
 
     <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
-        <span class="tc-badge badge-primary">{{ 'PORTTOS.OCUPACION_MUELLES.OCUPADOS' | translate: { p0: datos.resumen.ocupados } }}</span>
-        <span class="tc-badge badge-success">{{ 'PORTTOS.OCUPACION_MUELLES.LIBRES' | translate: { p0: datos.resumen.disponibles } }}</span>
-        <span *ngIf="datos.resumen.enMantenimiento" class="tc-badge badge-secondary">{{ 'PORTTOS.OCUPACION_MUELLES.MANT' | translate: { p0: datos.resumen.enMantenimiento } }}</span>
+        <span class="tc-badge badge-primary">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.P0_OCCUPIED' | translate: { p0: datos.resumen.ocupados } }}</span>
+        <span class="tc-badge badge-success">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.P0_FREE' | translate: { p0: datos.resumen.disponibles } }}</span>
+        <span *ngIf="datos.resumen.enMantenimiento" class="tc-badge badge-secondary">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.P0_MAINT' | translate: { p0: datos.resumen.enMantenimiento } }}</span>
     </div>
 
     <div *ngIf="cargando" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted">
-        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> {{ 'PORTTOS.OCUPACION_MUELLES.CRUZANDO_ATRAQUES_CON_MUELLES' | translate }}
+        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.MATCHING_BERTHINGS_WITH_BERTHS' | translate }}
     </div>
     <div *ngIf="!cargando && error && !datos"
         class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
@@ -17,7 +17,7 @@
     </div>
     <div *ngIf="datos && datos.terminales.length === 0"
         class="d-flex flex-column justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
-        <i class="feather icon-map fs-3 mb-2 opacity-50"></i>{{ 'PORTTOS.OCUPACION_MUELLES.NO_HAY_MUELLES_REGISTRADOS_PARA' | translate }}
+        <i class="feather icon-map fs-3 mb-2 opacity-50"></i>{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.NO_BERTHS_REGISTERED_PORT' | translate }}
     </div>
 
     <div *ngIf="datos && datos.terminales.length > 0" class="mv-lista h-100">
@@ -34,15 +34,15 @@
                     <span *ngIf="m.ocupado && m.naves.length > 0" class="mv-muelle-nave text-truncate">
                         {{ m.naves[0].nombre || m.naves[0].mmsi }} · {{ duracion(m.naves[0].minutos) }}
                     </span>
-                    <span *ngIf="!m.ocupado && !m.enMantenimiento" class="mv-muelle-nave">{{ 'PORTTOS.OCUPACION_MUELLES.LIBRE' | translate }}</span>
+                    <span *ngIf="!m.ocupado && !m.enMantenimiento" class="mv-muelle-nave">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.FREE' | translate }}</span>
                 </div>
             </div>
             <div *ngIf="t.navesSinMuelle.length > 0" class="mv-pie mt-1 mv-subtitulo-valor">
-                {{ 'PORTTOS.OCUPACION_MUELLES.ATRACADA_S_EN_LA_TERMINAL' | translate: { p0: t.navesSinMuelle.length } }}
+                {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.P0_BERTHED_AT_TERMINAL_WITH_NO' | translate: { p0: t.navesSinMuelle.length } }}
             </div>
         </div>
         <div *ngIf="datos.navesSinTerminal.length > 0" class="mv-pie mv-subtitulo-valor">
-            {{ 'PORTTOS.OCUPACION_MUELLES.ATRACADA_S_FUERA_DE_TERMINALES' | translate: { p0: datos.navesSinTerminal.length } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.P0_BERTHED_OUTSIDE_TERMINALS_WITH_GEOFENCE' | translate: { p0: datos.navesSinTerminal.length } }}
         </div>
     </div>
     <!-- Vista ampliada: tabla por muelle (reemplaza los bloques del tablero) -->

@@ -28,14 +28,14 @@
             zona del puerto</small>
     </ng-container>
 </div> -->
-<div class="embudo-cargando" *ngIf="cargando && !embudo">{{ 'PORTTOS.EMBUDO_LLEGADA.CALCULANDO_EMBUDO' | translate }}</div>
+<div class="embudo-cargando" *ngIf="cargando && !embudo">{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EMBUDO_LLEGADA.CALCULATING_FUNNEL' | translate }}</div>
 
 <ng-container *ngIf="embudo">
     <!-- Alertas superiores limpias -->
-    <div class="alerta-plana" *ngIf="!embudo.aisDisponible">{{ 'PORTTOS.EMBUDO_LLEGADA.SIN_DATOS_AIS_DEL_PUERTO' | translate }}</div>
-    <div class="alerta-plana" *ngIf="!embudo.avisosDisponibles">{{ 'PORTTOS.EMBUDO_LLEGADA.SIN_AVISOS_DIMAR_LA_ETAPA' | translate }}</div>
+    <div class="alerta-plana" *ngIf="!embudo.aisDisponible">{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EMBUDO_LLEGADA.NO_AIS_DATA_PORT_ONLY_DIMAR' | translate }}</div>
+    <div class="alerta-plana" *ngIf="!embudo.avisosDisponibles">{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EMBUDO_LLEGADA.NO_DIMAR_NOTICES_NOTIFIED_STAGE_STAYS' | translate }}</div>
     <div class="alerta-plana nivel-error" *ngIf="embudo.criticas.naves > 0">
-        {{ 'PORTTOS.EMBUDO_LLEGADA.NAVE_EN_ESTADO_CRITICO' | translate: { p0: embudo.criticas.naves, p1: embudo.criticas.naves === 1 ? '' : 's' } }}
+        {{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EMBUDO_LLEGADA.P0_SHIP_P1_IN_CRITICAL_STATUS' | translate: { p0: embudo.criticas.naves, p1: embudo.criticas.naves === 1 ? '' : 's' } }}
     </div>
     <div class="alerta-plana nivel-warning" *ngIf="embudo.cuelloDeBotella">
         ⚠ {{ (embudo.cuelloDeBotella.texto | translate) }}
@@ -45,7 +45,7 @@
     <div class="lista-plana">
         <button type="button" class="item-plano" *ngFor="let e of embudo.etapas; trackBy: trackEtapa"
             [class.activo]="etapaActiva === e.codigo" [class.cuello]="esCuello(e)" (click)="elegir(e)"
-            [title]="(e.descripcion | translate) + (e.naves ? ('PORTTOS.EMBUDO_LLEGADA.CLIC_PARA_VERLAS' | translate) : '')">
+            [title]="(e.descripcion | translate) + (e.naves ? ('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EMBUDO_LLEGADA.CLICK_SEE_THEM' | translate) : '')">
 
             <span class="cifra-destacada">{{ e.naves }}</span>
 
@@ -59,5 +59,5 @@
         </button>
     </div>
 
-    <small class="pie-panel">{{ 'PORTTOS.EMBUDO_LLEGADA.TOQUE_UNA_ETAPA_PARA_RESALTAR' | translate: { p0: embudo.totalEnPuerto } }}</small>
+    <small class="pie-panel">{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EMBUDO_LLEGADA.TAP_STAGE_HIGHLIGHT_ITS_SHIPS_P0' | translate: { p0: embudo.totalEnPuerto } }}</small>
 </ng-container>

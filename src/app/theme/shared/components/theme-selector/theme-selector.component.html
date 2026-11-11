@@ -1,11 +1,11 @@
 <div class="theme-selector-container">
-  <h5>{{ 'WEB.THEME_SELECTOR.SELECTOR_DE_TEMA' | translate }}</h5>
+  <h5>{{ 'SHARED.THEME_SELECTOR.THEME_SELECTOR' | translate }}</h5>
   <div class="form-check form-switch mb-3">
     <input class="form-check-input" type="checkbox" role="switch" id="darkThemeSwitch" [(ngModel)]="isDarkTheme" (change)="toggleTheme()">
-    <label class="form-check-label" for="darkThemeSwitch">{{ 'WEB.THEME_SELECTOR.MODO_OSCURO' | translate }}</label>
+    <label class="form-check-label" for="darkThemeSwitch">{{ 'SHARED.THEME_SELECTOR.DARK_MODE' | translate }}</label>
   </div>
 
-  <h6>{{ 'WEB.THEME_SELECTOR.COLOR_DEL_NAVBAR' | translate }}</h6>
+  <h6>{{ 'SHARED.THEME_SELECTOR.NAVBAR_COLOR' | translate }}</h6>
   <div class="color-palette">
     <div
       *ngFor="let color of colorPalette"

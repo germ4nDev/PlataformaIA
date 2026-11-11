@@ -111,12 +111,12 @@ export class EmpresasComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'nombreEmpresa',
-            header: 'SUSCRIPTOR.EMPRESAS.NOMBREEMPRESA',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'SUSCRIPTOR.EMPRESAS.ESTADOEMPRESA',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ];
@@ -124,17 +124,17 @@ export class EmpresasComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoEmpresaSC',
-            header: 'SUSCRIPTOR.EMPRESAS.CODIGOEMPRESA',
+            header: 'SUSCRIPTOR.EMPRESAS.COMPANY_CODE',
             type: 'text'
         },
         {
             name: 'nomSuscriptor',
-            header: 'SUSCRIPTOR.EMPRESAS.CODIGOSUSCRIPTOR',
+            header: 'SUSCRIPTOR.EMPRESAS.SUBSCRIBER_CODE',
             type: 'text'
         },
         {
             name: 'descripcionEmpresa',
-            header: 'SUSCRIPTOR.EMPRESAS.DESCRIPCION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
     ];
@@ -169,13 +169,13 @@ export class EmpresasComponent implements OnInit {
                             accion: 'MODIFICAR',
                             letra: 'M',
                             color: '#007bff',
-                            tooltip: (this.translate.instant('SUSCRIPTOR.EMPRESAS.MODIFICAR'))
+                            tooltip: (this.translate.instant('COMMON.EDIT_2'))
                         });
                     }
 
                     const estadoEmpresa = newEmpresa.estadoEmpresa ? 'I' : 'A';
                     const colorEmpresa = newEmpresa.estadoEmpresa ? '#dc3545' : '#13af2d';
-                    const tooltipEmpresa = newEmpresa.estadoEmpresa ? this.translate.instant('SUSCRIPTOR.EMPRESAS.INACTIVAR') : this.translate.instant('SUSCRIPTOR.EMPRESAS.ACTIVAR');
+                    const tooltipEmpresa = newEmpresa.estadoEmpresa ? this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE') : this.translate.instant('COMMON.ACTIVATE');
 
                     const puedeEliminar = permisos.includes('ACT_SUSCEMP_ELIMINAR');
                     if (puedeEliminar) {
@@ -286,15 +286,15 @@ export class EmpresasComponent implements OnInit {
 
                 const empresaSCInfo = this.empresaSC.find(x => x.codigoEmpresaSC == empresaSCToCancel.codigoEmpresaSC);
 
-                const titulo = this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTITULO');
-                const confirmText = this.translate.instant('SUSCRIPTOR.EMPRESAS.ACCEPTTEXT');
-                const cancelText = this.translate.instant('SUSCRIPTOR.EMPRESAS.CANCEL');
-                const placeholder = this.translate.instant('SUSCRIPTOR.EMPRESAS.PLACEHOLDERCANCEL');
-                const errorobs = this.translate.instant('SUSCRIPTOR.EMPRESAS.ERROROBSERVACION');
+                const titulo = this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE_2');
+                const confirmText = this.translate.instant('SUSCRIPTOR.EMPRESAS.YES_CHANGE_IT');
+                const cancelText = this.translate.instant('COMMON.CANCEL');
+                const placeholder = this.translate.instant('COMMON.REASON');
+                const errorobs = this.translate.instant('SUSCRIPTOR.EMPRESAS.YOU_MUST_ENTER_REASON');
 
                 const htmlBody = `
                         <div style="margin-bottom: 10px;">
-                            ${this.translate.instant('SUSCRIPTOR.EMPRESAS.CONFIRMTEXT')}
+                            ${this.translate.instant('SUSCRIPTOR.EMPRESAS.ENTER_REASON_CHANGING_COMPANYS_STATUS')}
                         </div>
                         <small><b>"${empresaSCInfo?.nombreEmpresa || empresaSCToCancel.codigoEmpresaSC}"</b></small>
                         `;
@@ -315,10 +315,10 @@ export class EmpresasComponent implements OnInit {
                             this.subscriptions.add(
                                 this._empresasScService.actualizarEmpresa(empresaSCActualizado).subscribe({
                                     next: (resp: any) => {
-                                        this._swalService.getAlertConfirmSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.SUCCESSTEXT'));
+                                        this._swalService.getAlertConfirmSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.COMPANYS_STATUS_WAS_CHANGED_SUCCESSFULLY'));
                                     },
                                     error: (err: any) => {
-                                        this._swalService.getAlertConfirmError(this.translate.instant('SUSCRIPTOR.EMPRESAS.ERRORTEXT'));
+                                        this._swalService.getAlertConfirmError(this.translate.instant('SUSCRIPTOR.EMPRESAS.COULD_NOT_CHANGE_COMPANYS_STATUS'));
                                         console.error('Error cancelando empresaSC', err);
                                     }
                                 })
@@ -341,12 +341,12 @@ export class EmpresasComponent implements OnInit {
     OnEliminarRegistroClick(id: any) {
         const empresa = this.empresaSC.filter((x) => x.codigoEmpresaSC == id.id)[0];
         console.log('empresa', empresa);
-        const titulo = this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTITULO');
-        const confirmText = this.translate.instant('PLATAFORMA.DELETE');
-        const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+        const titulo = this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE_2');
+        const confirmText = this.translate.instant('COMMON.DELETE');
+        const cancelText = this.translate.instant('COMMON.CANCEL');
         const htmlBody = `
         <div style="margin-bottom: 10px;">
-            ${this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTEXTO')}
+            ${this.translate.instant('SUSCRIPTOR.EMPRESAS.YOU_ARE_ABOUT_DELETE_COMPANY')}
         </div>
         <small><b>"${empresa?.nombreEmpresa}"</b></small>
     `;
@@ -359,10 +359,10 @@ export class EmpresasComponent implements OnInit {
         //                     const logData = {
         //                         codigoTipoLog: '',
         //                         codigoRespuesta: '201',
-        //                         descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+        //                         descripcionLog: this.translate.instant('COMMON.DELETED') + ' ' + resp.mensaje
         //                     };
         //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-        //                     this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+        //                     this._swalService.getAlertSuccess(this.translate.instant('COMMON.DELETED') + ' ' + resp.mensaje);
         //                     this.subscriptions.add(
         //                     this._empresasScService.cargarRegistros().subscribe(
         //                             () => console.log('Empresas cargadas y guardadas en el servicio'),
@@ -374,10 +374,10 @@ export class EmpresasComponent implements OnInit {
         //                     const logData = {
         //                         codigoTipoLog: '',
         //                         codigoRespuesta: '501',
-        //                         descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje
+        //                         descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.COULD_NOT_DELETE_COMPANY') + ' ' + err.mensaje
         //                     };
         //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-        //                     this._swalService.getAlertError(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje);
+        //                     this._swalService.getAlertError(this.translate.instant('SUSCRIPTOR.EMPRESAS.COULD_NOT_DELETE_COMPANY') + ' ' + err.mensaje);
         //                     console.error('Error eliminando', err);
         //                 }
         //             });

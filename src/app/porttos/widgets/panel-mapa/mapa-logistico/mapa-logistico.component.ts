@@ -70,19 +70,19 @@ const INFRA_THEME = {
 };
 
 export const NOMENCLATURA_ENTIDADES = [
-    { id: 'naves', label: traducir('PORTTOS.MAPA_LOGISTICO.MOTONAVES_EN_TRANSITO'), color: '#00E5FF' },
-    { id: 'clima', label: traducir('PORTTOS.MAPA_LOGISTICO.ALERTAS_IDEAM'), color: '#8b5cf6' },
-    { id: 'accidentes', label: traducir('PORTTOS.MAPA_LOGISTICO.INCIDENTES_VIALES'), color: '#ef4444' },
-    { id: 'terrestre', label: traducir('PORTTOS.MAPA_LOGISTICO.FLOTA_TERRESTRE'), color: '#10b981' },
-    { id: 'peajes', label: traducir('PORTTOS.MAPA_LOGISTICO.PEAJES_CONTROL'), color: '#eab308' }
+    { id: 'naves', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.VESSELS_IN_TRANSIT'), color: '#00E5FF' },
+    { id: 'clima', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.IDEAM_ALERTS'), color: '#8b5cf6' },
+    { id: 'accidentes', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.ROAD_INCIDENTS'), color: '#ef4444' },
+    { id: 'terrestre', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.LAND_FLEET'), color: '#10b981' },
+    { id: 'peajes', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.TOLLS_CONTROL'), color: '#eab308' }
 ];
 
 export const ESTADOS_OPERATIVOS = [
-    { id: 'libre', label: traducir('PORTTOS.MAPA_LOGISTICO.LIBRE_FLUIDO'), color: '#22c55e' },
-    { id: 'ocupado', label: traducir('PORTTOS.MAPA_LOGISTICO.OCUPADO_CAPACIDAD_MEDIA'), color: '#facc15' },
-    { id: 'congestionado', label: traducir('PORTTOS.MAPA_LOGISTICO.CONGESTIONADO_RETRASO'), color: '#f59e0b' },
-    { id: 'critico', label: traducir('PORTTOS.MAPA_LOGISTICO.CRITICO_BLOQUEADO'), color: '#dc2626' },
-    { id: 'desocupado', label: traducir('PORTTOS.MAPA_LOGISTICO.DESOCUPADO_SIN_OPERACION'), color: '#94a3b8' }
+    { id: 'libre', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.FREE_FLOWING'), color: '#22c55e' },
+    { id: 'ocupado', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.OCCUPIED_MEDIUM_CAPACITY'), color: '#facc15' },
+    { id: 'congestionado', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CONGESTED_DELAY'), color: '#f59e0b' },
+    { id: 'critico', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CRITICAL_BLOCKED'), color: '#dc2626' },
+    { id: 'desocupado', label: traducir('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.IDLE_NO_OPERATION'), color: '#94a3b8' }
 ];
 
 export type TipoMapaBase = 'outdoor' | 'terreno' | 'satelite';
@@ -1434,35 +1434,35 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
     public filasPanel: Record<string, any[]> = { buques: [], camiones: [], muelles: [], alertas: [], geocercas: [] };
     private refrescoPanel?: any;
     public readonly pestanasPanel: Array<{ id: 'buques' | 'camiones' | 'muelles' | 'alertas' | 'geocercas'; nombre: string; icono: string }> = [
-        { id: 'buques', nombre: 'PORTTOS.MAPA_LOGISTICO.BUQUES', icono: 'feather icon-anchor' },
-        { id: 'camiones', nombre: 'PORTTOS.CHART_DOUGHNUT.CAMIONES', icono: 'feather icon-truck' },
-        { id: 'muelles', nombre: 'PORTTOS.MAPA_LOGISTICO.MUELLES', icono: 'feather icon-grid' },
-        { id: 'alertas', nombre: 'PORTTOS.IA_ADMIN_PANEL.ALERTAS', icono: 'feather icon-bell' },
-        { id: 'geocercas', nombre: 'PORTTOS.MAPA_LOGISTICO.GEOCERCAS', icono: 'feather icon-target' }
+        { id: 'buques', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SHIPS', icono: 'feather icon-anchor' },
+        { id: 'camiones', nombre: 'COMMON.TRUCKS', icono: 'feather icon-truck' },
+        { id: 'muelles', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.BERTHS', icono: 'feather icon-grid' },
+        { id: 'alertas', nombre: 'COMMON.ALERTS', icono: 'feather icon-bell' },
+        { id: 'geocercas', nombre: 'COMMON.GEOFENCES', icono: 'feather icon-target' }
     ];
     public readonly columnasPanel: Record<string, ColumnaTabla[]> = {
         buques: [
-            { campo: 'nombre', titulo: 'PORTTOS.COMUN.NAVE', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-            { campo: 'velocidad', titulo: 'PORTTOS.MAPA_LOGISTICO.VEL', tipo: 'numero', decimales: 1, unidad: 'kn' }, { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
+            { campo: 'nombre', titulo: 'PORTTOS.WIDGETS.SHIP', tipo: 'principal' }, { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+            { campo: 'velocidad', titulo: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SPEED', tipo: 'numero', decimales: 1, unidad: 'kn' }, { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
             { campo: 'eta', titulo: 'ETA', tipo: 'fecha' }, { campo: 'mmsi', titulo: 'MMSI' }
         ],
         camiones: [
-            { campo: 'placa', titulo: 'PORTTOS.TABLE_COLA_GATE.PLACA', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-            { campo: 'velocidad', titulo: 'PORTTOS.MAPA_LOGISTICO.VEL', tipo: 'numero', unidad: 'km/h' }, { campo: 'tipo', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO' }, { campo: 'conductor', titulo: 'PORTTOS.MAPA_LOGISTICO.CONDUCTOR' }
+            { campo: 'placa', titulo: 'PORTTOS.WIDGETS.PLATE', tipo: 'principal' }, { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+            { campo: 'velocidad', titulo: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SPEED', tipo: 'numero', unidad: 'km/h' }, { campo: 'tipo', titulo: 'COMMON.TYPE' }, { campo: 'conductor', titulo: 'PORTTOS.WIDGETS.DRIVER' }
         ],
         muelles: [
-            { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' }, { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-            { campo: 'nave', titulo: 'PORTTOS.COMUN.NAVE' }, { campo: 'horasAtracada', titulo: 'PORTTOS.COMUN.ATRACADA', tipo: 'numero', decimales: 1, unidad: 'h' },
-            { campo: 'proximo', titulo: 'PORTTOS.MAPA_LOGISTICO.PROXIMO' }, { campo: 'proximoEnHoras', titulo: 'En', tipo: 'numero', decimales: 1, unidad: 'h' }
+            { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' }, { campo: 'muelle', titulo: 'COMMON.BERTH', tipo: 'principal' }, { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+            { campo: 'nave', titulo: 'PORTTOS.WIDGETS.SHIP' }, { campo: 'horasAtracada', titulo: 'PORTTOS.WIDGETS.BERTHED', tipo: 'numero', decimales: 1, unidad: 'h' },
+            { campo: 'proximo', titulo: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.NEXT' }, { campo: 'proximoEnHoras', titulo: 'En', tipo: 'numero', decimales: 1, unidad: 'h' }
         ],
         alertas: [
-            { campo: 'nivel', titulo: 'PORTTOS.MAPA_LOGISTICO.NIVEL', tipo: 'estado' }, { campo: 'titulo', titulo: 'PORTTOS.MAPA_LOGISTICO.ALERTA', tipo: 'principal' },
-            { campo: 'mensaje', titulo: 'PORTTOS.MAPA_LOGISTICO.DETALLE' }, { campo: 'fecha', titulo: 'PORTTOS.IA_ADMIN_PANEL.HORA', tipo: 'fecha' }, { campo: 'simulado', titulo: 'PORTTOS.MAPA_LOGISTICO.SIMULADA', tipo: 'si-no' }
+            { campo: 'nivel', titulo: 'PORTTOS.WIDGETS.LEVEL', tipo: 'estado' }, { campo: 'titulo', titulo: 'PORTTOS.ALERT', tipo: 'principal' },
+            { campo: 'mensaje', titulo: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.DETAIL' }, { campo: 'fecha', titulo: 'PORTTOS.TIME', tipo: 'fecha' }, { campo: 'simulado', titulo: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SIMULATED_2', tipo: 'si-no' }
         ],
         geocercas: [
-            { campo: 'nombre', titulo: 'PORTTOS.MAPA_LOGISTICO.GEOCERCA', tipo: 'principal' }, { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-            { campo: 'camiones', titulo: 'PORTTOS.CHART_DOUGHNUT.CAMIONES', tipo: 'numero' }, { campo: 'enRuta', titulo: 'PORTTOS.MAPA_LOGISTICO.EN_RUTA', tipo: 'numero' },
-            { campo: 'detenidos', titulo: 'PORTTOS.MAPA_LOGISTICO.DETENIDOS', tipo: 'numero' }, { campo: 'naves', titulo: 'PORTTOS.MAPA_LOGISTICO.NAVES', tipo: 'numero' }
+            { campo: 'nombre', titulo: 'PORTTOS.GEOFENCE', tipo: 'principal' }, { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+            { campo: 'camiones', titulo: 'COMMON.TRUCKS', tipo: 'numero' }, { campo: 'enRuta', titulo: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EN_ROUTE', tipo: 'numero' },
+            { campo: 'detenidos', titulo: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.STOPPED', tipo: 'numero' }, { campo: 'naves', titulo: 'PORTTOS.WIDGETS.SHIPS', tipo: 'numero' }
         ]
     };
 
@@ -1478,7 +1478,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
         const p = (f: any) => f?.properties || {};
         this.filasPanel = {
             buques: Array.from(this.navesActuales.values()).map((f: any, i) => ({
-                id: p(f).mmsi || `nave-${i}`, nombre: p(f).nombre_motonave || p(f).mmsi || 'PORTTOS.MAPA_LOGISTICO.DESCONOCIDA', mmsi: p(f).mmsi || null,
+                id: p(f).mmsi || `nave-${i}`, nombre: p(f).nombre_motonave || p(f).mmsi || 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.UNKNOWN', mmsi: p(f).mmsi || null,
                 estado: p(f).estado_ais || p(f).estado_inferido || p(f).estado_nave || null, velocidad: p(f).velocidad ?? null,
                 terminal: p(f).id_terminal || p(f).terminal || null, eta: p(f).eta || null, coordenadas: punto(f)
             })),
@@ -1495,7 +1495,7 @@ export class MapaLogisticoComponent implements OnInit, AfterViewInit, OnChanges,
                 id: a.id, nivel: a.nivel, titulo: a.titulo, mensaje: a.mensaje, fecha: a.fecha, simulado: a.simulado, coordenadas: a.coordenadas
             })),
             geocercas: (this.ultimasGeocercasKpiGeoJson?.features || []).map((f: any, i: number) => ({
-                id: p(f).id_faro || `geocerca-${i}`, nombre: p(f).nombre_faro || p(f).nombre || 'PORTTOS.MAPA_LOGISTICO.GEOCERCA', estado: p(f).estado_kpi || null,
+                id: p(f).id_faro || `geocerca-${i}`, nombre: p(f).nombre_faro || p(f).nombre || 'PORTTOS.GEOFENCE', estado: p(f).estado_kpi || null,
                 camiones: p(f).total_camiones ?? null, enRuta: p(f).camiones_ruta ?? null, detenidos: p(f).camiones_detenidos ?? null,
                 naves: p(f).total_naves ?? null, coordenadas: punto(f)
             }))

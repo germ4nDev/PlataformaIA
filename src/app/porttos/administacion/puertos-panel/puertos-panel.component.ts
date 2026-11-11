@@ -197,27 +197,27 @@ export class PuertosPanelComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'id_puerto',
-            header: 'PUERTOS.ID',
+            header: 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.ID',
             type: 'text'
         },
         {
             name: 'nombre',
-            header: 'PUERTOS.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'region',
-            header: 'PUERTOS.REGION',
+            header: 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.REGION',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'PUERTOS.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado'
         },
         {
             name: 'color_ui',
-            header: 'FAROS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'color_chip'
         }
     ]
@@ -225,27 +225,27 @@ export class PuertosPanelComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'url_fuente_scraping',
-            header: 'PUERTOS.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'descripcion',
-            header: 'PUERTOS.BBOX_SUR',
+            header: 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.SOUTH_BOUND',
             type: 'text'
         },
         {
             name: 'punto',
-            header: 'PUERTOS.BBOX_SUR',
+            header: 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.SOUTH_BOUND',
             type: 'array_list'
         },
         {
             name: 'coordenadas',
-            header: 'PUERTOS.BBOX_SUR',
+            header: 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.SOUTH_BOUND',
             type: 'array_list'
         },
         {
             name: 'capture',
-            header: 'PUERTOS.BBOX_OESTE',
+            header: 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.WEST_BOUND',
             type: 'capture'
         }
     ]
@@ -263,12 +263,12 @@ export class PuertosPanelComponent implements OnInit, OnDestroy {
     OnEliminarRegistroClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
-            title: this.translate.instant('PUERTOS.ELIMINARTITULO'),
-            text: this.translate.instant('PUERTOS.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.WILL_DELETE_PORT_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._puertosService.deletePuerto(id).subscribe({
@@ -276,20 +276,20 @@ export class PuertosPanelComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PUERTOS.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.PORT_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('PUERTOS.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.PORT_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupPuertosStream()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PUERTOS.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.COULD_NOT_DELETE_PORT')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('PUERTOS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.COULD_NOT_DELETE_PORT'), 'error')
                     }
                 })
             }

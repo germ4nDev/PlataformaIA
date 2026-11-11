@@ -27,19 +27,19 @@ export class WdgFacturacionAreaComponent implements OnInit {
         labels: [],
         datasets: [
             {
-                label: traducir('WEB.WDG_FACTURACION_AREA.LICENCIAS_ANUALES'),
+                label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.ANNUAL_LICENSES'),
                 data: [],
                 borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.3)',
                 fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
             },
             {
-                label: traducir('WEB.WDG_FACTURACION_AREA.RENOVACIONES_SEM_TRIM'),
+                label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.SEMIANNUAL_QUARTERLY_RENEWALS'),
                 data: [],
                 borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.3)',
                 fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
             },
             {
-                label: traducir('WEB.WDG_FACTURACION_AREA.SUSCRIPCIONES_MENSUALES'),
+                label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.MONTHLY_SUBSCRIPTIONS'),
                 data: [],
                 borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.3)',
                 fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6

@@ -153,13 +153,13 @@ export class ItemsPaqueteComponent implements OnInit, OnDestroy {
                     if (permisos.includes('ACT_ITEMPQ_MODIFICAR')) {
                         accionesPermitidas.push({
                             accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('PLATAFORMA.EDITAR')
+                            tooltip: this.translate.instant('COMMON.EDIT')
                         });
                     }
                     if (permisos.includes('ACT_ITEMPQ_ELIMINAR')) {
                         accionesPermitidas.push({
                             accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('PLATAFORMA.DELETE')
+                            tooltip: this.translate.instant('COMMON.DELETE')
                         });
                     }
 
@@ -216,18 +216,18 @@ export class ItemsPaqueteComponent implements OnInit, OnDestroy {
 
     eliminarItem(row: any): void {
         this._swalService.getAlertQuestionRequest(
-            this.translate.instant('APLICACIONES.ELIMINARTEXTO') + ` "${row.nombreItem}".`,
-            this.translate.instant('APLICACIONES.ELIMINARTITULO')
+            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreItem}".`,
+            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
         ).subscribe(result => {
             if (result) {
                 this._registrosService.deleteEliminarRegistro(row.codigoItem).subscribe({
                     next: (resp: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertSuccess(resp.mensaje);
                     },
                     error: err => {
-                        this._swalService.getAlertError(this.translate.instant('APLICACIONES.ELIMINARERROR'));
+                        this._swalService.getAlertError(this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION'));
                     }
                 });
             }
@@ -250,18 +250,15 @@ export class ItemsPaqueteComponent implements OnInit, OnDestroy {
     toggleNav(): void { this.toggleSidebar.emit(); }
 
     columnasPaquetes: ColumnMetadata[] = [
-        { name: 'nombreItem', header: 'ITEMS.NAME', type: 'text' },
-        { name: 'cantidad', header: 'ITEMS.CANTIDAD', type: 'number' },
-        { name: 'valorUnitario', header: 'ITEMS.VALOR', type: 'price' },
-        { name: 'valoresAdicionales', header: 'ITEMS.ADICIONALES', type: 'price' },
-        { name: 'valorTotal', header: 'ITEMS.TOTAL', type: 'price' },
-        { name: 'nomEstado', header: 'ITEMS.STATUS', type: 'estado' }
+        { name: 'nombreItem', header: 'COMMON.NAME', type: 'text' },
+        { name: 'cantidad', header: 'PAQUETES.ITEMS_PAQUETE.QUANTITY', type: 'number' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoItem', header: 'ITEMS.CODE', type: 'text' },
-        { name: 'codigoPaquete', header: 'ITEMS.CODEPAQUETE', type: 'text' },
-        { name: 'codigoValor', header: 'ITEMS.CODEVALOR', type: 'text' },
-        { name: 'descripcionItem', header: 'ITEMS.DESCRIPCION', type: 'text' }
+        { name: 'codigoItem', header: 'COMMON.CODE', type: 'text' },
+        { name: 'codigoPaquete', header: 'COMMON.PACKAGE', type: 'text' },
+        { name: 'codigoValor', header: 'COMMON.ITEM', type: 'text' },
+        { name: 'descripcionItem', header: 'COMMON.DESCRIPTION', type: 'text' }
     ];
 }

@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.TABLE_COLA_GATE.COLA_DE_CAMIONES' | translate)"
-    [subtitulo]="(widgetConfig?.subtitulo | translate) || ('PORTTOS.TABLE_COLA_GATE.TODOS_LOS_TIPOS_DE_CARGA' | translate)" [icono]="'feather icon-truck'"
+<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.TRUCK_QUEUE' | translate)"
+    [subtitulo]="(widgetConfig?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.ALL_CARGO_TYPES' | translate)" [icono]="'feather icon-truck'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origen">
 
     <!-- Badge indicador en el Header -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
-            {{ 'PORTTOS.TABLE_COLA_GATE.LOGISTICA_TERRESTRE_UNIDADES' | translate: { p0: (listaCitas.length || 0) } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.LAND_LOGISTICS_P0_UNITS' | translate: { p0: (listaCitas.length || 0) } }}
         </span>
     </div>
 
@@ -18,14 +18,14 @@
                 <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
                     <tr class="text-muted font-weight-bold text-uppercase"
                         style="font-size: 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.PLACA' | translate }}</th>
-                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.TRANSPORTADOR' | translate }}</th>
-                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.TIPO_CARGA' | translate }}</th>
-                        <th class="pb-2">{{ 'PORTTOS.COMUN.OPERACION' | translate }}</th>
-                        <th class="pb-2">{{ 'PORTTOS.COMUN.TERMINAL' | translate }}</th>
-                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.CITA_ESPERA' | translate }}</th>
-                        <th class="pb-2">{{ 'PORTTOS.TABLE_COLA_GATE.UBICACION' | translate }}</th>
-                        <th class="pb-2 text-center">{{ 'PORTTOS.COMUN.ESTADO' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.WIDGETS.PLATE' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CARRIER' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.CARGO_TYPE' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.WIDGETS.OPERATION' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.TERMINAL' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.APPOINTMENT_WAIT' | translate }}</th>
+                        <th class="pb-2">{{ 'PORTTOS.LOCATION' | translate }}</th>
+                        <th class="pb-2 text-center">{{ 'COMMON.STATUS' | translate }}</th>
                     </tr>
                 </thead>
 
@@ -34,7 +34,7 @@
                     <tr *ngIf="cargando && (!listaCitas || listaCitas.length === 0)">
                         <td colspan="8" class="text-center text-muted py-5">
                             <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
-                            {{ 'PORTTOS.TABLE_COLA_GATE.SINCRONIZANDO_COLA_DE_CAMIONES_EN' | translate }}
+                            {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.SYNCING_VIRTUAL_GATE_TRUCK_QUEUE' | translate }}
                         </td>
                     </tr>
 
@@ -63,7 +63,7 @@
                                 'text-warning': (cita.tiempo_espera_minutos || 0) >= 25 && (cita.tiempo_espera_minutos || 0) < 45,
                                 'text-success': (cita.tiempo_espera_minutos || 0) < 25
                             }">
-                                {{ 'PORTTOS.TABLE_COLA_GATE.MIN' | translate: { p0: (cita.tiempo_espera_minutos || 0) } }}
+                                {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.P0_MIN' | translate: { p0: (cita.tiempo_espera_minutos || 0) } }}
                             </span>
                         </td>
 
@@ -85,7 +85,7 @@
                     <tr *ngIf="!cargando && (!listaCitas || listaCitas.length === 0)">
                         <td colspan="8" class="text-center text-muted py-5">
                             <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                            {{ 'PORTTOS.TABLE_COLA_GATE.NO_HAY_CAMIONES_REGISTRADOS_EN' | translate }}
+                            {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.NO_TRUCKS_REGISTERED_IN_QUEUE_PORT' | translate }}
                         </td>
                     </tr>
                 </tbody>

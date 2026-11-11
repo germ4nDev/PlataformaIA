@@ -5,10 +5,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -18,12 +18,12 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'WEB.ITEMS.FILTROS_DE_CATALOGO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'PAQUETES.ITEMS.CATALOG_FILTERS' | translate }}</h6>
 
                     <div class="filtro">
-                        <small>{{ 'WEB.ITEMS.FILTRAR_POR_NOMBRE' | translate }}</small>
+                        <small>{{ 'PAQUETES.FILTER_BY_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            [placeholder]="'WEB.ITEMS.BUSCAR_ITEM' | translate" />
+                            [placeholder]="'PAQUETES.ITEMS.SEARCH_ITEM' | translate" />
                     </div>
 
                     <!-- Opcional: Filtro por categoría/tipo si lo necesitas -->
@@ -35,11 +35,11 @@
                     </div> -->
 
                     <div class="filtro">
-                        <small>{{ 'PLATAFORMA.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -52,11 +52,11 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="_itemsFiltrados$ | async as dataFiltrada; else loading">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoItem'" [tableTitle]="('WEB.ITEMS.CATALOGO_DE_ITEMS' | translate)"
+                    <app-table-data [data]="dataFiltrada" [idField]="'codigoItem'" [tableTitle]="('PAQUETES.ITEMS.ITEM_CATALOG' | translate)"
                         [metadataColumns]="columnasItems" [metadataDetailColumns]="columnasDetailRegistros"
                         [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
                         [showEditButton]="false" [showDeleteButton]="false" [showSearchBox]="false"
-                        [newButtonLabel]="'PLATAFORMA.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        [newButtonLabel]="'COMMON.NEW' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
                         (newRecord)="OnNuevoRegistroClick()" (accionPrincipalClick)="onAccionPrincipal($event)"
                         permisoNew="ACT_ITEMS_CREAR">
                     </app-table-data>

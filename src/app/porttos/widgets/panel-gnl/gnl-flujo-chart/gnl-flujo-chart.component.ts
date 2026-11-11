@@ -78,11 +78,11 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
     public filasBrazos: any[] = [];
     public resumenHistorial: { volumen: number; energia: number; presion: number | null; alarmas: number } | null = null;
     public readonly columnasBrazos: ColumnaTabla[] = [
-        { campo: 'brazo', titulo: 'PORTTOS.GNL_FLUJO_CHART.BRAZO', tipo: 'principal' },
-        { campo: 'volumenM3', titulo: 'PORTTOS.GNL_FLUJO_CHART.VOLUMEN_2', tipo: 'numero', decimales: 1, unidad: 'm³' },
-        { campo: 'energiaMmbtu', titulo: 'PORTTOS.GNL_FLUJO_CHART.ENERGIA_2', tipo: 'numero', decimales: 1, unidad: 'MMBTU' },
-        { campo: 'participacion', titulo: 'PORTTOS.GNL_FLUJO_CHART.PARTICIPACION', tipo: 'avance' },
-        { campo: 'horasConFlujo', titulo: 'PORTTOS.GNL_FLUJO_CHART.HORAS_CON_FLUJO', tipo: 'numero', decimales: 0 }
+        { campo: 'brazo', titulo: 'COMMON.ARM', tipo: 'principal' },
+        { campo: 'volumenM3', titulo: 'COMMON.VOLUME', tipo: 'numero', decimales: 1, unidad: 'm³' },
+        { campo: 'energiaMmbtu', titulo: 'COMMON.ENERGY', tipo: 'numero', decimales: 1, unidad: 'MMBTU' },
+        { campo: 'participacion', titulo: 'COMMON.SHARE', tipo: 'avance' },
+        { campo: 'horasConFlujo', titulo: 'COMMON.HOURS_WITH_FLOW', tipo: 'numero', decimales: 0 }
     ];
 
     constructor(
@@ -157,7 +157,7 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
         const brazos = h.porBrazo || [];
         this.seriesHistorial = brazos.length > 1
             ? brazos.map((b) => ({ label: b.brazo, data: b.volumenM3 }))
-            : [{ label: traducir('PORTTOS.GNL_FLUJO_CHART.VOLUMEN_2'), data: h.volumenM3 || [] }];
+            : [{ label: traducir('COMMON.VOLUME'), data: h.volumenM3 || [] }];
 
         const volumen = suma(h.volumenM3 || []);
         const presiones = (h.presionPsi || []).filter((v): v is number => v !== null && v !== undefined);
@@ -222,11 +222,11 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_FLUJO_CHART.HISTORICO_DE_FLUJO_M_H',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.WIDGETS.PANEL_GNL.GNL_FLUJO_CHART.FLOW_HISTORY_M_H',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||
-                'PORTTOS.GNL_FLUJO_CHART.CAUDAL_DE_GNL_EN_TIEMPO',
+                'PORTTOS.WIDGETS.PANEL_GNL.GNL_FLUJO_CHART.REAL_TIME_LNG_FLOW_SCADA',
             historialLabels: [...this.historialLabels],
             historialValores: [...this.historialValores],
             energiaTotal: this.energiaTotal,
@@ -369,7 +369,7 @@ export class GnlFlujoChartComponent implements OnInit, AfterViewInit, OnChanges,
                 labels: [],
                 datasets: [
                     {
-                        label: traducir('PORTTOS.GATE_VALIDACION.FLUJO'),
+                        label: traducir('COMMON.FLOW'),
                         data: [],
                         borderColor: '#00d4ff',
                         borderWidth: grosorLinea,

@@ -168,7 +168,7 @@ export class ResumenSemanalComponent implements OnInit, AfterViewInit, OnChanges
         if (Array.isArray(raw.labels) && Array.isArray(raw.datasets) && raw.datasets.length > 0) {
             this.labels = raw.labels.map((l: any) => String(l));
             this.datasets = raw.datasets.map((ds: any, idx: number) => ({
-                label: ds.label || traducir('PORTTOS.RESUMEN_SEMANAL.ARRIBOS'),
+                label: ds.label || traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.ARRIVALS'),
                 data: (ds.data || []).map((v: any) => Number(v || 0)),
                 color: ds.backgroundColor || ds.color || (idx === 0 ? '#00d4ff' : PorttosChartHelper.PALETA_DEFAULT[idx])
             }));
@@ -176,7 +176,7 @@ export class ResumenSemanalComponent implements OnInit, AfterViewInit, OnChanges
             this.labels = raw.labels.map((l: any) => String(l));
             this.datasets = [
                 {
-                    label: traducir('PORTTOS.RESUMEN_SEMANAL.ARRIBOS'),
+                    label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.ARRIVALS'),
                     data: raw.valores.map((v: any) => Number(v || 0)),
                     color: '#00d4ff'
                 }
@@ -195,7 +195,7 @@ export class ResumenSemanalComponent implements OnInit, AfterViewInit, OnChanges
             this.labels = Array.from(conteoPorDia.keys());
             this.datasets = [
                 {
-                    label: traducir('PORTTOS.RESUMEN_SEMANAL.ARRIBOS_PROGRAMADOS'),
+                    label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.SCHEDULED_ARRIVALS'),
                     data: Array.from(conteoPorDia.values()),
                     color: '#00d4ff'
                 }

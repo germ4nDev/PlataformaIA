@@ -30,25 +30,25 @@ export class ProyectoSueltaComponent extends WidgetTableroBase<TableroCargaSuelt
     public filas: any[] = [];
     public readonly mensajeVacio = 'Sin project cargo activo.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'folio', titulo: 'PORTTOS.PROYECTO_SUELTA.FOLIO', tipo: 'principal' },
-        { campo: 'producto', titulo: 'PORTTOS.PROYECTO_SUELTA.EQUIPO_CARGA' },
-        { campo: 'cliente', titulo: 'PORTTOS.TABLE_BODEGAS.CLIENTE' },
-        { campo: 'tm', titulo: 'PORTTOS.PROYECTO_SUELTA.PESO', tipo: 'numero', unidad: 't' },
-        { campo: 'sentido', titulo: 'PORTTOS.COMUN.OPERACION', tipo: 'estado' },
-        { campo: 'equipoRequerido', titulo: 'PORTTOS.PROYECTO_SUELTA.EQUIPO_REQUERIDO' },
-        { campo: 'permiso', titulo: 'PORTTOS.PROYECTO_SUELTA.PERMISO_VIAL', tipo: 'estado' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
+        { campo: 'folio', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.FOLIO', tipo: 'principal' },
+        { campo: 'producto', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.PROYECTO_SUELTA.EQUIPMENT_CARGO' },
+        { campo: 'cliente', titulo: 'PORTTOS.WIDGETS.CUSTOMER' },
+        { campo: 'tm', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.PROYECTO_SUELTA.WEIGHT', tipo: 'numero', unidad: 't' },
+        { campo: 'sentido', titulo: 'PORTTOS.WIDGETS.OPERATION', tipo: 'estado' },
+        { campo: 'equipoRequerido', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.REQUIRED_EQUIPMENT' },
+        { campo: 'permiso', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.PROYECTO_SUELTA.ROAD_PERMIT', tipo: 'estado' },
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'dimensiones', titulo: 'PORTTOS.PROYECTO_SUELTA.DIMENSIONES' },
-        { campo: 'pesoUnitarioTm', titulo: 'PORTTOS.PROYECTO_SUELTA.PESO_UNITARIO', tipo: 'numero', decimales: 2, unidad: 't' },
-        { campo: 'bultos', titulo: 'PORTTOS.PROYECTO_SUELTA.BULTOS', tipo: 'numero' },
-        { campo: 'ubicacion', titulo: 'PORTTOS.TABLE_COLA_GATE.UBICACION' },
-        { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE' },
-        { campo: 'naviera', titulo: 'PORTTOS.TABLE_CONTENEDORES.NAVIERA' },
-        { campo: 'fechaProgramada', titulo: 'PORTTOS.PROYECTO_SUELTA.PROGRAMADO', tipo: 'fecha' },
-        { campo: 'simulado', titulo: 'PORTTOS.MOTONAVES_GRANEL.SIMULADO', tipo: 'si-no' }
+        { campo: 'dimensiones', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.DIMENSIONS' },
+        { campo: 'pesoUnitarioTm', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.UNIT_WEIGHT', tipo: 'numero', decimales: 2, unidad: 't' },
+        { campo: 'bultos', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.PACKAGES', tipo: 'numero' },
+        { campo: 'ubicacion', titulo: 'PORTTOS.LOCATION' },
+        { campo: 'motonave', titulo: 'PORTTOS.WIDGETS.VESSEL' },
+        { campo: 'naviera', titulo: 'PORTTOS.WIDGETS.SHIPPING_LINE' },
+        { campo: 'fechaProgramada', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.SCHEDULED', tipo: 'fecha' },
+        { campo: 'simulado', titulo: 'COMMON.SIMULATED_2', tipo: 'si-no' }
     ];
     get pendientes(): number { return this.filas.filter((f) => f.permiso === 'PENDIENTE').length; }
 

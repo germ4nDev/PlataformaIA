@@ -91,7 +91,7 @@ export class GestionItemComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: () => {
-                    this._swalAlertService.getAlertConfirmError(traducir('WEB.GESTION_ITEM.NO_SE_PUDO_OBTENER_EL'));
+                    this._swalAlertService.getAlertConfirmError(traducir('PAQUETES.ITEMS.GESTION.COULD_NOT_GET_ITEM_WITH_THAT'));
                 }
             });
         }
@@ -144,7 +144,7 @@ export class GestionItemComponent implements OnInit, OnDestroy {
         this.isSubmit = true;
 
         if (this.formularioRegistro.invalid) {
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.FORMULARIOINVALIDO'));
+            this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
             return;
         }
 
@@ -159,7 +159,7 @@ export class GestionItemComponent implements OnInit, OnDestroy {
             this._itemsService.putModificarRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        this.registrarLogYSalir('PLATAFORMA.MODIFICAR', '201');
+                        this.registrarLogYSalir('COMMON.RECORD_UPDATED_SUCCESSFULLY', '201');
                     } else {
                         this.manejarErrorGuardado(resp.mensaje);
                     }
@@ -199,7 +199,7 @@ export class GestionItemComponent implements OnInit, OnDestroy {
 
     private manejarErrorGuardado(mensaje: string) {
         this.isSaving = false;
-        const msjCompleto = this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + (mensaje || '');
+        const msjCompleto = this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ' ' + (mensaje || '');
 
         const logData = {
             codigoTipoLog: '',

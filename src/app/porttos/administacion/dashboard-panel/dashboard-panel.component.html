@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'PLATAFORMA.MENU' |
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' |
                     translate }}</button>
             </div>
             <ng-container *ngIf="activeTab === 'menu'"><app-nav-content *ngIf="menuItems$ | async as menuItems"
@@ -17,21 +17,21 @@
             <div class="d-flex justify-content-between align-items-center mb-3 flex-shrink-0 px-1">
                 <div style="width: 110px;" class="d-none d-md-block"></div>
 
-                <h1 class="page-title text-center mb-0 flex-grow-1">{{ 'PLATAFORMA.TEXTO_HOME' | translate }}</h1>
+                <h1 class="page-title text-center mb-0 flex-grow-1">{{ 'COMMON.WELCOME_PLATFORM_2_0' | translate }}</h1>
 
                 <div class="d-flex align-items-center gap-2" style="justify-content: flex-end;">
                     <button class="btn-accion-dashboard" (click)="resetearLayout()"
-                        [title]="'PORTTOS.DASHBOARD_PANEL.RESTABLECER_TABLERO_POR_DEFECTO' | translate">
+                        [title]="'COMMON.RESET_DEFAULT_DASHBOARD' | translate">
                         <i class="feather icon-rotate-ccw"></i>
                     </button>
 
                     <button class="btn-accion-dashboard" (click)="toggleBloqueoGridster()"
                         [class.editing-mode]="!tableroBloqueado"
-                        [title]="tableroBloqueado ? ('PORTTOS.DASHBOARD_PANEL.TABLERO_BLOQUEADO_HAZ_CLIC_PARA' | translate) : ('PORTTOS.DASHBOARD_PANEL.TABLERO_DESBLOQUEADO_PARA_EDICION_HAZ' | translate)">
+                        [title]="tableroBloqueado ? ('COMMON.DASHBOARD_LOCKED_CLICK_UNLOCK' | translate) : ('COMMON.DASHBOARD_UNLOCKED_EDITING_CLICK_LOCK' | translate)">
                         <i class="feather" [ngClass]="tableroBloqueado ? 'icon-lock' : 'icon-unlock'"></i>
                     </button>
 
-                    <button type="button" class="btn-accion-dashboard" (click)="abrirLobby()" [title]="'PORTTOS.DASHBOARD_PANEL.AGREGAR_WIDGET' | translate">
+                    <button type="button" class="btn-accion-dashboard" (click)="abrirLobby()" [title]="'COMMON.ADD_WIDGET' | translate">
                         <i class="feather icon-plus"></i>
                     </button>
                 </div>
@@ -40,11 +40,11 @@
             <nav class="tc-nav-tabs mb-3 flex-shrink-0">
                 <button class="tc-tab-btn" [class.active]="pestanaActiva === 'TAB_PLAT_PRINCIPAL'"
                     (click)="cambiarPestana('TAB_PLAT_PRINCIPAL')">
-                    <span class="icon">📊</span> {{ 'PORTTOS.DASHBOARD_PANEL.PRINCIPAL' | translate }}
+                    <span class="icon">📊</span> {{ 'COMMON.MAIN' | translate }}
                 </button>
                 <button class="tc-tab-btn" [class.active]="pestanaActiva === 'TAB_PLAT_SISTEMA'"
                     (click)="cambiarPestana('TAB_PLAT_SISTEMA')">
-                    <span class="icon">⚙️</span> {{ 'PORTTOS.DASHBOARD_PANEL.SISTEMA' | translate }}
+                    <span class="icon">⚙️</span> {{ 'COMMON.SYSTEM' | translate }}
                 </button>
             </nav>
 

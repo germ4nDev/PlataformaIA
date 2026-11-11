@@ -16,15 +16,15 @@ import { IconoComponent } from '../icono/icono.component';
 import { EnlaceComponent } from '../enlace/enlace.component';
 
 export const MENU: readonly { ruta: string; etiqueta: string }[] = [
-    { ruta: RUTA_PORTAL, etiqueta: 'WEB.ENCABEZADO.INICIO' },
-    { ruta: `${RUTA_PORTAL}/solucion`, etiqueta: 'WEB.ENCABEZADO.LA_SOLUCION' },
-    { ruta: `${RUTA_PORTAL}/app`, etiqueta: 'WEB.PIE.APP_MOVIL' },
-    { ruta: `${RUTA_PORTAL}/perfiles`, etiqueta: 'WEB.ENCABEZADO.PARA_QUIEN' },
-    { ruta: `${RUTA_PORTAL}/puertos`, etiqueta: 'WEB.ENCABEZADO.PUERTOS_EN_VIVO' },
-    { ruta: `${RUTA_PORTAL}/gobierno`, etiqueta: 'WEB.ENCABEZADO.SECTOR_PUBLICO' },
-    { ruta: `${RUTA_PORTAL}/planes`, etiqueta: 'WEB.ENCABEZADO.PLANES' },
-    { ruta: `${RUTA_PORTAL}/mision`, etiqueta: 'WEB.ENCABEZADO.NOSOTROS' },
-    { ruta: `${RUTA_PORTAL}/contacto`, etiqueta: 'WEB.ENCABEZADO.CONTACTENOS' },
+    { ruta: RUTA_PORTAL, etiqueta: 'COMMON.HOME' },
+    { ruta: `${RUTA_PORTAL}/solucion`, etiqueta: 'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.SOLUTION' },
+    { ruta: `${RUTA_PORTAL}/app`, etiqueta: 'WEBSITES.PORTTOS.MOBILE_APP' },
+    { ruta: `${RUTA_PORTAL}/perfiles`, etiqueta: 'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.WHO_ITS' },
+    { ruta: `${RUTA_PORTAL}/puertos`, etiqueta: 'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.LIVE_PORTS' },
+    { ruta: `${RUTA_PORTAL}/gobierno`, etiqueta: 'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.PUBLIC_SECTOR' },
+    { ruta: `${RUTA_PORTAL}/planes`, etiqueta: 'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.PLANS' },
+    { ruta: `${RUTA_PORTAL}/mision`, etiqueta: 'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.ABOUT_US' },
+    { ruta: `${RUTA_PORTAL}/contacto`, etiqueta: 'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.CONTACT_US' },
 ];
 
 @Component({

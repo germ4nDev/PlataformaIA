@@ -136,15 +136,15 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
 
     estadoTarea(t: ConfigEfectivaIA | undefined): { texto: string; clase: string } {
         if (!t) return { texto: '—', clase: '' };
-        if (!this.resumen?.env?.habilitada) return { texto: 'PORTTOS.IA_ADMIN_PANEL.IA_APAGADA', clase: 'apagada' };
-        if (!t.activa) return { texto: 'PORTTOS.REGLAS_ALERTAS_PANEL.APAGADA', clase: 'apagada' };
-        return t.modoSombra ? { texto: 'PORTTOS.IA_ADMIN_PANEL.MODO_SOMBRA', clase: 'sombra' } : { texto: 'PORTTOS.IA_ADMIN_PANEL.PUBLICANDO', clase: 'activa' };
+        if (!this.resumen?.env?.habilitada) return { texto: 'PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.AI_OFF', clase: 'apagada' };
+        if (!t.activa) return { texto: 'PORTTOS.ADMINISTACION.OFF', clase: 'apagada' };
+        return t.modoSombra ? { texto: 'PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.SHADOW_MODE', clase: 'sombra' } : { texto: 'PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.PUBLISHING', clase: 'activa' };
     }
 
     analizar(puerto: string): void {
         this.accion(`analizar|${puerto}`, this.ia.analizar(puerto), (r) => {
             const msg = r?.estado === 'OK' ? `${r.hallazgos ?? 0} hallazgo(s) nuevos, ${r.actualizadas ?? 0} actualizados` : `${r?.estado}: ${r?.motivo || ''}`;
-            this.toastr.info(msg, traducir('PORTTOS.IA_ADMIN_PANEL.ANALISIS_PUERTO', { puerto }));
+            this.toastr.info(msg, traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.ANALYSIS_PUERTO', { puerto }));
             this.cargarResumen();
         });
     }
@@ -198,7 +198,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('guardar-config', this.ia.adminGuardarConfig(fila), (c) => {
             this.config = c;
             this.armarForm();
-            this.toastr.success(`${this.puertoConfig === '*' ? 'Todos los puertos' : this.puertoConfig} · ${this.tareaConfig}`, traducir('PORTTOS.IA_ADMIN_PANEL.CONFIGURACION_GUARDADA'));
+            this.toastr.success(`${this.puertoConfig === '*' ? 'Todos los puertos' : this.puertoConfig} · ${this.tareaConfig}`, traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.SETTINGS_SAVED'));
         });
     }
 
@@ -206,7 +206,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('guardar-config', this.ia.adminRestablecerConfig(this.puertoConfig, this.tareaConfig), (c) => {
             this.config = c;
             this.armarForm();
-            this.toastr.info(traducir('PORTTOS.IA_ADMIN_PANEL.TODO_VUELVE_A_HEREDAR'), traducir('PORTTOS.IA_ADMIN_PANEL.CONFIGURACION_RESTABLECIDA'));
+            this.toastr.info(traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.EVERYTHING_INHERITS_AGAIN'), traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.SETTINGS_RESET'));
         });
     }
 
@@ -266,7 +266,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('crear-prompt', this.ia.adminCrearPrompt(this.borrador), (p) => {
             this.prompts = this.mezclar(p);
             this.borrador = null;
-            this.toastr.success(traducir('PORTTOS.IA_ADMIN_PANEL.VERSION_BORRADOR', { version: p.creado?.version }), traducir('PORTTOS.IA_ADMIN_PANEL.PROMPT'));
+            this.toastr.success(traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.VERSION_VERSION_CREATED_AS_DRAFT', { version: p.creado?.version }), traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.PROMPT'));
         });
     }
 
@@ -274,7 +274,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         if (!v.id) return;
         this.accion(`prompt|${v.id}`, this.ia.adminEstadoPrompt(v.id, estado), (p) => {
             this.prompts = this.mezclar(p);
-            this.toastr.success(estado === 'ACTIVO' ? traducir('PORTTOS.IA_ADMIN_PANEL.VERSION_ACTIVA', { version: v.version }) : traducir('PORTTOS.IA_ADMIN_PANEL.VERSION_RETIRADA', { version: v.version }), traducir('PORTTOS.IA_ADMIN_PANEL.PROMPT'));
+            this.toastr.success(estado === 'ACTIVO' ? traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.VERSION_VERSION_ACTIVE', { version: v.version }) : traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.VERSION_VERSION_WITHDRAWN', { version: v.version }), traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.PROMPT'));
         });
     }
 
@@ -340,7 +340,7 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
         this.accion('tema', this.ia.adminGuardarTema(dto), (a) => {
             this.alcance = a;
             this.temaEdicion = null;
-            this.toastr.success(dto.nombre, traducir('PORTTOS.IA_ADMIN_PANEL.MARCO_DE_ALCANCE_ACTUALIZADO'));
+            this.toastr.success(dto.nombre, traducir('PORTTOS.ADMINISTACION.IA_ADMIN_PANEL.SCOPE_FRAME_UPDATED'));
         });
     }
 
@@ -362,6 +362,6 @@ export class IaAdminPanelComponent implements OnInit, OnDestroy {
     }
 
     private error(e: any, titulo: string): void {
-        this.toastr.error(e?.error?.msg || e?.message || traducir('PORTTOS.CRON_MONITOR.ERROR'), titulo);
+        this.toastr.error(e?.error?.msg || e?.message || traducir('COMMON.ERROR'), titulo);
     }
 }

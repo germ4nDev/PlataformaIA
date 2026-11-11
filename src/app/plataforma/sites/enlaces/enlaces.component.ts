@@ -89,22 +89,22 @@ export class EnlacesComponent implements OnInit {
   columnasRegistros: ColumnMetadata[] = [
     {
       name: 'nomSitio',
-      header: 'SITIOS.ENLACES.NAMESITIO',
+      header: 'SITES.SITE_NAME',
       type: 'text'
     },
     {
       name: 'nombreEnlace',
-      header: 'SITIOS.ENLACES.NAME',
+      header: 'COMMON.NAME',
       type: 'text'
     },
     {
       name: 'rutaEnlace',
-      header: 'SITIOS.ENLACES.RUTA',
+      header: 'SITES.ENLACES.LINK_PATH',
       type: 'text'
     },
     {
       name: 'nomEstado',
-      header: 'SITIOS.ENLACES.STATUS',
+      header: 'COMMON.STATUS',
       type: 'text'
     }
   ];
@@ -112,7 +112,7 @@ export class EnlacesComponent implements OnInit {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'descripcionEnlace',
-      header: 'SITIOS.ENLACES.DESCRIPTION',
+      header: 'COMMON.DESCRIPTION',
       type: 'text'
     }
   ];
@@ -146,21 +146,21 @@ export class EnlacesComponent implements OnInit {
 
   OnEliminarRegistroClick(id: any) {
     Swal.fire({
-      title: this.translate.instant('SITIOS.ENLACES.ELIMINARTITULO'),
-      text: this.translate.instant('SITIOS.ENLACES.ELIMINARTEXTO'),
+      title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE_2'),
+      text: this.translate.instant('SITES.ENLACES.YOU_ARE_ABOUT_DELETE_LINK'),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this._enlacesService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('SITIOS.ENLACES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('COMMON.DELETED'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.enlaceId !== id.id);
           },
           error: (err: any) => {
-            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('SITIOS.ENLACES.ELIMINARERROR'), 'error');
+            Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('SITES.ENLACES.COULD_NOT_DELETE_LINK'), 'error');
             console.error('Error eliminando', err);
           }
         });

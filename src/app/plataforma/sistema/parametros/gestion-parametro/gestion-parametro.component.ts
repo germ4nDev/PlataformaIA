@@ -88,7 +88,7 @@ export class GestionParametroComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: () => {
-                    this._swalAlertService.getAlertConfirmError(traducir('WEB.GESTION_PARAMETRO.NO_SE_PUDO_OBTENER_EL'));
+                    this._swalAlertService.getAlertConfirmError(traducir('SISTEMA.PARAMETROS.GESTION.COULD_NOT_GET_SYSTEM_PARAMETER'));
                 }
             });
         }
@@ -156,7 +156,7 @@ export class GestionParametroComponent implements OnInit, OnDestroy {
         this.isSubmit = true;
 
         if (this.formularioRegistro.invalid) {
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.FORMULARIOINVALIDO'));
+            this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
             return;
         }
 
@@ -173,13 +173,13 @@ export class GestionParametroComponent implements OnInit, OnDestroy {
 
         if (!this.modoEdicion) {
             this._registrosService.crearParametro(dataGuardar).subscribe({
-                next: (resp: any) => this.manejarExito(resp, 'PLATAFORMA.INSERTAR'),
-                error: (err: any) => this.manejarError(err, 'PLATAFORMA.NOINSERTO')
+                next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_INSERTED_SUCCESSFULLY'),
+                error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_INSERT_RECORD')
             });
         } else {
             this._registrosService.actualizarParametro(this.parametroId, dataGuardar).subscribe({
-                next: (resp: any) => this.manejarExito(resp, 'PLATAFORMA.MODIFICAR'),
-                error: (err: any) => this.manejarError(err, 'PLATAFORMA.NOMODIFICO')
+                next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_UPDATED_SUCCESSFULLY'),
+                error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_UPDATE_RECORD')
             });
         }
     }

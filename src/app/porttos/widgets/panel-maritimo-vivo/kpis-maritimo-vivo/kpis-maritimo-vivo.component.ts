@@ -48,17 +48,17 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
 
     // Vista ampliada (2026-10-24)
     public readonly columnasEstados: ColumnaTabla[] = [
-        { campo: 'estado', titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.ESTADO_AIS', tipo: 'estado' },
-        { campo: 'naves', titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.NAVES', tipo: 'numero' },
-        { campo: 'minutosPromedio', titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.TIEMPO_PROMEDIO', tipo: 'numero', unidad: 'min' },
-        { campo: 'minutosMaximo', titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.MAXIMO', tipo: 'numero', unidad: 'min' }
+        { campo: 'estado', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.AIS_STATUS', tipo: 'estado' },
+        { campo: 'naves', titulo: 'PORTTOS.WIDGETS.SHIPS', tipo: 'numero' },
+        { campo: 'minutosPromedio', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.KPIS_MARITIMO_VIVO.AVERAGE_TIME', tipo: 'numero', unidad: 'min' },
+        { campo: 'minutosMaximo', titulo: 'COMMON.MAXIMUM', tipo: 'numero', unidad: 'min' }
     ];
     public readonly columnasCriticas: ColumnaTabla[] = [
-        { campo: 'nombre', titulo: 'PORTTOS.COMUN.NAVE', tipo: 'principal' },
+        { campo: 'nombre', titulo: 'PORTTOS.WIDGETS.SHIP', tipo: 'principal' },
         { campo: 'mmsi', titulo: 'MMSI' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-        { campo: 'minutos', titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.TIEMPO_EN_EL_ESTADO', tipo: 'numero', unidad: 'min' },
-        { campo: 'idTerminal', titulo: 'PORTTOS.COMUN.TERMINAL' }
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+        { campo: 'minutos', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.KPIS_MARITIMO_VIVO.TIME_IN_STATUS', tipo: 'numero', unidad: 'min' },
+        { campo: 'idTerminal', titulo: 'PORTTOS.TERMINAL' }
     ];
     public filasEstados: any[] = [];
     public filasCriticas: any[] = [];
@@ -87,7 +87,7 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
 
         const r = d.resumen;
         tarjetas.push(r ? {
-            titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.FONDEADAS_AHORA',
+            titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.KPIS_MARITIMO_VIVO.AT_ANCHOR_NOW',
             valor: String(r.fondeo.naves),
             detalle: `Prom. ${formatoDuracion(r.fondeo.minutosPromedio)} · máx. ${formatoDuracion(r.fondeo.minutosMaximo)}`,
             icono: 'feather icon-anchor',
@@ -98,7 +98,7 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
         if (ocup) {
             const operables = ocup.muelles - ocup.enMantenimiento;
             tarjetas.push({
-                titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.OCUPACION_DE_MUELLES',
+                titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.KPIS_MARITIMO_VIVO.BERTH_OCCUPANCY',
                 valor: ocup.porcentajeOcupacion == null ? '—' : `${ocup.porcentajeOcupacion}%`,
                 detalle: `${ocup.ocupados}/${operables} ocupados${ocup.enMantenimiento ? ` · ${ocup.enMantenimiento} en mant.` : ''}`,
                 icono: 'feather icon-grid',
@@ -108,7 +108,7 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
 
         const ll = d.llegadas?.resumen;
         tarjetas.push(ll ? {
-            titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.LLEGADAS_24_H',
+            titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.KPIS_MARITIMO_VIVO.ARRIVALS_24_H',
             valor: String(ll.proximas24h),
             detalle: `${ll.atrasadas} atrasadas · ${ll.sinAis} sin AIS`,
             icono: 'feather icon-navigation',
@@ -117,7 +117,7 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
 
         const espera = d.tiempos?.fondeo.resumen;
         tarjetas.push(espera ? {
-            titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.ESPERA_EN_FONDEO_P90_30',
+            titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.KPIS_MARITIMO_VIVO.ANCHORAGE_WAIT_P90_30_D',
             valor: formatoDuracion(espera.p90Min),
             detalle: `Mediana ${formatoDuracion(espera.medianaMin)} · ${espera.eventos} atraques`,
             icono: 'feather icon-clock',
@@ -125,7 +125,7 @@ export class KpisMaritimoVivoComponent extends WidgetMaritimoVivoBase<DatosKpis>
         } : sinDato('Espera en fondeo (p90 · 30 d)', 'feather icon-clock'));
 
         tarjetas.push(r ? {
-            titulo: 'PORTTOS.KPIS_MARITIMO_VIVO.NAVES_EN_ZONA',
+            titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.KPIS_MARITIMO_VIVO.SHIPS_IN_AREA',
             valor: String(r.totalNaves),
             detalle: `${r.atracadas} atracadas · ${r.enMovimiento} en movimiento`,
             icono: 'feather icon-radio',

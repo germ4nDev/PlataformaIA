@@ -118,27 +118,27 @@ export class VersionesComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'nomAplicacion',
-            header: 'VERSIONES.APLICACIONE',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'fechaVersion',
-            header: 'VERSIONES.FECHA',
+            header: 'COMMON.DATE',
             type: 'date'
         },
         {
             name: 'version',
-            header: 'VERSIONES.VERSION',
+            header: 'COMMON.VERSION',
             type: 'text'
         },
         {
             name: 'nombreVersion',
-            header: 'VERSIONES.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'VERSIONES.STATUS',
+            header: 'COMMON.STATUS',
             type: 'text'
         }
     ];
@@ -146,12 +146,12 @@ export class VersionesComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoVersion',
-            header: 'VERSIONES.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'descripcionVersion',
-            header: 'VERSIONES.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         }
     ];
@@ -214,12 +214,12 @@ export class VersionesComponent implements OnInit {
 
     OnEliminarRegistroClick(id: any): void {
         Swal.fire({
-            title: this.translate.instant('VERSIONES.ELIMINARTITULO'),
-            text: this.translate.instant('VERSIONES.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('APLICACIONES.VERSIONES.WILL_DELETE_VERSION_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result) => {
             if (result.isConfirmed) {
                 this._registrosService.deleteEliminarRegistro(id.id).subscribe({
@@ -227,10 +227,10 @@ export class VersionesComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('VERSIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('APLICACIONES.VERSIONES.VERSION_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire(this.translate.instant('VERSIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+                        Swal.fire(this.translate.instant('APLICACIONES.VERSIONES.VERSION_DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
                         this.registros = this.registros.filter((a) => a.versionId !== id.id);
                         this.consultarRegistros()
                     },
@@ -238,10 +238,10 @@ export class VersionesComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('VERSIONES.ELIMINARERROR') + ' ' + err.mensaje
+                            descripcionLog: this.translate.instant('APLICACIONES.VERSIONES.COULD_NOT_DELETE_VERSION') + ' ' + err.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('VERSIONES.ELIMINARERROR'), 'error');
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('APLICACIONES.VERSIONES.COULD_NOT_DELETE_VERSION'), 'error');
                     }
                 });
             }

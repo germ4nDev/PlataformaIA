@@ -1,338 +1,125 @@
-import { traducir } from '../../../../theme/shared/i18n/traducir';
-import { CommonModule } from '@angular/common'
-import { Component, EventEmitter, Output } from '@angular/core'
-import { NgForm } from '@angular/forms'
-import { Router, ActivatedRoute } from '@angular/router'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import { Observable, Subscription, tap, catchError, of } from 'rxjs'
-import { GradientConfig } from 'src/app/app-config'
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
-import { PTLItemPaquete } from 'src/app/theme/shared/_helpers/models/PTLItemPaquete.model'
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
-import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
-import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model'
-import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
-import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoItem.model'
-import { PTLItemModel } from 'src/app/theme/shared/_helpers/models/PTLItem.model'
-import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
-import {
-    PtlAplicacionesService,
-    PtlSuitesAPService,
-    PtlmodulosApService,
-    PtllogActividadesService,
-    SwalAlertService,
-    LocalStorageService,
-    NavigationService,
-    PtlvaloresUnitariosService,
-    PtltiposItemsService
-} from 'src/app/theme/shared/service'
-import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service'
-import { LoadingService } from 'src/app/theme/shared/service/loading.service'
-import { PtlItemsPaqueteService } from 'src/app/theme/shared/service/ptlitems-paquete.service'
-import { PTLModulosPaqueteService } from 'src/app/theme/shared/service/ptlmodulos-paquete.service'
-import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { v4 as uuidv4 } from 'uuid'
+/*
+    Author: German Valencia
+    Pattern: PLATAFORMA Componente - Paquetes › Ítems por paquete › gestión (reescrito en OT-029)
+    Description: Qué lleva un paquete: el ítem del catálogo (PTLItemsPaquete.codigoValor) y su cantidad. El precio ya no va aquí: lo fija
+    Paquetes › Listas de precios. PTLItemsPaquete.codigoItem es el código de la fila (uuid); nombre y descripción se copian del ítem.
+    Antes: el ítem elegido se sobrescribía con un uuid, la cantidad quedaba en 0 y tipoValorId llegaba como NaN (nunca se guardó una fila).
+*/
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { Observable, forkJoin, of, catchError } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
+import { AppPermisoDirective } from 'src/app/theme/shared/directive/app-permiso.directive';
+import { PtlItemsPaqueteService } from 'src/app/theme/shared/service/ptlitems-paquete.service';
+import { PTLItemsService } from 'src/app/theme/shared/service/ptlitems.service';
+import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.service';
+import { traducir } from 'src/app/theme/shared/i18n/traducir';
 
 @Component({
     selector: 'app-gestion-itempq',
     standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, AppPermisoDirective],
     templateUrl: './gestion-itempq.component.html',
     styleUrl: './gestion-itempq.component.scss'
 })
-export class GestionItempqComponent {
-    // #region VARIABLES
-    @Output() toggleSidebar = new EventEmitter<void>()
-    FormRegistro: PTLItemPaquete = new PTLItemPaquete()
-    menuItems$!: Observable<NavigationItem[]>
-    gradientConfig: any
-    navCollapsed: boolean = false
-    navCollapsedMob: boolean = false
-    windowWidth: number = 0
-    form: undefined
-    isSubmit: boolean
-    modoEdicion: boolean = false
-    tiposItemsSub?: Subscription
-    tiposItems: PTLTipoItemModel[] = []
-    listaPreciosSub?: Subscription
-    listaPrecios: PTLItemModel[] = []
-    itemsSeleccionados: PTLItemModel[] = []
-    registroId: string = ''
-    codigoPaquete: string = ''
-    tipoEditorTexto = 'basica'
-    lockScreenSubscription: Subscription | undefined
-    isLocked: boolean = false
-    lockMessage: string = ''
-    suscriptor: string = ''
-    // #endregion VARIABLES
+export class GestionItempqComponent implements OnInit {
+    @Output() toggleSidebar = new EventEmitter<void>();
+    menuItems$!: Observable<NavigationItem[]>;
+    modoEdicion = false;
+    enviado = false;
+    guardando = false;
+    codigoFila = '';
+    form = { codigoPaquete: '', codigoValor: '', cantidad: 1, estadoItem: true };
+    paquetes: any[] = [];
+    items: any[] = [];
+    private original: any = null;
 
-    // constructor
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private _registrosService: PtlItemsPaqueteService,
-        private _tiposItemsService: PtltiposItemsService,
-        private _listaPreciosService: PtlvaloresUnitariosService,
-        private _layoutInitializer: LayoutInitializerService,
-        private _logActividadesService: PtllogActividadesService,
-        private _swalAlertService: SwalAlertService,
-        private _localStorageService: LocalStorageService,
-        private _loadingService: LoadingService,
-        private _navigationService: NavigationService
-    ) {
-        this.isSubmit = false
-        GradientConfig.header_fixed_layout = true
-        this.gradientConfig = GradientConfig
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
-        this.navCollapsedMob = false
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        this.registroId = this._localStorageService.getObject<string>('regId') || ''
-        this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || ''
-        console.log('asociar modulos para', this.codigoPaquete)
-        if (this.registroId !== 'nuevo') {
-            this.modoEdicion = true
-            this._registrosService.getRegistros().subscribe({
-                next: (resp: any) => {
-                    const itemsPaquete = resp.itemsPaquete.filter((x: { codigoItem: string }) => x.codigoItem === this.registroId)
-                    this.itemsSeleccionados = itemsPaquete
-                    console.log('modulos paquete', itemsPaquete)
+        private readonly router: Router,
+        private readonly navegacion: NavigationService,
+        private readonly almacen: LocalStorageService,
+        private readonly avisos: SwalAlertService,
+        private readonly itemsPaquete: PtlItemsPaqueteService,
+        private readonly itemsService: PTLItemsService,
+        private readonly paquetesService: PTLPaquetesService
+    ) {}
+
+    ngOnInit(): void {
+        this.navegacion.getNavigationItems();
+        this.menuItems$ = this.navegacion.menuItems$;
+        const id = this.almacen.getObject<string>('regId') || 'nuevo';
+        this.form.codigoPaquete = this.almacen.getObject<string>('regPQ') || '';
+        forkJoin([
+            this.paquetesService.cargarRegistros().pipe(catchError(() => of(this.paquetesService.getPaquetesActuales()))),
+            this.itemsService.cargarRegistros().pipe(catchError(() => of(this.itemsService.getItemsActuales())))
+        ]).subscribe(([paquetes, items]) => {
+            this.paquetes = (paquetes || []).filter((p: any) => p.estadoPaquete !== false);
+            this.items = (items || []).filter((i: any) => i.estadoItem !== false);
+        });
+        if (id !== 'nuevo') {
+            this.modoEdicion = true;
+            this.codigoFila = id;
+            this.itemsPaquete.getRegistros().subscribe({
+                next: (r: any) => {
+                    const fila = (r.itemsPaquete || []).find((x: any) => x.codigoItem === id);
+                    if (!fila) return;
+                    this.original = fila;
+                    this.form = { codigoPaquete: fila.codigoPaquete, codigoValor: fila.codigoValor, cantidad: Number(fila.cantidad) || 1, estadoItem: fila.estadoItem !== false };
                 },
-                error: () => {
-                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_ITEMPQ.NO_SE_PUDO_OBTENER_LOS'))
-                }
-            })
-        } else {
-            this.modoEdicion = false
+                error: () => this.avisos.getAlertError(traducir('PAQUETES.ITEMS_PAQUETE.GESTION.COULD_NOT_GET_PACKAGE_ITEMS'))
+            });
         }
     }
 
-    ngOnInit() {
-        this._layoutInitializer.applyLayout()
-        this._navigationService.getNavigationItems()
-        this.menuItems$ = this._navigationService.menuItems$
-        // TODO Replicar en todos los modulos de gestion de datos
-        this.consultarTiposValor()
-        this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
-            next: (message: string) => {
-                this._localStorageService.setFormRegistro(this.FormRegistro)
-                this.isLocked = true
-                this.lockMessage = message
+    get valido(): boolean { return !!(this.form.codigoPaquete && this.form.codigoValor && Number.isInteger(Number(this.form.cantidad)) && Number(this.form.cantidad) >= 1); }
+
+    guardar(): void {
+        this.enviado = true;
+        if (!this.valido || this.guardando) return;
+        const item = this.items.find((i) => i.codigoItem === this.form.codigoValor) || {};
+        const usuario = this.almacen.getUsuarioLocalStorage()?.codigoUsuario || '';
+        const ahora = new Date().toISOString();
+        const fila: any = {
+            ...(this.original || {}),
+            codigoItem: this.modoEdicion ? this.codigoFila : uuidv4(),
+            codigoPaquete: this.form.codigoPaquete,
+            codigoValor: this.form.codigoValor,
+            tipoValorId: 0,
+            nombreItem: item.nombreItem || this.original?.nombreItem || '',
+            descripcionItem: item.descripcionItem || this.original?.descripcionItem || '',
+            cantidad: Number(this.form.cantidad),
+            estadoItem: !!this.form.estadoItem,
+            codigoUsuarioCreacion: this.original?.codigoUsuarioCreacion || usuario,
+            fechaCreacion: this.original?.fechaCreacion || ahora,
+            codigoUsuarioModificacion: usuario,
+            fechaModificacion: ahora
+        };
+        this.guardando = true;
+        const peticion = this.modoEdicion ? this.itemsPaquete.putModificarRegistro(fila) : this.itemsPaquete.postCrearRegistro(fila);
+        peticion.subscribe({
+            next: () => {
+                this.guardando = false;
+                this.avisos.getAlertSuccess(traducir(this.modoEdicion ? 'COMMON.RECORD_UPDATED_SUCCESSFULLY' : 'COMMON.RECORD_INSERTED_SUCCESSFULLY'));
+                this.volver();
             },
-            error: err => console.error('Error al suscribirse al evento de bloqueo:', err)
-        })
-        const form = this._localStorageService.getFormRegistro()
-        if (form != undefined) {
-            this.FormRegistro = form
-            this._localStorageService.removeFormRegistro()
-        }
-        console.log('modoEdicion', this.modoEdicion)
-
-        if (!this.modoEdicion) {
-            console.log('modo edicion', this.modoEdicion)
-            this.FormRegistro.tipoValorId = 0
-            this.FormRegistro.codigoItem = ''
-            this.FormRegistro.codigoItem = uuidv4()
-            console.log('FormRegistro', this.FormRegistro)
-        }
+            error: (e: any) => {
+                this.guardando = false;
+                this.avisos.getAlertError(e?.error?.msg || traducir(this.modoEdicion ? 'COMMON.COULD_NOT_UPDATE_RECORD' : 'COMMON.COULD_NOT_INSERT_RECORD'));
+            }
+        });
     }
 
-    consultarTiposValor() {
-        this.tiposItemsSub = this._tiposItemsService
-            .getRegistros()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.tiposItems = resp.tiposItems.filter((x: { estadoTipo: boolean }) => x.estadoTipo == true)
-                        console.log('las tiposItems', this.tiposItems)
-                        return
-                    }
-                }),
-                catchError(err => {
-                    console.log('Ha ocurrido un error', err)
-                    return of(null)
-                })
-            )
-            .subscribe()
-    }
+    volver(): void { this.router.navigate(['paquetes/items-paquete']); }
 
-    consultarListaPrecios(tipoId: string) {
-        this.listaPreciosSub = this._listaPreciosService
-            .getRegistros()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        const activos = resp.valoresUnitarios.filter((x: { estadoValor: boolean }) => x.estadoValor == true)
-                        this.listaPrecios = activos.filter((x: { codigoTipo: string }) => x.codigoTipo == tipoId)
-                        console.log('las listaPrecios', this.listaPrecios)
-                        return
-                    }
-                }),
-                catchError(err => {
-                    console.log('Ha ocurrido un error', err)
-                    return of(null)
-                })
-            )
-            .subscribe()
-    }
-
-    actualizarDescripcionVersion(nuevoContenido: string): void {
-        this.FormRegistro.descripcionItem = nuevoContenido
-        console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionItem)
-        // if (this.validationForm && this.isSubmit) {
-        // }
-    }
-
-    onTipoValorChangeClick(evento: any) {
-        console.log('evento', evento.target.value)
-        const tipo = this.tiposItems.findIndex(x => x.codigoTipoItem == evento.target.value)
-        const tipoValor = this.tiposItems[tipo]
-        this.consultarListaPrecios(tipoValor.codigoTipoItem || '')
-    }
-
-    onValorChangeClick(evento: any) {
-        console.log('asociar el valorlo', evento.target.value)
-        const tipo = this.listaPrecios.findIndex(x => x.codigoItem == evento.target.value)
-        const valor = this.listaPrecios[tipo]
-        this.FormRegistro.nombreItem = valor.nombreItem || ''
-        this.FormRegistro.valorUnitario = valor.valorUnitario || 0
-        this.FormRegistro.cantidad = 0
-        this.FormRegistro.valoresAdicionales = 0
-        this.FormRegistro.valorTotal =
-            this.FormRegistro.cantidad == 0 ? valor.valorUnitario : this.FormRegistro.valorUnitario || 0 * this.FormRegistro.cantidad
-    }
-
-    onCantidadChangeClick(evento: any) {
-        console.log('valor evento', Number(evento.target.value))
-        this.FormRegistro.cantidad = Number(evento.target.value)
-        const operacion =
-            Number(this.FormRegistro.cantidad) > 0
-                ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad)
-                : Number(this.FormRegistro.valorUnitario)
-        this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales)
-    }
-
-    onValoresAdicionalesChangeClick(evento: any) {
-        console.log('valor evento', Number(evento.target.value))
-        this.FormRegistro.valoresAdicionales = Number(evento.target.value)
-        const operacion =
-            Number(this.FormRegistro.cantidad) > 0
-                ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad)
-                : Number(this.FormRegistro.valorUnitario)
-        this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales)
-    }
-
-    btnGestionarRegistroClick(form: NgForm) {
-        this.isSubmit = true
-        if (!form.valid) {
-            return
-        }
-        const registroData = form.value as PTLItemPaquete
-        // console.log('gestionar registro', registroData);
-
-        if (this.modoEdicion) {
-            registroData.codigoItem = this.FormRegistro.codigoItem
-            registroData.codigoPaquete = this.codigoPaquete
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-            registroData.fechaModificacion = new Date().toISOString()
-            // registroData. = Number(this.FormRegistro.tipo)
-            registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad
-            this._registrosService.putModificarRegistro(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        this._registrosService.putModificarRegistro(registroData).subscribe({
-                            next: () => {
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
-                                this._localStorageService.setObject('regId', this.codigoPaquete)
-                                this.router.navigate(['aplicaciones/items-paquete'])
-                            },
-                            error: err => {
-                                console.error('Error al actualizar requerimiento', err)
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '501',
-                                    descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
-                            }
-                        })
-                    } else {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + resp.mensaje
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + resp.mensaje)
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err)
-                    const logData = {
-                        codigoTipoLog: '',
-                        codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                    }
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
-                }
-            })
-        } else {
-            console.log('nuevo formregistro', this.FormRegistro.codigoPaquete)
-            registroData.codigoItem = uuidv4()
-            registroData.codigoPaquete = this.codigoPaquete
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-            registroData.fechaCreacion = new Date().toISOString()
-            registroData.codigoUsuarioModificacion = ''
-            registroData.fechaModificacion = ''
-            registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad
-            registroData.tipoValorId = Number(this.FormRegistro.tipoValorId)
-            console.log('insertar registro', registroData)
-            this._registrosService.postCrearRegistro(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR')
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
-                        form.resetForm()
-                        this.isSubmit = false
-                        this._localStorageService.setObject('regId', this.codigoPaquete)
-                        this.router.navigate(['aplicaciones/items-paquete'])
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err)
-                    const logData = {
-                        codigoTipoLog: '',
-                        codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                    }
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
-                }
-            })
-        }
-    }
-
-    btnRegresarClick() {
-        this._localStorageService.setObject('regId', this.codigoPaquete)
-        this.router.navigate(['aplicaciones/modulos-paquete'])
-    }
-
-    toggleNav(): void {
-        this.toggleSidebar.emit()
-    }
+    toggleNav(): void { this.toggleSidebar.emit(); }
 }

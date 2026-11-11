@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -16,37 +16,37 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'VERSIONES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'VERSIONES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
+                        <small>{{ 'APLICACIONES.VERSIONES.FILTER_BY_APPLICATION' | translate }}</small>
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="reg.aplicacionId" *ngFor="let reg of aplicaciones">
                                 {{ reg.nombreAplicacion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'VERSIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="app.nombreVersion" *ngFor="let app of registros">
                                 {{ app.nombreVersion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'VERSIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'VERSIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'VERSIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -58,11 +58,11 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-table-data [data]="registrosFiltrado" [idField]="'codigoVersion'"
-                    [tableTitle]="'VERSIONES.TITLE' | translate" [metadataColumns]="columnasRegistros"
+                    [tableTitle]="'APLICACIONES.VERSIONES.VERSION_MANAGEMENT' | translate" [metadataColumns]="columnasRegistros"
                     [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                     [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true"
-                    [showSearchBox]="false" [newButtonLabel]="'VERSIONES.NEW' | translate" [showSearchBox]="false"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                    [showSearchBox]="false" [newButtonLabel]="'COMMON.NEW_VERSION' | translate" [showSearchBox]="false"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_VERSIONES_CREAR" permisoEdit="ACT_VERSIONES_MODIFICAR" permisoDelete="ACT_VERSIONES_ELIMINAR">
                 </app-table-data>
             </div>

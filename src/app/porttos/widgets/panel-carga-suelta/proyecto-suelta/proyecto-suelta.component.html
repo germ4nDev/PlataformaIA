@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="(titulo | translate)" [origen]="origenTablero" [subtitulo]="(subtitulo | translate)" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
-    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="pendientes">{{ 'PORTTOS.PROYECTO_SUELTA.SIN_PERMISO' | translate: { p0: pendientes } }}</span></div>
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="pendientes">{{ 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.PROYECTO_SUELTA.P0_WITHOUT_PERMISSION' | translate: { p0: pendientes } }}</span></div>
     <div class="cuerpo">
         <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!filas.length"
             [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>

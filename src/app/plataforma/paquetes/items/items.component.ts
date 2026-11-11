@@ -110,14 +110,14 @@ export class ItemsComponent implements OnInit, OnDestroy {
                     if (permisos.includes('ACT_ITEMS_MODIFICAR')) {
                         accionesPermitidas.push({
                             accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('PLATAFORMA.EDITAR')
+                            tooltip: this.translate.instant('COMMON.EDIT')
                         });
                     }
 
                     if (permisos.includes('ACT_ITEMS_ELIMINAR')) {
                         accionesPermitidas.push({
                             accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('PLATAFORMA.DELETE')
+                            tooltip: this.translate.instant('COMMON.DELETE')
                         });
                     }
 
@@ -186,19 +186,19 @@ export class ItemsComponent implements OnInit, OnDestroy {
 
     eliminarRegistro(row: any): void {
         this._swalService.getAlertQuestionRequest(
-            this.translate.instant('APLICACIONES.ELIMINARTEXTO') + ` "${row.nombreValor}".`,
-            this.translate.instant('APLICACIONES.ELIMINARTITULO')
+            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreValor}".`,
+            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
         ).subscribe(result => {
             if (result) {
                 this._registrosService.deleteEliminarRegistro(row.codigoValor).subscribe({
                     next: (resp: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertSuccess(resp.mensaje);
                         this._registrosService.cargarRegistros().subscribe();
                     },
                     error: (err: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + err.mensaje };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + err.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertError(err.mensaje);
                         this._registrosService.cargarRegistros().subscribe();
@@ -213,15 +213,14 @@ export class ItemsComponent implements OnInit, OnDestroy {
     toggleNav(): void { this.toggleSidebar.emit(); }
 
     columnasItems: ColumnMetadata[] = [
-        { name: 'nombreItem', header: 'WEB.ITEMS.NOMBRE_DEL_ITEM', type: 'text' },
-        { name: 'nomTipoItem', header: 'WEB.ITEMS.TIPO', type: 'text' },
-        { name: 'costoItem', header: 'WEB.ITEMS.COSTO', type: 'price' },
-        { name: 'valorUnitario', header: 'WEB.ITEMS.PRECIO_UNITARIO', type: 'price' },
-        { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
+        { name: 'nombreItem', header: 'PAQUETES.ITEMS.ITEM_NAME', type: 'text' },
+        { name: 'nomTipoItem', header: 'COMMON.TYPE', type: 'text' },
+        { name: 'costoItem', header: 'PAQUETES.COST', type: 'price' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoValor', header: 'WEB.ITEMS.CODIGO_INTERNO', type: 'text' },
-        { name: 'descripcionValor', header: 'WEB.ITEMS.DESCRIPCION', type: 'text' }
+        { name: 'codigoValor', header: 'PAQUETES.INTERNAL_CODE', type: 'text' },
+        { name: 'descripcionValor', header: 'COMMON.DESCRIPTION', type: 'text' }
     ];
 }

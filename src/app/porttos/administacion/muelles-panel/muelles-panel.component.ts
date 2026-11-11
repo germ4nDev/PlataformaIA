@@ -189,27 +189,27 @@ export class MuellesPanelComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'puerto',
-            header: 'MUELLES.PUERTO',
+            header: 'COMMON.PORT',
             type: 'text'
         },
         {
             name: 'terminal',
-            header: 'MUELLES.TERMINAL',
+            header: 'PORTTOS.TERMINAL',
             type: 'text'
         },
         {
             name: 'codigo_muelle',
-            header: 'MUELLES.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'MUELLES.ESTADO',
+            header: 'COMMON.STATUS',
             type: 'estado'
         },
         {
             name: 'color_ui',
-            header: 'FAROS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'color_chip'
         }
     ]
@@ -217,27 +217,27 @@ export class MuellesPanelComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcion',
-            header: 'MUELLES.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'especialidad',
-            header: 'MUELLES.ESPECIALIDAD',
+            header: 'PORTTOS.SPECIALTY',
             type: 'text'
         },
         {
             name: 'calado_metros',
-            header: 'MUELLES.CALADO',
+            header: 'PORTTOS.ADMINISTACION.MUELLES_PANEL.DRAFT_M',
             type: 'text'
         },
         {
             name: 'capacidad_reefer',
-            header: 'MUELLES.REEFER',
+            header: 'PORTTOS.ADMINISTACION.REEFER',
             type: 'text'
         },
         {
             name: 'coordenadas',
-            header: 'MUELLES.REEFER',
+            header: 'PORTTOS.ADMINISTACION.REEFER',
             type: 'array_list'
         }
     ]
@@ -255,12 +255,12 @@ export class MuellesPanelComponent implements OnInit, OnDestroy {
     OnEliminarRegistroClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
-            title: this.translate.instant('MUELLES.ELIMINARTITULO'),
-            text: this.translate.instant('MUELLES.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('PORTTOS.ADMINISTACION.MUELLES_PANEL.WILL_DELETE_BERTH_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._muellesService.deleteMuelle(id).subscribe({
@@ -268,20 +268,20 @@ export class MuellesPanelComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('MUELLES.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.BERTH_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('MUELLES.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('PORTTOS.ADMINISTACION.BERTH_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupMuellesStream()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('MUELLES.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.MUELLES_PANEL.COULD_NOT_DELETE_BERTH')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('MUELLES.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('PORTTOS.ADMINISTACION.MUELLES_PANEL.COULD_NOT_DELETE_BERTH'), 'error')
                     }
                 })
             }

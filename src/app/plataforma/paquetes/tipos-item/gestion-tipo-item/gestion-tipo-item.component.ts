@@ -93,7 +93,7 @@ export class GestionTipoItemComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_TIPO_ITEM.NO_SE_PUDO_OBTENER_LA'));
+                    this._swalAlertService.getAlertError(traducir('PAQUETES.TIPOS_ITEM.GESTION.COULD_NOT_GET_CATEGORY_WITH_THAT'));
                     this.btnRegresarClick();
                 }
             });
@@ -138,7 +138,7 @@ export class GestionTipoItemComponent implements OnInit, OnDestroy {
         this.isSubmit = true;
 
         if (this.formularioRegistro.invalid) {
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.FORMULARIOINVALIDO'));
+            this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
             return;
         }
 
@@ -154,7 +154,7 @@ export class GestionTipoItemComponent implements OnInit, OnDestroy {
             this._tiposItemService.putModificarRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        this.registrarLogYSalir('PLATAFORMA.MODIFICAR', '201');
+                        this.registrarLogYSalir('COMMON.RECORD_UPDATED_SUCCESSFULLY', '201');
                     } else {
                         this.manejarErrorGuardado(resp.mensaje);
                     }
@@ -169,7 +169,7 @@ export class GestionTipoItemComponent implements OnInit, OnDestroy {
             this._tiposItemService.postCrearRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        this.registrarLogYSalir('PLATAFORMA.INSERTAR', '201');
+                        this.registrarLogYSalir('COMMON.RECORD_INSERTED_SUCCESSFULLY', '201');
                     } else {
                         this.manejarErrorGuardado(resp.mensaje);
                     }
@@ -194,7 +194,7 @@ export class GestionTipoItemComponent implements OnInit, OnDestroy {
 
     private manejarErrorGuardado(mensaje: string) {
         this.isSaving = false;
-        const msjCompleto = this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + (mensaje || '');
+        const msjCompleto = this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ' ' + (mensaje || '');
 
         const logData = {
             codigoTipoLog: '',

@@ -73,16 +73,16 @@
 </div> -->
 <div class="recorrido" [class.dark-theme]="isDark">
     <!-- Pestañas estilo "Segmented Control" tipo macOS -->
-    <div class="tabs-planos" role="group" [attr.aria-label]="'PORTTOS.RECORRIDO_PANEL.VENTANA_DE_TIEMPO' | translate">
+    <div class="tabs-planos" role="group" [attr.aria-label]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.TIME_WINDOW' | translate">
         <button type="button" *ngFor="let h of ventanas" [class.activo]="h === horas" (click)="cambiarHoras.emit(h)">
             {{ h }} h
         </button>
     </div>
 
-    <p class="aviso-plano" *ngIf="cargando">{{ 'PORTTOS.RECORRIDO_PANEL.CARGANDO_EL_RECORRIDO' | translate }}</p>
+    <p class="aviso-plano" *ngIf="cargando">{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.LOADING_PLAYBACK' | translate }}</p>
     <p class="aviso-plano text-error" *ngIf="!cargando && error">{{ error }}</p>
     <p class="aviso-plano" *ngIf="!cargando && !error && vacio">
-        {{ 'PORTTOS.RECORRIDO_PANEL.TODAVIA_NO_HAY_RECORRIDO_GUARDADO' | translate }}
+        {{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.NO_PLAYBACK_SAVED_IN_WINDOW_YET' | translate }}
     </p>
 
     <ng-container *ngIf="recorrido && !cargando && !error && !vacio">
@@ -97,23 +97,23 @@
                     [ngClass]="'nivel-' + e.nivel" [style.left.%]="pos(e.seg)" [title]="(e.titulo | translate)"></span>
             </div>
             <input type="range" min="0" [max]="duracion" step="10" [value]="segundo"
-                (input)="alMover($any($event.target).value)" [attr.aria-label]="'PORTTOS.RECORRIDO_PANEL.MOMENTO_DEL_RECORRIDO' | translate">
+                (input)="alMover($any($event.target).value)" [attr.aria-label]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.PLAYBACK_MOMENT' | translate">
             <div class="extremos">
                 <span>{{ hora(0) | date: 'HH:mm' : '-0500' }}</span>
-                <span>{{ 'PORTTOS.RECORRIDO_PANEL.AHORA' | translate }}</span>
+                <span>{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.NOW' | translate }}</span>
             </div>
         </div>
 
         <div class="controles-planos">
-            <button type="button" class="btn-salto" (click)="saltar(-15)" [title]="'PORTTOS.RECORRIDO_PANEL.15_MIN_ATRAS' | translate"><i
+            <button type="button" class="btn-salto" (click)="saltar(-15)" [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.15_MIN_BACK' | translate"><i
                     class="icon feather icon-rewind"></i></button>
 
             <button type="button" class="btn-play" (click)="alternar.emit()"
-                [title]="reproduciendo ? ('PORTTOS.RECORRIDO_PANEL.PAUSAR' | translate) : ('PORTTOS.RECORRIDO_PANEL.REPRODUCIR' | translate)">
+                [title]="reproduciendo ? ('COMMON.PAUSE' | translate) : ('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.PLAY' | translate)">
                 <i class="icon feather" [ngClass]="reproduciendo ? 'icon-pause' : 'icon-play'"></i>
             </button>
 
-            <button type="button" class="btn-salto" (click)="saltar(15)" [title]="'PORTTOS.RECORRIDO_PANEL.15_MIN_ADELANTE' | translate"><i
+            <button type="button" class="btn-salto" (click)="saltar(15)" [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.15_MIN_FORWARD' | translate"><i
                     class="icon feather icon-fast-forward"></i></button>
 
             <div class="velocidades-planas" role="group">
@@ -125,15 +125,15 @@
         </div>
 
         <p class="totales-planos">
-            {{ 'PORTTOS.RECORRIDO_PANEL.NAVES_CAMIONES_EVENTOS' | translate: { p0: recorrido.totales.naves, p1: recorrido.totales.camiones, p2: recorrido.eventos.length } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.P0_SHIPS_P1_TRUCKS_P2_EVENTS' | translate: { p0: recorrido.totales.naves, p1: recorrido.totales.camiones, p2: recorrido.eventos.length } }}
         </p>
 
         <!-- Eventos idénticos a la Bitácora -->
         <div class="eventos-planos" *ngIf="recorrido.eventos.length">
-            <h4>{{ 'PORTTOS.RECORRIDO_PANEL.EVENTOS' | translate }}</h4>
+            <h4>{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.EVENTS' | translate }}</h4>
             <button type="button" class="evento-item" *ngFor="let e of recorrido.eventos; trackBy: trackEvento"
                 [ngClass]="'nivel-' + e.nivel" [class.pasado]="e.seg <= segundo" (click)="verEvento.emit(e)"
-                [title]="'PORTTOS.RECORRIDO_PANEL.IR_A_ESTE_MOMENTO' | translate">
+                [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.GO_MOMENT' | translate">
                 <span class="evento-punto"></span>
                 <span class="evento-texto">
                     <strong>{{ (e.titulo | translate) }}</strong>
@@ -146,7 +146,7 @@
 
     <div class="pie-recorrido">
         <button type="button" class="btn-volver" (click)="salir.emit()">
-            <i class="icon feather icon-radio"></i> {{ 'PORTTOS.RECORRIDO_PANEL.VOLVER_A_EN_VIVO' | translate }}
+            <i class="icon feather icon-radio"></i> {{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RECORRIDO_PANEL.BACK_LIVE' | translate }}
         </button>
     </div>
 </div>

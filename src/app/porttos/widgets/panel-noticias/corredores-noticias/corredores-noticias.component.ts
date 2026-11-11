@@ -37,12 +37,12 @@ export class CorredoresNoticiasComponent extends WidgetTableroBase<TableroNotici
 
     // Vista ampliada (2026-10-25): todos los eventos del día por corredor
     public readonly columnasEventos: ColumnaTabla[] = [
-        { campo: 'corredor', titulo: 'PORTTOS.CORREDORES_NOTICIAS.CORREDOR', tipo: 'principal' },
-        { campo: 'tipo', titulo: 'PORTTOS.CORREDORES_NOTICIAS.EVENTO', tipo: 'estado' },
-        { campo: 'sector', titulo: 'PORTTOS.CORREDORES_NOTICIAS.SECTOR' },
-        { campo: 'severidad', titulo: 'PORTTOS.CORREDORES_NOTICIAS.SEVERIDAD' },
-        { campo: 'desde', titulo: 'PORTTOS.CORREDORES_NOTICIAS.DESDE', tipo: 'hora' },
-        { campo: 'descripcion', titulo: 'PORTTOS.CORREDORES_NOTICIAS.DESCRIPCION' }
+        { campo: 'corredor', titulo: 'PORTTOS.WIDGETS.PANEL_NOTICIAS.CORREDORES_NOTICIAS.CORRIDOR', tipo: 'principal' },
+        { campo: 'tipo', titulo: 'PORTTOS.WIDGETS.PANEL_NOTICIAS.CORREDORES_NOTICIAS.EVENT', tipo: 'estado' },
+        { campo: 'sector', titulo: 'PORTTOS.WIDGETS.PANEL_NOTICIAS.CORREDORES_NOTICIAS.SECTOR' },
+        { campo: 'severidad', titulo: 'PORTTOS.WIDGETS.SEVERITY' },
+        { campo: 'desde', titulo: 'PORTTOS.WIDGETS.PANEL_NOTICIAS.CORREDORES_NOTICIAS.FROM', tipo: 'hora' },
+        { campo: 'descripcion', titulo: 'COMMON.DESCRIPTION' }
     ];
     public eventos: any[] = [];
 

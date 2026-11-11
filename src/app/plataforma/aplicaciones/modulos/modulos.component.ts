@@ -289,22 +289,22 @@ export class ModulosComponent implements OnInit, OnDestroy {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'nombreModulo',
-            header: 'MODULOS.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomPadre',
-            header: 'MODULOS.PADRE',
+            header: 'COMMON.PARENT',
             type: 'text'
         },
         {
             name: 'nomHijos',
-            header: 'MODULOS.HIJOS',
+            header: 'COMMON.CHILDREN',
             type: 'estado'
         },
         {
             name: 'nomEstado',
-            header: 'MODULOS.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ]
@@ -312,27 +312,27 @@ export class ModulosComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoModulo',
-            header: 'MODULOS.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'nomAplicacion',
-            header: 'MODULOS.NOMBREAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nomSuite',
-            header: 'MODULOS.NOMBRESUITE',
+            header: 'COMMON.SUITE',
             type: 'text'
         },
         {
             name: 'precioModulo',
-            header: 'MODULOS.PRECIO',
+            header: 'COMMON.PRICE',
             type: 'price'
         },
         {
             name: 'descripcionModulo',
-            header: 'MODULOS.DESCRIPTION',
+            header: 'COMMON.MODULE_DESCRIPTION',
             type: 'text'
         }
     ]
@@ -382,12 +382,12 @@ export class ModulosComponent implements OnInit, OnDestroy {
 
     OnEliminarRegistroClick(id: any): void {
         Swal.fire({
-            title: this.translate.instant('MODULOS.ELIMINARTITULO'),
-            text: this.translate.instant('MODULOS.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            text: this.translate.instant('COMMON.MODULE_WILL_BE_DELETED'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._registrosService.deleteEliminarRegistro(id.id).subscribe({
@@ -395,20 +395,20 @@ export class ModulosComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('COMMON.MODULE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('COMMON.MODULE_WAS_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupModulosStream()
                     },
                     error: err => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_MODULE') + ' ' + err.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('MODULOS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_DELETE_MODULE'), 'error')
                     }
                 })
             }

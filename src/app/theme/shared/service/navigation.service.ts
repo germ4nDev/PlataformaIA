@@ -93,7 +93,7 @@ export class NavigationService implements OnInit, OnDestroy {
             const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
             const hasChildren = modulo.hijos == true;
             const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
-            const titleKey = this.translate.instant('PLATAFORMA.MODULOS.' + modulo.translateKey);
+            const titleKey = this.translate.instant('MENU.MODULES.' + modulo.translateKey);
 
             const item: NavigationItem = {
                 id: modulo.codigoModulo,
@@ -126,7 +126,7 @@ export class NavigationService implements OnInit, OnDestroy {
         let hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, modulos);
         hijosDelNodoSuite = this.sortMenuItems(hijosDelNodoSuite);
 
-        const suiteTitleKey = this.translate.instant('PLATAFORMA.SUITES.' + this.suite.translateKey);
+        const suiteTitleKey = this.translate.instant('MENU.SUITES.' + this.suite.translateKey);
 
         const nodoSuite: NavigationItem = {
             id: this.suite.codigoSuite || '',

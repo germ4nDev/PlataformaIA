@@ -9,10 +9,10 @@
             @if (e.titulo) { <h3 class="perfil__titulo">{{ e.titulo }}</h3> }
           </div>
           @if (e.detalle) {
-            <div class="perfil__bloque"><p class="perfil__rotulo perfil__rotulo--preocupa">{{ 'WEB.PERFILES.LO_QUE_LE_PREOCUPA' | translate }}</p><p>{{ e.detalle }}</p></div>
+            <div class="perfil__bloque"><p class="perfil__rotulo perfil__rotulo--preocupa">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.PERFILES.WHAT_CONCERNS_YOU' | translate }}</p><p>{{ e.detalle }}</p></div>
           }
           @if (e.texto) {
-            <div class="perfil__bloque"><p class="perfil__rotulo">{{ 'WEB.PERFILES.LO_QUE_VE_EN_PORTTOS' | translate }}</p><p>{{ e.texto }}</p></div>
+            <div class="perfil__bloque"><p class="perfil__rotulo">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.PERFILES.WHAT_YOU_SEE_IN_PORTTOS' | translate }}</p><p>{{ e.texto }}</p></div>
           }
           @if (accion(e); as a) {
             <pp-enlace [url]="a.url" clase="perfil__accion">{{ a.texto }} <span aria-hidden="true">→</span></pp-enlace>

@@ -1,11 +1,11 @@
 <app-widget-shell [titulo]="(data?.titulo | translate) || 'RESUMEN SEMANAL'"
-    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.RESUMEN_MARITIMO.RESUMEN_SEMANAL_MARITIMO' | translate)" [icono]="data?.icono || 'feather icon-wind'"
+    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_MARITIMO.WEEKLY_MARITIME_SUMMARY' | translate)" [icono]="data?.icono || 'feather icon-wind'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-primary text-uppercase">
-            {{ 'PORTTOS.RESUMEN_MARITIMO.METRICAS' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_MARITIMO.METRICS' | translate }}
         </span>
     </div>
 
@@ -16,7 +16,7 @@
         <!-- Estado Vacío -->
         <div *ngIf="!data?.metricas || data?.metricas.length === 0"
             class="d-flex justify-content-center align-items-center h-100 titulo-container small py-3">
-            {{ 'PORTTOS.RESUMEN_MARITIMO.NO_HAY_METRICAS_DISPONIBLES_EN' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_MARITIMO.NO_METRICS_AVAILABLE_RIGHT_NOW' | translate }}
         </div>
 
         <!-- Grid de Tarjetas -->

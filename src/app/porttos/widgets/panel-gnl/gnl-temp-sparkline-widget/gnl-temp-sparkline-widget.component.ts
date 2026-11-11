@@ -124,7 +124,7 @@ export class GnlTempSparklineWidgetComponent implements OnInit, AfterViewInit, O
                 labels: [],
                 datasets: [
                     {
-                        label: traducir('PORTTOS.GNL_TEMP_SPARKLINE_WIDGET.TEMPERATURA_C'),
+                        label: traducir('PORTTOS.WIDGETS.PANEL_GNL.GNL_TEMP_SPARKLINE_WIDGET.TEMPERATURE_C'),
                         data: [],
                         borderColor: '#00d4ff',
                         borderWidth: 3,

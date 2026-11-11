@@ -40,7 +40,7 @@ export class MarcasVehiculosComponent extends WidgetTableroBase<TableroCargaSuel
 
     protected alRecibir(d: TableroCargaSuelta | null): void {
         this.labels = d?.marcas.labels || [];
-        this.series = [{ label: traducir('PORTTOS.MARCAS_VEHICULOS.UNIDADES'), data: d?.marcas.valores || [], color: '#2f96b4' }];
+        this.series = [{ label: traducir('PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.MARCAS_VEHICULOS.UNITS'), data: d?.marcas.valores || [], color: '#2f96b4' }];
     }
 
     protected override alCambiarTamano(): void {

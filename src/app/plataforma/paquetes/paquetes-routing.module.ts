@@ -45,15 +45,28 @@ const routes: Routes = [
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
+            // OT-029: Listas de precios (las rutas precios-paquete y gestion-precio-paquete quedan como alias)
+            {
+                path: 'listas-precios',
+                loadComponent: () => import('./listas-precios/listas-precios.component').then((m) => m.ListasPreciosComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-lista-precios',
+                loadComponent: () => import('./listas-precios/gestion-lista-precios/gestion-lista-precios.component').then((m) => m.GestionListaPreciosComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
             {
                 path: 'precios-paquete',
-                loadComponent: () => import('./precios-paquete/precios-paquete.component').then((m) => m.PreciosPaqueteComponent),
+                loadComponent: () => import('./listas-precios/listas-precios.component').then((m) => m.ListasPreciosComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-precio-paquete',
-                loadComponent: () => import('./precios-paquete/gestion-precio-paquete/gestion-precio-paquete.component').then((m) => m.GestionPrecioPaqueteComponent),
+                loadComponent: () => import('./listas-precios/gestion-lista-precios/gestion-lista-precios.component').then((m) => m.GestionListaPreciosComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },

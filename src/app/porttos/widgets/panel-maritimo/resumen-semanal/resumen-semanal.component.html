@@ -1,15 +1,15 @@
 <app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || 'ARRIBOS 7 DÍAS'"
-    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.RESUMEN_SEMANAL.PROGRAMACION_DE_ARRIBOS_Y_ATRAQUES' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_MARITIMO.ARRIVAL_BERTHING_SCHEDULE' | translate)"
     [icono]="data?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Botón para alternar entre Gráfica y Lista -->
     <div acciones-extra class="d-flex align-items-center gap-2">
         <span class="tc-badge badge-info text-uppercase" *ngIf="!cargando && listaArribos.length > 0">
-            {{ 'PORTTOS.RESUMEN_SEMANAL.NAVES' | translate: { p0: listaArribos.length } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.P0_SHIPS' | translate: { p0: listaArribos.length } }}
         </span>
         <button class="btn btn-sm btn-outline-secondary py-0 px-2 border-0" (click)="toggleVista()"
-            [title]="mostrarTabla ? ('PORTTOS.RESUMEN_SEMANAL.VER_GRAFICA_DE_BARRAS' | translate) : ('PORTTOS.RESUMEN_SEMANAL.VER_LISTADO_DE_MOTONAVES' | translate)">
+            [title]="mostrarTabla ? ('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.VIEW_BAR_CHART' | translate) : ('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.VIEW_VESSEL_LIST' | translate)">
             <i *ngIf="mostrarTabla" class="feather icon-bar-chart-2 text-info"></i>
             <i *ngIf="!mostrarTabla" class="feather icon-list text-info"></i>
         </button>
@@ -22,7 +22,7 @@
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top: 0; left: 0; z-index: 10;">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="subtitulo-container small">{{ 'PORTTOS.RESUMEN_SEMANAL.CONSULTANDO_PROGRAMACION_7_DIAS' | translate }}</span>
+            <span class="subtitulo-container small">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.CHECKING_7_DAY_SCHEDULE' | translate }}</span>
         </div>
 
         <!-- 1. VISTA DE LISTA DE ARRIBOS -->
@@ -33,14 +33,14 @@
                     style="border-left: 3px solid #00d4ff;">
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="titulo-container fw-bold" style="font-size: 0.8rem;">
-                            {{ item.motonave || item.nombre_buque || ('PORTTOS.RESUMEN_SEMANAL.MOTONAVE_EN_TRANSITO' | translate) }}
+                            {{ item.motonave || item.nombre_buque || ('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.VESSEL_IN_TRANSIT' | translate) }}
                         </span>
                         <span class="badge bg-info bg-opacity-10 text-info" style="font-size: 0.68rem;">
-                            {{ item.eta || item.fecha_arribo || ('PORTTOS.RESUMEN_SEMANAL.ETA_PENDIENTE' | translate) }}
+                            {{ item.eta || item.fecha_arribo || ('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.ETA_PENDING' | translate) }}
                         </span>
                     </div>
                     <small class="subtitulo-container d-block mt-1" style="font-size: 0.72rem;">
-                        {{ item.terminal || item.instalacion_portuaria || ('PORTTOS.RESUMEN_SEMANAL.TERMINAL_POR_DEFINIR' | translate) }}
+                        {{ item.terminal || item.instalacion_portuaria || ('PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.TERMINAL_BE_DEFINED' | translate) }}
                     </small>
                 </div>
             </div>
@@ -61,7 +61,7 @@
         <ng-template #sinArribos>
             <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
                 <i class="feather icon-anchor fs-2 mb-2 opacity-50"></i>
-                {{ 'PORTTOS.RESUMEN_SEMANAL.NO_HAY_ARRIBOS_PROGRAMADOS_EN' | translate }}
+                {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.RESUMEN_SEMANAL.NO_ARRIVALS_SCHEDULED_IN_RANGE' | translate }}
             </div>
         </ng-template>
 

@@ -4,10 +4,10 @@
     <div class="card">
       <div class="nav-tabs-custom">
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'PLATAFORMA.MENU' | translate }}
+          {{ 'COMMON.MENU' | translate }}
         </button>
         <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'PLATAFORMA.FILTERS' | translate }}
+          {{ 'COMMON.FILTERS' | translate }}
         </button>
       </div>
 
@@ -17,12 +17,12 @@
 
       <ng-container *ngIf="activeTab === 'filters'">
         <div class="p-3 filtros-scroll-wrapper">
-          <h6 class="filtros-title">{{ 'GALERIA.FILTROS.TITULO' | translate }}</h6>
+          <h6 class="filtros-title">{{ 'BIBLIOTECA.GALERIAS.GALLERY_FILTERS' | translate }}</h6>
 
           <div class="filtro">
-            <small>{{ 'GALERIA.FILTROS.FILTROCODIGO' | translate }}</small>
+            <small>{{ 'COMMON.CODE' | translate }}</small>
             <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
               <option [value]="gal.codigoGaleria" *ngFor="let gal of galerias">
                 {{ gal.codigoGaleria }}
               </option>
@@ -30,9 +30,9 @@
           </div>
 
           <div class="filtro">
-            <small>{{ 'GALERIA.FILTROS.FILTRONOMBRE' | translate }}</small>
+            <small>{{ 'COMMON.NAME' | translate }}</small>
             <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
               <option [value]="gal.nombreGaleria" *ngFor="let gal of galerias">
                 {{ gal.nombreGaleria }}
               </option>
@@ -40,21 +40,21 @@
           </div>
 
           <div class="filtro">
-            <small>{{ 'GALERIA.FILTROS.FILTRODECRIPCION' | translate }}</small>
+            <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroDescripcionChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'GALERIA.FILTROS.DESCRIPCIONCHOLDER' | translate }}"
+              placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}"
             />
           </div>
 
           <div class="filtro">
-            <small>{{ 'GALERIA.FILTROS.FILTROESTADO' | translate }}</small>
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
             </select>
           </div>
         </div>
@@ -69,7 +69,7 @@
           <app-data-table
             [data]="dataFiltrada"
             [idField]="'codigoGaleria'"
-            [tableTitle]="'GALERIA.TITLE' | translate"
+            [tableTitle]="'BIBLIOTECA.GALERIAS.GALLERY_MANAGEMENT' | translate"
             [metadataColumns]="columnasGaleria"
             [metadataDetailColumns]="columnasDetailRegistros"
             [showDetail]="true"
@@ -80,8 +80,8 @@
             [showDeleteButton]="true"
             [showBackButton]="true"
             [showSearchBox]="false"
-            [newButtonLabel]="'GALERIA.NEW' | translate"
-            [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+            [newButtonLabel]="'BIBLIOTECA.GALERIAS.NEW_GALLERY' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
             (newRecord)="OnNuevaGaleriaClick()"
             (editRecord)="OnEditarGaleriaClick($event)"
             (deleteRecord)="OnEliminarGaleriaClick($event)"

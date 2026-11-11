@@ -94,27 +94,27 @@ export class ScriptsComponent implements OnInit {
   columnasScripts: ColumnMetadata[] = [
     {
       name: 'codigoScript',
-      header: 'ADMINISTRACIONBD.SCRIPTS.CODIGO',
+      header: 'COMMON.CODE',
       type: 'text'
     },
     {
       name: 'nombreScript',
-      header: 'ADMINISTRACIONBD.SCRIPTS.NOMBRE',
+      header: 'COMMON.NAME',
       type: 'text'
     },
     {
       name: 'codigoAplicacion',
-      header: 'ADMINISTRACIONBD.SCRIPTS.APLICACION',
+      header: 'COMMON.APPLICATION',
       type: 'text'
     },
     {
       name: 'codigoTipo',
-      header: 'ADMINISTRACIONBD.SCRIPTS.TIPO',
+      header: 'ADMINISTRACION_BD.SCRIPTS.SCRIPT_TYPE',
       type: 'text'
     },
     {
       name: 'nomEstado',
-      header: 'PLATAFORMA.STATUS',
+      header: 'COMMON.STATUS',
       type: 'text'
     }
   ]
@@ -122,7 +122,7 @@ export class ScriptsComponent implements OnInit {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'descripcionScript',
-      header: 'SCRIPTS.DESCRIPCION',
+      header: 'COMMON.DESCRIPTION',
       type: 'text'
     }
   ]
@@ -140,12 +140,12 @@ export class ScriptsComponent implements OnInit {
   OnEliminarRegistroClick(evento: any) {
     const id = typeof evento === 'string' ? evento : evento?.codigoScript || evento?.id
     Swal.fire({
-      title: this.translate.instant('SCRIPTS.ELIMINARTITULO'),
-      text: this.translate.instant('SCRIPTS.ELIMINARTEXTO'),
+      title: this.translate.instant('ADMINISTRACION_BD.SCRIPTS.ARE_YOU_SURE'),
+      text: this.translate.instant('ADMINISTRACION_BD.SCRIPTS.ACTION_WILL_PERMANENTLY_DELETE_SCRIPT_YOU'),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
         this._scriptsService.deleteEliminarRegistro(id).subscribe({
@@ -153,10 +153,10 @@ export class ScriptsComponent implements OnInit {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('SCRIPTS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+              descripcionLog: this.translate.instant('ADMINISTRACION_BD.SCRIPTS.SCRIPT_HAS_BEEN_SUCCESSFULLY_DELETED') + ' ' + resp.mensaje
             }
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire(this.translate.instant('SCRIPTS.ELIMINAREXITOSA'), resp.mensaje, 'success')
+            Swal.fire(this.translate.instant('ADMINISTRACION_BD.SCRIPTS.SCRIPT_HAS_BEEN_SUCCESSFULLY_DELETED'), resp.mensaje, 'success')
 
             // Refresca la grilla localmente
             this.registros = this.registros.filter(s => s.codigoScript !== id)
@@ -166,10 +166,10 @@ export class ScriptsComponent implements OnInit {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('SCRIPTS.ELIMINARERROR') + ' ' + err.mensaje
+              descripcionLog: this.translate.instant('ADMINISTRACION_BD.SCRIPTS.ERROR_OCCURRED_WHILE_TRYING_DELETE_SCRIPT') + ' ' + err.mensaje
             }
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('SCRIPTS.ELIMINARERROR'), 'error')
+            Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('ADMINISTRACION_BD.SCRIPTS.ERROR_OCCURRED_WHILE_TRYING_DELETE_SCRIPT'), 'error')
             console.error('Error eliminando', err)
           }
         })

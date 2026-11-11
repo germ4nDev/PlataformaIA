@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,26 +17,26 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'TICKETS.CLASESTICKET.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'TICKETS.CLASES_TICKET.TICKET_CLASS_FILTERS' | translate }}</h6>
                     </DIV>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.CLASESTICKET.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'TICKETS.CLASESTICKET.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'TICKETS.CLASES_TICKET.CLASS_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.CLASESTICKET.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'TICKETS.CLASESTICKET.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'TICKETS.CLASES_TICKET.CLASS_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.CLASESTICKET.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer;"
                             (change)="onFiltroEstadoChangeClick($event)">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -49,9 +49,9 @@
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoClase'"
-                        [tableTitle]="'TICKETS.CLASESTICKET.TITLE' | translate"
-                        [newButtonLabel]="'TICKETS.CLASESTICKET.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasRegistros"
+                        [tableTitle]="'TICKETS.CLASES_TICKET.TICKET_CLASS_MANAGEMENT' | translate"
+                        [newButtonLabel]="'TICKETS.CLASES_TICKET.NEW_TICKET_CLASS' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         [showDeleteButton]="true" [showSearchBox]="false" (viewRecord)="OnViewRegistroClick($event)"

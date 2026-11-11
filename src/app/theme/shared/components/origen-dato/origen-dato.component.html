@@ -1,9 +1,9 @@
 <div class="origen-dato" *ngIf="o.fuente || o.simulado || o.esRespaldo || o.periodo || o.generadoEn || o.nota">
     <i class="feather icon-info"></i>
-    <span *ngIf="o.fuente">{{ 'WEB.ORIGEN_DATO.FUENTE' | translate }} <strong>{{ o.fuente }}</strong></span>
-    <span *ngIf="o.periodo">{{ 'WEB.ORIGEN_DATO.PERIODO' | translate: { p0: o.periodo } }}</span>
-    <span *ngIf="o.generadoEn">{{ 'WEB.ORIGEN_DATO.ACTUALIZADO' | translate: { p0: (o.generadoEn | date: 'dd/MM HH:mm' : '-0500') } }}</span>
-    <span *ngIf="o.simulado" class="marca marca-simulado">{{ 'WEB.ORIGEN_DATO.DATOS_SIMULADOS' | translate }}</span>
-    <span *ngIf="o.esRespaldo" class="marca marca-respaldo">{{ 'WEB.ORIGEN_DATO.VALORES_DE_RESPALDO' | translate }}</span>
+    <span *ngIf="o.fuente">{{ 'SHARED.ORIGEN_DATO.SOURCE' | translate }} <strong>{{ o.fuente }}</strong></span>
+    <span *ngIf="o.periodo">{{ 'SHARED.ORIGEN_DATO.PERIOD_P0' | translate: { p0: o.periodo } }}</span>
+    <span *ngIf="o.generadoEn">{{ 'SHARED.ORIGEN_DATO.UPDATED_P0' | translate: { p0: (o.generadoEn | date: 'dd/MM HH:mm' : '-0500') } }}</span>
+    <span *ngIf="o.simulado" class="marca marca-simulado">{{ 'SHARED.ORIGEN_DATO.SIMULATED_DATA' | translate }}</span>
+    <span *ngIf="o.esRespaldo" class="marca marca-respaldo">{{ 'SHARED.ORIGEN_DATO.FALLBACK_VALUES' | translate }}</span>
     <span *ngIf="o.nota" class="nota">{{ o.nota }}</span>
 </div>

@@ -75,16 +75,16 @@ export class TableBodegasComponent implements OnInit, OnChanges, OnDestroy {
     public notaRango: string | null = null;
     public origenRango: any = null;
     public readonly columnasRango: ColumnaTabla[] = [
-        { campo: 'fechaCreacion', titulo: 'PORTTOS.TABLE_BODEGAS.FECHA', tipo: 'fecha' },
-        { campo: 'lote_bl', titulo: 'PORTTOS.TABLE_BODEGAS.LOTE_BL', tipo: 'principal' },
-        { campo: 'nombre_bodega', titulo: 'PORTTOS.TABLE_BODEGAS.BODEGA' },
-        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
-        { campo: 'tipo_operacion', titulo: 'PORTTOS.COMUN.OPERACION', tipo: 'estado' },
-        { campo: 'toneladas', titulo: 'PORTTOS.CHART_DOUGHNUT_BODEGAS.TONELADAS', tipo: 'numero', decimales: 1, unidad: 't' },
-        { campo: 'cliente', titulo: 'PORTTOS.TABLE_BODEGAS.CLIENTE' },
-        { campo: 'dias_almacenaje', titulo: 'PORTTOS.TABLE_BODEGAS.ESTADIA', tipo: 'numero', unidad: 'd' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-        { campo: 'codigoUsuarioCreacion', titulo: 'PORTTOS.TABLE_BODEGAS.REGISTRO' }
+        { campo: 'fechaCreacion', titulo: 'COMMON.DATE', tipo: 'fecha' },
+        { campo: 'lote_bl', titulo: 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.LOT_BL', tipo: 'principal' },
+        { campo: 'nombre_bodega', titulo: 'PORTTOS.WIDGETS.WAREHOUSE' },
+        { campo: 'producto', titulo: 'PORTTOS.WIDGETS.PRODUCT' },
+        { campo: 'tipo_operacion', titulo: 'PORTTOS.WIDGETS.OPERATION', tipo: 'estado' },
+        { campo: 'toneladas', titulo: 'COMMON.TONS', tipo: 'numero', decimales: 1, unidad: 't' },
+        { campo: 'cliente', titulo: 'PORTTOS.WIDGETS.CUSTOMER' },
+        { campo: 'dias_almacenaje', titulo: 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.STAY', tipo: 'numero', unidad: 'd' },
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+        { campo: 'codigoUsuarioCreacion', titulo: 'PORTTOS.WIDGETS.PANEL_BODEGAS.TABLE_BODEGAS.LOGGED_BY' }
     ];
 
     cambiarDias(d: number): void {

@@ -42,8 +42,8 @@ export class TraficoCapacidadComponent extends WidgetTableroBase<TableroCapacida
         this.labels = d?.trafico.labels || [];
         const hay = (d?.trafico.ingresos || []).some((v) => v > 0) || (d?.trafico.salidas || []).some((v) => v > 0);
         this.series = hay ? [
-            { label: traducir('PORTTOS.TRAFICO_CAPACIDAD.ENTRADAS'), data: d!.trafico.ingresos, color: '#2f96b4' },
-            { label: traducir('PORTTOS.TRAFICO_CAPACIDAD.SALIDAS'), data: d!.trafico.salidas, color: '#51a351' }
+            { label: traducir('PORTTOS.WIDGETS.PANEL_CAPACIDAD.TRAFICO_CAPACIDAD.INFLOWS'), data: d!.trafico.ingresos, color: '#2f96b4' },
+            { label: traducir('PORTTOS.WIDGETS.PANEL_CAPACIDAD.TRAFICO_CAPACIDAD.OUTFLOWS'), data: d!.trafico.salidas, color: '#51a351' }
         ] : [];
     }
 

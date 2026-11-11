@@ -191,12 +191,12 @@ export class ChartBarBodegasComponent implements OnInit, AfterViewInit, OnChange
                 isEnfoque: this.isEnfoque,
                 datasets: [
                     {
-                        label: traducir('PORTTOS.CHART_BAR_BODEGAS.INGRESO_DESCARGUE_BUQUE'),
+                        label: traducir('PORTTOS.WIDGETS.PANEL_BODEGAS.CHART_BAR_BODEGAS.INFLOW_SHIP_UNLOADING'),
                         data: this.serieEntradas,
                         color: '#00d4ff'
                     },
                     {
-                        label: traducir('PORTTOS.CHART_BAR_BODEGAS.SALIDA_DESPACHO_CAMION'),
+                        label: traducir('PORTTOS.WIDGETS.PANEL_BODEGAS.CHART_BAR_BODEGAS.OUTFLOW_TRUCK_DISPATCH'),
                         data: this.serieSalidas,
                         color: '#10b981'
                     }

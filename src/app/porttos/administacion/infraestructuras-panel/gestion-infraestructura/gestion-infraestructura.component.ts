@@ -101,7 +101,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                     console.log('data registro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_INFRAESTRUCTURA.NO_SE_PUDO_OBTENER_EL'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.COULD_NOT_GET_INFRASTRUCTURE'), 'error')
                 }
             })
         }
@@ -215,7 +215,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                     this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -245,7 +245,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                     if (resp.ok) {
                         console.log('MODIFICAdo Infraestructura', resp.data);
                         form.resetForm()
-                        this._swalService.getAlertSuccess(this.translate.instant('MUELLES.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('PORTTOS.ADMINISTACION.BERTH_CREATED_SUCCESSFULLY'))
                         this.router.navigate(['/porttos/infraestructuras-panel'])
                     }
                 },
@@ -254,10 +254,10 @@ export class GestionInfraestructuraComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('MUELLES.CREATESUCCSESSFULLY')
+                        descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.BERTH_CREATED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_INFRAESTRUCTURA.NO_SE_PUDO_ACTUALIZAR_EL'))
+                    this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.COULD_NOT_UPDATE_INFRASTRUCTURE'))
                 }
             })
         } else {
@@ -267,7 +267,7 @@ export class GestionInfraestructuraComponent implements OnInit {
                     console.log('resp', resp)
                     if (resp.ok) {
                         form.resetForm()
-                        this._swalService.getAlertSuccess(this.translate.instant('MUELLES.UPDATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('PORTTOS.ADMINISTACION.BERTH_UPDATED_SUCCESSFULLY'))
                         this.router.navigate(['/porttos/infraestructuras-panel'])
                     }
                 },
@@ -276,10 +276,10 @@ export class GestionInfraestructuraComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('MUELLES.ELIMINAREXITOSA')
+                        descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.BERTH_DELETED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_INFRAESTRUCTURA.NO_SE_PUDO_CREAR_EL'))
+                    this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.COULD_NOT_CREATE_INFRASTRUCTURE'))
                 }
             })
         }

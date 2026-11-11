@@ -26,18 +26,18 @@ export class UtilidadesService {
 
     public getMesesAnio() {
         const meses = [
-            this.translate.instant('PLATAFORMA.ENERO'),
-            this.translate.instant('PLATAFORMA.FEBRERO'),
-            this.translate.instant('PLATAFORMA.MARZO'),
-            this.translate.instant('PLATAFORMA.ABRIL'),
-            this.translate.instant('PLATAFORMA.MAYO'),
-            this.translate.instant('PLATAFORMA.JUNIO'),
-            this.translate.instant('PLATAFORMA.JULIO'),
-            this.translate.instant('PLATAFORMA.AGOSTO'),
-            this.translate.instant('PLATAFORMA.SEPTIEMBRE'),
-            this.translate.instant('PLATAFORMA.OCTUBRE'),
-            this.translate.instant('PLATAFORMA.NOVIEMBRE'),
-            this.translate.instant('PLATAFORMA.DICIEMBRE')
+            this.translate.instant('SHARED.SERVICE.JANUARY'),
+            this.translate.instant('SHARED.SERVICE.FEBRUARY'),
+            this.translate.instant('SHARED.SERVICE.MARCH'),
+            this.translate.instant('SHARED.SERVICE.APRIL'),
+            this.translate.instant('SHARED.SERVICE.MAY'),
+            this.translate.instant('SHARED.SERVICE.JUNE'),
+            this.translate.instant('SHARED.SERVICE.JULY'),
+            this.translate.instant('SHARED.SERVICE.AUGUST'),
+            this.translate.instant('SHARED.SERVICE.SEPTEMBER'),
+            this.translate.instant('SHARED.SERVICE.OCTOBER'),
+            this.translate.instant('SHARED.SERVICE.NOVEMBER'),
+            this.translate.instant('SHARED.SERVICE.DECEMBER')
         ];
         return meses;
     }

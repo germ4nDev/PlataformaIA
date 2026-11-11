@@ -33,9 +33,9 @@
               /></a>
               <div class="media-body chat-menu-content">
                 <div class="rem-msg">
-                  <p class="chat-cont">{{ 'WEB.CHAT_MSG.TYPING' | translate }}</p>
+                  <p class="chat-cont">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CHAT_MSG.TYPING' | translate }}</p>
                 </div>
-                <p class="chat-time">{{ 'WEB.CHAT_MSG.NOW' | translate }}</p>
+                <p class="chat-time">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CHAT_MSG.NOW' | translate }}</p>
               </div>
             </div>
           }
@@ -44,7 +44,7 @@
         <div class="media chat-messages text-center">
           <div class="media-body chat-menu-content">
             <div>
-              <p class="chat-cont">{{ 'WEB.CHAT_MSG.CHAT_NOT_FOUND' | translate }}</p>
+              <p class="chat-cont">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CHAT_MSG.CHAT_NOT_FOUND' | translate }}</p>
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@
       [(ngModel)]="message"
       name="h-chat-text"
       class="form-control h-send-chat"
-      [placeholder]="'WEB.CHAT_MSG.WRITE_HEAR' | translate"
+      [placeholder]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CHAT_MSG.WRITE_HERE' | translate"
       (keyup)="sentMsg(1)"
       (keyup.enter)="sentMsg(0)"
     />

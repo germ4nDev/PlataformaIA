@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
@@ -16,24 +16,24 @@
             <div class="card-header card-header-sticky">
                 <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'INFRAESTRUCTURA.NEW' | translate }}
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.NEW_INFRASTRUCTURE' | translate }}
                         </h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'INFRAESTRUCTURA.UPDATE' | translate }}
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.EDIT_INFRASTRUCTURE' | translate }}
                         </h4>
                     </div>
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'INFRAESTRUCTURA.CREATE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.CREATE_INFRASTRUCTURE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'INFRAESTRUCTURA.UPDATE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.EDIT_INFRASTRUCTURE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -45,68 +45,68 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="id_terminal">{{ 'INFRAESTRUCTURA.TERMINAL' |
+                                <label class="form-control-label" for="id_terminal">{{ 'PORTTOS.TERMINAL' |
                                     translate
                                     }}</label>
                                 <input class="form-control form-input" id="id_terminal" name="id_terminal" type="text"
-                                    placeholder="{{ 'INFRAESTRUCTURA.TERMINAL' | translate }}"
+                                    placeholder="{{ 'PORTTOS.TERMINAL' | translate }}"
                                     (input)="onVerificarTerminal($event)"
                                     [ngClass]="{ 'is-invalid': (!id_terminal.valid && (id_terminal.dirty || id_terminal.touched || isSubmit)) || terminalDuplicado }"
                                     #id_terminal="ngModel" required [(ngModel)]="FormRegistro.id_terminal" />
                                 <label
                                     *ngIf="!id_terminal.valid && (id_terminal.dirty || id_terminal.touched || isSubmit) && !terminalDuplicado"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.EXISTETERMINALHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.SELECT_TERMINAL_FIELD_REQUIRED' | translate }}
                                 </label>
                                 <label *ngIf="nombreDuplicado"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.EXISTETERMINALHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.SELECT_TERMINAL_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="id_tipo"> {{ 'INFRAESTRUCTURA.TIPOINFRA'
+                                <label class="form-control-label" for="id_tipo"> {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.INFRASTRUCTURE_TYPE'
                                     | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="id_tipo"
+                                <select class="form-control form-select" style="cursor: pointer" name="id_tipo"
                                     id="id_tipo"
                                     [ngClass]="{ 'is-invalid': !id_tipo.valid && (id_tipo.dirty || id_tipo.touched || isSubmit) }"
                                     #id_tipo="ngModel" required [(ngModel)]="FormRegistro.id_tipo">
-                                    <option value="">{{ 'INFRAESTRUCTURA.GESTION.PLACEHOLDERTIPOINFRA' | translate }}
+                                    <option value="">{{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.SELECT_INFRASTRUCTURE_TYPE' | translate }}
                                     </option>
                                     <option [value]="tipo.id_tipo" *ngFor="let tipo of tiposInfra"> {{
                                         tipo.nombre }}</option>
                                 </select>
                                 <label *ngIf="!id_tipo.valid && (id_tipo.dirty || id_tipo.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.GESTION.REQUERIDOTIPOINFRA' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.SELECT_INFRASTRUCTURE_TYPE_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombre">{{ 'INFRAESTRUCTURA.NAME' |
+                                <label class="form-control-label" for="nombre">{{ 'COMMON.NAME' |
                                     translate
                                     }}</label>
                                 <input class="form-control form-input" id="nombre" name="nombre" type="text"
-                                    placeholder="{{ 'INFRAESTRUCTURA.NAME' | translate }}"
+                                    placeholder="{{ 'COMMON.NAME' | translate }}"
                                     (input)="onVerificarNombre($event)"
                                     [ngClass]="{ 'is-invalid': (!nombre.valid && (nombre.dirty || nombre.touched || isSubmit)) || nombreDuplicado }"
                                     #nombre="ngModel" required [(ngModel)]="FormRegistro.nombre" />
                                 <label
                                     *ngIf="!nombre.valid && (nombre.dirty || nombre.touched || isSubmit) && !nombreDuplicado"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.EXISTENAMEHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.FIELD_REQUIRED_MUST_BE_UNIQUE' | translate }}
                                 </label>
                                 <label *ngIf="nombreDuplicado"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.EXISTENAMEHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.FIELD_REQUIRED_MUST_BE_UNIQUE' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORTEXT' | translate
+                                <label class="form-control-label">{{ 'COMMON.TEXT_COLOR' | translate
                                     }}</label>
                                 <app-color-selector [initialColor]="FormRegistro.color_ui" [id]="textoColor"
                                     (colorSelected)="OnColorSelectedClick($event)"></app-color-selector>
@@ -115,7 +115,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="ubicacion_geo">
-                                    {{ 'INFRAESTRUCTURA.UBICACION' | translate }}
+                                    {{ 'PORTTOS.LOCATION' | translate }}
                                 </label>
 
                                 <!-- Aquí usamos nuestro componente interactivo -->
@@ -129,14 +129,14 @@
 
                                 <label *ngIf="!FormRegistro.ubicacion_geo && isSubmit"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.UBICACION_REQUERIDA' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.MARK_LOCATION_ON_MAP_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="geocerca_geo">
-                                    {{ 'INFRAESTRUCTURA.GEOCERCA' | translate }}
+                                    {{ 'PORTTOS.GEOFENCE' | translate }}
                                 </label>
 
                                 <!-- Aquí usamos nuestro componente interactivo -->
@@ -149,13 +149,13 @@
 
                                 <label *ngIf="!FormRegistro.geocerca_geo && isSubmit"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.GEOCERCA_REQUERIDA' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.DRAW_INFRASTRUCTURE_GEOFENCE_ON_MAP_FIELD' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'INFRAESTRUCTURA.DESCRIPTION' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcion ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcion"
@@ -166,25 +166,25 @@
                                 <label
                                     *ngIf="!descripcion.valid && (descripcion.dirty || descripcion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'INFRAESTRUCTURA.DESCRIPCIONHOLDER' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.GESTION.INFRASTRUCTURE_DESCRIPTION' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'INFRAESTRUCTURA.STATUS' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="estado" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estado" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVO' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estado" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estado" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVO' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

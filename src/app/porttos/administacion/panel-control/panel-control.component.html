@@ -1,17 +1,17 @@
 <div class="PORTTOS-dashboard-container">
     <header class="dashboard-header">
         <div class="header-titles">
-            <h1 class="title">{{ 'PORTTOS.PANEL_CONTROL.TORRE_DE_CONTROL_LOGISTICA_4' | translate }}</h1>
-            <p class="subtitle">{{ 'PORTTOS.PANEL_CONTROL.PLATAFORMA_DE_VISIBILIDAD_Y_AGENTES' | translate }}</p>
+            <h1 class="title">{{ 'COMMON.LOGISTICS_CONTROL_TOWER_4_0' | translate }}</h1>
+            <p class="subtitle">{{ 'COMMON.VISIBILITY_AI_AGENTS_PLATFORM' | translate }}</p>
         </div>
 
         <div class="header-controls">
-            <label for="nodoOperativo">{{ 'PORTTOS.PANEL_CONTROL.NODO_OPERATIVO' | translate }}</label>
+            <label for="nodoOperativo">{{ 'COMMON.OPERATING_NODE' | translate }}</label>
             <select id="nodoOperativo" class="form-select">
                 <option value="buenaventura">Buenaventura (SPRBUN / TCBUEN)</option>
             </select>
             <div>
-                <i class="icon feather icon-help-circle icon-lg" title="{{ 'PLATAFORMA.NAVBAR.HELP' | translate }}"
+                <i class="icon feather icon-help-circle icon-lg" title="{{ 'COMMON.HELP' | translate }}"
                     (click)="RegresarClick()" style="cursor: pointer"></i>
             </div>
             <div>
@@ -53,37 +53,37 @@
     <nav class="dashboard-nav-tabs">
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'operacion_maritima'}"
             (click)="cambiarPestana('operacion_maritima')">
-            <span class="icon">🛳️</span> {{ 'PORTTOS.PANEL_CONTROL.OPERACION_MARITIMA' | translate }}
+            <span class="icon">🛳️</span> {{ 'COMMON.MARITIME_OPERATIONS' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'gate_bodegas'}"
             (click)="cambiarPestana('gate_bodegas')">
-            <span class="icon">🏗️</span> {{ 'PORTTOS.PANEL_CONTROL.GATE_BODEGAS' | translate }}
+            <span class="icon">🏗️</span> {{ 'COMMON.GATE_WAREHOUSES' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'operacion_terrestre'}"
             (click)="cambiarPestana('operacion_terrestre')">
-            <span class="icon">🚛</span> {{ 'PORTTOS.PANEL_CONTROL.OPERACION_TERRESTRE' | translate }}
+            <span class="icon">🚛</span> {{ 'PORTTOS.ADMINISTACION.LAND_OPERATIONS' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'analitica_rndc'}"
             (click)="cambiarPestana('analitica_rndc')">
-            <span class="icon">📈</span> {{ 'PORTTOS.PANEL_CONTROL.ANALITICA_RNDC' | translate }}
+            <span class="icon">📈</span> {{ 'COMMON.RNDC_ANALYTICS' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'ingesta_ia'}"
             (click)="cambiarPestana('ingesta_ia')">
-            <span class="icon">🧠</span> {{ 'PORTTOS.PANEL_CONTROL.INGESTA_IA' | translate }}
+            <span class="icon">🧠</span> {{ 'COMMON.AI_INGESTION' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'seguridad_oea'}"
             (click)="cambiarPestana('seguridad_oea')">
-            <span class="icon">🛡️</span> {{ 'PORTTOS.PANEL_CONTROL.SEGURIDAD_OEA' | translate }}
+            <span class="icon">🛡️</span> {{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.AEO_SECURITY' | translate }}
         </button>
 
         <button class="tab-btn" [ngClass]="{'active': pestanaActiva === 'reportes_gerenciales'}"
             (click)="cambiarPestana('reportes_gerenciales')">
-            <span class="icon">📊</span> {{ 'PORTTOS.PANEL_CONTROL.REPORTES_GERENCIALES' | translate }}
+            <span class="icon">📊</span> {{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.MANAGEMENT_REPORTS' | translate }}
         </button>
     </nav>
 
@@ -94,7 +94,7 @@
             <div class="terminal-card">
                 <div class="terminal-header">
                     <h3>SPRBUN <span class="sub">SOCIEDAD PORTUARIA REGIONAL</span></h3>
-                    <span class="badge operando">{{ 'PORTTOS.PANEL_CONTROL.OPERATIVO' | translate }}</span>
+                    <span class="badge operando">{{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.OPERATIONAL' | translate }}</span>
                 </div>
                 <div class="docks-grid">
                     <div class="dock active">M-1</div>
@@ -109,15 +109,15 @@
                 <div class="terminal-mini-stats">
                     <div class="stat">
                         <h4>62%</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.OCUPACION' | translate }}</p>
+                        <p>{{ 'PORTTOS.OCCUPANCY' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>5</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.MOTONAVES' | translate }}</p>
+                        <p>{{ 'PORTTOS.VESSELS' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>14.2k</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.TM_HOY' | translate }}</p>
+                        <p>{{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.T_TODAY' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
             <div class="terminal-card">
                 <div class="terminal-header">
                     <h3>TCBUEN <span class="sub">TERMINAL DE CONTENEDORES</span></h3>
-                    <span class="badge congestionado">{{ 'PORTTOS.PANEL_CONTROL.CONGESTIONADO' | translate }}</span>
+                    <span class="badge congestionado">{{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.CONGESTED' | translate }}</span>
                 </div>
                 <div class="docks-grid">
                     <div class="dock active">N-1</div>
@@ -140,15 +140,15 @@
                 <div class="terminal-mini-stats">
                     <div class="stat">
                         <h4>87%</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.OCUPACION' | translate }}</p>
+                        <p>{{ 'PORTTOS.OCCUPANCY' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>7</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.MOTONAVES' | translate }}</p>
+                        <p>{{ 'PORTTOS.VESSELS' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>22.1k</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.TEU_HOY' | translate }}</p>
+                        <p>{{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.TEU_TODAY' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -156,7 +156,7 @@
             <div class="terminal-card">
                 <div class="terminal-header">
                     <h3>PUERTO AGUADULCE <span class="sub">BAHÍA - MULTIPROPÓSITO</span></h3>
-                    <span class="badge operando">{{ 'PORTTOS.PANEL_CONTROL.OPERATIVO' | translate }}</span>
+                    <span class="badge operando">{{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.OPERATIONAL' | translate }}</span>
                 </div>
                 <div class="docks-grid">
                     <div class="dock">A-1</div>
@@ -171,15 +171,15 @@
                 <div class="terminal-mini-stats">
                     <div class="stat">
                         <h4>50%</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.OCUPACION' | translate }}</p>
+                        <p>{{ 'PORTTOS.OCCUPANCY' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>4</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.MOTONAVES' | translate }}</p>
+                        <p>{{ 'PORTTOS.VESSELS' | translate }}</p>
                     </div>
                     <div class="stat">
                         <h4>8.7k</h4>
-                        <p>{{ 'PORTTOS.PANEL_CONTROL.TM_HOY' | translate }}</p>
+                        <p>{{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.T_TODAY' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -189,7 +189,7 @@
 
             <div class="table-container-large">
                 <h3 style="color: white; margin-top: 0; margin-bottom: 20px; font-size: 16px;">
-                    {{ 'PORTTOS.PANEL_CONTROL.REPORTE_DE_MOTONAVES_72H' | translate }}
+                    {{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.VESSEL_REPORT_72H' | translate }}
                 </h3>
 
                 <!-- <app-vessel-table [motonaves]="motonavesMaestras"></app-vessel-table> -->
@@ -197,9 +197,9 @@
 
             <div class="chart-container-small">
                 <h3 style="color: white; margin-top: 0; margin-bottom: 20px; font-size: 16px;">
-                    {{ 'PORTTOS.PANEL_CONTROL.ETA_VS_ATA' | translate }}
+                    {{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.ETA_VS_ATA' | translate }}
                 </h3>
-                <p style="color: #8b95a5; font-size: 13px;">{{ 'PORTTOS.PANEL_CONTROL.ESPACIO_RESERVADO_PARA_GRAFICA_DE' | translate }}</p>
+                <p style="color: #8b95a5; font-size: 13px;">{{ 'PORTTOS.ADMINISTACION.PANEL_CONTROL.PLACEHOLDER_DELAY_CHART' | translate }}</p>
             </div>
 
         </div>

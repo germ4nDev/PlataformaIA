@@ -2,14 +2,14 @@
     <h5 *ngIf="tableTitle" class="datatable-title text-center">{{ tableTitle }}</h5><br>
     <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
         <div class="d-flex align-items-center">
-            <span>{{ 'PLATAFORMA.DATATABLE.SHOW' | translate }}</span>
+            <span>{{ 'SHARED.SHOW' | translate }}</span>
             <select class="form-select mx-2" [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
                 <option [ngValue]="10">10</option>
                 <option [ngValue]="25">25</option>
                 <option [ngValue]="50">50</option>
                 <option [ngValue]="100">100</option>
             </select>
-            <span>{{ 'PLATAFORMA.DATATABLE.ENTRIES' | translate }}</span>
+            <span>{{ 'SHARED.ENTRIES' | translate }}</span>
         </div>
         <div class="d-flex">
             <ng-container *ngIf="showUploadButton">
@@ -17,7 +17,7 @@
                     (change)="onFileExcelSelected($event)">
                 <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                     (click)="fileInputExcel.click()" [disabled]="cargandoExcel">
-                    {{ cargandoExcel ? ('WEB.DATA_TABLE.PROCESANDO' | translate) : ('WEB.DATA_TABLE.CARGAR_EXCEL' | translate) }}
+                    {{ cargandoExcel ? ('SHARED.PROCESSING' | translate) : ('SHARED.UPLOAD_EXCEL' | translate) }}
                 </button>
             </ng-container>
             <button class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="onExcelExport()">
@@ -52,7 +52,7 @@
                                 <i class="fas fa-arrow-down ms-1" *ngIf="sortDirection === 'desc'"></i>
                             </ng-container>
                         </th>
-                        <th *ngIf="showActions" class="text-center">{{ 'PLATAFORMA.DATATABLE.ACTIONS' | translate }}
+                        <th *ngIf="showActions" class="text-center">{{ 'SHARED.OPTIONS' | translate }}
                         </th>
                     </tr>
                 </thead>
@@ -60,7 +60,7 @@
                     <tr *ngIf="paginatedData.length === 0">
                         <td [attr.colspan]="finalColumns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)"
                             class="text-center py-4"><br /><br />
-                            {{ 'PLATAFORMA.DATATABLE.NODATA' | translate }}
+                            {{ 'SHARED.NO_RECORDS_SHOW' | translate }}
                         </td>
                     </tr>
                     <ng-container *ngFor="let row of paginatedData; let i = index">
@@ -72,13 +72,13 @@
                             <td *ngFor="let column of finalColumns">
                                 <ng-container *ngIf="column" [ngSwitch]="column.type">
                                     <ng-container *ngSwitchCase="'avatar'">
-                                        <img [src]="row[column.name]" [alt]="('WEB.DATA_TABLE.AVATAR' | translate)" class="avatar-table" />
+                                        <img [src]="row[column.name]" [alt]="('SHARED.AVATAR' | translate)" class="avatar-table" />
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'image'">
-                                        <img [src]="row[column.name]" [alt]="('WEB.DATA_TABLE.IMAGE' | translate)" class="image-table" />
+                                        <img [src]="row[column.name]" [alt]="('COMMON.IMAGE' | translate)" class="image-table" />
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'capture'">
-                                        <img [src]="row[column.name]" [alt]="('WEB.DATA_TABLE.CAPTURE' | translate)" class="capture-table" />
+                                        <img [src]="row[column.name]" [alt]="('SHARED.CAPTURE' | translate)" class="capture-table" />
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'number'">
                                         <span style="display: block; text-align: right">
@@ -137,7 +137,7 @@
                                 <ng-container *ngIf="showViewButton">
                                     <button *appPermiso="permisoView" id="btnView"
                                         class="dt-option-btn dt-option-btn--view" (click)="onView(row)"
-                                        [title]="'PLATAFORMA.DATATABLE.VIEW' | translate">
+                                        [title]="'SHARED.VIEW' | translate">
                                         {{ viewLetter }}
                                     </button>
                                 </ng-container>
@@ -145,7 +145,7 @@
                                 <ng-container *ngIf="showEditButton">
                                     <button *appPermiso="permisoEdit" id="btnEdit"
                                         class="dt-option-btn dt-option-btn--edit" (click)="onEdit(row)"
-                                        [title]="'PLATAFORMA.DATATABLE.EDIT' | translate">
+                                        [title]="'SHARED.MODIFY' | translate">
                                         {{ updateLetter }}
                                     </button>
                                 </ng-container>
@@ -153,7 +153,7 @@
                                 <ng-container *ngIf="showDeleteButton">
                                     <button *appPermiso="permisoDelete" id="btnDel"
                                         class="dt-option-btn dt-option-btn--delete" (click)="onDelete(row)"
-                                        [title]="'PLATAFORMA.DATATABLE.DELETE' | translate">
+                                        [title]="'COMMON.DELETE' | translate">
                                         {{ deleteLetter }}
                                     </button>
                                 </ng-container>
@@ -235,29 +235,29 @@
                                                 <ng-container [ngSwitch]="detailColumn.type">
 
                                                     <ng-container *ngSwitchCase="'avatar'">
-                                                        <img [src]="row[detailColumn.name]" [alt]="('WEB.DATA_TABLE.AVATAR' | translate)"
+                                                        <img [src]="row[detailColumn.name]" [alt]="('SHARED.AVATAR' | translate)"
                                                             class="avatar-table" />
                                                     </ng-container>
                                                     <ng-container *ngSwitchCase="'image'">
-                                                        <img [src]="row[detailColumn.name]" [alt]="('WEB.DATA_TABLE.IMAGE' | translate)"
+                                                        <img [src]="row[detailColumn.name]" [alt]="('COMMON.IMAGE' | translate)"
                                                             class="image-table" />
                                                     </ng-container>
                                                     <ng-container *ngSwitchCase="'logo'">
-                                                        <img [src]="row[detailColumn.name]" [alt]="('WEB.DATA_TABLE.IMAGE' | translate)"
+                                                        <img [src]="row[detailColumn.name]" [alt]="('COMMON.IMAGE' | translate)"
                                                             class="logo-table" />
                                                     </ng-container>
 
                                                     <ng-container *ngSwitchCase="'capture'">
                                                         <ng-container [ngSwitch]="row.tipo">
                                                             <img *ngSwitchCase="'capture'" [src]="row.capture"
-                                                                [alt]="('WEB.DATA_TABLE.CAPTURE' | translate)" class="capture-table" />
+                                                                [alt]="('SHARED.CAPTURE' | translate)" class="capture-table" />
                                                             <div *ngSwitchCase="'video'" class="video-table">
                                                                 <app-video-player
                                                                     [src]="row.capture"></app-video-player>
                                                             </div>
                                                             <div *ngSwitchDefault>
                                                                 <a [href]="row[detailColumn.capture]" target="_blank"
-                                                                    style="color: cyan"> {{ 'WEB.DATA_TABLE.VER_ARCHIVO' | translate }} </a>
+                                                                    style="color: cyan"> {{ 'SHARED.VIEW_FILE' | translate }} </a>
                                                             </div>
                                                         </ng-container>
                                                     </ng-container>
@@ -352,7 +352,7 @@
 
                                                                             <th *ngIf="row[detailColumn.name][0]['_acciones']"
                                                                                 class="px-3 py-2 text-center text-nowrap">
-                                                                                {{ 'WEB.DATA_TABLE.OPCIONES' | translate }}
+                                                                                {{ 'SHARED.OPTIONS_2' | translate }}
                                                                             </th>
                                                                         </tr>
                                                                     </thead>
@@ -389,7 +389,7 @@
                                                         </ng-container>
                                                         <ng-template #noJsonData>
                                                             <div class="text-muted mt-2">
-                                                                <i class="feather icon-info me-1"></i> {{ 'WEB.DATA_TABLE.NO_HAY_REGISTROS_DETALLADOS_DISPONIBLES' | translate }}
+                                                                <i class="feather icon-info me-1"></i> {{ 'SHARED.NO_DETAILED_RECORDS_AVAILABLE' | translate }}
                                                             </div>
                                                         </ng-template>
                                                     </ng-container>
@@ -427,16 +427,16 @@
     <div class="dt-footer d-flex justify-content-between align-items-center"
         style="border-color: transparent !important">
         <div>
-            {{ 'PLATAFORMA.DATATABLE.SHOWING' | translate }} {{ (currentPage - 1) * itemsPerPage + 1 }}
-            {{ 'PLATAFORMA.DATATABLE.TO' | translate }} {{ (currentPage - 1) * itemsPerPage + paginatedData.length }}
-            {{ 'PLATAFORMA.DATATABLE.OF' | translate }} {{ filteredData.length }} {{ 'PLATAFORMA.DATATABLE.ENTRIES' |
+            {{ 'SHARED.SHOWING' | translate }} {{ (currentPage - 1) * itemsPerPage + 1 }}
+            {{ 'SHARED.TO' | translate }} {{ (currentPage - 1) * itemsPerPage + paginatedData.length }}
+            {{ 'SHARED.OF' | translate }} {{ filteredData.length }} {{ 'SHARED.ENTRIES' |
             translate }}
         </div>
         <nav>
             <ul class="pagination">
                 <li class="page-item" [class.disabled]="currentPage === 1">
                     <a style="cursor: pointer" class="page-link page-link-b" (click)="onPageChange(currentPage - 1)">
-                        {{ 'PLATAFORMA.DATATABLE.PREVIOUS' | translate }}</a>
+                        {{ 'SHARED.PREVIOUS' | translate }}</a>
                 </li>
                 <li class="page-item" *ngFor="let page of getPages()" [class.active]="currentPage === page">
                     <a style="cursor: pointer; border-color: transparent !important; margin: 1px !important"
@@ -444,7 +444,7 @@
                 </li>
                 <li class="page-item" [class.disabled]="currentPage === totalPages || totalPages === 0">
                     <a style="cursor: pointer" class="page-link page-link-b" (click)="onPageChange(currentPage + 1)">
-                        {{ 'PLATAFORMA.DATATABLE.NEXT' | translate }}</a>
+                        {{ 'SHARED.NEXT' | translate }}</a>
                 </li>
             </ul>
         </nav>

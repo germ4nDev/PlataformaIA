@@ -3,9 +3,9 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">{{
-          'PLATAFORMA.FILTERS' | translate
+          'COMMON.FILTERS' | translate
         }}</button>
             </div>
 
@@ -15,35 +15,35 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'FORMATOSGALERIA.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.FILTERS' | translate }}</h6>
 
                     <div class="filtro">
-                        <small>{{ 'FORMATOSGALERIA.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <small>{{ 'COMMON.CODE' | translate }}</small>
                         <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
               <option [value]="f.codigoFormato" *ngFor="let f of formatos">{{ f.codigoFormato }}</option>
             </select>
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'FORMATOSGALERIA.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.NAME' | translate }}</small>
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
               <option [value]="f.nombreFormato" *ngFor="let f of formatos">{{ f.nombreFormato }}</option>
             </select>
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'FORMATOSGALERIA.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input" placeholder="{{ 'FORMATOSGALERIA.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input" placeholder="{{ 'COMMON.SEARCH_2' | translate }}" />
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'FORMATOSGALERIA.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
             </select>
                     </div>
                 </div>
@@ -55,8 +55,8 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="formatosFiltrada$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoFormato'" [tableTitle]="'FORMATOSGALERIA.TITLE' | translate" [metadataColumns]="columnasFormatos" [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true" [showNewButton]="true"
-                        [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'FORMATOSGALERIA.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoFormatoClick()"
+                    <app-data-table [data]="dataFiltrada" [idField]="'codigoFormato'" [tableTitle]="'BIBLIOTECA.FORMATOS_GALERIA.GALLERY_FORMATS_MANAGEMENT' | translate" [metadataColumns]="columnasFormatos" [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true" [showNewButton]="true"
+                        [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'BIBLIOTECA.FORMATOS_GALERIA.NEW_FORMAT' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoFormatoClick()"
                         (editRecord)="OnEditarFormatoClick($event)" (deleteRecord)="OnEliminarFormatoClick($event)" permisoNew="ACT_FORMATOSGAL_CREAR" permisoEdit="ACT_FORMATOSGAL_MODIFICAR" permisoDelete="ACT_FORMATOSGAL_ELIMINAR">
                     </app-data-table>
                 </ng-container>

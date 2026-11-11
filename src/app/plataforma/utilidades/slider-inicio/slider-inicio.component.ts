@@ -189,22 +189,22 @@ export class SliderInicioComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'urlSlider',
-            header: 'SLIDER.SLIDER',
+            header: 'COMMON.IMAGE',
             type: 'image'
         },
         {
             name: 'nomAplicacion',
-            header: 'SLIDER.NOMBREAPP',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nombreSlider',
-            header: 'SLIDER.NOMBRE',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'SLIDER.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ]
@@ -212,12 +212,12 @@ export class SliderInicioComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcionSlider',
-            header: 'SLIDER.DESCRIPCION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'capture',
-            header: 'SLIDER.DESCRIPCION',
+            header: 'COMMON.DESCRIPTION',
             type: 'capture'
         }
     ]
@@ -239,21 +239,21 @@ export class SliderInicioComponent implements OnInit {
     OnEliminarRegistroClick(id: number) {
         const nombre = this.registrosFiltrado.filter(x => x.usuarioId == id)[0]
         Swal.fire({
-            title: this.translate.instant('USUARIOS.ELIMINARTITULO'),
-            text: `this.translate.instant('USUARIOS.ELIMINARTEXTO') + "${nombre.nombreUsuario}".`,
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            text: `this.translate.instant('UTILIDADES.USER_WILL_BE_DELETED') + "${nombre.nombreUsuario}".`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
                 this._registrosService.deleteEliminarRegistro(id).subscribe({
                     next: (resp: any) => {
-                        this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje)
+                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.USER_WAS_DELETED_SUCCESSFULLY') + ', ' + resp.mensaje)
                         this.registros = this.registros.filter(s => s.sliderId !== id)
                     },
                     error: (err: any) => {
-                        this._swalService.getAlertError(this.translate.instant('SLIDER.ELIMINARERROR') + ', ' + err)
+                        this._swalService.getAlertError(this.translate.instant('UTILIDADES.SLIDER_INICIO.COULD_NOT_DELETE_SLIDER') + ', ' + err)
                         console.error('Error eliminando', err)
                     }
                 })

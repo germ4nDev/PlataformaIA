@@ -4,10 +4,10 @@
     <div class="card">
       <div class="nav-tabs-custom">
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'PLATAFORMA.MENU' | translate }}
+          {{ 'COMMON.MENU' | translate }}
         </button>
         <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'PLATAFORMA.FILTERS' | translate }}
+          {{ 'COMMON.FILTERS' | translate }}
         </button>
       </div>
 
@@ -17,29 +17,29 @@
       <ng-container *ngIf="activeTab === 'filters'">
         <div class="p-3 filtros-scroll-wrapper">
           <div class="filtro">
-            <small>{{ 'SITIOS.ENLACES.FILTROS.FILTRONOMBRE' | translate }}</small>
+            <small>{{ 'COMMON.NAME' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroNombreChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'SITIOS.ENLACES.FILTROS.NOMBRECHOLDER' | translate }}"
+              placeholder="{{ 'SITES.ENLACES.LINK_NAME' | translate }}"
             />
           </div>
           <div class="filtro">
-            <small>{{ 'SITIOS.ENLACES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+            <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroDescripcionChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'SITIOS.ENLACES.FILTROS.DESCRIPCIONCHOLDER' | translate }}"
+              placeholder="{{ 'SITES.ENLACES.LINK_DESCRIPTION' | translate }}"
             />
           </div>
           <div class="filtro">
-            <small>{{ 'SITIOS.ENLACES.FILTROS.FILTROESTADO' | translate }}</small>
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
             </select>
           </div>
         </div>
@@ -53,7 +53,7 @@
         <app-data-table
           [data]="registrosFiltrado"
           [idField]="'enlaceId'"
-          [tableTitle]="'SITIOS.ENLACES.TITLE' | translate"
+          [tableTitle]="'SITES.ENLACES.LINK_MANAGEMENT' | translate"
           [metadataColumns]="columnasRegistros"
           [metadataDetailColumns]="columnasDetailRegistros"
           [showActions]="true"
@@ -62,8 +62,8 @@
           [showEditButton]="true"
           [showDeleteButton]="true"
           [showDetail]="true"
-          [newButtonLabel]="'SITIOS.ENLACES.GESTION.NEW' | translate"
-          [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+          [newButtonLabel]="'SITES.ENLACES.NEW_LINK' | translate"
+          [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
           (newRecord)="OnNuevoRegistroClick()"
           (editRecord)="OnEditarRegistroClick($event)"
           (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_ENLACES_CREAR" permisoEdit="ACT_ENLACES_MODIFICAR" permisoDelete="ACT_ENLACES_ELIMINAR">

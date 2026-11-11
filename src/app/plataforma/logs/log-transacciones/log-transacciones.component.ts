@@ -20,27 +20,27 @@ dtColumnSearchingOptions: object = {};
       ajax: 'fake-data/datatable-data.json',
       columns: [
         {
-          title: traducir('WEB.PERFIL_CONFIGURACION.NAME'),
+          title: traducir('COMMON.NAME'),
           data: 'name'
         },
         {
-          title: traducir('WEB.COMUN.POSITION'),
+          title: traducir('COMMON.POSITION'),
           data: 'position'
         },
         {
-          title: traducir('WEB.COMUN.OFFICE'),
+          title: traducir('COMMON.OFFICE'),
           data: 'office'
         },
         {
-          title: traducir('WEB.COMUN.AGE'),
+          title: traducir('COMMON.AGE'),
           data: 'age'
         },
         {
-          title: traducir('WEB.COMUN.START_DATE'),
+          title: traducir('COMMON.START_DATE'),
           data: 'date'
         },
         {
-          title: traducir('WEB.COMUN.SALARY'),
+          title: traducir('COMMON.SALARY'),
           data: 'salary'
         }
       ],

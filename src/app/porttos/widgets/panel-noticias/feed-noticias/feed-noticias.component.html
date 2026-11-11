@@ -1,20 +1,20 @@
 <app-widget-shell [titulo]="(titulo | translate)" [origen]="origenTablero" [subtitulo]="(subtitulo | translate)" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
-    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="todas.length">{{ 'PORTTOS.FEED_NOTICIAS.EN_7_DIAS' | translate: { p0: todas.length } }}</span></div>
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="todas.length">{{ 'PORTTOS.WIDGETS.PANEL_NOTICIAS.FEED_NOTICIAS.P0_IN_7_DAYS' | translate: { p0: todas.length } }}</span></div>
     <div class="cuerpo">
         <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!todas.length"
             [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
         <div class="contenido" *ngIf="!cargando && !error && !(!todas.length)">
             <div class="busqueda" *ngIf="isEnfoque">
-                <input type="search" [placeholder]="'PORTTOS.FEED_NOTICIAS.BUSCAR_EN_TITULARES_Y_RESUMENES' | translate" [value]="busqueda" (input)="buscar($any($event.target).value)" [attr.aria-label]="'PORTTOS.FEED_NOTICIAS.BUSCAR_NOTICIAS' | translate">
-                <select (change)="elegirMedio($any($event.target).value)" [attr.aria-label]="'PORTTOS.FEED_NOTICIAS.FILTRAR_POR_MEDIO' | translate">
-                    <option value="">{{ 'PORTTOS.FEED_NOTICIAS.TODOS_LOS_MEDIOS' | translate }}</option>
+                <input type="search" [placeholder]="'PORTTOS.WIDGETS.PANEL_NOTICIAS.FEED_NOTICIAS.SEARCH_HEADLINES_SUMMARIES' | translate" [value]="busqueda" (input)="buscar($any($event.target).value)" [attr.aria-label]="'PORTTOS.WIDGETS.PANEL_NOTICIAS.FEED_NOTICIAS.SEARCH_NEWS' | translate">
+                <select (change)="elegirMedio($any($event.target).value)" [attr.aria-label]="'PORTTOS.WIDGETS.PANEL_NOTICIAS.FEED_NOTICIAS.FILTER_BY_SOURCE' | translate">
+                    <option value="">{{ 'PORTTOS.WIDGETS.PANEL_NOTICIAS.FEED_NOTICIAS.ALL_SOURCES' | translate }}</option>
                     <option *ngFor="let m of medios" [value]="m" [selected]="m === medio">{{ m }}</option>
                 </select>
-                <span class="contador">{{ 'PORTTOS.FEED_NOTICIAS.DE' | translate: { p0: noticias.length, p1: todas.length } }}</span>
+                <span class="contador">{{ 'PORTTOS.WIDGETS.PANEL_NOTICIAS.FEED_NOTICIAS.P0_P1' | translate: { p0: noticias.length, p1: todas.length } }}</span>
             </div>
             <div class="filtros">
-                <button type="button" [class.activo]="!categoria" (click)="filtrar(null)">{{ 'PORTTOS.COMUN.TODAS' | translate }}</button>
+                <button type="button" [class.activo]="!categoria" (click)="filtrar(null)">{{ 'PORTTOS.ALL' | translate }}</button>
                 <button type="button" *ngFor="let c of categorias" [class.activo]="categoria === c.codigo"
                     (click)="filtrar(c.codigo)">{{ (c.nombre | translate) }} · {{ c.noticias }}</button>
             </div>
@@ -26,7 +26,7 @@
                         <span *ngIf="n.medio">{{ n.medio }}</span>
                         <span>{{ n.fecha | date: 'dd MMM · HH:mm' : '-0500' }}</span>
                         <span class="puerto" *ngIf="n.delPuerto">{{ puerto }}</span>
-                        <span *ngIf="isEnfoque" class="proveedor">{{ 'PORTTOS.FEED_NOTICIAS.VIA' | translate: { p0: n.proveedor } }}</span>
+                        <span *ngIf="isEnfoque" class="proveedor">{{ 'PORTTOS.WIDGETS.PANEL_NOTICIAS.FEED_NOTICIAS.VIA_P0' | translate: { p0: n.proveedor } }}</span>
                     </div>
                     <p *ngIf="isEnfoque && n.resumen" class="resumen">{{ n.resumen }}</p>
                 </li>

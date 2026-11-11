@@ -56,14 +56,14 @@
 
 </app-widget-shell> -->
 <app-widget-shell
-    [titulo]="((data?.titulo | translate) || ('PORTTOS.MATRIZ_CARGA.MATRIZ_TERMINAL_X_TIPO_DE' | translate)) + (data?.anio ? ' · ' + data.anio : '')"
-    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.MATRIZ_CARGA.TONELADAS_MOVILIZADAS_REVELA_LA_ESPECIAL' | translate)"
+    [titulo]="((data?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.TERMINAL_X_CARGO_TYPE_MATRIX' | translate)) + (data?.anio ? ' · ' + data.anio : '')"
+    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.TONS_MOVED_SHOWS_OPERATING_SPECIALIZATION' | translate)"
     [icono]="data?.icono || 'feather icon-grid'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge de Operadores y Tipos -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
-            {{ 'PORTTOS.MATRIZ_CARGA.OPERADORES' | translate: { p0: (filas.length || data?.operadores || 0) } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.P0_OPERATORS' | translate: { p0: (filas.length || data?.operadores || 0) } }}
         </span>
     </div>
 
@@ -76,15 +76,15 @@
                 <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
                     <tr class="text-muted font-weight-bold text-uppercase"
                         style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <th class="col-terminal pb-2">{{ 'PORTTOS.COMUN.TERMINAL' | translate }}</th>
-                        <th class="pb-2 text-center"><i class="feather icon-box text-primary me-1"></i> {{ 'PORTTOS.MATRIZ_CARGA.CONT' | translate }}</th>
-                        <th class="pb-2 text-center"><i class="feather icon-package text-warning me-1"></i> {{ 'PORTTOS.MATRIZ_CARGA.GR_SOLIDO' | translate }}
+                        <th class="col-terminal pb-2">{{ 'PORTTOS.TERMINAL' | translate }}</th>
+                        <th class="pb-2 text-center"><i class="feather icon-box text-primary me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.CONT' | translate }}</th>
+                        <th class="pb-2 text-center"><i class="feather icon-package text-warning me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.DRY_BULK' | translate }}
                         </th>
-                        <th class="pb-2 text-center"><i class="feather icon-triangle text-success me-1"></i> {{ 'PORTTOS.MATRIZ_CARGA.GENERAL' | translate }}
+                        <th class="pb-2 text-center"><i class="feather icon-triangle text-success me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.GENERAL' | translate }}
                         </th>
-                        <th class="pb-2 text-center"><i class="feather icon-droplet text-info me-1"></i> {{ 'PORTTOS.MATRIZ_CARGA.GR_LIQ' | translate }}</th>
-                        <th class="pb-2 text-center"><i class="feather icon-circle text-secondary me-1"></i> {{ 'PORTTOS.MATRIZ_CARGA.CARBON' | translate }}</th>
-                        <th class="col-total pb-2 text-end text-white">{{ 'PORTTOS.MATRIZ_CARGA.TOTAL' | translate }}</th>
+                        <th class="pb-2 text-center"><i class="feather icon-droplet text-info me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.LIQ_BULK' | translate }}</th>
+                        <th class="pb-2 text-center"><i class="feather icon-circle text-secondary me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.COAL' | translate }}</th>
+                        <th class="col-total pb-2 text-end text-white">{{ 'COMMON.TOTAL' | translate }}</th>
                     </tr>
                 </thead>
 
@@ -93,7 +93,7 @@
                     <tr *ngIf="isLoading">
                         <td colspan="7" class="text-center text-muted py-5">
                             <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
-                            {{ 'PORTTOS.MATRIZ_CARGA.CONSOLIDANDO_MATRIZ_DE_ESPECIALIZACION_P' | translate }}
+                            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.CONSOLIDATING_SPECIALIZATION_MATRIX_BY_TERMINAL' | translate }}
                         </td>
                     </tr>
 
@@ -116,7 +116,7 @@
                         <tr *ngIf="filas.length === 0">
                             <td colspan="7" class="text-center text-muted py-5">
                                 <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                                {{ 'PORTTOS.MATRIZ_CARGA.NO_HAY_DATOS_DE_MATRIZ' | translate }}
+                                {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MATRIZ_CARGA.NO_MATRIX_DATA_REGISTERED_PORT' | translate }}
                             </td>
                         </tr>
                     </ng-container>

@@ -112,7 +112,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                     this.codeActividad = resp.actividad.codigoActividad;
                 },
                 error: () => {
-                    this._swalService.getAlertConfirmError(traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'))
+                    this._swalService.getAlertConfirmError(traducir('COMMON.COULD_NOT_GET_APPLICATION'))
                 }
             });
         }
@@ -226,10 +226,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
+                            descripcionLog: this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY'));
                         form.resetForm();
                         this.router.navigate(['/actividades/actividades']);
                     }
@@ -239,10 +239,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_ACTIVITY')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
+                    this._swalService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_ACTIVITY_2'));
                 }
             });
         } else {
@@ -258,10 +258,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('ACTIVIDADES.GESTIION_ACTIVIDAD.ACTIVITY_DELETED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.CREATESUCCESSFULLY'));
+                        this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.ACTIVITY_CREATED_SUCCESSFULLY'));
                         form.resetForm();
                         this.router.navigate(['/actividades/actividades']);
                     }
@@ -271,10 +271,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('ACTIVIDADES.CREATEERROR')
+                        descripcionLog: this.translate.instant('ACTIVIDADES.GESTIION_ACTIVIDAD.COULD_NOT_CREATE_ACTIVITY')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalService.getAlertError(traducir('WEB.GESTIION_ACTIVIDAD.NO_SE_PUDO_CREAR_LA'));
+                    this._swalService.getAlertError(traducir('ACTIVIDADES.GESTIION_ACTIVIDAD.COULD_NOT_CREATE_ACTIVITY_2'));
                 }
             });
         }

@@ -193,23 +193,23 @@ export class WidgetsPanelComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'imagen',
-            header: 'WIDGETS.FOTO',
+            header: 'COMMON.IMAGE',
             type: 'image',
             isSortable: false
         },
         {
             name: 'codigo_widget',
-            header: 'WIDGETS.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'nombre',
-            header: 'WIDGETS.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'WIDGETS.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ]
@@ -217,12 +217,12 @@ export class WidgetsPanelComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcion',
-            header: 'WIDGETS.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'capture',
-            header: 'WIDGETS.IMAGENINICIO',
+            header: 'COMMON.IMAGE',
             type: 'capture'
         }
     ]
@@ -240,12 +240,12 @@ export class WidgetsPanelComponent implements OnInit, OnDestroy {
     OnEliminarWidgetClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
-            title: this.translate.instant('WIDGETS.ELIMINARTITULO'),
-            text: this.translate.instant('WIDGETS.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.REMOVE_WIDGET_FROM_CATALOG'),
+            text: this.translate.instant('COMMON.WIDGET_BECOMES_INACTIVE_LEAVES_DASHBOARDS_USERS'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._widgetsService.deleteWidget(id).subscribe({
@@ -253,20 +253,20 @@ export class WidgetsPanelComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('WIDGETS.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('COMMON.WIDGET_UPDATED')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('WIDGETS.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('COMMON.WIDGET_UPDATED'), resp.mensaje, 'success')
                         this.setupWidgetsStream()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('WIDGETS.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('COMMON.WIDGET_COULD_NOT_BE_UPDATED')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('WIDGETS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.WIDGET_COULD_NOT_BE_UPDATED'), 'error')
                     }
                 })
             }

@@ -121,7 +121,7 @@ export class GestionGaleriaComponent implements OnInit {
                     this.codeGaleria = resp.galeria.codigoGaleria
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_GALERIA.NO_SE_PUDO_OBTENER_LA'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('BIBLIOTECA.GALERIAS.GESTION.COULD_NOT_GET_GALLERY'), 'error')
                 }
             })
         }
@@ -210,7 +210,7 @@ export class GestionGaleriaComponent implements OnInit {
                     this.selectedFileFotoName = path.nombreArchivo
                 },
                 error: () => {
-                    this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -257,7 +257,7 @@ export class GestionGaleriaComponent implements OnInit {
                     this.selectedFileUrl = this._uploadService.getFilePath(objUpload.susc, objUpload.tipo, path.nombreArchivo)
                 },
                 error: () => {
-                    this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -280,19 +280,19 @@ export class GestionGaleriaComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('GALERIA.UPDATESUCCSESSFULLY')
+                            descripcionLog: this.translate.instant('BIBLIOTECA.GALERIAS.GESTION.GALLERY_UPDATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe()
-                        this._swalService.getAlertSuccess(this.translate.instant('GALERIA.UPDATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.GALERIAS.GESTION.GALLERY_UPDATED_SUCCESSFULLY'))
                         form.resetForm()
                         this.router.navigate(['/biblioteca/galeria'])
                     }
                 },
                 error: (err: any) => {
                     console.error(err)
-                    const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('GALERIA.UPDATEERROR') }
+                    const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('BIBLIOTECA.GALERIAS.GESTION.COULD_NOT_UPDATE_GALLERY') }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError(traducir('WEB.GESTION_GALERIA.NO_SE_PUDO_ACTUALIZAR_LA'))
+                    this._swalService.getAlertError(traducir('BIBLIOTECA.GALERIAS.GESTION.COULD_NOT_UPDATE_GALLERY_2'))
                 }
             })
         } else {
@@ -312,19 +312,19 @@ export class GestionGaleriaComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('GALERIA.CREATESUCCSESSFULLY')
+                            descripcionLog: this.translate.instant('BIBLIOTECA.GALERIAS.GESTION.GALLERY_CREATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe()
-                        this._swalService.getAlertSuccess(this.translate.instant('GALERIA.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.GALERIAS.GESTION.GALLERY_CREATED_SUCCESSFULLY'))
                         form.resetForm()
                         this.router.navigate(['/biblioteca/galeria'])
                     }
                 },
                 error: (err: any) => {
                     console.error(err)
-                    const logData = { codigoTipoLog: '', codigoRespuesta: '500', descripcionLog: this.translate.instant('GALERIA.CREATEERROR') }
+                    const logData = { codigoTipoLog: '', codigoRespuesta: '500', descripcionLog: this.translate.instant('BIBLIOTECA.GALERIAS.GESTION.COULD_NOT_CREATE_GALLERY') }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError(traducir('WEB.GESTION_GALERIA.NO_SE_PUDO_CREAR_LA'))
+                    this._swalService.getAlertError(traducir('BIBLIOTECA.GALERIAS.GESTION.COULD_NOT_CREATE_GALLERY_2'))
                 }
             })
         }
@@ -351,7 +351,7 @@ export class GestionGaleriaComponent implements OnInit {
     //           this.userPhotoUrl = path.nombreArchivo;
     //         },
     //         error: () => {
-    //           this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+    //           this._swalService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
     //         }
     //       });
     //     } else {

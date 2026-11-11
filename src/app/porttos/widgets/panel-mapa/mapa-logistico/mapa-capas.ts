@@ -31,39 +31,39 @@ export const GRUPOS_CAPAS: GrupoCapas[] = [
         grupo: 'Operación Marítima',
         abierto: true,
         capas: [
-            { id: 'muelles-estado', nombre: 'PORTTOS.MAPA_CAPAS.ESTADO_DE_MUELLES_LIBRE_OCUPADO', capas: ['muelles-estado-fill', 'muelles-estado-line', 'muelles-estado-line-lineup', 'muelles-estado-label'], defecto: true, color: COLORES_MAPA.muelleEstado['OCUPADO'] },
-            { id: 'naves', nombre: 'PORTTOS.MAPA_CAPAS.MOTONAVES_AIS', capas: ['naves-cluster-symbol', 'naves-individual'], defecto: true, icono: 'nave-navegando' },
-            { id: 'naves-nombres', nombre: 'PORTTOS.MAPA_CAPAS.NOMBRES_DE_MOTONAVES', capas: ['naves-nombres'], defecto: true, color: '#e2e8f0' },
-            { id: 'faros', nombre: 'PORTTOS.MAPA_CAPAS.GEOCERCAS_DE_CONTROL_FAROS', capas: ['layer-faros-fill', 'layer-faros-line'], defecto: true, color: '#00E5FF' },
-            { id: 'geocercas-kpi', nombre: 'PORTTOS.MAPA_CAPAS.RADAR_DE_GEOCERCAS_CONTEOS', capas: ['geocerca-fill-layer', 'geocerca-line-layer'], defecto: true, color: '#3b82f6' }
+            { id: 'muelles-estado', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.BERTH_STATUS_FREE_OCCUPIED_RESERVED', capas: ['muelles-estado-fill', 'muelles-estado-line', 'muelles-estado-line-lineup', 'muelles-estado-label'], defecto: true, color: COLORES_MAPA.muelleEstado['OCUPADO'] },
+            { id: 'naves', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.VESSELS_AIS', capas: ['naves-cluster-symbol', 'naves-individual'], defecto: true, icono: 'nave-navegando' },
+            { id: 'naves-nombres', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.VESSEL_NAMES', capas: ['naves-nombres'], defecto: true, color: '#e2e8f0' },
+            { id: 'faros', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CONTROL_GEOFENCES_LIGHTHOUSES', capas: ['layer-faros-fill', 'layer-faros-line'], defecto: true, color: '#00E5FF' },
+            { id: 'geocercas-kpi', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.GEOFENCE_RADAR_COUNTS', capas: ['geocerca-fill-layer', 'geocerca-line-layer'], defecto: true, color: '#3b82f6' }
         ]
     },
     {
         grupo: 'Infraestructura',
         abierto: true,
         capas: [
-            { id: 'puertos', nombre: 'PORTTOS.MAPA_CAPAS.PUERTOS', capas: ['puerto-fill', 'puerto-line', 'infra-marcadores-puerto'], defecto: true, icono: 'infra-puerto' },
-            { id: 'terminales', nombre: 'PORTTOS.PARTICIPACION_NACIONAL.TERMINALES', capas: ['capa-infra-terminal-fill', 'capa-infra-terminal-line', 'infra-marcadores-terminal'], defecto: true, icono: 'infra-terminal' },
-            { id: 'muelles-almacenamiento', nombre: 'PORTTOS.MAPA_CAPAS.MUELLES_BODEGAS_SILOS_Y_PATIOS', capas: ['capa-infra-fill', 'capa-infra-line', 'capa-infra-point', 'infra-marcadores-detalle'], defecto: true, icono: 'infra-bodega' }
+            { id: 'puertos', nombre: 'COMMON.PORTS', capas: ['puerto-fill', 'puerto-line', 'infra-marcadores-puerto'], defecto: true, icono: 'infra-puerto' },
+            { id: 'terminales', nombre: 'PORTTOS.WIDGETS.TERMINALS', capas: ['capa-infra-terminal-fill', 'capa-infra-terminal-line', 'infra-marcadores-terminal'], defecto: true, icono: 'infra-terminal' },
+            { id: 'muelles-almacenamiento', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.BERTHS_WAREHOUSES_SILOS_YARDS', capas: ['capa-infra-fill', 'capa-infra-line', 'capa-infra-point', 'infra-marcadores-detalle'], defecto: true, icono: 'infra-bodega' }
         ]
     },
     {
         grupo: 'Operación Terrestre',
         abierto: true,
         capas: [
-            { id: 'terrestre', nombre: 'PORTTOS.MAPA_CAPAS.FLOTA_EN_RUTA_GPS', capas: ['terrestre-cluster-content', 'terrestre-individual'], defecto: true, icono: 'camion-ruta' },
-            { id: 'peajes', nombre: 'PORTTOS.MAPA_CAPAS.PEAJES', capas: ['peajes-cluster-content', 'peajes-individual'], defecto: true, icono: 'peaje' },
-            { id: 'peajes-zonas', nombre: 'PORTTOS.MAPA_CAPAS.ZONAS_DE_INFLUENCIA_DE_PEAJES', capas: ['geocercas-layer', 'geocercas-line-layer'], defecto: true, color: COLORES_MAPA.peaje },
+            { id: 'terrestre', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.FLEET_EN_ROUTE_GPS', capas: ['terrestre-cluster-content', 'terrestre-individual'], defecto: true, icono: 'camion-ruta' },
+            { id: 'peajes', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.TOLLS', capas: ['peajes-cluster-content', 'peajes-individual'], defecto: true, icono: 'peaje' },
+            { id: 'peajes-zonas', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.TOLL_INFLUENCE_ZONES_2_KM', capas: ['geocercas-layer', 'geocercas-line-layer'], defecto: true, color: COLORES_MAPA.peaje },
             // Apagada por defecto: la red vial solo se descarga al activarla
-            { id: 'vias', nombre: 'PORTTOS.MAPA_CAPAS.RED_VIAL_NACIONAL', capas: ['vias-layer'], defecto: false, color: '#64748b' }
+            { id: 'vias', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.NATIONAL_ROAD_NETWORK', capas: ['vias-layer'], defecto: false, color: '#64748b' }
         ]
     },
     {
         grupo: 'Riesgos y Clima',
         abierto: true,
         capas: [
-            { id: 'accidentes', nombre: 'PORTTOS.MAPA_CAPAS.INCIDENTES_VIALES', capas: ['viales-cluster-content', 'viales-individual'], defecto: true, icono: 'incidente-accidente' },
-            { id: 'clima', nombre: 'PORTTOS.MAPA_CAPAS.CLIMA_ACTUAL_POR_PUERTO', capas: ['clima-cluster-symbol', 'clima-individual'], defecto: true, icono: 'clima' }
+            { id: 'accidentes', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.ROAD_INCIDENTS_2', capas: ['viales-cluster-content', 'viales-individual'], defecto: true, icono: 'incidente-accidente' },
+            { id: 'clima', nombre: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CURRENT_WEATHER_BY_PORT', capas: ['clima-cluster-symbol', 'clima-individual'], defecto: true, icono: 'clima' }
         ]
     }
 ];

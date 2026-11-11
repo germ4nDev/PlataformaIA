@@ -1,0 +1,233 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span>{{ (modoEdicion ? 'PAQUETES.LISTAS_PRECIOS.GESTION.EDIT_PRICE_LIST' :
+                                'PAQUETES.LISTAS_PRECIOS.NEW_PRICE_LIST') | translate }}</span>
+                            <span class="titulo-container"> - {{ 'PAQUETES.LISTAS_PRECIOS.PRICE_LISTS' | translate
+                                }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">{{
+                            'PAQUETES.LISTAS_PRECIOS.ONLY_PLACE_SALE_PRICE_PACKAGES_ITEMS' | translate }}</h6>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
+                            {{ 'COMMON.BACK' | translate }}<i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button *appPermiso="modoEdicion ? 'ACT_PRECIO_MODIFICAR' : 'ACT_PRECIO_CREAR'" type="button"
+                            class="btn btn-primary btn-NuevoRegistro" [disabled]="guardando" (click)="guardar()">
+                            {{ (guardando ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                    </div>
+                </div>
+                <hr class="mb-0"><br>
+            </div>
+            <div class="card-body form-scroll-wrapper">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="lpCodigo">{{ 'COMMON.CODE' | translate }}</label>
+                        <input id="lpCodigo" name="lpCodigo" class="form-control form-input"
+                            [(ngModel)]="lista.codigoLista" [readonly]="modoEdicion"
+                            [placeholder]="'PAQUETES.LISTAS_PRECIOS.GESTION.EG_CO_2027' | translate" />
+                        @if (enviado && !lista.codigoLista.trim()) { <small class="text-danger">{{
+                            'COMMON.ENTER_CODE_FIELD_REQUIRED' | translate }}</small> }
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="lpNombre">{{ 'COMMON.NAME' | translate }}</label>
+                        <input id="lpNombre" name="lpNombre" class="form-control form-input"
+                            [(ngModel)]="lista.nombreLista" />
+                        @if (enviado && !lista.nombreLista.trim()) { <small class="text-danger">{{
+                            'COMMON.NAME_REQUIRED' | translate }}</small> }
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="lpPais">{{ 'PAQUETES.LISTAS_PRECIOS.COUNTRY' | translate
+                            }}</label>
+                        <select id="lpPais" name="lpPais" class="form-control form-select"
+                            [(ngModel)]="lista.paisAplica" (ngModelChange)="alCambiarPais()">
+                            <option value="">{{ 'PAQUETES.LISTAS_PRECIOS.ALL_COUNTRIES' | translate }}</option>
+                            @for (p of paisesActivos; track p.codigoPais) { <option [value]="p.codigoPais">{{
+                                p.codigoPais }} · {{ nombrePais(p) }}</option> }
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="lpMoneda">{{ 'COMMON.CURRENCY' | translate
+                            }}</label>
+                        <input id="lpMoneda" name="lpMoneda" class="form-control form-input text-uppercase"
+                            maxlength="3" [(ngModel)]="lista.moneda" [placeholder]="monedaEjemplo"
+                            [readonly]="!!lista.paisAplica" />
+                        @if (lista.paisAplica) { <small class="text-muted">{{
+                            'PAQUETES.LISTAS_PRECIOS.GESTION.COUNTRY_CURRENCY' | translate }}</small> }
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="lpInicio">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.VALID_FROM' |
+                            translate }}</label>
+                        <app-selector-fecha contexto="lpInicio" [requerido]="true" [limpiable]="false"
+                            [(ngModel)]="lista.fechaInicio"></app-selector-fecha>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="lpFin">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.VALID_UNTIL' |
+                            translate }}</label>
+                        <app-selector-fecha contexto="lpFin" [min]="lista.fechaInicio"
+                            [(ngModel)]="lista.fechaFin"></app-selector-fecha>
+                        @if (enviado && fechaFinInvalida) { <small class="text-danger">{{
+                            'PAQUETES.LISTAS_PRECIOS.GESTION.END_DATE_BEFORE_START' | translate }}</small> }
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
+                            <div class="radio-buttons">
+                                <label class="radio-button">
+                                    <input name="estadoLista" type="radio" [value]="true"
+                                        [(ngModel)]="lista.estadoLista">
+                                    <div class="radio-circle"></div>
+                                    <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                                </label>
+
+                                <label class="radio-button">
+                                    <input name="estadoLista" type="radio" [value]="false"
+                                        [(ngModel)]="lista.estadoLista">
+                                    <div class="radio-circle"></div>
+                                    <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (modoEdicion) {
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- título de la sección con las clases de título de los formularios (el h5 suelto toma un color fijo que no se ve en tema oscuro) -->
+                    <div class="d-flex flex-column pe-3">
+                        <h5 class="titulo-formulario mb-0">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.LIST_PRICES' | translate }}<span
+                                class="titulo-container"> - {{ lista.nombreLista }}</span></h5>
+                        <small class="subtitulo-formulario">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.VALUES_IN_CURRENCY_ONE_PER_PACKAGE_OR_ITEM' |
+                            translate: { moneda: lista.moneda } }}</small>
+                    </div>
+                    <button *appPermiso="'ACT_PRECIO_CREAR'" type="button" class="btn btn-primary btn-NuevoRegistro"
+                        (click)="mostrarCopia = !mostrarCopia">
+                        <i class="feather icon-copy me-1"></i>{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.DUPLICATE_LIST' |
+                        translate }}
+                    </button>
+                </div>
+
+                @if (mostrarCopia) {
+                <div class="border rounded p-3 mb-3">
+                    <small class="d-block mb-2">{{
+                        'PAQUETES.LISTAS_PRECIOS.GESTION.COPY_LIST_ITS_PRICES_ANOTHER_VALIDITY' | translate }}</small>
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-2"><label class="form-label">{{ 'COMMON.CODE' | translate }}</label>
+                            <input class="form-control form-input" [(ngModel)]="copia.codigoLista" />
+                        </div>
+                        <div class="col-md-2"><label class="form-label">{{ 'COMMON.NAME' | translate }}</label>
+                            <input class="form-control form-input" [(ngModel)]="copia.nombreLista" />
+                        </div>
+                        <div class="col-md-2"><label class="form-label">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.VALID_FROM'
+                                | translate }}</label>
+                            <app-selector-fecha contexto="copiaInicio" [limpiable]="false"
+                                [(ngModel)]="copia.fechaInicio"></app-selector-fecha>
+                        </div>
+                        <div class="col-md-2"><label class="form-label">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.VALID_UNTIL'
+                                | translate }}</label>
+                            <app-selector-fecha contexto="copiaFin" [min]="copia.fechaInicio"
+                                [(ngModel)]="copia.fechaFin"></app-selector-fecha>
+                        </div>
+                        <div class="col-md-2"><label class="form-label">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.ADJUSTMENT'
+                                | translate }}</label>
+                            <input type="number" class="form-control form-input" [(ngModel)]="copia.porcentajeAjuste" />
+                        </div>
+                        <div class="col-md-2"><button type="button" class="btn btn-primary btn-NuevoRegistro"
+                                (click)="duplicar()">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.DUPLICATE_LIST' | translate
+                                }}</button></div>
+                    </div>
+                </div>
+                }
+
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>{{ 'COMMON.TYPE' | translate }}</th>
+                                <th>{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.PACKAGE_OR_ITEM' | translate }}</th>
+                                <th class="text-end">{{ 'COMMON.MONTHLY' | translate }}</th>
+                                <th class="text-end">{{ 'COMMON.ANNUAL' | translate }}</th>
+                                <th class="text-end">{{ 'COMMON.SETUP' | translate }}</th>
+                                <th>{{ 'COMMON.ACTIVE' | translate }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *appPermiso="'ACT_PRECIO_CREAR'">
+                                <td>
+                                    <select class="form-control form-select" [(ngModel)]="nuevo.tipoReferencia"
+                                        (ngModelChange)="alCambiarTipo()">
+                                        <option value="PAQUETE">{{ 'COMMON.PACKAGE' | translate }}</option>
+                                        <option value="ITEM">{{ 'COMMON.ITEM' | translate }}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control form-select" [(ngModel)]="nuevo.codigoReferencia">
+                                        <option value="">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.SELECT_PACKAGE_OR_ITEM' |
+                                            translate }}</option>
+                                        @for (r of referencias; track r.codigo) { <option [value]="r.codigo">{{ r.nombre
+                                            }}</option> }
+                                    </select>
+                                </td>
+                                <td><input type="number" min="0" class="form-control form-input text-end"
+                                        [(ngModel)]="nuevo.valorMensual" (change)="proponerAnual(nuevo)" /></td>
+                                <td><input type="number" min="0" class="form-control form-input text-end"
+                                        [(ngModel)]="nuevo.valorAnual" /></td>
+                                <td><input type="number" min="0" class="form-control form-input text-end"
+                                        [(ngModel)]="nuevo.precioSetup" /></td>
+                                <td></td>
+                                <td><button type="button" class="btn btn-primary btn-NuevoRegistro"
+                                        (click)="agregar()"><i class="feather icon-plus"></i> {{ 'COMMON.ADD' |
+                                        translate }}</button></td>
+                            </tr>
+                            @for (p of precios; track p.codigoDetalle) {
+                            <tr>
+                                <td>{{ (p.tipoReferencia === 'ITEM' ? 'COMMON.ITEM' : 'COMMON.PACKAGE') | translate }}
+                                </td>
+                                <td>{{ p.nombreReferencia }}</td>
+                                <td><input type="number" min="0" class="form-control form-input text-end"
+                                        [(ngModel)]="p.valorMensual" /></td>
+                                <td><input type="number" min="0" class="form-control form-input text-end"
+                                        [(ngModel)]="p.valorAnual" /></td>
+                                <td><input type="number" min="0" class="form-control form-input text-end"
+                                        [(ngModel)]="p.precioSetup" /></td>
+                                <td class="text-center"><input type="checkbox" class="custom-checkbox"
+                                        [(ngModel)]="p.estadoDetalle" />
+                                </td>
+                                <td class="text-nowrap text-center">
+                                    <button *appPermiso="'ACT_PRECIO_MODIFICAR'" id="btnDel"
+                                        class="dt-option-btn dt-option-btn--edit" (click)="guardarPrecio(p)"
+                                        [title]="'COMMON.SAVE' | translate">G
+                                    </button>
+                                    <button *appPermiso="'ACT_PRECIO_ELIMINAR'" id="btnDel"
+                                        class="dt-option-btn dt-option-btn--delete" (click)="quitar(p)"
+                                        [title]="'COMMON.DELETE' | translate">E
+                                    </button>
+                                </td>
+                            </tr>
+                            } @empty {
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">{{
+                                    'PAQUETES.LISTAS_PRECIOS.GESTION.LIST_HAS_NO_PRICES_YET' | translate }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

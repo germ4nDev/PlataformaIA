@@ -171,8 +171,8 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                             'Permiso Otorgado': ar.permiso ? 'Sí' : 'No',
                             'Fecha Asignación': ar.fechaCreacion ? new Date(ar.fechaCreacion).toLocaleDateString() : 'N/A',
                             '_acciones': [
-                                { accion: 'EDITAR', permiso: 'ACT_ACT_MODIFICAR', letra: 'E', color: '#dc3545', tooltip: this.translate.instant('ACTIVIDADES.ELIMINARTEXTO') },
-                                { accion: 'REMOVER', permiso: 'ACT_ACT_ELIMINAR', letra: 'R', color: '#28a745', tooltip: this.translate.instant('ACTIVIDADES.RENOVARTEXTO') }
+                                { accion: 'EDITAR', permiso: 'ACT_ACT_MODIFICAR', letra: 'E', color: '#dc3545', tooltip: this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE') },
+                                { accion: 'REMOVER', permiso: 'ACT_ACT_ELIMINAR', letra: 'R', color: '#28a745', tooltip: this.translate.instant('ACTIVIDADES.REMOVE') }
                             ]
                         };
                     });
@@ -180,9 +180,9 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                     return {
                         ...actividad,
                         '_acciones': [
-                            { accion: 'MODIFICAR', permiso: 'ACT_ACT_MODIFICAR', letra: 'M', color: '#223dd6', tooltip: (this.translate.instant('ACTIVIDADES.MODIFICAR')) },
-                            { accion: 'ELIMINAR', permiso: 'ACT_ACT_ELIMINAR', letra: 'E', color: '#e41a1a', tooltip: (this.translate.instant('ACTIVIDADES.ELIMINAR')) },
-                            { accion: 'ROLES', permiso: 'ACT_ROLES_PERMISOS', letra: 'R', color: '#28a745', tooltip: (this.translate.instant('ACTIVIDADES.ROLES')) }
+                            { accion: 'MODIFICAR', permiso: 'ACT_ACT_MODIFICAR', letra: 'M', color: '#223dd6', tooltip: (this.translate.instant('COMMON.EDIT_2')) },
+                            { accion: 'ELIMINAR', permiso: 'ACT_ACT_ELIMINAR', letra: 'E', color: '#e41a1a', tooltip: (this.translate.instant('COMMON.DELETE')) },
+                            { accion: 'ROLES', permiso: 'ACT_ROLES_PERMISOS', letra: 'R', color: '#28a745', tooltip: (this.translate.instant('COMMON.ROLES')) }
                         ],
                     };
                 });
@@ -271,22 +271,22 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'actividad',
-            header: 'ACTIVIDADES.ACTIVIDAD',
+            header: 'ACTIVIDADES.ACTIVITY',
             type: 'text'
         },
         {
             name: 'nomModulo',
-            header: 'ACTIVIDADES.NOMMODULO',
+            header: 'COMMON.MODULE',
             type: 'text'
         },
         {
             name: 'nomSuite',
-            header: 'ACTIVIDADES.NOMSUITE',
+            header: 'COMMON.SUITE',
             type: 'text'
         },
         {
             name: 'nomAplicacion',
-            header: 'ACTIVIDADES.NOMAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text',
             isSortable: false
         }
@@ -295,27 +295,27 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoActividad',
-            header: 'ACTIVIDADES.CODIGOACTIVIDAD',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'llavePermiso',
-            header: 'ACTIVIDADES.LLAVEPERMISO',
+            header: 'ACTIVIDADES.PERMISSION_KEY',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'ACTIVIDADES.NOMESTADO',
+            header: 'COMMON.STATUS',
             type: 'text'
         },
         {
             name: 'descripcion',
-            header: 'ACTIVIDADES.DESCRIPCION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'roles',
-            header: 'ACTIVIDADES.ROLES_ASIGNADOS',
+            header: 'ACTIVIDADES.ASSIGNED_ROLES',
             type: 'json-tabla'
         }
     ]
@@ -356,10 +356,10 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                 console.log('ejecutando eliminar actividades', event)
                 console.log('id aplicacion', idRegistro)
                 this._swalAlertService.getAlertQuestionRequest(
-                    this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
-                    this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
-                    this.translate.instant('PLATAFORMA.DELETE'),
-                    this.translate.instant('PLATAFORMA.CANCEL')
+                    this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE'),
+                    this.translate.instant('COMMON.ARE_YOU_SURE'),
+                    this.translate.instant('COMMON.DELETE'),
+                    this.translate.instant('COMMON.CANCEL')
                 ).subscribe(result => {
                     if (result) {
                         const actividad = this.actividades.filter(x => x.codigoActividad == idRegistro)[0];
@@ -386,10 +386,10 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                                     const logData = {
                                         codigoTipoLog: '',
                                         codigoRespuesta: '201',
-                                        descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
+                                        descripcionLog: this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY')
                                     };
                                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                    this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+                                    this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY'));
                                 }
                             },
                             error: (err: any) => {
@@ -397,10 +397,10 @@ export class ActividadesComponent implements OnInit, OnDestroy {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '501',
-                                    descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
+                                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_ACTIVITY')
                                 };
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                this._swalAlertService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
+                                this._swalAlertService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_ACTIVITY_2'));
                             }
                         });
                     }

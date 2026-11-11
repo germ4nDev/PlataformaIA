@@ -100,27 +100,27 @@ export class ConexionesComponent implements OnInit {
     columnasCnexiones: ColumnMetadata[] = [
         {
             name: 'nombreConexion',
-            header: 'CONEXIONES.NOMBRECONEXION',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nombreServidor',
-            header: 'CONEXIONES.NOMBREAPLICACION',
+            header: 'COMMON.APPLICATION_NAME',
             type: 'text'
         },
         {
             name: 'nombreSuscriptor',
-            header: 'CONEXIONES.NOMBRESUSCRIPTOR',
+            header: 'COMMON.SUBSCRIBER_NAME',
             type: 'text'
         },
         {
             name: 'BDNombre',
-            header: 'CONEXIONES.NOMBREBD',
+            header: 'ADMINISTRACION_BD.CONEXIONES.DATABASE_NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'USUARIOS.STATUS',
+            header: 'COMMON.STATUS',
             type: 'text'
         }
     ]
@@ -128,7 +128,7 @@ export class ConexionesComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcionLog',
-            header: 'CONEXIONES.DESCRIPCIONCONEXIONN',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         }
     ]
@@ -164,12 +164,12 @@ export class ConexionesComponent implements OnInit {
 
     OnEliminarRegistroClick(id: any) {
         Swal.fire({
-            title: this.translate.instant('CONEXIONES.ELIMINARTITULO'),
-            text: this.translate.instant('CONEXIONES.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            text: this.translate.instant('ADMINISTRACION_BD.CONEXIONES.CONNECTION_WILL_BE_DELETED'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
                 this._conexionService.deleteEliminarRegistro(id.id).subscribe({
@@ -177,20 +177,20 @@ export class ConexionesComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('CONEXIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('ADMINISTRACION_BD.CONEXIONES.CONNECTION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('CONEXIONES.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('ADMINISTRACION_BD.CONEXIONES.CONNECTION_WAS_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.registros = this.registros.filter(s => s.conexionId !== id.id)
                     },
                     error: (err: any) => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('CONEXIONES.ELIMINARERROR') + ' ' + err
+                            descripcionLog: this.translate.instant('ADMINISTRACION_BD.CONEXIONES.COULD_NOT_DELETE_CONNECTION') + ' ' + err
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('CONEXIONES.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('ADMINISTRACION_BD.CONEXIONES.COULD_NOT_DELETE_CONNECTION'), 'error')
                         console.error('Error eliminando', err)
                     }
                 })

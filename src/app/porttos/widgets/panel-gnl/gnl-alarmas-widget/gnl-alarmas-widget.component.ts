@@ -107,7 +107,7 @@ export class GnlAlarmasWidgetComponent implements OnInit, OnChanges, OnDestroy {
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_ALARMAS_WIDGET.BITACORA_DE_EVENTOS',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.WIDGETS.PANEL_GNL.GNL_ALARMAS_WIDGET.EVENT_LOG',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||

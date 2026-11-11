@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -16,12 +16,12 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'ACTIVIDADES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'ACTIVIDADES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_CODE' | translate }}</small>
                         <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroCodigoActividadChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="app.codigoAplicacion" *ngFor="let app of actividades">
                                 {{ app.actividad }}
@@ -29,10 +29,10 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'ACTIVIDADES.FILTROS.FILTROSUITES' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_SUITE' | translate }}</small>
                         <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="sui.codigoSuite" *ngFor="let sui of roles">
                                 {{ sui.nombreRole }}
@@ -49,8 +49,8 @@
             <div class="card-body">
                 <ng-container *ngIf="actividadesRolesFiltradas$ | async as dataFiltrada">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoActividadRole'"
-                        [tableTitle]="'ACTIVIDADES.TITLE' | translate" [newButtonLabel]="'ACTIVIDADES.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasAplicaciopnes"
+                        [tableTitle]="'ACTIVIDADES.ACTIVITY_MANAGEMENT' | translate" [newButtonLabel]="'ACTIVIDADES.NEW_ACTIVITY' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [metadataColumns]="columnasAplicaciopnes"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="false" [showSearchBox]="false"
                         [showBackButton]="true" (newRecord)="OnNuevoRegistroClick()"

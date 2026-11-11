@@ -151,13 +151,13 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
 
         const metricasConstruidas: IMetricaSemanal[] = [
             {
-                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.MOTONAVES_ATENDIDAS'),
+                label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTE_SEMANAL_MARITIMO.VESSELS_SERVED'),
                 valor: totalMotonaves.toLocaleString('es-CO'),
                 tendencia: 'Acumulado 7 días',
                 claseTendencia: 'text-info'
             },
             {
-                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.TONELADAS_MOVILIZADAS'),
+                label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTE_SEMANAL_MARITIMO.TONS_MOVED'),
                 valor: totalToneladas >= 1000 ? `${(totalToneladas / 1000).toFixed(1)}k TM` : `${totalToneladas} TM`,
                 tendencia: 'Volumen semanal',
                 claseTendencia: 'text-success'
@@ -166,7 +166,7 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
 
         if (totalTeus > 0) {
             metricasConstruidas.push({
-                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.TEU_MOVILIZADOS'),
+                label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTE_SEMANAL_MARITIMO.TEU_MOVED'),
                 valor: totalTeus >= 1000 ? `${(totalTeus / 1000).toFixed(1)}k` : totalTeus.toLocaleString('es-CO'),
                 tendencia: 'Contenedores 7d',
                 claseTendencia: 'text-success'
@@ -175,7 +175,7 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
 
         if (totalVehiculos > 0) {
             metricasConstruidas.push({
-                label: traducir('PORTTOS.REPORTE_SEMANAL_MARITIMO.VEHICULOS_UNID'),
+                label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTE_SEMANAL_MARITIMO.VEHICLES_UNITS'),
                 valor: totalVehiculos.toLocaleString('es-CO'),
                 tendencia: 'Operación Ro-Ro',
                 claseTendencia: 'text-warning'
@@ -185,7 +185,7 @@ export class ReporteSemanalMaritimoComponent implements OnInit, OnChanges, OnDes
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'RESUMEN SEMANAL MARÍTIMO',
-            subtitulo: raw.subtitulo || 'PORTTOS.REPORTE_SEMANAL_MARITIMO.INDICADORES_CLAVE_DE_LOS_ULTIMOS',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTE_SEMANAL_MARITIMO.KEY_INDICATORS_LAST_7_DAYS',
             icono: raw.icono || 'feather icon-calendar',
             metricas: metricasConstruidas
         };

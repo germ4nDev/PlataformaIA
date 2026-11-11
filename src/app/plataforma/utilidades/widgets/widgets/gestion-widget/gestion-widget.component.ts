@@ -118,7 +118,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                     this.fileNameDark = resp.widget.imagenWidget_dark;
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('COMMON.COULD_NOT_GET_APPLICATION'), 'error')
                 }
             })
         } else {
@@ -200,7 +200,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                 const nombre = path?.data?.respuesta?.fileName
                 if (nombre) alTerminar(nombre)
             },
-            error: () => this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+            error: () => this._swalAlertService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
         })
     }
 
@@ -248,7 +248,7 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
         registroData.movil = registroData.canal === 'telefono'
         if (!registroData.codigoWidget || !registroData.nombreWidget || !registroData.codigoPestana || !registroData.codigoTipo
             || !registroData.codigoAplicacion || !registroData.codigoSuite || !registroData.anclajeTipo) {
-            this._swalAlertService.getAlertError(this._translate.instant('WIDGETS.GESTION.FALTANCAMPOS'))
+            this._swalAlertService.getAlertError(this._translate.instant('UTILIDADES.WIDGETS.GESTION.MISSING_REQUIRED_DATA_CODE_NAME_TYPE'))
             return
         }
         registroData.imagenWidget_light = this.fileName !== '' ? this.fileName : 'no-imagen.png'
@@ -267,20 +267,20 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR') + ', ' + resp.mensaje
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY') + ', ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                         // Texto del widget (antes «El Usuario se modificó correctamente»; OT-015, CC-114)
-                        this._swalAlertService.getAlertSuccess(this._translate.instant('WIDGETS.UPDATESUCCSESSFULLY'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('COMMON.WIDGET_UPDATED'))
                         this.router.navigate(['/utilidades/widgets'])
                     } else {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + resp.mensaje
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'))
+                        this._swalAlertService.getAlertError(resp.message || this._translate.instant('COMMON.COULD_NOT_UPDATE_USER'))
                     }
                 },
                 error: (err: any) => {
@@ -288,10 +288,10 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.mensaje
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.mensaje
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'))
+                    this._swalAlertService.getAlertError(this._translate.instant('COMMON.COULD_NOT_UPDATE_USER'))
                 }
             })
         } else {
@@ -304,10 +304,10 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this._translate.instant('WIDGETS.GESTION.CREADO'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('UTILIDADES.WIDGETS.GESTION.WIDGET_CREATED'))
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/utilidades/widgets'])
@@ -318,13 +318,13 @@ export class GestionWidgetComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.mensaje
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.mensaje
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'))
                     // Antes borraba un archivo de la carpeta 'usuarios' con el nombre de la imagen del widget.
                     // La imagen subida se conserva: sirve si se corrige el formulario y se guarda otra vez.
                     const detalle = err?.error?.details?.map((d: any) => d.campo).join(', ') || err?.error?.msg || ''
-                    this._swalAlertService.getAlertError(this._translate.instant('WIDGETS.GESTION.ERRORGUARDAR') + (detalle ? ': ' + detalle : ''))
+                    this._swalAlertService.getAlertError(this._translate.instant('UTILIDADES.WIDGETS.WIDGET_COULD_NOT_BE_SAVED') + (detalle ? ': ' + detalle : ''))
                 }
             })
         }

@@ -89,17 +89,17 @@ export class ServidoresComponent implements OnInit {
     columnasServidores: ColumnMetadata[] = [
         {
             name: 'nombreServidor',
-            header: 'CONEXIONES.SERVIDORES.NOMBRESERVIDOR',
+            header: 'COMMON.SERVER',
             type: 'text'
         },
         {
             name: 'rutaServidor',
-            header: 'CONEXIONES.SERVIDORES.RUTASERVIDOR',
+            header: 'COMMON.PATH',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'USUARIOS.STATUS',
+            header: 'COMMON.STATUS',
             type: 'text'
         }
     ];
@@ -107,7 +107,7 @@ export class ServidoresComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcionServidor',
-            header: 'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         }
     ];
@@ -124,12 +124,12 @@ export class ServidoresComponent implements OnInit {
 
     OnEliminarRegistroClick(id: any) {
         Swal.fire({
-            title: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARTITULO'),
-            text: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('ADMINISTRACION_BD.SERVIDORES.WILL_DELETE_SERVER_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
                 this._servidorService.deleteEliminarRegistro(id.id).subscribe({
@@ -137,20 +137,20 @@ export class ServidoresComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('ADMINISTRACION_BD.SERVIDORES.SERVER_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire(this.translate.instant('CONEXIONES.SERVIDORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+                        Swal.fire(this.translate.instant('ADMINISTRACION_BD.SERVIDORES.SERVER_DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
                         this.registros = this.registros.filter((s) => s.servidorId !== id.id);
                     },
                     error: (err: any) => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARERROR') + ' ' + err.mensaje
+                            descripcionLog: this.translate.instant('ADMINISTRACION_BD.SERVIDORES.COULD_NOT_DELETE_SERVER') + ' ' + err.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARERROR'), 'error');
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('ADMINISTRACION_BD.SERVIDORES.COULD_NOT_DELETE_SERVER'), 'error');
                         console.error('Error eliminando', err);
                     }
                 });

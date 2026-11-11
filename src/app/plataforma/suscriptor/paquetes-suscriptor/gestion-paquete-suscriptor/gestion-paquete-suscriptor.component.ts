@@ -17,6 +17,7 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
 import { PTLSuscriptoresService, NavigationService, LocalStorageService, UploadFilesService, PTLUsuariosService, PtlusuariosScService, PTLPaquetesService, PTLPaquetesSCService, PTLHistorialFacturacionService, PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service';
 import { PTLTiposPagoService } from 'src/app/theme/shared/service/ptltipos-pago.service';
 import { PTLTiposPaqueteService } from 'src/app/theme/shared/service/ptltipos-paquete.service';
+import { PTLListasPreciosService, ListaPrecios, FotoPrecio } from 'src/app/theme/shared/service/ptllistas-precios.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
@@ -53,6 +54,11 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
     tiposPago: PTLTipoPagoModel[] = [];
     paquetesSC: PTLPaquetesSCModel[] = [];
     historiales: PTLHistorialFacturacionModel[] = [];
+    /** OT-029: el precio sale de la lista de precios (vacía = la vigente); el API guarda la foto del precio al vender. */
+    listasPrecios: ListaPrecios[] = [];
+    codigoLista = '';
+    cotizacion: FotoPrecio | null = null;
+    errorPrecio = '';
 
 
     constructor(
@@ -68,7 +74,8 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
         private _paquetesSCService: PTLPaquetesSCService,
         private _historialFacturacionService: PTLHistorialFacturacionService,
         private _logActividadesService: PtllogActividadesService,
-        private _swalAlertService: SwalAlertService
+        private _swalAlertService: SwalAlertService,
+        private _listasPrecios: PTLListasPreciosService
     ) {
         this.isSubmit = false;
         this.suscriptor = this._localStorageService.getObject<string>('regId') || ''
@@ -162,6 +169,7 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
         this.historiales = this._historialFacturacionService.getHistorialesActuales();
         this.tiposPaquete = this._tiposPaqueteService.getTiposPaqueteActuales();
         this.tiposPago = this._tiposPagoService.getTiposPagoActuales();
+        this._listasPrecios.listar().subscribe({ next: (l) => (this.listasPrecios = l.filter((x) => x.estadoLista)), error: () => (this.listasPrecios = []) });
     }
 
     onPaqueteChangeClick(event: any) {
@@ -173,10 +181,9 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
             const paquete = this.paquetes.find(x => x.codigoPaquete == event.target.value);
             this.FormRegistro.codigoLicencia = uuidv4()
             this.FormRegistro.descripcionPaquete = paquete?.descripcionPaquete
-            this.FormRegistro.precioPaquete = paquete?.precioPaquete || 0
-            console.log('datos del paquete', paquete);
+            this.recotizar();
         } else {
-            this._swalAlertService.getAlertConfirmError(traducir('WEB.GESTION_PAQUETE_SUSCRIPTOR.EL_PAQUETE_SELECCIONADO_YA_ESTA'))
+            this._swalAlertService.getAlertConfirmError(traducir('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.GESTION.SELECTED_PACKAGE_ALREADY_LINKED_SUBSCRIBER'))
         }
     }
 
@@ -188,18 +195,8 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
     onTipoPaqueteChangeClick(event: any) {
         const tipoPaquete = this.tiposPaquete.find(x => x.codigoTipoPaquete == event.target.value);
 
-        this.FormRegistro.descuentoMeses = tipoPaquete?.descuentoMeses || 0
-        this.FormRegistro.mesesCobertura = tipoPaquete?.numMeses || 0
-        const precio = this.FormRegistro.precioPaquete || 0
         const numMeses = tipoPaquete?.numMeses || 0
-        const desc = tipoPaquete?.descuentoMeses || 0
-
-        const valorDescuento = (precio * desc) / 100;
-        const precioFinalPorMes = precio - valorDescuento;
-        const valorFactura = precioFinalPorMes * numMeses;
-
-        this.FormRegistro.valorMes = precioFinalPorMes
-        this.FormRegistro.valorPago = valorFactura
+        this.recotizar();
 
         const fechaVencimiento = new Date();
         fechaVencimiento.setMonth(fechaVencimiento.getMonth() + Number(numMeses));
@@ -211,7 +208,35 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
         console.log('datos del formregistro', this.FormRegistro);
     }
 
+    onListaChangeClick(): void { this.recotizar(); }
+
+    /** OT-029: precio de la lista con los meses y el descuento del tipo de paquete (lo calcula el API; es lo que guardará al vender). */
+    recotizar(): void {
+        this.cotizacion = null;
+        this.errorPrecio = '';
+        if (!this.FormRegistro.codigoPaquete || !this.FormRegistro.codigoTipoPaquete) return;
+        this._listasPrecios.cotizar(this.FormRegistro.codigoPaquete, this.FormRegistro.codigoTipoPaquete, this.codigoLista).subscribe({
+            next: (c) => {
+                this.cotizacion = c;
+                const meses = c.mesesCobertura || 1;
+                this.FormRegistro.mesesCobertura = meses;
+                this.FormRegistro.descuentoMeses = c.porcentajeDescuento;
+                this.FormRegistro.precioPaquete = Math.round((c.valorPeriodo / meses) * 100) / 100;
+                this.FormRegistro.valorMes = Math.round((c.valorFinal / meses) * 100) / 100;
+                this.FormRegistro.valorPago = Math.round((c.valorFinal + (c.precioSetup || 0)) * 100) / 100;
+            },
+            error: (e) => {
+                this.errorPrecio = e?.error?.msg || traducir('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.GESTION.PACKAGE_HAS_NO_PRICE');
+                this.FormRegistro.precioPaquete = 0; this.FormRegistro.valorMes = 0; this.FormRegistro.valorPago = 0;
+            }
+        });
+    }
+
     btnGestionarRegistroClick(form: any) {
+        if (!this.cotizacion) {
+            this._swalAlertService.getAlertConfirmError(this.errorPrecio || traducir('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.GESTION.PACKAGE_HAS_NO_PRICE'));
+            return;
+        }
         console.log('gestionar formulario paquete sc', this.FormRegistro);
         const historial = this.historiales.filter(x => x.codigoSuscriptor == this.FormRegistro.codigoSuscriptor && x.codigoPaquete == this.FormRegistro.codigoPaquete)
         const ultimHistorial = historial[historial.length - 1];
@@ -278,9 +303,10 @@ export class GestionPaqueteSuscriptorComponent implements OnInit {
             fechaRenovacion: new Date().toISOString(),
             numRenovaciones: numRen,
             estadoLicencia: true,
+            codigoLista: this.cotizacion?.codigoLista || this.codigoLista || '',
             codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '',
             fechaCreacion: new Date().toISOString()
-        };
+        } as PTLPaquetesSCModel;
 
         console.log('nueva paquete', paqueteSuscriptor);
         this._paquetesSCService.postCrearRegistro(paqueteSuscriptor).subscribe({

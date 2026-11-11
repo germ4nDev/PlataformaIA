@@ -1,11 +1,11 @@
 <div class="tabla-herramientas" *ngIf="ampliada">
     <div class="buscador">
         <i class="feather icon-search"></i>
-        <input type="search" [placeholder]="'PORTTOS.TABLA_TCL.BUSCAR' | translate" [value]="busqueda" (input)="buscar($any($event.target).value)" [attr.aria-label]="'PORTTOS.TABLA_TCL.BUSCAR_EN_LA_TABLA' | translate">
+        <input type="search" [placeholder]="'COMMON.SEARCH_2' | translate" [value]="busqueda" (input)="buscar($any($event.target).value)" [attr.aria-label]="'PORTTOS.WIDGETS.SHARED.TABLA_TCL.SEARCH_TABLE' | translate">
     </div>
-    <span class="contador">{{ 'PORTTOS.TABLA_TCL.DE_FILAS' | translate: { p0: filtradas.length, p1: (filas.length || 0) } }}</span>
-    <button type="button" class="btn-csv" (click)="exportar()" [disabled]="!filtradas.length" [title]="'PORTTOS.TABLA_TCL.EXPORTAR_A_CSV' | translate">
-        <i class="feather icon-download"></i> {{ 'PORTTOS.TABLA_TCL.CSV' | translate }}
+    <span class="contador">{{ 'PORTTOS.WIDGETS.SHARED.TABLA_TCL.P0_P1_ROWS' | translate: { p0: filtradas.length, p1: (filas.length || 0) } }}</span>
+    <button type="button" class="btn-csv" (click)="exportar()" [disabled]="!filtradas.length" [title]="'PORTTOS.WIDGETS.SHARED.EXPORT_CSV' | translate">
+        <i class="feather icon-download"></i> {{ 'PORTTOS.WIDGETS.SHARED.CSV' | translate }}
     </button>
 </div>
 <div class="tabla-tcl" [class.ampliada]="ampliada">
@@ -46,7 +46,7 @@
     <ng-template #guion>—</ng-template>
 </div>
 <div class="tabla-paginas" *ngIf="ampliada && paginas > 1">
-    <button type="button" (click)="irA(pagina - 1)" [disabled]="pagina === 0" [attr.aria-label]="'PORTTOS.TABLA_TCL.PAGINA_ANTERIOR' | translate"><i class="feather icon-chevron-left"></i></button>
-    <span>{{ 'PORTTOS.TABLA_TCL.PAGINA_DE' | translate: { p0: pagina + 1, p1: paginas } }}</span>
-    <button type="button" (click)="irA(pagina + 1)" [disabled]="pagina >= paginas - 1" [attr.aria-label]="'PORTTOS.TABLA_TCL.PAGINA_SIGUIENTE' | translate"><i class="feather icon-chevron-right"></i></button>
+    <button type="button" (click)="irA(pagina - 1)" [disabled]="pagina === 0" [attr.aria-label]="'PORTTOS.WIDGETS.SHARED.TABLA_TCL.PREVIOUS_PAGE' | translate"><i class="feather icon-chevron-left"></i></button>
+    <span>{{ 'PORTTOS.WIDGETS.SHARED.TABLA_TCL.PAGE_P0_P1' | translate: { p0: pagina + 1, p1: paginas } }}</span>
+    <button type="button" (click)="irA(pagina + 1)" [disabled]="pagina >= paginas - 1" [attr.aria-label]="'PORTTOS.WIDGETS.SHARED.TABLA_TCL.NEXT_PAGE' | translate"><i class="feather icon-chevron-right"></i></button>
 </div>

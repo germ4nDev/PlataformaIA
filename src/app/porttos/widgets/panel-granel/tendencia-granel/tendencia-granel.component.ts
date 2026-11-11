@@ -43,7 +43,7 @@ export class TendenciaGranelComponent extends WidgetTableroBase<TableroGranel> {
 
     protected alRecibir(d: TableroGranel | null): void {
         this.labels = d?.tendencia.labels || [];
-        this.series = [{ label: traducir('PORTTOS.TENDENCIA_GRANEL.TONELADAS_POR_HORA'), data: d?.tendencia.valores || [], color: '#51a351', relleno: true }];
+        this.series = [{ label: traducir('PORTTOS.WIDGETS.PANEL_GRANEL.TENDENCIA_GRANEL.TONS_PER_HOUR'), data: d?.tendencia.valores || [], color: '#51a351', relleno: true }];
         this.pico = d?.tendencia.pico || null;
         this.total = d?.tendencia.total24h || 0;
     }

@@ -145,7 +145,7 @@ export class HistoricoAnualComponent implements OnInit, AfterViewInit, OnChanges
         } else if (Array.isArray(raw.valores)) {
             this.datasets = [
                 {
-                    label: raw.titulo || traducir('PORTTOS.HISTORICO_ANUAL.TONELADAS_MOVILIZADAS'),
+                    label: raw.titulo || traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.HISTORICO_ANUAL.TONS_MOVED'),
                     data: raw.valores.map((v: any) => Number(v || 0)),
                     color: '#00d4ff',
                     relleno: true

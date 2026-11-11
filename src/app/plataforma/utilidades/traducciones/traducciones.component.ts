@@ -73,7 +73,7 @@ export class TraduccionesComponent implements OnInit {
                     .map((f) => ({
                         ...f,
                         ...Object.fromEntries(this.idiomas.map((i) => [`texto_${i}`, f.textos[i] ?? '—'])),
-                        nomEstado: f.protegida ? traducir('UTILIDADES.TRADUCCIONES.EN_USO') : traducir('UTILIDADES.TRADUCCIONES.LIBRE')
+                        nomEstado: f.protegida ? traducir('UTILIDADES.TRADUCCIONES.IN_USE') : traducir('UTILIDADES.TRADUCCIONES.UNUSED')
                     }));
             })
         );
@@ -88,9 +88,9 @@ export class TraduccionesComponent implements OnInit {
                 this.modulos = r.ramas.map((x) => x.modulo).sort();
                 this.filas = r.filas;
                 this.columnas = [
-                    { name: 'llave', header: 'UTILIDADES.TRADUCCIONES.LLAVE', type: 'text' },
+                    { name: 'llave', header: 'UTILIDADES.TRADUCCIONES.KEY', type: 'text' },
                     ...this.idiomas.map((i) => ({ name: `texto_${i}`, header: i.toUpperCase(), type: 'text' })),
-                    { name: 'nomEstado', header: 'UTILIDADES.TRADUCCIONES.USO', type: 'text' }
+                    { name: 'nomEstado', header: 'UTILIDADES.TRADUCCIONES.USAGE', type: 'text' }
                 ] as ColumnMetadata[];
                 this.filas$.next(this.filas);
                 this.cargando = false;
@@ -98,7 +98,7 @@ export class TraduccionesComponent implements OnInit {
             },
             error: () => {
                 this.cargando = false;
-                this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.ERROR_CARGAR'));
+                this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.COULD_NOT_GET_TRANSLATIONS'));
             }
         });
     }
@@ -115,8 +115,8 @@ export class TraduccionesComponent implements OnInit {
     sembrar(idioma: string): void {
         this.traducciones.jsonDelBuild(idioma).subscribe((arbol) =>
             this.traducciones.sembrar(idioma, arbol).subscribe({
-                next: () => { this.avisos.getAlertConfirmSuccess(traducir('UTILIDADES.TRADUCCIONES.SEMBRADO')); this.cargar(); },
-                error: () => this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.ERROR_SEMBRAR'))
+                next: () => { this.avisos.getAlertConfirmSuccess(traducir('UTILIDADES.TRADUCCIONES.LANGUAGE_LOADED_INTO_API')); this.cargar(); },
+                error: () => this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.COULD_NOT_LOAD_LANGUAGE_INTO_API'))
             })
         );
     }
@@ -144,21 +144,21 @@ export class TraduccionesComponent implements OnInit {
     eliminar(llave: string): void {
         const fila = this.filas.find((f) => f.llave === llave);
         if (fila?.protegida) {
-            this.avisos.getAlertConfirmWarning(traducir('UTILIDADES.TRADUCCIONES.NO_SE_PUEDE_ELIMINAR'));
+            this.avisos.getAlertConfirmWarning(traducir('UTILIDADES.TRADUCCIONES.KEY_USED_BY_SYSTEM_SCREEN_OR'));
             return;
         }
         Swal.fire({
-            title: this.translate.instant('UTILIDADES.TRADUCCIONES.ELIMINAR_TITULO'),
-            text: this.translate.instant('UTILIDADES.TRADUCCIONES.ELIMINAR_TEXTO', { llave }),
+            title: this.translate.instant('UTILIDADES.TRADUCCIONES.DELETE_KEY'),
+            text: this.translate.instant('UTILIDADES.TRADUCCIONES.LLAVE_WILL_BE_DELETED_IN_ALL', { llave }),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('UTILIDADES.TRADUCCIONES.ELIMINAR_SI'),
-            cancelButtonText: this.translate.instant('UTILIDADES.TRADUCCIONES.CANCELAR')
+            confirmButtonText: this.translate.instant('UTILIDADES.TRADUCCIONES.YES_DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((r) => {
             if (!r.isConfirmed) return;
             this.traducciones.eliminar(llave).subscribe({
-                next: () => { this.avisos.getAlertConfirmSuccess(traducir('UTILIDADES.TRADUCCIONES.ELIMINADA')); this.cargar(); },
-                error: (e) => this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.TRADUCCIONES.ERROR_ELIMINAR'))
+                next: () => { this.avisos.getAlertConfirmSuccess(traducir('UTILIDADES.TRADUCCIONES.KEY_DELETED')); this.cargar(); },
+                error: (e) => this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.TRADUCCIONES.COULD_NOT_DELETE_KEY'))
             });
         });
     }

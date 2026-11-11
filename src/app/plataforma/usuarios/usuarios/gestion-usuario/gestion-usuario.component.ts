@@ -142,7 +142,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                     // CC-134 (decisión del usuario): los roles se asignan solo en Suscriptores › Usuarios › Roles; aquí ya no se consultan
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('COMMON.COULD_NOT_GET_APPLICATION'), 'error')
                 }
             })
         } else {
@@ -332,7 +332,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                     this.FormRegistro.fotoUsuario = path.nombreArchivo
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalAlertService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -380,10 +380,10 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('COMMON.USER_UPDATED_SUCCESSFULLY'))
                         this.router.navigate(['/usuarios/usuarios'])
                     }
                 },
@@ -392,10 +392,10 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.mensaje
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.mensaje
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'))
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'))
+                    this._swalAlertService.getAlertError(this._translate.instant('COMMON.COULD_NOT_UPDATE_USER'))
                 }
             })
         } else {
@@ -416,10 +416,10 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                         // const logData = {
                         //     codigoTipoLog: '',
                         //     codigoRespuesta: '201',
-                        //     descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                        //     descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         // }
                         // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTUSERSUCCESS'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('USUARIOS.GESTION.USER_CREATED_SUCCESSFULLY'))
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/usuarios/usuarios'])
@@ -430,7 +430,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.mensaje
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.mensaje
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'))
                     const objUpload = {
@@ -439,7 +439,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                         file: this.fileName
                     }
                     this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'))
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.INSERTUSERERROR'))
+                    this._swalAlertService.getAlertError(this._translate.instant('USUARIOS.GESTION.COULD_NOT_CREATE_USER'))
                 }
             })
         }

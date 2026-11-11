@@ -102,7 +102,7 @@ export class UnlockScreenComponent implements OnInit {
                 if (!resp.ok) {
                     Swal.fire({
                         title: resp.msg,
-                        text: traducir('WEB.UNLOCK_SCREEN.LA_DIRECCION_DE_CORREO_ELECTRONICO'),
+                        text: traducir('STARTER.LOCK_SCREEN.UNLOCK_SCREEN.EMAIL_ADDRESS_ENTERED_NOT_REGISTERED_IN'),
                         icon: 'error',
                         showCloseButton: true
                     });
@@ -117,7 +117,7 @@ export class UnlockScreenComponent implements OnInit {
             catchError((err) => {
                 this.loading = false;
                 this.error = err;
-                Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), err, 'error');
+                Swal.fire(traducir('COMMON.ERROR'), err, 'error');
                 return of(null);
             })
         ).subscribe();

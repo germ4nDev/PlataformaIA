@@ -208,10 +208,10 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //                         const logData = {
 //                             codigoTipoLog: '',
 //                             codigoRespuesta: '201',
-//                             descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+//                             descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
 //                         }
 //                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-//                         this._swalAlertService.getAlertConfirmSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+//                         this._swalAlertService.getAlertConfirmSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
 //                         this._loadingService.hide()
 //                         this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: this.codigoPaquete } })
 //                     }
@@ -221,16 +221,16 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //                     const logData = {
 //                         codigoTipoLog: '',
 //                         codigoRespuesta: '501',
-//                         descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+//                         descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
 //                     }
 //                     this._loadingService.hide()
 //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-//                     this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err)
+//                     this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err)
 //                 }
 //             })
 //         } else {
 //             this._loadingService.hide()
-//             this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOREGISTROS'))
+//             this._swalAlertService.getAlertError(this.translate.instant('PAQUETES.MODULOS_PAQUETE.GESTION.NO_RECORDS'))
 //         }
 
 //         // if (this.modoEdicion) {
@@ -240,19 +240,19 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //                 const logData = {
 //         //                     codigoTipoLog: '',
 //         //                     codigoRespuesta: '201',
-//         //                     descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+//         //                     descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
 //         //                 };
 //         //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-//         //                 this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+//         //                 this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'));
 //         //                 this.router.navigate(['/aplicaciones/modulos']);
 //         //             } else {
 //         //                 const logData = {
 //         //                     codigoTipoLog: '',
 //         //                     codigoRespuesta: '501',
-//         //                     descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+//         //                     descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
 //         //                 };
 //         //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-//         //                 this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
+//         //                 this._swalAlertService.getAlertError(resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'));
 //         //             }
 //         //         },
 //         //         error: (err: any) => {
@@ -260,10 +260,10 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //             const logData = {
 //         //                 codigoTipoLog: '',
 //         //                 codigoRespuesta: '501',
-//         //                 descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+//         //                 descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.message
 //         //             };
 //         //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-//         //             this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
+//         //             this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'));
 //         //         }
 //         //     });
 //         // } else {
@@ -281,10 +281,10 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //                 const logData = {
 //         //                     codigoTipoLog: '',
 //         //                     codigoRespuesta: '201',
-//         //                     descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+//         //                     descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
 //         //                 };
 //         //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-//         //                 this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+//         //                 this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
 //         //                 form.resetForm();
 //         //                 this.isSubmit = false;
 //         //                 this.router.navigate(['/aplicaciones/modulos']);
@@ -295,10 +295,10 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //             const logData = {
 //         //                 codigoTipoLog: '',
 //         //                 codigoRespuesta: '501',
-//         //                 descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+//         //                 descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
 //         //             };
 //         //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-//         //             this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
+//         //             this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err);
 //         //         }
 //         //     });
 //         // }
@@ -504,13 +504,13 @@ export class GestionModulopqComponent implements OnInit, OnDestroy {
         this.isSubmit = true;
 
         if (this.formularioRegistro.invalid) {
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.FORMULARIOINVALIDO'));
+            this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
             return;
         }
 
         const seleccionados = this.modulosPadre.filter(x => x.checked);
         if (seleccionados.length === 0) {
-            this._swalAlertService.getAlertError(traducir('WEB.GESTION_MODULOPQ.DEBE_SELECCIONAR_AL_MENOS_UN'));
+            this._swalAlertService.getAlertError(traducir('PAQUETES.MODULOS_PAQUETE.GESTION.YOU_MUST_SELECT_AT_LEAST_ONE'));
             return;
         }
 
@@ -542,8 +542,8 @@ export class GestionModulopqComponent implements OnInit, OnDestroy {
         };
 
         this._registrosService.postCrearRegistro(dataCrear).subscribe({
-            next: (resp: any) => this.manejarExito(resp, 'PLATAFORMA.INSERTAR'),
-            error: (err: any) => this.manejarError(err, 'PLATAFORMA.NOINSERTO')
+            next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_INSERTED_SUCCESSFULLY'),
+            error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_INSERT_RECORD')
         });
     }
 

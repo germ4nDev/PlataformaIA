@@ -171,25 +171,25 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
 
             this.listaBarras = [
                 {
-                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.EN_VENTANA_OK'),
+                    label: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ESTADO_CITAS.IN_WINDOW_OK'),
                     value: confirmadas,
                     percent: Math.round((confirmadas / total) * 100),
                     colorClass: 'bg-success'
                 },
                 {
-                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.EN_COLA_VIRTUAL'),
+                    label: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ESTADO_CITAS.IN_VIRTUAL_QUEUE'),
                     value: enEspera,
                     percent: Math.round((enEspera / total) * 100),
                     colorClass: 'bg-info'
                 },
                 {
-                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.VENCIDAS_REAGEND'),
+                    label: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ESTADO_CITAS.EXPIRED_RESCHED'),
                     value: reagendadas,
                     percent: Math.round((reagendadas / total) * 100),
                     colorClass: 'bg-warning'
                 },
                 {
-                    label: traducir('PORTTOS.GATE_ESTADO_CITAS.SIN_CITA_RETENIDOS'),
+                    label: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ESTADO_CITAS.NO_APPOINTMENT_HELD'),
                     value: canceladas,
                     percent: Math.round((canceladas / total) * 100),
                     colorClass: 'bg-danger'
@@ -224,7 +224,7 @@ export class GateEstadoCitasComponent implements OnInit, OnChanges, OnDestroy {
         this.datosAutonomosSQL = {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'ESTADO DE CITAS',
-            subtitulo: raw.subtitulo || 'PORTTOS.GATE_ESTADO_CITAS.GESTION_DE_TURNOS_Y_ACCESOS_2',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ESTADO_CITAS.SHIFT_ACCESS_MANAGEMENT_BY_WINDOW',
             icono: raw.icono || 'feather icon-calendar',
             barrasProgreso: this.listaBarras,
             resumen: resumenNormalizado

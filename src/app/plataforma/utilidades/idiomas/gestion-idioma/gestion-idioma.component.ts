@@ -142,7 +142,7 @@ export class GestionIdiomaComponent implements OnInit {
                     this.isModImagen = true
                 },
                 error: () => {
-                    this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -168,7 +168,7 @@ export class GestionIdiomaComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY')
+                            descripcionLog: this.translate.instant('COMMON.APPLICATION_UPDATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                         if (this.flagOriginal != this.flagIdioma) {
@@ -182,7 +182,7 @@ export class GestionIdiomaComponent implements OnInit {
                             console.log('borrar imagen', objUpload)
                             this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('imagen eliminada correctamente'))
                         }
-                        this._swalService.getAlertSuccess(this.translate.instant('IDIOMAS.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('UTILIDADES.IDIOMAS.GESTION.LANGUAGE_CREATED_SUCCESSFULLY'))
                         form.resetForm()
                         // this.isSubmit = false;
                         this.router.navigate(['/utilidades/idiomas'])
@@ -193,7 +193,7 @@ export class GestionIdiomaComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+                        descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                     const objUpload = {
@@ -202,7 +202,7 @@ export class GestionIdiomaComponent implements OnInit {
                         folto: this.flagIdioma
                     }
                     this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('imagen eliminada correctamente'))
-                    this._swalService.getAlertError(traducir('WEB.GESTION_IDIOMA.NO_SE_PUDO_ACTUALIZAR_LA'))
+                    this._swalService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_APPLICATION'))
                 }
             })
         } else {
@@ -219,10 +219,10 @@ export class GestionIdiomaComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('IDIOMAS.CREATESUCCESSFULLY')
+                            descripcionLog: this.translate.instant('UTILIDADES.IDIOMAS.GESTION.LANGUAGE_CREATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('IDIOMAS.UPDATESUCCESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('UTILIDADES.IDIOMAS.GESTION.LANGUAGE_UPDATED_SUCCESSFULLY'))
                         form.resetForm()
                         // this.isSubmit = false;
                         this.router.navigate(['/utilidades/idiomas'])
@@ -233,7 +233,7 @@ export class GestionIdiomaComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('IDIOMAS.ELIMINAREXITOSA')
+                        descripcionLog: this.translate.instant('UTILIDADES.IDIOMAS.LANGUAGE_DELETED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                     const objUpload = {
@@ -243,7 +243,7 @@ export class GestionIdiomaComponent implements OnInit {
                     }
                     console.log('borrar imagen', objUpload)
                     this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('imagen eliminada correctamente'))
-                    this._swalService.getAlertError(traducir('WEB.GESTION_IDIOMA.NO_SE_PUDO_CREAR_LA'))
+                    this._swalService.getAlertError(traducir('COMMON.COULD_NOT_CREATE_APPLICATION'))
                 }
             })
         }

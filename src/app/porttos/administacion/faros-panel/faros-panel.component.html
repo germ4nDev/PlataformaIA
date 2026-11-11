@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <!-- <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button> -->
             </div>
 
@@ -16,37 +16,37 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <!-- <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'FAROS.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'FAROS.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_CODE' | translate }}</small>
                         <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.codigoAplicacion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'FAROS.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.nombreAplicacion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'FAROS.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'FAROS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'FAROS.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div> -->
@@ -58,11 +58,11 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="farosFiltradas$ | async as dataFiltrada; else loading">
-                    <app-data-table [data]="dataFiltrada" [idField]="'id_faro'" [tableTitle]="'FAROS.TITLE' | translate"
+                    <app-data-table [data]="dataFiltrada" [idField]="'id_faro'" [tableTitle]="'PORTTOS.ADMINISTACION.FAROS_PANEL.LIGHTHOUSE_MANAGEMENT' | translate"
                         [metadataColumns]="columnasAplicaciopnes" [metadataDetailColumns]="columnasDetailRegistros"
                         [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
                         [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
-                        [newButtonLabel]="'FAROS.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        [newButtonLabel]="'PORTTOS.ADMINISTACION.FAROS_PANEL.NEW_LIGHTHOUSE' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
                         (newRecord)="OnNuevaRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                         (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_FAROS_CREAR" permisoEdit="ACT_FAROS_MODIFICAR" permisoDelete="ACT_FAROS_ELIMINAR">
                     </app-data-table>

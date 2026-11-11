@@ -53,13 +53,13 @@ export class ColaFondeoComponent extends WidgetMaritimoVivoBase<ResumenMaritimo>
 
     // ---------------------------------------------------------------- vista ampliada (2026-10-24)
     public readonly columnasCola: ColumnaTabla[] = [
-        { campo: 'nombre', titulo: 'PORTTOS.COMUN.NAVE', tipo: 'principal' },
+        { campo: 'nombre', titulo: 'PORTTOS.WIDGETS.SHIP', tipo: 'principal' },
         { campo: 'mmsi', titulo: 'MMSI' },
-        { campo: 'destino', titulo: 'PORTTOS.COLA_FONDEO.DESTINO_AIS' },
-        { campo: 'horas', titulo: 'PORTTOS.COLA_FONDEO.EN_FONDEO_2', tipo: 'numero', decimales: 1, unidad: 'h' },
-        { campo: 'nivelTexto', titulo: 'PORTTOS.COLA_FONDEO.NIVEL', tipo: 'estado' },
-        { campo: 'latitud', titulo: 'PORTTOS.COLA_FONDEO.LATITUD', tipo: 'numero', decimales: 4 },
-        { campo: 'longitud', titulo: 'PORTTOS.COLA_FONDEO.LONGITUD', tipo: 'numero', decimales: 4 }
+        { campo: 'destino', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.AIS_DESTINATION' },
+        { campo: 'horas', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.AT_ANCHORAGE', tipo: 'numero', decimales: 1, unidad: 'h' },
+        { campo: 'nivelTexto', titulo: 'PORTTOS.WIDGETS.LEVEL', tipo: 'estado' },
+        { campo: 'latitud', titulo: 'PORTTOS.LATITUDE', tipo: 'numero', decimales: 4 },
+        { campo: 'longitud', titulo: 'PORTTOS.LONGITUDE', tipo: 'numero', decimales: 4 }
     ];
     public filasCola: any[] = [];
 

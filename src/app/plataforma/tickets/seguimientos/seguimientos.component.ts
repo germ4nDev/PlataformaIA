@@ -121,17 +121,17 @@ export class SeguimientosComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'fechaSeguimiento',
-            header: 'TICKETS.SEGUIMIENTOS.FECHASEGUIMIENTO',
+            header: 'TICKETS.SEGUIMIENTOS.TRACKING_DATE',
             type: 'date'
         },
         {
             name: 'estadoSeguimiento',
-            header: 'TICKETS.SEGUIMIENTOS.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado'
         },
         {
             name: 'nombreSeguimiento',
-            header: 'TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO',
+            header: 'COMMON.NAME',
             type: 'text'
         }
     ];
@@ -139,22 +139,22 @@ export class SeguimientosComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoRequerimiento',
-            header: 'TICKETS.SEGUIMIENTOS.CODIGOREQUERIMIENTO',
+            header: 'TICKETS.SEGUIMIENTOS.REQUIREMENT_CODE',
             type: 'text'
         },
         {
             name: 'nomRequerimiento',
-            header: 'TICKETS.SEGUIMIENTOS.NOMBREREQUERIMIENTO',
+            header: 'TICKETS.REQUIREMENT',
             type: 'text'
         },
         {
             name: 'descripcionSeguimiento',
-            header: 'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO',
+            header: 'TICKETS.SEGUIMIENTOS.TRACKING_DESCRIPTION',
             type: 'text'
         },
         {
             name: 'captura',
-            header: 'TICKETS.SEGUIMIENTOS.CAPTURASEGUIMIENTO',
+            header: 'COMMON.IMAGE',
             type: 'capture'
         }
     ];
@@ -284,18 +284,18 @@ export class SeguimientosComponent implements OnInit {
     OnEliminarRegistroClick(id: any) {
         const seguimiento = this.seguimiento.filter((x) => x.codigoSeguimiento == id.id)[0];
         Swal.fire({
-            title: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTITULO'),
-            //   text: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO') + `"${seguimiento.nombreSeguimiento}".`,
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            //   text: this.translate.instant('TICKETS.SEGUIMIENTOS.TRACKING_WILL_BE_DELETED') + `"${seguimiento.nombreSeguimiento}".`,
             html: `
         <div style="margin-bottom: 10px;">
-            ${this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO')}
+            ${this.translate.instant('TICKETS.SEGUIMIENTOS.TRACKING_WILL_BE_DELETED')}
         </div>
         <small><b>"${seguimiento.nombreSeguimiento}"</b></small>
         `,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
                 this._seguimientosService.deleteEliminarRegistro(id.id).subscribe({
@@ -303,7 +303,7 @@ export class SeguimientosComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('TICKETS.SEGUIMIENTOS.TRACKING_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                         const segui = this.registros.filter((x) => x.codigoSeguimiento == id.id)[0];
@@ -316,17 +316,17 @@ export class SeguimientosComponent implements OnInit {
                             //   });
                         }
                         this._seguimientosService.cargarRegistros().subscribe(() => {
-                            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA'));
+                            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.SEGUIMIENTOS.TRACKING_WAS_DELETED_SUCCESSFULLY'));
                         });
                     },
                     error: (err: any) => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_TRACKING') + ' ' + err.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalService.getAlertError(this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje);
+                        this._swalService.getAlertError(this.translate.instant('COMMON.COULD_NOT_DELETE_TRACKING') + ' ' + err.mensaje);
                         console.error('Error eliminando', err);
                     }
                 });

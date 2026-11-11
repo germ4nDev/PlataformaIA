@@ -4,7 +4,7 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button>
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
             </div>
 
@@ -22,19 +22,19 @@
                     </div>
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
 
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'WIDGETSROLES.CREATE' | translate }}
+                            {{ 'COMMON.SAVE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
 
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'WIDGETSROLES.UPDATE' | translate }}
+                            {{ 'COMMON.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -46,31 +46,31 @@
                     <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
                     <div class="d-flex flex-column pe-3">
                         <h4 class="titulo-formulario">
-                            <span *ngIf="!modoEdicion">{{ 'WIDGETSROLES.NEW' | translate }}</span>
-                            <span *ngIf="modoEdicion">{{ 'WIDGETSROLES.UPDATE' | translate }}</span>
-                            <span class="titulo-container"> - {{ 'WIDGETSROLES.TITLE' | translate }}</span>
+                            <span *ngIf="!modoEdicion">{{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.NEW_ASSIGNMENT' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'COMMON.UPDATE' | translate }}</span>
+                            <span class="titulo-container"> - {{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.WIDGETS_BY_ROLE' | translate }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            {{ 'WIDGETSROLES.TITLEDESCRIPTION' | translate }}
+                            {{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.APPLICATION_ROLES_THAT_CAN_SEE_WIDGET' | translate }}
                         </h6>
                     </div>
 
                     <!-- Bloque Derecho: Botones con Spinners -->
                     <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
 
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'WIDGETSROLES.CREATE' | translate }}
+                            {{ 'COMMON.SAVE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
 
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'WIDGETSROLES.UPDATE' | translate }}
+                            {{ 'COMMON.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -81,14 +81,14 @@
             <div class="card-body form-scroll-wrapper">
                 <div class="col-md-12" *ngIf="rolesConCheck.length > 0">
                     <div class="text-center flex flex-col justify-center"><br />
-                        <h4 class="titulo-container">{{ 'WEB.GESTION_WIDGET_ROLES.ROLES_ASOCIADOS_AL_WIDGET' | translate: { p0: ('WIDGETSROLESROLES.GESTION.TITLE' | translate) } }}</h4>
+                        <h4 class="titulo-container">{{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.P0_ROLES_LINKED_WIDGET' | translate: { p0: ('UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.CREATE_OR_UPDATE_WIDGET_ROLE' | translate) } }}</h4>
                         <!-- Se muestra el nombre del widget o su código como fallback -->
                         <h6 class="subtitulo-container"> {{ widgetMaestro.nombreWidget || widgetMaestro.codigoWidget }}
                         </h6><br>
 
                         <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                             (click)="btnAsociarTodosClick()">
-                            {{ 'PLATAFORMA.ALLDATA' | translate }}
+                            {{ 'COMMON.SELECT_ALL' | translate }}
                         </button><br /><br />
                     </div>
                 </div>

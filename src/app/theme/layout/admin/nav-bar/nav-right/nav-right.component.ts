@@ -86,7 +86,7 @@ export class NavRightComponent implements DoCheck, OnInit {
         // console.log('isDarkTheme', this.isDarkTheme);
         this.isDarkTheme = this.themeService.isDarkThemeEnabled();
         this.iconoTema = this.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
-        this.themeTextKey = this.isDarkTheme ? 'PLATAFORMA.NAVBAR.THEME_LIGHT' : 'PLATAFORMA.NAVBAR.THEME_DARK';
+        this.themeTextKey = this.isDarkTheme ? 'COMMON.LIGHT_THEME' : 'COMMON.DARK_THEME';
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     }
 
@@ -141,7 +141,7 @@ export class NavRightComponent implements DoCheck, OnInit {
         this.isDarkTheme = !this.isDarkTheme;
         const settings = this._localStorageService.getThemeSettings();
         this.iconoTema = settings.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
-        this.themeTextKey = settings.isDarkTheme ? 'PLATAFORMA.NAVBAR.THEME_LIGHT' : 'PLATAFORMA.NAVBAR.THEME_DARK';
+        this.themeTextKey = settings.isDarkTheme ? 'COMMON.LIGHT_THEME' : 'COMMON.DARK_THEME';
     }
 
     onNavbarColorChange(i: number): void {

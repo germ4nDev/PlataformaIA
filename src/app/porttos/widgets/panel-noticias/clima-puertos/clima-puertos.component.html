@@ -10,7 +10,7 @@
                     <div class="nombre">{{ (c.nombre | translate) }}</div>
                     <div class="temp">{{ c.temperatura | number: '1.0-0' }}°C</div>
                     <div class="cond">{{ c.condicion }}</div>
-                    <div class="viento" [class.fuerte]="c.vientoNudos >= 20">{{ 'PORTTOS.CLIMA_PUERTOS.VIENTO_KN' | translate: { p0: (c.vientoNudos | number: '1.0-0') } }}</div>
+                    <div class="viento" [class.fuerte]="c.vientoNudos >= 20">{{ 'PORTTOS.WIDGETS.PANEL_NOTICIAS.CLIMA_PUERTOS.WIND_P0_KN' | translate: { p0: (c.vientoNudos | number: '1.0-0') } }}</div>
                 </div>
             </div>
         </div>

@@ -192,17 +192,17 @@ export class GaleriasComponent implements OnInit, OnDestroy {
   }
 
   columnasGaleria: ColumnMetadata[] = [
-    { name: 'imagenGaleria', header: 'GALERIA.FOTO', type: 'image', isSortable: false },
-    { name: 'codigoGaleria', header: 'GALERIA.CODE', type: 'text' },
-    { name: 'nombreGaleria', header: 'GALERIA.NAME', type: 'text' },
-    { name: 'nomEstado', header: 'GALERIA.STATUS', type: 'estado' }
+    { name: 'imagenGaleria', header: 'BIBLIOTECA.GALERIAS.MULTIMEDIA_FILE', type: 'image', isSortable: false },
+    { name: 'codigoGaleria', header: 'COMMON.CODE', type: 'text' },
+    { name: 'nombreGaleria', header: 'COMMON.NAME', type: 'text' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
   ]
 
   columnasDetailRegistros: ColumnMetadata[] = [
-    { name: 'descripcionGaleria', header: 'GALERIA.DESCRIPTION', type: 'text' },
+    { name: 'descripcionGaleria', header: 'COMMON.DESCRIPTION', type: 'text' },
     {
       name: 'capture',
-      header: 'GALERIA.IMAGENINICIO',
+      header: 'COMMON.IMAGE',
       type: 'capture'
     }
   ]
@@ -231,12 +231,12 @@ export class GaleriasComponent implements OnInit, OnDestroy {
     }
 
     Swal.fire({
-      title: this.translate.instant('GALERIA.ELIMINARTITULO'),
-      text: this.translate.instant('GALERIA.ELIMINARTEXTO'),
+      title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+      text: this.translate.instant('BIBLIOTECA.GALERIAS.GALLERY_WILL_BE_DELETED'),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
     }).then(result => {
       if (result.isConfirmed) {
         this._galeriaService.eliminarGaleria(id).subscribe({
@@ -244,16 +244,16 @@ export class GaleriasComponent implements OnInit, OnDestroy {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('GALERIA.ELIMINAREXITOSA')
+              descripcionLog: this.translate.instant('BIBLIOTECA.GALERIAS.GALLERY_WAS_DELETED_SUCCESSFULLY')
             }
             this._logActividadesService.postCrearRegistro(logData).subscribe()
-            Swal.fire(this.translate.instant('GALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success')
+            Swal.fire(this.translate.instant('BIBLIOTECA.GALERIAS.GALLERY_WAS_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
             this.cargarDatos()
           },
           error: () => {
-            const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('GALERIA.ELIMINARERROR') }
+            const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('BIBLIOTECA.GALERIAS.COULD_NOT_DELETE_GALLERY') }
             this._logActividadesService.postCrearRegistro(logData).subscribe()
-            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('GALERIA.ELIMINARERROR'), 'error')
+            Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('BIBLIOTECA.GALERIAS.COULD_NOT_DELETE_GALLERY'), 'error')
           }
         })
       }

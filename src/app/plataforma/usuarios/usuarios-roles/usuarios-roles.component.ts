@@ -117,7 +117,7 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //         console.log('datos usuarios', this.usuarios);
 //         this.usuario = this.usuarios.find(x => x.codigoUsuario == this.codigoRole) || {}
 //         console.log('datos usuario', this.usuario);
-//         this.tituloPagina = this.translate.instant('USUARIOS.USUARIOSROLES.TITLE') + ' ' + this.usuario.nombreUsuario;
+//         this.tituloPagina = this.translate.instant('USUARIOS.USER_ROLES_MANAGEMENT') + ' ' + this.usuario.nombreUsuario;
 //         console.log('roles actuales', this.roles);
 //         console.log('usuarios actuales', this.usuarios);
 //         console.log('aplicaciones actuales', this.aplicaciones);
@@ -232,27 +232,27 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //     columnasRegistros: ColumnMetadata[] = [
 //         {
 //             name: 'nomSuscriptor',
-//             header: 'USUARIOS.USUARIOSROLES.NOMBRESUSCRIPTOR',
+//             header: 'COMMON.SUBSCRIBER',
 //             type: 'text'
 //         },
 //         {
 //             name: 'nomAplicacion', // 🟢 Se mueve a la vista principal
-//             header: 'USUARIOS.USUARIOSROLES.NOMBREAPLICACION',
+//             header: 'COMMON.APPLICATION',
 //             type: 'text'
 //         },
 //         {
 //             name: 'nomRole',
-//             header: 'USUARIOS.USUARIOSROLES.NOMBREROL',
+//             header: 'COMMON.ROLE',
 //             type: 'text'
 //         },
 //         {
 //             name: 'tipoRol',
-//             header: 'USUARIOS.USUARIOSROLES.TIPOROLE',
+//             header: 'COMMON.ROLE_TYPE_2',
 //             type: 'text'
 //         },
 //         {
 //             name: 'nomEstado',
-//             header: 'USUARIOS.USUARIOSROLES.ESTADOROLE',
+//             header: 'COMMON.STATUS',
 //             type: 'estado'
 //         }
 //     ];
@@ -260,12 +260,12 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //     columnasDetailRegistros: ColumnMetadata[] = [
 //         {
 //             name: 'nomAplicacion',
-//             header: 'USUARIOS.USUARIOSROLES.NOMBREAPLICACION',
+//             header: 'COMMON.APPLICATION',
 //             type: 'text'
 //         },
 //         {
 //             name: 'nomSuite',
-//             header: 'USUARIOS.USUARIOSROLES.NOMBRESUITE',
+//             header: 'COMMON.SUITE',
 //             type: 'text'
 //         }
 //     ]
@@ -314,20 +314,20 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //                 const logData = {
 //                     codigoTipoLog: '',
 //                     codigoRespuesta: '201',
-//                     descripcionLog: this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+//                     descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
 //                 }
 //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
 //                 this.setupRolesStream()
-//                 this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje)
+//                 this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje)
 //             },
 //             error: (err: any) => {
 //                 const logData = {
 //                     codigoTipoLog: '',
 //                     codigoRespuesta: '201',
-//                     descripcionLog: this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje
+//                     descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
 //                 }
 //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-//                 this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje)
+//                 this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
 //                 console.error('Error eliminando', err)
 //             }
 //         })
@@ -336,10 +336,10 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //     OnEliminarRegistroClick(id: any) {
 //         // const nombre = this.registros.filter((x) => x.codigoRole == id.id)[0]
 //         this._swalAlertService.getAlertQuestionRequest(
-//             this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
-//             this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
-//             this.translate.instant('PLATAFORMA.DELETE'),
-//             this.translate.instant('PLATAFORMA.CANCEL')
+//             this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE'),
+//             this.translate.instant('COMMON.ARE_YOU_SURE'),
+//             this.translate.instant('COMMON.DELETE'),
+//             this.translate.instant('COMMON.CANCEL')
 //         ).subscribe(result => {
 //             if (result) {
 //                 const usuRole = this.usuariosRoles.filter(x => x.codigoUsuarioRole == id.id)[0];
@@ -351,11 +351,11 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //                             const logData = {
 //                                 codigoTipoLog: '',
 //                                 codigoRespuesta: '201',
-//                                 descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
+//                                 descripcionLog: this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY')
 //                             };
 //                             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
 //                             this.setupRolesStream()
-//                             this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+//                             this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY'));
 //                         }
 //                     },
 //                     error: (err: any) => {
@@ -363,7 +363,7 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //                         const logData = {
 //                             codigoTipoLog: '',
 //                             codigoRespuesta: '501',
-//                             descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
+//                             descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_ACTIVITY')
 //                         };
 //                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
 //                         this._swalAlertService.getAlertError('No se pudo actualizar la Actividad');
@@ -510,7 +510,7 @@ export class UsuariosRolesComponent implements OnInit {
                     return {
                         ...ur,
                         '_acciones': [
-                            { accion: 'INACTIVAR', permiso: 'ACT_USUSC_ROLES', letra: 'I', color: '#3db120', tooltip: (this.translate.instant('USUARIOSROLES.INACTIVAR')) }
+                            { accion: 'INACTIVAR', permiso: 'ACT_USUSC_ROLES', letra: 'I', color: '#3db120', tooltip: (this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')) }
                         ],
                     } as PTLUsuarioRoleAPModel;
                 });
@@ -545,21 +545,21 @@ export class UsuariosRolesComponent implements OnInit {
     }
 
     columnasRegistros: ColumnMetadata[] = [
-        { name: 'nomUsuario', header: 'WEB.USUARIOS_ROLES.NOMBRE_USUARIO', type: 'text' },
-        { name: 'nomSuscriptor', header: 'WEB.USUARIOS_ROLES.SUSCRIPTOR_ASIGNADO', type: 'text' },
-        { name: 'fechaCreacionFormateada', header: 'WEB.USUARIOS_ROLES.FECHA_ASIGNACION', type: 'text' },
-        { name: 'nomEstado', header: 'WEB.WDG_KPI_APLICACIONES.ESTADO', type: 'estado' }
+        { name: 'nomUsuario', header: 'USUARIOS.USUARIOS_ROLES.USERNAME', type: 'text' },
+        { name: 'nomSuscriptor', header: 'USUARIOS.USUARIOS_ROLES.ASSIGNED_SUBSCRIBER', type: 'text' },
+        { name: 'fechaCreacionFormateada', header: 'USUARIOS.USUARIOS_ROLES.ASSIGNMENT_DATE', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'nomAplicacion',
-            header: 'USUARIOS.USUARIOSROLES.NOMBREAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nomSuite',
-            header: 'USUARIOS.USUARIOSROLES.NOMBRESUITE',
+            header: 'COMMON.SUITE',
             type: 'text'
         }
     ]
@@ -584,21 +584,21 @@ export class UsuariosRolesComponent implements OnInit {
 
     OnEliminarRegistroClick(id: any) {
         this._swalAlertService.getAlertQuestionRequest(
-            this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
-            this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
-            this.translate.instant('PLATAFORMA.DELETE'),
-            this.translate.instant('PLATAFORMA.CANCEL')
+            this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE'),
+            this.translate.instant('COMMON.ARE_YOU_SURE'),
+            this.translate.instant('COMMON.DELETE'),
+            this.translate.instant('COMMON.CANCEL')
         ).subscribe(result => {
             if (result) {
                 this._usuariosRolesService.deleteTodosUsuarioRole(id.id).subscribe({
                     next: (resp: any) => {
                         if (resp.ok) {
                             this.setupUsuariosStream();
-                            this._swalAlertService.getAlertSuccess(traducir('WEB.USUARIOS_ROLES.RELACION_ELIMINADA_EXITOSAMENTE'));
+                            this._swalAlertService.getAlertSuccess(traducir('USUARIOS.USUARIOS_ROLES.RELATION_DELETED_SUCCESSFULLY'));
                         }
                     },
                     error: (err: any) => {
-                        this._swalAlertService.getAlertError(traducir('WEB.USUARIOS_ROLES.NO_SE_PUDO_ELIMINAR_LA'));
+                        this._swalAlertService.getAlertError(traducir('USUARIOS.USUARIOS_ROLES.COULD_NOT_DELETE_RELATION'));
                     }
                 });
             }
@@ -614,10 +614,10 @@ export class UsuariosRolesComponent implements OnInit {
         switch (accion) {
             case 'INACTIVAR':
                 this._swalAlertService.getAlertQuestionRequest(
-                    this.translate.instant('USUARIOSROLES.INACTIVAR'),
-                    this.translate.instant('USUARIOSROLES.INACTIVARTITULO'),
-                    this.translate.instant('USUARIOSROLES.INACTIVARBTN'),
-                    this.translate.instant('PLATAFORMA.CANCEL')
+                    this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
+                    this.translate.instant('USUARIOS.USUARIOS_ROLES.CHANGE_USER_ROLE_STATUS'),
+                    this.translate.instant('COMMON.CHANGE_STATUS'),
+                    this.translate.instant('COMMON.CANCEL')
                 ).subscribe(result => {
                     if (result) {
                         console.log('inactivar usuario codigo', id);
@@ -634,20 +634,20 @@ export class UsuariosRolesComponent implements OnInit {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                                    descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                                 this.setupUsuariosStream()
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje)
+                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje)
                             },
                             error: (err: any) => {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje
+                                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje)
+                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
                                 console.error('Error eliminando', err)
                             }
                         })
@@ -675,20 +675,20 @@ export class UsuariosRolesComponent implements OnInit {
     //             const logData = {
     //                 codigoTipoLog: '',
     //                 codigoRespuesta: '201',
-    //                 descripcionLog: this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+    //                 descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
     //             }
     //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
     //             this.setupUsuariosStream()
-    //             this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje)
+    //             this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje)
     //         },
     //         error: (err: any) => {
     //             const logData = {
     //                 codigoTipoLog: '',
     //                 codigoRespuesta: '201',
-    //                 descripcionLog: this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje
+    //                 descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
     //             }
     //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //             this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje)
+    //             this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
     //             console.error('Error eliminando', err)
     //         }
     //     })

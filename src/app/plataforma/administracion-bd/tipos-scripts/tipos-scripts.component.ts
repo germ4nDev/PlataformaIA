@@ -89,17 +89,17 @@ export class TiposScriptsComponent implements OnInit {
     columnasTiposScripts: ColumnMetadata[] = [
         {
             name: 'codigoTipoScript',
-            header: 'TIPOS_SCRIPTS.CODIGO',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'nombreTipo',
-            header: 'TIPOS_SCRIPTS.NOMBRE',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'PLATAFORMA.STATUS',
+            header: 'COMMON.STATUS',
             type: 'text'
         }
     ];
@@ -107,7 +107,7 @@ export class TiposScriptsComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcionTipo',
-            header: 'TIPOS_SCRIPTS.DESCRIPCION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         }
     ];
@@ -126,12 +126,12 @@ export class TiposScriptsComponent implements OnInit {
         const id = typeof evento === 'string' ? evento : evento?.codigoTipoScript || evento?.id;
 
         Swal.fire({
-            title: this.translate.instant('TIPOS_SCRIPTS.ELIMINARTITULO'),
-            text: this.translate.instant('TIPOS_SCRIPTS.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('ADMINISTRACION_BD.TIPOS_SCRIPTS.WILL_DELETE_SCRIPT_TYPE_YOU_WONT'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
                 this._tiposScriptsService.deleteEliminarRegistro(id).subscribe({
@@ -139,10 +139,10 @@ export class TiposScriptsComponent implements OnInit {
                         const logData = {
                             codigoTipoScriptLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('TIPOS_SCRIPTS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('ADMINISTRACION_BD.TIPOS_SCRIPTS.SCRIPT_TYPE_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        Swal.fire(this.translate.instant('TIPOS_SCRIPTS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+                        Swal.fire(this.translate.instant('ADMINISTRACION_BD.TIPOS_SCRIPTS.SCRIPT_TYPE_DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
 
                         this.registros = this.registros.filter((t) => t.codigoTipoScript !== id);
                         this.registrosFiltrado = this.registrosFiltrado.filter((t) => t.codigoTipoScript !== id);
@@ -151,10 +151,10 @@ export class TiposScriptsComponent implements OnInit {
                         const logData = {
                             codigoTipoScriptLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('TIPOS_SCRIPTS.ELIMINARERROR') + ' ' + err.message
+                            descripcionLog: this.translate.instant('ADMINISTRACION_BD.TIPOS_SCRIPTS.COULD_NOT_DELETE_SCRIPT_TYPE') + ' ' + err.message
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('TIPOS_SCRIPTS.ELIMINARERROR'), 'error');
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('ADMINISTRACION_BD.TIPOS_SCRIPTS.COULD_NOT_DELETE_SCRIPT_TYPE'), 'error');
                         console.error('Error eliminando', err);
                     }
                 });

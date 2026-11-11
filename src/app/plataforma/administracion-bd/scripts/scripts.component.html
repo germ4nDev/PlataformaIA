@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,28 +17,28 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'SCRIPTS.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'ADMINISTRACION_BD.SCRIPTS.SEARCH_FILTERS' | translate }}</h6>
 
                     <div class="filtro">
-                        <small>{{ 'SCRIPTS.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'ADMINISTRACION_BD.FILTER_BY_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'SCRIPTS.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}" />
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'SCRIPTS.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'ADMINISTRACION_BD.SCRIPTS.FILTER_BY_DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'SCRIPTS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'SCRIPTS.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'ADMINISTRACION_BD.SCRIPTS.FILTER_BY_STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
                             style="cursor: pointer">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -50,11 +50,11 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-table-data [data]="registrosFiltrado" [idField]="'codigoScript'"
-                    [tableTitle]="'SCRIPTS.TITLE' | translate" [metadataColumns]="columnasScripts"
+                    [tableTitle]="'ADMINISTRACION_BD.SCRIPTS.SCRIPTS_MANAGEMENT' | translate" [metadataColumns]="columnasScripts"
                     [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true" [showNewButton]="true"
                     [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showDetail]="true"
-                    [showSearchBox]="false" [newButtonLabel]="'SCRIPTS.NEW' | translate" [showSearchBox]="false"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                    [showSearchBox]="false" [newButtonLabel]="'ADMINISTRACION_BD.SCRIPTS.NEW_SCRIPT' | translate" [showSearchBox]="false"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_SCRIPTS_CREAR" permisoEdit="ACT_SCRIPTS_MODIFICAR" permisoDelete="ACT_SCRIPTS_ELIMINAR">
                 </app-table-data>
             </div>

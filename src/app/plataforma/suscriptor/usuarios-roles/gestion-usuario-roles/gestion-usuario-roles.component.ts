@@ -113,7 +113,7 @@ export class GestionUsuarioRolesComponent implements OnInit {
         console.log('empresasSC', this.empresasSC);
         this.usuario = this.usuarios.find(x => x.codigoUsuario == this.codigoUsuario) || {}
         console.log('datos usuario', this.usuario);
-        this.tituloPagina = this.translate.instant('USUARIOS.USUARIOSROLES.GESTION.NEW') + ' ' + this.usuario.nombreUsuario;
+        this.tituloPagina = this.translate.instant('COMMON.ROLES_ASSOCIATED_WITH_USER') + ' ' + this.usuario.nombreUsuario;
         this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales();
         this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales();
         this.roles = this._rolesService.getRolesActuales().map(r => ({ ...r, checked: false }));
@@ -222,7 +222,7 @@ export class GestionUsuarioRolesComponent implements OnInit {
 
     consultarRolesPorFiltro(codApp: string, codSuite: string, codTipoId: string) {
         if (this.esRolSuscriptor && !this.codigoUsuarioSC) {
-            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIO_ROLES.DEBE_SELECCIONAR_UN_SUSCRIPTOR_PRIMERO'));
+            this._swalAlertService.getAlertConfirmWarning(traducir('COMMON.YOU_MUST_SELECT_SUBSCRIBER_FIRST'));
             this.roles = [];
             return;
         }
@@ -264,14 +264,14 @@ export class GestionUsuarioRolesComponent implements OnInit {
         if (!form.valid) return;
 
         if (this.esRolSuscriptor && !this.codigoUsuarioSC) {
-            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIO_ROLES.DEBE_SELECCIONAR_UN_SUSCRIPTOR_VALIDO'));
+            this._swalAlertService.getAlertConfirmWarning(traducir('COMMON.YOU_MUST_SELECT_VALID_SUBSCRIBER'));
             return;
         }
 
         const rolesSeleccionados = this.roles.filter(r => r.checked);
 
         if (rolesSeleccionados.length === 0) {
-            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIO_ROLES.DEBE_SELECCIONAR_AL_MENOS_UN'));
+            this._swalAlertService.getAlertConfirmWarning(traducir('COMMON.YOU_MUST_SELECT_AT_LEAST_ONE'));
             return;
         }
 
@@ -303,14 +303,14 @@ export class GestionUsuarioRolesComponent implements OnInit {
         this._registrosService.postSincronizarRoles(payloadSync).subscribe({
             next: (resp: any) => {
                 if (resp.ok) {
-                    this._swalAlertService.getAlertConfirmSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                    this._swalAlertService.getAlertConfirmSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
                     this._loadingService.hide();
                     this.router.navigate(['/usuarios/roles-usuario']);
                 }
             },
             error: (err: any) => {
                 this._loadingService.hide();
-                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'));
+                this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'));
             }
         });
     }

@@ -159,7 +159,7 @@ export class ImplicacionesOperativasComponent implements OnInit, OnChanges, OnDe
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || '🎯 IMPLICACIONES OPERATIVAS PARA LA TORRE DE CONTROL',
-            subtitulo: raw.subtitulo || 'PORTTOS.IMPLICACIONES_OPERATIVAS.REGLAS_DE_PRIORIZACION_Y_ALERTAS',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_MARITIMO.IMPLICACIONES_OPERATIVAS.PRIORITIZATION_RULES_ALERTS_DERIVED_FROM_CARGO',
             icono: raw.icono || 'feather icon-alert-circle',
             insights: insightsNormalizados
         };

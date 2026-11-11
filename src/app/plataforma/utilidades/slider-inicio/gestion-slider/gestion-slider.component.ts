@@ -157,7 +157,7 @@ export class GestionSliderComponent implements OnInit {
                     this.FormRegistro.urlSlider = path.data.respuesta.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -189,15 +189,15 @@ export class GestionSliderComponent implements OnInit {
             this._registrosService.putModificarRegistro(registroData, registroData.codigoSlider || '').subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'))
                         this.router.navigate(['/utilidades/slider-inicio'])
                     } else {
-                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
                     }
                 },
                 error: (err: any) => {
                     console.error(err)
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
                 }
             })
         } else {
@@ -210,7 +210,7 @@ export class GestionSliderComponent implements OnInit {
             this._registrosService.postCrearRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/utilidades/slider-inicio'])
@@ -218,7 +218,7 @@ export class GestionSliderComponent implements OnInit {
                 },
                 error: (err: any) => {
                     console.error(err)
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'))
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'))
                 }
             })
         }

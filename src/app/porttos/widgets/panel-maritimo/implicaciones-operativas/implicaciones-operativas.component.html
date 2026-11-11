@@ -1,12 +1,12 @@
 <app-widget-shell [titulo]="(data.titulo | translate) || '🎯 IMPLICACIONES OPERATIVAS PARA LA TORRE DE CONTROL'"
-    [subtitulo]="(data.subtitulo | translate) || ('PORTTOS.IMPLICACIONES_OPERATIVAS.IMPACTO_EN_EL_CONTROL_DE' | translate)"
+    [subtitulo]="(data.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_MARITIMO.IMPLICACIONES_OPERATIVAS.IMPACT_ON_CONTROL_PORT_LAND_OPERATIONS' | translate)"
     [icono]="data.icono || 'feather icon-alert-circle'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origenMaritimo]="widgetConfig">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-danger text-uppercase">
-            {{ 'PORTTOS.IMPLICACIONES_OPERATIVAS.DIRECTRICES' | translate: { p0: insights.length } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.IMPLICACIONES_OPERATIVAS.GUIDELINES_P0' | translate: { p0: insights.length } }}
         </span>
     </div>
 
@@ -18,14 +18,14 @@
             <!-- Estado Cargando -->
             <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
                 <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-                {{ 'PORTTOS.IMPLICACIONES_OPERATIVAS.EVALUANDO_IMPLICACIONES_OPERATIVAS_DEL_P' | translate }}
+                {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.IMPLICACIONES_OPERATIVAS.ASSESSING_PORTS_OPERATING_IMPLICATIONS' | translate }}
             </div>
 
             <!-- Estado Vacío -->
             <div *ngIf="!isLoading && insights.length === 0"
                 class="titulo-containerd-flex justify-content-center align-items-center h-100 text-muted small py-4">
                 <i class="feather icon-check-circle me-2 text-success"></i>
-                {{ 'PORTTOS.IMPLICACIONES_OPERATIVAS.NO_HAY_IMPLICACIONES_U_OBSERVACIONES' | translate }}
+                {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.IMPLICACIONES_OPERATIVAS.NO_IMPLICATIONS_OR_OBSERVATIONS_REGISTERED_PORT' | translate }}
             </div>
 
             <!-- Iteración de Implicaciones / Insights -->

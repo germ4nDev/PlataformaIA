@@ -98,7 +98,7 @@ export class GestionBibliotecaComponent implements OnInit {
                     this.codeBiblioteca = resp.biblioteca.codigoBiblioteca
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_BIBLIOTECA.NO_SE_PUDO_OBTENER_LA'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('BIBLIOTECA.BIBLIOTECAS.GESTION.COULD_NOT_GET_LIBRARY'), 'error')
                 }
             })
         } else {
@@ -207,7 +207,7 @@ export class GestionBibliotecaComponent implements OnInit {
                     this.userPhotoUrl = path.nombreArchivo
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -230,10 +230,10 @@ export class GestionBibliotecaComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('BIBLIOTECA.UPDATESUCCSESSFULLY')
+                            descripcionLog: this.translate.instant('BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_UPDATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe()
-                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.UPDATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_UPDATED_SUCCESSFULLY'))
                         form.resetForm()
                         this.router.navigate(['/biblioteca/bibliotecas'])
                     }
@@ -243,10 +243,10 @@ export class GestionBibliotecaComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('BIBLIOTECA.UPDATEERROR')
+                        descripcionLog: this.translate.instant('BIBLIOTECA.BIBLIOTECAS.GESTION.COULD_NOT_UPDATE_LIBRARY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError(traducir('WEB.GESTION_BIBLIOTECA.NO_SE_PUDO_ACTUALIZAR_LA'))
+                    this._swalService.getAlertError(traducir('BIBLIOTECA.BIBLIOTECAS.GESTION.COULD_NOT_UPDATE_LIBRARY_2'))
                 }
             })
         } else {
@@ -266,10 +266,10 @@ export class GestionBibliotecaComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('BIBLIOTECA.CREATESUCCSESSFULLY')
+                            descripcionLog: this.translate.instant('BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_CREATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe()
-                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_CREATED_SUCCESSFULLY'))
                         form.resetForm()
                         this.router.navigate(['/biblioteca/bibliotecas'])
                     }
@@ -279,10 +279,10 @@ export class GestionBibliotecaComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('BIBLIOTECA.CREATEERROR')
+                        descripcionLog: this.translate.instant('BIBLIOTECA.BIBLIOTECAS.GESTION.COULD_NOT_CREATE_LIBRARY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe()
-                    this._swalService.getAlertError(traducir('WEB.GESTION_BIBLIOTECA.NO_SE_PUDO_CREAR_LA'))
+                    this._swalService.getAlertError(traducir('BIBLIOTECA.BIBLIOTECAS.GESTION.COULD_NOT_CREATE_LIBRARY_2'))
                 }
             })
         }

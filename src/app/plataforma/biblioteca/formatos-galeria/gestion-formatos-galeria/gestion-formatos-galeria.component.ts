@@ -65,7 +65,7 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
                     this.FormRegistro = resp.formatoGaleria
                     this.codeFormato = resp.formatoGaleria.codigoFormato
                 },
-                error: () => Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_FORMATOS_GALERIA.NO_SE_PUDO_OBTENER_EL'), 'error')
+                error: () => Swal.fire(traducir('COMMON.ERROR'), traducir('BIBLIOTECA.FORMATOS_GALERIA.GESTION.COULD_NOT_GET_FORMAT'), 'error')
             })
         }
     }
@@ -103,12 +103,12 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
             this._formatosGaleriaService.actualizarFormatoGaleria(this.FormRegistro).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        this._swalService.getAlertSuccess(this.translate.instant('FORMATOSGALERIA.UPDATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.FORMATOS_GALERIA.GESTION.FORMAT_UPDATED_SUCCESSFULLY'))
                         form.resetForm()
                         this.router.navigate(['/biblioteca/formatos-galeria'])
                     }
                 },
-                error: () => this._swalService.getAlertError(traducir('WEB.GESTION_FORMATOS_GALERIA.NO_SE_PUDO_ACTUALIZAR'))
+                error: () => this._swalService.getAlertError(traducir('BIBLIOTECA.COULD_NOT_UPDATE'))
             })
         } else {
             form.formatosGaleriaId = 0
@@ -123,12 +123,12 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
             this._formatosGaleriaService.crearFormatoGaleria(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        this._swalService.getAlertSuccess(this.translate.instant('FORMATOSGALERIA.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.FORMATOS_GALERIA.GESTION.FORMAT_CREATED_SUCCESSFULLY'))
                         form.resetForm()
                         this.router.navigate(['/biblioteca/formatos-galeria'])
                     }
                 },
-                error: () => this._swalService.getAlertError(traducir('WEB.GESTION_FORMATOS_GALERIA.NO_SE_PUDO_CREAR'))
+                error: () => this._swalService.getAlertError(traducir('BIBLIOTECA.COULD_NOT_CREATE'))
             })
         }
     }

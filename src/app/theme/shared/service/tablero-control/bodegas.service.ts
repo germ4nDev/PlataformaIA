@@ -148,7 +148,7 @@ export class BodegasService {
         ).length;
 
         // Sin respuesta del API: las tarjetas dicen que no hay dato en lugar de mostrar 0 % / 0 Ton
-        const sinDato = (titulo: string) => ({ titulo, valor: '—', subtitulo: raw?.error || 'WEB.BODEGAS_SERVICE.SIN_DATOS_DE_BODEGAS', colorBorde: 'borde-gris' });
+        const sinDato = (titulo: string) => ({ titulo, valor: '—', subtitulo: raw?.error || 'SHARED.SERVICE.TABLERO_CONTROL.NO_WAREHOUSE_DATA', colorBorde: 'borde-gris' });
         const kpis = raw?.kpis || (raw?.error || !bodegas.length
             ? {
                 ocupacionGeneral: sinDato('OCUPACIÓN DE BODEGAS'),
@@ -169,11 +169,11 @@ export class BodegasService {
                     subtitulo: `Capacidad: ${totalCapacidad.toLocaleString('es-CO')} Ton`,
                     colorBorde: 'borde-green'
                 },
-                tasaDespacho: { titulo: 'FLUJO OPERATIVO (24H)', valor: '—', subtitulo: 'WEB.BODEGAS_SERVICE.EL_API_NO_ENVIO_EL', colorBorde: 'borde-gris' },
+                tasaDespacho: { titulo: 'FLUJO OPERATIVO (24H)', valor: '—', subtitulo: 'SHARED.SERVICE.TABLERO_CONTROL.API_DID_NOT_SEND_24_H', colorBorde: 'borde-gris' },
                 alertasBodega: {
                     titulo: 'BODEGAS EN ALERTA',
                     valor: String(bodegasCriticas),
-                    subtitulo: bodegasCriticas > 0 ? 'WEB.BODEGAS_SERVICE.SATURACION_90_DETECTADA' : 'WEB.BODEGAS_SERVICE.ALMACENAMIENTO_EN_RANGO_NORMAL',
+                    subtitulo: bodegasCriticas > 0 ? 'SHARED.SERVICE.TABLERO_CONTROL.SATURATION_90_DETECTED' : 'SHARED.SERVICE.TABLERO_CONTROL.STORAGE_WITHIN_NORMAL_RANGE',
                     colorBorde: bodegasCriticas > 0 ? 'borde-rojo' : 'borde-purple'
                 }
             });

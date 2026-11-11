@@ -104,24 +104,24 @@ export class RequerimientosComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'nombreRequerimiento',
-            header: 'TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ];
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcionRequerimiento',
-            header: 'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'nomTicket',
-            header: 'TICKETS.REQUERIMIENTOS.NOMBRETICKET',
+            header: 'TICKETS.REQUERIMIENTOS.TICKET',
             type: 'text'
         }
     ];
@@ -230,17 +230,17 @@ export class RequerimientosComponent implements OnInit {
         // console.log('+++ME TRAE EL ID???', id);
 
         Swal.fire({
-            title: this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTITULO'),
-            text: this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            text: this.translate.instant('TICKETS.REQUERIMIENTOS.REQUIREMENT_WILL_BE_DELETED'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result) => {
             if (result.isConfirmed) {
                 this._requerimientoService.deleteEliminarRegistro(id.id).subscribe({
                     next: (resp: any) => {
-                        this._swalService.getAlertSuccess(this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+                        this._swalService.getAlertSuccess(this.translate.instant('TICKETS.REQUERIMIENTOS.REQUIREMENT_WAS_DELETED_SUCCESSFULLY') + ', ' + resp.mensaje);
                         this.subscriptions.add(
                             this._requerimientoService.cargarRegistros().subscribe(
                                 () => console.log('Requerimientos cargados y guardados en el servicio'),
@@ -250,7 +250,7 @@ export class RequerimientosComponent implements OnInit {
                         this.setupRegistrosStream();
                     },
                     error: (err: any) => {
-                        this._swalService.getAlertError(this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARERROR') + ', ' + err);
+                        this._swalService.getAlertError(this.translate.instant('TICKETS.REQUERIMIENTOS.COULD_NOT_DELETE_REQUIREMENT') + ', ' + err);
                         console.error('Error eliminando', err);
                     }
                 });

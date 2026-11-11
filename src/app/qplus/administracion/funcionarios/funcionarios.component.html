@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
             <ng-container *ngIf="activeTab === 'menu'">
@@ -16,46 +16,46 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'MODULOS.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.MODULE_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
+                        <small>{{ 'COMMON.MODULE_CODE' | translate }}</small>
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="reg.codigoAplicacion" *ngFor="let reg of aplicaciones">
                                 {{ reg.nombreAplicacion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
+                        <small>{{ 'COMMON.SUITE_CODE' | translate }}</small>
                         <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="reg.codigoSuite" *ngFor="let reg of suites">
                                 {{ reg.nombreSuite }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <small>{{ 'COMMON.CODE' | translate }}</small>
                         <select (change)="onFiltroCodigoModuloChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="reg.nombreModulo" *ngFor="let reg of modulos">
                                 {{ reg.nombreModulo }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'MODULOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.MODULE_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
             <div class="card-body">
                 <ng-container *ngIf="modulosFiltrados$ | async as dataFiltrada; else loading">
                     <app-data-table [data]="dataFiltrada" [idField]="'codigoModulo'"
-                        [tableTitle]="'MODULOS.TITLE' | translate" [metadataColumns]="columnasRegistros"
+                        [tableTitle]="'COMMON.MODULE_MANAGEMENT' | translate" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'MODULOS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'COMMON.NEW_MODULE_2' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
                     </app-data-table>
                 </ng-container>

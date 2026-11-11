@@ -23,24 +23,24 @@ export class TableColaGateComponent implements OnInit, OnChanges, OnDestroy {
 
     /** Vista ampliada (2026-10-24): todas las columnas que ya trae cada cita, con búsqueda, orden y CSV. */
     public readonly columnasDetalle: ColumnaTabla[] = [
-        { campo: 'placa', titulo: 'PORTTOS.TABLE_COLA_GATE.PLACA', tipo: 'principal' },
-        { campo: 'conductor', titulo: 'PORTTOS.TABLE_COLA_GATE.CONDUCTOR' },
-        { campo: 'transportador', titulo: 'PORTTOS.TABLE_COLA_GATE.TRANSPORTADOR' },
-        { campo: 'tipo_carga', titulo: 'PORTTOS.VESSEL_TABLE.CARGA' },
-        { campo: 'operacion', titulo: 'PORTTOS.COMUN.OPERACION' },
-        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
-        { campo: 'fecha_hora_cita', titulo: 'PORTTOS.TABLE_COLA_GATE.CITA', tipo: 'fecha' },
-        { campo: 'franja_horaria', titulo: 'PORTTOS.TABLE_COLA_GATE.FRANJA' },
-        { campo: 'tiempo_espera_minutos', titulo: 'PORTTOS.TABLE_COLA_GATE.ESPERA', tipo: 'numero', unidad: 'min' },
-        { campo: 'ubicacion', titulo: 'PORTTOS.TABLE_COLA_GATE.UBICACION' },
-        { campo: 'distancia_km', titulo: 'PORTTOS.TABLE_COLA_GATE.DISTANCIA', tipo: 'numero', decimales: 1, unidad: 'km' },
-        { campo: 'distancia_estimada', titulo: 'PORTTOS.TABLE_COLA_GATE.DIST_ESTIMADA', tipo: 'si-no' },
-        { campo: 'peso_bascula_ton', titulo: 'PORTTOS.TABLE_COLA_GATE.BASCULA', tipo: 'numero', decimales: 1, unidad: 't' },
+        { campo: 'placa', titulo: 'PORTTOS.WIDGETS.PLATE', tipo: 'principal' },
+        { campo: 'conductor', titulo: 'PORTTOS.WIDGETS.DRIVER' },
+        { campo: 'transportador', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CARRIER' },
+        { campo: 'tipo_carga', titulo: 'PORTTOS.WIDGETS.CARGO' },
+        { campo: 'operacion', titulo: 'PORTTOS.WIDGETS.OPERATION' },
+        { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
+        { campo: 'fecha_hora_cita', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.APPOINTMENT', tipo: 'fecha' },
+        { campo: 'franja_horaria', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.SLOT' },
+        { campo: 'tiempo_espera_minutos', titulo: 'PORTTOS.WIDGETS.WAIT', tipo: 'numero', unidad: 'min' },
+        { campo: 'ubicacion', titulo: 'PORTTOS.LOCATION' },
+        { campo: 'distancia_km', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.DISTANCE', tipo: 'numero', decimales: 1, unidad: 'km' },
+        { campo: 'distancia_estimada', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.EST_DISTANCE', tipo: 'si-no' },
+        { campo: 'peso_bascula_ton', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.WEIGHBRIDGE', tipo: 'numero', decimales: 1, unidad: 't' },
         { campo: 'ocr', titulo: 'OCR', tipo: 'estado' },
-        { campo: 'biometria', titulo: 'PORTTOS.TABLE_COLA_GATE.BIOMETRIA', tipo: 'estado' },
-        { campo: 'documental', titulo: 'PORTTOS.TABLE_COLA_GATE.DOCUMENTAL', tipo: 'estado' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-        { campo: 'imputados', titulo: 'PORTTOS.TABLE_COLA_GATE.SIN_DATO_EN', tipo: 'lista' }
+        { campo: 'biometria', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.BIOMETRICS', tipo: 'estado' },
+        { campo: 'documental', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.TABLE_COLA_GATE.DOCUMENTS', tipo: 'estado' },
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+        { campo: 'imputados', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.NO_DATA_IN', tipo: 'lista' }
     ];
 
     /** Filas de la vista ampliada: validaciones como Aprobada / Fallida / Sin dato. */

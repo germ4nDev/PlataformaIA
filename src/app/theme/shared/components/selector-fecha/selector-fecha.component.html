@@ -1,0 +1,53 @@
+<div class="selector-fecha" [class.abierto]="abierto">
+    @if (etiqueta) { <label class="form-label" [for]="contexto">{{ etiqueta | translate }}</label> }
+    <div class="campo" [class.is-invalid]="invalido" [class.deshabilitado]="deshabilitado">
+        <input type="text" class="form-control form-input" readonly [id]="contexto" [name]="contexto" [value]="texto"
+            [placeholder]="placeholder | translate" [disabled]="deshabilitado" (click)="alternar()" (keydown.enter)="alternar()"
+            [attr.aria-expanded]="abierto" />
+        @if (limpiable && elegida && !deshabilitado) {
+        <button type="button" class="btn-icono limpiar" [title]="'SHARED.SELECTOR_FECHA.CLEAR' | translate" (click)="limpiar()">
+            <i class="feather icon-x"></i>
+        </button>
+        }
+        <button type="button" class="btn-icono" [title]="'SHARED.SELECTOR_FECHA.OPEN_CALENDAR' | translate" [disabled]="deshabilitado" (click)="alternar()">
+            <i class="feather icon-calendar"></i>
+        </button>
+    </div>
+    @if (invalido) { <small class="text-danger">{{ 'COMMON.REQUIRED_FIELD' | translate }}</small> }
+
+    @if (abierto) {
+    <div class="calendario" role="dialog" [style.top.px]="posicion.top" [style.left.px]="posicion.left">
+        <div class="cabecera">
+            <button type="button" class="btn-icono" [title]="'SHARED.SELECTOR_FECHA.PREVIOUS_MONTH' | translate" (click)="mover(-1)">
+                <i class="feather icon-chevron-left"></i>
+            </button>
+            <div class="mes-anio">
+                <select class="form-select" [value]="vista.m" (change)="irAMes($event)" [attr.aria-label]="'COMMON.MONTH' | translate">
+                    @for (n of meses; track $index) { <option [value]="$index" [selected]="$index === vista.m">{{ n }}</option> }
+                </select>
+                <select class="form-select" [value]="vista.y" (change)="irAAnio($event)" [attr.aria-label]="'SHARED.SELECTOR_FECHA.YEAR' | translate">
+                    @for (a of anios; track a) { <option [value]="a" [selected]="a === vista.y">{{ a }}</option> }
+                </select>
+            </div>
+            <button type="button" class="btn-icono" [title]="'SHARED.SELECTOR_FECHA.NEXT_MONTH' | translate" (click)="mover(1)">
+                <i class="feather icon-chevron-right"></i>
+            </button>
+        </div>
+        <div class="semana nombres">
+            @for (n of diasSemana; track $index) { <span>{{ n }}</span> }
+        </div>
+        @for (fila of filas; track $index) {
+        <div class="semana">
+            @for (c of fila; track c.y + '-' + c.m + '-' + c.d) {
+            <button type="button" class="dia" [class.fuera]="!c.delMes" [class.hoy]="esHoy(c)" [class.elegida]="esElegida(c)"
+                [disabled]="!sePuede(c)" (click)="elegir(c)">{{ c.d }}</button>
+            }
+        </div>
+        }
+        <div class="pie">
+            @if (limpiable) { <button type="button" class="btn btn-sm btn-link" (click)="limpiar()">{{ 'SHARED.SELECTOR_FECHA.CLEAR' | translate }}</button> }
+            <button type="button" class="btn btn-sm btn-link ms-auto" (click)="hoy()">{{ 'COMMON.TODAY' | translate }}</button>
+        </div>
+    </div>
+    }
+</div>

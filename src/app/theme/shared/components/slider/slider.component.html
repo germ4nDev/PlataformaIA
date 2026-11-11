@@ -12,7 +12,7 @@
     </button>
 
     <div class="indicators" *ngIf="images.length > 1">
-        <button *ngFor="let image of images; let i = index" [ngClass]="{ 'active': i === currentIndex }" (click)="goToImage(i)" class="indicator-dot" [attr.aria-label]="('WEB.SLIDER.IR_A_LA_IMAGEN' | translate) + (i + 1)">
+        <button *ngFor="let image of images; let i = index" [ngClass]="{ 'active': i === currentIndex }" (click)="goToImage(i)" class="indicator-dot" [attr.aria-label]="('SHARED.GO_IMAGE' | translate) + (i + 1)">
         </button>
     </div>
 

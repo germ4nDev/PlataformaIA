@@ -70,13 +70,13 @@ export class GestionTraduccionComponent implements OnInit {
                 this.textos = Object.fromEntries(this.idiomas.map((i) => [i, '']));
                 if (llave) {
                     const fila = r.filas.find((f) => f.llave === llave);
-                    if (!fila) { this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.NO_EXISTE')); this.volver(); return; }
+                    if (!fila) { this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.GESTION.THAT_KEY_DOES_NOT_EXIST')); this.volver(); return; }
                     this.modoEdicion = true;
                     this.llaveEditada = llave;
                     this.textos = Object.fromEntries(this.idiomas.map((i) => [i, String(fila.textos[i] ?? '')]));
                 }
             },
-            error: () => this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.ERROR_CARGAR'))
+            error: () => this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.COULD_NOT_GET_TRANSLATIONS'))
         });
     }
 
@@ -110,12 +110,12 @@ export class GestionTraduccionComponent implements OnInit {
             next: () => {
                 this.guardando = false;
                 this.translate.reloadLang(this.translate.currentLang || 'es').subscribe();
-                this.avisos.getAlertConfirmSuccess(traducir(this.modoEdicion ? 'UTILIDADES.TRADUCCIONES.MODIFICADA' : 'UTILIDADES.TRADUCCIONES.CREADA'));
+                this.avisos.getAlertConfirmSuccess(traducir(this.modoEdicion ? 'UTILIDADES.TRADUCCIONES.GESTION.KEY_UPDATED' : 'UTILIDADES.TRADUCCIONES.GESTION.KEY_CREATED'));
                 this.volver();
             },
             error: (e) => {
                 this.guardando = false;
-                this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.TRADUCCIONES.ERROR_GUARDAR'));
+                this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.TRADUCCIONES.GESTION.COULD_NOT_SAVE_KEY'));
             }
         });
     }

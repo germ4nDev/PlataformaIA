@@ -1,12 +1,12 @@
-<app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || ('PORTTOS.CHART_DOUGHNUT_BODEGAS.INVENTARIO_POR_TIPO_DE_CARGA' | translate)"
-    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.CHART_DOUGHNUT_BODEGAS.PARTICIPACION_VOLUMETRICA_EN_BODEGAS_Y' | translate)"
+<app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_BODEGAS.CHART_DOUGHNUT_BODEGAS.INVENTORY_BY_CARGO_TYPE' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_BODEGAS.CHART_DOUGHNUT_BODEGAS.VOLUME_SHARE_IN_WAREHOUSES_SILOS' | translate)"
     [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origen]="data?.origen">
 
     <!-- PROYECCIÓN AL HEADER -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase" *ngIf="!cargando && !sinDatos">
-            {{ 'PORTTOS.CHART_DOUGHNUT_BODEGAS.TON' | translate: { p0: (totalInventarioTon | number:'1.0-0') } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.CHART_DOUGHNUT_BODEGAS.P0_T' | translate: { p0: (totalInventarioTon | number:'1.0-0') } }}
         </span>
     </div>
 
@@ -18,14 +18,14 @@
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top: 0; left: 0; z-index: 10;">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted small">{{ 'PORTTOS.CHART_DOUGHNUT_BODEGAS.CALCULANDO_DISTRIBUCION_POR_CARGA' | translate }}</span>
+            <span class="text-muted small">{{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.CHART_DOUGHNUT_BODEGAS.CALCULATING_DISTRIBUTION_BY_CARGO' | translate }}</span>
         </div>
 
         <!-- Estado Vacío -->
         <div *ngIf="!cargando && sinDatos"
             class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
             <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
-            {{ 'PORTTOS.CHART_DOUGHNUT_BODEGAS.SIN_EXISTENCIAS_REGISTRADAS_POR_TIPO' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.CHART_DOUGHNUT_BODEGAS.NO_STOCK_REGISTERED_BY_PRODUCT_TYPE' | translate }}
         </div>
 
         <!-- Dona + Leyenda Compacta (Compatible con Modo Claro y Modo Oscuro) -->
@@ -38,7 +38,7 @@
                     <span class="titulo-container d-block fw-bolder" style="font-size: 1.05rem;">
                         {{ totalInventarioTon | number:'1.0-0' }}
                     </span>
-                    <small class="titulo-container text-uppercase" style="font-size: 0.62rem;">{{ 'PORTTOS.CHART_DOUGHNUT_BODEGAS.TONELADAS' | translate }}</small>
+                    <small class="titulo-container text-uppercase" style="font-size: 0.62rem;">{{ 'COMMON.TONS' | translate }}</small>
                 </div>
             </div>
 

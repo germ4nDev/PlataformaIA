@@ -257,10 +257,10 @@ export class UsuariosComponent implements OnInit {
                     return {
                         ...user,
                         '_acciones': [
-                            { accion: 'INACTIVAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'I', color: '#ff0000', tooltip: (this.translate.instant('USUARIOS.INACTIVAR')) },
-                            { accion: 'CAMBIAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'C', color: '#25a042', tooltip: (this.translate.instant('USUARIOS.CAMBIAR')) },
-                            { accion: 'RESETEAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'R', color: '#d3751d', tooltip: (this.translate.instant('USUARIOS.RESERTEAR')) },
-                            { accion: 'ROLES', permiso: 'ACT_USUSC_ROLES', letra: 'R', color: '#c41dd3', tooltip: (this.translate.instant('USUARIOS.USUARIOS.ROLES')) }
+                            { accion: 'INACTIVAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'I', color: '#ff0000', tooltip: (this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')) },
+                            { accion: 'CAMBIAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'C', color: '#25a042', tooltip: (this.translate.instant('COMMON.CHANGE_PASSWORD_2')) },
+                            { accion: 'RESETEAR', permiso: 'ACT_USR_ACTUALIZAR', letra: 'R', color: '#d3751d', tooltip: (this.translate.instant('COMMON.RESET_PASSWORD_2')) },
+                            { accion: 'ROLES', permiso: 'ACT_USUSC_ROLES', letra: 'R', color: '#c41dd3', tooltip: (this.translate.instant('COMMON.ROLES')) }
                         ],
                     } as PTLUsuarioModel;
                 });
@@ -329,28 +329,28 @@ export class UsuariosComponent implements OnInit {
     columnasUsuarios: ColumnMetadata[] = [
         {
             name: 'avatarUsuario',
-            header: 'USUARIOS.USUARIOS.FOTO',
+            header: 'COMMON.PHOTO',
             type: 'avatar',
             isSortable: false
         },
         {
             name: 'identificacionUsuario',
-            header: 'USUARIOS.USUARIOS.IDENTIFICACION',
+            header: 'COMMON.IDENTIFICATION',
             type: 'text'
         },
         {
             name: 'nombreUsuario',
-            header: 'USUARIOS.USUARIOS.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'userNameUsuario',
-            header: 'USUARIOS.USUARIOS.USERNAME',
+            header: 'COMMON.USERNAME_2',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'USUARIOS.USUARIOS.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ]
@@ -358,17 +358,17 @@ export class UsuariosComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'correoUsuario',
-            header: 'USUARIOS.USUARIOS.CORREO',
+            header: 'COMMON.EMAIL',
             type: 'text'
         },
         {
             name: 'descripcionUsuario',
-            header: 'USUARIOS.USUARIOS.DESCRIPCION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'roles',
-            header: 'USUARIOS.USUARIOS.ROLES',
+            header: 'COMMON.ROLES',
             type: 'json-tabla'
         }
     ]
@@ -593,10 +593,10 @@ export class UsuariosComponent implements OnInit {
                 const usuario = this.usuarios.find(x => x.codigoUsuario === id);
                 if (!usuario) return;
                 this._swalService.getAlertQuestionRequest(
-                    this.translate.instant('USUARIOS.INACTIVAR'),
-                    this.translate.instant('USUARIOS.INACTIVARTITULO'),
-                    this.translate.instant('USUARIOS.INACTIVARBTN'),
-                    this.translate.instant('PLATAFORMA.CANCEL')
+                    this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
+                    this.translate.instant('COMMON.CHANGE_USER_STATUS'),
+                    this.translate.instant('COMMON.CHANGE_STATUS'),
+                    this.translate.instant('COMMON.CANCEL')
                 ).subscribe(result => {
                     if (result) {
                         usuario.estadoUsuario = usuario.estadoUsuario == true ? false : true;
@@ -606,20 +606,20 @@ export class UsuariosComponent implements OnInit {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('USUARIOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                                    descripcionLog: this.translate.instant('COMMON.USER_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR'));
+                                this._swalService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE'));
                                 this.setupRegistrosStream()
                             },
                             error: (err: any) => {
                                 // const logData = {
                                 //     codigoTipoLog: '',
                                 //     codigoRespuesta: '201',
-                                //     descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje
+                                //     descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
                                 // }
                                 // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje)
+                                this._swalService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
                                 // this.setupRegistrosStream()
                                 console.error('Error eliminando', err)
                             }
@@ -794,7 +794,7 @@ export class UsuariosComponent implements OnInit {
                             }
                         });
 
-                        this._swalService.getAlertConfirmSuccess(this.translate.instant('USUARIOS.USUARIOS.CAMBIOCLACESUCCESS'));
+                        this._swalService.getAlertConfirmSuccess(this.translate.instant('COMMON.PASSWORD_WAS_CHANGED_SUCCESSFULLY'));
                     },
                     error: (errUpdate) => {
                         console.error('❌ Error guardando la nueva clave', errUpdate);

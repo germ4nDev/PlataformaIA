@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -16,12 +16,12 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'APLICACIONES.APPLICATION_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <small>{{ 'COMMON.CODE' | translate }}</small>
                         <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.codigoAplicacion }}
@@ -29,10 +29,10 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.NAME' | translate }}</small>
                         <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.nombreAplicacion }}
@@ -40,19 +40,19 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
                         <!-- El cambio en el input ahora solo notifica al BehaviorSubject -->
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'APLICACIONES.APPLICATION_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -65,12 +65,12 @@
             <div class="card-body">
                 <ng-container *ngIf="aplicacionesFiltradas$ | async as dataFiltrada;">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoAplicacion'"
-                        [tableTitle]="'APLICACIONES.TITLE' | translate" [metadataColumns]="columnasAplicaciopnes"
+                        [tableTitle]="'APLICACIONES.APPLICATION_MANAGEMENT' | translate" [metadataColumns]="columnasAplicaciopnes"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         permisoNew="ACT_APP_CREAR" permisoEdit="ACT_APP_MODIFICAR" permisoDelete="ACT_APP_ELIMINAR"
                         [showDeleteButton]="true" [showSearchBox]="false"
-                        [newButtonLabel]="'APLICACIONES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        [newButtonLabel]="'APLICACIONES.NEW_APPLICATION' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
                         (newRecord)="OnNuevaAplicaicionClick()" (editRecord)="OnEditarAplicaicionClick($event)"
                         (deleteRecord)="OnEliminarAplicaicionClick($event)">
                     </app-table-data>

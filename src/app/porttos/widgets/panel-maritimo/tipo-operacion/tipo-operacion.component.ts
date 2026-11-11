@@ -217,14 +217,14 @@ export class TipoOperacionComponent implements OnInit, AfterViewInit, OnChanges,
      */
     private calcularFlujosDesdeSQL(filas: any[]): void {
         const definicionFlujos = [
-            { col: 'importacion', label: traducir('PORTTOS.TIPO_OPERACION.IMPORTACION') },
-            { col: 'exportacion', label: traducir('PORTTOS.TIPO_OPERACION.EXPORTACION') },
-            { col: 'transbordo', label: traducir('PORTTOS.TIPO_OPERACION.TRANSBORDO') },
-            { col: 'cabotaje', label: traducir('PORTTOS.TIPO_OPERACION.CABOTAJE') },
-            { col: 'transitoInternacional', label: traducir('PORTTOS.TIPO_OPERACION.TRANSITO_INT') },
-            { col: 'fluvial', label: traducir('PORTTOS.TIPO_OPERACION.FLUVIAL') },
-            { col: 'movilizacionesABordo', label: traducir('PORTTOS.TIPO_OPERACION.MOV_A_BORDO') },
-            { col: 'transitoria', label: traducir('PORTTOS.TIPO_OPERACION.TRANSITORIA') }
+            { col: 'importacion', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.IMPORT') },
+            { col: 'exportacion', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.EXPORT') },
+            { col: 'transbordo', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.TRANSSHIPMENT') },
+            { col: 'cabotaje', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.CABOTAGE') },
+            { col: 'transitoInternacional', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.INT_TRANSIT') },
+            { col: 'fluvial', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.RIVER') },
+            { col: 'movilizacionesABordo', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.ON_BOARD_MOVES') },
+            { col: 'transitoria', label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.TIPO_OPERACION.TEMPORARY') }
         ];
 
         const acumulados: Array<{ label: string; total: number }> = definicionFlujos.map((def) => ({

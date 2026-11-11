@@ -4,7 +4,7 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button>
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
             </div>
 
@@ -19,26 +19,26 @@
             <div class="card-header card-header-sticky">
                 <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'SITIOS.ENLACES.GESTION.NEW' | translate }}
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'SITES.ENLACES.NEW_LINK' | translate }}
                         </h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'SITIOS.ENLACES.UPDATE' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'SITES.ENLACES.GESTION.MODIFY_LINK' | translate }}</h4>
                     </div>
                     <div class="d-flex">
                         <button *ngIf="!modoEdicion" type="button"
                             class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'SITIOS.ENLACES.GESTION.CREATE' | translate }}
+                            {{ 'SITES.ENLACES.GESTION.CREATE_LINK' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button"
                             class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'SITIOS.ENLACES.UPDATE' | translate }}
+                            {{ 'SITES.ENLACES.GESTION.MODIFY_LINK' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
@@ -50,13 +50,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoSitio">
-                                    {{ 'SITIOS.ENLACES.GESTION.SITIOS' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer;" name="codigoSitio"
+                                    {{ 'SITES.ENLACES.GESTION.SITES' | translate }}</label>
+                                <select class="form-control form-select" style="cursor: pointer;" name="codigoSitio"
                                     id="codigoSitio"
                                     [ngClass]="{ 'is-invalid': !codigoSitio.valid && (codigoSitio.dirty || codigoSitio.touched || isSubmit) }"
                                     #codigoSitio="ngModel" required [(ngModel)]="FormRegistro.codigoSitio"
                                     (change)="onSitiochangeClick($event)">
-                                    <option value="" disabled>{{ 'SITIOS.ENLACES.GESTION.PLACEHOLDERSITIOS' | translate
+                                    <option value="" disabled>{{ 'SITES.ENLACES.GESTION.SELECT_SITE' | translate
                                         }}
                                     </option>
                                     <option [value]="sitio.codigoSitio" *ngFor="let sitio of sitios">
@@ -65,61 +65,61 @@
                                 <label
                                     *ngIf="!codigoSitio.valid && (codigoSitio.dirty || codigoSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'SITIOS.ENLACES.GESTION.REQUERIDOSITIOS' | translate }}
+                                    {{ 'SITES.ENLACES.GESTION.SELECT_SITE_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreEnlace">{{ 'SITIOS.ENLACES.NAME' |
+                                <label class="form-control-label" for="nombreEnlace">{{ 'COMMON.NAME' |
                                     translate
                                     }}</label>
                                 <input class="form-control form-input" id="nombreEnlace" name="nombreEnlace" type="text"
-                                    placeholder="{{ 'SITIOS.ENLACES.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    placeholder="{{ 'SITES.ENLACES.GESTION.LINK_NAME' | translate }}"
                                     [ngClass]="{'is-invalid': !nombreEnlace.valid && (nombreEnlace.dirty || nombreEnlace.touched || isSubmit)}"
                                     #nombreEnlace="ngModel" required [(ngModel)]="FormRegistro.nombreEnlace" />
                                 <label
                                     *ngIf="!nombreEnlace.valid && (nombreEnlace.dirty || nombreEnlace.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'SITIOS.ENLACES.GESTION.REQUERIDONAME' | translate }}
+                                    {{ 'COMMON.ENTER_NAME_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'SITIOS.ENLACES.RUTA' | translate }}</label>
+                                <label class="form-label">{{ 'SITES.ENLACES.LINK_PATH' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="rutaEnlace"
-                                    placeholder="{{ 'SITIOS.ENLACES.GESTION.PLACEHOLDERRUTA' | translate }}"
+                                    placeholder="{{ 'SITES.ENLACES.GESTION.LINK_PATH' | translate }}"
                                     [ngClass]="{'is-invalid': !rutaEnlace.valid && (rutaEnlace.dirty || rutaEnlace.touched || isSubmit) }"
                                     #rutaEnlace="ngModel" required [(ngModel)]="FormRegistro.rutaEnlace" />
                                 <label *ngIf="!rutaEnlace.valid && (rutaEnlace.dirty || rutaEnlace.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'SITIOS.ENLACES.GESTION.REQUERIDORUTA' | translate }}
+                                    {{ 'SITES.ENLACES.GESTION.ENTER_PATH_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'SITIOS.ENLACES.STATUS' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="option" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoEnlace">
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="option" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoEnlace">
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'SITIOS.ENLACES.DESCRIPTION' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcionEnlace ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionEnlace($event)" name="descripcionEnlace"
@@ -130,7 +130,7 @@
                                 <label
                                     *ngIf="!descripcionEnlace.valid && (descripcionEnlace.dirty || descripcionEnlace.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'SITIOS.ENLACES.GESTION.REQUERIDODESCRIPCION' | translate }}
+                                    {{ 'COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>

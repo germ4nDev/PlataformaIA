@@ -91,10 +91,10 @@ export class GestionRolesComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + err.mensaje
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + err.mensaje
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOEXISTE') + err);
+                    this._swalAlertService.getAlertError(this.translate.instant('USUARIOS.RECORD_DOES_NOT_EXIST') + err);
                 }
             });
         } else {
@@ -196,10 +196,10 @@ export class GestionRolesComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
                         this.router.navigate(['/usuarios/roles']);
                     }
                 },
@@ -208,10 +208,10 @@ export class GestionRolesComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + err.mensaje
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + err.mensaje
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + err);
                 }
             });
         } else {
@@ -235,10 +235,10 @@ export class GestionRolesComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
                         form.resetForm();
                         this.isSubmit = false;
                         this.router.navigate(['/usuarios/roles']);
@@ -248,10 +248,10 @@ export class GestionRolesComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + err);
                 }
             });
         }

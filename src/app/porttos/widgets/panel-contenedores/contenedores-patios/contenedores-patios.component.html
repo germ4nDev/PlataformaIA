@@ -1,12 +1,12 @@
-<app-widget-shell [titulo]="(configData?.titulo | translate) || ('PORTTOS.CONTENEDORES_PATIOS.SATURACION_DE_PATIOS' | translate)"
-    [subtitulo]="(configData?.subtitulo | translate) || ('PORTTOS.CONTENEDORES_PATIOS.CAPACIDAD_VS_OCUPACION_EN_TERMINALES' | translate)"
+<app-widget-shell [titulo]="(configData?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_CONTENEDORES.CONTENEDORES_PATIOS.YARD_SATURATION' | translate)"
+    [subtitulo]="(configData?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_CONTENEDORES.CONTENEDORES_PATIOS.CAPACITY_VS_OCCUPANCY_IN_TERMINALS_DEPOTS' | translate)"
     [icono]="configData?.icono || 'feather icon-layers'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origen]="configData?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase">
-            {{ 'PORTTOS.CONTENEDORES_PATIOS.OCUPACION_PATIOS' | translate: { p0: listadoPatios.length } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.CONTENEDORES_PATIOS.OCCUPANCY_P0_YARDS' | translate: { p0: listadoPatios.length } }}
         </span>
     </div>
 
@@ -16,14 +16,14 @@
         <!-- Estado Cargando -->
         <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            {{ 'PORTTOS.CONTENEDORES_PATIOS.CONSULTANDO_SATURACION_DE_PATIOS_Y' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.CONTENEDORES_PATIOS.CHECKING_YARD_DEPOT_SATURATION' | translate }}
         </div>
 
         <!-- Mensaje si no hay datos -->
         <div *ngIf="!isLoading && listadoPatios.length === 0"
             class="d-flex flex-column justify-content-center align-items-center h-100 text-muted small">
             <i class="feather icon-layers fs-2 mb-2 opacity-50"></i>
-            {{ 'PORTTOS.CONTENEDORES_PATIOS.NO_HAY_INFORMACION_DE_PATIOS' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.CONTENEDORES_PATIOS.NO_YARD_INFORMATION_AVAILABLE_PORT' | translate }}
         </div>
 
         <!-- Iteración de patios -->

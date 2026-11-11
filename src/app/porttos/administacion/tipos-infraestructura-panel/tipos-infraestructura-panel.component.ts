@@ -172,22 +172,22 @@ export class TiposInfraestructuraPanelComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'codigo_tipo',
-            header: 'TIPOSINFRA.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'nombre',
-            header: 'TIPOSINFRA.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'TIPOSINFRA.ESTADO',
+            header: 'COMMON.STATUS',
             type: 'estado'
         },
         {
             name: 'color_ui',
-            header: 'FAROS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'color_chip'
         }
     ]
@@ -195,7 +195,7 @@ export class TiposInfraestructuraPanelComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcion',
-            header: 'TIPOSINFRA.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         }
     ]
@@ -213,12 +213,12 @@ export class TiposInfraestructuraPanelComponent implements OnInit, OnDestroy {
     OnEliminarAplicaicionClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
-            title: this.translate.instant('TIPOSINFRA.ELIMINARTITULO'),
-            text: this.translate.instant('TIPOSINFRA.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.WILL_DELETE_INFRASTRUCTURE_TYPE_YOU_WONT'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._tiposInfraestructuraService.deleteTipoInfraestructura(id).subscribe({
@@ -226,20 +226,20 @@ export class TiposInfraestructuraPanelComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('TIPOSINFRA.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.INFRASTRUCTURE_TYPE_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('TIPOSINFRA.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.INFRASTRUCTURE_TYPE_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupTipoInfraestructurasStream()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('TIPOSINFRA.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.COULD_NOT_DELETE_INFRASTRUCTURE_TYPE')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('TIPOSINFRA.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('PORTTOS.ADMINISTACION.TIPOS_INFRAESTRUCTURA_PANEL.COULD_NOT_DELETE_INFRASTRUCTURE_TYPE'), 'error')
                     }
                 })
             }

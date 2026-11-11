@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,28 +17,28 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'WEB.PARAMETROS.FILTROS_DE_PARAMETROS' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'SISTEMA.PARAMETROS.PARAMETER_FILTERS' | translate }}</h6>
 
                     <div class="filtro">
-                        <small>{{ 'WEB.PARAMETROS.LLAVE_LOGICA_ID' | translate }}</small>
+                        <small>{{ 'SISTEMA.PARAMETROS.LOGICAL_KEY_ID' | translate }}</small>
                         <input type="text" (keyup)="onFiltroLlaveChangeClick($event)" class="form-control form-input"
-                            [placeholder]="'WEB.PARAMETROS.EJ_MARGEN_UTILIDAD' | translate" />
+                            [placeholder]="'SISTEMA.PARAMETROS.E_G_MARGEN_UTILIDAD' | translate" />
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'WEB.PARAMETROS.NOMBRE_VISIBLE' | translate }}</small>
+                        <small>{{ 'SISTEMA.PARAMETROS.DISPLAY_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            [placeholder]="'WEB.PARAMETROS.EJ_MARGEN_BASE' | translate" />
+                            [placeholder]="'SISTEMA.PARAMETROS.E_G_BASE_MARGIN' | translate" />
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'WEB.PARAMETROS.TIPO_DE_DATO' | translate }}</small>
+                        <small>{{ 'SISTEMA.PARAMETROS.DATA_TYPE' | translate }}</small>
                         <select (change)="onFiltroTipoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="DECIMAL">{{ 'WEB.PARAMETROS.DECIMAL_NUMERICO' | translate }}</option>
-                            <option value="INTEGER">{{ 'WEB.PARAMETROS.INTEGER_ENTERO' | translate }}</option>
-                            <option value="BOOLEAN">{{ 'WEB.PARAMETROS.BOOLEAN_LOGICO' | translate }}</option>
-                            <option value="STRING">{{ 'WEB.PARAMETROS.STRING_TEXTO' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="DECIMAL">{{ 'SISTEMA.PARAMETROS.DECIMAL_NUMERIC' | translate }}</option>
+                            <option value="INTEGER">{{ 'SISTEMA.PARAMETROS.INTEGER_WHOLE_NUMBER' | translate }}</option>
+                            <option value="BOOLEAN">{{ 'SISTEMA.PARAMETROS.BOOLEAN_LOGICAL' | translate }}</option>
+                            <option value="STRING">{{ 'SISTEMA.PARAMETROS.STRING_TEXT' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -52,11 +52,11 @@
 
                 <ng-container *ngIf="parametrosFiltrados$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoParametro'"
-                        [tableTitle]="('WEB.PARAMETROS.PARAMETROS_DEL_SISTEMA' | translate)" [metadataColumns]="columnasRegistros"
+                        [tableTitle]="('SISTEMA.PARAMETROS.SYSTEM_PARAMETERS' | translate)" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
                         [showDeleteButton]="false" [showSearchBox]="false"
-                        [newButtonLabel]="'PLATAFORMA.ADD' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        [newButtonLabel]="'COMMON.ADD' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
                         (newRecord)="OnNuevoRegistroClick()" (accionPrincipalClick)="onAccionPrincipal($event)"
                         permisoNew="ACT_SYST_CREAR">
                     </app-table-data>

@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || ('WEB.WDG_TICKETS_SBAR.ESTADO_DE_TICKETS' | translate)"
-    [subtitulo]="widgetConfig?.subtitulo || ('WEB.WDG_TICKETS_SBAR.OPERACIONES' | translate)" [icono]="widgetConfig?.icono || 'feather icon-bar-chart-2'"
+<app-widget-shell [titulo]="widgetConfig?.titulo || ('STARTER.HOME.WIDGETS.WDG_TICKETS_SBAR.TICKET_STATUS' | translate)"
+    [subtitulo]="widgetConfig?.subtitulo || ('COMMON.OPERATIONS' | translate)" [icono]="widgetConfig?.icono || 'feather icon-bar-chart-2'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- 🟢 1. PROYECCIÓN AL HEADER: Badge de Operaciones -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-danger text-uppercase">
-            {{ 'WEB.WDG_TICKETS_SBAR.OPERACIONES' | translate }}
+            {{ 'COMMON.OPERATIONS' | translate }}
         </span>
     </div>
 

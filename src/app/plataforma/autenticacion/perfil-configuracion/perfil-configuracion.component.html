@@ -8,30 +8,30 @@
       </div>
       <div class="card">
         <div class="card-body text-center">
-          <h5 class="mb-4">{{ 'WEB.PERFIL_CONFIGURACION.PROFILE_SETTINGS' | translate }}</h5>
-          <img src="assets/images/user/avatar-3.jpg" class="img-radius mb-4" [alt]="'WEB.PERFIL_CONFIGURACION.USER_PROFILE_IMAGE' | translate" />
+          <h5 class="mb-4">{{ 'AUTENTICACION.PERFIL_CONFIGURACION.PROFILE_SETTINGS' | translate }}</h5>
+          <img src="assets/images/user/avatar-3.jpg" class="img-radius mb-4" [alt]="'COMMON.PROFILE_IMAGE' | translate" />
           <div class="input-group mb-3">
-            <input type="text" class="form-control" [placeholder]="'WEB.PERFIL_CONFIGURACION.NAME' | translate" />
+            <input type="text" class="form-control" [placeholder]="'COMMON.NAME' | translate" />
           </div>
           <div class="input-group mb-3">
-            <input type="text" class="form-control" [placeholder]="'WEB.PERFIL_CONFIGURACION.USER_NAME' | translate" />
+            <input type="text" class="form-control" [placeholder]="'COMMON.USERNAME' | translate" />
           </div>
           <div class="mb-4 text-start">
             <div class="form-group d-inline">
               <div class="radio radio-fill d-inline">
                 <input type="radio" name="radio-in-1" id="radio-in-1" checked />
-                <label for="radio-in-1" class="cr">{{ 'WEB.PERFIL_CONFIGURACION.PRIVATE_PROFILE' | translate }}</label>
+                <label for="radio-in-1" class="cr">{{ 'AUTENTICACION.PERFIL_CONFIGURACION.PRIVATE_PROFILE' | translate }}</label>
               </div>
             </div>
             <div class="form-group d-inline">
               <div class="radio radio-fill d-inline">
                 <input type="radio" name="radio-in-1" id="radio-in-2" />
-                <label for="radio-in-2" class="cr">{{ 'WEB.PERFIL_CONFIGURACION.PUBLIC_PROFILE' | translate }}</label>
+                <label for="radio-in-2" class="cr">{{ 'AUTENTICACION.PERFIL_CONFIGURACION.PUBLIC_PROFILE' | translate }}</label>
               </div>
             </div>
           </div>
-          <button class="btn btn-primary mb-4">{{ 'WEB.PERFIL_CONFIGURACION.REGISTER' | translate }}</button>
-          <p class="mb-0 text-muted">{{ 'WEB.PERFIL_CONFIGURACION.DON_T_HAVE_AN_ACCOUNT' | translate }} <a [routerLink]="['/auth/signup']">{{ 'WEB.PERFIL_CONFIGURACION.SIGN_UP' | translate }}</a></p>
+          <button class="btn btn-primary mb-4">{{ 'AUTENTICACION.PERFIL_CONFIGURACION.REGISTER' | translate }}</button>
+          <p class="mb-0 text-muted">{{ 'AUTENTICACION.PERFIL_CONFIGURACION.DONT_HAVE_ACCOUNT' | translate }} <a [routerLink]="['/auth/signup']">{{ 'AUTENTICACION.PERFIL_CONFIGURACION.SIGN_UP' | translate }}</a></p>
         </div>
       </div>
     </div>

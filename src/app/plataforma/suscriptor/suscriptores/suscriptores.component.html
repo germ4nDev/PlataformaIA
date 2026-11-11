@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,25 +17,25 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'SUSCRIPTOR.SUSCRIPTORES.SUBSCRIBER_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SUBSCRIBER_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.FILTROIDENTIFICACION' | translate }}</small>
+                        <small>{{ 'COMMON.IDENTIFICATION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.IDENTIFICACIONHOLDER' | translate }}" />
+                            placeholder="{{ 'SUSCRIPTOR.SUSCRIPTORES.SUBSCRIBER_IDENTIFICATION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
                             style="cursor: pointer">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -48,9 +48,9 @@
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrados$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoSuscriptor'"
-                        [tableTitle]="'SUSCRIPTOR.SUSCRIPTORES.TITLE' | translate"
-                        [newButtonLabel]="'SUSCRIPTOR.SUSCRIPTORES.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasRegistros"
+                        [tableTitle]="'SUSCRIPTOR.SUSCRIPTORES.SUBSCRIBER_MANAGEMENT' | translate"
+                        [newButtonLabel]="'SUSCRIPTOR.SUSCRIPTORES.NEW_SUBSCRIBER' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true" [showNewButton]="true"
                         [showViewButton]="false" [showSearchBox]="false" (newRecord)="OnNuevoRegistroClick()"
                         (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_SUSC_CREAR"

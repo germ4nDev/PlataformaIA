@@ -117,14 +117,14 @@ export class ParametrosComponent implements OnInit, OnDestroy {
                     if (permisos.includes('ACT_SYST_ACTUALIZAR')) {
                         accionesPermitidas.push({
                             accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('PLATAFORMA.EDITAR')
+                            tooltip: this.translate.instant('COMMON.EDIT')
                         });
                     }
 
                     if (permisos.includes('ACT_SYST_ELIMINAR')) {
                         accionesPermitidas.push({
                             accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('PLATAFORMA.DELETE')
+                            tooltip: this.translate.instant('COMMON.DELETE')
                         });
                     }
 
@@ -193,8 +193,8 @@ export class ParametrosComponent implements OnInit, OnDestroy {
 
     eliminarParametro(row: any): void {
         this._swalService.getAlertQuestionRequest(
-            this.translate.instant('APLICACIONES.ELIMINARTEXTO') + ` "${row.nombreParametro}".`,
-            this.translate.instant('APLICACIONES.ELIMINARTITULO')
+            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreParametro}".`,
+            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
         ).subscribe(result => {
             if (result) {
                 this._registrosService.eliminarParametro(row.codigoParametro).subscribe({
@@ -202,7 +202,7 @@ export class ParametrosComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.msg
+                            descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.msg
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertSuccess(resp.msg);
@@ -213,7 +213,7 @@ export class ParametrosComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + (err.error?.msg || err.message)
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + (err.error?.msg || err.message)
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertError(err.error?.msg || err.message);
@@ -236,15 +236,15 @@ export class ParametrosComponent implements OnInit, OnDestroy {
 
     // 🟢 Columnas de la Tabla Principal
     columnasRegistros: ColumnMetadata[] = [
-        { name: 'llaveParametro', header: 'WEB.PARAMETROS.LLAVE_LOGICA_ID', type: 'text' },
-        { name: 'nombreParametro', header: 'WEB.GESTION_PARAMETRO.NOMBRE_VISIBLE', type: 'text' },
-        { name: 'valorParametro', header: 'WEB.GESTION_PARAMETRO.VALOR_ASIGNADO', type: 'text' },
-        { name: 'tipoDato', header: 'WEB.PARAMETROS.TIPO_DE_DATO', type: 'text' },
-        { name: 'nomEstado', header: 'WEB.WDG_KPI_APLICACIONES.ESTADO', type: 'estado' }
+        { name: 'llaveParametro', header: 'SISTEMA.PARAMETROS.LOGICAL_KEY_ID', type: 'text' },
+        { name: 'nombreParametro', header: 'SISTEMA.PARAMETROS.DISPLAY_NAME', type: 'text' },
+        { name: 'valorParametro', header: 'SISTEMA.PARAMETROS.ASSIGNED_VALUE', type: 'text' },
+        { name: 'tipoDato', header: 'SISTEMA.PARAMETROS.DATA_TYPE', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
     // 🟢 Columnas del Detalle (Opcional si enciendes el showDetail="true" en el HTML)
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'descripcionParametro', header: 'WEB.GESTION_ITEM.DESCRIPCION_DETALLADA', type: 'text' }
+        { name: 'descripcionParametro', header: 'COMMON.DETAILED_DESCRIPTION', type: 'text' }
     ];
 }

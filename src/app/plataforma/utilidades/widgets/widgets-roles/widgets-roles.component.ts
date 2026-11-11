@@ -53,13 +53,13 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
     roles: PTLRoleAPModel[] = []
 
     columnasAplicaciopnes: ColumnMetadata[] = [
-        { name: 'nombreWidget', header: 'WIDGETS.NOMWIDGET', type: 'text' },
-        { name: 'nomRole', header: 'WIDGETS.NOMROLE', type: 'text' },
-        { name: 'nomEstado', header: 'WIDGETS.NOMESTADO', type: 'estado' }
+        { name: 'nombreWidget', header: 'UTILIDADES.WIDGETS.WIDGETS_ROLES.WIDGET', type: 'text' },
+        { name: 'nomRole', header: 'COMMON.ROLE', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ]
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoRole', header: 'WIDGETS.CODIGOROLE', type: 'text' }
+        { name: 'codigoRole', header: 'UTILIDADES.WIDGETS.WIDGETS_ROLES.ROLE_CODE', type: 'text' }
     ]
 
     constructor(
@@ -130,7 +130,7 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
                             accion: 'ESTADO', permiso: 'ACT_WDGT_ROLES',
                             letra: isActivo ? 'I' : 'A',
                             color: isActivo ? '#dc3545' : '#13af2d',
-                            tooltip: isActivo ? this.translate.instant('WIDGETSROLES.INACTIVAR') : this.translate.instant('WIDGETSROLES.ACTIVAR')
+                            tooltip: isActivo ? this.translate.instant('UTILIDADES.WIDGETS.WIDGETS_ROLES.DEACTIVATE') : this.translate.instant('COMMON.ACTIVATE')
                         }],
                     };
                 })
@@ -175,10 +175,10 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
 
     OnEliminarRegistroClick(evento: any): void {
         this._swalAlertService.getAlertQuestionRequest(
-            this.translate.instant('WIDGETS.ELIMINARTEXTO'),
-            this.translate.instant('WIDGETS.ELIMINARTITULO'),
-            this.translate.instant('PLATAFORMA.DELETE'),
-            this.translate.instant('PLATAFORMA.CANCEL')
+            this.translate.instant('COMMON.WIDGET_BECOMES_INACTIVE_LEAVES_DASHBOARDS_USERS'),
+            this.translate.instant('COMMON.REMOVE_WIDGET_FROM_CATALOG'),
+            this.translate.instant('COMMON.DELETE'),
+            this.translate.instant('COMMON.CANCEL')
         ).subscribe(result => {
             if (result) {
                 // 🟢 Se utilizan las llaves compuestas requeridas por nuestro backend
@@ -187,13 +187,13 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
                 this._widgetsRolesService.removerRolDeWidget(relacionBorrar.codigoWidgetRole).subscribe({
                     next: (resp: any) => {
                         if (resp.ok) {
-                            this.registrarLog('201', 'WIDGETS.DELETESUCCSESSFULLY');
-                            this._swalAlertService.getAlertSuccess(this.translate.instant('WIDGETS.DELETESUCCSESSFULLY'));
+                            this.registrarLog('201', 'UTILIDADES.WIDGETS.WIDGETS_ROLES.RELATION_DELETED');
+                            this._swalAlertService.getAlertSuccess(this.translate.instant('UTILIDADES.WIDGETS.WIDGETS_ROLES.RELATION_DELETED'));
                         }
                     },
                     error: (err: any) => {
-                        this.registrarLog('501', 'WIDGETS.DELETEERROR');
-                        this._swalAlertService.getAlertError(traducir('WEB.WIDGETS_ROLES.NO_SE_PUDO_ELIMINAR_EL'));
+                        this.registrarLog('501', 'UTILIDADES.WIDGETS.WIDGETS_ROLES.RELATION_COULD_NOT_BE_DELETED');
+                        this._swalAlertService.getAlertError(traducir('UTILIDADES.WIDGETS.WIDGETS_ROLES.COULD_NOT_DELETE_WIDGET_PERMISSION'));
                     }
                 });
             }
@@ -203,10 +203,10 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
     onAccionPrincipal(evento: { accion: string, row: any }) {
         if (evento.accion === 'ESTADO') {
             this._swalAlertService.getAlertQuestionRequest(
-                this.translate.instant('WIDGETS.REVOCARTEXTO'),
-                this.translate.instant('WIDGETS.REVOCARTITULO'),
-                this.translate.instant('PLATAFORMA.CONTINUE'),
-                this.translate.instant('PLATAFORMA.CANCEL')
+                this.translate.instant('UTILIDADES.WIDGETS.WIDGETS_ROLES.USERS_WITH_ROLE_WILL_STOP_SEEING'),
+                this.translate.instant('UTILIDADES.WIDGETS.WIDGETS_ROLES.REMOVE_ROLE_FROM_WIDGET'),
+                this.translate.instant('UTILIDADES.WIDGETS.WIDGETS_ROLES.CONTINUE'),
+                this.translate.instant('COMMON.CANCEL')
             ).subscribe(result => {
                 if (result) {
                     const relacion = this.widgetsRoles.find(x => x.codigoWidget === evento.row.codigoWidget && x.codigoRol === evento.row.codigoRol);
@@ -229,13 +229,13 @@ export class WidgetsRolesComponent implements OnInit, OnDestroy {
                     this._widgetsRolesService.toggleEstadoRelacion(relacion.codigoWidgetRole, payload).subscribe({
                         next: (resp: any) => {
                             if (resp.ok) {
-                                this.registrarLog('201', 'WIDGETS.UPDATESUCCSESSFULLY');
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('WIDGETS.UPDATESUCCSESSFULLY'));
+                                this.registrarLog('201', 'COMMON.WIDGET_UPDATED');
+                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.WIDGET_UPDATED'));
                             }
                         },
                         error: (err: any) => {
-                            this.registrarLog('501', 'WIDGETS.UPDATEERROR');
-                            this._swalAlertService.getAlertError(traducir('WEB.WIDGETS_ROLES.NO_SE_PUDO_ACTUALIZAR_EL'));
+                            this.registrarLog('501', 'COMMON.WIDGET_COULD_NOT_BE_UPDATED');
+                            this._swalAlertService.getAlertError(traducir('UTILIDADES.WIDGETS.WIDGETS_ROLES.COULD_NOT_UPDATE_WIDGET_PERMISSION'));
                         }
                     });
                 }

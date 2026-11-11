@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -16,37 +16,37 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'CONEXIONES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'ADMINISTRACION_BD.CONEXIONES.CONNECTION_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.APPLICATION_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreApliChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBREHOLDER' | translate }}" />
+                            placeholder="{{ 'ADMINISTRACION_BD.CONEXIONES.CONNECTION_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBRESUSCRIP' | translate }}</small>
+                        <small>{{ 'COMMON.SUBSCRIBER_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreSuscripChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBRESUSCRIPHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SUBSCRIBER_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBRESERVE' | translate }}</small>
+                        <small>{{ 'ADMINISTRACION_BD.CONEXIONES.SERVER_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreServeChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBRESERVEHOLDER' | translate }}" />
+                            placeholder="{{ 'ADMINISTRACION_BD.CONEXIONES.SERVER_NAME_2' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBREBD' | translate }}</small>
+                        <small>{{ 'ADMINISTRACION_BD.CONEXIONES.DATABASE_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreBDChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBREBDHOLDER' | translate }}" />
+                            placeholder="{{ 'ADMINISTRACION_BD.CONEXIONES.DATABASE_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'ADMINISTRACION_BD.CONEXIONES.CONNECTION_STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
                             style="cursor: pointer">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -58,11 +58,11 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-table-data [data]="registrosFiltrado" [idField]="'conexionId'"
-                    [tableTitle]="'CONEXIONES.TITLE' | translate" [metadataColumns]="columnasCnexiones"
+                    [tableTitle]="'ADMINISTRACION_BD.CONEXIONES.CONNECTION_MANAGEMENT' | translate" [metadataColumns]="columnasCnexiones"
                     [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                     [showSearchBox]="false" [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                    [showDeleteButton]="true" [newButtonLabel]="'CONEXIONES.NEW' | translate"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                    [showDeleteButton]="true" [newButtonLabel]="'ADMINISTRACION_BD.CONEXIONES.NEW_CONNECTION' | translate"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_CONEXIONES_CREAR" permisoEdit="ACT_CONEXIONES_MODIFICAR" permisoDelete="ACT_CONEXIONES_ELIMINAR">
                 </app-table-data>
             </div>

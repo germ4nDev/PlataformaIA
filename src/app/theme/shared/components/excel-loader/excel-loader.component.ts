@@ -28,7 +28,7 @@ export class ExcelUploaderComponent {
     onFileChange(event: any): void {
         const target: DataTransfer = <DataTransfer>(event.target);
         if (target.files.length !== 1) {
-            this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.SOLO_PUEDES_SELECCIONAR_UN_ARCHIVO'));
+            this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.YOU_CAN_ONLY_SELECT_ONE_FILE'));
             return;
         }
         this.archivoSeleccionado = target.files[0];
@@ -36,7 +36,7 @@ export class ExcelUploaderComponent {
 
     procesarYEnviar(fileInput: HTMLInputElement): void {
         if (!this.archivoSeleccionado || !this.apiUrl || !this.columnsMap) {
-            this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.FALTAN_PARAMETROS_DE_CONFIGURACION_URL'));
+            this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.CONFIGURATION_PARAMETERS_ARE_MISSING_URL_OR'));
             return;
         }
 
@@ -64,7 +64,7 @@ export class ExcelUploaderComponent {
                 this.enviarApi(dataFormateada, fileInput);
 
             } catch (error) {
-                this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.ERROR_AL_LEER_EL_ARCHIVO'));
+                this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.ERROR_READING_EXCEL_FILE_CHECK_FORMAT'));
                 console.error(error);
             }
         };
@@ -102,7 +102,7 @@ export class ExcelUploaderComponent {
                 this.resetearInput(fileInput);
             },
             error: (err) => {
-                this.swal.getAlertError(traducir('WEB.EXCEL_LOADER.HUBO_UN_ERROR_AL_GUARDAR'));
+                this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.THERE_WAS_ERROR_SAVING_DATA_ON'));
                 console.error('Error API:', err);
             }
         });

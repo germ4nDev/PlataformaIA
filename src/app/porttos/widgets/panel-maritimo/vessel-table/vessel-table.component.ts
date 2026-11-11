@@ -29,19 +29,19 @@ import { ColumnaTabla, TablaTclComponent } from '../../shared/tabla-tcl/tabla-tc
 
 /** Vista ampliada (Fase 3): todo el line-up que trae el API, con búsqueda, orden y CSV. */
 const COLUMNAS_AMPLIADAS: ColumnaTabla[] = [
-    { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE', tipo: 'principal' },
-    { campo: 'naviera', titulo: 'PORTTOS.VESSEL_TABLE.LINEA_AGENCIA' },
-    { campo: 'viaje', titulo: 'PORTTOS.VESSEL_TABLE.VIAJE' },
-    { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
-    { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE' },
-    { campo: 'eslora', titulo: 'PORTTOS.VESSEL_TABLE.ESLORA', tipo: 'numero', decimales: 0, unidad: 'm' },
+    { campo: 'motonave', titulo: 'PORTTOS.WIDGETS.VESSEL', tipo: 'principal' },
+    { campo: 'naviera', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO.VESSEL_TABLE.LINE_AGENCY' },
+    { campo: 'viaje', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO.VESSEL_TABLE.VOYAGE' },
+    { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
+    { campo: 'muelle', titulo: 'COMMON.BERTH' },
+    { campo: 'eslora', titulo: 'PORTTOS.WIDGETS.LENGTH', tipo: 'numero', decimales: 0, unidad: 'm' },
     { campo: 'eta', titulo: 'ETA' },
-    { campo: 'fechaAtraque', titulo: 'PORTTOS.VESSEL_TABLE.ATA_ATRAQUE_2' },
-    { campo: 'zarpe', titulo: 'PORTTOS.VESSEL_TABLE.ZARPE' },
-    { campo: 'carga', titulo: 'PORTTOS.VESSEL_TABLE.CARGA' },
-    { campo: 'estadoTexto', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-    { campo: 'atrasada', titulo: 'PORTTOS.VESSEL_TABLE.ETA_VENCIDA', tipo: 'si-no', alinear: 'centro' },
-    { campo: 'novedades', titulo: 'PORTTOS.VESSEL_TABLE.NOVEDADES' }
+    { campo: 'fechaAtraque', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO.VESSEL_TABLE.ATA_BERTHING_2' },
+    { campo: 'zarpe', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO.VESSEL_TABLE.DEPARTURE' },
+    { campo: 'carga', titulo: 'PORTTOS.WIDGETS.CARGO' },
+    { campo: 'estadoTexto', titulo: 'COMMON.STATUS', tipo: 'estado' },
+    { campo: 'atrasada', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO.VESSEL_TABLE.ETA_PASSED', tipo: 'si-no', alinear: 'centro' },
+    { campo: 'novedades', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO.VESSEL_TABLE.UPDATES' }
 ];
 
 @Component({
@@ -176,7 +176,7 @@ export class VesselTableComponent implements OnInit, OnChanges, OnDestroy {
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'REPORTE DE MOTONAVES · 72H',
-            subtitulo: raw.subtitulo || 'PORTTOS.VESSEL_TABLE.PROGRAMACION_DE_ARRIBOS_FONDEO_Y',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_MARITIMO.VESSEL_TABLE.ARRIVAL_ANCHORAGE_BERTHING_SCHEDULE',
             icono: raw.icono || 'feather icon-anchor',
             motonaves: motonavesNormalizadas
         };

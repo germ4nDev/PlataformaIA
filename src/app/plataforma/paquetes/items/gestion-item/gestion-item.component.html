@@ -4,7 +4,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
@@ -21,29 +21,29 @@
                     <!-- Bloque Izquierdo: Título y Subtítulo -->
                     <div class="d-flex flex-column pe-3">
                         <h4 class="titulo-formulario mb-1">
-                            <span *ngIf="!modoEdicion">{{ 'WEB.GESTION_ITEM.NUEVO_ITEM_DE_CATALOGO' | translate }}</span>
-                            <span *ngIf="modoEdicion">{{ 'WEB.GESTION_ITEM.MODIFICAR_ITEM' | translate }}</span>
+                            <span *ngIf="!modoEdicion">{{ 'PAQUETES.ITEMS.GESTION.NEW_CATALOG_ITEM' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'PAQUETES.ITEMS.GESTION.EDIT_ITEM' | translate }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0 text-muted">
-                            {{ 'WEB.GESTION_ITEM.CONFIGURE_EL_VALOR_UNITARIO_COSTO' | translate }}
+                            {{ 'PAQUETES.ITEMS.GESTION.SET_UNIT_VALUE_COST_DETAILS_RESOURCE' | translate }}
                         </h6>
                     </div>
 
                     <!-- Bloque Derecho: Botones -->
                     <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-secondary btn-animacion ms-2" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
 
                         <button type="button" class="btn btn-primary btn-animacion ms-2"
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
                             <span *ngIf="!isSaving">
-                                {{ modoEdicion ? ('PLATAFORMA.UPDATE' | translate) : ('PLATAFORMA.CREATE' | translate)
+                                {{ modoEdicion ? ('COMMON.EDIT_2' | translate) : ('PAQUETES.CREATE' | translate)
                                 }}
                                 <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                             </span>
-                            <span *ngIf="isSaving">{{ 'WEB.COMUN.GUARDANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'COMMON.SAVING' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
                     </div>
@@ -56,7 +56,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoItem">{{ 'WEB.GESTION_ITEM.CODIGO_DEL_ITEM' | translate }}</label>
+                                <label class="form-control-label" for="codigoItem">{{ 'PAQUETES.ITEMS.GESTION.ITEM_CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="codigoItem"
                                     formControlName="codigoItem" readonly />
                                 <!-- <small class="text-muted">ID único generado por el sistema.</small> -->
@@ -64,11 +64,11 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoTipoItem">{{ 'WEB.GESTION_ITEM.CATEGORIA_TIPO_DE_ITEM' | translate }}</label>
+                                <label class="form-control-label" for="codigoTipoItem">{{ 'PAQUETES.ITEMS.GESTION.CATEGORY_ITEM_TYPE' | translate }}</label>
                                 <select class="form-control form-select" id="codigoTipoItem"
                                     formControlName="codigoTipoItem"
                                     [ngClass]="{ 'is-invalid': f['codigoTipoItem'].invalid && (f['codigoTipoItem'].dirty || f['codigoTipoItem'].touched || isSubmit) }">
-                                    <option value="" disabled selected>{{ 'WEB.GESTION_ITEM.SELECCIONE_EL_TIPO' | translate }}</option>
+                                    <option value="" disabled selected>{{ 'PAQUETES.ITEMS.GESTION.SELECT_TYPE' | translate }}</option>
                                     <option [value]="tipo.codigoTipoItem" *ngFor="let tipo of tiposItem">
                                         {{ tipo.nombreTipo }}
                                     </option>
@@ -77,27 +77,27 @@
                                 <label
                                     *ngIf="f['codigoTipoItem'].invalid && (f['codigoTipoItem'].dirty || f['codigoTipoItem'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'WEB.GESTION_ITEM.DEBE_SELECCIONAR_UNA_TIPO_DE' | translate }}
+                                    {{ 'PAQUETES.ITEMS.GESTION.YOU_MUST_SELECT_ITEM_TYPE' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreItem">{{ 'WEB.GESTION_ITEM.NOMBRE_COMERCIAL_DEL_ITEM' | translate }}</label>
+                                <label class="form-control-label" for="nombreItem">{{ 'PAQUETES.ITEMS.GESTION.ITEM_TRADE_NAME' | translate }}</label>
                                 <input type="text" class="form-control form-input" id="nombreItem"
-                                    formControlName="nombreItem" [placeholder]="'WEB.GESTION_ITEM.EJ_1GB_ALMACENAMIENTO_ADICIONAL' | translate"
+                                    formControlName="nombreItem" [placeholder]="'PAQUETES.ITEMS.GESTION.E_G_1GB_ADDITIONAL_STORAGE' | translate"
                                     [ngClass]="{ 'is-invalid': f['nombreItem'].invalid && (f['nombreItem'].dirty || f['nombreItem'].touched || isSubmit) }" />
                                 <!-- <small class="text-muted">ID único generado por el sistema.</small> -->
                                 <label
                                     *ngIf="f['nombreItem'].invalid && (f['nombreItem'].dirty || f['nombreItem'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'WEB.COMUN.EL_NOMBRE_ES_OBLIGATORIO' | translate }}
+                                    {{ 'COMMON.NAME_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="costoItem">{{ 'WEB.GESTION_ITEM.COSTO_INTERNO' | translate }}</label>
+                                <label class="form-control-label" for="costoItem">{{ 'PAQUETES.ITEMS.GESTION.INTERNAL_COST' | translate }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text form-input">$</span>
                                     <input type="number" step="0.01" class="form-control form-input" id="costoItem"
@@ -106,20 +106,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label class="form-control-label" for="valorUnitario">{{ 'WEB.GESTION_ITEM.VALOR_UNITARIO_VENTA' | translate }}</label>
-                                <div class="input-group">
-                                    <span class="input-group-text  form-input">$</span>
-                                    <input type="number" step="0.01" class="form-control form-input" id="valorUnitario"
-                                        formControlName="valorUnitario" placeholder="0.00"
-                                        [ngClass]="{ 'is-invalid': f['valorUnitario'].invalid && (f['valorUnitario'].dirty || f['valorUnitario'].touched || isSubmit) }" />
-                                </div>
-                            </div>
+                        <!-- OT-029: el precio de venta ya no va en el ítem; se fija en Paquetes › Listas de precios -->
+                        <div class="col-md-6 mb-3 d-flex align-items-end">
+                            <small class="text-muted"><i class="feather icon-info me-1"></i>{{ 'COMMON.SALE_PRICE_SET_IN_PRICE_LISTS' | translate }}</small>
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'WEB.GESTION_ITEM.DESCRIPCION_DETALLADA' | translate }}</label>
+                                <label class="form-control-label">{{ 'COMMON.DETAILED_DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="'completa'"
                                     [contentHtml]="f['descripcionItem'].value || ''"
                                     (contentHtmlChange)="actualizarDescripcionValor($event)">
@@ -131,17 +124,17 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'PLATAFORMA.STATUS' | translate }}</label>
+                                <label class="form-control-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input formControlName="estadoItem" type="radio" [value]="true" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input formControlName="estadoItem" type="radio" [value]="false" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

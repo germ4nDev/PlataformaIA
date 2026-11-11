@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
@@ -21,28 +21,28 @@
                         <h4 class="titulo-formulario">
                             <span *ngIf="!modoEdicion">{{ tituloPagina }}</span>
                             <span *ngIf="modoEdicion">{{ tituloPagina }}</span>
-                            <span class="titulo-container"> - {{ 'USUARIOS.USUARIOSROLES.GESTION.TITLE' | translate
+                            <span class="titulo-container"> - {{ 'COMMON.USER_ROLE_MANAGEMENT' | translate
                                 }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            {{ 'USUARIOS.USUARIOSROLES.GESTION.TITLEDESCRIPTION' | translate }}
+                            {{ 'COMMON.USER_ROLE_DETAILS' | translate }}
                         </h6>
                     </div>
 
                     <!-- Bloque Derecho: Botones con Spinners -->
                     <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             [disabled]="roles.length === 0" (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'USUARIOS.USUARIOSROLES.GESTION.CREATE' | translate }}
+                            {{ 'COMMON.CREATE_USER_ROLE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'USUARIOS.USUARIOSROLES.GESTION.UPDATE' | translate }}
+                            {{ 'COMMON.UPDATE_USER_ROLE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -57,13 +57,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoSuscriptor">{{
-                                    'USUARIOS.USUARIOSROLES.GESTION.SUSCRIPTOR' | translate }}</label>
+                                    'COMMON.SUBSCRIBER' | translate }}</label>
                                 <select class="form-control input-md form-select" style="cursor: pointer"
                                     name="codigoSuscriptor" id="codigoSuscriptor"
                                     [ngClass]="{ 'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
                                     #codigoSuscriptor="ngModel" required [(ngModel)]="FormRegistro.codigoSuscriptor"
                                     (change)="onSuscriptorChangeClick($event)">
-                                    <option value="" disabled>{{ 'USUARIOS.USUARIOSROLES.GESTION.SUSCRIPTORHOLDER'
+                                    <option value="" disabled>{{ 'COMMON.SELECT_SUBSCRIBER_2'
                                         | translate }}</option>
                                     <option [value]="app.codigoSuscriptor" *ngFor="let app of suscriptores">{{
                                         app.nombreSuscriptor }}</option>
@@ -71,7 +71,7 @@
                                 <label
                                     *ngIf="!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'USUARIOS.USUARIOSROLES.GESTION.REQUERIDOSUSCRIPTOR' | translate }}
+                                    {{ 'COMMON.SUBSCRIBER_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -80,13 +80,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoEmpresaSC">{{
-                                    'USUARIOS.USUARIOSROLES.GESTION.EMPRESASC' | translate }}</label>
+                                    'COMMON.SUBSCRIBER_COMPANY' | translate }}</label>
                                 <select class="form-control input-md form-select" style="cursor: pointer"
                                     name="codigoEmpresaSC" id="codigoEmpresaSC"
                                     [ngClass]="{ 'is-invalid': !codigoEmpresaSC.valid && (codigoEmpresaSC.dirty || codigoEmpresaSC.touched || isSubmit) }"
                                     #codigoEmpresaSC="ngModel" required [(ngModel)]="FormRegistro.codigoEmpresaSC"
                                     (change)="onEmpresaSCChangeClick($event)">
-                                    <option value="" disabled>{{ 'USUARIOS.USUARIOSROLES.GESTION.EMPRESASCHOLDER' |
+                                    <option value="" disabled>{{ 'COMMON.SELECT_SUBSCRIBER_COMPANY' |
                                         translate }}</option>
                                     <option [value]="app.codigoEmpresaSC" *ngFor="let app of empresasSC">{{
                                         app.nombreEmpresa }}</option>
@@ -94,7 +94,7 @@
                                 <label
                                     *ngIf="!codigoEmpresaSC.valid && (codigoEmpresaSC.dirty || codigoEmpresaSC.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'USUARIOS.USUARIOSROLES.GESTION.REQUERIDOEMPRESASC' | translate }}
+                                    {{ 'COMMON.SUBSCRIBER_COMPANY_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -103,21 +103,21 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoTipoRole">{{
-                                    'USUARIOS.USUARIOSROLES.GESTION.TIPOROLE' | translate }}</label>
+                                    'COMMON.ROLE_TYPE_2' | translate }}</label>
                                 <select class="form-control input-md form-select" style="cursor: pointer"
                                     name="codigoTipoRole" id="codigoTipoRole"
                                     [ngClass]="{ 'is-invalid': !codigoTipoRoleVal.valid && (codigoTipoRoleVal.dirty || codigoTipoRoleVal.touched || isSubmit) }"
                                     #codigoTipoRoleVal="ngModel" required [(ngModel)]="FormRegistro.codigoTipoRole"
                                     (change)="onTipoRoleChangeClick($event)">
                                     <option value="" disabled selected>{{
-                                        'USUARIOS.USUARIOSROLES.GESTION.TIPOROLEHOLDER' | translate }}</option>
+                                        'COMMON.SELECT_ROLE_TYPE' | translate }}</option>
                                     <option [value]="app.codigoTipoRole" *ngFor="let app of tiposRoles">{{
                                         app.nombreTipoRole }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoTipoRoleVal.valid && (codigoTipoRoleVal.dirty || codigoTipoRoleVal.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'USUARIOS.USUARIOSROLES.GESTION.REQUERIDOTIPOROLE' | translate }}
+                                    {{ 'COMMON.ROLE_TYPE_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -126,13 +126,13 @@
                         <div class="col-md-6" *ngIf="esRolSuscriptor">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoAplicacion">{{
-                                    'USUARIOS.USUARIOSROLES.GESTION.APLICACION' | translate }}</label>
+                                    'COMMON.APPLICATION' | translate }}</label>
                                 <select class="form-control input-md form-select" style="cursor: pointer"
                                     name="codigoAplicacion" id="codigoAplicacion"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled>{{ 'USUARIOS.USUARIOSROLES.GESTION.APLICACIONHOLDER' |
+                                    <option value="" disabled>{{ 'COMMON.SELECT_APPLICATION_2' |
                                         translate }}</option>
                                     <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{
                                         app.nombreAplicacion }}</option>
@@ -140,7 +140,7 @@
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'USUARIOS.USUARIOSROLES.GESTION.REQUERIDOAPLICACION' | translate }}
+                                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED_2' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -149,13 +149,13 @@
                         <div class="col-md-6" *ngIf="esRolSuscriptor">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoSuite">{{
-                                    'USUARIOS.USUARIOSROLES.GESTION.SUITE' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="codigoSuite"
+                                    'COMMON.SUITE' | translate }}</label>
+                                <select class="form-control form-select" style="cursor: pointer" name="codigoSuite"
                                     id="codigoSuite"
                                     [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
                                     #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite"
                                     (change)="onSuiteChangeClick($event)">
-                                    <option value="" disabled>{{ 'USUARIOS.USUARIOSROLES.GESTION.PLACEHOLDERSUITE' |
+                                    <option value="" disabled>{{ 'COMMON.SELECT_SUITE_2' |
                                         translate }}</option>
                                     <option [value]="sui.codigoSuite" *ngFor="let sui of suitesFiltradas">{{
                                         sui.nombreSuite }}</option>
@@ -163,7 +163,7 @@
                                 <label
                                     *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'USUARIOS.USUARIOSROLES.GESTION.REQUERIDOSUITE' | translate }}
+                                    {{ 'COMMON.SELECT_SUITE_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -171,14 +171,14 @@
                         <!-- Header Roles -->
                         <div class="col-md-12" *ngIf="roles.length > 0">
                             <div class="text-center flex flex-col justify-center"><br />
-                                <h4 class="titulo-container">{{ 'USUARIOS.USUARIOSROLES.GESTION.TITLE' | translate }}
+                                <h4 class="titulo-container">{{ 'COMMON.USER_ROLE_MANAGEMENT' | translate }}
                                 </h4>
-                                <h6 class="subtitulo-container">{{ 'USUARIOS.USUARIOSROLES.GESTION.SUBTITLE' | translate
+                                <h6 class="subtitulo-container">{{ 'COMMON.ROLES_ASSOCIATED_WITH_USER_2' | translate
                                     }}
                                 </h6><br>
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                     (click)="btnAsociarTodosClick()">
-                                    {{ 'PLATAFORMA.ALLDATA' | translate }}
+                                    {{ 'COMMON.SELECT_ALL' | translate }}
                                 </button><br /><br />
                             </div>
                         </div>

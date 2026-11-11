@@ -30,20 +30,20 @@ export class RoroSueltaComponent extends WidgetTableroBase<TableroCargaSuelta> {
     public filas: any[] = [];
     public readonly mensajeVacio = 'Sin buques Ro-Ro en operación ni programados.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE', tipo: 'principal' },
-        { campo: 'naviera', titulo: 'PORTTOS.TABLE_CONTENEDORES.NAVIERA' },
-        { campo: 'total', titulo: 'PORTTOS.RORO_SUELTA.VEHICULOS', tipo: 'numero' },
-        { campo: 'avancePct', titulo: 'PORTTOS.RORO_SUELTA.AVANCE', tipo: 'avance', ancho: '110px' },
+        { campo: 'motonave', titulo: 'PORTTOS.WIDGETS.VESSEL', tipo: 'principal' },
+        { campo: 'naviera', titulo: 'PORTTOS.WIDGETS.SHIPPING_LINE' },
+        { campo: 'total', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.RORO_SUELTA.VEHICLES', tipo: 'numero' },
+        { campo: 'avancePct', titulo: 'PORTTOS.WIDGETS.PROGRESS', tipo: 'avance', ancho: '110px' },
         { campo: 'eta', titulo: 'ETA', tipo: 'fecha' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
-        { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE' },
-        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
-        { campo: 'operadas', titulo: 'PORTTOS.MOTONAVES_GRANEL.OPERADAS', tipo: 'numero' },
-        { campo: 'simulado', titulo: 'PORTTOS.MOTONAVES_GRANEL.SIMULADO', tipo: 'si-no' }
+        { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
+        { campo: 'muelle', titulo: 'COMMON.BERTH' },
+        { campo: 'producto', titulo: 'PORTTOS.WIDGETS.PRODUCT' },
+        { campo: 'operadas', titulo: 'PORTTOS.WIDGETS.HANDLED', tipo: 'numero' },
+        { campo: 'simulado', titulo: 'COMMON.SIMULATED_2', tipo: 'si-no' }
     ];
 
     constructor(tableros: TablerosPestanasService, torre: DashboardService, cdr: ChangeDetectorRef) {

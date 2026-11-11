@@ -1,4 +1,4 @@
-<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.GNL_FLUJO_CHART.HISTORICO_DE_FLUJO_M_H' | translate)"
+<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_GNL.GNL_FLUJO_CHART.FLOW_HISTORY_M_H' | translate)"
     [subtitulo]="(widgetConfig?.subtitulo | translate) || 'CAUDAL DE GNL EN TIEMPO REAL (SCADA)'" [icono]="'feather icon-activity'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origen$ | async" [lienzo]="true">
 
@@ -25,7 +25,7 @@
         <!-- Spinner de carga -->
         <div *ngIf="cargando" class="w-100 h-100 d-flex justify-content-center align-items-center">
             <div class="spinner-border text-info" role="status">
-                <span class="visually-hidden">{{ 'PORTTOS.GNL_FLUJO_CHART.CONECTANDO_A_SCADA' | translate }}</span>
+                <span class="visually-hidden">{{ 'COMMON.CONNECTING_SCADA' | translate }}</span>
             </div>
         </div>
 
@@ -39,18 +39,18 @@
     <!-- Vista ampliada: historial consolidado por hora y volumen por brazo -->
     <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
         <div class="detalle-cabecera">
-            <h6 class="detalle-titulo">{{ 'PORTTOS.GNL_FLUJO_CHART.HISTORIAL_CONSOLIDADO_POR_HORA' | translate }}</h6>
+            <h6 class="detalle-titulo">{{ 'COMMON.HOURLY_CONSOLIDATED_HISTORY' | translate }}</h6>
             <div class="d-flex align-items-center gap-2">
-                <span *ngIf="historial?.simulado" class="detalle-simulado">{{ 'PORTTOS.GNL_FLUJO_CHART.SIMULADO' | translate }}</span>
+                <span *ngIf="historial?.simulado" class="detalle-simulado">{{ 'COMMON.SIMULATED' | translate }}</span>
                 <app-rango-tcl [valor]="horas" [deshabilitado]="cargandoHistorial" (cambio)="cambiarHoras($event)"></app-rango-tcl>
             </div>
         </div>
 
         <div *ngIf="resumenHistorial" class="detalle-resumen">
-            <span>{{ 'PORTTOS.GNL_FLUJO_CHART.VOLUMEN' | translate }} <strong>{{ resumenHistorial.volumen | number:'1.0-1' }} m³</strong></span>
-            <span>{{ 'PORTTOS.GNL_FLUJO_CHART.ENERGIA' | translate }} <strong>{{ resumenHistorial.energia | number:'1.0-1' }} MMBTU</strong></span>
-            <span *ngIf="resumenHistorial.presion !== null">{{ 'PORTTOS.GNL_FLUJO_CHART.PRESION_PROM' | translate }} <strong>{{ resumenHistorial.presion | number:'1.0-1' }} psi</strong></span>
-            <span>{{ 'PORTTOS.GNL_FLUJO_CHART.ALARMAS' | translate }} <strong>{{ resumenHistorial.alarmas | number:'1.0-0' }}</strong></span>
+            <span>{{ 'PORTTOS.WIDGETS.PANEL_GNL.GNL_FLUJO_CHART.VOLUME' | translate }} <strong>{{ resumenHistorial.volumen | number:'1.0-1' }} m³</strong></span>
+            <span>{{ 'PORTTOS.WIDGETS.PANEL_GNL.GNL_FLUJO_CHART.ENERGY' | translate }} <strong>{{ resumenHistorial.energia | number:'1.0-1' }} MMBTU</strong></span>
+            <span *ngIf="resumenHistorial.presion !== null">{{ 'PORTTOS.WIDGETS.PANEL_GNL.GNL_FLUJO_CHART.AVG_PRESSURE' | translate }} <strong>{{ resumenHistorial.presion | number:'1.0-1' }} psi</strong></span>
+            <span>{{ 'PORTTOS.WIDGETS.PANEL_GNL.GNL_FLUJO_CHART.ALARMS' | translate }} <strong>{{ resumenHistorial.alarmas | number:'1.0-0' }}</strong></span>
         </div>
         <p *ngIf="notaHistorial" class="detalle-ayuda">{{ notaHistorial }}</p>
 
@@ -60,7 +60,7 @@
         </div>
 
         <ng-container *ngIf="filasBrazos.length">
-            <h6 class="detalle-titulo mt-2">{{ 'PORTTOS.GNL_FLUJO_CHART.VOLUMEN_POR_BRAZO' | translate }}</h6>
+            <h6 class="detalle-titulo mt-2">{{ 'COMMON.VOLUME_BY_ARM' | translate }}</h6>
             <app-tabla-tcl [columnas]="columnasBrazos" [filas]="filasBrazos" [ampliada]="true" [seleccionable]="false"
                 nombreArchivo="gnl-volumen-por-brazo"></app-tabla-tcl>
         </ng-container>

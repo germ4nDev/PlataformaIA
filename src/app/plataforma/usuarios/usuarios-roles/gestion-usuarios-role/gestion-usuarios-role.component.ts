@@ -194,14 +194,14 @@ export class GestionUsuariosRoleComponent implements OnInit {
         this.isSubmit = true;
 
         if (!this.codigoRoleBase) {
-            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIOS_ROLE.NO_HAY_UN_ROL_BASE'));
+            this._swalAlertService.getAlertConfirmWarning(traducir('USUARIOS.USUARIOS_ROLES.GESTION.NO_BASE_ROLE_SELECTED'));
             return;
         }
 
         const usuariosSeleccionados = this.usuariosMostrados.filter(u => u.checked);
 
         if (usuariosSeleccionados.length === 0 && this.usuariosMostrados.length === 0) {
-            this._swalAlertService.getAlertConfirmWarning(traducir('WEB.GESTION_USUARIOS_ROLE.DEBE_BUSCAR_Y_SELECCIONAR_AL'));
+            this._swalAlertService.getAlertConfirmWarning(traducir('USUARIOS.USUARIOS_ROLES.GESTION.YOU_MUST_SEARCH_SELECT_AT_LEAST'));
             return;
         }
 
@@ -239,14 +239,14 @@ export class GestionUsuariosRoleComponent implements OnInit {
         this._registrosService.postSincronizarUsuariosRol(payloadSync).subscribe({
             next: (resp: any) => {
                 if (resp.ok) {
-                    this._swalAlertService.getAlertConfirmSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                    this._swalAlertService.getAlertConfirmSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
                     this._loadingService.hide();
                     this.router.navigate(['/usuarios/usuarios-roles']);
                 }
             },
             error: (err: any) => {
                 this._loadingService.hide();
-                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'));
+                this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'));
             }
         });
     }

@@ -20,6 +20,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { LocalStorageService, PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service';
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
 import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.service';
+import { PTLListasPreciosService } from 'src/app/theme/shared/service/ptllistas-precios.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
@@ -70,7 +71,8 @@ export class PaquetesComponent implements OnInit, OnDestroy {
         private _logActividadesService: PtllogActividadesService,
         private _registrosService: PTLPaquetesService,
         private _permisosService: PtlPermisosService,
-        private _swalService: SwalAlertService
+        private _swalService: SwalAlertService,
+        private _listasPrecios: PTLListasPreciosService
     ) {
         this.gradientConfig = GradientConfig;
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
@@ -97,52 +99,57 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     }
 
     setupPaquetesStream(): void {
+        // OT-029: el precio sale de la lista de precios vigente (mensual), no del paquete
+        const vigente$ = this._listasPrecios.vigente().pipe(catchError(() => of({ lista: null, detalles: [] as any[] })), startWith({ lista: null, detalles: [] as any[] }));
         this.paquetesTransformados$ = combineLatest([
             this._registrosService.paquetes$,
-            this._permisosService.actividadesAutorizadas$
+            this._permisosService.actividadesAutorizadas$,
+            vigente$
         ]).pipe(
-            map(([paqs, permisos]: [PTLPaqueteModel[], string[]]) => {
+            map(([paqs, permisos, vigente]: [PTLPaqueteModel[], string[], any]) => {
                 if (!paqs || paqs.length === 0) return [];
 
                 return paqs.map((paq: any) => {
                     const newPaq: any = { ...paq };
                     newPaq.nomEstado = newPaq.estadoPaquete ? 'Activo' : 'Inactivo';
                     newPaq.nomPromocion = newPaq.promocion ? 'Si' : 'No';
+                    const precio = (vigente?.detalles || []).find((d: any) => d.tipoReferencia === 'PAQUETE' && d.codigoReferencia === paq.codigoPaquete);
+                    newPaq.precioPaquete = precio ? Number(precio.valorMensual) : null;
 
                     const accionesPermitidas: any[] = [];
 
                     if (permisos.includes('ACT_PAQS_MODIFICAR')) {
                         accionesPermitidas.push({
                             accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('PLATAFORMA.EDITAR')
+                            tooltip: this.translate.instant('COMMON.EDIT')
                         });
                     }
 
                     if (permisos.includes('ACT_PAQS_ELIMINAR')) {
                         accionesPermitidas.push({
                             accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('PLATAFORMA.DELETE')
+                            tooltip: this.translate.instant('COMMON.DELETE')
                         });
                     }
 
                     if (permisos.includes('ACT_PAQS_MODULOS')) {
                         accionesPermitidas.push({
                             accion: 'MODULOS', letra: 'M', color: '#6f42c1',
-                            tooltip: this.translate.instant('PAQUETES.MODULOS')
+                            tooltip: this.translate.instant('COMMON.MODULES')
                         });
                     }
 
                     if (permisos.includes('ACT_PAQS_ITEMS')) {
                         accionesPermitidas.push({
                             accion: 'ITEMS', letra: 'I', color: '#4279c1',
-                            tooltip: this.translate.instant('PAQUETES.ITEMS')
+                            tooltip: this.translate.instant('PAQUETES.PACKAGE_ITEMS')
                         });
                     }
 
                     if (permisos.includes('ACT_PAQS_PRECIOS')) {
                         accionesPermitidas.push({
                             accion: 'PRECIOS', letra: 'P', color: '#28a745',
-                            tooltip: this.translate.instant('PAQUETES.PRECIOS')
+                            tooltip: this.translate.instant('PAQUETES.PRICES')
                         });
                     }
 
@@ -227,19 +234,19 @@ export class PaquetesComponent implements OnInit, OnDestroy {
 
     eliminarPaquete(row: any): void {
         this._swalService.getAlertQuestionRequest(
-            this.translate.instant('APLICACIONES.ELIMINARTEXTO') + ` "${row.nombrePaquete}".`,
-            this.translate.instant('APLICACIONES.ELIMINARTITULO')
+            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombrePaquete}".`,
+            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
         ).subscribe(result => {
             if (result) {
                 this._registrosService.deleteEliminarRegistro(row.codigoPaquete).subscribe({
                     next: (resp: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertSuccess(resp.mensaje);
                         // El stream se actualiza solo si el backend responde por sockets, sino recargamos
                     },
                     error: (err: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + err.mensaje };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + err.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertError(err.mensaje);
                     }
@@ -259,19 +266,19 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     toggleNav(): void { this.toggleSidebar.emit(); }
 
     columnasPaquetes: ColumnMetadata[] = [
-        { name: 'nombrePaquete', header: 'PAQUETES.NAME', type: 'text' },
-        { name: 'costoPaquete', header: 'PAQUETES.COSTE', type: 'price' },
-        { name: 'precioPaquete', header: 'PAQUETES.PRECIO', type: 'price' },
-        { name: 'nomPromocion', header: 'PAQUETES.PROMOCION', type: 'estado' },
-        { name: 'nomEstado', header: 'PAQUETES.STATUS', type: 'estado' }
+        { name: 'nombrePaquete', header: 'COMMON.NAME', type: 'text' },
+        { name: 'costoPaquete', header: 'PAQUETES.COST', type: 'price' },
+        { name: 'precioPaquete', header: 'PAQUETES.MONTHLY_PRICE_CURRENT_LIST', type: 'price' },
+        { name: 'nomPromocion', header: 'PAQUETES.PROMOTION', type: 'estado' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoPaquete', header: 'PAQUETES.CODE', type: 'text' },
-        { name: 'precioPromocion', header: 'PAQUETES.PRECIOPROMOCION', type: 'price' },
-        { name: 'descripcionPaquete', header: 'PAQUETES.DESCRIPTION', type: 'text' },
-        { name: 'acuerdoLicencia', header: 'PAQUETES.ACUERDOLICENCIA', type: 'text' },
-        { name: 'iconoPaquete', header: 'PAQUETES.ICONO', type: 'avatar' },
-        { name: 'imagenPaquete', header: 'PAQUETES.IMAGEN', type: 'image' }
+        { name: 'codigoPaquete', header: 'COMMON.CODE', type: 'text' },
+        { name: 'precioPromocion', header: 'PAQUETES.PROMOTIONAL_PRICE', type: 'price' },
+        { name: 'descripcionPaquete', header: 'COMMON.DESCRIPTION', type: 'text' },
+        { name: 'acuerdoLicencia', header: 'PAQUETES.LICENSE_AGREEMENT', type: 'text' },
+        { name: 'iconoPaquete', header: 'COMMON.ICON', type: 'avatar' },
+        { name: 'imagenPaquete', header: 'COMMON.IMAGE', type: 'image' }
     ];
 }

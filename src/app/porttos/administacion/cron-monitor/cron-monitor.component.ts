@@ -145,27 +145,27 @@ export class CronMonitorComponent implements OnInit, OnDestroy {
     columnasCrons: ColumnMetadata[] = [
         {
             name: 'fecha_ejecucion',
-            header: 'PORTTOS.CRON_MONITOR.FECHA_DE_EJECUCION',
+            header: 'PORTTOS.ADMINISTACION.CRON_MONITOR.RUN_DATE',
             type: 'date'
         },
         {
             name: 'proceso',
-            header: 'PORTTOS.CRON_MONITOR.TUNEL_PROCESO',
+            header: 'PORTTOS.ADMINISTACION.CRON_MONITOR.TUNNEL_PROCESS',
             type: 'text'
         },
         {
             name: 'estado',
-            header: 'PORTTOS.COMUN.ESTADO',
+            header: 'COMMON.STATUS',
             type: 'estado'
         },
         {
             name: 'registros_procesados',
-            header: 'PORTTOS.CRON_MONITOR.REGISTROS_PROCESADOS',
+            header: 'PORTTOS.ADMINISTACION.CRON_MONITOR.RECORDS_PROCESSED',
             type: 'number'
         },
         {
             name: 'duracion_ms',
-            header: 'PORTTOS.CRON_MONITOR.DURACION_MS',
+            header: 'PORTTOS.ADMINISTACION.CRON_MONITOR.DURATION_MS',
             type: 'number'
         }
     ]
@@ -173,7 +173,7 @@ export class CronMonitorComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'mensaje_error',
-            header: 'PORTTOS.CRON_MONITOR.OBSERVACIONES_DETALLE_DE_ERROR',
+            header: 'PORTTOS.ADMINISTACION.CRON_MONITOR.NOTES_ERROR_DETAIL',
             type: 'text'
         }
     ]

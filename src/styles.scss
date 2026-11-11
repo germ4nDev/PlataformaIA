@@ -104,6 +104,8 @@
     --custom-navbar-background: #ffffff;
     --custom-navbar-text-color: #333333;
     --app-dashboard-gap: 12px;
+    --caret-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+    --checkbox-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 
     /* Variables de Widgets */
     --grid-widget-min-width: 220px;
@@ -229,6 +231,8 @@ body.dark-theme {
     --app-iconos-color: #b4b4b4;
     --custom-navbar-background: #1e1e2d;
     --custom-navbar-text-color: #ffffff;
+    --caret-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+    --checkbox-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 
     /* Variables de Widgets */
     --tablero-background: #242424;
@@ -758,6 +762,13 @@ html {
     border-radius: 5px !important;
 }
 
+.form-select {
+    background-image: var(--caret-select) !important;
+    background-repeat: no-repeat !important;
+    background-position: right .75rem center !important;
+    background-size: 16px 12px !important;
+}
+
 .form-label {
     color: var(--texto-color) !important;
 }
@@ -766,7 +777,43 @@ html {
     margin-bottom: 1rem;
 }
 
-/* Custom Checkbox */
+.custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    vertical-align: middle;
+    background-color: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:checked {
+        background-color: var(--app-navbar-color);
+        border-color: color-mix(in srgb, var(--app-navbar-color) 60%, var(--text-color, #fff));
+        background-image: var(--checkbox-image);
+        background-size: 75%;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &:hover:not(:checked) {
+        border-color: #9ca3af;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--app-navbar-color);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+    }
+}
+
 .checkbox-container {
     display: flex;
     align-items: flex-start;
@@ -774,32 +821,8 @@ html {
     padding: 8px 0;
 
     .custom-checkbox {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 20px;
-        height: 20px;
         margin-top: 2px;
         margin-right: 12px;
-        flex-shrink: 0;
-        background-color: transparent;
-        border: 2px solid var(--border-color);
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-
-        &:checked {
-            background-color: var(--app-navbar-color);
-            border-color: var(--border-color);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-            background-size: 75%;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        &:focus-visible {
-            outline: 2px solid var(--app-navbar-color);
-            outline-offset: 2px;
-        }
     }
 
     .text-wrapper {
@@ -2275,7 +2298,8 @@ gridster-item {
    Reemplaza los altos sueltos (calc(100vh - 80px) del card de la tabla, -1rem de .card-table y el alto según el contenido del menú).
    ========================================================================== */
 :root {
-    --alto-barra-admin: 60px; /* alto de .navbar (nav-bar.component.scss) */
+    --alto-barra-admin: 60px;
+    /* alto de .navbar (nav-bar.component.scss) */
     --margen-cards-admin: 0.5rem;
 }
 
@@ -2291,8 +2315,8 @@ app-nav-bar:has(+ .layout-wrapper > .aside-left) .navbar {
     padding: var(--margen-cards-admin);
     box-sizing: border-box;
 
-    > .aside-left,
-    > .content-area {
+    >.aside-left,
+    >.content-area {
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -2301,8 +2325,8 @@ app-nav-bar:has(+ .layout-wrapper > .aside-left) .navbar {
         margin: 0;
     }
 
-    > .aside-left > .card,
-    > .content-area > .card {
+    >.aside-left>.card,
+    >.content-area>.card {
         flex: 1 1 auto;
         min-height: 0;
         height: auto !important;
@@ -2310,25 +2334,26 @@ app-nav-bar:has(+ .layout-wrapper > .aside-left) .navbar {
         overflow: hidden;
     }
 
-    > .content-area > .card {
+    >.content-area>.card {
         display: flex;
         flex-direction: column;
     }
 
     /* El cuerpo no hace scroll: la tabla toma el alto que sobra (título, barra y paginación quedan fijos)
        y solo ella se desplaza cuando hay más filas de las que caben. Reemplaza el alto fijo de 66vh de .content-g67. */
-    > .content-area > .card > .card-body {
+    >.content-area>.card>.card-body {
         flex: 1 1 auto;
         min-height: 0;
-        overflow: auto; /* formularios de gestión: scroll normal si no caben */
+        overflow: auto;
+        /* formularios de gestión: scroll normal si no caben */
     }
 
-    > .content-area > .card > .card-body:has(app-table-data) {
+    >.content-area>.card>.card-body:has(app-table-data) {
         display: flex;
         flex-direction: column;
         overflow: hidden;
 
-        > *,
+        >*,
         app-table-data,
         .datatables-wrapper {
             flex: 1 1 auto;
@@ -2337,11 +2362,11 @@ app-nav-bar:has(+ .layout-wrapper > .aside-left) .navbar {
             flex-direction: column;
         }
 
-        .datatables-wrapper > :not(.content-g67) {
+        .datatables-wrapper> :not(.content-g67) {
             flex: 0 0 auto;
         }
 
-        .datatables-wrapper > br {
+        .datatables-wrapper>br {
             display: none;
         }
 
@@ -2352,14 +2377,38 @@ app-nav-bar:has(+ .layout-wrapper > .aside-left) .navbar {
             margin-bottom: var(--margen-cards-admin);
         }
 
-        .content-g67 > .tableFixHead {
+        .content-g67>.tableFixHead {
             max-height: none;
         }
     }
 
-    > .aside-left .filtros-scroll-wrapper,
-    > .aside-left .nav-scroll-wrapper {
+    >.aside-left .filtros-scroll-wrapper,
+    >.aside-left .nav-scroll-wrapper {
         height: auto;
         max-height: 100%;
     }
+}
+
+/* ==========================================================================
+   Selector de fecha (app-selector-fecha, regla 25): colores del calendario por tema.
+   Cambie aquí los valores; el componente los lee con var(--selector-fecha-*). Si borra una, usa la del tema general.
+   ========================================================================== */
+:root {
+    --selector-fecha-fondo: var(--card-background);
+    --selector-fecha-texto: var(--texto-color);
+    --selector-fecha-borde: var(--border-color);
+    --selector-fecha-sombra: 0 8px 24px rgba(0, 0, 0, .15);
+    /* --selector-fecha-acento: sin definir = el color de la barra que elige el usuario (--app-navbar-color, va en el body); defínalo para fijar otro */
+    --selector-fecha-texto-acento: #ffffff;
+    --selector-fecha-dias-fuera: .4;
+    --selector-fecha-radio: 8px;
+}
+
+body.dark-theme {
+    --selector-fecha-fondo: var(--card-background);
+    --selector-fecha-texto: var(--texto-color);
+    --selector-fecha-borde: var(--border-color);
+    --selector-fecha-sombra: 0 8px 24px rgba(0, 0, 0, .55);
+    --selector-fecha-texto-acento: #ffffff;
+    --selector-fecha-dias-fuera: .35;
 }

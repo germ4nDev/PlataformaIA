@@ -4,10 +4,10 @@
     <div class="card">
       <div class="nav-tabs-custom">
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'PLATAFORMA.MENU' | translate }}
+          {{ 'COMMON.MENU' | translate }}
         </button>
         <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'PLATAFORMA.FILTERS' | translate }}
+          {{ 'COMMON.FILTERS' | translate }}
         </button>
       </div>
 
@@ -16,31 +16,31 @@
       </ng-container>
       <ng-container *ngIf="activeTab === 'filters'">
         <div class="p-3 filtros-scroll-wrapper">
-          <h6 class="filtros-title">{{ 'SITIOS.CONTENIDOS.FILTROS.TITULO' | translate }}</h6>
+          <h6 class="filtros-title">{{ 'SITES.CONTENIDOS.CONTENT_FILTERS' | translate }}</h6>
           <div class="filtro">
-            <small>{{ 'SITIOS.CONTENIDOS.FILTROS.FILTRONOMBRE' | translate }}</small>
+            <small>{{ 'COMMON.NAME' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroNombreChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'SITIOS.CONTENIDOS.FILTROS.NOMBRECHOLDER' | translate }}"
+              placeholder="{{ 'SITES.CONTENIDOS.CONTENT_NAME' | translate }}"
             />
           </div>
           <div class="filtro">
-            <small>{{ 'SITIOS.CONTENIDOS.FILTROS.FILTRODECRIPCION' | translate }}</small>
+            <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroDescripcionChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'SITIOS.CONTENIDOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}"
+              placeholder="{{ 'SITES.CONTENIDOS.CONTENT_DESCRIPTION' | translate }}"
             />
           </div>
           <div class="filtro">
-            <small>{{ 'SITIOS.CONTENIDOS.FILTROS.FILTROESTADO' | translate }}</small>
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
             </select>
           </div>
         </div>
@@ -54,7 +54,7 @@
         <app-data-table
           [data]="registrosFiltrado"
           [idField]="'contenidoId'"
-          [tableTitle]="'SITIOS.CONTENIDOS.TITLE' | translate"
+          [tableTitle]="'SITES.CONTENIDOS.CONTENT_MANAGEMENT' | translate"
           [metadataColumns]="columnasRegistros"
           [metadataDetailColumns]="columnasDetailRegistros"
           [showActions]="true"
@@ -63,8 +63,8 @@
           [showEditButton]="true"
           [showDeleteButton]="true"
           [showDetail]="true"
-          [newButtonLabel]="'SITIOS.CONTENIDOS.GESTION.NEW' | translate"
-          [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+          [newButtonLabel]="'SITES.CONTENIDOS.NEW_CONTENT' | translate"
+          [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
           (newRecord)="OnNuevoRegistroClick()"
           (editRecord)="OnEditarRegistroClick($event)"
           (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_CONTENIDOS_CREAR" permisoEdit="ACT_CONTENIDOS_MODIFICAR" permisoDelete="ACT_CONTENIDOS_ELIMINAR">

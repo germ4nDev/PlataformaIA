@@ -143,7 +143,7 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                     id: a.id ?? idx,
                     tipo,
                     icono: a.icono || this.resolverIcono(tipo),
-                    titulo: a.titulo || (a.tipo ? `${a.tipo}${a.terminal ? ' · ' + a.terminal : ''}` : 'PORTTOS.GATE_ALERTAS.INCIDENCIA_EN_GATE'),
+                    titulo: a.titulo || (a.tipo ? `${a.tipo}${a.terminal ? ' · ' + a.terminal : ''}` : 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.GATE_INCIDENT'),
                     descripcion: a.descripcion || a.mensaje || a.detalle || ''
                 };
             });
@@ -159,8 +159,8 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
 
         this.datosAutonomosSQL = {
             ...(Array.isArray(raw) ? {} : raw),
-            titulo: raw.titulo || 'PORTTOS.GATE_ALERTAS.ALERTAS_OPERATIVAS',
-            subtitulo: raw.subtitulo || 'PORTTOS.GATE_ALERTAS.MONITOREO_DE_INCIDENCIAS_EN_TIEMPO',
+            titulo: raw.titulo || 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.OPERATING_ALERTS',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.REAL_TIME_INCIDENT_MONITORING',
             icono: raw.icono || 'feather icon-alert-triangle',
             alertas: this.listaAlertas
         };
@@ -181,7 +181,7 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                 id: `sc-${c.id_cita || idx}`,
                 tipo: 'danger',
                 icono: '🛑',
-                titulo: traducir('PORTTOS.GATE_ALERTAS.CAMION_ESTADO', { placa: c.placa, estado: c.estado || traducir('PORTTOS.GATE_ALERTAS.SIN_CITA') }),
+                titulo: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.TRUCK_PLACA_ESTADO', { placa: c.placa, estado: c.estado || traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.NO_APPOINTMENT') }),
                 descripcion: `${c.ubicacion || 'Pre-gate'} · ${c.transportador || 'Transportador'} (${c.terminal || 'Terminal'})`
             });
         });
@@ -195,8 +195,8 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                 id: 'demora-gate',
                 tipo: 'warning',
                 icono: '⚠️',
-                titulo: traducir('PORTTOS.GATE_ALERTAS.COLA_ACTIVA', { terminal: terminalCritica, max: maxEspera }),
-                descripcion: traducir('PORTTOS.GATE_ALERTAS.CAMIONES_SUPERAN_25', { n: demorasAltas.length })
+                titulo: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.ACTIVE_QUEUE_AT_GATE_TERMINAL_MAX', { terminal: terminalCritica, max: maxEspera }),
+                descripcion: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.N_TRUCKS_EXCEED_25_MIN_VIRTUAL', { n: demorasAltas.length })
             });
         }
 
@@ -207,8 +207,8 @@ export class GateAlertasComponent implements OnInit, OnChanges, OnDestroy {
                 id: 'flujo-info',
                 tipo: 'info',
                 icono: 'ℹ️',
-                titulo: traducir('PORTTOS.GATE_ALERTAS.UNIDADES_PREGATE', { n: enCola.length }),
-                descripcion: 'PORTTOS.GATE_ALERTAS.DOSIFICACION_ACTIVA_POR_VENTANA_HORARIA'
+                titulo: traducir('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.N_UNITS_QUEUED_AT_PRE_GATE', { n: enCola.length }),
+                descripcion: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.ACTIVE_DOSING_BY_TIME_WINDOW_TERMINALS'
             });
         }
 

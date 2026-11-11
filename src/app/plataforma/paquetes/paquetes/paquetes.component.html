@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,24 +17,24 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'PAQUETES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'PAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'PAQUETES.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'PAQUETES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'PAQUETES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'PAQUETES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -48,11 +48,11 @@
                 <!-- 🟢 Se usa ng-template #loading y se cambia app-data-table por app-table-data -->
                 <ng-container *ngIf="paquetesFiltrados$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoPaquete'"
-                        [tableTitle]="'PAQUETES.TITLE' | translate" [metadataColumns]="columnasPaquetes"
+                        [tableTitle]="'PAQUETES.PACKAGE_MANAGEMENT' | translate" [metadataColumns]="columnasPaquetes"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
-                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'PAQUETES.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'PAQUETES.NEW_PACKAGE' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_PAQS_CREAR">
                     </app-table-data>
                 </ng-container>

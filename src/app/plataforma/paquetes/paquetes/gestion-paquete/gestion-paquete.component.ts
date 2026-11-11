@@ -28,6 +28,7 @@ import {
     PtlAplicacionesService
 } from 'src/app/theme/shared/service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
+import { PTLListasPreciosService, ReferenciaPaquete } from 'src/app/theme/shared/service/ptllistas-precios.service';
 
 @Component({
     selector: 'app-gestion-paquete',
@@ -68,6 +69,8 @@ export class GestionPaqueteComponent implements OnInit, OnDestroy {
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
     lockMessage: string = '';
+    /** OT-029: precio del paquete en la lista vigente y suma de sus ítems (solo de referencia; se fija en Listas de precios). */
+    referenciaPrecio: ReferenciaPaquete | null = null;
     suscriptor: string = '';
     tipoEditorTexto: string = 'basica';
 
@@ -82,7 +85,8 @@ export class GestionPaqueteComponent implements OnInit, OnDestroy {
         private _swalAlertService: SwalAlertService,
         private _localStorageService: LocalStorageService,
         private _uploadService: UploadFilesService,
-        private _navigationService: NavigationService
+        private _navigationService: NavigationService,
+        private _listasPrecios: PTLListasPreciosService
     ) {
         GradientConfig.header_fixed_layout = true;
         this.gradientConfig = GradientConfig;
@@ -152,6 +156,10 @@ export class GestionPaqueteComponent implements OnInit, OnDestroy {
             next: (resp: any) => {
                 if (resp.paquete) {
                     this.formularioRegistro.patchValue(resp.paquete);
+                    this._listasPrecios.referenciaPaquete(resp.paquete.codigoPaquete).subscribe({
+                        next: (r) => (this.referenciaPrecio = r),
+                        error: () => (this.referenciaPrecio = null)
+                    });
 
                     // Cargar previsualización de imágenes si existen
                     if (resp.paquete.imagenPaquete && resp.paquete.imagenPaquete !== 'no-image.png') {
@@ -198,7 +206,7 @@ export class GestionPaqueteComponent implements OnInit, OnDestroy {
         this.isSubmit = true;
 
         if (this.formularioRegistro.invalid) {
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.FORMULARIOINVALIDO'));
+            this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
             return;
         }
 
@@ -218,13 +226,13 @@ export class GestionPaqueteComponent implements OnInit, OnDestroy {
 
         if (!this.modoEdicion) {
             this._registrosService.postCrearRegistro(dataGuardar).subscribe({
-                next: (resp: any) => this.manejarExito(resp, 'PLATAFORMA.INSERTAR'),
-                error: (err: any) => this.manejarError(err, 'PLATAFORMA.NOINSERTO')
+                next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_INSERTED_SUCCESSFULLY'),
+                error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_INSERT_RECORD')
             });
         } else {
             this._registrosService.putModificarRegistro(dataGuardar).subscribe({
-                next: (resp: any) => this.manejarExito(resp, 'PLATAFORMA.MODIFICAR'),
-                error: (err: any) => this.manejarError(err, 'PLATAFORMA.NOMODIFICO')
+                next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_UPDATED_SUCCESSFULLY'),
+                error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_UPDATE_RECORD')
             });
         }
     }
@@ -239,7 +247,7 @@ export class GestionPaqueteComponent implements OnInit, OnDestroy {
             this.btnRegresarClick();
         } else {
             // Manejo si el backend devuelve 200 pero con ok: false
-            this.manejarError(resp, 'PLATAFORMA.NOMODIFICO');
+            this.manejarError(resp, 'COMMON.COULD_NOT_UPDATE_RECORD');
         }
     }
 

@@ -1,10 +1,10 @@
 @if (estado$ | async; as e) {
   @if (e.cargando) {
-    <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>{{ 'WEB.PAGINA.CARGANDO' | translate }}</div>
+    <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>{{ 'COMMON.LOADING_2' | translate }}</div>
   } @else if (e.error) {
     <div class="estado estado--error" role="alert">
       <p>{{ e.error }}</p>
-      <button type="button" class="boton boton--secundario" (click)="reintentar()">{{ 'WEB.PAGINA.REINTENTAR' | translate }}</button>
+      <button type="button" class="boton boton--secundario" (click)="reintentar()">{{ 'COMMON.RETRY' | translate }}</button>
     </div>
   } @else { @if (e.dato; as v) {
     @for (s of v.pagina.secciones; track s.codigo; let i = $index) {
@@ -25,7 +25,7 @@
       }
       @if (i === 0 && v.bloque === 'puertos') { <pp-puertos-vivo /> }
       @if (i === 0 && v.bloque === 'planes') {
-        @if (v.planes?.cargando) { <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>{{ 'WEB.PAGINA.CARGANDO' | translate }}</div> }
+        @if (v.planes?.cargando) { <div class="estado" role="status"><span class="girador" aria-hidden="true"></span>{{ 'COMMON.LOADING_2' | translate }}</div> }
         @if (v.planes?.error) { <div class="estado estado--error" role="alert"><p>{{ v.planes?.error }}</p></div> }
         @if (v.planes?.dato; as planes) { <pp-planes [datos]="planes" /> }
       }

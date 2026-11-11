@@ -53,13 +53,13 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
     roles: PTLRoleAPModel[] = []
 
     columnasAplicaciopnes: ColumnMetadata[] = [
-        { name: 'nomActividad', header: 'ACTIVIDADES.NOMMODULO', type: 'text' },
-        { name: 'nomRole', header: 'ACTIVIDADES.NOMSUITE', type: 'text' },
-        { name: 'nomEstado', header: 'ACTIVIDADES.NOMAPLICACION', type: 'estado' }
+        { name: 'nomActividad', header: 'COMMON.MODULE', type: 'text' },
+        { name: 'nomRole', header: 'COMMON.SUITE', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.APPLICATION', type: 'estado' }
     ]
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoActividadRole', header: 'ACTIVIDADES.CODIGOACTIVIDAD', type: 'text' }
+        { name: 'codigoActividadRole', header: 'COMMON.CODE', type: 'text' }
     ]
 
     constructor(
@@ -123,7 +123,7 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
                             accion: 'ESTADO', permiso: 'ACT_ROLES_PERMISOS',
                             letra: isActivo ? 'I' : 'A',
                             color: isActivo ? '#dc3545' : '#13af2d',
-                            tooltip: isActivo ? this.translate.instant('ACTIVIDADESROLES.INACTIVAR') : this.translate.instant('ACTIVIDADESROLES.ACTIVAR')
+                            tooltip: isActivo ? this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE') : this.translate.instant('COMMON.ACTIVATE')
                         }],
                     };
                 })
@@ -167,22 +167,22 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
 
     OnEliminarRegistroClick(idData: any): void {
         this._swalAlertService.getAlertQuestionRequest(
-            this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
-            this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
-            this.translate.instant('PLATAFORMA.DELETE'),
-            this.translate.instant('PLATAFORMA.CANCEL')
+            this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE'),
+            this.translate.instant('COMMON.ARE_YOU_SURE'),
+            this.translate.instant('COMMON.DELETE'),
+            this.translate.instant('COMMON.CANCEL')
         ).subscribe(result => {
             if (result) {
                 this._actividadesRolesService.deleteEliminarRegistro(idData.id).subscribe({
                     next: (resp: any) => {
                         if (resp.ok) {
-                            this.registrarLog('201', 'ACTIVIDADES.UPDATESUCCSESSFULLY');
-                            this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+                            this.registrarLog('201', 'COMMON.ACTIVITY_UPDATED_SUCCESSFULLY');
+                            this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY'));
                         }
                     },
                     error: (err: any) => {
-                        this.registrarLog('501', 'ACTIVIDADES.UPDATEERROR');
-                        this._swalAlertService.getAlertError(traducir('WEB.ACTIVIDADES_ROLES.NO_SE_PUDO_ELIMINAR_LA'));
+                        this.registrarLog('501', 'COMMON.COULD_NOT_UPDATE_ACTIVITY');
+                        this._swalAlertService.getAlertError(traducir('ACTIVIDADES.ACTIVIDADES_ROLES.COULD_NOT_DELETE_ACTIVITY'));
                     }
                 });
             }
@@ -194,10 +194,10 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
 
         if (evento.accion === 'ESTADO') {
             this._swalAlertService.getAlertQuestionRequest(
-                this.translate.instant('ACTIVIDADES.REVOCARTEXTO'),
-                this.translate.instant('ACTIVIDADES.REVOCARTITULO'),
-                this.translate.instant('PLATAFORMA.DELETE'),
-                this.translate.instant('PLATAFORMA.CANCEL')
+                this.translate.instant('ACTIVIDADES.ACTIVIDADES_ROLES.ACTIVITY_WILL_NO_LONGER_BE_ASSIGNED'),
+                this.translate.instant('ACTIVIDADES.ACTIVIDADES_ROLES.REVOKE_ACTIVITY'),
+                this.translate.instant('COMMON.DELETE'),
+                this.translate.instant('COMMON.CANCEL')
             ).subscribe(result => {
                 if (result) {
                     const actividad = this.actividadesRoles.find(x => x.codigoActividadRole == idRegistro);
@@ -215,13 +215,13 @@ export class ActividadesRolesComponent implements OnInit, OnDestroy {
                     this._actividadesRolesService.putModificarRegistro(actRole).subscribe({
                         next: (resp: any) => {
                             if (resp.ok) {
-                                this.registrarLog('201', 'ACTIVIDADES.UPDATESUCCSESSFULLY');
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+                                this.registrarLog('201', 'COMMON.ACTIVITY_UPDATED_SUCCESSFULLY');
+                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY'));
                             }
                         },
                         error: (err: any) => {
-                            this.registrarLog('501', 'ACTIVIDADES.UPDATEERROR');
-                            this._swalAlertService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
+                            this.registrarLog('501', 'COMMON.COULD_NOT_UPDATE_ACTIVITY');
+                            this._swalAlertService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_ACTIVITY_2'));
                         }
                     });
                 }

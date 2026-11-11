@@ -232,32 +232,32 @@ export class TicketsComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'color',
-            header: 'TICKETS.TICKETS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'color_chip'
         },
         {
             name: 'fechaTicket',
-            header: 'TICKETS.TICKETS.FECHACREACION',
+            header: 'TICKETS.TICKET_DATE',
             type: 'date'
         },
         {
             name: 'nombreTicket',
-            header: 'TICKETS.TICKETS.NOMBRETICKET',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomSender',
-            header: 'TICKETS.TICKETS.NOMUSUARIOSENDER',
+            header: 'COMMON.USER',
             type: 'text'
         },
         {
             name: 'prioridad',
-            header: 'TICKETS.TICKETS.PRIORIDAD',
+            header: 'TICKETS.PRIORITY',
             type: 'text'
         },
         {
             name: 'estadoTicket',
-            header: 'TICKETS.TICKETS.ESTADOTICKET',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ]
@@ -265,47 +265,47 @@ export class TicketsComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoTicket',
-            header: 'TICKETS.TICKETS.CODIGOTICKET',
+            header: 'TICKETS.CODE',
             type: 'text'
         },
         {
             name: 'nomAplicacion',
-            header: 'TICKETS.TICKETS.NOMMAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nomSuite',
-            header: 'TICKETS.TICKETS.NOMBRESUITE',
+            header: 'COMMON.SUITE',
             type: 'text'
         },
         {
             name: 'nomModulo',
-            header: 'TICKETS.TICKETS.NOMBREMODULO',
+            header: 'TICKETS.MODULE',
             type: 'text'
         },
         {
             name: 'fechaAsignacion',
-            header: 'TICKETS.TICKETS.FECHAASIGNACION',
+            header: 'TICKETS.ASSIGNMENT_DATE',
             type: 'date'
         },
         {
             name: 'nomAsignado',
-            header: 'TICKETS.TICKETS.NOMUSUARIOASIGNADO',
+            header: 'TICKETS.ASSIGNED_USER',
             type: 'text'
         },
         {
             name: 'descripcionTicket',
-            header: 'TICKETS.TICKETS.DESCRIPCIONTICKET',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'definicionRequerimiento',
-            header: 'TICKETS.TICKETS.DEFINICIONREQUERIMIENTO',
+            header: 'TICKETS.REQUIREMENT',
             type: 'text'
         },
         {
             name: 'captura',
-            header: 'TICKETS.TICKETS.CAPTURA',
+            header: 'COMMON.IMAGE',
             type: 'capture'
         }
     ]
@@ -448,12 +448,12 @@ export class TicketsComponent implements OnInit {
 
     OnEliminarRegistroClick(id: any) {
         Swal.fire({
-            title: this.translate.instant('TICKETS.TICKETS.ELIMINARTITULO'),
-            text: this.translate.instant('TICKETS.TICKETS.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            text: this.translate.instant('TICKETS.TICKET_WILL_BE_DELETED'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
                 console.log('id', id.id)
@@ -463,7 +463,7 @@ export class TicketsComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('TICKETS.TICKETS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('TICKETS.TICKET_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                         if (ticket.capturaTicket != 'no-imagen.png') {
@@ -483,17 +483,17 @@ export class TicketsComponent implements OnInit {
                             }
                         })
                         this._ticketsService.cargarRegistros().subscribe(() => {
-                            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.TICKETS.ELIMINAREXITOSA'))
+                            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.TICKET_WAS_DELETED_SUCCESSFULLY'))
                         })
                     },
                     error: (err: any) => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('TICKETS.MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+                            descripcionLog: this.translate.instant('TICKETS.COULD_NOT_DELETE_MODULE') + ' ' + err.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertError(this.translate.instant('TICKETS.TICKETS.ELIMINARERROR') + ' ' + err.mensaje)
+                        this._swalService.getAlertError(this.translate.instant('TICKETS.COULD_NOT_DELETE_TICKET') + ' ' + err.mensaje)
                         console.error('Error eliminando', err)
                     }
                 })

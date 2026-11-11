@@ -276,20 +276,20 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //                 const logData = {
 //         //                     codigoTipoLog: '',
 //         //                     codigoRespuesta: '201',
-//         //                     descripcionLog: this._translate.instant('PLATAFORMA.MODIFICAR')
+//         //                     descripcionLog: this._translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
 //         //                 }
 //         //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
 //         //                 this.gestionarUsuarioMaestro(registroData);
-//         //                 this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.MODIFICAR'))
+//         //                 this._swalAlertService.getAlertSuccess(this._translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'))
 //         //                 this.router.navigate(['/suscriptores/usuarios-suscriptor'])
 //         //             } else {
 //         //                 const logData = {
 //         //                     codigoTipoLog: '',
 //         //                     codigoRespuesta: '501',
-//         //                     descripcionLog: this._translate.instant('PLATAFORMA.NOMODIFICO')
+//         //                     descripcionLog: this._translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
 //         //                 }
 //         //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-//         //                 this._swalAlertService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.NOMODIFICO'))
+//         //                 this._swalAlertService.getAlertError(resp.message || this._translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
 //         //             }
 //         //         },
 //         //         error: (err: any) => {
@@ -297,10 +297,10 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //             const logData = {
 //         //                 codigoTipoLog: '',
 //         //                 codigoRespuesta: '501',
-//         //                 descripcionLog: this._translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+//         //                 descripcionLog: this._translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.message
 //         //             }
 //         //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-//         //             this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.NOMODIFICO'))
+//         //             this._swalAlertService.getAlertError(this._translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
 //         //         }
 //         //     })
 //         // } else {
@@ -313,11 +313,11 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //                 const logData = {
 //         //                     codigoTipoLog: '',
 //         //                     codigoRespuesta: '201',
-//         //                     descripcionLog: this._translate.instant('PLATAFORMA.INSERTAR')
+//         //                     descripcionLog: this._translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
 //         //                 }
 //         //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
 //         //                 this.gestionarUsuarioMaestro(registroData);
-//         //                 this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTAR'))
+//         //                 this._swalAlertService.getAlertSuccess(this._translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
 //         //                 form.resetForm()
 //         //                 this.isSubmit = false
 //         //                 this.router.navigate(['/suscriptores/usuarios-suscriptor'])
@@ -328,10 +328,10 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //         //             const logData = {
 //         //                 codigoTipoLog: '',
 //         //                 codigoRespuesta: '501',
-//         //                 descripcionLog: this._translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+//         //                 descripcionLog: this._translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
 //         //             }
 //         //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-//         //             this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err)
+//         //             this._swalAlertService.getAlertError(this._translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err)
 //         //         }
 //         //     })
 //         // }
@@ -479,7 +479,7 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 //                     this.FormRegistro.fotoUsuario = path.nombreArchivo
 //                 },
 //                 error: () => {
-//                     this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+//                     this._swalAlertService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
 //                 }
 //             })
 //         } else {
@@ -650,7 +650,7 @@ export class GestionUsuarioSuscrptorComponent {
                     this.vincularDatosEdicion();
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_USUARIO_SUSCRPTOR.NO_SE_PUDO_OBTENER_EL'));
+                    this._swalAlertService.getAlertError(traducir('SUSCRIPTOR.USUARIOS_SUSCRIPTOR.GESTION.COULD_NOT_GET_SUBSCRIBER_USER'));
                 }
             });
         } else {
@@ -844,10 +844,10 @@ export class GestionUsuarioSuscrptorComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this._translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                        descripcionLog: this._translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err)
+                    this._swalAlertService.getAlertError(this._translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err)
                 }
             })
         }
@@ -901,10 +901,10 @@ export class GestionUsuarioSuscrptorComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this._translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this._translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTAR'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
 
                         this._localStorageService.setObject('regId', this.codigoSuscriptor)
                         this.router.navigate(['/suscriptor/usuarios-suscriptor'])
@@ -934,10 +934,10 @@ export class GestionUsuarioSuscrptorComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '201',
-                        descripcionLog: this._translate.instant('PLATAFORMA.INSERTAR')
+                        descripcionLog: this._translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTAR'))
+                    this._swalAlertService.getAlertSuccess(this._translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
                     this._localStorageService.setObject('regId', this.codigoSuscriptor)
                     this.router.navigate(['/suscriptor/usuarios-suscriptor'])
                 },
@@ -974,7 +974,7 @@ export class GestionUsuarioSuscrptorComponent {
                     this.FormRegistro.fotoUsuario = path.nombreArchivo
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalAlertService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {

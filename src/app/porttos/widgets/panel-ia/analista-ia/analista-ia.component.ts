@@ -337,15 +337,15 @@ export class AnalistaIAComponent implements OnInit, OnChanges, OnDestroy {
     // ── vista ampliada: historial ───────────────────────────────────────────────────────────────────
 
     public readonly columnasHistorial: ColumnaTabla[] = [
-        { campo: 'fechaTexto', titulo: 'PORTTOS.IA_ADMIN_PANEL.HORA', tipo: 'texto', ancho: '120px' },
-        { campo: 'claseTexto', titulo: 'PORTTOS.ANALISTA_IA.CLASE' },
-        { campo: 'tipoTexto', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO' },
-        { campo: 'titulo', titulo: 'PORTTOS.ANALISTA_IA.HALLAZGO', tipo: 'principal' },
-        { campo: 'severidadTexto', titulo: 'PORTTOS.ANALISTA_IA.SEVERIDAD', tipo: 'estado' },
-        { campo: 'confianzaPct', titulo: 'PORTTOS.ANALISTA_IA.CONFIANZA_2', tipo: 'numero', decimales: 0, unidad: '%' },
-        { campo: 'horizonteTexto', titulo: 'PORTTOS.ANALISTA_IA.HORIZONTE' },
-        { campo: 'estadoTexto', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-        { campo: 'verificacion', titulo: 'PORTTOS.ANALISTA_IA.VERIFICACION_MOTIVO' }
+        { campo: 'fechaTexto', titulo: 'PORTTOS.TIME', tipo: 'texto', ancho: '120px' },
+        { campo: 'claseTexto', titulo: 'PORTTOS.WIDGETS.PANEL_IA.ANALISTA_IA.CLASS' },
+        { campo: 'tipoTexto', titulo: 'COMMON.TYPE' },
+        { campo: 'titulo', titulo: 'PORTTOS.WIDGETS.PANEL_IA.ANALISTA_IA.FINDING', tipo: 'principal' },
+        { campo: 'severidadTexto', titulo: 'PORTTOS.WIDGETS.SEVERITY', tipo: 'estado' },
+        { campo: 'confianzaPct', titulo: 'PORTTOS.WIDGETS.PANEL_IA.ANALISTA_IA.CONFIDENCE', tipo: 'numero', decimales: 0, unidad: '%' },
+        { campo: 'horizonteTexto', titulo: 'PORTTOS.WIDGETS.PANEL_IA.ANALISTA_IA.HORIZON' },
+        { campo: 'estadoTexto', titulo: 'COMMON.STATUS', tipo: 'estado' },
+        { campo: 'verificacion', titulo: 'PORTTOS.WIDGETS.PANEL_IA.ANALISTA_IA.VERIFICATION_REASON' }
     ];
     public filasHistorial: any[] = [];
 

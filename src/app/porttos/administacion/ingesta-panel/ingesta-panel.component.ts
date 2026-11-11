@@ -97,7 +97,7 @@ export class IngestaPanelComponent implements OnInit {
         const isValidCsv = (file.type.includes('csv') || file.name.endsWith('.csv')) && this.tipoDocumento === 'TRAFICO';
 
         if (!isValidPDF && !isValidExcel && !isValidCsv) {
-            this.mostrarError(traducir('PORTTOS.INGESTA_PANEL.FORMATO_NO_COINCIDE', { tipo: this.tipoDocumento }));
+            this.mostrarError(traducir('PORTTOS.ADMINISTACION.INGESTA_PANEL.FILE_DOES_NOT_MATCH_EXPECTED_FORMAT', { tipo: this.tipoDocumento }));
             return;
         }
 
@@ -351,7 +351,7 @@ export class IngestaPanelComponent implements OnInit {
                 // Validación de seguridad por si el excel venía vacío
                 if (this.registrosProcesados.length === 0) {
                     this.isUploading = false;
-                    this.mostrarError(traducir('PORTTOS.INGESTA_PANEL.EL_ARCHIVO_NO_CONTIENE_REGISTROS'));
+                    this.mostrarError(traducir('PORTTOS.ADMINISTACION.INGESTA_PANEL.FILE_HAS_NO_VALID_RECORDS_INGESTION'));
                     return;
                 }
                 // 🚨 Ojo: Asegúrate de agregar este método en tu IngestaService
@@ -373,7 +373,7 @@ export class IngestaPanelComponent implements OnInit {
 
             default:
                 this.isUploading = false;
-                this.mostrarError(traducir('PORTTOS.INGESTA_PANEL.TIPO_DE_DOCUMENTO_NO_SOPORTADO'));
+                this.mostrarError(traducir('PORTTOS.ADMINISTACION.INGESTA_PANEL.DOCUMENT_TYPE_NOT_SUPPORTED_OR_NOT'));
                 return;
         }
 
@@ -391,7 +391,7 @@ export class IngestaPanelComponent implements OnInit {
             },
             error: (err) => {
                 this.isUploading = false;
-                this.mostrarError(err.error?.message || err.error?.msg || traducir('PORTTOS.INGESTA_PANEL.ERROR_DE_CONEXION_CON_EL'));
+                this.mostrarError(err.error?.message || err.error?.msg || traducir('PORTTOS.ADMINISTACION.INGESTA_PANEL.SERVER_CONNECTION_ERROR'));
             }
         });
     }

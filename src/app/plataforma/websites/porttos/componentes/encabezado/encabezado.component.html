@@ -1,13 +1,13 @@
 <header class="encabezado">
   <div class="contenedor encabezado__barra">
-    <a [routerLink]="inicio" class="encabezado__logo" [attr.aria-label]="'WEB.ENCABEZADO.PORTTOS_IR_AL_INICIO' | translate">
+    <a [routerLink]="inicio" class="encabezado__logo" [attr.aria-label]="'WEBSITES.PORTTOS.COMPONENTES.ENCABEZADO.PORTTOS_GO_HOME' | translate">
       <img src="assets/images/porttos/porttos-principal-negativo.png" alt="Porttos" width="132" height="36" />
     </a>
-    <button type="button" class="encabezado__menu-boton" [attr.aria-label]="abierto ? ('WEB.ENCABEZADO.CERRAR_MENU' | translate) : ('WEB.ENCABEZADO.ABRIR_MENU' | translate)" [attr.aria-expanded]="abierto" aria-controls="menu-principal"
+    <button type="button" class="encabezado__menu-boton" [attr.aria-label]="abierto ? ('COMMON.CLOSE_MENU' | translate) : ('COMMON.OPEN_MENU' | translate)" [attr.aria-expanded]="abierto" aria-controls="menu-principal"
             (click)="abierto = !abierto">
       <pp-icono [nombre]="abierto ? 'cerrar' : 'menu'" />
     </button>
-    <nav id="menu-principal" class="encabezado__nav" [class.abierto]="abierto" [attr.aria-label]="'WEB.ENCABEZADO.PRINCIPAL' | translate">
+    <nav id="menu-principal" class="encabezado__nav" [class.abierto]="abierto" [attr.aria-label]="'COMMON.MAIN' | translate">
       <ul role="list">
         @for (i of menu; track i.ruta) {
           <li><a [routerLink]="i.ruta" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: i.ruta === inicio }"
@@ -24,9 +24,9 @@
             }
           }
         } @else if (config?.rutaIngreso) {
-          <pp-enlace [url]="config?.rutaIngreso" base="" clase="boton boton--fantasma">{{ 'WEB.ENCABEZADO.INICIAR_SESION' | translate }}</pp-enlace>
+          <pp-enlace [url]="config?.rutaIngreso" base="" clase="boton boton--fantasma">{{ 'WEBSITES.PORTTOS.COMPONENTES.SIGN_IN' | translate }}</pp-enlace>
         }
-        <a class="boton boton--primario" [routerLink]="contacto" [queryParams]="{ motivo: 'ACCESO' }" (click)="abierto = false">{{ 'WEB.ENCABEZADO.SOLICITAR_ACCESO' | translate }}</a>
+        <a class="boton boton--primario" [routerLink]="contacto" [queryParams]="{ motivo: 'ACCESO' }" (click)="abierto = false">{{ 'COMMON.REQUEST_ACCESS' | translate }}</a>
       </div>
     </nav>
   </div>

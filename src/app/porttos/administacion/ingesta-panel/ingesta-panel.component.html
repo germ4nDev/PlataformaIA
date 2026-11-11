@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -71,7 +71,7 @@
                 <div class="action-section">
                     <button *appPermiso="'ACT_INGESTA_CARGAR'" class="btn-process" [disabled]="!selectedFile || isUploading" (click)="procesarDocumento()">
                         <i class="fas" [ngClass]="isUploading ? 'fa-spinner fa-spin' : 'fa-brain'"></i>
-                        {{ isUploading ? ('PORTTOS.INGESTA_PANEL.IA_PROCESANDO_DOCUMENTO' | translate) : ('PORTTOS.INGESTA_PANEL.EXTRAER_DATOS_CON_IA' | translate) }}
+                        {{ isUploading ? ('PORTTOS.ADMINISTACION.INGESTA_PANEL.AI_PROCESSING_DOCUMENT' | translate) : ('PORTTOS.ADMINISTACION.INGESTA_PANEL.EXTRACT_DATA_WITH_AI' | translate) }}
                     </button>
 
                     <div class="status-alert success" *ngIf="uploadSuccess">
@@ -89,19 +89,19 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <div class="header-section">
-                    <h2>{{ 'PORTTOS.INGESTA_PANEL.MOTOR_DE_INGESTA_INTELIGENTE_ETL' | translate }}</h2>
-                    <p>{{ 'PORTTOS.INGESTA_PANEL.SUBE_LOS_REPORTES_OPERATIVOS_LA' | translate }}</p>
+                    <h2>{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.SMART_INGESTION_ENGINE_ETL_AI' | translate }}</h2>
+                    <p>{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.UPLOAD_OPERATING_REPORTS_AI_WILL_EXTRACT' | translate }}</p>
                 </div>
 
                 <div class="config-section">
-                    <label for="docType">{{ 'PORTTOS.INGESTA_PANEL.TIPO_DE_DOCUMENTO_A_PROCESAR' | translate }}</label>
+                    <label for="docType">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.DOCUMENT_TYPE_PROCESS' | translate }}</label>
                     <select id="docType" [(ngModel)]="tipoDocumento" (change)="selectedFile = null; resetStatus()">
-                        <option value="LINEUP_EXCEL">{{ 'PORTTOS.INGESTA_PANEL.LINE_UP_MARITIMO_NACIONAL_EXCEL' | translate }}</option>
+                        <option value="LINEUP_EXCEL">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.NATIONAL_MARITIME_LINE_UP_MULTI_TAB' | translate }}</option>
 
-                        <option value="BOLETIN_PORTUARIO">{{ 'PORTTOS.INGESTA_PANEL.BOLETIN_ESTADISTICO_PORTUARIO_PDF' | translate }}</option>
-                        <option value="RNDC_EXCEL">{{ 'PORTTOS.INGESTA_PANEL.REPORTE_DE_DESPACHOS_RNDC_EXCEL' | translate }}</option>
-                        <option value="MATRIZ_BODEGAS">{{ 'PORTTOS.INGESTA_PANEL.MATRIZ_OPERACIONES_PORTUARIAS_EXCEL' | translate }}</option>
-                        <option value="TRAFICO">{{ 'PORTTOS.INGESTA_PANEL.REPORTE_PORTUARIO_MARITIMO_CSV' | translate }}</option>
+                        <option value="BOLETIN_PORTUARIO">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.PORT_STATISTICAL_BULLETIN_PDF' | translate }}</option>
+                        <option value="RNDC_EXCEL">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.RNDC_DISPATCH_REPORT_EXCEL' | translate }}</option>
+                        <option value="MATRIZ_BODEGAS">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.PORT_OPERATIONS_MATRIX_EXCEL' | translate }}</option>
+                        <option value="TRAFICO">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.MARITIME_PORT_REPORT_CSV' | translate }}</option>
                     </select>
                 </div>
 
@@ -111,34 +111,34 @@
                     <i class="fas fa-cloud-upload-alt upload-icon"></i>
 
                     <div *ngIf="!selectedFile">
-                        <h3>{{ 'PORTTOS.INGESTA_PANEL.ARRASTRA_TU_ARCHIVO_AQUI' | translate }}</h3>
+                        <h3>{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.DRAG_YOUR_FILE_HERE' | translate }}</h3>
                         <p>o</p>
                         <label class="btn-browse">
-                            {{ 'PORTTOS.INGESTA_PANEL.EXPLORAR_ARCHIVOS' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.BROWSE_FILES' | translate }}
                             <input type="file" (change)="onFileSelected($event)" accept=".pdf,.xls,.xlsx,.csv" hidden>
                         </label>
-                        <p class="file-hint">{{ 'PORTTOS.INGESTA_PANEL.FORMATOS_SOPORTADOS_PDF_EXCEL_XLSX' | translate }}</p>
+                        <p class="file-hint">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.SUPPORTED_FORMATS_PDF_EXCEL_XLSX_XLS' | translate }}</p>
                     </div>
 
                     <div *ngIf="selectedFile" class="file-ready">
                         <i class="fas fa-file-excel file-type-icon text-success"></i>
                         <div class="file-details">
                             <span class="file-name">{{ selectedFile.name }}</span>
-                            <span class="file-size">{{ 'PORTTOS.INGESTA_PANEL.MB' | translate: { p0: (selectedFile.size / 1024 / 1024).toFixed(2) } }}</span>
+                            <span class="file-size">{{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.P0_MB' | translate: { p0: (selectedFile.size / 1024 / 1024).toFixed(2) } }}</span>
 
                             <div *ngIf="tipoDocumento === 'LINEUP_EXCEL' && pestanasEncontradas.length > 0"
                                 class="mt-2 text-sm">
                                 <span class="text-info font-weight-bold">
-                                    <i class="fas fa-layer-group"></i> {{ 'PORTTOS.INGESTA_PANEL.TERMINALES_DETECTADAS' | translate: { p0: pestanasEncontradas.length } }}
+                                    <i class="fas fa-layer-group"></i> {{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.P0_TERMINALS_DETECTED' | translate: { p0: pestanasEncontradas.length } }}
                                 </span>
                                 <span class="text-gray-400 d-block mt-1">{{ pestanasEncontradas.join(', ') }}</span>
                                 <span class="text-success font-weight-bold d-block mt-1">
-                                    <i class="fas fa-ship"></i> {{ 'PORTTOS.INGESTA_PANEL.NAVES_LISTAS_PARA_INGESTA' | translate: { p0: registrosProcesados.length } }}
+                                    <i class="fas fa-ship"></i> {{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.P0_SHIPS_READY_INGESTION' | translate: { p0: registrosProcesados.length } }}
                                 </span>
                             </div>
                         </div>
                         <button class="btn-clear" (click)="limpiarArchivo()"><i class="fas fa-times"></i>
-                            {{ 'PORTTOS.INGESTA_PANEL.QUITAR' | translate }}</button>
+                            {{ 'PORTTOS.ADMINISTACION.INGESTA_PANEL.REMOVE' | translate }}</button>
                     </div>
 
                 </div>
@@ -148,7 +148,7 @@
                         [disabled]="!selectedFile || isUploading || (tipoDocumento === 'LINEUP_EXCEL' && registrosProcesados.length === 0)"
                         (click)="procesarDocumento()">
                         <i class="fas" [ngClass]="isUploading ? 'fa-spinner fa-spin' : 'fa-brain'"></i>
-                        {{ isUploading ? ('PORTTOS.INGESTA_PANEL.IA_PROCESANDO_DOCUMENTO' | translate) : ('PORTTOS.INGESTA_PANEL.EXTRAER_DATOS_CON_IA' | translate) }}
+                        {{ isUploading ? ('PORTTOS.ADMINISTACION.INGESTA_PANEL.AI_PROCESSING_DOCUMENT' | translate) : ('PORTTOS.ADMINISTACION.INGESTA_PANEL.EXTRACT_DATA_WITH_AI' | translate) }}
                     </button>
 
                     <div class="status-alert success" *ngIf="uploadSuccess">

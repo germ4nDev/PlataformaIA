@@ -171,7 +171,7 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || '🛡 Pre-Gate · Validación',
-            subtitulo: raw.subtitulo || 'PORTTOS.GATE_VALIDACION.CONTROL_DE_ENTURNAMIENTO_Y_VALIDACION',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.QUEUE_CONTROL_DOCUMENT_VALIDATION',
             icono: raw.icono || 'feather icon-check-square',
             resumen: resumenNormalizado
         };
@@ -180,12 +180,12 @@ export class GateValidacionComponent implements OnInit, OnChanges, OnDestroy {
     // ---------------------------------------------------------------- vista ampliada (2026-10-24)
 
     public readonly columnasObservadas: ColumnaTabla[] = [
-        { campo: 'placa', titulo: 'PORTTOS.TABLE_COLA_GATE.PLACA', tipo: 'principal' },
-        { campo: 'transportador', titulo: 'PORTTOS.TABLE_COLA_GATE.TRANSPORTADOR' },
-        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-        { campo: 'fallas', titulo: 'PORTTOS.GATE_VALIDACION.FALLA_EN', tipo: 'lista' },
-        { campo: 'sinDato', titulo: 'PORTTOS.GATE_VALIDACION.SIN_DATO_EN', tipo: 'lista' }
+        { campo: 'placa', titulo: 'PORTTOS.WIDGETS.PLATE', tipo: 'principal' },
+        { campo: 'transportador', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CARRIER' },
+        { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+        { campo: 'fallas', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.FAILURE_IN', tipo: 'lista' },
+        { campo: 'sinDato', titulo: 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.NO_DATA_IN', tipo: 'lista' }
     ];
 
     /** Aprobadas / fallidas / sin dato por tipo de validación (lo calcula el API). */

@@ -1,5 +1,5 @@
 <!-- HEADER GLOBAL -->
-<app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="('PORTTOS.TORRE_CONTROL.PLATAFORMA_DE_LOGISTICA_Y_GESTION' | translate)"
+<app-tc-header [titulo]="'Porttos 1.0'" [subtitulo]="('PORTTOS.TORRE_CONTROL.LOGISTICS_PORT_MANAGEMENT_PLATFORM' | translate)"
     [pestanaActiva]="pestanaActiva" [tableroBloqueado]="tableroBloqueado" (toggleBloqueo)="toggleBloqueoTablero()"
     (abrirCatalogo)="abrirCatalogoDesdeEncabezado()" [pestanas]="pestanasVisibles"
     (pestanaElegida)="cambiarPestana($event)" (abrirPestanas)="abrirPestanasDesdeEncabezado()"
@@ -29,7 +29,7 @@
             <div class="porttos-config-menu position-relative">
 
                 <button *ngIf="!esTelefono" type="button" class="border-0 shadow-none btn-menu fab-principal" (click)="toggleMenuConfig()"
-                    [class.activo]="menuConfigAbierto" [title]="'PORTTOS.TORRE_CONTROL.CONFIGURACION_DEL_TABLERO' | translate">
+                    [class.activo]="menuConfigAbierto" [title]="'PORTTOS.TORRE_CONTROL.DASHBOARD_SETTINGS' | translate">
                     <i class="icon feather" [ngClass]="menuConfigAbierto ? 'icon-x' : 'icon-settings'"></i>
                 </button>
 
@@ -38,17 +38,17 @@
                     <!-- VISTA 1: Grilla de Botones -->
                     <ng-container *ngIf="!mostrarLobby && !mostrarLobbyPestanas">
                         <div class="config-grid">
-                            <button (click)="mostrarLobbyPestanas = true" [title]="'PORTTOS.TORRE_CONTROL.PERSONALIZAR_PESTANAS' | translate">
+                            <button (click)="mostrarLobbyPestanas = true" [title]="'PORTTOS.TORRE_CONTROL.CUSTOMIZE_TABS' | translate">
                                 <i class="icon feather icon-layers"></i>
                             </button>
                             <!-- abrirLobbyModal() marca en el catálogo lo que ya está en el tablero (CC-122; en el teléfono no hay caché) -->
-                            <button (click)="abrirLobbyModal()" [title]="'PORTTOS.TORRE_CONTROL.PERSONALIZAR_WIDGETS_DE_LA_PESTANA' | translate">
+                            <button (click)="abrirLobbyModal()" [title]="'PORTTOS.TORRE_CONTROL.CUSTOMIZE_TAB_WIDGETS' | translate">
                                 <i class="icon feather icon-plus"></i>
                             </button>
-                            <button (click)="toggleBloqueoTablero(); toggleMenuConfig()" [title]="'PORTTOS.TORRE_CONTROL.BLOQUEAR_DESBLOQUEAR' | translate">
+                            <button (click)="toggleBloqueoTablero(); toggleMenuConfig()" [title]="'PORTTOS.TORRE_CONTROL.LOCK_UNLOCK' | translate">
                                 <i class="icon feather" [ngClass]="tableroBloqueado ? 'icon-unlock' : 'icon-lock'"></i>
                             </button>
-                            <button (click)="restaurarTableroDefault(); toggleMenuConfig()" [title]="'PORTTOS.TORRE_CONTROL.RESTAURAR_TABLERO' | translate">
+                            <button (click)="restaurarTableroDefault(); toggleMenuConfig()" [title]="'PORTTOS.TORRE_CONTROL.RESTORE_DASHBOARD_2' | translate">
                                 <i class="icon feather icon-refresh-cw"></i>
                             </button>
                         </div>
@@ -152,8 +152,8 @@
         <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100"
             style="min-height: 300px;">
             <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
-            <h5 class="text-white">{{ 'PORTTOS.TORRE_CONTROL.INICIANDO_CENTRO_DE_CONTROL_PORTUARIO' | translate }}</h5>
-            <small class="text-secondary">{{ 'PORTTOS.TORRE_CONTROL.DESCARGANDO_CONFIGURACIONES_Y_CATALOGO_D' | translate }}</small>
+            <h5 class="text-white">{{ 'PORTTOS.TORRE_CONTROL.STARTING_PORT_CONTROL_CENTER' | translate }}</h5>
+            <small class="text-secondary">{{ 'PORTTOS.TORRE_CONTROL.DOWNLOADING_SETTINGS_WIDGET_CATALOG' | translate }}</small>
         </div>
     </ng-template>
 

@@ -237,49 +237,49 @@
 //     columnasRegistros: any[] = [
 //         {
 //             name: 'nomSuscriptor',
-//             header: 'SUSCRIPTOR.PAQUETESSC.SUSCRIPTOR',
+//             header: 'COMMON.SUBSCRIBER',
 //             type: 'text',
 //             isSortable: true,
 //             searchable: false
 //         },
 //         {
 //             name: 'nomPaquete',
-//             header: 'SUSCRIPTOR.PAQUETESSC.NAME',
+//             header: 'COMMON.PACKAGE',
 //             type: 'text',
 //             isSortable: true,
 //             searchable: false
 //         },
 //         {
 //             name: 'fechaInicio',
-//             header: 'SUSCRIPTOR.PAQUETESSC.FECHAINICIO',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.START_DATE',
 //             type: 'date',
 //             isSortable: true,
 //             searchable: false
 //         },
 //         {
 //             name: 'fechaProximoPago',
-//             header: 'SUSCRIPTOR.PAQUETESSC.FECHAVENCIMINETO',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.EXPIRATION',
 //             type: 'date',
 //             isSortable: true,
 //             searchable: false
 //         },
 //         {
 //             name: 'fechaRenovacion',
-//             header: 'SUSCRIPTOR.PAQUETESSC.FECHARENOVACION',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL',
 //             type: 'date',
 //             isSortable: true,
 //             searchable: false
 //         },
 //         {
 //             name: 'numRenovaciones',
-//             header: 'SUSCRIPTOR.PAQUETESSC.RENOVACIONES',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWALS',
 //             type: 'estado',
 //             isSortable: true,
 //             searchable: false
 //         },
 //         {
 //             name: 'nomEstado',
-//             header: 'SUSCRIPTOR.PAQUETESSC.ESTADO',
+//             header: 'COMMON.STATUS',
 //             type: 'estado',
 //             isSortable: true,
 //             searchable: false
@@ -289,27 +289,27 @@
 //     columnasDetailRegistros: ColumnMetadata[] = [
 //         {
 //             name: 'codigoPaquete',
-//             header: 'SUSCRIPTOR.PAQUETESSC.PAQUETE',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_CODE',
 //             type: 'text'
 //         },
 //         {
 //             name: 'codigoLicencia',
-//             header: 'SUSCRIPTOR.PAQUETESSC.LICENCIA',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE',
 //             type: 'text'
 //         },
 //         {
 //             name: 'fechaRenovacion',
-//             header: 'SUSCRIPTOR.PAQUETESSC.FECHARENOVACION',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL',
 //             type: 'date'
 //         },
 //         {
 //             name: 'fechaProximoPago',
-//             header: 'SUSCRIPTOR.PAQUETESSC.FECHAPROXIMOPAGO',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT',
 //             type: 'date'
 //         },
 //         {
 //             name: 'historiales',
-//             header: 'SUSCRIPTOR.PAQUETESSC.HISTORIALES',
+//             header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PROCESSED_PAYMENTS',
 //             type: 'json-tabla'
 //         }
 //     ];
@@ -446,12 +446,12 @@
 
 //     OnEliminarRegistroClick(id: any) {
 //         const suscriptor = this.registros.filter((x) => x.codigoSuscriptor == id.id)[0];
-//         const titulo = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINARTITULO');
-//         const confirmText = this.translate.instant('PLATAFORMA.DELETE');
-//         const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+//         const titulo = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ARE_YOU_SURE_YOU_WANT_CANCEL');
+//         const confirmText = this.translate.instant('COMMON.DELETE');
+//         const cancelText = this.translate.instant('COMMON.CANCEL');
 //         const htmlBody = `
 //         <div style="margin-bottom: 10px;">
-//             ${this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINARTEXTO')}
+//             ${this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.WILL_DELETE_SUBSCRIBER_PACKAGE_YOU_WONT')}
 //         </div>
 //         <small><b>"${suscriptor?.codigoPaquete}"</b></small>
 //     `;
@@ -460,7 +460,7 @@
 //         //         if (confirmado) {
 //         //             this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
 //         //             next: (resp: any) => {
-//         //                 Swal.fire(this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINAREXITOSA'), resp.mensaje, 'success');
+//         //                 Swal.fire(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SUBSCRIBER_PACKAGE_DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
 //         //                 this.subscriptions.add(
 //         //                         this._suscriptoresService.getRegistros().subscribe(
 //         //                             () => console.log('Suscriptores cargados y guardadas en el servicio'),
@@ -469,7 +469,7 @@
 //         //                     )
 //         //             },
 //         //             error: (err: any) => {
-//         //                 Swal.fire('Error', this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINARERROR'), 'error');
+//         //                 Swal.fire('Error', this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.COULD_NOT_DELETE_SUBSCRIBER_PACKAGE'), 'error');
 //         //                 console.error('Error eliminando', err);
 //         //             }
 //         //             });
@@ -516,11 +516,13 @@ import { PTLTipoPagoModel } from 'src/app/theme/shared/_helpers/models/PTLTiposP
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
 import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
 import { DataLoaderComponent } from "src/app/theme/shared/components/data-loader/data-loader.component";
+import { PtlAprovisionamientosService, Aprovisionamiento } from 'src/app/theme/shared/service/ptlaprovisionamientos.service';
+import { AppPermisoDirective } from 'src/app/theme/shared/directive/app-permiso.directive';
 
 @Component({
     selector: 'app-paquetes-suscriptor',
     standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent, DataLoaderComponent],
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent, DataLoaderComponent, AppPermisoDirective],
     templateUrl: './paquetes-suscriptor.component.html',
     styleUrl: './paquetes-suscriptor.component.scss'
 })
@@ -583,7 +585,8 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         private _historialFacturacionService: PTLHistorialFacturacionService,
         private _utilidaddesService: UtilidadesService,
         private _swalService: SwalAlertService,
-        private _permisosService: PtlPermisosService
+        private _permisosService: PtlPermisosService,
+        private _aprovisionamientos: PtlAprovisionamientosService
     ) {
         this.gradientConfig = GradientConfig;
         this.codigoSuscriptor = this._localStorageService.getObject<string>('regId') || '';
@@ -598,6 +601,7 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         this.cargarCatalogosEstaticos();
         this.iniciarEscuchasSockets();
         this.setupRegistrosStream();
+        this.cargarBases();
     }
 
     ngOnDestroy(): void {
@@ -679,7 +683,7 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
                             accion: 'MODIFICAR',
                             letra: 'M',
                             color: '#007bff',
-                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETESSC.MODIFICAR'))
+                            tooltip: (this.translate.instant('COMMON.EDIT_2'))
                         });
                     }
 
@@ -689,7 +693,7 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
                             accion: 'ELIMINAR',
                             letra: 'E',
                             color: '#dc3545',
-                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINAR'))
+                            tooltip: (this.translate.instant('COMMON.DELETE'))
                         });
                     }
 
@@ -699,7 +703,7 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
                             accion: 'RENOVAR',
                             letra: 'R',
                             color: '#ec5914',
-                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETESSC.RENOVAR'))
+                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEW'))
                         });
                     }
 
@@ -790,21 +794,21 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
     }
 
     columnasRegistros: any[] = [
-        { name: 'nomSuscriptor', header: 'SUSCRIPTOR.PAQUETESSC.SUSCRIPTOR', type: 'text', isSortable: true, searchable: false },
-        { name: 'nomPaquete', header: 'SUSCRIPTOR.PAQUETESSC.NAME', type: 'text', isSortable: true, searchable: false },
-        { name: 'fechaInicio', header: 'SUSCRIPTOR.PAQUETESSC.FECHAINICIO', type: 'date', isSortable: true, searchable: false },
-        { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETESSC.FECHAVENCIMINETO', type: 'date', isSortable: true, searchable: false },
-        { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETESSC.FECHARENOVACION', type: 'date', isSortable: true, searchable: false },
-        { name: 'numRenovaciones', header: 'SUSCRIPTOR.PAQUETESSC.RENOVACIONES', type: 'estado', isSortable: true, searchable: false },
-        { name: 'nomEstado', header: 'SUSCRIPTOR.PAQUETESSC.ESTADO', type: 'estado', isSortable: true, searchable: false }
+        { name: 'nomSuscriptor', header: 'COMMON.SUBSCRIBER', type: 'text', isSortable: true, searchable: false },
+        { name: 'nomPaquete', header: 'COMMON.PACKAGE', type: 'text', isSortable: true, searchable: false },
+        { name: 'fechaInicio', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.START_DATE', type: 'date', isSortable: true, searchable: false },
+        { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.EXPIRATION', type: 'date', isSortable: true, searchable: false },
+        { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL', type: 'date', isSortable: true, searchable: false },
+        { name: 'numRenovaciones', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWALS', type: 'estado', isSortable: true, searchable: false },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado', isSortable: true, searchable: false }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoPaquete', header: 'SUSCRIPTOR.PAQUETESSC.PAQUETE', type: 'text' },
-        { name: 'codigoLicencia', header: 'SUSCRIPTOR.PAQUETESSC.LICENCIA', type: 'text' },
-        { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETESSC.FECHARENOVACION', type: 'date' },
-        { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETESSC.FECHAPROXIMOPAGO', type: 'date' },
-        { name: 'historiales', header: 'SUSCRIPTOR.PAQUETESSC.HISTORIALES', type: 'json-tabla' }
+        { name: 'codigoPaquete', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_CODE', type: 'text' },
+        { name: 'codigoLicencia', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE', type: 'text' },
+        { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL', type: 'date' },
+        { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT', type: 'date' },
+        { name: 'historiales', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PROCESSED_PAYMENTS', type: 'json-tabla' }
     ];
 
     // =========================================================================
@@ -857,15 +861,15 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
 
                 const paqueteInfo = this.paquetes.find(x => x.codigoPaquete == paqueteToCancel.codigoPaquete);
 
-                const titulo = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ELIMINARTITULO');
-                const confirmText = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ACCEPTTEXT');
-                const cancelText = this.translate.instant('SUSCRIPTOR.PAQUETESSC.CANCEL');
-                const placeholder = this.translate.instant('SUSCRIPTOR.PAQUETESSC.PLACEHOLDERCANCEL');
-                const errorobs = this.translate.instant('SUSCRIPTOR.PAQUETESSC.ERROROBSERVACION');
+                const titulo = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ARE_YOU_SURE_YOU_WANT_CANCEL');
+                const confirmText = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.YES_CANCEL_PACKAGE');
+                const cancelText = this.translate.instant('COMMON.CANCEL');
+                const placeholder = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ENTER_REASON_CANCELLATION');
+                const errorobs = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.YOU_MUST_ENTER_REASON_OR_COMMENT');
 
                 const htmlBody = `
                     <div style="margin-bottom: 10px;">
-                        ${this.translate.instant('SUSCRIPTOR.PAQUETESSC.CONFIRMTEXT')}
+                        ${this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.CANCELING_PACKAGE_SUBSCRIBER_CHANGES_PACKAGE_STATUS')}
                     </div>
                     <small><b>"${paqueteInfo?.nombrePaquete || paqueteToCancel.codigoPaquete}"</b></small>
                     `;
@@ -887,10 +891,10 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
                             this.subscriptions.add(
                                 this._paquetesSCService.putModificarRegistro(paqueteActualizado).subscribe({
                                     next: (resp: any) => {
-                                        this._swalService.getAlertConfirmSuccess(this.translate.instant('SUSCRIPTOR.PAQUETESSC.SUCCESSTEXT'));
+                                        this._swalService.getAlertConfirmSuccess(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_CANCELED_SUCCESSFULLY'));
                                     },
                                     error: (err: any) => {
-                                        this._swalService.getAlertConfirmError(this.translate.instant('SUSCRIPTOR.PAQUETESSC.ERRORTEXT'));
+                                        this._swalService.getAlertConfirmError(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.THERE_WAS_ERROR_CANCELING_PACKAGE'));
                                         console.error('Error cancelando paquete', err);
                                     }
                                 })
@@ -911,6 +915,23 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         }
     }
 
+    // =====================================================================
+    // OT-030: bases del suscriptor (una por aplicación de su paquete) y reintento
+    // =====================================================================
+    bases: Aprovisionamiento[] = [];
+
+    cargarBases(): void {
+        if (!this.codigoSuscriptor) return;
+        this._aprovisionamientos.listar(this.codigoSuscriptor).subscribe({ next: (b) => (this.bases = b), error: () => (this.bases = []) });
+    }
+
+    reintentarBase(b: Aprovisionamiento): void {
+        this._aprovisionamientos.reintentar(b.codigoSuscriptor, b.codigoAplicacion).subscribe({
+            next: () => { this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.DATABASE_QUEUED_AGAIN')); setTimeout(() => this.cargarBases(), 3000); },
+            error: (e: any) => this._swalService.getAlertError(e?.error?.msg || this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.COULD_NOT_RETRY_DATABASE'))
+        });
+    }
+
     private _prepararDatosDeRenovacion(codigoSuscriptorPaquete: string): void {
         let paSc = this.paquetesSC.find(x => x.codigoSuscriptorPaquete == codigoSuscriptorPaquete) || new PTLPaquetesSCModel();
         let paquete = this.paquetes.find(x => x.codigoPaquete == paSc?.codigoPaquete);
@@ -920,13 +941,12 @@ export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
         console.log('datos paquete:', paquete);
         console.log('datos tipoPaquete:', tipoPaquete);
 
-        const precio = paquete?.precioPaquete || 0;
-        const numMeses = tipoPaquete?.numMeses || 0;
-        const desc = tipoPaquete?.descuentoMeses || 0;
-
-        const valorDescuento = (precio * desc) / 100;
-        const precioFinalPorMes = precio - valorDescuento;
-        const valorFactura = precioFinalPorMes * numMeses;
+        // OT-029: la renovación cobra el precio con el que se vendió (foto en PTLPaquetesSC), no el de la lista de hoy
+        const numMeses = paSc?.mesesCobertura || tipoPaquete?.numMeses || 0;
+        const desc = Number(paSc?.porcentajeDescuento ?? tipoPaquete?.descuentoMeses ?? 0);
+        const valorFactura = Number(paSc?.valorFinal || 0);
+        const precio = numMeses ? Math.round((Number(paSc?.valorPeriodo || 0) / numMeses) * 100) / 100 : 0;
+        const precioFinalPorMes = numMeses ? Math.round((valorFactura / numMeses) * 100) / 100 : 0;
 
         const fechaVencimiento = new Date();
         fechaVencimiento.setMonth(fechaVencimiento.getMonth() + Number(numMeses));

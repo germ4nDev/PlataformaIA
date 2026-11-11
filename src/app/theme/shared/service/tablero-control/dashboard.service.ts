@@ -124,20 +124,20 @@ export class DashboardService implements OnInit, OnDestroy {
         Swal.fire({
             title: alerta.titulo, text: alerta.mensaje, icon: alerta.nivel,
             showCancelButton: true, confirmButtonColor: '#3b82f6', cancelButtonColor: '#64748b',
-            confirmButtonText: traducir('WEB.DASHBOARD_SERVICE.SI_SINCRONIZAR'), cancelButtonText: traducir('WEB.DASHBOARD_SERVICE.MAS_TARDE')
+            confirmButtonText: traducir('SHARED.SERVICE.TABLERO_CONTROL.YES_SYNC'), cancelButtonText: traducir('SHARED.SERVICE.TABLERO_CONTROL.LATER')
         }).then((result) => {
             if (result.isConfirmed) {
                 // endpointAccion trae la ruta completa (/api/...): se usa la raíz del API del ambiente, nunca localhost (2026-10-29)
                 this.http.post(`${environment.sctUrl}${alerta.endpointAccion}`, {}).subscribe({
-                    next: (res: any) => Swal.fire(traducir('WEB.DASHBOARD_SERVICE.SINCRONIZADO'), traducir('WEB.DASHBOARD_SERVICE.LOS_HISTORICOS_DE_SUPERTRANSPORTE_ESTAN'), 'success'),
-                    error: (err) => Swal.fire(traducir('WEB.DASHBOARD_SERVICE.ERROR'), traducir('WEB.DASHBOARD_SERVICE.NO_SE_PUDO_CONECTAR_CON'), 'error')
+                    next: (res: any) => Swal.fire(traducir('SHARED.SERVICE.TABLERO_CONTROL.SYNCED'), traducir('SHARED.SERVICE.TABLERO_CONTROL.SUPERTRANSPORTE_HISTORY_UP_DATE'), 'success'),
+                    error: (err) => Swal.fire(traducir('COMMON.ERROR'), traducir('SHARED.SERVICE.TABLERO_CONTROL.COULD_NOT_CONNECT_DATOS_GOV_CO'), 'error')
                 });
             }
         });
     }
 
     ejecutarSincronizacion() {
-        this.toastr.info(traducir('WEB.DASHBOARD_SERVICE.SINCRONIZANDO_CON_SUPERTRANSPORTE'), traducir('WEB.DASHBOARD_SERVICE.PROCESANDO'), { timeOut: 2000 });
+        this.toastr.info(traducir('SHARED.SERVICE.TABLERO_CONTROL.SYNCING_WITH_SUPERTRANSPORTE'), traducir('SHARED.SERVICE.TABLERO_CONTROL.PROCESSING'), { timeOut: 2000 });
         this._ingestaService.actualizarHistoricoSuperTrasnporte();
     }
 

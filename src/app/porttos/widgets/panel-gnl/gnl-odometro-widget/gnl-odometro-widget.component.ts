@@ -94,7 +94,7 @@ export class GnlOdometroWidgetComponent implements OnInit, OnChanges, OnDestroy 
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_ODOMETRO_WIDGET.ENERGIA_TRANSFERIDA',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.WIDGETS.PANEL_GNL.GNL_ODOMETRO_WIDGET.ENERGY_TRANSFERRED',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||

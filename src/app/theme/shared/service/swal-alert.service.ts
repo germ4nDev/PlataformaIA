@@ -129,7 +129,7 @@ export class SwalAlertService implements OnDestroy {
     getAlertConfirmError(descripcion: string) {
         this.fireSwal({
             icon: 'error',
-            title: traducir('WEB.SWAL_ALERT_SERVICE.ERROR'),
+            title: traducir('COMMON.ERROR'),
             text: descripcion,
         });
     }
@@ -137,7 +137,7 @@ export class SwalAlertService implements OnDestroy {
     getAlertConfirmSuccess(descripcion: string) {
         this.fireSwal({
             icon: 'success',
-            title: traducir('WEB.SWAL_ALERT_SERVICE.EXITO'),
+            title: traducir('COMMON.SUCCESS'),
             text: descripcion,
         });
     }
@@ -153,7 +153,7 @@ export class SwalAlertService implements OnDestroy {
 
         this.fireSwal({
             icon: 'warning',
-            title: traducir('WEB.SWAL_ALERT_SERVICE.ADVERTENCIA'),
+            title: traducir('SHARED.SERVICE.WARNING'),
             html: `<ul style="list-style-type: disc; margin: 0; padding-left: 20px; text-align: left;">${listadoIncidencias}</ul>`,
         });
     }
@@ -231,9 +231,9 @@ export class SwalAlertService implements OnDestroy {
         confirmButtonText?: string,
         cancelButtonText?: string
     ): Observable<boolean> {
-        const finalTitle = title || this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO');
-        const finalConfirm = confirmButtonText || this.translate.instant('PLATAFORMA.ACEPTAR');
-        const finalCancel = cancelButtonText || this.translate.instant('PLATAFORMA.CANCEL');
+        const finalTitle = title || this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE');
+        const finalConfirm = confirmButtonText || this.translate.instant('SHARED.SERVICE.ACCEPT');
+        const finalCancel = cancelButtonText || this.translate.instant('COMMON.CANCEL');
 
         return from(
             this.fireSwal({

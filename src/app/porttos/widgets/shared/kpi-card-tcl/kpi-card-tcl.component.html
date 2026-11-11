@@ -1,4 +1,4 @@
-<app-kpi-shell *ngIf="!isEnfoque" [titulo]="(data?.titulo | translate) || ('PORTTOS.KPI_CARD_TCL.METRICA_CLAVE' | translate)"
+<app-kpi-shell *ngIf="!isEnfoque" [titulo]="(data?.titulo | translate) || ('PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.KEY_METRIC' | translate)"
     [icono]="data?.icono || 'feather icon-activity'" [colorBorde]="data?.colorBorde || data?.color || 'info'"
     (clickEnfoque)="maximizarDesdeShell()">
 
@@ -52,18 +52,18 @@
                 <i [class]="data?.icono || 'feather icon-activity'" class="fs-4"></i>
             </div>
             <div>
-                <h4 class="kpi-shell-title_modal">{{ (data?.titulo | translate) || ('PORTTOS.KPI_CARD_TCL.METRICA_CLAVE' | translate) }}</h4>
+                <h4 class="kpi-shell-title_modal">{{ (data?.titulo | translate) || ('PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.KEY_METRIC' | translate) }}</h4>
                 <small class="kpi-shell-subtitle text-muted" style="letter-spacing: 0.5px;">{{ puertoEnfoque }}</small>
             </div>
         </div>
-        <button class="tc-action-btn" (click)="maximizarDesdeShell()" [title]="'PORTTOS.KPI_CARD_TCL.CERRAR_VISTA_AMPLIADA' | translate">
+        <button class="tc-action-btn" (click)="maximizarDesdeShell()" [title]="'COMMON.CLOSE_EXPANDED_VIEW' | translate">
             <i class="feather icon-minimize"></i>
         </button>
     </div>
 
     <div *ngIf="isLoading" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-2">
         <div class="spinner-border text-info" role="status"></div>
-        <small class="kpi-shell-subtitle">{{ 'PORTTOS.KPI_CARD_TCL.CONSULTANDO' | translate: { p0: (data?.titulo || 'indicador') } }}</small>
+        <small class="kpi-shell-subtitle">{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.CHECKING_P0' | translate: { p0: (data?.titulo || 'indicador') } }}</small>
     </div>
 
     <div *ngIf="!isLoading" class="enfoque-body flex-grow-1 d-flex flex-row overflow-hidden">
@@ -78,9 +78,9 @@
             </div>
             <div *ngIf="data?.tendencia && data?.tendencia !== data?.subtitulo" class="mt-2 kpi-shell-subtitle">{{ data?.tendencia }}</div>
             <div *ngIf="data?.umbrales as u" class="umbrales mt-3">
-                <span class="umbral verde">{{ 'PORTTOS.KPI_CARD_TCL.NORMAL' | translate }}</span>
-                <span class="umbral amarillo">{{ 'PORTTOS.KPI_CARD_TCL.ATENCION' | translate: { p0: u.amarillo } }}</span>
-                <span class="umbral rojo">{{ 'PORTTOS.KPI_CARD_TCL.CRITICO' | translate: { p0: u.rojo } }}</span>
+                <span class="umbral verde">{{ 'PORTTOS.WIDGETS.NORMAL' | translate }}</span>
+                <span class="umbral amarillo">{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.WARNING_P0' | translate: { p0: u.amarillo } }}</span>
+                <span class="umbral rojo">{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.CRITICAL_P0' | translate: { p0: u.rojo } }}</span>
             </div>
         </div>
 
@@ -90,7 +90,7 @@
             <!-- Bloque 3: contexto temporal -->
             <section *ngIf="rangosSerie.length" class="bloque">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h5 class="kpi-shell-title_modal mb-0">{{ 'PORTTOS.KPI_CARD_TCL.EVOLUCION' | translate }}</h5>
+                    <h5 class="kpi-shell-title_modal mb-0">{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.TREND' | translate }}</h5>
                     <div class="btn-group" *ngIf="rangosSerie.length > 1">
                         <button *ngFor="let r of rangosSerie" class="btn btn-sm btn-active-toggle" [class.active]="r === rangoSerie" (click)="rangoSerie = r">{{ r }}</button>
                     </div>
@@ -103,8 +103,8 @@
             <!-- Bloque 4: desglose -->
             <section *ngIf="desglose.length" class="bloque">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h5 class="kpi-shell-title_modal mb-0">{{ 'PORTTOS.KPI_CARD_TCL.DESGLOSE' | translate }}</h5>
-                    <button type="button" class="btn-csv" (click)="exportarDesglose()" [title]="'PORTTOS.KPI_CARD_TCL.EXPORTAR_A_CSV' | translate"><i class="feather icon-download"></i> {{ 'PORTTOS.KPI_CARD_TCL.CSV' | translate }}</button>
+                    <h5 class="kpi-shell-title_modal mb-0">{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.BREAKDOWN' | translate }}</h5>
+                    <button type="button" class="btn-csv" (click)="exportarDesglose()" [title]="'PORTTOS.WIDGETS.SHARED.EXPORT_CSV' | translate"><i class="feather icon-download"></i> {{ 'PORTTOS.WIDGETS.SHARED.CSV' | translate }}</button>
                 </div>
                 <div class="desglose">
                     <div *ngFor="let d of desglose" class="fila-desglose">
@@ -117,7 +117,7 @@
 
             <!-- Cómo se calcula -->
             <section *ngIf="data?.definicion || data?.formula" class="bloque">
-                <h5 class="kpi-shell-title_modal mb-2">{{ 'PORTTOS.KPI_CARD_TCL.COMO_SE_CALCULA' | translate }}</h5>
+                <h5 class="kpi-shell-title_modal mb-2">{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.HOW_IT_CALCULATED' | translate }}</h5>
                 <p *ngIf="data?.definicion" class="definicion mb-1">{{ data?.definicion }}</p>
                 <code *ngIf="data?.formula" class="formula">{{ data?.formula }}</code>
             </section>
@@ -126,8 +126,8 @@
             <div *ngIf="!rangosSerie.length && !desglose.length && !data?.definicion && !data?.formula"
                 class="sin-detalle flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center p-4">
                 <i class="feather icon-bar-chart-2 mb-2"></i>
-                <p class="mb-0">{{ 'PORTTOS.KPI_CARD_TCL.ESTE_INDICADOR_TODAVIA_NO_TIENE' | translate }}</p>
-                <small>{{ 'PORTTOS.KPI_CARD_TCL.SE_MUESTRA_EL_MISMO_VALOR' | translate }}</small>
+                <p class="mb-0">{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.INDICATOR_HAS_NO_EXPANDED_DETAIL_YET' | translate }}</p>
+                <small>{{ 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.SAME_VALUE_AS_DASHBOARD_SHOWN' | translate }}</small>
             </div>
 
             <!-- Bloque 5: origen del dato -->

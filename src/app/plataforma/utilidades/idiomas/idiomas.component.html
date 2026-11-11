@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,19 +17,19 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'IDIOMAS.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
                     </DIV>
                     <div class="filtro">
-                        <small>{{ 'IDIOMAS.FILTROS.NOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'IDIOMAS.FILTROS.NOMBREHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'IDIOMAS.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input" required>
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" required>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -42,12 +42,12 @@
             <div class="card-body">
                 <ng-container *ngIf="idiomasFiltradas$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoIdioma'"
-                        [tableTitle]="'IDIOMAS.TITLE' | translate" [tableSubtitle]="'IDIOMAS.SUBTITULO' | translate"
+                        [tableTitle]="'UTILIDADES.IDIOMAS.LANGUAGE_MANAGEMENT' | translate" [tableSubtitle]="'UTILIDADES.IDIOMAS.LANGUAGES_AVAILABLE_ON_PLATFORM' | translate"
                         [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
                         [showDetail]="true" [showActions]="true" [showAvatar]="true" [showImage]="false"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'IDIOMAS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'UTILIDADES.IDIOMAS.NEW_LANGUAGE' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
                         permisoNew="ACT_IDIOMAS_CREAR" permisoEdit="ACT_IDIOMAS_MODIFICAR"
                         permisoDelete="ACT_IDIOMAS_ELIMINAR">

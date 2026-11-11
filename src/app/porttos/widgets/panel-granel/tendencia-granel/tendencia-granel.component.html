@@ -1,6 +1,6 @@
 <app-widget-shell [titulo]="(titulo | translate)" [origen]="origenTablero" [subtitulo]="(subtitulo | translate)" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
-    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="pico">{{ 'PORTTOS.TENDENCIA_GRANEL.PICO_T_H' | translate: { p0: (pico.tmh |
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="pico">{{ 'PORTTOS.WIDGETS.PANEL_GRANEL.TENDENCIA_GRANEL.PEAK_P0_T_H_P1' | translate: { p0: (pico.tmh |
             number: '1.0-0'), p1: pico.hora } }}</span></div>
     <div class="cuerpo">
         <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!total" [mensajeVacio]="mensajeVacio"
@@ -13,7 +13,7 @@
     <!-- Vista ampliada: toneladas por tipo de granel en 24 h, 72 h o 7 días (reemplaza la línea del tablero) -->
     <div detalle-enfoque *ngIf="isEnfoque" class="detalle h-100">
         <div class="detalle-cabecera">
-            <h6 class="detalle-titulo">{{ 'PORTTOS.TENDENCIA_GRANEL.TONELADAS_POR_TIPO_DE_GRANEL' | translate: { p0: (porTipo?.unidad || 't/h') } }}</h6>
+            <h6 class="detalle-titulo">{{ 'PORTTOS.WIDGETS.PANEL_GRANEL.TENDENCIA_GRANEL.TONS_BY_BULK_TYPE_P0' | translate: { p0: (porTipo?.unidad || 't/h') } }}</h6>
             <app-rango-tcl [valor]="horas" (cambio)="cambiarHoras($event)"></app-rango-tcl>
         </div>
         <p *ngIf="errorTipo" class="detalle-ayuda text-warning">{{ errorTipo }}</p>

@@ -151,7 +151,7 @@ export class GestiionActividadRoleComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (resp) => {
                     console.log('Sincronización exitosa', resp);
-                    this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.CREATESUCCESSFULLY'));
+                    this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.ACTIVITY_CREATED_SUCCESSFULLY'));
                     this.router.navigate(['/actividades/actividades-roles']);
                 },
                 error: (err) => console.error('Error al sincronizar', err)

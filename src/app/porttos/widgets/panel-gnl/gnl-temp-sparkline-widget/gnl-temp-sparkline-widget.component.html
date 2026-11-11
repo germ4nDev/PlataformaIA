@@ -1,4 +1,4 @@
-<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.GNL_TEMP_SPARKLINE_WIDGET.TEMPERATURA_CRIOGENICA' | translate)"
+<app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_GNL.GNL_TEMP_SPARKLINE_WIDGET.CRYOGENIC_TEMPERATURE' | translate)"
     [subtitulo]="(widgetConfig?.subtitulo | translate) || 'TENDENCIA TÉRMICA EN TIEMPO REAL'" [icono]="'feather icon-thermometer'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="origen$ | async">
 
@@ -26,7 +26,7 @@
                 </h1>
 
                 <span class="text-muted small fw-medium">
-                    {{ 'PORTTOS.GNL_TEMP_SPARKLINE_WIDGET.LIMITE_OPERATIVO_C' | translate: { p0: (limiteOperativo | number:'1.1-1') } }}
+                    {{ 'PORTTOS.WIDGETS.PANEL_GNL.GNL_TEMP_SPARKLINE_WIDGET.OPERATING_LIMIT_P0_C' | translate: { p0: (limiteOperativo | number:'1.1-1') } }}
                 </span>
             </ng-container>
 

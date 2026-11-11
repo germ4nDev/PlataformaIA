@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
@@ -20,12 +20,12 @@
                     </div>
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button type="button" class="btn btn-primary btn-NuevoRegistro"
                             [disabled]="usuariosMostrados.length === 0" (click)="btnGestionarRegistroClick()">
-                            {{ 'USUARIOS.USUARIOSROLES.GESTION.CREATE' | translate }}
+                            {{ 'COMMON.CREATE_USER_ROLE' | translate }}
                             <i class="feather icon-plus ms-2"></i>
                         </button>
                     </div>
@@ -39,11 +39,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoSuscriptor">{{
-                                    'USUARIOS.USUARIOSROLES.GESTION.SUSCRIPTOR' | translate }}</label>
+                                    'COMMON.SUBSCRIBER' | translate }}</label>
                                 <select class="form-control input-md form-select" style="cursor: pointer"
                                     name="codigoSuscriptor" id="codigoSuscriptor" required
                                     [(ngModel)]="codigoSuscriptor" (change)="onSuscriptorChangeClick($event)">
-                                    <option value="" disabled>{{ 'USUARIOS.USUARIOSROLES.GESTION.SUSCRIPTORHOLDER' |
+                                    <option value="" disabled>{{ 'COMMON.SELECT_SUBSCRIBER_2' |
                                         translate }}</option>
                                     <option [value]="sus.codigoSuscriptor" *ngFor="let sus of suscriptores">{{
                                         sus.nombreSuscriptor }}</option>
@@ -55,11 +55,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoEmpresaSC">{{
-                                    'USUARIOS.USUARIOSROLES.GESTION.EMPRESASC' | translate }}</label>
+                                    'COMMON.SUBSCRIBER_COMPANY' | translate }}</label>
                                 <select class="form-control input-md form-select" style="cursor: pointer"
                                     name="codigoEmpresaSC" id="codigoEmpresaSC" [(ngModel)]="codigoEmpresaSC"
                                     (change)="onEmpresaSCChangeClick($event)">
-                                    <option value="">{{ 'USUARIOS.USUARIOSROLES.GESTION.EMPRESASCHOLDER' | translate }}
+                                    <option value="">{{ 'COMMON.SELECT_SUBSCRIBER_COMPANY' | translate }}
                                     </option>
                                     <option [value]="emp.codigoEmpresaSC" *ngFor="let emp of empresasSC">{{
                                         emp.nombreEmpresa }}</option>
@@ -70,11 +70,11 @@
                         <!-- Header Usuarios -->
                         <div class="col-md-12" *ngIf="usuariosMostrados.length > 0">
                             <div class="text-center flex flex-col justify-center"><br />
-                                <h4 class="titulo-container">{{ 'WEB.GESTION_USUARIOS_ROLE.USUARIOS_FILTRADOS' | translate }}</h4>
-                                <h6 class="subtitulo-container">{{ 'WEB.GESTION_USUARIOS_ROLE.SELECCIONE_LOS_USUARIOS_PARA_ASIGNARLES' | translate }}</h6><br>
+                                <h4 class="titulo-container">{{ 'USUARIOS.USUARIOS_ROLES.GESTION.FILTERED_USERS' | translate }}</h4>
+                                <h6 class="subtitulo-container">{{ 'USUARIOS.USUARIOS_ROLES.GESTION.SELECT_USERS_ASSIGN_ROLE' | translate }}</h6><br>
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                     (click)="btnAsociarTodosClick()">
-                                    {{ 'PLATAFORMA.ALLDATA' | translate }}
+                                    {{ 'COMMON.SELECT_ALL' | translate }}
                                 </button><br /><br />
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                         <!-- Mensaje Vacio -->
                         <div class="col-md-12" *ngIf="usuariosMostrados.length === 0 && codigoSuscriptor !== ''">
                             <div class="alert alert-warning text-center mt-3">
-                                {{ 'WEB.GESTION_USUARIOS_ROLE.NO_SE_ENCONTRARON_USUARIOS_CON' | translate }}
+                                {{ 'USUARIOS.USUARIOS_ROLES.GESTION.NO_USERS_FOUND_WITH_SELECTED_PARAMETERS' | translate }}
                             </div>
                         </div>
                     </div>

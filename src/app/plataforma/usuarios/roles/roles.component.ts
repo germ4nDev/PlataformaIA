@@ -134,17 +134,17 @@ export class RolesComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'nombreRole',
-            header: 'USUARIOS.ROLES.NOMBREROL',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'USUARIOS.ROLES.ESTADOROLE',
+            header: 'COMMON.STATUS',
             type: 'estado'
         },
         {
             name: 'tipoRol',
-            header: 'USUARIOS.ROLES.TIPOROLE',
+            header: 'COMMON.ROLE_TYPE',
             type: 'text'
         }
     ]
@@ -152,22 +152,22 @@ export class RolesComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'nomAplicacion',
-            header: 'USUARIOS.ROLES.NOMBREAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nomSuite',
-            header: 'USUARIOS.ROLES.NOMBRESUITE',
+            header: 'COMMON.SUITE',
             type: 'text'
         },
         {
             name: 'descripcionRole',
-            header: 'USUARIOS.ROLES.DESCRIPCIONROL',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'usuarios',
-            header: 'USUARIOS.ROLES.DESCRIPCIONROL',
+            header: 'COMMON.DESCRIPTION',
             type: 'json-tabla'
         }
     ]
@@ -226,8 +226,8 @@ export class RolesComponent implements OnInit {
                     return {
                         ...role,
                         '_acciones': [
-                            { accion: 'INACTIVAR', permiso: 'ACT_ROLES_MODIFICAR', letra: 'I', color: '#a02525', tooltip: (this.translate.instant('ROLES.INACTIVAR')) },
-                            { accion: 'USUARIOS', permiso: 'ACT_USUSC_ROLES', letra: 'U', color: '#a025a0', tooltip: (this.translate.instant('ROLES.USUARIOSROLE')) }
+                            { accion: 'INACTIVAR', permiso: 'ACT_ROLES_MODIFICAR', letra: 'I', color: '#a02525', tooltip: (this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')) },
+                            { accion: 'USUARIOS', permiso: 'ACT_USUSC_ROLES', letra: 'U', color: '#a025a0', tooltip: (this.translate.instant('USUARIOS.ROLES.ROLE_USERS')) }
                         ],
                     } as PTLRoleAPModel;
                 });
@@ -341,8 +341,8 @@ export class RolesComponent implements OnInit {
     //                 return {
     //                     ...role,
     //                     '_acciones': [
-    //                         { accion: 'INACTIVAR', letra: 'I', color: '#a02525', tooltip: (this.translate.instant('ROLES.INACTIVAR')) },
-    //                         { accion: 'USUARIOS', letra: 'U', color: '#a025a0', tooltip: (this.translate.instant('ROLES.USUARIOSROLE')) }
+    //                         { accion: 'INACTIVAR', letra: 'I', color: '#a02525', tooltip: (this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')) },
+    //                         { accion: 'USUARIOS', letra: 'U', color: '#a025a0', tooltip: (this.translate.instant('USUARIOS.ROLES.ROLE_USERS')) }
     //                     ],
     //                 } as PTLRoleAPModel;
     //             });
@@ -415,10 +415,10 @@ export class RolesComponent implements OnInit {
                 console.log('cambiar estado role', role);
 
                 this._swalService.getAlertQuestionRequest(
-                    this.translate.instant('ROLES.INACTIVAR'),
-                    this.translate.instant('ROLES.USUARIOS'),
-                    this.translate.instant('ROLES.INACTIVARBTN'),
-                    this.translate.instant('PLATAFORMA.CANCEL')
+                    this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
+                    this.translate.instant('COMMON.USERS'),
+                    this.translate.instant('COMMON.CHANGE_STATUS'),
+                    this.translate.instant('COMMON.CANCEL')
                 ).subscribe(result => {
                     if (result) {
                         role.estadoRole = role.estadoRole == true ? false : true;
@@ -428,7 +428,7 @@ export class RolesComponent implements OnInit {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                                    descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                                 this._rolesAPService.cargarRegistros().subscribe();
@@ -437,10 +437,10 @@ export class RolesComponent implements OnInit {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje
+                                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje)
+                                this._swalService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
                                 this._rolesAPService.cargarRegistros().subscribe();
                                 console.error('Error eliminando', err)
                             }

@@ -4,10 +4,10 @@
     <div class="card">
       <div class="nav-tabs-custom">
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'PLATAFORMA.MENU' | translate }}
+          {{ 'COMMON.MENU' | translate }}
         </button>
         <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'PLATAFORMA.FILTERS' | translate }}
+          {{ 'COMMON.FILTERS' | translate }}
         </button>
       </div>
 
@@ -17,12 +17,12 @@
 
       <ng-container *ngIf="activeTab === 'filters'">
         <div class="p-3 filtros-scroll-wrapper">
-          <h6 class="filtros-title">{{ 'BIBLIOTECA.FILTROS.TITULO' | translate }}</h6>
+          <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
 
           <div class="filtro">
-            <small>{{ 'BIBLIOTECA.FILTROS.FILTROCODIGO' | translate }}</small>
+            <small>{{ 'COMMON.FILTER_BY_CODE' | translate }}</small>
             <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
               <option [value]="lib.codigoBiblioteca" *ngFor="let lib of bibliotecas">
                 {{ lib.codigoBiblioteca }}
               </option>
@@ -30,9 +30,9 @@
           </div>
 
           <div class="filtro">
-            <small>{{ 'BIBLIOTECA.FILTROS.FILTRONOMBRE' | translate }}</small>
+            <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
             <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
               <option [value]="lib.nombreBiblioteca" *ngFor="let lib of bibliotecas">
                 {{ lib.nombreBiblioteca }}
               </option>
@@ -40,21 +40,21 @@
           </div>
 
           <div class="filtro">
-            <small>{{ 'BIBLIOTECA.FILTROS.FILTRODECRIPCION' | translate }}</small>
+            <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroDescripcionChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'BIBLIOTECA.FILTROS.DESCRIPCIONCHOLDER' | translate }}"
+              placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}"
             />
           </div>
 
           <div class="filtro">
-            <small>{{ 'BIBLIOTECA.FILTROS.FILTROESTADO' | translate }}</small>
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
             </select>
           </div>
         </div>
@@ -69,7 +69,7 @@
           <app-data-table
             [data]="dataFiltrada"
             [idField]="'codigoBiblioteca'"
-            [tableTitle]="'BIBLIOTECA.TITLE' | translate"
+            [tableTitle]="'BIBLIOTECA.BIBLIOTECAS.LIBRARY_MANAGEMENT' | translate"
             [metadataColumns]="columnasBiblioteca"
             [metadataDetailColumns]="columnasDetailRegistros"
             [showDetail]="true"
@@ -81,10 +81,10 @@
             [showDeleteButton]="true"
             [showSearchBox]="false"
             [colorOpcion1]="colorOpcion1"
-            [tooltipOption1]="'PAQUETES.MODULOS' | translate"
+            [tooltipOption1]="'COMMON.MODULES' | translate"
             [letraOpcion1]="letraOpcion1"
-            [newButtonLabel]="'BIBLIOTECA.NEW' | translate"
-            [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+            [newButtonLabel]="'BIBLIOTECA.BIBLIOTECAS.NEW_LIBRARY' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
             (newRecord)="OnNuevaBibliotecaClick()"
             (editRecord)="OnEditarBibliotecaClick($event)"
             (deleteRecord)="OnEliminarBibliotecaClick($event)"

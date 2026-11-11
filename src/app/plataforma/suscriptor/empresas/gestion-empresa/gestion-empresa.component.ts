@@ -109,7 +109,7 @@ export class GestionEmpresaComponent {
                     console.log('datos del FormRegistro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_EMPRESA.NO_SE_PUDO_OBTENER_LA'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('SUSCRIPTOR.EMPRESAS.GESTION.COULD_NOT_GET_COMPANY'), 'error');
                 }
             });
         } else {
@@ -197,7 +197,7 @@ export class GestionEmpresaComponent {
                     this.FormRegistro.logoEmpresa = path.nombreArchivo;
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
                 }
             });
         } else {
@@ -223,30 +223,30 @@ export class GestionEmpresaComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'));
                         this._localStorageService.setObject('regId', this.codigoSuscriptor);
                         this.router.navigate(['/suscriptor/empresas']);
                     } else {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + resp.message);
+                        this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + resp.message);
                     }
                 },
                 error: (err: any) => {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + err);
                 }
             });
         } else {
@@ -262,10 +262,10 @@ export class GestionEmpresaComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
                         form.resetForm();
                         this.isSubmit = false;
                         this._localStorageService.setObject('regId', this.codigoSuscriptor);
@@ -276,10 +276,10 @@ export class GestionEmpresaComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + err);
                 }
             });
         }

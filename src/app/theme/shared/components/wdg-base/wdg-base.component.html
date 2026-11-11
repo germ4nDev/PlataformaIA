@@ -6,7 +6,7 @@
     <!-- ============================================== -->
     <!-- Todo lo que pongas aquí aparecerá al lado del botón maximizar -->
     <div acciones-extra class="ms-2 d-flex gap-2">
-        <span class="badge bg-light text-dark border shadow-sm">{{ 'WEB.WDG_BASE.ETIQUETA' | translate }}</span>
+        <span class="badge bg-light text-dark border shadow-sm">{{ 'SHARED.WDG_BASE.LABEL' | translate }}</span>
         <!-- <button class="btn btn-sm btn-light p-1 m-0"><i class="feather icon-refresh-cw"></i></button> -->
     </div>
 
@@ -27,7 +27,7 @@
     <ng-template #loadedContent>
         <div class="w-100 h-100 position-relative p-2">
             <!-- AQUÍ VA TU GRÁFICA, TABLA O INDICADOR -->
-            <p class="text-dark fw-medium">{{ 'WEB.WDG_BASE.CONTENIDO_PRINCIPAL_DEL_WIDGET' | translate }}</p>
+            <p class="text-dark fw-medium">{{ 'SHARED.WDG_BASE.MAIN_WIDGET_CONTENT' | translate }}</p>
         </div>
     </ng-template>
 
@@ -36,7 +36,7 @@
     <!-- ============================================== -->
     <!-- La directiva "modo-enfoque" oculta esto en el tablero y lo muestra solo al expandir -->
     <div modo-enfoque class="w-100 h-100 position-relative p-3 overflow-auto">
-        <p class="text-muted small mb-3">{{ 'WEB.WDG_BASE.DESCRIPCION_DETALLADA_QUE_EL_USUARIO' | translate }}</p>
+        <p class="text-muted small mb-3">{{ 'SHARED.WDG_BASE.DETAILED_DESCRIPTION_USER_SEES_WHEN_EXPANDING' | translate }}</p>
 
         <!-- AQUÍ VA LA VISTA DETALLADA O DATATABLE -->
 

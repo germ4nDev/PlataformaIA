@@ -61,9 +61,9 @@ export class GestionWidgetComponent implements OnInit {
     suscriptor: string = ''
 
     public listaPestanas: any[] = [
-        { id: 'TLC_MARITIMO_001', nombre: 'PORTTOS.PANEL_CONTROL.OPERACION_MARITIMA' },
-        { id: 'TLC_TERRESTRE_001', nombre: 'PORTTOS.PANEL_CONTROL.OPERACION_TERRESTRE' },
-        { id: 'TLC_MAPA_001', nombre: 'PORTTOS.GESTION_WIDGET.MAPA_LOGISTICO' }
+        { id: 'TLC_MARITIMO_001', nombre: 'COMMON.MARITIME_OPERATIONS' },
+        { id: 'TLC_TERRESTRE_001', nombre: 'PORTTOS.ADMINISTACION.LAND_OPERATIONS' },
+        { id: 'TLC_MAPA_001', nombre: 'PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.LOGISTICS_MAP' }
     ];
 
     constructor(
@@ -96,7 +96,7 @@ export class GestionWidgetComponent implements OnInit {
                     // this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'widgets', resp.widget.thumbnail_url)
                 },
                 error: () => {
-                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_WIDGET.NO_SE_PUDO_OBTENER_LA'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.COULD_NOT_GET_APPLICATION'), 'error')
                 }
             })
         }
@@ -150,7 +150,7 @@ export class GestionWidgetComponent implements OnInit {
                     this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -172,10 +172,10 @@ export class GestionWidgetComponent implements OnInit {
                     // const logData = {
                     //     codigoTipoLog: '',
                     //     codigoRespuesta: '201',
-                    //     descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+                    //     descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
                     // }
                     // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY'))
+                    this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY'))
                     form.resetForm()
                     // this.isSubmit = false;
                     this.router.navigate(['/porttos/widget-panel'])
@@ -186,10 +186,10 @@ export class GestionWidgetComponent implements OnInit {
                 // const logData = {
                 //     codigoTipoLog: '',
                 //     codigoRespuesta: '501',
-                //     descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+                //     descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
                 // }
                 // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                this._swalService.getAlertError(traducir('PORTTOS.GESTION_WIDGET.NO_SE_PUDO_ACTUALIZAR_LA'))
+                this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.COULD_NOT_UPDATE_APPLICATION'))
             }
         })
     }
@@ -208,10 +208,10 @@ export class GestionWidgetComponent implements OnInit {
                     // const logData = {
                     //     codigoTipoLog: '',
                     //     codigoRespuesta: '201',
-                    //     descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+                    //     descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
                     // }
                     // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'))
+                    this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_UPDATED_SUCCESSFULLY'))
                     form.resetForm()
                     // this.isSubmit = false;
                     this.router.navigate(['/porttos/widget-panel'])
@@ -222,10 +222,10 @@ export class GestionWidgetComponent implements OnInit {
                 // const logData = {
                 //     codigoTipoLog: '',
                 //     codigoRespuesta: '500',
-                //     descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+                //     descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
                 // }
                 // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                this._swalService.getAlertError(traducir('PORTTOS.GESTION_WIDGET.NO_SE_PUDO_CREAR_LA'))
+                this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.WIDGETS_PANEL.GESTION.COULD_NOT_CREATE_APPLICATION'))
             }
         })
     }

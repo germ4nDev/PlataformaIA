@@ -1,12 +1,12 @@
 <div class="dropdown drp-user" ngbDropdown placement="auto" [autoClose]="'outside'" #profileDrop="ngbDropdown">
     <a href="javascript:void(0)" ngbDropdownToggle>
-        <img src="{{ avatarUsuario }}" class="img-radius wid-40" [alt]="'WEB.PROFILE_DRP.USER_PROFILE_IMAGE' | translate" />
+        <img src="{{ avatarUsuario }}" class="img-radius wid-40" [alt]="'COMMON.PROFILE_IMAGE' | translate" />
     </a>
 
     <div class="dropdown-menu dropdown-menu-end profile-notification drop-menu" ngbDropdownMenu>
         <div class="pro-head">
-            <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" [alt]="'WEB.PROFILE_DRP.USER_PROFILE_IMAGE' | translate" />
-            <a href="javascript:void(0)" class="dud-logout" [title]="'WEB.PROFILE_DRP.LOGOUT' | translate" (click)="logout(); profileDrop.close()">
+            <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" [alt]="'COMMON.PROFILE_IMAGE' | translate" />
+            <a href="javascript:void(0)" class="dud-logout" [title]="'COMMON.SIGN_OUT' | translate" (click)="logout(); profileDrop.close()">
                 <i class="feather icon-log-out icon-bg"></i>
             </a>
         </div>
@@ -18,17 +18,17 @@
 
             <li>
                 <a href="javascript:void(0)" class="dropdown-item" (click)="perfilUsuario(); profileDrop.close()">
-                    <i class="feather icon-user icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.PROFILE' | translate }}
+                    <i class="feather icon-user icon-bg"></i> {{ 'SHARED.PROFILE_DRP.PROFILE' | translate }}
                 </a>
             </li>
             <li>
                 <a href="javascript:void(0)" class="dropdown-item" (click)="profileDrop.close()">
-                    <i class="feather icon-mail icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}
+                    <i class="feather icon-mail icon-bg"></i> {{ 'SHARED.PROFILE_DRP.MY_MESSAGES' | translate }}
                 </a>
             </li>
             <li>
                 <a href="javascript:void(0)" class="dropdown-item" (click)="lockscreen(); profileDrop.close()">
-                    <i class="feather icon-lock icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.LOCK' | translate }}
+                    <i class="feather icon-lock icon-bg"></i> {{ 'SHARED.PROFILE_DRP.LOCK_SCREEN' | translate }}
                 </a>
             </li>
 
@@ -41,7 +41,7 @@
             <li>
                 <div class="color-picker-dropdown">
                     <a href="javascript:void(0)" class="dropdown-item" (click)="togglePanelColores($event)">
-                        <i class="feather icon-droplet icon-bg"></i> {{ 'PLATAFORMA.NAVBAR.NAVBARCOLOR' | translate }}
+                        <i class="feather icon-droplet icon-bg"></i> {{ 'SHARED.PROFILE_DRP.HEADER_COLOR' | translate }}
                         <i class="feather icon-bg"
                             [ngClass]="mostrarPanelColores ? 'icon-chevron-up' : 'icon-chevron-down'"
                             style="margin-left: auto; font-size: 14px;"></i>

@@ -87,7 +87,7 @@ export class PagoModalComponent implements OnDestroy {
                 },
                 onError: (error: any) => {
                     console.error('Error en el Brick de MP:', error);
-                    Swal.fire(traducir('WEB.PAGO_MODAL.AVISO'), traducir('WEB.PAGO_MODAL.OCURRIO_UN_ERROR_AL_CARGAR'), 'warning');
+                    Swal.fire(traducir('SHARED.PAGO_MODAL.NOTICE'), traducir('SHARED.PAGO_MODAL.ERROR_OCCURRED_LOADING_SECURE_GATEWAY'), 'warning');
                 }
             }
         };
@@ -113,13 +113,13 @@ export class PagoModalComponent implements OnDestroy {
 
             this.http.post(url, payload).subscribe({
                 next: (resp: any) => {
-                    Swal.fire(traducir('WEB.PAGO_MODAL.PAGO_EXITOSO'), traducir('WEB.PAGO_MODAL.TU_TRANSACCION_FUE_PROCESADA_Y'), 'success');
+                    Swal.fire(traducir('SHARED.PAGO_MODAL.PAYMENT_SUCCESSFUL'), traducir('SHARED.PAGO_MODAL.YOUR_TRANSACTION_WAS_PROCESSED_APPROVED_SUCCESSFULLY'), 'success');
                     this.onPagoExitoso.emit(resp);
                     this.cerrar();
                     resolve();
                 },
                 error: (err) => {
-                    Swal.fire(traducir('WEB.PAGO_MODAL.PAGO_RECHAZADO'), err.error?.msg || traducir('WEB.PAGO_MODAL.ERROR_PROCESANDO_EL_PAGO_CON'), 'error');
+                    Swal.fire(traducir('SHARED.PAGO_MODAL.PAYMENT_DECLINED'), err.error?.msg || traducir('SHARED.PAGO_MODAL.ERROR_PROCESSING_PAYMENT_WITH_BANK'), 'error');
                     reject();
                 }
             });

@@ -73,7 +73,7 @@ export class GestionSiteComponent implements OnInit {
             console.log('respuesta componente', this.FormRegistro);
           },
           error: () => {
-            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SITE.NO_SE_PUDO_OBTENER_EL'), 'error');
+            Swal.fire(traducir('COMMON.ERROR'), traducir('SITES.GESTION.COULD_NOT_GET_SITE'), 'error');
           }
         });
       } else {
@@ -145,22 +145,22 @@ export class GestionSiteComponent implements OnInit {
       this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
+            Swal.fire('', this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'), 'success');
             this.router.navigate(['/sites/sites']);
           } else {
-            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+            Swal.fire(traducir('COMMON.ERROR'), resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
         }
       });
     } else {
       this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+            Swal.fire('', this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'), 'success');
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/sites/sites']);
@@ -168,7 +168,7 @@ export class GestionSiteComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+          Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'), 'error');
         }
       });
     }

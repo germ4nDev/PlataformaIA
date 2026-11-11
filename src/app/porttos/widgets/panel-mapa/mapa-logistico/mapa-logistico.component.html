@@ -10,7 +10,7 @@
                     <i [class]="t.icono"></i> {{ (t.nombre | translate) }} <span class="plf-n">{{ filasPanel[t.id].length }}</span>
                 </button>
             </div>
-            <button type="button" class="plf-cerrar" (click)="panelLateralAbierto = false" [title]="'PORTTOS.MAPA_LOGISTICO.OCULTAR_PANEL' | translate"><i
+            <button type="button" class="plf-cerrar" (click)="panelLateralAbierto = false" [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.HIDE_PANEL' | translate"><i
                     class="feather icon-chevrons-right"></i></button>
         </div>
         <div class="plf-cuerpo">
@@ -18,10 +18,10 @@
                 [ampliada]="true" [tamanoPagina]="30" [nombreArchivo]="'mapa-' + pestanaPanel"
                 (filaClick)="volarAFila($event)"></app-tabla-tcl>
         </div>
-        <div class="plf-pie">{{ 'PORTTOS.MAPA_LOGISTICO.DATOS_EN_MEMORIA_DEL_MAPA' | translate }}</div>
+        <div class="plf-pie">{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.MAP_DATA_IN_MEMORY_REFRESHES_EVERY' | translate }}</div>
     </aside>
     <button type="button" class="plf-abrir" *ngIf="pantallaCompleta && !panelLateralAbierto"
-        (click)="panelLateralAbierto = true" [title]="'PORTTOS.MAPA_LOGISTICO.MOSTRAR_PANEL' | translate">
+        (click)="panelLateralAbierto = true" [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SHOW_PANEL' | translate">
         <i class="feather icon-list"></i>
     </button>
 
@@ -43,8 +43,8 @@
 
         <!-- Analista IA flotante: botón arriba a la derecha y el panel sobre el mapa (no le quita espacio) -->
         <button type="button" class="fab-ia" *ngIf="puertoIA" [class.abierto]="iaAbierto" [class.con-panel-fs]="pantallaCompleta"
-            (click)="alternarIA()" [title]="iaAbierto ? ('PORTTOS.MAPA_LOGISTICO.CERRAR_ANALISTA_IA' | translate) : ('PORTTOS.MAPA_LOGISTICO.ANALISTA_IA' | translate)" [attr.aria-expanded]="iaAbierto">
-            <span class="fab-ia-sello" *ngIf="!iaAbierto">{{ 'PORTTOS.COMUN.IA' | translate }}</span>
+            (click)="alternarIA()" [title]="iaAbierto ? ('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CLOSE_AI_ANALYST' | translate) : ('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.AI_ANALYST' | translate)" [attr.aria-expanded]="iaAbierto">
+            <span class="fab-ia-sello" *ngIf="!iaAbierto">{{ 'COMMON.AI' | translate }}</span>
             <i class="feather icon-x" *ngIf="iaAbierto"></i>
             <span class="fab-ia-badge" *ngIf="!iaAbierto && iaConteo.alertas > 0" [class.critica]="iaConteo.criticas > 0">{{ iaConteo.alertas > 9 ? '9+' : iaConteo.alertas }}</span>
         </button>
@@ -58,7 +58,7 @@
 
             <!-- BOTÓN GATILLO PRINCIPAL -->
             <button type="button" class="fab-principal" [class.activo]="estiloBase === 'satelite'"
-                [title]="'PORTTOS.MAPA_LOGISTICO.HERRAMIENTAS_DEL_MAPA' | translate" (click)="toggleMenuConfig()" [class.activo]="menuConfigAbierto">
+                [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.MAP_TOOLS' | translate" (click)="toggleMenuConfig()" [class.activo]="menuConfigAbierto">
                 <i class="icon feather icon-map"></i>
 
                 <span class="alertas-badge" *ngIf="alertasSinLeer > 0">{{ alertasSinLeer > 9 ? '9+' :
@@ -72,44 +72,44 @@
                 <ng-container *ngIf="!hayPanelAbierto">
                     <div class="config-grid">
                         <button type="button" (click)="mostrarCapas = true" [class.activo]="mostrarCapas"
-                            [title]="'PORTTOS.MAPA_LOGISTICO.CAPAS_DEL_MAPA' | translate">
+                            [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.MAP_LAYERS' | translate">
                             <i class="icon feather icon-layers"></i>
                         </button>
 
                         <button type="button" (click)="mostrarLeyenda = true" [class.activo]="mostrarLeyenda"
-                            [title]="'PORTTOS.MAPA_LOGISTICO.CONVENCIONES_DEL_MAPA' | translate">
+                            [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.MAP_LEGEND' | translate">
                             <i class="icon feather icon-info"></i>
                         </button>
 
                         <button type="button" (click)="mostrarBitacora = true" [class.activo]="mostrarBitacora"
-                            [title]="'PORTTOS.MAPA_LOGISTICO.ALERTAS_DEL_MAPA' | translate" class="position-relative">
+                            [title]="'COMMON.MAP_ALERTS' | translate" class="position-relative">
                             <i class="icon feather icon-bell"></i>
                             <span class="alertas-badge" *ngIf="alertasSinLeer > 0">{{ alertasSinLeer > 9 ? '9+' :
                                 alertasSinLeer }}</span>
                         </button>
 
                         <button type="button" (click)="mostrarEmbudo = true" [class.activo]="mostrarEmbudo"
-                            [title]="'PORTTOS.MAPA_LOGISTICO.EMBUDO_DE_LLEGADA_DE_NAVES' | translate">
+                            [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SHIP_ARRIVAL_FUNNEL' | translate">
                             <i class="icon feather icon-filter"></i>
                         </button>
 
                         <button type="button" (click)="mostrarRecorrido = true"
-                            [class.activo]="mostrarRecorrido || modoRecorrido" [title]="'PORTTOS.MAPA_LOGISTICO.REPRODUCIR_LAS_ULTIMAS_HORAS' | translate">
+                            [class.activo]="mostrarRecorrido || modoRecorrido" [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.PLAY_LAST_HOURS' | translate">
                             <i class="icon feather icon-film"></i>
                         </button>
 
                         <button type="button" (click)="toggleMapaBase()" [class.activo]="estiloBase === 'satelite'"
-                            [title]="'PORTTOS.MAPA_LOGISTICO.ALTERNAR_VISTA_SATELITAL' | translate">
+                            [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.TOGGLE_SATELLITE_VIEW' | translate">
                             <i class="icon feather"
                                 [ngClass]="estiloBase === 'satelite' ? 'icon-map' : 'icon-globe'"></i>
                         </button>
 
-                        <button type="button" (click)="centrarMapa()" [title]="'PORTTOS.MAPA_LOGISTICO.CENTRAR_MAPA_EN_OPERACION' | translate">
+                        <button type="button" (click)="centrarMapa()" [title]="'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CENTER_MAP_ON_OPERATIONS' | translate">
                             <i class="icon feather icon-crosshair"></i>
                         </button>
 
                         <button type="button" (click)="alternarPantallaCompleta()" [class.activo]="pantallaCompleta"
-                            [title]="pantallaCompleta ? ('PORTTOS.KPI_CARD_TCL.CERRAR_VISTA_AMPLIADA' | translate) : ('PORTTOS.MAPA_LOGISTICO.AMPLIAR_MAPA' | translate)">
+                            [title]="pantallaCompleta ? ('COMMON.CLOSE_EXPANDED_VIEW' | translate) : ('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.EXPAND_MAP' | translate)">
                             <i class="icon feather"
                                 [ngClass]="pantallaCompleta ? 'icon-minimize' : 'icon-maximize'"></i>
                         </button>
@@ -118,14 +118,14 @@
                     <!-- Aviso de modo recorrido -->
                     <div class="aviso-recorrido" *ngIf="modoRecorrido">
                         <span class="aviso-punto" [class.pausa]="!reproduciendo"></span>
-                        <span class="aviso-texto">{{ 'PORTTOS.MAPA_LOGISTICO.REPRODUCIENDO' | translate }}<strong *ngIf="fechaRecorrido"> · {{ fechaRecorrido |
+                        <span class="aviso-texto">{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.PLAYING' | translate }}<strong *ngIf="fechaRecorrido"> · {{ fechaRecorrido |
                                 date: 'HH:mm' : '-0500' }}</strong></span>
                         <div class="controles-aviso">
                             <button type="button" (click)="alternarReproduccion()" [disabled]="!recorrido"
-                                [title]="reproduciendo ? ('PORTTOS.MAPA_LOGISTICO.PAUSAR' | translate) : ('PORTTOS.MAPA_LOGISTICO.REPRODUCIR' | translate)">
+                                [title]="reproduciendo ? ('COMMON.PAUSE' | translate) : ('PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.PLAY' | translate)">
                                 <i class="icon feather" [ngClass]="reproduciendo ? 'icon-pause' : 'icon-play'"></i>
                             </button>
-                            <button type="button" class="aviso-vivo" (click)="salirRecorrido()">{{ 'PORTTOS.MAPA_LOGISTICO.EN_VIVO' | translate }}</button>
+                            <button type="button" class="aviso-vivo" (click)="salirRecorrido()">{{ 'COMMON.LIVE' | translate }}</button>
                         </div>
                     </div>
                 </ng-container>
@@ -133,7 +133,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarCapas">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.VISUALIZACION_DE_CAPAS' | translate }}</h3>
+                            <h3>{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.LAYER_DISPLAY' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -211,7 +211,7 @@
                     <div class="panel-menu">
                         <div class="panel-header">
                             <!-- Usamos h3 igual que en el panel de capas para mantener consistencia -->
-                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.CONVENCIONES_DEL_MAPA' | translate }}</h3>
+                            <h3>{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.MAP_LEGEND' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -277,7 +277,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarBitacora">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.ALERTAS_DEL_MAPA' | translate }}</h3>
+                            <h3>{{ 'COMMON.MAP_ALERTS' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -286,7 +286,7 @@
                         <div class="contenido-panel">
                             <!-- Mensaje de estado vacío con un poco más de aire -->
                             <p class="text-muted small text-center my-4" *ngIf="!bitacoraAlertas.length">
-                                {{ 'PORTTOS.MAPA_LOGISTICO.SIN_ALERTAS_POR_AHORA_EN' | translate }}
+                                {{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.NO_ALERTS_NOW_IN_PORT' | translate }}
                             </p>
 
                             <!-- Contenedor maestro de la lista (Hereda de grupo-capas) -->
@@ -303,7 +303,7 @@
 
                                         <span class="alerta-texto">
                                             <strong>{{ (a.titulo | translate) }}</strong>
-                                            <span>{{ (a.mensaje | translate) }}<em *ngIf="a.simulado"> {{ 'PORTTOS.MAPA_LOGISTICO.SIMULADO' | translate }}</em></span>
+                                            <span>{{ (a.mensaje | translate) }}<em *ngIf="a.simulado"> {{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SIMULATED' | translate }}</em></span>
                                         </span>
 
                                         <span class="alerta-hora">{{ a.fecha | date: 'HH:mm' }}</span>
@@ -332,7 +332,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarEmbudo">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.EMBUDO_DE_LLEGADA' | translate }}</h3>
+                            <h3>{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.ARRIVAL_FUNNEL' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>
@@ -366,7 +366,7 @@
                 <div class="panel-interno animate__animated animate__fadeIn" *ngIf="mostrarRecorrido">
                     <div class="panel-menu">
                         <div class="panel-header">
-                            <h3>{{ 'PORTTOS.MAPA_LOGISTICO.REPRODUCIR_HISTORIAL' | translate }}</h3>
+                            <h3>{{ 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.PLAY_HISTORY' | translate }}</h3>
                             <button type="button" class="btn-cerrar" (click)="cerrarPaneles()">
                                 <i class="icon feather icon-x"></i>
                             </button>

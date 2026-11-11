@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
@@ -16,22 +16,22 @@
             <div class="card-header card-header-sticky">
                 <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PUERTOS.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PUERTOS.UPDATE' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.NEW_PORT' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.EDIT_PORT' | translate }}</h4>
                     </div>
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'PUERTOS.CREATE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.CREATE_PORT' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'PUERTOS.UPDATE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.EDIT_PORT' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -63,66 +63,66 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'PUERTOS.CODE' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="id_puerto"
-                                    placeholder="{{ 'PUERTOS.CODEPLACEHOLDER' | translate }}"
+                                    placeholder="{{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.PORT_CODE' | translate }}"
                                     [ngClass]="{ 'is-invalid': !id_puerto.valid && (id_puerto.dirty || id_puerto.touched || isSubmit) }"
                                     #id_puerto="ngModel" required [(ngModel)]="FormRegistro.id_puerto" />
                                 <label *ngIf="!id_puerto.valid && (id_puerto.dirty || id_puerto.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PUERTOS.CODEHOLDERERROR' | translate }}
+                                    {{ 'COMMON.ENTER_CODE_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombre">{{ 'PUERTOS.NAME' |
+                                <label class="form-control-label" for="nombre">{{ 'COMMON.NAME' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="nombre" name="nombre" type="text"
-                                    placeholder="{{ 'PUERTOS.NAME' | translate }}"
+                                    placeholder="{{ 'COMMON.NAME' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombre.valid && (nombre.dirty || nombre.touched || isSubmit) }"
                                     #nombre="ngModel" required [(ngModel)]="FormRegistro.nombre" />
                                 <label *ngIf="!nombre.valid && (nombre.dirty || nombre.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PUERTOS.NAMEHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.ENTER_NAME_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="region">{{ 'PUERTOS.REGION' |
+                                <label class="form-control-label" for="region">{{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.REGION' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="region" name="region" type="text"
-                                    placeholder="{{ 'PUERTOS.REGIONHOLDER' | translate }}"
+                                    placeholder="{{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.PORT_REGION' | translate }}"
                                     [ngClass]="{ 'is-invalid': !region.valid && (region.dirty || region.touched || isSubmit) }"
                                     #region="ngModel" required [(ngModel)]="FormRegistro.region" />
                                 <label *ngIf="!region.valid && (region.dirty || region.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PUERTOS.REGIONHOLDERORR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.ENTER_REGION_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="url_fuente_scraping">{{ 'PUERTOS.URLSCRAPING' |
+                                <label class="form-control-label" for="url_fuente_scraping">{{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.DATA_SOURCE_URL' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="url_fuente_scraping"
                                     name="url_fuente_scraping" type="text"
-                                    placeholder="{{ 'PUERTOS.URLSCRAPINGHOLDER' | translate }}"
+                                    placeholder="{{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.HTTPS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !url_fuente_scraping.valid && (url_fuente_scraping.dirty || url_fuente_scraping.touched || isSubmit) }"
                                     #url_fuente_scraping="ngModel" required
                                     [(ngModel)]="FormRegistro.url_fuente_scraping" />
                                 <label
                                     *ngIf="!url_fuente_scraping.valid && (url_fuente_scraping.dirty || url_fuente_scraping.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PUERTOS.URLSCRAPINGHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.ENTER_VALID_URL' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="ubicacion_geo">
-                                    {{ 'PUERTOS.UBICACION' | translate }}
+                                    {{ 'PORTTOS.LOCATION' | translate }}
                                 </label>
 
                                 <!-- Aquí usamos nuestro componente interactivo -->
@@ -136,14 +136,14 @@
 
                                 <label *ngIf="!FormRegistro.ubicacion_geo && isSubmit"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PUERTOS.UBICACION_REQUERIDA' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.MARK_LOCATION_ON_MAP_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="geocerca_geo">
-                                    {{ 'PUERTOS.GEOCERCA' | translate }}
+                                    {{ 'PORTTOS.GEOFENCE' | translate }}
                                 </label>
 
                                 <!-- Aquí usamos nuestro componente interactivo -->
@@ -156,13 +156,13 @@
 
                                 <label *ngIf="!FormRegistro.geocerca_geo && isSubmit"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PUERTOS.GEOCERCA_REQUERIDA' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.DRAW_PORT_GEOFENCE_ON_MAP_FIELD' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORTEXT' | translate
+                                <label class="form-control-label">{{ 'COMMON.TEXT_COLOR' | translate
                                     }}</label>
                                 <app-color-selector [initialColor]="FormRegistro.color_ui" [id]="textoColor"
                                     (colorSelected)="OnColorSelectedClick($event)"></app-color-selector>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'PUERTOS.DESCRIPTION' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcion ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcion"
@@ -181,13 +181,13 @@
                                 <label
                                     *ngIf="!descripcion.valid && (descripcion.dirty || descripcion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PUERTOS.DESCRIPCIONHOLDER' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.PORT_DESCRIPTION' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'PUERTOS.GESTION.IMAGEN' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.IMAGE' | translate }}</label>
                                 <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview" />
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
@@ -201,19 +201,19 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'PUERTOS.STATUS' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="estado" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estado" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estado" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estado" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

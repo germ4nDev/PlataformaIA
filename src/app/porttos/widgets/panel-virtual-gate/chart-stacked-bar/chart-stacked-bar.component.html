@@ -31,14 +31,14 @@
     </div>
 
 </app-widget-shell> -->
-<app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || ('PORTTOS.CHART_STACKED_BAR.CITAS_PROXIMAS_12_HORAS' | translate)"
-    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.CHART_STACKED_BAR.POR_TERMINAL_Y_FRANJA_HORARIA' | translate)"
+<app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CHART_STACKED_BAR.APPOINTMENTS_NEXT_12_HOURS' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CHART_STACKED_BAR.BY_TERMINAL_TIME_SLOT' | translate)"
     [icono]="data?.icono || 'feather icon-bar-chart-2'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <div acciones-extra class="d-flex align-items-center">
         <!-- 🟢 CORREGIDO: Usamos data.datasets en lugar de datasets privado -->
         <span class="tc-badge badge-info text-uppercase">
-            {{ tieneDatos ? (data.datasets.length + ('PORTTOS.CHART_STACKED_BAR.TERMINALES' | translate)) : 'PROYECCIONES' }}
+            {{ tieneDatos ? (data.datasets.length + ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CHART_STACKED_BAR.TERMINALS' | translate)) : 'PROYECCIONES' }}
         </span>
     </div>
 
@@ -47,7 +47,7 @@
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top: 0; left: 0; z-index: 10;">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted" style="font-size: 0.8rem;">{{ 'PORTTOS.CHART_STACKED_BAR.CONSULTANDO_PROGRAMACION_DE_CITAS' | translate }}</span>
+            <span class="text-muted" style="font-size: 0.8rem;">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CHART_STACKED_BAR.CHECKING_APPOINTMENT_SCHEDULE' | translate }}</span>
         </div>
 
         <!-- Canvas Chart.js unificado con PorttosChartHelper -->
@@ -60,7 +60,7 @@
         <div *ngIf="!cargando && !tieneDatos"
             class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted">
             <i class="feather icon-calendar fs-2 mb-2 opacity-50"></i>
-            <span style="font-size: 0.8rem;">{{ 'PORTTOS.CHART_STACKED_BAR.SIN_CITAS_PROGRAMADAS_PARA_LAS' | translate }}</span>
+            <span style="font-size: 0.8rem;">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.CHART_STACKED_BAR.NO_APPOINTMENTS_SCHEDULED_NEXT_12_HOURS' | translate }}</span>
         </div>
     </div>
 

@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,68 +17,68 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'TICKETS.TICKETS.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'TICKETS.TICKET_FILTERS' | translate }}</h6>
                     </DIV>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTROAPLICACION' | translate }}</small>
+                        <small>{{ 'COMMON.APPLICATION' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer"
                             (change)="onFiltroAplicacionChangeClick($event)">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="apli.codigoAplicacion" *ngFor="let apli of aplicaciones"> {{
                                 apli.nombreAplicacion }}</option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTROSUITE' | translate }}</small>
+                        <small>{{ 'COMMON.SUITE' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer"
                             (change)="onFiltroSuiteChangeClick($event)">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="sui.codigoSuite" *ngFor="let sui of suites"> {{ sui.nombreSuite }}</option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTROMODULO' | translate }}</small>
+                        <small>{{ 'TICKETS.MODULE' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer"
                             (change)="onFiltroModuloChangeClick($event)">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="mod.codigoModulo" *ngFor="let mod of modulos"> {{ mod.nombreModulo }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTROSENDER' | translate }}</small>
+                        <small>{{ 'TICKETS.SENT_BY' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer"
                             (change)="onFiltroSenderChangeClick($event)">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="usuS.codigoUsuario" *ngFor="let usuS of usuarios"> {{ usuS.nombreUsuario }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTROASIGNADO' | translate }}</small>
+                        <small>{{ 'TICKETS.ASSIGNED' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer"
                             (change)="onFiltroAsignadoChangeClick($event)">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="usuS.codigoUsuario" *ngFor="let usuS of usuarios"> {{ usuS.nombreUsuario }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'TICKETS.TICKETS.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'TICKETS.TICKET_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'TICKETS.TICKETS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'TICKETS.TICKET_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.TICKETS.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer"
                             (change)="onFiltroEstadoChangeClick($event)">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="esta.siglaEstado" *ngFor="let esta of estadosTicket"> {{ esta.nombreEstado
                                 }}</option>
                         </select>
@@ -93,9 +93,9 @@
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoTicket'"
-                        [tableTitle]="'TICKETS.TICKETS.TITLE' | translate"
-                        [newButtonLabel]="'TICKETS.TICKETS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [metadataColumns]="columnasRegistros"
+                        [tableTitle]="'TICKETS.TICKET_MANAGEMENT' | translate"
+                        [newButtonLabel]="'TICKETS.NEW_TICKET' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showSearchBox]="false"
                         [showDeleteButton]="true" (viewRecord)="OnViewRegistroClick($event)"

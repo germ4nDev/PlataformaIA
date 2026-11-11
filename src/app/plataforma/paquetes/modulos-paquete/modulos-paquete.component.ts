@@ -161,7 +161,7 @@ export class ModulosPaqueteComponent implements OnInit, OnDestroy {
                     if (permisos.includes('ACT_MODPQ_ELIMINAR')) {
                         accionesPermitidas.push({
                             accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('PLATAFORMA.DELETE')
+                            tooltip: this.translate.instant('COMMON.DELETE')
                         });
                     }
 
@@ -203,18 +203,18 @@ export class ModulosPaqueteComponent implements OnInit, OnDestroy {
 
     eliminarModulo(row: any): void {
         this._swalService.getAlertQuestionRequest(
-            this.translate.instant('APLICACIONES.ELIMINARTEXTO'),
-            this.translate.instant('APLICACIONES.ELIMINARTITULO')
+            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED'),
+            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
         ).subscribe(result => {
             if (result) {
                 this._registrosService.deleteEliminarRegistro(row.codigoModuloPQ).subscribe({
                     next: (resp: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertSuccess(resp.mensaje);
                     },
                     error: err => {
-                        this._swalService.getAlertError(this.translate.instant('APLICACIONES.ELIMINARERROR'));
+                        this._swalService.getAlertError(this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION'));
                     }
                 });
             }
@@ -235,10 +235,10 @@ export class ModulosPaqueteComponent implements OnInit, OnDestroy {
     toggleNav(): void { this.toggleSidebar.emit(); }
 
     columnasPaquetes: ColumnMetadata[] = [
-        { name: 'nomModulo', header: 'MODULOSPQ.MODULO', type: 'text' },
-        { name: 'nomSuite', header: 'MODULOSPQ.SUITE', type: 'text' },
-        { name: 'nomAplicacion', header: 'MODULOSPQ.APLICACION', type: 'text' },
-        { name: 'nomEstado', header: 'MODULOSPQ.STATUS', type: 'estado' }
+        { name: 'nomModulo', header: 'COMMON.MODULE', type: 'text' },
+        { name: 'nomSuite', header: 'COMMON.SUITE', type: 'text' },
+        { name: 'nomAplicacion', header: 'COMMON.APPLICATION', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [];

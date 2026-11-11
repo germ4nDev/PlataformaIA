@@ -1,14 +1,14 @@
 <app-widget-shell [titulo]="(widgetConfig?.titulo | translate) || 'COLA DE FONDEO'"
-    [subtitulo]="('PORTTOS.COLA_FONDEO.NAVES_FONDEADAS_ESPERANDO_MUELLE' | translate) + puerto" icono="feather icon-anchor" [isEnfoque]="isEnfoque"
+    [subtitulo]="('PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.SHIPS_AT_ANCHORAGE_WAITING_BERTH' | translate) + puerto" icono="feather icon-anchor" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()" [origen]="origenVivo">
 
     <div acciones-extra class="d-flex align-items-center gap-2" *ngIf="datos">
-        <span class="tc-badge badge-info">{{ 'PORTTOS.COLA_FONDEO.EN_FONDEO' | translate: { p0: datos.fondeo.naves } }}</span>
-        <span *ngIf="enAlerta() > 0" class="tc-badge badge-warning">{{ 'PORTTOS.COLA_FONDEO.SOBRE_UMBRAL' | translate: { p0: enAlerta() } }}</span>
+        <span class="tc-badge badge-info">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.P0_AT_ANCHORAGE' | translate: { p0: datos.fondeo.naves } }}</span>
+        <span *ngIf="enAlerta() > 0" class="tc-badge badge-warning">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.P0_ABOVE_THRESHOLD' | translate: { p0: enAlerta() } }}</span>
     </div>
 
     <div *ngIf="cargando" class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted">
-        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> {{ 'PORTTOS.COLA_FONDEO.LEYENDO_POSICIONES_AIS' | translate }}
+        <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.READING_AIS_POSITIONS' | translate }}
     </div>
     <div *ngIf="!cargando && error && !datos"
         class="d-flex justify-content-center align-items-center h-100 mv-estado text-muted text-center px-3">
@@ -16,7 +16,7 @@
     </div>
     <div *ngIf="datos && datos.fondeo.cola.length === 0"
         class="d-flex flex-column justify-content-center align-items-center h-100 mv-estado text-muted">
-        <i class="feather icon-check-circle fs-3 mb-2 opacity-50"></i>{{ 'PORTTOS.COLA_FONDEO.SIN_NAVES_EN_FONDEO_EN' | translate }}
+        <i class="feather icon-check-circle fs-3 mb-2 opacity-50"></i>{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.NO_SHIPS_AT_ANCHORAGE_RIGHT_NOW' | translate }}
     </div>
 
     <div *ngIf="datos && datos.fondeo.cola.length > 0" class="mv-lista h-100">
@@ -37,7 +37,7 @@
     </div>
 
     <div *ngIf="datos" class="mv-pie pt-1">
-        {{ 'PORTTOS.COLA_FONDEO.PROMEDIO_ACTUALIZADO' | translate: { p0: duracion(datos.fondeo.minutosPromedio), p1: (ultimaActualizacion | date: 'HH:mm:ss') } }}
+        {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.COLA_FONDEO.AVERAGE_P0_UPDATED_P1' | translate: { p0: duracion(datos.fondeo.minutosPromedio), p1: (ultimaActualizacion | date: 'HH:mm:ss') } }}
         <span *ngIf="error" class="text-warning"> · ⚠ {{ error }}</span>
     </div>
     <!-- Vista ampliada: la cola completa (hasta 50 naves) con posición -->

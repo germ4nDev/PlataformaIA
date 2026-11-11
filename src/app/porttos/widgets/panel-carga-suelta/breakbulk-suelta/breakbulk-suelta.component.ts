@@ -30,25 +30,25 @@ export class BreakbulkSueltaComponent extends WidgetTableroBase<TableroCargaSuel
     public filas: any[] = [];
     public readonly mensajeVacio = 'Sin carga suelta activa.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'folio', titulo: 'PORTTOS.BREAKBULK_SUELTA.FOLIO', tipo: 'principal' },
-        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
-        { campo: 'cliente', titulo: 'PORTTOS.TABLE_BODEGAS.CLIENTE' },
-        { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE' },
-        { campo: 'bultosTexto', titulo: 'PORTTOS.BREAKBULK_SUELTA.BULTOS', alinear: 'der' },
+        { campo: 'folio', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.FOLIO', tipo: 'principal' },
+        { campo: 'producto', titulo: 'PORTTOS.WIDGETS.PRODUCT' },
+        { campo: 'cliente', titulo: 'PORTTOS.WIDGETS.CUSTOMER' },
+        { campo: 'motonave', titulo: 'PORTTOS.WIDGETS.VESSEL' },
+        { campo: 'bultosTexto', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.PACKAGES', alinear: 'der' },
         { campo: 'tm', titulo: 'TM', tipo: 'numero' },
-        { campo: 'ubicacion', titulo: 'PORTTOS.TABLE_COLA_GATE.UBICACION' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
+        { campo: 'ubicacion', titulo: 'PORTTOS.LOCATION' },
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'naviera', titulo: 'PORTTOS.TABLE_CONTENEDORES.NAVIERA' },
-        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
-        { campo: 'sentido', titulo: 'PORTTOS.BREAKBULK_SUELTA.SENTIDO' },
-        { campo: 'pesoUnitarioTm', titulo: 'PORTTOS.BREAKBULK_SUELTA.PESO_UNITARIO', tipo: 'numero', decimales: 2, unidad: 't' },
-        { campo: 'dimensiones', titulo: 'PORTTOS.BREAKBULK_SUELTA.DIMENSIONES' },
-        { campo: 'equipoRequerido', titulo: 'PORTTOS.BREAKBULK_SUELTA.EQUIPO_REQUERIDO' },
-        { campo: 'fechaProgramada', titulo: 'PORTTOS.BREAKBULK_SUELTA.PROGRAMADO', tipo: 'fecha' },
-        { campo: 'simulado', titulo: 'PORTTOS.MOTONAVES_GRANEL.SIMULADO', tipo: 'si-no' }
+        { campo: 'naviera', titulo: 'PORTTOS.WIDGETS.SHIPPING_LINE' },
+        { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
+        { campo: 'sentido', titulo: 'PORTTOS.WIDGETS.DIRECTION' },
+        { campo: 'pesoUnitarioTm', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.UNIT_WEIGHT', tipo: 'numero', decimales: 2, unidad: 't' },
+        { campo: 'dimensiones', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.DIMENSIONS' },
+        { campo: 'equipoRequerido', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.REQUIRED_EQUIPMENT' },
+        { campo: 'fechaProgramada', titulo: 'PORTTOS.WIDGETS.PANEL_CARGA_SUELTA.SCHEDULED', tipo: 'fecha' },
+        { campo: 'simulado', titulo: 'COMMON.SIMULATED_2', tipo: 'si-no' }
     ];
 
     constructor(tableros: TablerosPestanasService, torre: DashboardService, cdr: ChangeDetectorRef) {

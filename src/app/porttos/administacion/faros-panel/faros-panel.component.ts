@@ -56,10 +56,10 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
     DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
 
     ETIPOS_FARO = [
-        { id: 'PEAJE', label: traducir('PORTTOS.COMUN.PEAJE'), color: '#22c55e' },
-        { id: 'PUNTO_CONTROL', label: traducir('PORTTOS.COMUN.PUNTO_DE_CONTROL'), color: '#facc15' },
-        { id: 'ZONA_TERRESTRE', label: traducir('PORTTOS.COMUN.ZONA_TERRESTRE'), color: '#f59e0b' },
-        { id: 'ZONA_MARITIMA', label: traducir('PORTTOS.COMUN.ZONA_MARITIMA'), color: '#dc2626' }
+        { id: 'PEAJE', label: traducir('PORTTOS.TOLL'), color: '#22c55e' },
+        { id: 'PUNTO_CONTROL', label: traducir('PORTTOS.ADMINISTACION.CHECKPOINT'), color: '#facc15' },
+        { id: 'ZONA_TERRESTRE', label: traducir('PORTTOS.ADMINISTACION.LAND_ZONE'), color: '#f59e0b' },
+        { id: 'ZONA_MARITIMA', label: traducir('PORTTOS.ADMINISTACION.MARITIME_ZONE'), color: '#dc2626' }
     ];
 
     moduloTituloExcel: string = ''
@@ -137,7 +137,7 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
 
                     // Evitar errores si this.ETIPOS_FARO no encuentra coincidencia
                     const tipoFaro = this.ETIPOS_FARO.find(x => x.id == fr.tipo_faro);
-                    fr.nomTipo = tipoFaro ? traducir(tipoFaro.label) : traducir('PORTTOS.COMUN.DESCONOCIDO');
+                    fr.nomTipo = tipoFaro ? traducir(tipoFaro.label) : traducir('PORTTOS.ADMINISTACION.FAROS_PANEL.UNKNOWN');
 
                     // 1. Manejo seguro de ubicacion_geo (El marcador/punto central)
                     const geoUbicacion = fr.ubicacion_geo?.features?.[0]?.geometry;
@@ -212,27 +212,27 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'nomTipo',
-            header: 'FAROS.TIPO',
+            header: 'COMMON.TYPE',
             type: 'text'
         },
         {
             name: 'nombre_faro',
-            header: 'FAROS.NOMBRE',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'radio_metros',
-            header: 'FAROS.RADIO_METROS',
+            header: 'PORTTOS.ADMINISTACION.FAROS_PANEL.RADIUS_M',
             type: 'estado'
         },
         {
             name: 'nomEstado',
-            header: 'FAROS.ESTADO',
+            header: 'COMMON.STATUS',
             type: 'estado'
         },
         {
             name: 'color_ui',
-            header: 'FAROS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'color_chip'
         }
     ]
@@ -240,22 +240,22 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'nomAlerta',
-            header: 'FAROS.ALERTA',
+            header: 'PORTTOS.ALERT',
             type: 'text'
         },
         {
             name: 'descripcion',
-            header: 'FAROS.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'punto',
-            header: 'FAROS.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'array_list'
         },
         {
             name: 'coordenadas',
-            header: 'FAROS.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'array_list'
         }
     ]
@@ -277,8 +277,8 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
             text: this.translate.instant('faros.ELIMINARTEXTO'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._farosService.deleteFaro(id).subscribe({
@@ -299,7 +299,7 @@ export class FarosPanelComponent implements OnInit, OnDestroy {
                             descripcionLog: this.translate.instant('faros.ELIMINARERROR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('faros.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('faros.ELIMINARERROR'), 'error')
                     }
                 })
             }

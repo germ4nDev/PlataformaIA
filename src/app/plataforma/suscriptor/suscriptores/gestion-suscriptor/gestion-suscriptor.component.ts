@@ -224,7 +224,7 @@ export class GestionSuscriptorComponent implements OnInit {
                 this.FormRegistro.claveConfirm = '';
                 this.isClaveValida = false;
                 this.isClaveActual = true;
-                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.PASSWORDNOTMATCH'));
+                this._swalAlertService.getAlertError(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.GESTION.CURRENT_PASSWORD_DOES_NOT_MATCH'));
             }
         });
     }
@@ -276,7 +276,7 @@ export class GestionSuscriptorComponent implements OnInit {
                     this.FormRegistro.logoSuscriptor = path.data.respuesta.fileName;
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
                 }
             });
         } else {
@@ -319,7 +319,7 @@ export class GestionSuscriptorComponent implements OnInit {
                 next: (resp: any) => {
                     if (resp.ok) {
                         this.GestionarUsuario(registroData);
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('SUSCRIPTORES.UPDATESUCCSESSFULLY'))
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.GESTION.SUBSCRIBER_UPDATED_SUCCESSFULLY'))
                         form.resetForm()
                     }
                 },
@@ -328,10 +328,10 @@ export class GestionSuscriptorComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('SUSCRIPTORES.CREATEERROR')
+                        descripcionLog: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.GESTION.COULD_NOT_CREATE_SUBSCRIBER')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_SUSCRIPTOR.NO_SE_PUDO_ACTUALIZAR_EL'))
+                    this._swalAlertService.getAlertError(traducir('SUSCRIPTOR.SUSCRIPTORES.GESTION.COULD_NOT_UPDATE_SUBSCRIBER'))
                 }
             });
         } else {
@@ -343,13 +343,13 @@ export class GestionSuscriptorComponent implements OnInit {
                 next: (resp: any) => {
                     if (resp.ok) {
                         this.GestionarUsuario(registroData);
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('SUSCRIPTORES.CREATESUCCSESSFULLY'))
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.GESTION.SUBSCRIBER_CREATED_SUCCESSFULLY'))
                         form.resetForm()
                     }
                 },
                 error: (err) => {
                     const error = err.error?.msg || 'Error al validar datos'
-                    const rutaTraduccion = `SUSCRIPTORES.CREATEERROR`;
+                    const rutaTraduccion = `SUSCRIPTOR.SUSCRIPTORES.GESTION.COULD_NOT_CREATE_SUBSCRIBER`;
                     this._swalAlertService.getAlertConfirmWarning(this.translate.instant(`rutaTraduccion ${error}`));
                 }
             });
@@ -427,7 +427,7 @@ export class GestionSuscriptorComponent implements OnInit {
 
     private finalizarRegistro(codigoSuscriptor: string) {
         this._uploadService.createFolder(codigoSuscriptor).subscribe();
-        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
         this.router.navigate(['/suscriptor/suscriptores']);
     }
 

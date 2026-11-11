@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
             <ng-container *ngIf="activeTab === 'menu'">
@@ -15,13 +15,13 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'ITEMSPAQUETES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
 
                     <div class="filtro">
-                        <label class="form-control-label" for="tipoValorId"> {{ 'MODULOS.GESTION.TIPOVALOR' | translate
+                        <label class="form-control-label" for="tipoValorId"> {{ 'PAQUETES.ITEMS_PAQUETE.VALUE_TYPE' | translate
                             }}</label>
                         <select (change)="onTipoValorChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="tipo.codigoTipoItem" *ngFor="let tipo of tiposValor">
                                 {{ tipo.nombreTipo }}
                             </option>
@@ -29,9 +29,9 @@
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
                         <select (change)="onFiltroValorChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <option [value]="valor.codigoItem" *ngFor="let valor of listaPrecios">
                                 {{ valor.nombreItem }}
                             </option>
@@ -39,24 +39,24 @@
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'ITEMSPAQUETES.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}" />
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'ITEMSPAQUETES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'ITEMSPAQUETES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -69,11 +69,11 @@
             <div class="card-body">
                 <ng-container *ngIf="itemsPaqueteFiltrados$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoItem'"
-                        [tableTitle]="'ITEMSPAQUETES.TITLE' | translate" [metadataColumns]="columnasPaquetes"
+                        [tableTitle]="'PAQUETES.PACKAGE_ITEM_MANAGEMENT' | translate" [metadataColumns]="columnasPaquetes"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showBackButton]="true" [showViewButton]="false" [showEditButton]="false"
-                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'ITEMS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'PAQUETES.NEW_ITEM' | translate"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (backRecord)="OnRegresarClick()" (accionPrincipalClick)="onAccionPrincipal($event)"
                         permisoNew="ACT_ITEMPQ_CREAR">
                     </app-table-data>

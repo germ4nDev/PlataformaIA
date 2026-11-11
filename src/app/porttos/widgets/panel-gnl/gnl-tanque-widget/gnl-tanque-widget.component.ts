@@ -93,7 +93,7 @@ export class GnlTanqueWidgetComponent implements OnInit, OnChanges, OnDestroy {
     get data(): any {
         return {
             ...(this.widgetConfig?.data || {}),
-            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.GNL_TANQUE_WIDGET.OCUPACION_DE_PLANTA',
+            titulo: this.widgetConfig?.tituloWidget || this.widgetConfig?.data?.titulo || 'PORTTOS.WIDGETS.PANEL_GNL.GNL_TANQUE_WIDGET.PLANT_OCCUPANCY',
             subtitulo:
                 this.widgetConfig?.descripcionWidget ||
                 this.widgetConfig?.data?.subtitulo ||

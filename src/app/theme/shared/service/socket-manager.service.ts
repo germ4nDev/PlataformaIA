@@ -380,7 +380,8 @@ export class SocketManagerService {
         this.socketService.listen('widgets-actualizados').subscribe(data => this.widgetsActualizados$.next(data));
         this.socketService.listen('widgets-roles-actualizados').subscribe(data => this.widgetsRolesActualizados$.next(data));
         this.socketService.listen('layout-actualizado').subscribe(data => this.layoutActualizado$.next(data));
-        this.socketService.listen('lista-precios-actualizados').subscribe(data => this.listasPreciosActualizadas$.next(data));
+        // OT-029: el API emite 'listas-precios-actualizadas' (antes se escuchaba otro nombre y no llegaba)
+        this.socketService.listen('listas-precios-actualizadas').subscribe(data => this.listasPreciosActualizadas$.next(data));
         this.socketService.listen('parametros-actualizados').subscribe(data => this.parametrosActualizados$.next(data));
         this.socketService.listen('items-actualizados').subscribe(data => this.itemsActualizadas$.next(data));
         this.socketService.listen('pestanas-actualizados').subscribe(data => this.pestanasActualizadoa$.next(data));

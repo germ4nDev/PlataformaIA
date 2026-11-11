@@ -162,7 +162,7 @@ export class GestionWidgetRolesComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (resp: any) => {
                     console.log('Sincronización exitosa', resp);
-                    this._swalAlertService.getAlertSuccess(this.translate.instant('WIDGETS.CREATESUCCESSFULLY'));
+                    this._swalAlertService.getAlertSuccess(this.translate.instant('UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.WIDGET_ROLES_SAVED'));
                     // Refresca la copia en memoria (la tabla de Widgets por rol y esta pantalla la usan).
                     this._widgetsRolesService.cargarRegistros().subscribe();
                     this._localStorageService.setObject('regId', this.codigoWidget)
@@ -170,7 +170,7 @@ export class GestionWidgetRolesComponent implements OnInit, OnDestroy {
                 },
                 error: (err: any) => {
                     console.error('Error al sincronizar roles de widget', err);
-                    this._swalAlertService.getAlertError(this.translate.instant('WIDGETS.GESTION.ERRORGUARDAR'));
+                    this._swalAlertService.getAlertError(this.translate.instant('UTILIDADES.WIDGETS.WIDGET_COULD_NOT_BE_SAVED'));
                 }
             });
     }

@@ -1,7 +1,7 @@
 @if (preguntas.length) {
   <section class="bloque bloque--alterno">
     <div class="contenedor contenedor--angosto">
-      <h2 class="titulo-seccion titulo-seccion--centro">{{ 'WEB.PREGUNTAS.PREGUNTAS_FRECUENTES' | translate }}</h2>
+      <h2 class="titulo-seccion titulo-seccion--centro">{{ 'WEBSITES.PORTTOS.COMPONENTES.PREGUNTAS.FAQ' | translate }}</h2>
       @for (p of preguntas; track $index) {
         <details class="pregunta"><summary>{{ p.pregunta }}</summary><p>{{ p.respuesta }}</p></details>
       }

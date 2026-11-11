@@ -1,0 +1,103 @@
+// Selector de fecha (regla 25). Los colores salen de variables CSS --selector-fecha-* que se definen en styles.scss para el tema claro
+// (:root) y el oscuro (body.dark-theme). Si una no está definida, cae a la del tema general (--card-background, --texto-color…).
+// Son variables CSS (no de SCSS): las de SCSS se fijan al compilar y no cambiarían al pasar de tema claro a oscuro.
+:host {
+    display: block;
+    position: relative;
+
+    --sf-fondo: var(--selector-fecha-fondo, var(--card-background));
+    --sf-texto: var(--selector-fecha-texto, var(--texto-color));
+    --sf-borde: var(--selector-fecha-borde, var(--border-color));
+    --sf-sombra: var(--selector-fecha-sombra, 0 8px 24px rgba(0, 0, 0, .25));
+    --sf-acento: var(--selector-fecha-acento, var(--app-navbar-color, #2a5dbd));
+    --sf-texto-acento: var(--selector-fecha-texto-acento, #fff);
+    --sf-hover: var(--selector-fecha-hover, color-mix(in srgb, var(--sf-acento) 20%, transparent));
+    --sf-dias-fuera: var(--selector-fecha-dias-fuera, .4);
+    --sf-radio: var(--selector-fecha-radio, 8px);
+}
+
+.campo {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input { padding-right: 4.2rem; cursor: pointer; }
+    &.deshabilitado input { cursor: not-allowed; }
+    &.is-invalid input { border-color: #dc3545 !important; }
+
+    .btn-icono { position: absolute; right: .35rem; }
+    .btn-icono.limpiar { right: 2.2rem; }
+}
+
+.btn-icono {
+    border: 0;
+    background: transparent;
+    color: var(--sf-texto);
+    opacity: .75;
+    padding: .25rem .4rem;
+    line-height: 1;
+    border-radius: 4px;
+    &:hover:not(:disabled) { opacity: 1; background: color-mix(in srgb, var(--sf-texto) 10%, transparent); }
+    &:disabled { opacity: .35; }
+}
+
+.calendario {
+    position: fixed;   // top y left los calcula el componente (no lo recortan los cards con overflow)
+    z-index: 1060;
+    width: 18.5rem;
+    padding: .6rem;
+    background: var(--sf-fondo);
+    color: var(--sf-texto);
+    border: 1px solid var(--sf-borde);
+    border-radius: var(--sf-radio);
+    box-shadow: var(--sf-sombra);
+}
+
+.cabecera {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    margin-bottom: .4rem;
+
+    .mes-anio { display: flex; gap: .25rem; flex: 1; }
+    .form-select { padding: .2rem 1.6rem .2rem .5rem; font-size: .85rem; text-transform: capitalize; }
+    .form-select:first-child { flex: 1.4; }
+}
+
+.semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+
+    &.nombres span {
+        text-align: center;
+        font-size: .72rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        opacity: .7;
+        padding: .2rem 0;
+    }
+}
+
+.dia {
+    border: 0;
+    background: transparent;
+    color: var(--sf-texto);
+    border-radius: 6px;
+    height: 2.1rem;
+    font-size: .85rem;
+
+    &:hover:not(:disabled) { background: var(--sf-hover); }
+    &.fuera { opacity: var(--sf-dias-fuera); }
+    &.hoy { box-shadow: inset 0 0 0 1px var(--sf-acento); }
+    &.elegida { background: var(--sf-acento); color: var(--sf-texto-acento); opacity: 1; }
+    &:disabled { opacity: .2; cursor: not-allowed; }
+}
+
+.pie {
+    display: flex;
+    margin-top: .4rem;
+    padding-top: .4rem;
+    border-top: 1px solid var(--sf-borde);
+    .btn-link { color: var(--sf-acento); text-decoration: none; padding: .1rem .3rem; }
+}

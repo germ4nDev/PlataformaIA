@@ -30,18 +30,18 @@ export class EquiposGranelComponent extends WidgetTableroBase<TableroGranel> {
     public filas: any[] = [];
     public readonly mensajeVacio = 'Sin equipos de granel registrados.';
     public readonly columnas: ColumnaTabla[] = [
-        { campo: 'codigo', titulo: 'PORTTOS.EQUIPOS_GRANEL.EQUIPO', tipo: 'principal' },
-        { campo: 'descripcion', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO' },
-        { campo: 'motonave', titulo: 'PORTTOS.EQUIPOS_GRANEL.MOTONAVE_ASIGNADA' },
-        { campo: 'producto', titulo: 'PORTTOS.TABLE_BODEGAS.PRODUCTO' },
-        { campo: 'rendimientoTmh', titulo: 'PORTTOS.PRODUCTIVIDAD_CHART.RENDIMIENTO', tipo: 'numero', unidad: 't/h' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' }
+        { campo: 'codigo', titulo: 'PORTTOS.WIDGETS.PANEL_GRANEL.EQUIPOS_GRANEL.EQUIPMENT', tipo: 'principal' },
+        { campo: 'descripcion', titulo: 'COMMON.TYPE' },
+        { campo: 'motonave', titulo: 'PORTTOS.WIDGETS.PANEL_GRANEL.EQUIPOS_GRANEL.ASSIGNED_VESSEL' },
+        { campo: 'producto', titulo: 'PORTTOS.WIDGETS.PRODUCT' },
+        { campo: 'rendimientoTmh', titulo: 'PORTTOS.WIDGETS.PERFORMANCE', tipo: 'numero', unidad: 't/h' },
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' }
     ];
     /** Columnas que solo se ven en la vista ampliada (datos que ya llegan del tablero). */
     public readonly columnasAmpliadas: ColumnaTabla[] = [
-        { campo: 'tipo', titulo: 'PORTTOS.EQUIPOS_GRANEL.CODIGO_DE_TIPO' },
-        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
-        { campo: 'capacidadTmh', titulo: 'PORTTOS.EQUIPOS_GRANEL.NOMINAL', tipo: 'numero', unidad: 't/h' },
+        { campo: 'tipo', titulo: 'PORTTOS.WIDGETS.PANEL_GRANEL.EQUIPOS_GRANEL.TYPE_CODE' },
+        { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
+        { campo: 'capacidadTmh', titulo: 'PORTTOS.WIDGETS.PANEL_GRANEL.EQUIPOS_GRANEL.NOMINAL', tipo: 'numero', unidad: 't/h' },
         { campo: 'rendimientoPct', titulo: '% del nominal', tipo: 'numero', unidad: '%' }
     ];
     get operando(): number { return this.filas.filter((f) => f.estado === 'OPERANDO').length; }

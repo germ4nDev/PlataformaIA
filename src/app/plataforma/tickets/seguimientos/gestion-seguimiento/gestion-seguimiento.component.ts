@@ -106,7 +106,7 @@ export class GestionSeguimientoComponent {
                     // console.log('datos del FormRegistro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SEGUIMIENTO.NO_SE_PUDO_OBTENER_EL'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('TICKETS.SEGUIMIENTOS.GESTION.COULD_NOT_GET_FOLLOW_UP'), 'error');
                 }
             });
         }
@@ -267,7 +267,7 @@ export class GestionSeguimientoComponent {
                     this.FormRegistro.capturaSeguimiento = path.nombreArchivo;
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
                 }
             });
         } else {
@@ -300,10 +300,10 @@ export class GestionSeguimientoComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'));
                         if (this.codigoRegistro == 'nuevo') {
                             this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.codigoRequerimiento } });
                         }
@@ -314,10 +314,10 @@ export class GestionSeguimientoComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
+                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'));
                     }
                 },
                 error: (err: any) => {
@@ -325,10 +325,10 @@ export class GestionSeguimientoComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_TRACKING') + ' ' + err.mensaje
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ' ' + err.mensaje);
                 }
             });
         } else {
@@ -350,10 +350,10 @@ export class GestionSeguimientoComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'));
                         form.resetForm();
                         this.isSubmit = false;
                         if (this.codigoRegistro == 'nuevo') {
@@ -369,10 +369,10 @@ export class GestionSeguimientoComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err);
                 }
             });
         }

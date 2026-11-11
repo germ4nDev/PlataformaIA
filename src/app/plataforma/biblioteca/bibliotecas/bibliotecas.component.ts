@@ -153,20 +153,20 @@ export class BibliotecasComponent implements OnInit, OnDestroy {
     columnasBiblioteca: ColumnMetadata[] = [
         {
             name: 'capture',
-            header: 'BIBLIOTECA.FOTO',
+            header: 'COMMON.IMAGE',
             type: 'image',
             isSortable: false
         },
-        { name: 'nombreBiblioteca', header: 'BIBLIOTECA.NAME', type: 'text' },
-        { name: 'nomEstado', header: 'BIBLIOTECA.STATUS', type: 'estado' }
+        { name: 'nombreBiblioteca', header: 'COMMON.NAME', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ]
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoAplicacion', header: 'BIBLIOTECA.APLICACION', type: 'text' },
-        { name: 'descripcionBiblioteca', header: 'BIBLIOTECA.DESCRIPTION', type: 'text' },
+        { name: 'codigoAplicacion', header: 'COMMON.APPLICATION', type: 'text' },
+        { name: 'descripcionBiblioteca', header: 'COMMON.DESCRIPTION', type: 'text' },
         {
             name: 'capture',
-            header: 'BIBLIOTECA.IMAGENINICIO',
+            header: 'COMMON.IMAGE',
             type: 'capture'
         }
     ]
@@ -188,12 +188,12 @@ export class BibliotecasComponent implements OnInit, OnDestroy {
 
     OnEliminarBibliotecaClick(id: string): void {
         Swal.fire({
-            title: this.translate.instant('BIBLIOTECA.ELIMINARTITULO'),
-            text: this.translate.instant('BIBLIOTECA.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('BIBLIOTECA.BIBLIOTECAS.WILL_DELETE_LIBRARY_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._bibliotecaService.eliminarBiblioteca(id).subscribe({
@@ -201,20 +201,20 @@ export class BibliotecasComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('BIBLIOTECA.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('BIBLIOTECA.BIBLIOTECAS.LIBRARY_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('BIBLIOTECA.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('BIBLIOTECA.BIBLIOTECAS.LIBRARY_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.cargarDatos()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('BIBLIOTECA.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('BIBLIOTECA.BIBLIOTECAS.COULD_NOT_DELETE_LIBRARY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('BIBLIOTECA.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('BIBLIOTECA.BIBLIOTECAS.COULD_NOT_DELETE_LIBRARY'), 'error')
                     }
                 })
             }

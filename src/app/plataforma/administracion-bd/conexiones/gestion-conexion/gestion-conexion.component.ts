@@ -87,7 +87,7 @@ export class GestionConexionComponent {
                     console.log('datos del FormRegistro', this.FormRegistro)
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_CONEXION.NO_SE_PUDO_OBTENER_EL'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.CONEXIONES.GESTION.COULD_NOT_GET_ROLE'), 'error')
                 }
             })
         } else {
@@ -207,19 +207,19 @@ export class GestionConexionComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success')
+                        Swal.fire('', this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'), 'success')
                         this.router.navigate(['/administracion-bd/conexiones'])
                     } else {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error')
                     }
                 },
                 error: (err: any) => {
@@ -227,10 +227,10 @@ export class GestionConexionComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error')
                 }
             })
         } else {
@@ -247,10 +247,10 @@ export class GestionConexionComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success')
+                        Swal.fire('', this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'), 'success')
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/administracion-bd/conexiones'])
@@ -261,10 +261,10 @@ export class GestionConexionComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'), 'error')
                 }
             })
         }

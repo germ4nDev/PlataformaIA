@@ -1,12 +1,12 @@
 <app-widget-shell [titulo]="widgetConfig?.titulo || 'TOTAL APLICACIONES'"
-    [subtitulo]="widgetConfig?.subtitulo || ('WEB.COMUN.SINCRONIZADO_CON_BD' | translate)" [icono]="widgetConfig?.icono || 'feather icon-grid'"
+    [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.SYNCED_WITH_DB' | translate)" [icono]="widgetConfig?.icono || 'feather icon-grid'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
 
     <!-- 🟢 1. PROYECCIÓN AL HEADER: Badge de En Vivo -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-warning text-uppercase d-flex align-items-center gap-1">
             <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem;"></span>
-            {{ 'WEB.COMUN.EN_VIVO' | translate }}
+            {{ 'COMMON.LIVE' | translate }}
         </span>
     </div>
 
@@ -31,28 +31,28 @@
 
         <!-- VISTA DETALLADA MODO ENFOQUE (Tabla en modal gigante) -->
         <div *ngIf="isEnfoque" class="w-100 h-100 p-2 animate__animated animate__fadeIn overflow-auto">
-            <p class="text-muted mb-4">{{ 'WEB.WDG_KPI_APLICACIONES.ESTADO_ACTUAL_DE_LAS_APLICACIONES' | translate }}</p>
+            <p class="text-muted mb-4">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_APLICACIONES.CURRENT_STATUS_APPLICATIONS_DEPLOYED_IN_SYSTEM' | translate }}</p>
 
             <table class="table table-borderless table-sm">
                 <thead class="text-muted text-uppercase" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                     <tr>
-                        <th class="text-white pb-2">{{ 'WEB.WDG_KPI_APLICACIONES.APLICACION' | translate }}</th>
-                        <th class="text-end text-white pb-2">{{ 'WEB.WDG_KPI_APLICACIONES.ESTADO' | translate }}</th>
+                        <th class="text-white pb-2">{{ 'COMMON.APPLICATION' | translate }}</th>
+                        <th class="text-end text-white pb-2">{{ 'COMMON.STATUS' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td class="text-white fw-medium py-3">{{ 'WEB.WDG_KPI_APLICACIONES.MODULO_DASHBOARD_QPLUS' | translate }}</td>
+                        <td class="text-white fw-medium py-3">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_APLICACIONES.QPLUS_DASHBOARD_MODULE' | translate }}</td>
                         <td class="text-end py-3">
                             <span
-                                class="badge bg-transparent border border-warning text-warning rounded-pill px-3 py-1">{{ 'WEB.WDG_KPI_APLICACIONES.OPERATIVA' | translate }}</span>
+                                class="badge bg-transparent border border-warning text-warning rounded-pill px-3 py-1">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_APLICACIONES.OPERATING' | translate }}</span>
                         </td>
                     </tr>
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td class="text-white fw-medium py-3">{{ 'WEB.WDG_KPI_APLICACIONES.MOTOR_DE_SINCRONIZACION' | translate }}</td>
+                        <td class="text-white fw-medium py-3">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_APLICACIONES.SYNC_ENGINE' | translate }}</td>
                         <td class="text-end py-3">
                             <span
-                                class="badge bg-transparent border border-warning text-warning rounded-pill px-3 py-1">{{ 'WEB.WDG_KPI_APLICACIONES.OPERATIVA' | translate }}</span>
+                                class="badge bg-transparent border border-warning text-warning rounded-pill px-3 py-1">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_APLICACIONES.OPERATING' | translate }}</span>
                         </td>
                     </tr>
                 </tbody>

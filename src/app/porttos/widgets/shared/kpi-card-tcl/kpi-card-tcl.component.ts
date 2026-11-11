@@ -109,7 +109,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
             this.kpiTableroSub?.unsubscribe();
             this.kpiTableroSub = this._tableros.kpi(codigoWidget, puerto)
                 .pipe(takeUntil(this.destroy$)).subscribe((kpiData: any) => {
-                    this.datosAutonomosSQL = kpiData || { valor: 0, subtitulo: 'PORTTOS.KPI_CARD_TCL.SIN_DATOS_TODAVIA' };
+                    this.datosAutonomosSQL = kpiData || { valor: 0, subtitulo: 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.NO_DATA_YET' };
                     this.cargandoKpi = false;
                     this.cdr.detectChanges();
                 });
@@ -231,7 +231,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             titulo: 'BOG',
                             valor: t.bog ?? 0,
                             unidad: 'kg/h',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.GAS_EVAPORADO_BOIL_OFF',
+                            subtitulo: 'COMMON.BOIL_OFF_GAS',
                             colorBorde: 'borde-purple',
                             icono: 'feather icon-wind'
                         },
@@ -239,7 +239,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             titulo: 'DESCARGA DE BUQUE',
                             valor: t.descarga_buque ?? 0,
                             unidad: 'm³/h',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.TELEMETRIA_DE_ENTRADA',
+                            subtitulo: 'COMMON.INBOUND_TELEMETRY',
                             colorBorde: 'borde-blue',
                             icono: 'feather icon-anchor'
                         },
@@ -247,7 +247,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             titulo: 'INYECCIÓN A RED',
                             valor: t.inyeccion ?? 0,
                             unidad: 'm³/h',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.FLUJO_DE_SALIDA_A_RED',
+                            subtitulo: 'COMMON.OUTFLOW_GRID',
                             colorBorde: 'borde-green',
                             icono: 'feather icon-log-out'
                         },
@@ -255,7 +255,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             titulo: 'OCUPACIÓN DE PLANTA',
                             valor: t.volumen_almacenado ?? 0,
                             unidad: '%',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.PORCENTAJE_DE_LLENADO_DE_TANQUES',
+                            subtitulo: 'COMMON.TANK_FILL_PERCENTAGE',
                             colorBorde: 'borde-amarillo',
                             icono: 'feather icon-database'
                         },
@@ -263,7 +263,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             titulo: 'ENERGÍA TRANSFERIDA',
                             valor: energiaCalculada,
                             unidad: 'MMBTU',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.ENERGIA_DEL_ULTIMO_SEGUNDO',
+                            subtitulo: 'COMMON.ENERGY_IN_LAST_SECOND',
                             colorBorde: 'borde-indigo',
                             icono: 'feather icon-zap'
                         },
@@ -271,7 +271,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             titulo: 'PODER CALORÍFICO',
                             valor: t.poder_calorifico ?? 0,
                             unidad: 'BTU/ft³',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.CALIDAD_DE_LA_MEZCLA_GNL',
+                            subtitulo: 'COMMON.LNG_BLEND_QUALITY',
                             colorBorde: 'borde-teal',
                             icono: 'feather icon-thermometer'
                         },
@@ -290,7 +290,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             unidad: '',
                             subtitulo: esConsolidado
                                 ? `${Array.isArray(t.alertas) ? t.alertas.length : 0} de ${t.cantidadBrazosActivos || 0} brazos en alarma`
-                                : t.alarma_activa ? 'PORTTOS.KPI_CARD_TCL.ALARMA_EN_EL_ULTIMO_PULSO' : 'PORTTOS.KPI_CARD_TCL.SIN_ALARMA_EN_EL_ULTIMO',
+                                : t.alarma_activa ? 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.ALARM_IN_LAST_PULSE' : 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.NO_ALARM_IN_LAST_PULSE',
                             colorBorde: t.alarma_activa ? 'borde-rojo' : 'borde-green',
                             icono: 'feather icon-bell'
                         },
@@ -298,7 +298,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                             titulo: 'ENERGÍA ACUMULADA',
                             valor: this.acumularEnergiaGnl(Number(energiaCalculada) || 0, t.timestamp).toFixed(2),
                             unidad: 'MMBTU',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.DESDE_QUE_SE_ABRIO_EL',
+                            subtitulo: 'COMMON.SINCE_DASHBOARD_WAS_OPENED',
                             colorBorde: 'borde-indigo',
                             icono: 'feather icon-zap'
                         }
@@ -315,26 +315,26 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
                     const campos = campoPorBrazo[codigoWidget];
                     const desgloseBrazos = campos && brazos.length
                         ? brazos.map((b: any) => ({
-                            etiqueta: traducir('PORTTOS.KPI_CARD_TCL.BRAZO_N', { brazo: b.brazo_id || b.codigo_segmento || '?' }),
+                            etiqueta: traducir('PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.ARM_BRAZO', { brazo: b.brazo_id || b.codigo_segmento || '?' }),
                             valor: Number(campos.map((c) => b[c]).find((v) => v !== undefined && v !== null) ?? 0),
                             semaforo: b.alarma_activa ? 'rojo' : undefined
                         }))
                         : codigoWidget === 'PTT_GNL_KPI_ALERTAS' && brazos.length
-                            ? brazos.filter((b: any) => b.alarma_activa).map((b: any) => ({ etiqueta: traducir('PORTTOS.KPI_CARD_TCL.BRAZO_EVENTO', { brazo: b.brazo_id || b.codigo_segmento, evento: b.event_type || traducir('PORTTOS.KPI_CARD_TCL.ALARMA') }), valor: 1, semaforo: 'rojo' }))
+                            ? brazos.filter((b: any) => b.alarma_activa).map((b: any) => ({ etiqueta: traducir('PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.ARM_BRAZO_EVENTO', { brazo: b.brazo_id || b.codigo_segmento, evento: b.event_type || traducir('PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.ALARM') }), valor: 1, semaforo: 'rojo' }))
                             : null;
 
                     if (mapaGnlKpis[codigoWidget]) {
                         const kpi = desgloseBrazos ? { ...mapaGnlKpis[codigoWidget], desglose: desgloseBrazos } : mapaGnlKpis[codigoWidget];
                         // Datos de demo: se rotulan para que no se presenten como telemetría real
                         this.datosAutonomosSQL = t.simulado
-                            ? { ...kpi, subtitulo: `${traducir(kpi.subtitulo)} · ${traducir('PORTTOS.GNL_FLUJO_CHART.SIMULADO')}` }
+                            ? { ...kpi, subtitulo: `${traducir(kpi.subtitulo)} · ${traducir('COMMON.SIMULATED')}` }
                             : kpi;
                     } else {
                         // Fallback si el código no está mapeado
                         this.datosAutonomosSQL = {
                             valor: 0,
-                            titulo: 'PORTTOS.KPI_CARD_TCL.METRICA_GNL',
-                            subtitulo: 'PORTTOS.KPI_CARD_TCL.CODIGO_NO_RECONOCIDO',
+                            titulo: 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.LNG_METRIC',
+                            subtitulo: 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.UNRECOGNIZED_CODE',
                             colorBorde: 'borde-secundario'
                         };
                     }
@@ -349,7 +349,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private marcarError(): void {
-        this.datosAutonomosSQL = { valor: 0, subtitulo: 'PORTTOS.KPI_CARD_TCL.SIN_CONEXION_DE_DATOS' };
+        this.datosAutonomosSQL = { valor: 0, subtitulo: 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.NO_DATA_CONNECTION' };
         this.cargandoKpi = false;
         this.cdr.detectChanges();
     }
@@ -377,7 +377,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
             case 'PTT_CONT_KPI_FREETIME':
                 return { titulo: 'FREE TIME VENCIDO', icono: 'feather icon-alert-triangle', colorBorde: 'borde-blue' };
             default:
-                return { titulo: 'PORTTOS.KPI_CARD_TCL.METRICA_CLAVE', icono: 'feather icon-activity', colorBorde: 'borde-primary' };
+                return { titulo: 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.KEY_METRIC', icono: 'feather icon-activity', colorBorde: 'borde-primary' };
         }
     }
 
@@ -390,7 +390,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
         return {
             ...configBase,
             ...fuenteViva,
-            titulo: fuenteViva.titulo || configBase.titulo || 'PORTTOS.KPI_CARD_TCL.METRICA_CLAVE',
+            titulo: fuenteViva.titulo || configBase.titulo || 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.KEY_METRIC',
             valor:
                 fuenteViva.valor !== undefined && fuenteViva.valor !== null
                     ? fuenteViva.valor
@@ -474,7 +474,7 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
     get serieGrafica(): SerieGrafica[] {
         const valores = this.serieActual.valores;
         if (this._serieCache?.valores !== valores) {
-            this._serieCache = { valores, series: [{ label: this.data?.titulo || traducir('PORTTOS.KPI_CARD_TCL.VALOR'), data: valores, relleno: true }] };
+            this._serieCache = { valores, series: [{ label: this.data?.titulo || traducir('PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.VALUE'), data: valores, relleno: true }] };
         }
         return this._serieCache.series;
     }
@@ -495,6 +495,6 @@ export class KpiCardTclComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     exportarDesglose(): void {
-        exportarCsv(this.data?.titulo || 'kpi', [{ campo: 'etiqueta', titulo: 'PORTTOS.KPI_CARD_TCL.CONCEPTO' }, { campo: 'valor', titulo: 'PORTTOS.KPI_CARD_TCL.VALOR' }], this.desglose);
+        exportarCsv(this.data?.titulo || 'kpi', [{ campo: 'etiqueta', titulo: 'COMMON.ITEM' }, { campo: 'valor', titulo: 'PORTTOS.WIDGETS.SHARED.KPI_CARD_TCL.VALUE' }], this.desglose);
     }
 }

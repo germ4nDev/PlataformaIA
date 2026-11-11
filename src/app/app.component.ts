@@ -51,7 +51,6 @@ import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
 import { SocketManagerService } from './theme/shared/service/socket-manager.service';
 import { PTLWidgetsMaestroService } from './theme/shared/service/ptlwidgets-maestro.service'
 import { PtlWidgetsRolesService } from './theme/shared/service/ptlwidgets-roles.service'
-import { PTLListasPreciosService } from './theme/shared/service/ptllistas-precios.service'
 import { CronMonitorService } from './theme/shared/service/tablero-control/cron-monitor.service'
 import { FarosService } from './theme/shared/service/tablero-control/faros.service'
 import { MuellesService } from './theme/shared/service/tablero-control/muelles.service'
@@ -111,7 +110,6 @@ export class AppComponent implements OnInit {
         private _tiposItemsService: PtltiposItemsService,
         private _widgetsService: PTLWidgetsMaestroService,
         private _widgetsRolesService: PtlWidgetsRolesService,
-        private _listasPreciosService: PTLListasPreciosService,
         private _pestanasService: PTLModulosPaqueteService,
         private _tiposWidgetService: PtltiposWidgetService,
         private _modulosPaqueteService: PTLModulosPaqueteService,
@@ -272,10 +270,6 @@ export class AppComponent implements OnInit {
         this._widgetsRolesService.cargarRegistros().subscribe(
             () => console.log('** Widgets Roles cargados y guardados en el servicio'),
             err => console.error('Error al cargar Widgets Roles', err)
-        )
-        this._listasPreciosService.cargarRegistros().subscribe(
-            () => console.log('** Listas precios cargados y guardados en el servicio'),
-            err => console.error('Error al cargar Listas precios', err)
         )
         this._pestanasService.cargarRegistros().subscribe(
             () => console.log('** Pestanas cargados y guardados en el servicio'),

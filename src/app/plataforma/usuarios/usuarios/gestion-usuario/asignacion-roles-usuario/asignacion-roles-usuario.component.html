@@ -1,41 +1,41 @@
 <div class="asignacion-roles">
-    <h6 class="asignacion-roles__titulo">{{ 'WEB.ASIGNACION_ROLES.TITULO' | translate }}</h6>
-    <p class="asignacion-roles__ayuda">{{ 'WEB.ASIGNACION_ROLES.AYUDA' | translate }}</p>
+    <h6 class="asignacion-roles__titulo">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.USER_ROLES' | translate }}</h6>
+    <p class="asignacion-roles__ayuda">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.CHOOSE_SUBSCRIBER_COMPANY_APPLICATION_CHECK_ROLES' | translate }}</p>
 
     @if (!vinculos.length) {
-        <p class="asignacion-roles__vacio">{{ 'WEB.ASIGNACION_ROLES.SIN_SUSCRIPTORES' | translate }}</p>
+        <p class="asignacion-roles__vacio">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.USER_NOT_LINKED_ANY_SUBSCRIBER_LINK' | translate }}</p>
     } @else {
         <div class="row">
             <div class="col-md-6 col-lg-3 form-group">
-                <label class="form-label" for="asigSuscriptor">{{ 'WEB.ASIGNACION_ROLES.SUSCRIPTOR' | translate }}</label>
+                <label class="form-label" for="asigSuscriptor">{{ 'COMMON.SUBSCRIBER' | translate }}</label>
                 <select id="asigSuscriptor" class="form-select" name="asigSuscriptor" [(ngModel)]="codigoSuscriptor" (ngModelChange)="alCambiarSuscriptor()">
-                    <option value="">{{ 'WEB.ASIGNACION_ROLES.ELIJA_SUSCRIPTOR' | translate }}</option>
+                    <option value="">{{ 'USUARIOS.SELECT_SUBSCRIBER' | translate }}</option>
                     @for (v of vinculos; track v.codigoUsuarioSC) { <option [value]="v.codigoSuscriptor">{{ v.nombre }}</option> }
                 </select>
             </div>
             <div class="col-md-6 col-lg-3 form-group">
-                <label class="form-label" for="asigEmpresa">{{ 'WEB.ASIGNACION_ROLES.EMPRESA' | translate }}</label>
+                <label class="form-label" for="asigEmpresa">{{ 'COMMON.COMPANY' | translate }}</label>
                 <select id="asigEmpresa" class="form-select" name="asigEmpresa" [(ngModel)]="codigoEmpresaSC" (ngModelChange)="armarRoles()" [disabled]="!codigoSuscriptor">
-                    <option value="">{{ 'WEB.ASIGNACION_ROLES.ELIJA_EMPRESA' | translate }}</option>
+                    <option value="">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.SELECT_COMPANY' | translate }}</option>
                     @for (e of empresas; track e.codigoEmpresaSC) { <option [value]="e.codigoEmpresaSC">{{ e.nombreEmpresa }}</option> }
                 </select>
-                @if (codigoSuscriptor && !empresas.length) { <small class="text-muted">{{ 'WEB.ASIGNACION_ROLES.SIN_EMPRESAS' | translate }}</small> }
+                @if (codigoSuscriptor && !empresas.length) { <small class="text-muted">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.SUBSCRIBER_HAS_NO_ACTIVE_COMPANIES' | translate }}</small> }
             </div>
             <div class="col-md-6 col-lg-3 form-group">
-                <label class="form-label" for="asigAplicacion">{{ 'WEB.ASIGNACION_ROLES.APLICACION' | translate }}</label>
+                <label class="form-label" for="asigAplicacion">{{ 'COMMON.APPLICATION' | translate }}</label>
                 <select id="asigAplicacion" class="form-select" name="asigAplicacion" [(ngModel)]="codigoAplicacion" (ngModelChange)="armarRoles()" [disabled]="!codigoSuscriptor || cargandoAplicaciones">
-                    <option value="">{{ (cargandoAplicaciones ? 'WEB.ASIGNACION_ROLES.CARGANDO' : 'WEB.ASIGNACION_ROLES.ELIJA_APLICACION') | translate }}</option>
+                    <option value="">{{ (cargandoAplicaciones ? 'COMMON.LOADING_2' : 'COMMON.SELECT_APPLICATION') | translate }}</option>
                     @for (a of aplicaciones; track a.codigoAplicacion) { <option [value]="a.codigoAplicacion">{{ a.nombreAplicacion }}</option> }
                 </select>
-                @if (codigoSuscriptor && !cargandoAplicaciones && !aplicaciones.length) { <small class="text-muted">{{ 'WEB.ASIGNACION_ROLES.SIN_APLICACIONES' | translate }}</small> }
+                @if (codigoSuscriptor && !cargandoAplicaciones && !aplicaciones.length) { <small class="text-muted">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.SUBSCRIBER_HAS_NO_APPLICATIONS_WITH_ACTIVE' | translate }}</small> }
             </div>
         </div>
 
         @if (codigoEmpresaSC && codigoAplicacion) {
             <div class="asignacion-roles__roles">
-                <label class="form-label">{{ 'WEB.ASIGNACION_ROLES.ROLES' | translate }}</label>
+                <label class="form-label">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.APPLICATION_ROLES' | translate }}</label>
                 @if (!roles.length) {
-                    <p class="asignacion-roles__vacio">{{ 'WEB.ASIGNACION_ROLES.SIN_ROLES' | translate }}</p>
+                    <p class="asignacion-roles__vacio">{{ 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.APPLICATION_HAS_NO_ACTIVE_ROLES' | translate }}</p>
                 } @else {
                     <div class="asignacion-roles__lista">
                         @for (r of roles; track r.codigoRole) {
@@ -47,7 +47,7 @@
                     </div>
                     <button *appPermiso="'ACT_USUSC_ROLES'" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion mt-2"
                         [disabled]="guardando" (click)="guardar()">
-                        {{ (guardando ? 'WEB.ASIGNACION_ROLES.GUARDANDO' : 'WEB.ASIGNACION_ROLES.GUARDAR') | translate }}
+                        {{ (guardando ? 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.SAVING' : 'USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.SAVE_ROLES') | translate }}
                     </button>
                 }
             </div>

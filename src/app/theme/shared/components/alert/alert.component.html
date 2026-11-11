@@ -1,6 +1,6 @@
 <div #alert class="alert alert-{{ type }}" role="alert" [ngClass]="{ 'alert-dismissible': dismiss }">
   <ng-content></ng-content>
   @if (dismiss) {
-    <button (click)="dismissAlert(alert)" type="button" class="btn-close" data-dismiss="alert" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate"></button>
+    <button (click)="dismissAlert(alert)" type="button" class="btn-close" data-dismiss="alert" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
   }
 </div>

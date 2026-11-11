@@ -63,27 +63,27 @@ export class ColoresNavComponent implements OnInit {
     public columnasRegistros: ColumnMetadata[] = [
         {
             name: 'navbarColor',
-            header: 'PLATAFORMA.COLORSETTING.NAVBARCOLOR',
+            header: 'UTILIDADES.COLORES_NAV.NAVBAR_COLOR',
             type: 'color_chip'
         },
         {
             name: 'textoColor',
-            header: 'PLATAFORMA.COLORSETTING.TEXTCOLOR',
+            header: 'UTILIDADES.COLORES_NAV.TEXT_COLOR',
             type: 'color_chip'
         },
         {
             name: 'iconosColor',
-            header: 'PLATAFORMA.COLORSETTING.ICONSCOLOR',
+            header: 'UTILIDADES.COLORES_NAV.ICONS_COLOR',
             type: 'color_chip'
         },
         {
             name: 'buttonsHoverColor',
-            header: 'PLATAFORMA.COLORSETTING.HOVERCOLOR',
+            header: 'UTILIDADES.COLORES_NAV.ACTIVE_BUTTON_COLOR',
             type: 'color_chip'
         },
         {
             name: 'nomEstado',
-            header: 'PLATAFORMA.COLORSETTING.STATUS',
+            header: 'UTILIDADES.COLORES_NAV.COLOR_STATUS',
             type: 'estado'
         }
     ];
@@ -132,21 +132,21 @@ export class ColoresNavComponent implements OnInit {
 
     OnEliminarRegistroClick(id: number) {
         Swal.fire({
-            title: this.translate.instant('PLATAFORMA.COLORESNAV.ELIMINARTITULO'),
-            text: `this.translate.instant('PLATAFORMA.COLORESNAV.ELIMINARTEXTO')`,
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: `this.translate.instant('UTILIDADES.COLORES_NAV.WILL_DELETE_COLOR_SETTING_YOU_WONT')`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
                 this._registrosService.deleteEliminarRegistro(id).subscribe({
                     next: (resp: any) => {
-                        this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.COLORESNAV.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+                        this._swalService.getAlertSuccess(this.translate.instant('UTILIDADES.COLORES_NAV.COLOR_SETTING_DELETED_SUCCESSFULLY') + ', ' + resp.mensaje);
                         this.registros = this.registros.filter((s) => s.colorNavId !== id);
                     },
                     error: (err: any) => {
-                        this._swalService.getAlertError(this.translate.instant('PLATAFORMA.COLORESNAV.ELIMINARERROR') + ', ' + err);
+                        this._swalService.getAlertError(this.translate.instant('UTILIDADES.COLORES_NAV.COULD_NOT_DELETE_COLOR_SETTING') + ', ' + err);
                         console.error('Error eliminando', err);
                     }
                 });

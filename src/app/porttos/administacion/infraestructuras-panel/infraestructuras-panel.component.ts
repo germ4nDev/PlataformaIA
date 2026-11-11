@@ -199,27 +199,27 @@ export class InfraestructurasPanelComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'terminal',
-            header: 'INFRAESTRUCTURAS.TERMINAL',
+            header: 'PORTTOS.TERMINAL',
             type: 'text'
         },
         {
             name: 'tipo',
-            header: 'INFRAESTRUCTURAS.TIPO',
+            header: 'COMMON.TYPE',
             type: 'text'
         },
         {
             name: 'nombre',
-            header: 'INFRAESTRUCTURAS.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'FAROS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'estado'
         },
         {
             name: 'color_ui',
-            header: 'FAROS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'color_chip'
         }
     ]
@@ -227,22 +227,22 @@ export class InfraestructurasPanelComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'latitud',
-            header: 'INFRAESTRUCTURAS.LATITUD',
+            header: 'PORTTOS.LATITUDE',
             type: 'text'
         },
         {
             name: 'longitud',
-            header: 'INFRAESTRUCTURAS.LONGITUD',
+            header: 'PORTTOS.LONGITUDE',
             type: 'text'
         },
         {
             name: 'punto',
-            header: 'FAROS.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'array_list'
         },
         {
             name: 'coordenadas',
-            header: 'FAROS.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'array_list'
         }
     ]
@@ -260,12 +260,12 @@ export class InfraestructurasPanelComponent implements OnInit, OnDestroy {
     OnEliminarAplicaicionClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
-            title: this.translate.instant('INFRAESTRUCTURAS.ELIMINARTITULO'),
-            text: this.translate.instant('INFRAESTRUCTURAS.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.WILL_DELETE_INFRASTRUCTURE_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._infraestructurasService.deleteInfraestructura(id).subscribe({
@@ -273,20 +273,20 @@ export class InfraestructurasPanelComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('INFRAESTRUCTURAS.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.INFRASTRUCTURE_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('INFRAESTRUCTURAS.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.INFRASTRUCTURE_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupInfraestructurasStream()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('INFRAESTRUCTURAS.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.COULD_NOT_DELETE_INFRASTRUCTURE')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('INFRAESTRUCTURAS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('PORTTOS.ADMINISTACION.INFRAESTRUCTURAS_PANEL.COULD_NOT_DELETE_INFRASTRUCTURE'), 'error')
                     }
                 })
             }

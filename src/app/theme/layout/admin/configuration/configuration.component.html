@@ -2,71 +2,71 @@
 <div *ngIf="isConfig" id="styleSelector" class="menu-styler" [ngClass]="{ open: styleSelectorToggle }">
     <div id="styleSelector" class="menu-styler" [ngClass]="{ open: styleSelectorToggle }">
         <div class="style-toggler">
-            <a href="javascript:" [title]="'WEB.CONFIGURATION.CUSTOMIZED' | translate" (click)="styleSelectorToggle = !styleSelectorToggle"></a>
-            <button class="btn btn-sm btn-danger mt-3" (click)="resetAll()">{{ 'WEB.CONFIGURATION.RESET_CONFIGURACION' | translate }}</button>
+            <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.CUSTOMIZED' | translate" (click)="styleSelectorToggle = !styleSelectorToggle"></a>
+            <button class="btn btn-sm btn-danger mt-3" (click)="resetAll()">{{ 'LAYOUT.ADMIN.CONFIGURATION.RESET_SETTINGS' | translate }}</button>
         </div>
         <div class="style-block">
-            <h5 class="mb-2">{{ 'WEB.CONFIGURATION.GRADIENT_ABLE_LIVE_CUSTOMIZER' | translate }}</h5>
+            <h5 class="mb-2">{{ 'LAYOUT.ADMIN.CONFIGURATION.LIVE_CUSTOMIZER' | translate }}</h5>
             <hr class="my-0" />
             <div class="m-style-scroller">
-                <h6>{{ 'WEB.CONFIGURATION.LAYOUTS' | translate }}</h6>
+                <h6>{{ 'LAYOUT.ADMIN.CONFIGURATION.LAYOUTS' | translate }}</h6>
                 <div class="theme-color layout-type">
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.MENU_DARK' | translate" [ngClass]="{ active: layoutType === 'menu-dark' }"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.DARK_MENU' | translate" [ngClass]="{ active: layoutType === 'menu-dark' }"
                         (click)="setLayout('menu-dark')" data-value="menu-dark"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.MENU_LIGHT' | translate" [ngClass]="{ active: layoutType === 'menu-light' }"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.LIGHT_MENU' | translate" [ngClass]="{ active: layoutType === 'menu-light' }"
                         (click)="setLayout('menu-light')" data-value="menu-light"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.DARK_MODE' | translate" [ngClass]="{ active: layoutType === 'dark' }"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.DARK_MODE' | translate" [ngClass]="{ active: layoutType === 'dark' }"
                         (click)="setLayout('dark')" data-value="dark"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.RESET' | translate" [ngClass]="{ active: layoutType === 'reset' }"
-                        (click)="setLayout('reset')" data-value="reset">{{ 'WEB.CONFIGURATION.RESET_TO_DEFAULT' | translate }}</a>
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.RESET' | translate" [ngClass]="{ active: layoutType === 'reset' }"
+                        (click)="setLayout('reset')" data-value="reset">{{ 'LAYOUT.ADMIN.CONFIGURATION.RESET_DEFAULT' | translate }}</a>
                 </div>
-                <h6>{{ 'WEB.CONFIGURATION.HEADER_BACKGROUND' | translate }}</h6>
+                <h6>{{ 'LAYOUT.ADMIN.CONFIGURATION.HEADER_BACKGROUND' | translate }}</h6>
                 <div class="theme-color header-color">
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_BLUE' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.BLUE_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-blue' }"
                         (click)="setHeaderBackground('header-blue')"
                         data-value="header-blue"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_RED' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.RED_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-red' }"
                         (click)="setHeaderBackground('header-red')"
                         data-value="header-red"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_PURPLE' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.PURPLE_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-purple' }"
                         (click)="setHeaderBackground('header-purple')"
                         data-value="header-purple"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_INFO' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.INFO_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-info' }"
                         (click)="setHeaderBackground('header-info')"
                         data-value="header-info"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_DARK' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.DARK_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-dark' }"
                         (click)="setHeaderBackground('header-dark')"
                         data-value="header-dark"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_ORANGE' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.ORANGE_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-orange' }"
                         (click)="setHeaderBackground('header-orange')"
                         data-value="header-orange"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_GREEN' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.GREEN_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-green' }"
                         (click)="setHeaderBackground('header-green')"
                         data-value="header-green"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_YELLOW' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.YELLOW_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-yellow' }"
                         (click)="setHeaderBackground('header-yellow')"
                         data-value="header-yellow"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_ORCHIDGREEN' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.ORCHID_GREEN_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-orchidGreen' }"
                         (click)="setHeaderBackground('header-orchidGreen')"
                         data-value="header-orchidGreen"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_INDIGOGREEN' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.INDIGO_GREEN_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-indigoGreen' }"
                         (click)="setHeaderBackground('header-indigoGreen')"
                         data-value="header-indigoGreen"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_DARKGREEN' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.DARK_GREEN_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-darkGreen' }"
                         (click)="setHeaderBackground('header-darkGreen')"
                         data-value="header-darkGreen"><span></span><span></span></a>
-                    <a href="javascript:" [title]="'WEB.CONFIGURATION.HEADER_DARKBLUE' | translate"
+                    <a href="javascript:" [title]="'LAYOUT.ADMIN.CONFIGURATION.DARK_BLUE_HEADER' | translate"
                         [ngClass]="{ active: headerBackgroundColor === 'header-darkblue' }"
                         (click)="setHeaderBackground('header-darkblue')"
                         data-value="header-darkblue"><span></span><span></span></a>
@@ -74,44 +74,44 @@
                 @if (gradientConfig['layout'] !== 'horizontal') {
                 <div class="form-group mb-0">
                     <div class="switch switch-primary d-inline m-r-10">
-                        <input type="checkbox" [title]="'WEB.CONFIGURATION.RTL_THEME' | translate" id="theme-rtl" [(ngModel)]="rtlLayout"
+                        <input type="checkbox" [title]="'LAYOUT.ADMIN.CONFIGURATION.RTL_THEME' | translate" id="theme-rtl" [(ngModel)]="rtlLayout"
                             (change)="setRtlLayout($event)" />
                         <label for="theme-rtl" class="cr"></label>
                     </div>
-                    <label>{{ 'WEB.CONFIGURATION.RTL' | translate }}</label>
+                    <label>{{ 'LAYOUT.ADMIN.CONFIGURATION.RTL' | translate }}</label>
                 </div>
                 }
                 @if (gradientConfig['layout'] !== 'horizontal' && !gradientConfig['isBoxLayout']) {
                 <div class="form-group mb-0">
                     <div class="switch switch-primary d-inline m-r-10">
-                        <input type="checkbox" [title]="'WEB.CONFIGURATION.MENU_FIXED' | translate" id="menu-fixed" [(ngModel)]="menuFixedLayout"
+                        <input type="checkbox" [title]="'LAYOUT.ADMIN.CONFIGURATION.FIXED_MENU' | translate" id="menu-fixed" [(ngModel)]="menuFixedLayout"
                             (change)="setMenuFixedLayout($event)" />
                         <label for="menu-fixed" class="cr"></label>
                     </div>
-                    <label>{{ 'WEB.CONFIGURATION.MENU_FIXED' | translate }}</label>
+                    <label>{{ 'LAYOUT.ADMIN.CONFIGURATION.FIXED_MENU' | translate }}</label>
                 </div>
                 }
                 @if (gradientConfig['layout'] !== 'horizontal' && !gradientConfig['isBoxLayout']) {
                 <div class="form-group mb-0">
                     <div class="switch switch-primary d-inline m-r-10">
-                        <input type="checkbox" [title]="'WEB.CONFIGURATION.HEADER_FIXED' | translate" id="header-fixed" [(ngModel)]="headerFixedLayout"
+                        <input type="checkbox" [title]="'LAYOUT.ADMIN.CONFIGURATION.FIXED_HEADER' | translate" id="header-fixed" [(ngModel)]="headerFixedLayout"
                             (change)="setHeaderFixedLayout($event)" />
                         <label for="header-fixed" class="cr"></label>
                     </div>
-                    <label>{{ 'WEB.CONFIGURATION.HEADER_FIXED' | translate }}</label>
+                    <label>{{ 'LAYOUT.ADMIN.CONFIGURATION.FIXED_HEADER' | translate }}</label>
                 </div>
                 }
                 @if (gradientConfig['layout'] !== 'horizontal') {
                 <div class="form-group mb-0">
                     <div class="switch switch-primary d-inline m-r-10">
-                        <input type="checkbox" [title]="'WEB.CONFIGURATION.BOX_LAYOUTS' | translate" id="box-layouts" [(ngModel)]="boxLayout"
+                        <input type="checkbox" [title]="'LAYOUT.ADMIN.CONFIGURATION.BOX_LAYOUTS' | translate" id="box-layouts" [(ngModel)]="boxLayout"
                             (change)="setBoxLayout($event)" />
                         <label for="box-layouts" class="cr"></label>
                     </div>
-                    <label>{{ 'WEB.CONFIGURATION.BOX_LAYOUTS' | translate }}</label>
+                    <label>{{ 'LAYOUT.ADMIN.CONFIGURATION.BOX_LAYOUTS' | translate }}</label>
                 </div>
                 }
-                <button class="btn btn-sm btn-danger mt-3" (click)="resetAll()">{{ 'WEB.CONFIGURATION.RESET_CONFIGURACION' | translate }}</button>
+                <button class="btn btn-sm btn-danger mt-3" (click)="resetAll()">{{ 'LAYOUT.ADMIN.CONFIGURATION.RESET_SETTINGS' | translate }}</button>
             </div>
         </div>
     </div>

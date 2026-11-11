@@ -95,13 +95,13 @@ const routes: Routes = [
             },
             {
                 path: 'precios-paquete',
-                loadComponent: () => import('../paquetes/precios-paquete/precios-paquete.component').then((m) => m.PreciosPaqueteComponent),
+                loadComponent: () => import('../paquetes/listas-precios/listas-precios.component').then((m) => m.ListasPreciosComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
                 path: 'gestion-precio-paquete',
-                loadComponent: () => import('../paquetes/precios-paquete/gestion-precio-paquete/gestion-precio-paquete.component').then((m) => m.GestionPrecioPaqueteComponent),
+                loadComponent: () => import('../paquetes/listas-precios/gestion-lista-precios/gestion-lista-precios.component').then((m) => m.GestionListaPreciosComponent),
                 canActivate: [RoleGuard],
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },

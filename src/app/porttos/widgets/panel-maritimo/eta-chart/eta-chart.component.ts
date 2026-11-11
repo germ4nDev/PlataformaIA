@@ -158,7 +158,7 @@ export class EtaChartComponent implements OnInit, AfterViewInit, OnChanges, OnDe
             this.datasets = raw.datasets.map((ds: any, idx: number) => {
                 const dataNum = (ds.data || []).map((v: any) => Number(v || 0));
                 return {
-                    label: ds.label || traducir('PORTTOS.ETA_CHART.RETRASO_PROM_H'),
+                    label: ds.label || traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.ETA_CHART.AVG_DELAY_H'),
                     data: dataNum,
                     color:
                         ds.backgroundColor ||
@@ -182,7 +182,7 @@ export class EtaChartComponent implements OnInit, AfterViewInit, OnChanges, OnDe
                 valores.length > 0
                     ? [
                         {
-                            label: traducir('PORTTOS.ETA_CHART.RETRASO_PROM_H'),
+                            label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO.ETA_CHART.AVG_DELAY_H'),
                             data: valores,
                             color: valores.map((v: number) =>
                                 v >= 3.5 ? '#ef4444' : v >= 2.0 ? '#f59e0b' : '#00d4ff'

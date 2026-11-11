@@ -1,12 +1,12 @@
 <app-widget-shell [titulo]="(titulo | translate)" [origen]="origenTablero" [lienzo]="true" [subtitulo]="(subtitulo | translate)" [icono]="iconoDefecto" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
-    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="criticos">{{ 'PORTTOS.NODOS_CAPACIDAD.CRITICOS' | translate: { p0: criticos } }}</span></div>
+    <div acciones-extra class="d-flex align-items-center gap-2"><span class="insignia" *ngIf="criticos">{{ 'PORTTOS.WIDGETS.PANEL_CAPACIDAD.NODOS_CAPACIDAD.P0_CRITICAL' | translate: { p0: criticos } }}</span></div>
     <div class="cuerpo">
         <app-estado-widget-tcl [cargando]="cargando" [error]="error" [vacio]="!todos.length"
             [mensajeVacio]="mensajeVacio" [icono]="iconoDefecto"></app-estado-widget-tcl>
         <div class="contenido" *ngIf="!cargando && !error && !(!todos.length)">
             <div class="filtros">
-                <button type="button" [class.activo]="!categoria" (click)="filtrar(null)">{{ 'PORTTOS.NODOS_CAPACIDAD.TODOS' | translate: { p0: todos.length } }}</button>
+                <button type="button" [class.activo]="!categoria" (click)="filtrar(null)">{{ 'PORTTOS.WIDGETS.PANEL_CAPACIDAD.NODOS_CAPACIDAD.ALL_P0' | translate: { p0: todos.length } }}</button>
                 <button type="button" *ngFor="let c of categorias" [class.activo]="categoria === c.codigo"
                     (click)="filtrar(c.codigo)">{{ (c.nombre | translate) }} · {{ c.nodos }}</button>
             </div>
@@ -17,13 +17,13 @@
     <!-- Vista ampliada: ocupación y tráfico del nodo elegido -->
     <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
         <div class="detalle-cabecera">
-            <h6 class="detalle-titulo">{{ 'PORTTOS.NODOS_CAPACIDAD.SERIE_DEL_NODO' | translate: { p0: nodoElegido ? '· ' + nodoElegido.nombre : '' } }}</h6>
+            <h6 class="detalle-titulo">{{ 'PORTTOS.WIDGETS.PANEL_CAPACIDAD.NODOS_CAPACIDAD.NODE_SERIES_P0' | translate: { p0: nodoElegido ? '· ' + nodoElegido.nombre : '' } }}</h6>
             <app-rango-tcl [valor]="horas" [deshabilitado]="!nodoElegido" (cambio)="cambiarHoras($event)"></app-rango-tcl>
         </div>
-        <p *ngIf="!nodoElegido" class="detalle-ayuda">{{ 'PORTTOS.NODOS_CAPACIDAD.PULSA_UN_NODO_DE_LA' | translate }}</p>
+        <p *ngIf="!nodoElegido" class="detalle-ayuda">{{ 'PORTTOS.WIDGETS.PANEL_CAPACIDAD.NODOS_CAPACIDAD.TAP_NODE_IN_TABLE_SEE_ITS' | translate }}</p>
         <p *ngIf="errorSerie" class="detalle-ayuda text-warning">{{ errorSerie }}</p>
         <ng-container *ngIf="nodoElegido && serie">
-            <p class="detalle-ayuda">{{ 'PORTTOS.NODOS_CAPACIDAD.DE_HORAS_CON_DATO' | translate: { p0: serie.conDato, p1: serie.horas } }}<span *ngIf="serie.simulado"> {{ 'PORTTOS.NODOS_CAPACIDAD.DATOS_SIMULADOS' | translate }}</span>{{ 'PORTTOS.NODOS_CAPACIDAD.LAS_HORAS_SIN_FOTO_QUEDAN' | translate }}</p>
+            <p class="detalle-ayuda">{{ 'PORTTOS.WIDGETS.PANEL_CAPACIDAD.NODOS_CAPACIDAD.P0_P1_HOURS_WITH_DATA' | translate: { p0: serie.conDato, p1: serie.horas } }}<span *ngIf="serie.simulado"> {{ 'PORTTOS.WIDGETS.PANEL_CAPACIDAD.NODOS_CAPACIDAD.SIMULATED_DATA' | translate }}</span>{{ 'PORTTOS.WIDGETS.PANEL_CAPACIDAD.NODOS_CAPACIDAD.HOURS_WITHOUT_SNAPSHOT_STAY_EMPTY' | translate }}</p>
             <div class="row g-2">
                 <div class="col-lg-6 detalle-grafica"><app-grafica-tcl tipo="linea" [labels]="serie.labels" [series]="seriesOcupacion" unidad="%" [isEnfoque]="true"></app-grafica-tcl></div>
                 <div class="col-lg-6 detalle-grafica"><app-grafica-tcl tipo="barras" [labels]="serie.labels" [series]="seriesTrafico" unidad="veh/h" [isEnfoque]="true"></app-grafica-tcl></div>

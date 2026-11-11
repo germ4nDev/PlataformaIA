@@ -91,7 +91,7 @@ export class GestionSuiteComponent implements OnInit {
                     this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suites', resp.suite.imagenInicio)
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SUITE.NO_SE_PUDO_OBTENER_LA'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('APLICACIONES.COULD_NOT_GET_SUITE_BY'), 'error')
                 }
             })
         } else {
@@ -178,7 +178,7 @@ export class GestionSuiteComponent implements OnInit {
                     this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -208,19 +208,19 @@ export class GestionSuiteComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'))
                         this.router.navigate(['/aplicaciones/suites'])
                     } else {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + resp.message
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + resp.message
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                        this._swalService.getAlertError(resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
                     }
                 },
                 error: (err: any) => {
@@ -228,10 +228,10 @@ export class GestionSuiteComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                    this._swalService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
                 }
             })
         } else {
@@ -252,10 +252,10 @@ export class GestionSuiteComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR') + ' ' + resp.mensaje
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY') + ' ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/aplicaciones/suites'])
@@ -266,10 +266,10 @@ export class GestionSuiteComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'))
+                    this._swalService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'))
                 }
             })
         }
@@ -293,19 +293,19 @@ export class GestionSuiteComponent implements OnInit {
     //                     const logData = {
     //                         codigoTipoLog: '',
     //                         codigoRespuesta: '201',
-    //                         descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+    //                         descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
     //                     }
     //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //                     this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+    //                     this._swalService.getAlertSuccess(this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'))
     //                     this.router.navigate(['/aplicaciones/suites'])
     //                 } else {
     //                     const logData = {
     //                         codigoTipoLog: '',
     //                         codigoRespuesta: '501',
-    //                         descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + resp.message
+    //                         descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + resp.message
     //                     }
     //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //                     this._swalService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'))
+    //                     this._swalService.getAlertError(resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
     //                 }
     //             },
     //             error: (err: any) => {
@@ -313,10 +313,10 @@ export class GestionSuiteComponent implements OnInit {
     //                 const logData = {
     //                     codigoTipoLog: '',
     //                     codigoRespuesta: '501',
-    //                     descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+    //                     descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.message
     //                 }
     //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //                 this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'))
+    //                 this._swalService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
     //             }
     //         })
     //     } else {
@@ -333,10 +333,10 @@ export class GestionSuiteComponent implements OnInit {
     //                     const logData = {
     //                         codigoTipoLog: '',
     //                         codigoRespuesta: '201',
-    //                         descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR') + ' ' + resp.mensaje
+    //                         descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY') + ' ' + resp.mensaje
     //                     }
     //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //                     this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+    //                     this._swalService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
     //                     form.resetForm()
     //                     this.isSubmit = false
     //                     this.router.navigate(['/aplicaciones/suites'])
@@ -347,10 +347,10 @@ export class GestionSuiteComponent implements OnInit {
     //                 const logData = {
     //                     codigoTipoLog: '',
     //                     codigoRespuesta: '501',
-    //                     descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+    //                     descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
     //                 }
     //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //                 this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'))
+    //                 this._swalService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'))
     //             }
     //         })
     //     }

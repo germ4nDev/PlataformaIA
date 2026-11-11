@@ -841,10 +841,10 @@ export class TorreControlComponent implements OnInit, OnDestroy {
     restaurarTableroDefault(): void {
         this._swalAlertService
             .getAlertQuestionRequest(
-                this.translate.instant('PORTTOS.REINICIARTABLERO'),
-                this.translate.instant('PORTTOS.REINBICIASUBTITULO'),
-                this.translate.instant('PLATAFORMA.RESET'),
-                this.translate.instant('PLATAFORMA.CANCEL')
+                this.translate.instant('PORTTOS.TORRE_CONTROL.TABS_DASHBOARD_GOES_BACK_ITS_DEFAULT'),
+                this.translate.instant('PORTTOS.TORRE_CONTROL.RESTORE_DASHBOARD'),
+                this.translate.instant('PORTTOS.TORRE_CONTROL.RESTORE'),
+                this.translate.instant('COMMON.CANCEL')
             )
             .subscribe((result) => {
                 if (result) {

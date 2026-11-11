@@ -31,16 +31,16 @@ export class OcupacionMuellesComponent extends WidgetMaritimoVivoBase<OcupacionM
 
     // ---------------------------------------------------------------- vista ampliada (2026-10-24)
     public readonly columnasMuelles: ColumnaTabla[] = [
-        { campo: 'terminal', titulo: 'PORTTOS.COMUN.TERMINAL' },
-        { campo: 'muelle', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE', tipo: 'principal' },
-        { campo: 'especialidad', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.ESPECIALIDAD' },
-        { campo: 'caladoMetros', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.CALADO', tipo: 'numero', decimales: 1, unidad: 'm' },
-        { campo: 'estado', titulo: 'PORTTOS.COMUN.ESTADO', tipo: 'estado' },
-        { campo: 'naves', titulo: 'PORTTOS.OCUPACION_MUELLES.NAVE_S', tipo: 'lista' },
-        { campo: 'horasAtracada', titulo: 'PORTTOS.COMUN.ATRACADA', tipo: 'numero', decimales: 1, unidad: 'h' },
-        { campo: 'fuente', titulo: 'PORTTOS.OCUPACION_MUELLES.FUENTE' },
-        { campo: 'verificacion', titulo: 'PORTTOS.OCUPACION_MUELLES.VERIFICACION' },
-        { campo: 'proximo', titulo: 'PORTTOS.OCUPACION_MUELLES.PROXIMO_ATRAQUE' },
+        { campo: 'terminal', titulo: 'PORTTOS.TERMINAL' },
+        { campo: 'muelle', titulo: 'COMMON.BERTH', tipo: 'principal' },
+        { campo: 'especialidad', titulo: 'PORTTOS.SPECIALTY' },
+        { campo: 'caladoMetros', titulo: 'PORTTOS.WIDGETS.DRAFT', tipo: 'numero', decimales: 1, unidad: 'm' },
+        { campo: 'estado', titulo: 'COMMON.STATUS', tipo: 'estado' },
+        { campo: 'naves', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.SHIP_S', tipo: 'lista' },
+        { campo: 'horasAtracada', titulo: 'PORTTOS.WIDGETS.BERTHED', tipo: 'numero', decimales: 1, unidad: 'h' },
+        { campo: 'fuente', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.SOURCE' },
+        { campo: 'verificacion', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.VERIFICATION' },
+        { campo: 'proximo', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.OCUPACION_MUELLES.NEXT_BERTHING' },
         { campo: 'proximoEnHoras', titulo: 'En', tipo: 'numero', decimales: 1, unidad: 'h' }
     ];
     public filasMuelles: any[] = [];

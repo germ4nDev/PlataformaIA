@@ -70,7 +70,7 @@ export class GestionServidorComponent {
                     console.log('datos del FormRegistro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_SERVIDOR.NO_SE_PUDO_OBTENER_EL'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.SERVIDORES.GESTION.COULD_NOT_GET_SERVER'), 'error');
                 }
             });
         } else {
@@ -121,30 +121,30 @@ export class GestionServidorComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
+                        Swal.fire('', this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'), 'success');
                         this.router.navigate(['/administracion-bd/servidores/']);
                     } else {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                        Swal.fire(traducir('COMMON.ERROR'), resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
                     }
                 },
                 error: (err: any) => {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.message
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                     console.error(err);
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
                 }
             });
         } else {
@@ -160,10 +160,10 @@ export class GestionServidorComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+                        Swal.fire('', this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'), 'success');
                         form.resetForm();
                         this.isSubmit = false;
                         this.router.navigate(['/administracion-bd/servidores/']);
@@ -174,10 +174,10 @@ export class GestionServidorComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'), 'error');
                 }
             });
         }

@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
@@ -16,22 +16,22 @@
             <div class="card-header card-header-sticky">
                 <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'FAROS.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'FAROS.UPDATE' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.NEW_LIGHTHOUSE' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.EDIT_LIGHTHOUSE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'FAROS.CREATE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.CREATE_LIGHTHOUSE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'FAROS.UPDATE' | translate }}
+                            {{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.EDIT_LIGHTHOUSE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -43,64 +43,64 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="tipo_faro"> {{ 'FAROS.tipo_faro'
+                                <label class="form-control-label" for="tipo_faro"> {{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.LIGHTHOUSE_TYPE'
                                     | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="tipo_faro"
+                                <select class="form-control form-select" style="cursor: pointer" name="tipo_faro"
                                     id="tipo_faro"
                                     [ngClass]="{ 'is-invalid': !tipo_faro.valid && (tipo_faro.dirty || tipo_faro.touched || isSubmit) }"
                                     #tipo_faro="ngModel" required [(ngModel)]="FormRegistro.tipo_faro">
-                                    <option value="">{{ 'FAROS.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    <option value="">{{ 'COMMON.SELECT_APPLICATION' | translate }}
                                     </option>
                                     <option [value]="trml.id" *ngFor="let trml of ETIPOS_FARO"> {{
                                         (trml.label | translate) }}</option>
                                 </select>
                                 <label *ngIf="!tipo_faro.valid && (tipo_faro.dirty || tipo_faro.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'FAROS.GESTION.REQUERIDOAPLICACION' | translate }}
+                                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombre_faro">{{ 'FAROS.NAME' | translate
+                                <label class="form-control-label" for="nombre_faro">{{ 'COMMON.NAME' | translate
                                     }}</label>
 
                                 <input class="form-control form-input" id="nombre_faro" name="nombre_faro" type="text"
-                                    placeholder="{{ 'FAROS.NAME' | translate }}" (input)="onVerificarNombre($event)"
+                                    placeholder="{{ 'COMMON.NAME' | translate }}" (input)="onVerificarNombre($event)"
                                     [ngClass]="{ 'is-invalid': (!nombre_faro.valid && (nombre_faro.dirty || nombre_faro.touched || isSubmit)) || nombreDuplicado }"
                                     #nombre_faro="ngModel" required [(ngModel)]="FormRegistro.nombre_faro" />
 
                                 <label
                                     *ngIf="!nombre_faro.valid && (nombre_faro.dirty || nombre_faro.touched || isSubmit) && !nombreDuplicado"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'FAROS.EXISTENAMEHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.FIELD_REQUIRED_MUST_BE_UNIQUE' | translate }}
                                 </label>
 
                                 <label *ngIf="nombreDuplicado"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'FAROS.EXISTENAMEHOLDERERROR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.FIELD_REQUIRED_MUST_BE_UNIQUE' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="radio_metros">{{ 'FAROS.radio_metros' |
+                                <label class="form-control-label" for="radio_metros">{{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.RADIUS_M' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="radio_metros" name="radio_metros"
-                                    type="number" placeholder="{{ 'FAROS.radio_metrosHOLDER' | translate }}"
+                                    type="number" placeholder="{{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.RADIUS_IN_METERS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !radio_metros.valid && (radio_metros.dirty || radio_metros.touched || isSubmit) }"
                                     #radio_metros="ngModel" required [(ngModel)]="FormRegistro.radio_metros" />
                                 <label
                                     *ngIf="!radio_metros.valid && (radio_metros.dirty || radio_metros.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'FAROS.SUBTITULOHOLDERORR' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.ENTER_VALID_VALUE_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="geocerca_geo">
-                                    {{ 'FAROS.GEOCERCA' | translate }}
+                                    {{ 'PORTTOS.GEOFENCE' | translate }}
                                 </label>
                                 <app-mapa-selector id="geocerca_geo" name="geocerca_geo" modo="poligono"
                                     [ngClass]="{ 'is-invalid': !geocerca_geo.valid && (geocerca_geo.dirty || geocerca_geo.touched || isSubmit) }"
@@ -111,13 +111,13 @@
 
                                 <label *ngIf="!FormRegistro.geocerca_geo && isSubmit"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'FAROS.GEOCERCA_REQUERIDA' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.DRAW_LIGHTHOUSE_GEOFENCE_ON_MAP_FIELD' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORTEXT' | translate
+                                <label class="form-control-label">{{ 'COMMON.TEXT_COLOR' | translate
                                     }}</label>
                                 <app-color-selector [initialColor]="FormRegistro.color_ui" [id]="textoColor"
                                     (colorSelected)="OnColorSelectedClick($event)"></app-color-selector>
@@ -125,7 +125,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'FAROS.DESCRIPTION' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcion ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcion"
@@ -136,44 +136,44 @@
                                 <label
                                     *ngIf="!descripcion.valid && (descripcion.dirty || descripcion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'FAROS.DESCRIPCIONHOLDER' | translate }}
+                                    {{ 'PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.LIGHTHOUSE_DESCRIPTION' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'FAROS.STATUS' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="genera_alerta_toast" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.genera_alerta_toast" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.SI' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.YES' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="genera_alerta_toast" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.genera_alerta_toast" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.NO' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.NO' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'FAROS.STATUS' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="estado" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estado" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVO' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estado" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estado" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVO' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

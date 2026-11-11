@@ -4,11 +4,11 @@
     <ol class="rejilla rejilla--niveles" role="list">
       @for (e of s.elementos; track $index) {
         <li class="nivel" [class.nivel--destacado]="e.icono === 'destacado'">
-          @if (e.icono === 'destacado') { <span class="nivel__insignia">{{ 'WEB.NIVELES.EL_DE_MAYOR_VALOR' | translate }}</span> }
-          <p class="nivel__numero">{{ 'WEB.NIVELES.NIVEL' | translate: { p0: $index + 1 } }}</p>
+          @if (e.icono === 'destacado') { <span class="nivel__insignia">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.NIVELES.HIGHEST_VALUE' | translate }}</span> }
+          <p class="nivel__numero">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.NIVELES.LEVEL_P0' | translate: { p0: $index + 1 } }}</p>
           @if (e.titulo) { <h3 class="nivel__titulo">{{ e.titulo }}</h3> }
-          @if (e.detalle) { <div><p class="perfil__rotulo">{{ 'WEB.NIVELES.EL_GOBIERNO' | translate }}</p><p class="nivel__texto">{{ e.detalle }}</p></div> }
-          @if (e.texto) { <div><p class="perfil__rotulo">{{ 'WEB.NIVELES.RECIBE' | translate }}</p><p class="nivel__texto">{{ e.texto }}</p></div> }
+          @if (e.detalle) { <div><p class="perfil__rotulo">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.NIVELES.GOVERNMENT' | translate }}</p><p class="nivel__texto">{{ e.detalle }}</p></div> }
+          @if (e.texto) { <div><p class="perfil__rotulo">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.NIVELES.RECEIVES' | translate }}</p><p class="nivel__texto">{{ e.texto }}</p></div> }
           @if (e.valor) { <p class="nivel__instrumento">{{ e.valor }}</p> }
         </li>
       }

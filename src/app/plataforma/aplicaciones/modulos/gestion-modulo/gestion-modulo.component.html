@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
@@ -19,13 +19,13 @@
                     <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
                     <div class="d-flex flex-column pe-3">
                         <h4 class="titulo-formulario">
-                            <span *ngIf="!modoEdicion">{{ 'MODULOS.GESTION.NEW' | translate }}</span>
-                            <span *ngIf="modoEdicion">{{ 'MODULOS.GESTION.UPDATE' | translate }}</span>
-                            <span class="titulo-container"> - {{ 'MODULOS.GESTION.TITLE' | translate
+                            <span *ngIf="!modoEdicion">{{ 'COMMON.NEW_MODULE' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'APLICACIONES.MODULOS.GESTION.EDIT_MODULE' | translate }}</span>
+                            <span class="titulo-container"> - {{ 'APLICACIONES.MODULOS.GESTION.CREATE_OR_UPDATE_MODULE' | translate
                                 }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            {{ 'MODULOS.GESTION.TITLEDESCRIPTION' | translate }}
+                            {{ 'APLICACIONES.MODULOS.GESTION.MODULE_DETAILS' | translate }}
                         </h6>
                     </div>
 
@@ -33,19 +33,19 @@
                     <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button"
                             class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'MODULOS.GESTION.CREATE' | translate }}
+                            {{ 'COMMON.CREATE_MODULE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button"
                             class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'MODULOS.UPDATE' | translate }}
+                            {{ 'COMMON.MODIFY_MODULE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -58,67 +58,67 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoModulo">{{ 'MODULOS.GESTION.CODE' |
+                                <label class="form-control-label" for="codigoModulo">{{ 'COMMON.CODE' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="codigoModulo" name="codigoModulo" type="text"
-                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    placeholder="{{ 'COMMON.MODULE_NAME' | translate }}"
                                     [ngClass]="{ 'is-invalid': !codigoModulo.valid && (codigoModulo.dirty || codigoModulo.touched || isSubmit) }"
                                     #codigoModulo="ngModel" required [(ngModel)]="FormRegistro.codigoModulo" />
                                 <label
                                     *ngIf="!codigoModulo.valid && (codigoModulo.dirty || codigoModulo.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'MODULOS.GESTION.REQUERIDOCODE' | translate }}
+                                    {{ 'COMMON.ENTER_CODE_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoAplicacion"> {{
-                                    'MODULOS.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="codigoAplicacion"
+                                    'COMMON.APPLICATION' | translate }}</label>
+                                <select class="form-control form-select" style="cursor: pointer" name="codigoAplicacion"
                                     id="codigoAplicacion"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     (change)="onAplicacionChangeClick($event)">
-                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERAPLICACION' | translate }} </option>
+                                    <option value="">{{ 'COMMON.SELECT_APPLICATION' | translate }} </option>
                                     <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{
                                         app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'MODULOS.GESTION.REQUERIDOAPLICACION' | translate }}
+                                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoSuite"> {{ 'MODULOS.GESTION.SUITE' |
+                                <label class="form-control-label" for="codigoSuite"> {{ 'COMMON.SUITE' |
                                     translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="codigoSuite"
+                                <select class="form-control form-select" style="cursor: pointer" name="codigoSuite"
                                     id="codigoSuite"
                                     [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
                                     #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite"
                                     (change)="onSuiteChangeClick($event)">
-                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERSUITE' | translate }} </option>
+                                    <option value="">{{ 'COMMON.SELECT_SUITE' | translate }} </option>
                                     <option [value]="sui.codigoSuite" *ngFor="let sui of suites"> {{ sui.nombreSuite }}
                                     </option>
                                 </select>
                                 <label
                                     *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'MODULOS.GESTION.REQUERIDOAPLICACION' | translate }}
+                                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoPadre"> {{ 'MODULOS.GESTION.PADRE' |
+                                <label class="form-control-label" for="codigoPadre"> {{ 'COMMON.PARENT_MODULE' |
                                     translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="codigoPadre"
+                                <select class="form-control form-select" style="cursor: pointer" name="codigoPadre"
                                     id="codigoPadre" #codigoPadre="ngModel" required
                                     [(ngModel)]="FormRegistro.codigoPadre" (change)="onCodigoPadreChangeClick($event)">
-                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERPADRE' | translate }} </option>
+                                    <option value="">{{ 'COMMON.SELECT_PARENT_MODULE' | translate }} </option>
                                     <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre"> {{
                                         mod.nombreModulo }}</option>
                                 </select>
@@ -126,62 +126,62 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreModulo">{{ 'MODULOS.NAME' | translate
+                                <label class="form-control-label" for="nombreModulo">{{ 'COMMON.NAME' | translate
                                     }}</label>
                                 <input class="form-control form-input" id="nombreModulo" name="nombreModulo" type="text"
-                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    placeholder="{{ 'COMMON.MODULE_NAME' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreModulo.valid && (nombreModulo.dirty || nombreModulo.touched || isSubmit) }"
                                     #nombreModulo="ngModel" required [(ngModel)]="FormRegistro.nombreModulo" />
                                 <label
                                     *ngIf="!nombreModulo.valid && (nombreModulo.dirty || nombreModulo.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'MODULOS.GESTION.REQUERIDONAME' | translate }}
+                                    {{ 'COMMON.ENTER_NAME_FIELD_REQUIRED_2' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'MODULOS.PATH' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.PATH' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="rutaModulo"
                                     [disabled]="FormRegistro.hijos == true"
-                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}"
+                                    placeholder="{{ 'APLICACIONES.NAVIGATION_PATH' | translate }}"
                                     #rutaModulo="ngModel" required [(ngModel)]="FormRegistro.rutaModulo" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="precioModulo">{{ 'MODULOS.PRECIO' | translate
+                                <label class="form-control-label" for="precioModulo">{{ 'COMMON.PRICE' | translate
                                     }}</label>
                                 <input class="form-control form-input" id="precioModulo" name="precioModulo"
-                                    type="number" placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    type="number" placeholder="{{ 'COMMON.MODULE_NAME' | translate }}"
                                     [ngClass]="{ 'is-invalid': !precioModulo.valid && (precioModulo.dirty || precioModulo.touched || isSubmit) }"
                                     #precioModulo="ngModel" required [(ngModel)]="FormRegistro.precioModulo" />
                                 <label
                                     *ngIf="!precioModulo.valid && (precioModulo.dirty || precioModulo.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'MODULOS.GESTION.REQUERIDOPRECIO' | translate }}
+                                    {{ 'APLICACIONES.MODULOS.GESTION.ENTER_PRICE_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'MODULOS.ICON' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.ICON' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="icon"
-                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}" #icon="ngModel"
+                                    placeholder="{{ 'APLICACIONES.NAVIGATION_PATH' | translate }}" #icon="ngModel"
                                     [(ngModel)]="FormRegistro.icon" />
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'MODULOS.GESTION.TRANSLATEKEY' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.TRANSLATION_KEY' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="translateKey"
-                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}"
+                                    placeholder="{{ 'APLICACIONES.NAVIGATION_PATH' | translate }}"
                                     #translateKey="ngModel" [(ngModel)]="FormRegistro.translateKey" />
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'MODULOS.DESCRIPTION' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.MODULE_DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcionModulo ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionModulo"
@@ -192,44 +192,44 @@
                                 <label
                                     *ngIf="!descripcionModulo.valid && (descripcionModulo.dirty || descripcionModulo.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'MODULOS.GESTION.REQUERIDODESCRIPCION' | translate }}
+                                    {{ 'COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'MODULOS.GESTION.HIJOS' | translate }}</label>
+                                <label class="form-label">{{ 'APLICACIONES.MODULOS.GESTION.HAS_SUBMODULES' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="hijos" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.hijos" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'MODULOS.GESTION.HIJOSSI' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.YES' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="hijos" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.hijos" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'MODULOS.GESTION.HIJOSNO' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.NO' | translate }}</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'MODULOS.GESTION.STATUS' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="estadoModulo" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoModulo" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estadoModulo" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoModulo" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

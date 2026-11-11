@@ -28,9 +28,9 @@ export class WdgTicketsSbarComponent implements OnInit {
     public barChartData: ChartConfiguration<'bar'>['data'] = {
         labels: [],
         datasets: [
-            { label: traducir('WEB.WDG_TICKETS.RESUELTOS'), data: [], backgroundColor: '#10b981', borderRadius: 4 },
-            { label: traducir('WEB.WDG_TICKETS_SBAR.EN_PROGRESO'), data: [], backgroundColor: '#f59e0b', borderRadius: 4 },
-            { label: traducir('WEB.WDG_TICKETS.ABIERTOS'), data: [], backgroundColor: '#ef4444', borderRadius: 4 }
+            { label: traducir('STARTER.HOME.WIDGETS.RESOLVED'), data: [], backgroundColor: '#10b981', borderRadius: 4 },
+            { label: traducir('STARTER.HOME.WIDGETS.WDG_TICKETS_SBAR.IN_PROGRESS'), data: [], backgroundColor: '#f59e0b', borderRadius: 4 },
+            { label: traducir('STARTER.HOME.WIDGETS.OPEN'), data: [], backgroundColor: '#ef4444', borderRadius: 4 }
         ]
     };
 

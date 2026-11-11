@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.GATE_VALIDACION.PRE_GATE_VALIDACION' | translate)"
-    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.GATE_VALIDACION.ESTADO_ACTUAL_DE_CAMIONES' | translate)" [icono]="data?.icono || 'feather icon-check-square'"
+<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.PRE_GATE_VALIDATION' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.CURRENT_TRUCK_STATUS' | translate)" [icono]="data?.icono || 'feather icon-check-square'"
     [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen" [lienzo]="true">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase">
-            {{ 'PORTTOS.GATE_VALIDACION.FLUJO' | translate }}
+            {{ 'COMMON.FLOW' | translate }}
         </span>
     </div>
 
@@ -16,7 +16,7 @@
         <!-- Estado Cargando -->
         <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100 h-100 text-muted small">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            {{ 'PORTTOS.GATE_VALIDACION.VALIDANDO_ESTADO_PRE_GATE' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.VALIDATING_PRE_GATE_STATUS' | translate }}
         </div>
 
         <!-- Contenido Principal -->
@@ -27,22 +27,22 @@
             </div>
 
             <div class="gv-subtitle text-muted text-uppercase mb-4 fw-bold">
-                {{ 'PORTTOS.GATE_VALIDACION.CAMIONES_EN_PRE_GATE' | translate }}
+                {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.TRUCKS_AT_PRE_GATE' | translate }}
             </div>
 
             <!-- Píldoras / Badges de Estados Inferiores -->
             <div class="gv-badges-container d-flex gap-2 flex-wrap justify-content-center">
 
                 <span class="gv-badge badge-success">
-                    <i class="feather icon-check me-1"></i> {{ 'PORTTOS.GATE_VALIDACION.VALIDADOS' | translate: { p0: (resumen.validados || 0) } }}
+                    <i class="feather icon-check me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.P0_VALIDATED' | translate: { p0: (resumen.validados || 0) } }}
                 </span>
 
                 <span class="gv-badge badge-warning">
-                    <i class="feather icon-clock me-1"></i> {{ 'PORTTOS.GATE_VALIDACION.EN_COLA' | translate: { p0: (resumen.enCola || 0) } }}
+                    <i class="feather icon-clock me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.P0_IN_QUEUE' | translate: { p0: (resumen.enCola || 0) } }}
                 </span>
 
                 <span class="gv-badge badge-danger">
-                    <i class="feather icon-alert-triangle me-1"></i> {{ 'PORTTOS.GATE_VALIDACION.RETENIDOS' | translate: { p0: (resumen.retenidos || 0) } }}
+                    <i class="feather icon-alert-triangle me-1"></i> {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.P0_HELD' | translate: { p0: (resumen.retenidos || 0) } }}
                 </span>
 
             </div>
@@ -53,19 +53,19 @@
     <!-- Vista ampliada: validación por tipo y citas observadas -->
     <div detalle-enfoque *ngIf="isEnfoque" class="d-flex flex-column gap-3 pt-2">
         <div *ngIf="tiposValidacion.length" class="validacion-tipos">
-            <h6 class="mb-2">{{ 'PORTTOS.GATE_VALIDACION.RESULTADO_POR_TIPO_DE_VALIDACION' | translate }}</h6>
+            <h6 class="mb-2">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.RESULT_BY_VALIDATION_TYPE' | translate }}</h6>
             <div *ngFor="let t of tiposValidacion" class="tipo-fila">
                 <span class="tipo-nombre">{{ (t.nombre | translate) }}</span>
-                <div class="tipo-barra" [title]="t.aprobadas + ('PORTTOS.GATE_VALIDACION.APROBADAS' | translate) + t.fallidas + ('PORTTOS.GATE_VALIDACION.FALLIDAS' | translate) + t.sinDato + ('PORTTOS.GATE_VALIDACION.SIN_DATO' | translate)">
+                <div class="tipo-barra" [title]="t.aprobadas + ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.APPROVED' | translate) + t.fallidas + ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.FAILED' | translate) + t.sinDato + ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.NO_DATA' | translate)">
                     <span class="tramo aprobada" [style.width.%]="pct(t.aprobadas, t.total)"></span>
                     <span class="tramo fallida" [style.width.%]="pct(t.fallidas, t.total)"></span>
                     <span class="tramo sin-dato" [style.width.%]="pct(t.sinDato, t.total)"></span>
                 </div>
-                <span class="tipo-cifras">{{ 'PORTTOS.GATE_VALIDACION.OK_FALLAS_SIN_DATO' | translate: { p0: t.aprobadas, p1: t.fallidas, p2: t.sinDato } }}</span>
+                <span class="tipo-cifras">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.P0_OK_P1_FAILURES_P2_NO' | translate: { p0: t.aprobadas, p1: t.fallidas, p2: t.sinDato } }}</span>
             </div>
         </div>
         <div>
-            <h6 class="mb-2">{{ 'PORTTOS.GATE_VALIDACION.CITAS_OBSERVADAS_O_SIN_DATO' | translate: { p0: filasObservadas.length } }}</h6>
+            <h6 class="mb-2">{{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_VALIDACION.FLAGGED_APPOINTMENTS_OR_WITHOUT_VALIDATION_DATA' | translate: { p0: filasObservadas.length } }}</h6>
             <div style="height: 320px;">
                 <app-tabla-tcl [columnas]="columnasObservadas" [filas]="filasObservadas" campoId="id" [ampliada]="true"
                     [nombreArchivo]="'validacion-pregate'"></app-tabla-tcl>

@@ -1,5 +1,5 @@
-<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.BODEGAS_SATURACION.SATURACION_DE_BODEGAS_Y_SILOS' | translate)"
-    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.BODEGAS_SATURACION.OCUPACION_FISICA_FRENTE_A_CAPACIDAD' | translate)"
+<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.WAREHOUSE_SILO_SATURATION' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.PHYSICAL_OCCUPANCY_VS_NOMINAL_CAPACITY_T' | translate)"
     [icono]="data?.icono || 'feather icon-home'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origen]="data?.origen" [lienzo]="true">
 
@@ -7,7 +7,7 @@
     <div acciones-extra class="d-flex align-items-center gap-2">
         <span class="tc-badge text-uppercase"
             [ngClass]="totalBodegasCriticas > 0 ? 'badge-danger blinking' : 'badge-info'">
-            {{ totalBodegasCriticas > 0 ? (totalBodegasCriticas + ('PORTTOS.BODEGAS_SATURACION.CRITICAS' | translate)) : (listaBodegas.length + ('PORTTOS.BODEGAS_SATURACION.ZONAS' | translate)) }}
+            {{ totalBodegasCriticas > 0 ? (totalBodegasCriticas + ('PORTTOS.WIDGETS.CRITICAL' | translate)) : (listaBodegas.length + ('PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.ZONES' | translate)) }}
         </span>
     </div>
 
@@ -18,7 +18,7 @@
         <div *ngIf="cargando"
             class="d-flex justify-content-center align-items-center w-100 h-100 py-4 text-muted small">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            {{ 'PORTTOS.BODEGAS_SATURACION.CONSULTANDO_INVENTARIO_DE_BODEGAS_Y' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.CHECKING_WAREHOUSE_SILO_INVENTORY' | translate }}
         </div>
 
         <!-- Lista de Bodegas y Silos -->
@@ -39,7 +39,7 @@
 
                     <div class="d-flex align-items-center gap-2 flex-shrink-0">
                         <span class="fw-bolder" [style.color]="bod.colorBarra" style="font-size: 0.9rem;">
-                            {{ bod.ocupacion_pct !== null ? (bod.ocupacion_pct | number:'1.0-1') + '%' : ('PORTTOS.BODEGAS_SATURACION.SIN_CAPACIDAD' | translate)
+                            {{ bod.ocupacion_pct !== null ? (bod.ocupacion_pct | number:'1.0-1') + '%' : ('PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.NO_CAPACITY' | translate)
                             }}
                         </span>
                         <span class="badge rounded-pill px-2 py-1" [ngClass]="bod.claseBadge"
@@ -61,7 +61,7 @@
                 <div class="d-flex justify-content-between align-items-center text-muted flex-wrap gap-1"
                     style="font-size: 0.73rem;">
                     <span>
-                        <strong class="text-light">{{ bod.inventario_actual_ton | number:'1.0-0' }}</strong> {{ 'PORTTOS.BODEGAS_SATURACION.TON' | translate: { p0: (bod.capacidad_maxima_ton | number:'1.0-0') } }}
+                        <strong class="text-light">{{ bod.inventario_actual_ton | number:'1.0-0' }}</strong> {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.P0_T' | translate: { p0: (bod.capacidad_maxima_ton | number:'1.0-0') } }}
                         <span class="text-info">{{ bod.tipo_carga_principal }}</span>
                     </span>
 
@@ -71,7 +71,7 @@
                             <i class="feather icon-thermometer me-1"></i>{{ bod.temperatura_c | number:'1.1-1' }}°C
                         </span>
                         <span *ngIf="bod.humedad_relativa_pct !== null">
-                            <i class="feather icon-droplet me-1"></i>{{ 'PORTTOS.BODEGAS_SATURACION.HR' | translate: { p0: (bod.humedad_relativa_pct | number:'1.0-0') } }}
+                            <i class="feather icon-droplet me-1"></i>{{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.P0_RH' | translate: { p0: (bod.humedad_relativa_pct | number:'1.0-0') } }}
                         </span>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
             <div *ngIf="listaBodegas.length === 0"
                 class="d-flex flex-column justify-content-center align-items-center h-100 text-muted py-5 small">
                 <i class="feather icon-inbox fs-2 mb-2 opacity-50"></i>
-                {{ 'PORTTOS.BODEGAS_SATURACION.NO_HAY_BODEGAS_NI_SILOS' | translate }}
+                {{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.NO_WAREHOUSES_OR_SILOS_REGISTERED_PORT' | translate }}
             </div>
         </ng-container>
 
@@ -91,7 +91,7 @@
     <!-- Vista ampliada: ocupación de cada bodega en el tiempo -->
     <div detalle-enfoque *ngIf="isEnfoque" class="detalle">
         <div class="detalle-cabecera">
-            <h6 class="detalle-titulo">{{ 'PORTTOS.BODEGAS_SATURACION.OCUPACION_EN_EL_TIEMPO' | translate }}</h6>
+            <h6 class="detalle-titulo">{{ 'PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.OCCUPANCY_OVER_TIME' | translate }}</h6>
             <app-rango-tcl [valor]="horas" (cambio)="cambiarHoras($event)"></app-rango-tcl>
         </div>
         <p *ngIf="notaSerie" class="detalle-ayuda">{{ notaSerie }}</p>

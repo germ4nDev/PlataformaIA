@@ -205,23 +205,23 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'imagenInicio',
-            header: 'APLICACIONES.FOTO',
+            header: 'COMMON.IMAGE',
             type: 'image',
             isSortable: false
         },
         {
             name: 'codigoAplicacion',
-            header: 'APLICACIONES.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'nombreAplicacion',
-            header: 'APLICACIONES.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'APLICACIONES.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ]
@@ -229,17 +229,17 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcionAplicacion',
-            header: 'APLICACIONES.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'imagenUI',
-            header: 'APLICACIONES.IMAGENUI',
+            header: 'APLICACIONES.INTERFACE_IMAGE',
             type: 'logo'
         },
         {
             name: 'capture',
-            header: 'APLICACIONES.IMAGENINICIO',
+            header: 'COMMON.IMAGE',
             type: 'capture'
         }
     ]
@@ -257,12 +257,12 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     OnEliminarAplicaicionClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
-            title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-            text: this.translate.instant('APLICACIONES.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            text: this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._aplicacionesService.eliminarAplicacion(id).subscribe({
@@ -270,20 +270,20 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupAplicacionesStream()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION'), 'error')
                     }
                 })
             }

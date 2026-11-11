@@ -1,5 +1,5 @@
 <app-widget-shell [titulo]="widgetConfig?.titulo || 'TOTAL PAQUETES'"
-    [subtitulo]="widgetConfig?.subtitulo || ('WEB.COMUN.SINCRONIZADO_CON_BD' | translate)"
+    [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.SYNCED_WITH_DB' | translate)"
     [icono]="widgetConfig?.icono || 'feather icon-package'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()">
 
@@ -7,7 +7,7 @@
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase d-flex align-items-center gap-1">
             <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem;"></span>
-            {{ 'WEB.COMUN.EN_VIVO' | translate }}
+            {{ 'COMMON.LIVE' | translate }}
         </span>
     </div>
 
@@ -32,18 +32,18 @@
 
         <!-- VISTA DETALLADA MODO ENFOQUE (Distribución en modal) -->
         <div *ngIf="isEnfoque" class="w-100 h-100 p-2 animate__animated animate__fadeIn overflow-auto">
-            <p class="text-muted mb-4">{{ 'WEB.WDG_KPI_PAQUETES.DISTRIBUCION_DE_PAQUETES_ACTIVOS_EN' | translate }}</p>
+            <p class="text-muted mb-4">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.DISTRIBUTION_ACTIVE_PACKAGES_ON_PLATFORM' | translate }}</p>
 
             <div class="d-flex flex-column gap-3">
                 <div class="d-flex justify-content-between p-3 rounded"
                     style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                    <span class="fw-medium text-white">{{ 'WEB.WDG_KPI_PAQUETES.PAQUETE_BASICO' | translate }}</span>
-                    <span class="fw-bold text-success">{{ 'WEB.WDG_KPI_PAQUETES.0_ACTIVOS' | translate }}</span>
+                    <span class="fw-medium text-white">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.BASIC_PACKAGE' | translate }}</span>
+                    <span class="fw-bold text-success">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.0_ACTIVE' | translate }}</span>
                 </div>
                 <div class="d-flex justify-content-between p-3 rounded"
                     style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                    <span class="fw-medium text-white">{{ 'WEB.WDG_KPI_PAQUETES.PAQUETE_PREMIUM' | translate }}</span>
-                    <span class="fw-bold text-success">{{ 'WEB.WDG_KPI_PAQUETES.ACTIVOS' | translate: { p0: total } }}</span>
+                    <span class="fw-medium text-white">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.PREMIUM_PACKAGE' | translate }}</span>
+                    <span class="fw-bold text-success">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.P0_ACTIVE' | translate: { p0: total } }}</span>
                 </div>
             </div>
         </div>

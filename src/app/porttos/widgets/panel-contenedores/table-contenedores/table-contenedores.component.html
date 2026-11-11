@@ -1,11 +1,11 @@
-<app-widget-shell [titulo]="(configData?.titulo | translate) || ('PORTTOS.TABLE_CONTENEDORES.MOVIMIENTOS_Y_TRAZABILIDAD_DE_CONTENEDOR' | translate)"
-    [subtitulo]="(configData?.subtitulo | translate) || ('PORTTOS.TABLE_CONTENEDORES.CARGADOS_A_RETIRAR_Y_VACIOS' | translate)"
+<app-widget-shell [titulo]="(configData?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.CONTAINER_MOVEMENTS_TRACEABILITY' | translate)"
+    [subtitulo]="(configData?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.LOADED_PICK_UP_EMPTIES_RETURN_NEXT' | translate)"
     [icono]="configData?.icono || 'feather icon-anchor'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()" [origen]="configData?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-success text-uppercase">
-            {{ 'PORTTOS.TABLE_CONTENEDORES.OPERACIONES' | translate: { p0: movimientos.length } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.OPERATIONS_P0' | translate: { p0: movimientos.length } }}
         </span>
     </div>
 
@@ -18,15 +18,15 @@
                 <thead style="position: sticky; top: 0; background-color: #1a1c23; z-index: 1;">
                     <tr class="text-muted font-weight-bold text-uppercase"
                         style="font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <th style="width: 14%;" class="pb-2">{{ 'PORTTOS.TABLE_CONTENEDORES.CONTENEDOR' | translate }}</th>
-                        <th style="width: 8%;" class="pb-2">{{ 'PORTTOS.TABLE_CONTENEDORES.TIPO' | translate }}</th>
-                        <th style="width: 12%;" class="pb-2">{{ 'PORTTOS.TABLE_CONTENEDORES.NAVIERA' | translate }}</th>
-                        <th style="width: 15%;" class="pb-2">{{ 'PORTTOS.COMUN.OPERACION' | translate }}</th>
-                        <th style="width: 18%;" class="pb-2">{{ 'PORTTOS.TABLE_CONTENEDORES.RUTA' | translate }}</th>
-                        <th style="width: 12%;" class="pb-2">{{ 'PORTTOS.TABLE_CONTENEDORES.CLIENTE' | translate }}</th>
-                        <th style="width: 9%;" class="pb-2">{{ 'PORTTOS.TABLE_CONTENEDORES.FREE_TIME' | translate }}</th>
-                        <th *ngIf="isEnfoque" class="pb-2">{{ 'PORTTOS.TABLE_CONTENEDORES.REGISTRO' | translate }}</th>
-                        <th style="width: 12%; text-align: right;" class="pb-2">{{ 'PORTTOS.COMUN.ESTADO' | translate }}</th>
+                        <th style="width: 14%;" class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.CONTAINER' | translate }}</th>
+                        <th style="width: 8%;" class="pb-2">{{ 'COMMON.TYPE' | translate }}</th>
+                        <th style="width: 12%;" class="pb-2">{{ 'PORTTOS.WIDGETS.SHIPPING_LINE' | translate }}</th>
+                        <th style="width: 15%;" class="pb-2">{{ 'PORTTOS.WIDGETS.OPERATION' | translate }}</th>
+                        <th style="width: 18%;" class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.ROUTE' | translate }}</th>
+                        <th style="width: 12%;" class="pb-2">{{ 'PORTTOS.WIDGETS.CUSTOMER' | translate }}</th>
+                        <th style="width: 9%;" class="pb-2">{{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.FREE_TIME' | translate }}</th>
+                        <th *ngIf="isEnfoque" class="pb-2">{{ 'COMMON.LOG' | translate }}</th>
+                        <th style="width: 12%; text-align: right;" class="pb-2">{{ 'COMMON.STATUS' | translate }}</th>
                     </tr>
                 </thead>
 
@@ -35,7 +35,7 @@
                     <tr *ngIf="isLoading">
                         <td [attr.colspan]="isEnfoque ? 9 : 8" class="text-center text-muted py-5">
                             <div class="spinner-border spinner-border-sm text-info me-2" role="status"></div>
-                            {{ 'PORTTOS.TABLE_CONTENEDORES.SINCRONIZANDO_TRAZABILIDAD_DE_CONTENEDOR' | translate }}
+                            {{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.SYNCING_CONTAINER_TRACEABILITY' | translate }}
                         </td>
                     </tr>
 
@@ -54,7 +54,7 @@
                             </td>
                             <td *ngIf="isEnfoque" class="text-muted">
                                 {{ m.fechaRegistro ? (m.fechaRegistro | date: 'dd/MM HH:mm' : '-0500') : '—' }}
-                                <i *ngIf="m.sinPuerto" class="feather icon-alert-circle text-warning ms-1" [title]="'PORTTOS.TABLE_CONTENEDORES.MOVIMIENTO_SIN_PUERTO_ASIGNADO_SE' | translate"></i>
+                                <i *ngIf="m.sinPuerto" class="feather icon-alert-circle text-warning ms-1" [title]="'PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.MOVEMENT_WITH_NO_ASSIGNED_PORT_SHOWN' | translate"></i>
                             </td>
                             <td class="text-end">
                                 <span class="badge rounded-pill px-2 py-1 shadow-sm"
@@ -69,7 +69,7 @@
                         <tr *ngIf="movimientos.length === 0">
                             <td [attr.colspan]="isEnfoque ? 9 : 8" class="text-center text-muted py-5">
                                 <i class="feather icon-inbox fs-2 mb-2 d-block opacity-50"></i>
-                                {{ 'PORTTOS.TABLE_CONTENEDORES.NO_HAY_MOVIMIENTOS_DE_CONTENEDORES' | translate }}
+                                {{ 'PORTTOS.WIDGETS.PANEL_CONTENEDORES.TABLE_CONTENEDORES.NO_CONTAINER_MOVEMENTS_REGISTERED_PORT' | translate }}
                             </td>
                         </tr>
                     </ng-container>

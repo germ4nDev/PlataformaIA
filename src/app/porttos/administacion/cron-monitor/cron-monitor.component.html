@@ -4,7 +4,7 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
 
             </div>
@@ -26,7 +26,7 @@
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="false"
                         [showNewButton]="false" [showViewButton]="true" [showEditButton]="false"
                         [showDeleteButton]="false" [showSearchBox]="false"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate">
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>
@@ -42,11 +42,11 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <!-- Botón de filtros descomentado y activado -->
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -56,12 +56,12 @@
 
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'PORTTOS.CRON_MONITOR.FILTROS_DE_TORRE_DE_CONTROL' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'PORTTOS.ADMINISTACION.CRON_MONITOR.CONTROL_TOWER_FILTERS' | translate }}</h6>
 
                     <div class="filtro">
-                        <small>{{ 'PORTTOS.CRON_MONITOR.PROCESO_TUNEL' | translate }}</small>
+                        <small>{{ 'PORTTOS.ADMINISTACION.CRON_MONITOR.PROCESS_TUNNEL' | translate }}</small>
                         <select (change)="onFiltroProcesoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
                             <!-- Lista renderizada dinámicamente -->
                             <option [value]="proceso" *ngFor="let proceso of listaNombresCrons">
                                 {{ proceso }}
@@ -70,12 +70,12 @@
                     </div>
 
                     <div class="filtro">
-                        <small>{{ 'PORTTOS.CRON_MONITOR.ESTADO_DEL_PROCESO' | translate }}</small>
+                        <small>{{ 'PORTTOS.ADMINISTACION.CRON_MONITOR.PROCESS_STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="EXITO">{{ 'PORTTOS.CRON_MONITOR.EXITO' | translate }}</option>
-                            <option value="FALLIDO">{{ 'PORTTOS.CRON_MONITOR.FALLIDO' | translate }}</option>
-                            <option value="ERROR">{{ 'PORTTOS.CRON_MONITOR.ERROR' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="EXITO">{{ 'COMMON.SUCCESS' | translate }}</option>
+                            <option value="FALLIDO">{{ 'PORTTOS.ADMINISTACION.CRON_MONITOR.FAILED' | translate }}</option>
+                            <option value="ERROR">{{ 'COMMON.ERROR' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="false"
                         [showNewButton]="false" [showViewButton]="true" [showEditButton]="false"
                         [showDeleteButton]="false" [showSearchBox]="false"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate">
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>

@@ -32,21 +32,21 @@ export class LlegadasMaritimasComponent extends WidgetMaritimoVivoBase<Llegadas>
 
     // ---------------------------------------------------------------- vista ampliada (2026-10-24)
     public readonly columnasLlegadas: ColumnaTabla[] = [
-        { campo: 'motonave', titulo: 'PORTTOS.VESSEL_TABLE.MOTONAVE', tipo: 'principal' },
+        { campo: 'motonave', titulo: 'PORTTOS.WIDGETS.VESSEL', tipo: 'principal' },
         { campo: 'eta', titulo: 'ETA', tipo: 'fecha' },
-        { campo: 'horasParaEta', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.PARA_ETA', tipo: 'numero', decimales: 1, unidad: 'h' },
-        { campo: 'situacion', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.SITUACION', tipo: 'estado' },
-        { campo: 'tipoNave', titulo: 'PORTTOS.TABLE_CONTENEDORES.TIPO' },
+        { campo: 'horasParaEta', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.LLEGADAS_MARITIMAS.ETA', tipo: 'numero', decimales: 1, unidad: 'h' },
+        { campo: 'situacion', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.LLEGADAS_MARITIMAS.SITUATION', tipo: 'estado' },
+        { campo: 'tipoNave', titulo: 'COMMON.TYPE' },
         { campo: 'omi', titulo: 'OMI' },
         { campo: 'mmsi', titulo: 'MMSI' },
-        { campo: 'bandera', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.BANDERA' },
-        { campo: 'eslora', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.ESLORA', tipo: 'numero', unidad: 'm' },
-        { campo: 'calado', titulo: 'PORTTOS.TERMINAL_DOCKS_DETAIL.CALADO', tipo: 'numero', decimales: 1, unidad: 'm' },
-        { campo: 'agencia', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.AGENCIA' },
-        { campo: 'instalacion', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.INSTALACION' },
-        { campo: 'estadoAis', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.ESTADO_AIS' },
-        { campo: 'velocidad', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.VELOCIDAD', tipo: 'numero', decimales: 1, unidad: 'kn' },
-        { campo: 'minutosDesdeAis', titulo: 'PORTTOS.LLEGADAS_MARITIMAS.AIS_HACE', tipo: 'numero', unidad: 'min' }
+        { campo: 'bandera', titulo: 'COMMON.FLAG' },
+        { campo: 'eslora', titulo: 'PORTTOS.WIDGETS.LENGTH', tipo: 'numero', unidad: 'm' },
+        { campo: 'calado', titulo: 'PORTTOS.WIDGETS.DRAFT', tipo: 'numero', decimales: 1, unidad: 'm' },
+        { campo: 'agencia', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.LLEGADAS_MARITIMAS.AGENCY' },
+        { campo: 'instalacion', titulo: 'COMMON.SETUP' },
+        { campo: 'estadoAis', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.AIS_STATUS' },
+        { campo: 'velocidad', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.LLEGADAS_MARITIMAS.SPEED', tipo: 'numero', decimales: 1, unidad: 'kn' },
+        { campo: 'minutosDesdeAis', titulo: 'PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.LLEGADAS_MARITIMAS.AIS_AGO', tipo: 'numero', unidad: 'min' }
     ];
     public filasLlegadas: any[] = [];
 

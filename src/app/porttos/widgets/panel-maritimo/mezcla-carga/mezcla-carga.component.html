@@ -1,5 +1,5 @@
 <app-widget-shell [titulo]="(data?.titulo | translate) || (widgetConfig?.titulo | translate) || 'MEZCLA POR TIPO DE CARGA'"
-    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.MEZCLA_CARGA.DISTRIBUCION_DE_TONELADAS_MOVILIZADAS_PO' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || (widgetConfig?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_MARITIMO.MEZCLA_CARGA.DISTRIBUTION_TONS_MOVED_BY_CARGO_TYPE' | translate)"
     [icono]="data?.icono || 'feather icon-pie-chart'" [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()"
     [origenMaritimo]="widgetConfig">
 
@@ -13,14 +13,14 @@
         <div *ngIf="cargando" class="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
             style="top: 0; left: 0; z-index: 10;">
             <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-            <span class="text-muted small">{{ 'PORTTOS.MEZCLA_CARGA.CONSULTANDO_DISTRIBUCION_MARITIMA' | translate }}</span>
+            <span class="text-muted small">{{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MEZCLA_CARGA.CHECKING_MARITIME_DISTRIBUTION' | translate }}</span>
         </div>
 
         <!-- Estado Vacío -->
         <div *ngIf="!cargando && sinDatos"
             class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-muted small">
             <i class="feather icon-pie-chart fs-2 mb-2 opacity-50"></i>
-            {{ 'PORTTOS.MEZCLA_CARGA.SIN_DISTRIBUCION_DE_CARGA_DISPONIBLE' | translate }}
+            {{ 'PORTTOS.WIDGETS.PANEL_MARITIMO.MEZCLA_CARGA.NO_CARGO_DISTRIBUTION_AVAILABLE_PORT' | translate }}
         </div>
 
         <!-- Dona + Leyenda Lateral -->

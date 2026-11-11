@@ -93,27 +93,27 @@ export class SitesComponent implements OnInit {
   columnasRegistros: ColumnMetadata[] = [
     {
       name: 'nomAplicacion',
-      header: 'SITIOS.NAMEAPLICATION',
+      header: 'COMMON.APPLICATION_NAME',
       type: 'text'
     },
 {
       name: 'nombreSitio',
-      header: 'SITIOS.NAME',
+      header: 'COMMON.NAME',
       type: 'text'
     },
     {
       name: 'urlSitio',
-      header: 'SITIOS.URL',
+      header: 'SITES.URL',
       type: 'text'
     },
     {
       name: 'puertoSitio',
-      header: 'SITIOS.SITESPORT',
+      header: 'SITES.SITE_PORT',
       type: 'text'
     },
     {
       name: 'nomEstado',
-      header: 'SITIOS.STATUS',
+      header: 'COMMON.STATUS',
       type: 'text'
     }
   ];
@@ -121,7 +121,7 @@ export class SitesComponent implements OnInit {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'descripcionSitio',
-      header: 'SITIOS.DESCRIPTION',
+      header: 'COMMON.DESCRIPTION',
       type: 'text'
     }
   ];
@@ -153,22 +153,22 @@ export class SitesComponent implements OnInit {
 
   OnEliminarRegistroClick(id: any) {
     Swal.fire({
-      title: this.translate.instant('SITIOS.ELIMINARTITULO'),
-      text: this.translate.instant('SITIOS.ELIMINARTEXTO'),
+      title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE_2'),
+      text: this.translate.instant('SITES.YOU_ARE_ABOUT_DELETE_SITE'),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result) => {
       console.log('Eliminado', id);
       if (result.isConfirmed) {
         this._sitiosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('SITIOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('COMMON.DELETED'), resp.mensaje, 'success');
             this.consultarSitios();
           },
           error: (err: any) => {
-            Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('SITIOS.ELIMINARERROR'), 'error');
+            Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('SITES.COULD_NOT_DELETE_SITE'), 'error');
             console.error('Error eliminando', err);
           }
         });

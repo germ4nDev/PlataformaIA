@@ -86,7 +86,7 @@ export class GestionTipoComponent implements OnInit {
                 }
             },
             error: () => {
-                Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_TIPO.NO_SE_PUDO_CARGAR_LA'), 'error');
+                Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.COULD_NOT_LOAD_SCRIPT_TYPE_INFORMATION'), 'error');
                 this.volver();
             }
         });
@@ -109,23 +109,23 @@ export class GestionTipoComponent implements OnInit {
         if (this.esNuevo) {
             this._tiposScriptsService.postCrearRegistro(tipoData).subscribe({
                 next: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.EXITO'), traducir('WEB.GESTION_TIPO.TIPO_DE_SCRIPT_CREADO_CORRECTAMENTE'), 'success');
+                    Swal.fire(traducir('COMMON.SUCCESS'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.SCRIPT_TYPE_CREATED_SUCCESSFULLY'), 'success');
                     this.volver();
                 },
                 error: (err) => {
                     console.error(err);
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_TIPO.OCURRIO_UN_ERROR_AL_CREAR'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.ERROR_OCCURRED_CREATING_SCRIPT_TYPE'), 'error');
                 }
             });
         } else {
             this._tiposScriptsService.putModificarRegistro(tipoData).subscribe({
                 next: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.EXITO'), traducir('WEB.GESTION_TIPO.TIPO_DE_SCRIPT_ACTUALIZADO_CORRECTAMENTE'), 'success');
+                    Swal.fire(traducir('COMMON.SUCCESS'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.SCRIPT_TYPE_UPDATED_SUCCESSFULLY'), 'success');
                     this.volver();
                 },
                 error: (err) => {
                     console.error(err);
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_TIPO.OCURRIO_UN_ERROR_AL_ACTUALIZAR'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.ERROR_OCCURRED_UPDATING_SCRIPT_TYPE'), 'error');
                 }
             });
         }

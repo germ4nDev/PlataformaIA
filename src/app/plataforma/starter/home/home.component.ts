@@ -232,10 +232,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     resetearLayout() {
         // 🟢 Usamos el método reactivo pasándole la descripción, el título y los textos de los botones
         this._swalAlertService.getAlertQuestionRequest(
-            traducir('WEB.HOME.ESTAS_SEGURO_DE_QUE_DESEAS'),
-            traducir('WEB.HOME.RESTABLECER_TABLERO'),
-            traducir('WEB.HOME.SI_RESTABLECER'),
-            traducir('WEB.MAPA_SELECTOR.CANCELAR')
+            traducir('COMMON.ARE_YOU_SURE_YOU_WANT_RESET'),
+            traducir('COMMON.RESET_DASHBOARD'),
+            traducir('COMMON.YES_RESET'),
+            traducir('COMMON.CANCEL')
         ).subscribe((confirmado: boolean) => {
 
             // Si el usuario hace clic en "Cancelar" o presiona Escape, 'confirmado' será false

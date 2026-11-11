@@ -9,7 +9,7 @@
 
             <li class="nav-item select-item">
                 <div class="tc-filtro-puerto">
-                    <small class="titulo-filtro">{{ 'TORRE_CONTROL.HEADER.FT_PUERTO' | translate }}</small>
+                    <small class="titulo-filtro">{{ 'COMMON.SELECT_PORT' | translate }}</small>
                     <select class="tc-dropdown" [(ngModel)]="nodoSeleccionado" (change)="onCambioNodo($event)">
                         <option *ngFor="let nodo of listaCiudadesPortuarias" [value]="nodo.id_puerto">
                             {{ nodo.id_puerto }}
@@ -75,7 +75,7 @@
 
             <li class="nav-item select-item">
                 <div class="tc-filtro-puerto">
-                    <small class="titulo-filtro">{{ 'TORRE_CONTROL.HEADER.FT_PUERTO' | translate }}</small>
+                    <small class="titulo-filtro">{{ 'COMMON.SELECT_PORT' | translate }}</small>
                     <select class="tc-dropdown" [(ngModel)]="nodoSeleccionado" (change)="onCambioNodo($event)">
                         <option *ngFor="let nodo of listaCiudadesPortuarias" [value]="nodo.id_puerto">
                             {{ nodo.id_puerto }}
@@ -139,7 +139,7 @@
 
         <div class="tc-filtro-puerto-wrapper">
             <div class="tc-filtro-puerto">
-                <small class="titulo-filtro">{{ 'TORRE_CONTROL.HEADER.FT_PUERTO' | translate }}</small>
+                <small class="titulo-filtro">{{ 'COMMON.SELECT_PORT' | translate }}</small>
                 <select class="tc-dropdown" [(ngModel)]="nodoSeleccionado" (change)="onCambioNodo($event)">
                     <option *ngFor="let nodo of listaCiudadesPortuarias" [value]="nodo.id_puerto">
                         {{ nodo.id_puerto }}
@@ -208,7 +208,7 @@
 
         <div class="tc-filtro-puerto-wrapper mr-4">
             <div class="tc-filtro-puerto">
-                <small class="titulo-filtro">{{ 'TORRE_CONTROL.HEADER.FT_PUERTO' | translate }}</small>
+                <small class="titulo-filtro">{{ 'COMMON.SELECT_PORT' | translate }}</small>
                 <select class="tc-dropdown" [(ngModel)]="nodoSeleccionado" (change)="onCambioNodo($event)">
                     <option *ngFor="let nodo of listaCiudadesPortuarias" [value]="nodo.id_puerto">
                         {{ nodo.id_puerto }}
@@ -279,7 +279,7 @@
         <div style="display: flex; align-items: center; gap: 20px;">
             <div class="tc-filtro-puerto-wrapper mr-4">
                 <div class="tc-filtro-puerto">
-                    <small class="titulo-filtro">{{ 'TORRE_CONTROL.HEADER.FT_PUERTO' | translate }}</small>
+                    <small class="titulo-filtro">{{ 'COMMON.SELECT_PORT' | translate }}</small>
                     <select class="tc-dropdown" [(ngModel)]="nodoSeleccionado" (change)="onCambioNodo($event)">
                         <option *ngFor="let nodo of listaCiudadesPortuarias" [value]="nodo.id_puerto">
                             {{ nodo.id_puerto }}
@@ -294,20 +294,20 @@
                 <ul class="tc-toolbar-nav d-flex align-items-center mb-0 list-unstyled">
                     <li class="nav-item mr-2">
                         <a href="javascript:void(0)" class="toolbar-btn" [hidden]="isOptionBloqueo"
-                            (click)="onBloqueoClick()" [title]="'WEB.TC_HEADER.BLOQUEO_DESBLOQUEO' | translate">
+                            (click)="onBloqueoClick()" [title]="'STARTER.HOME.TC_HEADER.LOCK_UNLOCK' | translate">
                             <i class="feather" [ngClass]="isBloqueado ? 'icon-lock' : 'icon-unlock'"></i>
                         </a>
                     </li>
 
                     <li class="nav-item mr-2">
-                        <a href="javascript:void(0)" class="toolbar-btn" (click)="goBack()" [title]="'WEB.TC_HEADER.MENU_PRINCIPAL' | translate">
+                        <a href="javascript:void(0)" class="toolbar-btn" (click)="goBack()" [title]="'COMMON.MAIN_MENU' | translate">
                             <i class="feather icon-home"></i>
                         </a>
                     </li>
 
                     <li class="nav-item mr-2">
                         <a href="javascript:void(0)" class="toolbar-btn" (click)="abrirCatalogo.emit()"
-                            [title]="'WEB.TC_HEADER.CATALOGO_WIDGETS' | translate">
+                            [title]="'STARTER.HOME.TC_HEADER.WIDGET_CATALOG' | translate">
                             <i class="feather icon-layout"></i>
                         </a>
                     </li>

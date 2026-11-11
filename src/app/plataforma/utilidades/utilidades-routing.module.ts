@@ -58,6 +58,19 @@ const routes: Routes = [
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
+                // OT-027: llaves de traducción de los idiomas (es.json, en.json…)
+                path: 'paises',
+                loadComponent: () => import('./paises/paises.component').then(m => m.PaisesComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-pais',
+                loadComponent: () => import('./paises/gestion-pais/gestion-pais.component').then(m => m.GestionPaisComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
                 path: 'widgets',
                 loadComponent: () => import('./widgets/widgets/widgets.component').then(m => m.WidgetsComponent),
                 canActivate: [RoleGuard],

@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
@@ -20,11 +20,11 @@
                     <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
                     <div class="d-flex flex-column pe-3">
                         <h4 class="titulo-formulario">
-                            <span>{{ 'MODULOS.GESTION.NEW' | translate }}</span>
-                            <span class="titulo-container"> {{ 'WEB.GESTION_MODULOPQ.ASIGNACION_AL_PAQUETE' | translate }}</span>
+                            <span>{{ 'COMMON.NEW_MODULE' | translate }}</span>
+                            <span class="titulo-container"> {{ 'PAQUETES.MODULOS_PAQUETE.GESTION.PACKAGE_ASSIGNMENT' | translate }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            {{ 'WEB.GESTION_MODULOPQ.SELECCIONE_LA_APLICACION_Y_SUITE' | translate }}
+                            {{ 'PAQUETES.MODULOS_PAQUETE.GESTION.SELECT_APPLICATION_SUITE_ASSIGN_THEIR_MODULES' | translate }}
                         </h6>
                     </div>
 
@@ -32,15 +32,15 @@
                     <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-secondary btn-NuevoRegistro btn-animacion ms-2"
                             (click)="btnRegresarClick()" [disabled]="isSaving">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
 
                         <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion ms-2"
                             (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
-                            <span *ngIf="!isSaving">{{ 'MODULOS.GESTION.CREATE' | translate }} <i
+                            <span *ngIf="!isSaving">{{ 'COMMON.CREATE_MODULE' | translate }} <i
                                     class="feather icon-save ms-2"></i></span>
-                            <span *ngIf="isSaving">{{ 'WEB.GESTION_MODULOPQ.ASIGNANDO' | translate }} <span class="spinner-border spinner-border-sm ms-2"
+                            <span *ngIf="isSaving">{{ 'PAQUETES.MODULOS_PAQUETE.GESTION.ASSIGNING' | translate }} <span class="spinner-border spinner-border-sm ms-2"
                                     role="status"></span></span>
                         </button>
                     </div>
@@ -55,11 +55,11 @@
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoAplicacion"> {{
-                                    'MODULOS.GESTION.APLICACION' | translate }}</label>
+                                    'COMMON.APPLICATION' | translate }}</label>
                                 <select class="form-control form-select" id="codigoAplicacion"
                                     formControlName="codigoAplicacion" (change)="onAplicacionChangeClick($event)"
                                     [ngClass]="{ 'is-invalid': f['codigoAplicacion'].invalid && (f['codigoAplicacion'].dirty || f['codigoAplicacion'].touched || isSubmit) }">
-                                    <option value="" disabled selected>{{ 'MODULOS.GESTION.PLACEHOLDERAPLICACION' |
+                                    <option value="" disabled selected>{{ 'COMMON.SELECT_APPLICATION' |
                                         translate }} </option>
                                     <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{
                                         app.nombreAplicacion }}</option>
@@ -68,19 +68,19 @@
                                 <label
                                     *ngIf="f['codigoAplicacion'].invalid && (f['codigoAplicacion'].dirty || f['codigoAplicacion'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'MODULOS.GESTION.REQUERIDOAPLICACION' | translate }}
+                                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoSuite"> {{ 'MODULOS.GESTION.SUITE' |
+                                <label class="form-control-label" for="codigoSuite"> {{ 'COMMON.SUITE' |
                                     translate }}</label>
                                 <select class="form-control form-select" id="codigoSuite" formControlName="codigoSuite"
                                     (change)="onSuiteChangeClick($event)"
                                     [ngClass]="{ 'is-invalid': f['codigoSuite'].invalid && (f['codigoSuite'].dirty || f['codigoSuite'].touched || isSubmit) }">
-                                    <option value="" disabled selected>{{ 'MODULOS.GESTION.PLACEHOLDERSUITE' | translate
+                                    <option value="" disabled selected>{{ 'COMMON.SELECT_SUITE' | translate
                                         }} </option>
                                     <option [value]="sui.codigoSuite" *ngFor="let sui of suitesFiltradas"> {{
                                         sui.nombreSuite }} </option>
@@ -89,21 +89,21 @@
                                 <label
                                     *ngIf="f['codigoSuite'].invalid && (f['codigoSuite'].dirty || f['codigoSuite'].touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'WEB.GESTION_MODULOPQ.DEBE_SELECCIONAR_UNA_SUITE' | translate }}
+                                    {{ 'PAQUETES.MODULOS_PAQUETE.GESTION.YOU_MUST_SELECT_SUITE' | translate }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-12 mt-3" *ngIf="modulosPadre.length > 0">
                             <div class="text-center flex flex-col justify-center"><br />
-                                <h4 class="titulo-container">{{ 'WEB.GESTION_MODULOPQ.MODULOS_ASOCIADOS_AL_PAQUETE' | translate }}</h4>
-                                <h6 class="subtitulo-container"> {{ 'WEB.GESTION_MODULOPQ.ASOCIE_TODOS_LOS_MODULOS_QUE' | translate }}
+                                <h4 class="titulo-container">{{ 'PAQUETES.MODULOS_PAQUETE.GESTION.MODULES_LINKED_PACKAGE' | translate }}</h4>
+                                <h6 class="subtitulo-container"> {{ 'PAQUETES.MODULOS_PAQUETE.GESTION.LINK_ALL_MODULES_INCLUDE_IN_PACKAGE' | translate }}
                                 </h6><br />
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                     (click)="btnAsociarTodosClick()">
                                     <i class="feather me-2"
                                         [ngClass]="todosSeleccionados ? 'icon-minus-square' : 'icon-check-square'"></i>
-                                    {{ todosSeleccionados ? ('WEB.GESTION_MODULOPQ.DESELECCIONAR_TODOS' | translate) : ('WEB.GESTION_MODULOPQ.SELECCIONAR_TODOS' | translate) }}
+                                    {{ todosSeleccionados ? ('PAQUETES.MODULOS_PAQUETE.GESTION.DESELECT_ALL' | translate) : ('PAQUETES.MODULOS_PAQUETE.GESTION.SELECT_ALL' | translate) }}
                                 </button>
                                 <br /><br />
                             </div>

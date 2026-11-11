@@ -127,7 +127,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
                             accion: 'MODIFICAR',
                             letra: 'M',
                             color: '#007bff',
-                            tooltip: (this.translate.instant('SUSCRIPTORES.MODIFICAR'))
+                            tooltip: (this.translate.instant('COMMON.EDIT_2'))
                         });
                     }
 
@@ -137,7 +137,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
                             accion: 'ELIMINAR',
                             letra: 'E',
                             color: '#dc3545',
-                            tooltip: (this.translate.instant('SUSCRIPTORES.ELIMINAR'))
+                            tooltip: (this.translate.instant('COMMON.DELETE'))
                         });
                     }
 
@@ -147,7 +147,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
                             accion: 'EMPRESAS',
                             letra: 'E',
                             color: '#0BD9D2',
-                            tooltip: (this.translate.instant('SUSCRIPTORES.EMPRESAS'))
+                            tooltip: (this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.SUBSCRIBER_COMPANIES'))
                         });
                     }
 
@@ -157,7 +157,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
                             accion: 'USUARIOS',
                             letra: 'U',
                             color: '#e08815',
-                            tooltip: (this.translate.instant('SUSCRIPTORES.USUARIOS'))
+                            tooltip: (this.translate.instant('COMMON.USERS'))
                         });
                     }
 
@@ -167,7 +167,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
                             accion: 'PAQUETES',
                             letra: 'P',
                             color: '#970fc0',
-                            tooltip: (this.translate.instant('SUSCRIPTORES.PAQUETES'))
+                            tooltip: (this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.PACKAGES'))
                         });
                     }
 
@@ -226,28 +226,28 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     columnasRegistros: any[] = [
         {
             name: 'logoSuscriptor',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.LOGO',
+            header: 'COMMON.LOGO',
             type: 'image',
             isSortable: false,
             searchable: false
         },
         {
             name: 'nombreSuscriptor',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.NAME',
+            header: 'COMMON.NAME',
             type: 'text',
             isSortable: true,
             searchable: false
         },
         {
             name: 'identificacionSuscriptor',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.IDENTIFICATION',
+            header: 'COMMON.IDENTIFICATION',
             type: 'text',
             isSortable: true,
             searchable: false
         },
         {
             name: 'nomEstado',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.STATUS',
+            header: 'COMMON.STATUS',
             type: 'estado',
             isSortable: true,
             searchable: false
@@ -257,42 +257,42 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoSuscriptor',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'direccionSuscriptor',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.DIRECCION',
+            header: 'SUSCRIPTOR.SUSCRIPTORES.ADDRESS',
             type: 'text'
         },
         {
             name: 'telefonoContacto',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.TELEFONO',
+            header: 'SUSCRIPTOR.SUSCRIPTORES.PHONE',
             type: 'text'
         },
         {
             name: 'numeroEmpresas',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.NUMEROEMPRESA',
+            header: 'SUSCRIPTOR.SUSCRIPTORES.COMPANY_NUMBER',
             type: 'text'
         },
         {
             name: 'numeroUsuarios',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.NUMEROUSUARIO',
+            header: 'SUSCRIPTOR.SUSCRIPTORES.USER_NUMBER',
             type: 'text'
         },
         {
             name: 'usuarioAdministrador',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.USUARIOADMIN',
+            header: 'SUSCRIPTOR.SUSCRIPTORES.ADMIN_USER',
             type: 'text'
         },
         {
             name: 'descripcionSuscriptor',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'capture',
-            header: 'SUSCRIPTOR.SUSCRIPTORES.LOGO',
+            header: 'COMMON.LOGO',
             type: 'capture'
         }
     ];
@@ -340,12 +340,12 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
 
     OnEliminarRegistroClick(id: any) {
         const suscriptor = this.registros.filter((x) => x.codigoSuscriptor == id.id)[0];
-        const titulo = this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO');
-        const confirmText = this.translate.instant('PLATAFORMA.DELETE');
-        const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+        const titulo = this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE_2');
+        const confirmText = this.translate.instant('COMMON.DELETE');
+        const cancelText = this.translate.instant('COMMON.CANCEL');
         const htmlBody = `
         <div style="margin-bottom: 10px;">
-            ${this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO')}
+            ${this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.YOU_ARE_ABOUT_DELETE_SUBSCRIBER')}
         </div>
         <small><b>"${suscriptor?.nombreSuscriptor}"</b></small>
     `;
@@ -354,7 +354,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
         //         if (confirmado) {
         //             this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
         //             next: (resp: any) => {
-        //                 Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+        //                 Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
         //                 this.subscriptions.add(
         //                         this._suscriptoresService.getRegistros().subscribe(
         //                             () => console.log('Suscriptores cargados y guardadas en el servicio'),
@@ -363,7 +363,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
         //                     )
         //             },
         //             error: (err: any) => {
-        //                 Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARERROR'), 'error');
+        //                 Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.COULD_NOT_DELETE_SUBSCRIBER'), 'error');
         //                 console.error('Error eliminando', err);
         //             }
         //             });

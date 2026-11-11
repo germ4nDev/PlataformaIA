@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -17,42 +17,42 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'USUARIOS.USUARIOS.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'USUARIOS.USER_FILTERS' | translate }}</h6>
                     </DIV>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.IDENTIFICACION' | translate }}</small>
+                        <small>{{ 'COMMON.IDENTIFICATION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USER_IDENTIFICATION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.NOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.NOMBREHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USER_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.CORREO' | translate }}</small>
+                        <small>{{ 'COMMON.EMAIL' | translate }}</small>
                         <input type="text" (keyup)="onFiltroCorreoChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.CORREOHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USER_EMAIL' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.USERNAME' | translate }}</small>
+                        <small>{{ 'USUARIOS.USERNAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroUsernameChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.USERNAMEHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USERNAME_2' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.DECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USER_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input"
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
                             style="cursor: pointer">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -65,12 +65,12 @@
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada; else loading">
                     <app-table-data [data]="dataFiltrada" [idField]="'codigoUsuario'"
-                        [tableTitle]="'USUARIOS.USUARIOS.TITLE' | translate" [metadataColumns]="columnasUsuarios"
+                        [tableTitle]="'USUARIOS.USER_MANAGEMENT' | translate" [metadataColumns]="columnasUsuarios"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
                         [showUploadButton]="true" [showDeleteButton]="false" [showSearchBox]="false"
-                        [newButtonLabel]="'USUARIOS.USUARIOS.NEW' | translate" [showUploadButton]="false"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" [showUploadModalButton]="true"
+                        [newButtonLabel]="'COMMON.NEW_USER' | translate" [showUploadButton]="false"
+                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [showUploadModalButton]="true"
                         [uploadModalLabel]="'Cargar Excel' | translate" (uploadModalClick)="abrirModalCargueMasivo()"
                         (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                         (deleteRecord)="OnEliminarRegistroClick($event)"
@@ -94,8 +94,8 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">{{ 'USUARIOS.CAMBIOCLAVE.TITULO' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate"
+                <h5 class="modal-title">{{ 'COMMON.PASSWORD_CHANGE' | translate }}</h5>
+                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'COMMON.CLOSE' | translate"
                     (click)="cerrarModal()"></button>
             </div>
 
@@ -104,27 +104,27 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVEACTUAL' | translate
+                                <label class="form-label">{{ 'COMMON.CURRENT_PASSWORD' | translate
                                     }}</label>
                                 <input type="password" class="form-control form-input" name="claveUsuario"
-                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    placeholder="{{ 'COMMON.ENTER_CURRENT_PASSWORD' | translate }}"
                                     #claveUsuario="ngModel" required [(ngModel)]="FormRegistro.claveUsuario" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEW' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.NEW_PASSWORD' | translate }}</label>
                                 <input type="password" class="form-control form-input" name="claveNew"
-                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEWHOLDER' | translate }}"
+                                    placeholder="{{ 'COMMON.ENTER_NEW_PASSWORD' | translate }}"
                                     #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRM' | translate
+                                <label class="form-label">{{ 'COMMON.CONFIRM_PASSWORD' | translate
                                     }}</label>
                                 <input type="password" class="form-control form-input" name="claveConfirm"
-                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRMHOLDER' | translate }}"
+                                    placeholder="{{ 'COMMON.CONFIRM_PASSWORD_2' | translate }}"
                                     #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
                             </div>
                         </div>
@@ -135,11 +135,11 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModal()">
-                    {{ 'PLATAFORMA.CANCELAR' | translate }}
+                    {{ 'COMMON.CANCEL' | translate }}
                 </button>
                 <button type="button" class="btn btn-primary btn-NuevoRegistro"
                     (click)="getCambiarClave(validationForm)">
-                    {{ 'PLATAFORMA.GUARDAR' | translate }}
+                    {{ 'COMMON.SAVE' | translate }}
                 </button>
             </div>
 
@@ -153,8 +153,8 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">{{ 'USUARIOS.CARGUEMASIVO.TITULO' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'WEB.COMUN.CLOSE' | translate"
+                <h5 class="modal-title">{{ 'USUARIOS.BULK_USER_UPLOAD' | translate }}</h5>
+                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'COMMON.CLOSE' | translate"
                     (click)="cerrarModalCargueMasivo()"></button>
             </div>
 
@@ -164,10 +164,10 @@
                         <!-- Combo de Suscriptores -->
                         <div class="col-md-12 mb-3">
                             <div class="form-group">
-                                <label class="form-label">{{ 'USUARIOS.CARGUEMASIVO.SUSCRIPTOR' | translate }}</label>
-                                <select class="form-control form-input" name="codigoSuscriptor"
+                                <label class="form-label">{{ 'COMMON.SUBSCRIBER' | translate }}</label>
+                                <select class="form-control form-select" name="codigoSuscriptor"
                                     #codigoSuscriptor="ngModel" required [(ngModel)]="suscriptorSeleccionadoParaCargue">
-                                    <option value="" disabled selected>{{ 'USUARIOS.CARGUEMASIVO.SUSCRIPTORHOLDER' |
+                                    <option value="" disabled selected>{{ 'USUARIOS.SELECT_SUBSCRIBER' |
                                         translate }}</option>
                                     <option *ngFor="let susc of suscriptores" [value]="susc.codigoSuscriptor">
                                         {{ susc.nombreSuscriptor }}
@@ -179,7 +179,7 @@
                         <!-- Selector de Archivo Excel -->
                         <div class="col-md-12 mb-3">
                             <div class="form-group">
-                                <label class="form-label">{{ 'USUARIOS.CARGUEMASIVO.ARCHIVOLABEL' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.FILE' | translate }}</label>
 
                                 <!-- Contenedor Flex para alinear el botón y el nombre del archivo -->
                                 <div class="d-flex align-items-center">
@@ -191,7 +191,7 @@
                                     <!-- 2. El Botón Estilizado -->
                                     <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                                         (click)="fileInputModal.click()">
-                                        {{ 'WEB.USUARIOS.SELECCIONAR_ARCHIVO' | translate }}
+                                        {{ 'USUARIOS.SELECT_FILE' | translate }}
                                     </button>
 
                                     <!-- 3. Indicador Visual del Archivo Seleccionado -->
@@ -199,13 +199,13 @@
                                         📄 {{ archivoExcelSeleccionado.name }}
                                     </span>
                                     <span class="ms-3 text-muted" *ngIf="!archivoExcelSeleccionado">
-                                        {{ 'WEB.USUARIOS.NO_SE_HA_SELECCIONADO_ARCHIVO' | translate }}
+                                        {{ 'USUARIOS.NO_FILE_SELECTED' | translate }}
                                     </span>
 
                                 </div>
 
                                 <small class="text-muted mt-2 d-block">
-                                    {{ 'USUARIOS.CARGUEMASIVO.ARCHIVOHOLDER' | translate }}
+                                    {{ 'USUARIOS.SELECT_FILE_EXCEL_OR_CSV' | translate }}
                                 </small>
                             </div>
                         </div>
@@ -215,13 +215,13 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModalCargueMasivo()">
-                    {{ 'PLATAFORMA.CANCELAR' | translate }}
+                    {{ 'COMMON.CANCEL' | translate }}
                 </button>
                 <button type="button" class="btn btn-primary btn-NuevoRegistro"
                     [disabled]="cargandoCargueMasivo || !suscriptorSeleccionadoParaCargue || !archivoExcelSeleccionado"
                     (click)="ejecutarCargueMasivo()">
                     <span *ngIf="cargandoCargueMasivo" class="spinner-border spinner-border-sm me-1"></span>
-                    {{ 'PLATAFORMA.GUARDAR' | translate }}
+                    {{ 'COMMON.SAVE' | translate }}
                 </button>
             </div>
 

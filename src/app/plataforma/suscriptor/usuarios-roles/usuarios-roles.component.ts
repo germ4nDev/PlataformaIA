@@ -127,8 +127,8 @@ export class UsuariosRolesComponent implements OnInit {
         this.usuario = this.usuarios.find(x => x.codigoUsuario == this.codigoUsuario) || {}
         this.suscriptor = this.suscriptores.find(x => x.codigoSuscriptor == this.codigoSuscriptor) || {}
         console.log('datos usuario', this.usuario);
-        this.tituloPagina = this.translate.instant('SUSCRIPTORES.USUARIOSROLES.TITLE') + ' ' + this.usuario.nombreUsuario;
-        this.subtituloPagina = this.translate.instant('SUSCRIPTORES.USUARIOSROLES.TITLE') + ' ' + this.suscriptor.nombreSuscriptor;
+        this.tituloPagina = this.translate.instant('SUSCRIPTOR.USUARIOS_ROLES.USER_ROLE_MANAGEMENT') + ' ' + this.usuario.nombreUsuario;
+        this.subtituloPagina = this.translate.instant('SUSCRIPTOR.USUARIOS_ROLES.USER_ROLE_MANAGEMENT') + ' ' + this.suscriptor.nombreSuscriptor;
         console.log('roles actuales', this.roles);
         console.log('usuarios actuales', this.usuarios);
         console.log('aplicaciones actuales', this.aplicaciones);
@@ -205,7 +205,7 @@ export class UsuariosRolesComponent implements OnInit {
                             accion: 'INACTIVAR', permiso: 'ACT_USUSC_ROLES',
                             letra: isActivo ? 'I' : 'A',
                             color: isActivo ? '#13af2d' : '#13af2d',
-                            tooltip: isActivo ? this.translate.instant('USUARIOSROLES.INACTIVAR') : this.translate.instant('USUARIOSROLES.ACTIVAR')
+                            tooltip: isActivo ? this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE') : this.translate.instant('COMMON.ACTIVATE')
                         }],
                     } as PTLUsuarioRoleAPModel;
                 });
@@ -256,27 +256,27 @@ export class UsuariosRolesComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'nomEmpresa',
-            header: 'USUARIOS.USUARIOSROLES.NOMBREEMPRESA',
+            header: 'COMMON.COMPANY',
             type: 'text'
         },
         {
             name: 'nomAplicacion', // 🟢 Se mueve a la vista principal
-            header: 'USUARIOS.USUARIOSROLES.NOMBREAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nomRole',
-            header: 'USUARIOS.USUARIOSROLES.NOMBREROL',
+            header: 'COMMON.ROLE',
             type: 'text'
         },
         {
             name: 'tipoRol',
-            header: 'USUARIOS.USUARIOSROLES.TIPOROLE',
+            header: 'COMMON.ROLE_TYPE_2',
             type: 'text'
         },
         {
             name: 'nomEstado',
-            header: 'USUARIOS.USUARIOSROLES.ESTADOROLE',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ];
@@ -284,12 +284,12 @@ export class UsuariosRolesComponent implements OnInit {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'nomAplicacion',
-            header: 'USUARIOS.USUARIOSROLES.NOMBREAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nomSuite',
-            header: 'USUARIOS.USUARIOSROLES.NOMBRESUITE',
+            header: 'COMMON.SUITE',
             type: 'text'
         }
     ]
@@ -335,10 +335,10 @@ export class UsuariosRolesComponent implements OnInit {
         switch (accion) {
             case 'INACTIVAR':
                 this._swalAlertService.getAlertQuestionRequest(
-                    this.translate.instant('ROLESUSUARIOS.INACTIVAR'),
-                    this.translate.instant('ROLESUSUARIOS.INACTIVARTITULO'),
-                    this.translate.instant('ROLESUSUARIOS.INACTIVARBTN'),
-                    this.translate.instant('PLATAFORMA.CANCEL')
+                    this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
+                    this.translate.instant('COMMON.CHANGE_ROLE_USER_STATUS'),
+                    this.translate.instant('COMMON.CHANGE_STATUS'),
+                    this.translate.instant('COMMON.CANCEL')
                 ).subscribe(result => {
                     if (result) {
                         console.log('inactivar usuario codigo', id);
@@ -355,20 +355,20 @@ export class UsuariosRolesComponent implements OnInit {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                                    descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
                                 this.setupRolesStream()
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje)
+                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje)
                             },
                             error: (err: any) => {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje
+                                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
                                 }
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje)
+                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
                                 console.error('Error eliminando', err)
                             }
                         })
@@ -388,10 +388,10 @@ export class UsuariosRolesComponent implements OnInit {
     OnEliminarRegistroClick(id: any) {
         // const nombre = this.registros.filter((x) => x.codigoRole == id.id)[0]
         this._swalAlertService.getAlertQuestionRequest(
-            this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
-            this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
-            this.translate.instant('PLATAFORMA.DELETE'),
-            this.translate.instant('PLATAFORMA.CANCEL')
+            this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE'),
+            this.translate.instant('COMMON.ARE_YOU_SURE'),
+            this.translate.instant('COMMON.DELETE'),
+            this.translate.instant('COMMON.CANCEL')
         ).subscribe(result => {
             if (result) {
                 const usuRole = this.usuariosRoles.filter(x => x.codigoUsuarioRole == id.id)[0];
@@ -403,11 +403,11 @@ export class UsuariosRolesComponent implements OnInit {
                             const logData = {
                                 codigoTipoLog: '',
                                 codigoRespuesta: '201',
-                                descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
+                                descripcionLog: this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY')
                             };
                             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                             this.setupRolesStream()
-                            this._swalAlertService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+                            this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ACTIVITY_UPDATED_SUCCESSFULLY'));
                         }
                     },
                     error: (err: any) => {
@@ -415,10 +415,10 @@ export class UsuariosRolesComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_ACTIVITY')
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError(traducir('WEB.COMUN.NO_SE_PUDO_ACTUALIZAR_LA'));
+                        this._swalAlertService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_ACTIVITY_2'));
                     }
                 });
             }

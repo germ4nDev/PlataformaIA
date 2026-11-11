@@ -224,10 +224,10 @@ export class DashboardPanelComponent implements OnInit, OnDestroy {
     resetearLayout() {
         // 🟢 Usamos el método reactivo pasándole la descripción, el título y los textos de los botones
         this._swalAlertService.getAlertQuestionRequest(
-            traducir('PORTTOS.DASHBOARD_PANEL.ESTAS_SEGURO_DE_QUE_DESEAS'),
-            traducir('PORTTOS.DASHBOARD_PANEL.RESTABLECER_TABLERO'),
-            traducir('PORTTOS.DASHBOARD_PANEL.SI_RESTABLECER'),
-            traducir('PORTTOS.IA_ADMIN_PANEL.CANCELAR')
+            traducir('COMMON.ARE_YOU_SURE_YOU_WANT_RESET'),
+            traducir('COMMON.RESET_DASHBOARD'),
+            traducir('COMMON.YES_RESET'),
+            traducir('COMMON.CANCEL')
         ).subscribe((confirmado: boolean) => {
 
             // Si el usuario hace clic en "Cancelar" o presiona Escape, 'confirmado' será false

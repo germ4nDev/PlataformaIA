@@ -65,7 +65,7 @@ export class TiemposFondeoComponent extends WidgetMaritimoVivoBase<TiemposMariti
         this.grafica = PorttosChartHelper.renderizarBarras(this.lienzo, this.grafica, {
             labels: porDia.map((d) => d.dia.slice(5).split('-').reverse().join('/')),
             datasets: [
-                { label: traducir('PORTTOS.TIEMPOS_FONDEO.PROMEDIO_H'), data: porDia.map((d) => horas(d.promedioMin)), color: paleta[0] },
+                { label: traducir('PORTTOS.WIDGETS.PANEL_MARITIMO_VIVO.TIEMPOS_FONDEO.AVERAGE_H'), data: porDia.map((d) => horas(d.promedioMin)), color: paleta[0] },
                 { label: 'P90 (h)', data: porDia.map((d) => horas(d.p90Min)), color: PorttosChartHelper.SEMAFORO.alerta }
             ],
             unidad: 'h',

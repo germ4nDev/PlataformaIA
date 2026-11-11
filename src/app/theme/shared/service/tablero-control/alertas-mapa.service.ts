@@ -166,7 +166,7 @@ export class AlertasMapaService implements OnDestroy {
             this.cola = [];
             this.mostrar(primera);
             const n = resto.length;
-            this.contar(this.toastr.info(traducir('WEB.ALERTAS_MAPA_SERVICE.VER_LA_BITACORA_DE_ALERTAS'), `+${n} alerta${n === 1 ? '' : 's'} más`, this.opciones('info')));
+            this.contar(this.toastr.info(traducir('SHARED.SERVICE.TABLERO_CONTROL.VIEW_MAP_ALERT_LOG'), `+${n} alerta${n === 1 ? '' : 's'} más`, this.opciones('info')));
             return;
         }
         this.mostrar(this.cola.shift()!);

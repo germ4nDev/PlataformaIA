@@ -101,7 +101,7 @@ export class PtlItemsPaqueteService {
     }
 
     putModificarRegistro(itemPaquete: PTLItemPaquete) {
-        const url = `${base_url}/items-paquete/${itemPaquete.itemId}`
+        const url = `${base_url}/items-paquete/${itemPaquete.codigoItem}` // el API identifica la fila por codigoItem (OT-029)
         return this.http.put(url, itemPaquete).pipe(
             map((resp: any) => {
                 console.log('data de itemPaquete modificacdo', resp)

@@ -61,10 +61,10 @@ export class GestionFaroPanelComponent implements OnInit {
     textoColor: string = 'id_color'
 
     ETIPOS_FARO = [
-        { id: 'PEAJE', label: traducir('PORTTOS.COMUN.PEAJE'), color: '#22c55e' },
-        { id: 'PUNTO_CONTROL', label: traducir('PORTTOS.COMUN.PUNTO_DE_CONTROL'), color: '#facc15' },
-        { id: 'ZONA_TERRESTRE', label: traducir('PORTTOS.COMUN.ZONA_TERRESTRE'), color: '#f59e0b' },
-        { id: 'ZONA_MARITIMA', label: traducir('PORTTOS.COMUN.ZONA_MARITIMA'), color: '#dc2626' }
+        { id: 'PEAJE', label: traducir('PORTTOS.TOLL'), color: '#22c55e' },
+        { id: 'PUNTO_CONTROL', label: traducir('PORTTOS.ADMINISTACION.CHECKPOINT'), color: '#facc15' },
+        { id: 'ZONA_TERRESTRE', label: traducir('PORTTOS.ADMINISTACION.LAND_ZONE'), color: '#f59e0b' },
+        { id: 'ZONA_MARITIMA', label: traducir('PORTTOS.ADMINISTACION.MARITIME_ZONE'), color: '#dc2626' }
     ];
 
     constructor(
@@ -98,7 +98,7 @@ export class GestionFaroPanelComponent implements OnInit {
                     console.log('data registro', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_FARO_PANEL.NO_SE_PUDO_OBTENER_EL'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.COULD_NOT_GET_LIGHTHOUSE'), 'error')
                 }
             })
         }
@@ -172,7 +172,7 @@ export class GestionFaroPanelComponent implements OnInit {
                     this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -218,7 +218,7 @@ export class GestionFaroPanelComponent implements OnInit {
                     if (resp.ok) {
                         console.log('MODIFICAdo FaroModel', resp.data);
                         form.resetForm()
-                        this._swalService.getAlertSuccess(this.translate.instant('MUELLES.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('PORTTOS.ADMINISTACION.BERTH_CREATED_SUCCESSFULLY'))
                         this.router.navigate(['/porttos/faros-panel'])
                     }
                 },
@@ -227,10 +227,10 @@ export class GestionFaroPanelComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('MUELLES.CREATESUCCSESSFULLY')
+                        descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.BERTH_CREATED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_FARO_PANEL.NO_SE_PUDO_ACTUALIZAR_EL'))
+                    this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.COULD_NOT_UPDATE_LIGHTHOUSE'))
                 }
             })
         } else {
@@ -246,7 +246,7 @@ export class GestionFaroPanelComponent implements OnInit {
                     console.log('resp', resp)
                     if (resp.ok) {
                         form.resetForm()
-                        this._swalService.getAlertSuccess(this.translate.instant('MUELLES.UPDATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('PORTTOS.ADMINISTACION.BERTH_UPDATED_SUCCESSFULLY'))
                         this.router.navigate(['/porttos/faros-panel'])
                     }
                 },
@@ -255,10 +255,10 @@ export class GestionFaroPanelComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('MUELLES.ELIMINAREXITOSA')
+                        descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.BERTH_DELETED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_FARO_PANEL.NO_SE_PUDO_CREAR_EL'))
+                    this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.FAROS_PANEL.GESTION.COULD_NOT_CREATE_LIGHTHOUSE'))
                 }
             })
         }

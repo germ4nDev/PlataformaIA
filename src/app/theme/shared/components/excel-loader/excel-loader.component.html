@@ -1,6 +1,6 @@
 <div class="excel-uploader-container">
     <input type="file" (change)="onFileChange($event)" accept=".xlsx, .xls" class="form-control mb-2" #fileInput />
     <button class="btn btn-primary w-100" [disabled]="!archivoSeleccionado" (click)="procesarYEnviar(fileInput)">
-        <i class="feather icon-upload"></i> {{ 'WEB.EXCEL_LOADER.SUBIR_Y_PROCESAR_EXCEL' | translate }}
+        <i class="feather icon-upload"></i> {{ 'SHARED.EXCEL_LOADER.UPLOAD_PROCESS_EXCEL' | translate }}
     </button>
 </div>

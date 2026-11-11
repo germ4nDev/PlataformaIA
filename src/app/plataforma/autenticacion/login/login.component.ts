@@ -196,7 +196,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 switchMap((respLogin: any) => {
 
                     if (!respLogin.ok) {
-                        this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'));
+                        this._swalService.getAlertError(this.translate.instant('AUTENTICACION.LOGIN.USER_NOT_FOUND'));
                         return of(null);
                     }
 
@@ -286,7 +286,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                     this.loading = false;
                     this.error = err;
                     console.error('Error en el Login:', err);
-                    this._swalService.getAlertError(this.translate.instant('PLATAFORMA.LOGINFAILED'));
+                    this._swalService.getAlertError(this.translate.instant('AUTENTICACION.LOGIN.INCORRECT_USERNAME_OR_PASSWORD'));
                     return of(null);
                 })
             )

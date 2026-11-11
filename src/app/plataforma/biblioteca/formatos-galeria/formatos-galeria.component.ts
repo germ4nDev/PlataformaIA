@@ -138,12 +138,12 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
     }
 
     columnasFormatos: ColumnMetadata[] = [
-        { name: 'codigoFormato', header: 'FORMATOSGALERIA.CODE', type: 'text' },
-        { name: 'nombreFormato', header: 'FORMATOSGALERIA.NAME', type: 'text' },
-        { name: 'nomEstado', header: 'FORMATOSGALERIA.STATUS', type: 'estado' }
+        { name: 'codigoFormato', header: 'COMMON.CODE', type: 'text' },
+        { name: 'nombreFormato', header: 'BIBLIOTECA.FORMATOS_GALERIA.FORMAT_NAME', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
-    columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionFormato', header: 'FORMATOSGALERIA.DESCRIPTION', type: 'text' }];
+    columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionFormato', header: 'COMMON.DESCRIPTION', type: 'text' }];
 
     OnNuevoFormatoClick(): void {
         this._localStorageService.setObject('regId', 'nuevo');
@@ -164,20 +164,20 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
         }
 
         Swal.fire({
-            title: this.translate.instant('FORMATOSGALERIA.ELIMINARTITULO'),
-            text: this.translate.instant('FORMATOSGALERIA.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('BIBLIOTECA.FORMATOS_GALERIA.FORMAT_WILL_BE_DELETED'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result) => {
             if (result.isConfirmed) {
                 this._formatosGaleriaService.eliminarFormatoGaleria(id).subscribe({
                     next: (resp: any) => {
-                        Swal.fire(this.translate.instant('FORMATOSGALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success');
+                        Swal.fire(this.translate.instant('BIBLIOTECA.FORMATOS_GALERIA.FORMAT_DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
                         this.cargarDatos();
                     },
-                    error: () => Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('FORMATOSGALERIA.ELIMINARERROR'), 'error')
+                    error: () => Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('BIBLIOTECA.COULD_NOT_DELETE'), 'error')
                 });
             }
         });

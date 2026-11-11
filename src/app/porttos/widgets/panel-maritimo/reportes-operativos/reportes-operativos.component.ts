@@ -130,8 +130,8 @@ export class ReportesOperativosComponent implements OnInit, OnChanges, OnDestroy
         const reportesNormalizados: IReporteOperativoItem[] = listaCruda.map((r: any, idx: number) => ({
             id_reporte: r.id_reporte ?? r.id ?? idx,
             puerto: r.puerto || '',
-            titulo: r.titulo || 'PORTTOS.REPORTES_OPERATIVOS.NOVEDAD_OPERATIVA',
-            descripcion: r.descripcion || r.detalle || 'PORTTOS.REPORTES_OPERATIVOS.SIN_DESCRIPCION_ADICIONAL',
+            titulo: r.titulo || 'PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTES_OPERATIVOS.OPERATING_UPDATE',
+            descripcion: r.descripcion || r.detalle || 'PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTES_OPERATIVOS.NO_FURTHER_DESCRIPTION',
             fecha_evento: r.fecha_evento || r.fecha_registro || r.fecha || 'Hoy',
             tipo_color: this.normalizarColorSeveridad(r.tipo_color || r.severidad),
             icono: r.icono || '📄'
@@ -140,7 +140,7 @@ export class ReportesOperativosComponent implements OnInit, OnChanges, OnDestroy
         return {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'REPORTES OPERATIVOS',
-            subtitulo: raw.subtitulo || 'PORTTOS.REPORTES_OPERATIVOS.REGISTRO_DE_NOVEDADES_Y_BOLETINES',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_MARITIMO.REPORTES_OPERATIVOS.LOG_UPDATES_OFFICIAL_BULLETINS',
             icono: raw.icono || 'feather icon-file-text',
             reportes: reportesNormalizados
         };

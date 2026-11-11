@@ -187,22 +187,22 @@ export class TerminalesPanelComponent implements OnInit, OnDestroy {
     columnasAplicaciopnes: ColumnMetadata[] = [
         {
             name: 'puerto',
-            header: 'TERMINALES.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'nombre',
-            header: 'TERMINALES.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'subtitulo',
-            header: 'TERMINALES.SUBTITULO',
+            header: 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.SUBTITLE',
             type: 'text'
         },
         {
             name: 'color_ui',
-            header: 'FAROS.COLOR',
+            header: 'COMMON.COLOR',
             type: 'color_chip'
         }
     ]
@@ -210,22 +210,22 @@ export class TerminalesPanelComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcion',
-            header: 'TERMINALES.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'unidad_medida',
-            header: 'TERMINALES.UNIDAD',
+            header: 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.UNIT_MEASURE',
             type: 'text'
         },
         {
             name: 'capacidad_reefer',
-            header: 'TERMINALES.CAPACIDAD',
+            header: 'PORTTOS.ADMINISTACION.TERMINALES_PANEL.REEFER_CAPACITY',
             type: 'text'
         },
         {
             name: 'coordenadas',
-            header: 'MUELLES.REEFER',
+            header: 'PORTTOS.ADMINISTACION.REEFER',
             type: 'array_list'
         }
     ]
@@ -243,12 +243,12 @@ export class TerminalesPanelComponent implements OnInit, OnDestroy {
     OnEliminarAplicaicionClick(id: string): void {
         console.log('id aplicacion', id)
         Swal.fire({
-            title: this.translate.instant('TERMINALES.ELIMINARTITULO'),
-            text: this.translate.instant('TERMINALES.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this.translate.instant('PORTTOS.ADMINISTACION.TERMINALES_PANEL.WILL_DELETE_TERMINAL_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._terminalesService.deleteTerminal(id).subscribe({
@@ -256,20 +256,20 @@ export class TerminalesPanelComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('TERMINALES.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.TERMINALES_PANEL.TERMINAL_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this.translate.instant('TERMINALES.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this.translate.instant('PORTTOS.ADMINISTACION.TERMINALES_PANEL.TERMINAL_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupTerminalsStream()
                     },
                     error: () => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('TERMINALES.ELIMINARERROR')
+                            descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.TERMINALES_PANEL.COULD_NOT_DELETE_TERMINAL')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), this.translate.instant('TERMINALES.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('PORTTOS.ADMINISTACION.TERMINALES_PANEL.COULD_NOT_DELETE_TERMINAL'), 'error')
                     }
                 })
             }

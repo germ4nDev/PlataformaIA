@@ -81,7 +81,7 @@ export class GestionVersionComponent implements OnInit {
                     console.log('formRegisto', this.FormRegistro);
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.GESTION_VERSION.NO_SE_PUDO_OBTENER_LA'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('APLICACIONES.COULD_NOT_GET_SUITE_BY'), 'error');
                 }
             });
         } else {
@@ -172,7 +172,7 @@ export class GestionVersionComponent implements OnInit {
         this.isSubmit = true;
         const descripcionValida = this.FormRegistro.descripcionVersion && this.FormRegistro.descripcionVersion.trim() !== '';
         if (!descripcionValida) {
-            Swal.fire(traducir('WEB.GESTION_VERSION.ATENCION'), this.translate.instant('VERSIONES.GESTION.REQUERIDODESCRIPCION'), 'warning');
+            Swal.fire(traducir('APLICACIONES.VERSIONES.GESTION.WARNING'), this.translate.instant('COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED'), 'warning');
             return;
         }
         if (!form.valid) {
@@ -201,15 +201,15 @@ export class GestionVersionComponent implements OnInit {
             this._registrosService.putModificarRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
+                        Swal.fire('', this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'), 'success');
                         this.router.navigate(['/aplicaciones/versiones']);
                     } else {
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                        Swal.fire(traducir('COMMON.ERROR'), resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
                     }
                 },
                 error: (err: any) => {
                     console.error(err);
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
                 }
             });
         } else {
@@ -222,7 +222,7 @@ export class GestionVersionComponent implements OnInit {
             this._registrosService.postCrearRegistro(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
-                        Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+                        Swal.fire('', this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'), 'success');
                         form.resetForm();
                         this.isSubmit = false;
                         this.router.navigate(['/aplicaciones/versiones']);
@@ -230,7 +230,7 @@ export class GestionVersionComponent implements OnInit {
                 },
                 error: (err: any) => {
                     console.error(err);
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'), 'error');
                 }
             });
         }

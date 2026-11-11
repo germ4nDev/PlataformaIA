@@ -164,7 +164,7 @@ export class ChartBarContComponent implements OnInit, AfterViewInit, OnChanges, 
                     conteoPorTipo.set(tipo, (conteoPorTipo.get(tipo) || 0) + 1);
                 });
                 this.labels = Array.from(conteoPorTipo.keys());
-                this.datasets = [{ label: traducir('PORTTOS.CHART_BAR_CONT.MOVIMIENTOS_2'), data: Array.from(conteoPorTipo.values()), color: '#00d4ff' }];
+                this.datasets = [{ label: traducir('PORTTOS.WIDGETS.PANEL_CONTENEDORES.CHART_BAR_CONT.MOVEMENTS_2'), data: Array.from(conteoPorTipo.values()), color: '#00d4ff' }];
             } else {
                 this.labels = [];
                 this.datasets = [];

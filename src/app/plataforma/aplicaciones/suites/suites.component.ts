@@ -221,23 +221,23 @@ export class SuitesComponent implements OnInit, OnDestroy {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'imagenInicio',
-            header: 'SUITE.FOTO',
+            header: 'COMMON.IMAGE',
             type: 'image',
             isSortable: false
         },
         {
             name: 'nomAplicacion',
-            header: 'SUITES.NAMEAPLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         },
         {
             name: 'nombreSuite',
-            header: 'SUITES.NAME',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'nomAplicacion',
-            header: 'SUITES.APLICACION',
+            header: 'COMMON.APPLICATION',
             type: 'text'
         }
     ]
@@ -245,22 +245,22 @@ export class SuitesComponent implements OnInit, OnDestroy {
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'codigoAplicacion',
-            header: 'SUITES.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'codigoSuite',
-            header: 'SUITES.CODE',
+            header: 'COMMON.CODE',
             type: 'text'
         },
         {
             name: 'descripcionSuite',
-            header: 'SUITES.DESCRIPTION',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'capture',
-            header: 'SUITE.STATUS',
+            header: 'COMMON.STATUS',
             type: 'capture'
         }
     ]
@@ -302,12 +302,12 @@ export class SuitesComponent implements OnInit, OnDestroy {
 
     OnEliminarRegistroClick(id: any): void {
         Swal.fire({
-            title: this._translate.instant('SUITES.ELIMINARTITULO'),
-            text: this._translate.instant('SUITES.ELIMINARTEXTO'),
+            title: this._translate.instant('COMMON.ARE_YOU_SURE'),
+            text: this._translate.instant('APLICACIONES.SUITES.WILL_DELETE_SUITE_YOU_WONT_BE'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this._translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this._translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this._translate.instant('COMMON.DELETE'),
+            cancelButtonText: this._translate.instant('COMMON.CANCEL')
         }).then(result => {
             if (result.isConfirmed) {
                 this._registrosService.eliminarSuiteAP(id.id).subscribe({
@@ -315,20 +315,20 @@ export class SuitesComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this._translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                            descripcionLog: this._translate.instant('COMMON.MODULE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(this._translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success')
+                        Swal.fire(this._translate.instant('COMMON.MODULE_WAS_DELETED_SUCCESSFULLY'), resp.mensaje, 'success')
                         this.setupRegistrosStream()
                     },
                     error: err => {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this._translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+                            descripcionLog: this._translate.instant('COMMON.COULD_NOT_DELETE_MODULE') + ' ' + err.mensaje
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), this._translate.instant('MODULOS.ELIMINARERROR'), 'error')
+                        Swal.fire(traducir('COMMON.ERROR'), this._translate.instant('COMMON.COULD_NOT_DELETE_MODULE'), 'error')
                     }
                 })
             }

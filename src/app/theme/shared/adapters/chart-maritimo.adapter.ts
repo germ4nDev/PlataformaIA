@@ -127,12 +127,12 @@ export class ChartMaritimoAdapter implements IBaseAdapter<any> {
             labels: labels, // <-- Esto reemplaza a chartLabels para alinear la salida
             datasets: [
                 {
-                    label: traducir('WEB.CHART_MARITIMO_ADAPTER.ETA_PLANEADA_H'),
+                    label: traducir('SHARED.ADAPTERS.PLANNED_ETA_H'),
                     data: dataEta,
                     backgroundColor: '#3b82f6'
                 },
                 {
-                    label: traducir('WEB.CHART_MARITIMO_ADAPTER.RETRASO_REAL_H'),
+                    label: traducir('SHARED.ADAPTERS.ACTUAL_DELAY_H'),
                     data: dataRetraso,
                     backgroundColor: '#ef4444'
                 }

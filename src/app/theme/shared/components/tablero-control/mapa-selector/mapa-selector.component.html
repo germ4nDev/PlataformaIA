@@ -1,7 +1,7 @@
 <!-- Input visible en el formulario -->
 <div class="input-group mb-4" [class.is-invalid]="invalid">
     <input type="text" class="form-control form-input" [value]="getDisplayText()" readonly
-        [placeholder]="'WEB.MAPA_SELECTOR.SELECCIONAR_UBICACION_EN_EL_MAPA' | translate" (click)="openModal()" />
+        [placeholder]="'SHARED.TABLERO_CONTROL.MAPA_SELECTOR.SELECT_LOCATION_ON_MAP' | translate" (click)="openModal()" />
     <div class="input-group-append form-input">
         <button class="btn btn-primary btn-NuevoRegistro" type="button" (click)="openModal()">
             <i class="fa fa-map"></i>
@@ -22,34 +22,34 @@
                     <div id="map" style="width: 100%; height: 100%;">
                         <div class="map-controls">
                             <button class="btn btn-primary btn-map-option btn-animacion-map" type="button"
-                                (click)="draw.changeMode('draw_polygon')" [title]="'WEB.MAPA_SELECTOR.DIBUJAR_POLIGONO' | translate"
+                                (click)="draw.changeMode('draw_polygon')" [title]="'SHARED.TABLERO_CONTROL.MAPA_SELECTOR.DRAW_POLYGON' | translate"
                                 *ngIf="modo === 'poligono'">
                                 <i class="icon feather icon-square"></i>
                             </button>
 
                             <button class="btn btn-primary btn-map-option btn-animacion-map" type="button"
-                                (click)="draw.trash()" [title]="'WEB.MAPA_SELECTOR.ELIMINAR' | translate">
+                                (click)="draw.trash()" [title]="'COMMON.DELETE' | translate">
                                 <i class="icon feather icon-trash-2"></i>
                             </button>
 
                             <button class="btn btn-primary btn-map-option btn-animacion-map" type="button"
                                 [class.ref-apagada]="!referenciaVisible"
                                 (click)="alternarReferencia()"
-                                [title]="referenciaVisible ? ('WEB.MAPA_SELECTOR.OCULTAR_REFERENCIA_OPENSTREETMAP' | translate) : ('WEB.MAPA_SELECTOR.MOSTRAR_REFERENCIA_OPENSTREETMAP' | translate)">
+                                [title]="referenciaVisible ? ('SHARED.TABLERO_CONTROL.MAPA_SELECTOR.HIDE_REFERENCE_OPEN_STREET_MAP' | translate) : ('SHARED.TABLERO_CONTROL.MAPA_SELECTOR.SHOW_REFERENCE_OPEN_STREET_MAP' | translate)">
                                 <i class="icon feather icon-layers"></i>
                             </button>
                         </div>
                         <div class="ref-atribucion" *ngIf="referenciaVisible">
-                            {{ 'WEB.MAPA_SELECTOR.REFERENCIA_CLIC_EN_UN_ELEMENTO' | translate: { p0: atribucionReferencia } }}
+                            {{ 'SHARED.TABLERO_CONTROL.MAPA_SELECTOR.REFERENCE_CLICK_ELEMENT_USE_ITS_GEOMETRY' | translate: { p0: atribucionReferencia } }}
                         </div>
                     </div>
                 </div>
 
                 <div class="floating-controls">
                     <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                        (click)="closeModal()">{{ 'WEB.MAPA_SELECTOR.CANCELAR' | translate }}</button>
+                        (click)="closeModal()">{{ 'COMMON.CANCEL' | translate }}</button>
                     <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                        (click)="confirmSelection()">{{ 'WEB.MAPA_SELECTOR.CONFIRMAR_SELECCION' | translate }}</button>
+                        (click)="confirmSelection()">{{ 'SHARED.TABLERO_CONTROL.MAPA_SELECTOR.CONFIRM_SELECTION' | translate }}</button>
                 </div>
             </div>
         </div>

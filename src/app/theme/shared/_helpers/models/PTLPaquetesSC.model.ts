@@ -31,6 +31,14 @@ export class PTLPaquetesSCModel {
         public fechaModificacion?: string,
         public nomSuscriptor?: string,
         public nomPaquete?: string,
-        public historiales?: any
+        public historiales?: any,
+        // OT-029: foto del precio con el que se vendió (la pone el API con la lista de precios)
+        public codigoLista?: string,
+        public moneda?: string,
+        public periodicidad?: string,
+        public valorPeriodo?: number,
+        public precioSetup?: number,
+        public porcentajeDescuento?: number,
+        public valorFinal?: number
     ) { }
 }

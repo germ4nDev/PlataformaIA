@@ -11,10 +11,10 @@
       <!-- Tabs -->
       <div class="nav-tabs-custom">
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'LAYOUT.MENU' | translate }}
+          {{ 'COMMON.MENU_2' | translate }}
         </button>
         <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'LAYOUT.FILTERS' | translate }}
+          {{ 'COMMON.FILTERS' | translate }}
         </button>
       </div>
 

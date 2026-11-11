@@ -4,12 +4,12 @@
       @if (t.url) {
         <a class="tienda" [class.tienda--propia]="t.propia" [href]="t.url" target="_blank" rel="noopener">
           <pp-icono nombre="descargar" [tamano]="compactas ? 18 : 22" />
-          <span><small>{{ 'WEB.TIENDAS.DISPONIBLE_EN' | translate }}</small>{{ (t.nombre | translate) }}</span>
+          <span><small>{{ 'WEBSITES.PORTTOS.COMPONENTES.TIENDAS.AVAILABLE_ON' | translate }}</small>{{ (t.nombre | translate) }}</span>
         </a>
       } @else {
         <span class="tienda tienda--proxima" [class.tienda--propia]="t.propia">
           <pp-icono nombre="telefono" [tamano]="compactas ? 18 : 22" />
-          <span><small>{{ 'WEB.TIENDAS.PROXIMAMENTE_EN' | translate }}</small>{{ (t.nombre | translate) }}</span>
+          <span><small>{{ 'WEBSITES.PORTTOS.COMPONENTES.TIENDAS.COMING_SOON_ON' | translate }}</small>{{ (t.nombre | translate) }}</span>
         </span>
       }
     </li>

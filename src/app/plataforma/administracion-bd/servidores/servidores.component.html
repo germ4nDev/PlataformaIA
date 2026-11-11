@@ -4,10 +4,10 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
+                    {{ 'COMMON.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                    {{ 'COMMON.FILTERS' | translate }}
                 </button>
             </div>
 
@@ -16,25 +16,25 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'CONEXIONES.SERVIDORES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.SERVIDORES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'CONEXIONES.SERVIDORES.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.SERVIDORES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'CONEXIONES.SERVIDORES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'CONEXIONES.SERVIDORES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'COMMON.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
                             style="cursor: pointer">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
                         </select>
                     </div>
                 </div>
@@ -46,11 +46,11 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-table-data [data]="registrosFiltrado" [idField]="'servidorId'"
-                    [tableTitle]="'CONEXIONES.SERVIDORES.TITLE' | translate" [metadataColumns]="columnasServidores"
+                    [tableTitle]="'ADMINISTRACION_BD.SERVIDORES.SERVER_MANAGEMENT' | translate" [metadataColumns]="columnasServidores"
                     [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true" [showNewButton]="true"
                     [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showDetail]="true"
-                    [showSearchBox]="false" [newButtonLabel]="'CONEXIONES.SERVIDORES.NEW' | translate"
-                    [showSearchBox]="false" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    [showSearchBox]="false" [newButtonLabel]="'ADMINISTRACION_BD.SERVIDORES.NEW_SERVER' | translate"
+                    [showSearchBox]="false" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                     (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_SERVIDORES_CREAR" permisoEdit="ACT_SERVIDORES_MODIFICAR" permisoDelete="ACT_SERVIDORES_ELIMINAR">
                 </app-table-data>

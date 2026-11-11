@@ -92,8 +92,8 @@ export class BodegasSaturacionComponent implements OnInit, OnChanges, OnDestroy 
                 this.serieLabels = r?.labels || [];
                 this.seriesOcupacion = [
                     ...conDato.slice(0, 8).map((b: any, i: number) => ({ label: b.codigo || b.nombre, data: b.ocupacionPct, color: this.paleta[i % this.paleta.length] })),
-                    { label: traducir('PORTTOS.BODEGAS_SATURACION.ATENCION_PCT', { pct: r?.umbrales?.atencion ?? 75 }), data: this.serieLabels.map(() => r?.umbrales?.atencion ?? 75), color: '#f8940688' },
-                    { label: traducir('PORTTOS.BODEGAS_SATURACION.CRITICO_PCT', { pct: r?.umbrales?.critico ?? 90 }), data: this.serieLabels.map(() => r?.umbrales?.critico ?? 90), color: '#bd362f88' }
+                    { label: traducir('PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.WARNING_PCT', { pct: r?.umbrales?.atencion ?? 75 }), data: this.serieLabels.map(() => r?.umbrales?.atencion ?? 75), color: '#f8940688' },
+                    { label: traducir('PORTTOS.WIDGETS.PANEL_BODEGAS.BODEGAS_SATURACION.CRITICAL_PCT', { pct: r?.umbrales?.critico ?? 90 }), data: this.serieLabels.map(() => r?.umbrales?.critico ?? 90), color: '#bd362f88' }
                 ];
                 this.notaSerie = !conDato.length ? 'Sin fotos de ocupación en el periodo.'
                     : conDato.length > 8 ? `Se muestran 8 de ${conDato.length} bodegas con dato.` : (r?.origen?.simulado ? 'Datos simulados.' : null);

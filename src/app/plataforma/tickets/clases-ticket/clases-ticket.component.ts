@@ -91,24 +91,24 @@ export class ClasesTicketComponent implements OnInit {
     columnasRegistros: ColumnMetadata[] = [
         {
             name: 'claseTicket',
-            header: 'TICKETS.CLASESTICKET.NOMBRECLASE',
+            header: 'COMMON.NAME',
             type: 'text'
         },
         {
             name: 'descripcionClase',
-            header: 'TICKETS.CLASESTICKET.DESCRIPCIONCLASE',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
         {
             name: 'estadoClase',
-            header: 'TICKETS.CLASESTICKET.ESTADOCLASE',
+            header: 'COMMON.STATUS',
             type: 'estado'
         }
     ];
     columnasDetailRegistros: ColumnMetadata[] = [
         {
             name: 'descripcionClase',
-            header: 'TICKETS.CLASESTICKET.DESCRIPCIONCLASE',
+            header: 'COMMON.DESCRIPTION',
             type: 'text'
         },
     ];
@@ -192,17 +192,17 @@ export class ClasesTicketComponent implements OnInit {
         // console.log('+++ME TRAE EL ID???', id);
 
         Swal.fire({
-            title: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTITULO'),
-            text: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTEXTO'),
+            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+            text: this.translate.instant('TICKETS.CLASES_TICKET.CLASS_WILL_BE_DELETED'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            confirmButtonText: this.translate.instant('COMMON.DELETE'),
+            cancelButtonText: this.translate.instant('COMMON.CANCEL')
         }).then((result) => {
             if (result.isConfirmed) {
                 this._clasesTicket.deleteEliminarRegistro(id.id).subscribe({
                     next: (resp: any) => {
-                        this._swalService.getAlertSuccess(this.translate.instant('TICKETS.CLASESTICKET.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+                        this._swalService.getAlertSuccess(this.translate.instant('TICKETS.CLASES_TICKET.CLASS_WAS_DELETED_SUCCESSFULLY') + ', ' + resp.mensaje);
                         this.subscriptions.add(
                             this._clasesTicket.cargarRegistros().subscribe(
                                 () => console.log('Clases cargados y guardados en el servicio'),
@@ -212,7 +212,7 @@ export class ClasesTicketComponent implements OnInit {
                         this.setupRegistrosStream();
                     },
                     error: (err: any) => {
-                        this._swalService.getAlertError(this.translate.instant('TICKETS.CLASESTICKET.ELIMINARERROR') + ', ' + err);
+                        this._swalService.getAlertError(this.translate.instant('TICKETS.CLASES_TICKET.COULD_NOT_DELETE_CLASS') + ', ' + err);
                         console.error('Error eliminando', err);
                     }
                 });

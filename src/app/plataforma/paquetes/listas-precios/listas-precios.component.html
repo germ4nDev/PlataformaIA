@@ -1,0 +1,60 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'COMMON.FILTERS' | translate }}</button>
+            </div>
+            @if (activeTab === 'menu') {
+            <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            } @else {
+            <div class="p-3 filtros-scroll-wrapper">
+                <div class="text-center">
+                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.STATUS' | translate }}</small>
+                    <select class="form-control form-select" (change)="alFiltrarEstado($event)">
+                        <option value="activas">{{ 'PAQUETES.LISTAS_PRECIOS.ACTIVE_LISTS' | translate }}</option>
+                        <option value="inactivas">{{ 'PAQUETES.LISTAS_PRECIOS.INACTIVE_LISTS' | translate }}</option>
+                        <option value="todas">{{ 'COMMON.ALL' | translate }}</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.CURRENCY' | translate }}</small>
+                    <select class="form-control form-select" (change)="alFiltrarMoneda($event)">
+                        <option value="">{{ 'COMMON.ALL' | translate }}</option>
+                        @for (m of monedas; track m) { <option [value]="m">{{ m }}</option> }
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.SEARCH' | translate }}</small>
+                    <input type="text" class="form-control form-input" (keyup)="alFiltrarTexto($event)"
+                        [placeholder]="'PAQUETES.LISTAS_PRECIOS.CODE_NAME_OR_COUNTRY' | translate" />
+                </div>
+            </div>
+            }
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                @if (!cargando) {
+                <app-table-data [data]="(filtradas$ | async) || []" [idField]="'codigoLista'"
+                    [tableTitle]="'PAQUETES.LISTAS_PRECIOS.PRICE_LISTS' | translate"
+                    [tableSubtitle]="'PAQUETES.LISTAS_PRECIOS.ONLY_PLACE_SALE_PRICE_PACKAGES_ITEMS' | translate"
+                    [metadataColumns]="columnas" [showActions]="true" [showNewButton]="true" [showEditButton]="true"
+                    [showDeleteButton]="true" [showSearchBox]="false"
+                    [newButtonLabel]="'PAQUETES.LISTAS_PRECIOS.NEW_PRICE_LIST' | translate"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nueva()" (editRecord)="editar($event)"
+                    (deleteRecord)="cambiarEstado($event)" permisoNew="ACT_PRECIO_CREAR" permisoEdit="ACT_PRECIO_MODIFICAR"
+                    permisoDelete="ACT_PRECIO_MODIFICAR">
+                </app-table-data>
+                } @else {
+                <app-data-loader [isLoading]="true" [message]="'PAQUETES.LISTAS_PRECIOS.LOADING_PRICE_LISTS' | translate"></app-data-loader>
+                }
+            </div>
+        </div>
+    </div>
+</div>

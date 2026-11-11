@@ -3,7 +3,7 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+                <button>{{ 'COMMON.MENU' | translate }}</button>
             </div>
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
@@ -19,30 +19,30 @@
                     <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
                     <div class="d-flex flex-column pe-3">
                         <h4 class="titulo-formulario">
-                            <span *ngIf="!modoEdicion">{{ 'APLICACIONES.NEW' | translate }}</span>
-                            <span *ngIf="modoEdicion">{{ 'APLICACIONES.UPDATE' | translate }}</span>
-                            <span class="titulo-container"> - {{ 'APLICACIONES.TITLE' | translate
+                            <span *ngIf="!modoEdicion">{{ 'APLICACIONES.NEW_APPLICATION' | translate }}</span>
+                            <span *ngIf="modoEdicion">{{ 'APLICACIONES.GESTION.UPDATE_APPLICATION' | translate }}</span>
+                            <span class="titulo-container"> - {{ 'APLICACIONES.APPLICATION_MANAGEMENT' | translate
                                 }}</span>
                         </h4>
                         <h6 class="subtitulo-formulario mb-0">
-                            {{ 'APLICACIONES.TITLEDESCRIPTION' | translate }}
+                            {{ 'APLICACIONES.GESTION.APPLICATION_DETAILS' | translate }}
                         </h6>
                     </div>
 
                     <!-- Bloque Derecho: Botones con Spinners -->
                     <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            {{ 'COMMON.BACK' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarAplicacionClick(validationForm)">
-                            {{ 'APLICACIONES.CREATE' | translate }}
+                            {{ 'APLICACIONES.GESTION.CREATE_APPLICATION' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarAplicacionClick(validationForm)">
-                            {{ 'APLICACIONES.UPDATE' | translate }}
+                            {{ 'APLICACIONES.GESTION.UPDATE_APPLICATION' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -55,81 +55,81 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.CODE' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoAplicacion"
-                                    [placeholder]="'WEB.GESTION_APLICACION.CODIGO_DE_LA_APLICACION' | translate"
+                                    [placeholder]="'COMMON.APPLICATION_CODE' | translate"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     readonly />
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'APLICACIONES.CODEHOLDER' | translate }}
+                                    {{ 'APLICACIONES.GESTION.APPLICATION_CODE' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreAplicacion">{{ 'APLICACIONES.NAME' |
+                                <label class="form-control-label" for="nombreAplicacion">{{ 'COMMON.NAME' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="nombreAplicacion" name="nombreAplicacion"
-                                    type="text" placeholder="{{ 'APLICACIONES.NAME' | translate }}"
+                                    type="text" placeholder="{{ 'COMMON.NAME' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit) }"
                                     #nombreAplicacion="ngModel" required [(ngModel)]="FormRegistro.nombreAplicacion" />
                                 <label
                                     *ngIf="!nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'APLICACIONES.NAMEHOLDER' | translate }}
+                                    {{ 'APLICACIONES.GESTION.APPLICATION_NAME' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="translateKey">{{ 'APLICACIONES.TRANSLATEKEY' |
+                                <label class="form-control-label" for="translateKey">{{ 'APLICACIONES.GESTION.TRANSLATE_KEY' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="translateKey" name="translateKey" type="text"
-                                    placeholder="{{ 'APLICACIONES.TRANSLATEKEY' | translate }}"
+                                    placeholder="{{ 'APLICACIONES.GESTION.TRANSLATE_KEY' | translate }}"
                                     [ngClass]="{ 'is-invalid': !translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit) }"
                                     #translateKey="ngModel" required [(ngModel)]="FormRegistro.translateKey" />
                                 <label
                                     *ngIf="!translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'APLICACIONES.NAMEHOLDER' | translate }}
+                                    {{ 'APLICACIONES.GESTION.APPLICATION_NAME' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="plantillaBD">{{ 'APLICACIONES.PLANTILLABD' |
+                                <label class="form-control-label" for="plantillaBD">{{ 'APLICACIONES.GESTION.DATABASE_TEMPLATE' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="plantillaBD" name="plantillaBD" type="text"
-                                    placeholder="{{ 'APLICACIONES.PLANTILLABD' | translate }}"
+                                    placeholder="{{ 'APLICACIONES.GESTION.DATABASE_TEMPLATE' | translate }}"
                                     [ngClass]="{ 'is-invalid': !plantillaBD.valid && (plantillaBD.dirty || plantillaBD.touched || isSubmit) }"
                                     #plantillaBD="ngModel" required [(ngModel)]="FormRegistro.plantillaBD" />
                                 <label
                                     *ngIf="!plantillaBD.valid && (plantillaBD.dirty || plantillaBD.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'APLICACIONES.PLANTILLABDHOLDER' | translate }}
+                                    {{ 'APLICACIONES.GESTION.DATABASE_TEMPLATE_NAME' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="prefijoBD">{{ 'APLICACIONES.PREFIJOBD' |
+                                <label class="form-control-label" for="prefijoBD">{{ 'APLICACIONES.GESTION.DATABASE_PREFIX' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="prefijoBD" name="prefijoBD" type="text"
-                                    placeholder="{{ 'APLICACIONES.PREFIJOBD' | translate }}"
+                                    placeholder="{{ 'APLICACIONES.GESTION.DATABASE_PREFIX' | translate }}"
                                     [ngClass]="{ 'is-invalid': !prefijoBD.valid && (prefijoBD.dirty || prefijoBD.touched || isSubmit) }"
                                     #prefijoBD="ngModel" required [(ngModel)]="FormRegistro.prefijoBD" />
                                 <label *ngIf="!prefijoBD.valid && (prefijoBD.dirty || prefijoBD.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'APLICACIONES.PREFIJOBDHOLDER' | translate }}
+                                    {{ 'APLICACIONES.GESTION.TABLE_PREFIX_E_G_PTL' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.DESCRIPTION' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcionAplicacion ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)"
@@ -141,13 +141,13 @@
                                 <label
                                     *ngIf="!descripcionAplicacion.valid && (descripcionAplicacion.dirty || descripcionAplicacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'APLICACIONES.DESCRIPCIONHOLDER' | translate }}
+                                    {{ 'APLICACIONES.GESTION.APPLICATION_DESCRIPTION' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTO' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.APLICATION_IMAGE' | translate }}</label>
                                 <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview" />
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
@@ -161,7 +161,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOUI' | translate }}</label>
+                                <label class="form-label">{{ 'APLICACIONES.INTERFACE_IMAGE' | translate }}</label>
                                 <img *ngIf="selectedFileUrlUI" [src]="selectedFileUrlUI" class="image-preview-ui" />
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInputUI" class="btn btn-primary btn-NuevoRegistro">
@@ -175,7 +175,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOUIB' | translate }}</label>
+                                <label class="form-label">{{ 'APLICACIONES.GESTION.INTERFACE_IMAGE_DARK_BACKGROUND' | translate }}</label>
                                 <img *ngIf="selectedFileUrlUIB" [src]="selectedFileUrlUIB" class="image-preview-ui" />
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInputUIB" class="btn btn-primary btn-NuevoRegistro">
@@ -189,7 +189,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOLOGO' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.LOGO' | translate }}</label>
                                 <img *ngIf="selectedFileUrlLogo" [src]="selectedFileUrlLogo" class="image-preview-ui" />
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInputLogo" class="btn btn-primary btn-NuevoRegistro">
@@ -203,7 +203,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOLOGOB' | translate }}</label>
+                                <label class="form-label">{{ 'APLICACIONES.GESTION.LOGO_DARK_BACKGROUND' | translate }}</label>
                                 <img *ngIf="selectedFileUrlLogoB" [src]="selectedFileUrlLogoB"
                                     class="image-preview-ui" />
                                 <div class="file-input-wrapper">
@@ -218,7 +218,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.GESTION.FOTOIICONO' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.ICON' | translate }}</label>
                                 <img *ngIf="selectedFileUrlIcono" [src]="selectedFileUrlIcono"
                                     class="image-preview-ui" />
                                 <div class="file-input-wrapper">
@@ -233,19 +233,19 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'APLICACIONES.STATUS' | translate }}</label>
+                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="estadoAplicacion" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoAplicacion" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estadoAplicacion" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoAplicacion" />
                                         <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</span>
+                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
                                     </label>
                                 </div>
                             </div>

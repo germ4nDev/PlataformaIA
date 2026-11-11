@@ -124,7 +124,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.selectedFileUrlIcono = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenIcono) || 'no-image.png';
                 },
                 error: () => {
-                    Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('COMMON.COULD_NOT_GET_APPLICATION'), 'error')
                 }
             })
         }
@@ -185,7 +185,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -213,7 +213,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.userPhotoUrlUI = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -240,7 +240,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.FormRegistro.imagenUIB = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -266,7 +266,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.FormRegistro.imagenLogo = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -292,7 +292,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.FormRegistro.imagenLogoB = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -318,7 +318,7 @@ export class GestionAplicacionComponent implements OnInit {
                     this.FormRegistro.imagenIcono = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -344,10 +344,10 @@ export class GestionAplicacionComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+                            descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY'))
                         form.resetForm()
                         // this.isSubmit = false;
                         this.router.navigate(['/aplicaciones/aplicaciones'])
@@ -358,10 +358,10 @@ export class GestionAplicacionComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+                        descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('WEB.GESTION_APLICACION.NO_SE_PUDO_ACTUALIZAR_LA'))
+                    this._swalService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_APPLICATION'))
                 }
             })
         } else {
@@ -386,10 +386,10 @@ export class GestionAplicacionComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+                            descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_UPDATED_SUCCESSFULLY'))
                         form.resetForm()
                         // this.isSubmit = false;
                         this.router.navigate(['/aplicaciones/aplicaciones'])
@@ -400,10 +400,10 @@ export class GestionAplicacionComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+                        descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('WEB.GESTION_APLICACION.NO_SE_PUDO_CREAR_LA'))
+                    this._swalService.getAlertError(traducir('COMMON.COULD_NOT_CREATE_APPLICATION'))
                 }
             })
         }

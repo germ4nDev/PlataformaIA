@@ -92,7 +92,7 @@ export class AsignacionRolesUsuarioComponent implements OnChanges {
             },
             error: () => {
                 this.cargandoAplicaciones = false;
-                this.avisos.getAlertError(traducir('WEB.ASIGNACION_ROLES.ERROR_APLICACIONES'));
+                this.avisos.getAlertError(traducir('USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.COULD_NOT_GET_SUBSCRIBER_APPLICATIONS'));
             }
         });
     }
@@ -135,11 +135,11 @@ export class AsignacionRolesUsuarioComponent implements OnChanges {
             next: () => {
                 this.guardando = false;
                 this.usuariosRoles.cargarRegistros().subscribe(() => this.armarRoles());
-                this.avisos.getAlertConfirmSuccess(traducir('WEB.ASIGNACION_ROLES.GUARDADOS'));
+                this.avisos.getAlertConfirmSuccess(traducir('USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.USER_ROLES_SAVED'));
             },
             error: () => {
                 this.guardando = false;
-                this.avisos.getAlertError(traducir('WEB.ASIGNACION_ROLES.ERROR_GUARDAR'));
+                this.avisos.getAlertError(traducir('USUARIOS.GESTION.ASIGNACION_ROLES_USUARIO.COULD_NOT_SAVE_ROLES'));
             }
         });
     }

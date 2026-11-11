@@ -7,10 +7,10 @@
           @if (e.titulo) { <h3 class="meta__indicador">{{ e.titulo }}</h3> }
           <div class="meta__cifras">
             @if (e.detalle) {
-              <p class="meta__par"><span class="meta__rotulo">{{ 'WEB.METAS.LINEA_BASE' | translate }}</span><span class="meta__desde">{{ e.detalle }}</span></p>
+              <p class="meta__par"><span class="meta__rotulo">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.METAS.BASELINE' | translate }}</span><span class="meta__desde">{{ e.detalle }}</span></p>
               <span class="meta__flecha" aria-hidden="true"><pp-icono nombre="flecha" [tamano]="22" /></span>
             }
-            @if (e.valor) { <p class="meta__par"><span class="meta__rotulo">{{ 'WEB.METAS.META' | translate }}</span><strong class="meta__hasta">{{ e.valor }}</strong></p> }
+            @if (e.valor) { <p class="meta__par"><span class="meta__rotulo">{{ 'WEBSITES.PORTTOS.COMPONENTES.SECCIONES.METAS.TARGET' | translate }}</span><strong class="meta__hasta">{{ e.valor }}</strong></p> }
           </div>
           @if (e.texto) { <p class="meta__mide">{{ e.texto }}</p> }
         </article>

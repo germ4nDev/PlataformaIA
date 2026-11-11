@@ -93,7 +93,7 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
                     this.consultarMLodulos(this.FormRegistro.codigoSuite)
                 },
                 error: () => {
-                    this._swalAlertService.getAlertError(traducir('WEB.GESTION_MODULO.NO_SE_PUDO_OBTENER_EL'))
+                    this._swalAlertService.getAlertError(traducir('APLICACIONES.MODULOS.GESTION.COULD_NOT_GET_MODULE'))
                 }
             })
         } else {
@@ -257,19 +257,19 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'))
                         this.router.navigate(['/aplicaciones/modulos'])
                     } else {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
                     }
                 },
                 error: (err: any) => {
@@ -277,10 +277,10 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'))
                 }
             })
         } else {
@@ -300,10 +300,10 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'))
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/aplicaciones/modulos'])
@@ -314,10 +314,10 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                        descripcionLog: this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err)
+                    this._swalAlertService.getAlertError(this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD') + ', ' + err)
                 }
             })
         }

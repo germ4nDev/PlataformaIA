@@ -184,7 +184,7 @@ export class AnalisisTraficoComponent implements OnInit, AfterViewInit, OnChange
         this.datosAutonomosSQL = {
             ...(Array.isArray(raw) ? {} : raw),
             titulo: raw.titulo || 'ANÁLISIS DE TRÁFICO PORTUARIO · SUPERTRANSPORTE',
-            subtitulo: raw.subtitulo || 'PORTTOS.ANALISIS_TRAFICO.EVOLUCION_MENSUAL_24_MESES_POR',
+            subtitulo: raw.subtitulo || 'PORTTOS.WIDGETS.PANEL_MARITIMO.ANALISIS_TRAFICO.MONTHLY_TREND_24_MONTHS_BY_CARGO',
             icono: raw.icono || 'feather icon-trending-up',
             kpisTop,
             chartEvolucion

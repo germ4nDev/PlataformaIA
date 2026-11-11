@@ -83,7 +83,7 @@ export class PerfilComponent implements OnInit {
                         // this.codeRegistro = resp.aplicacion.codigoAplicacion;
                     },
                     error: () => {
-                        Swal.fire(traducir('WEB.SWAL_ALERT_SERVICE.ERROR'), traducir('WEB.COMUN.NO_SE_PUDO_OBTENER_LA'), 'error');
+                        Swal.fire(traducir('COMMON.ERROR'), traducir('COMMON.COULD_NOT_GET_APPLICATION'), 'error');
                     }
                 });
             } else {
@@ -132,8 +132,8 @@ export class PerfilComponent implements OnInit {
                     this.userPhotoUrl = path.nombreArchivo;
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
-                    alert(traducir('WEB.PERFIL.ERROR_AL_SUBIR_LA_IMAGEN'));
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
+                    alert(traducir('STARTER.PERFIL.ERROR_UPLOADING_IMAGE'));
                     //   this.selectedFileUrl = null;
                 }
             });
@@ -190,19 +190,19 @@ export class PerfilComponent implements OnInit {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '201',
-                                    descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS')
+                                    descripcionLog: this._translate.instant('COMMON.USER_UPDATED_SUCCESSFULLY')
                                 };
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
+                                this._swalService.getAlertSuccess(this._translate.instant('COMMON.USER_UPDATED_SUCCESSFULLY'));
                                 this.router.navigate(['/autenticacion/login']);
                             } else {
                                 const logData = {
                                     codigoTipoLog: '',
                                     codigoRespuesta: '501',
-                                    descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + resp.message
+                                    descripcionLog: this._translate.instant('COMMON.COULD_NOT_UPDATE_USER') + ' ' + resp.message
                                 };
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                this._swalService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
+                                this._swalService.getAlertError(resp.message || this._translate.instant('COMMON.COULD_NOT_UPDATE_USER'));
                             }
                         },
                         error: (err: any) => {
@@ -210,20 +210,20 @@ export class PerfilComponent implements OnInit {
                             const logData = {
                                 codigoTipoLog: '',
                                 codigoRespuesta: '501',
-                                descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + err.mensaje
+                                descripcionLog: this._translate.instant('COMMON.COULD_NOT_UPDATE_USER') + ' ' + err.mensaje
                             };
                             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                            this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
+                            this._swalService.getAlertError(this._translate.instant('COMMON.COULD_NOT_UPDATE_USER'));
                         }
                     });
                 } else {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this._translate.instant('PLATAFORMA.PASSWORDSERROR')
+                        descripcionLog: this._translate.instant('STARTER.PERFIL.PASSWORD_CONFIRMATION_DO_NOT_MATCH')
                     };
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.PASSWORDSERROR'));
+                    this._swalService.getAlertError(this._translate.instant('STARTER.PERFIL.PASSWORD_CONFIRMATION_DO_NOT_MATCH'));
                 }
             } else {
                 this._registrosService.actualizarUsuarioDatos(this.FormRegistro).subscribe({
@@ -232,19 +232,19 @@ export class PerfilComponent implements OnInit {
                             const logData = {
                                 codigoTipoLog: '',
                                 codigoRespuesta: '201',
-                                descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS')
+                                descripcionLog: this._translate.instant('COMMON.USER_UPDATED_SUCCESSFULLY')
                             };
                             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                            this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
+                            this._swalService.getAlertSuccess(this._translate.instant('COMMON.USER_UPDATED_SUCCESSFULLY'));
                             this.router.navigate(['/frontal/home']);
                         } else {
                             const logData = {
                                 codigoTipoLog: '',
                                 codigoRespuesta: '501',
-                                descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + resp.message
+                                descripcionLog: this._translate.instant('COMMON.COULD_NOT_UPDATE_USER') + ' ' + resp.message
                             };
                             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                            this._swalService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
+                            this._swalService.getAlertError(resp.message || this._translate.instant('COMMON.COULD_NOT_UPDATE_USER'));
                         }
                     },
                     error: (err: any) => {
@@ -252,10 +252,10 @@ export class PerfilComponent implements OnInit {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + err.mensaje
+                            descripcionLog: this._translate.instant('COMMON.COULD_NOT_UPDATE_USER') + ' ' + err.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
+                        this._swalService.getAlertError(this._translate.instant('COMMON.COULD_NOT_UPDATE_USER'));
                     }
                 });
             }

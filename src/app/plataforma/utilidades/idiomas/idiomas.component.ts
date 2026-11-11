@@ -167,17 +167,17 @@ export class IdiomasComponent implements OnInit, OnDestroy {
   columnasRegistros: ColumnMetadata[] = [
     {
       name: 'capture',
-      header: 'IDIOMAS.FLAG',
+      header: 'COMMON.FLAG',
       type: 'image'
     },
     {
       name: 'nombreIdioma',
-      header: 'IDIOMAS.NOMBRE',
+      header: 'COMMON.NAME',
       type: 'text'
     },
     {
       name: 'nomEstado',
-      header: 'IDIOMAS.STATUS',
+      header: 'COMMON.STATUS',
       type: 'estado'
     }
   ]
@@ -185,12 +185,12 @@ export class IdiomasComponent implements OnInit, OnDestroy {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'codigoIdioma',
-      header: 'IDIOMAS.CODE',
+      header: 'COMMON.CODE',
       type: 'text'
     },
     {
       name: 'capture',
-      header: 'IDIOMAS.FLAG',
+      header: 'COMMON.FLAG',
       type: 'capture'
     }
   ]
@@ -227,17 +227,17 @@ export class IdiomasComponent implements OnInit, OnDestroy {
   OnEliminarRegistroClick(id: string) {
     const idioma = this.registrosFiltrado.filter(x => x.codigoIdioma == id)[0]
     Swal.fire({
-      title: this.translate.instant('USUARIOS.ELIMINARTITULO'),
-      text: `this.translate.instant('USUARIOS.ELIMINARTEXTO') + "${idioma.nombreIdioma}".`,
+      title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+      text: `this.translate.instant('UTILIDADES.USER_WILL_BE_DELETED') + "${idioma.nombreIdioma}".`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
         this._registrosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
-            this._swalService.getAlertSuccess(this.translate.instant('IDIOMAS.ELIMINAREXITOSA') + ', ' + resp.mensaje)
+            this._swalService.getAlertSuccess(this.translate.instant('UTILIDADES.IDIOMAS.LANGUAGE_DELETED_SUCCESSFULLY') + ', ' + resp.mensaje)
             const objUpload = {
               susc: this.suscPlataforma,
               tipo: 'idiomas',
@@ -248,7 +248,7 @@ export class IdiomasComponent implements OnInit, OnDestroy {
             this.setupRegistrosStream()
           },
           error: (err: any) => {
-            this._swalService.getAlertError(this.translate.instant('IDIOMAS.ELIMINARERROR') + ', ' + err)
+            this._swalService.getAlertError(this.translate.instant('UTILIDADES.IDIOMAS.COULD_NOT_DELETE_LANGUAGE') + ', ' + err)
             console.error('Error eliminando', err)
           }
         })

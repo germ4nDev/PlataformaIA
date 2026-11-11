@@ -110,14 +110,14 @@ export class TiposItemComponent implements OnInit, OnDestroy {
                     if (permisos.includes('ACT_TIPOS_ITEM_MODIFICAR')) {
                         accionesPermitidas.push({
                             accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('PLATAFORMA.EDITAR')
+                            tooltip: this.translate.instant('COMMON.EDIT')
                         });
                     }
 
                     if (permisos.includes('ACT_TIPOS_ITEM_ELIMINAR')) {
                         accionesPermitidas.push({
                             accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('PLATAFORMA.DELETE')
+                            tooltip: this.translate.instant('COMMON.DELETE')
                         });
                     }
 
@@ -186,19 +186,19 @@ export class TiposItemComponent implements OnInit, OnDestroy {
 
     eliminarRegistro(row: any): void {
         this._swalService.getAlertQuestionRequest(
-            this.translate.instant('APLICACIONES.ELIMINARTEXTO') + ` "${row.nombreTipo}".`,
-            this.translate.instant('APLICACIONES.ELIMINARTITULO')
+            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreTipo}".`,
+            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
         ).subscribe(result => {
             if (result) {
                 this._registrosService.deleteEliminarRegistro(row.codigoTipoItem).subscribe({
                     next: (resp: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertSuccess(resp.mensaje);
                         this._registrosService.cargarRegistros().subscribe();
                     },
                     error: (err: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + err.mensaje };
+                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + err.mensaje };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         this._swalService.getAlertError(err.mensaje);
                         this._registrosService.cargarRegistros().subscribe();
@@ -213,13 +213,13 @@ export class TiposItemComponent implements OnInit, OnDestroy {
     toggleNav(): void { this.toggleSidebar.emit(); }
 
     columnasTipos: ColumnMetadata[] = [
-        { name: 'claseIconoTabla', header: 'WEB.TIPOS_ITEM.ICONO', type: 'icon' },
-        { name: 'nombreTipo', header: 'WEB.TIPOS_ITEM.NOMBRE_DEL_TIPO', type: 'text' },
-        { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
+        { name: 'claseIconoTabla', header: 'COMMON.ICON', type: 'icon' },
+        { name: 'nombreTipo', header: 'PAQUETES.TIPOS_ITEM.TYPE_NAME', type: 'text' },
+        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoTipoItem', header: 'WEB.TIPOS_ITEM.CODIGO_INTERNO', type: 'text' },
-        { name: 'descripcionTipo', header: 'WEB.TIPOS_ITEM.DESCRIPCION', type: 'text' }
+        { name: 'codigoTipoItem', header: 'PAQUETES.INTERNAL_CODE', type: 'text' },
+        { name: 'descripcionTipo', header: 'COMMON.DESCRIPTION', type: 'text' }
     ];
 }

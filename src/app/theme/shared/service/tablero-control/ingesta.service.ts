@@ -38,11 +38,11 @@ export class IngestaService {
         this.http.post(`${base_url}/tclp-ingesta/historico-supertransporte/sincronizar`, {}).subscribe({
             next: (res: any) => {
                 // Si sale bien, lanzamos un toast de Éxito
-                this.toastr.success(`✅ ${res.data.length || 'Los'} registros históricos fueron guardados.`, traducir('WEB.INGESTA_SERVICE.AUDITORIA_ACTUALIZADA'));
+                this.toastr.success(`✅ ${res.data.length || 'Los'} registros históricos fueron guardados.`, traducir('SHARED.SERVICE.TABLERO_CONTROL.AUDIT_UPDATED'));
             },
             error: (err) => {
                 // Si el portal del gobierno falla
-                this.toastr.error(traducir('WEB.INGESTA_SERVICE.NO_SE_PUDO_CONECTAR_CON'), traducir('WEB.INGESTA_SERVICE.ERROR_DE_SINCRONIZACION'));
+                this.toastr.error(traducir('SHARED.SERVICE.TABLERO_CONTROL.COULD_NOT_CONNECT_DATOS_GOV_CO'), traducir('SHARED.SERVICE.TABLERO_CONTROL.SYNC_ERROR'));
             }
         });
     }

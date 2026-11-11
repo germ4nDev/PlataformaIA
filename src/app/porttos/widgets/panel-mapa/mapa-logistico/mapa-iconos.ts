@@ -190,69 +190,69 @@ export const LEYENDA_MAPA: Array<{ grupo: string; nota?: string; items: Array<{ 
         grupo: 'Estado de muelles',
         nota: 'Borde continuo: confirmado por AIS · punteado: solo line-up',
         items: [
-            { color: COLORES_MAPA.muelleEstado['LIBRE'], texto: 'PORTTOS.TERMINAL_DOCKS_DETAIL.LIBRE' },
-            { color: COLORES_MAPA.muelleEstado['OCUPADO'], texto: 'PORTTOS.MAPA_ICONOS.OCUPADO' },
-            { color: COLORES_MAPA.muelleEstado['RESERVADO'], texto: 'PORTTOS.MAPA_ICONOS.RESERVADO_ATRAQUE_EN_24_H' },
-            { color: COLORES_MAPA.muelleEstado['MANTENIMIENTO'], texto: 'PORTTOS.MAPA_ICONOS.EN_MANTENIMIENTO' }
+            { color: COLORES_MAPA.muelleEstado['LIBRE'], texto: 'PORTTOS.WIDGETS.FREE' },
+            { color: COLORES_MAPA.muelleEstado['OCUPADO'], texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.OCCUPIED' },
+            { color: COLORES_MAPA.muelleEstado['RESERVADO'], texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.RESERVED_BERTHING_WITHIN_24_H' },
+            { color: COLORES_MAPA.muelleEstado['MANTENIMIENTO'], texto: 'PORTTOS.UNDER_MAINTENANCE' }
         ]
     },
     {
         grupo: 'Infraestructura portuaria',
         items: [
-            { icono: 'infra-puerto', texto: 'PORTTOS.IA_ADMIN_PANEL.PUERTO' },
-            { icono: 'infra-terminal', texto: 'PORTTOS.COMUN.TERMINAL' },
-            { icono: 'infra-muelle', texto: 'PORTTOS.TERMINAL_DOCKS_DETAIL.MUELLE' },
-            { icono: 'infra-bodega', texto: 'PORTTOS.MAPA_ICONOS.BODEGA' },
-            { icono: 'infra-silo', texto: 'PORTTOS.MAPA_ICONOS.SILO' },
-            { icono: 'infra-patio', texto: 'PORTTOS.MAPA_ICONOS.PATIO_DE_CONTENEDORES' },
-            { icono: 'infra-tanque', texto: 'PORTTOS.MAPA_ICONOS.TANQUE' }
+            { icono: 'infra-puerto', texto: 'COMMON.PORT' },
+            { icono: 'infra-terminal', texto: 'PORTTOS.TERMINAL' },
+            { icono: 'infra-muelle', texto: 'COMMON.BERTH' },
+            { icono: 'infra-bodega', texto: 'PORTTOS.WIDGETS.WAREHOUSE' },
+            { icono: 'infra-silo', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SILO' },
+            { icono: 'infra-patio', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CONTAINER_YARD' },
+            { icono: 'infra-tanque', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.TANK' }
         ]
     },
     {
         grupo: 'Motonaves (estado AIS · la proa indica el rumbo)',
         items: [
-            { icono: 'nave-navegando', texto: 'PORTTOS.MAPA_ICONOS.NAVEGANDO' },
-            { icono: 'nave-maniobra', texto: 'PORTTOS.MAPA_ICONOS.EN_MANIOBRA' },
-            { icono: 'nave-fondeado', texto: 'PORTTOS.MAPA_ICONOS.FONDEADA' },
-            { icono: 'nave-atracado', texto: 'PORTTOS.COMUN.ATRACADA' },
-            { icono: 'nave-detenido', texto: 'PORTTOS.MAPA_ICONOS.DETENIDA' },
-            { icono: 'nave-alerta', texto: 'PORTTOS.MAPA_ICONOS.VARADA_EMERGENCIA' },
-            { icono: 'nave-sin-estado', texto: 'PORTTOS.MAPA_ICONOS.SIN_ESTADO_AIS' }
+            { icono: 'nave-navegando', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SAILING' },
+            { icono: 'nave-maniobra', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.MANEUVERING' },
+            { icono: 'nave-fondeado', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.AT_ANCHOR' },
+            { icono: 'nave-atracado', texto: 'PORTTOS.WIDGETS.BERTHED' },
+            { icono: 'nave-detenido', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.STOPPED_2' },
+            { icono: 'nave-alerta', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.AGROUND_EMERGENCY' },
+            { icono: 'nave-sin-estado', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.NO_AIS_STATUS' }
         ]
     },
     {
         grupo: 'Operación terrestre',
         items: [
-            { icono: 'camion-ruta', texto: 'PORTTOS.MAPA_ICONOS.CAMION_EN_RUTA' },
-            { icono: 'camion-detenido', texto: 'PORTTOS.MAPA_ICONOS.CAMION_DETENIDO_PEAJE_TRAFICO_COLA' },
-            { icono: 'peaje', texto: 'PORTTOS.COMUN.PEAJE' }
+            { icono: 'camion-ruta', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.TRUCK_EN_ROUTE' },
+            { icono: 'camion-detenido', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.STOPPED_TRUCK_TOLL_TRAFFIC_QUEUE_LOADING' },
+            { icono: 'peaje', texto: 'PORTTOS.TOLL' }
         ]
     },
     {
         grupo: 'Riesgos y clima',
         items: [
-            { icono: 'incidente-accidente', texto: 'PORTTOS.MAPA_ICONOS.ACCIDENTE_INCIDENTE' },
-            { icono: 'incidente-obra', texto: 'PORTTOS.MAPA_ICONOS.OBRA_MANTENIMIENTO' },
-            { icono: 'incidente-cierre', texto: 'PORTTOS.MAPA_ICONOS.CIERRE_VIAL' },
-            { icono: 'incidente-congestion', texto: 'PORTTOS.MAPA_ICONOS.CONGESTION' },
-            { icono: 'clima', texto: 'PORTTOS.MAPA_ICONOS.CLIMA_ACTUAL_POR_PUERTO' }
+            { icono: 'incidente-accidente', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.ACCIDENT_INCIDENT' },
+            { icono: 'incidente-obra', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.WORKS_MAINTENANCE' },
+            { icono: 'incidente-cierre', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.ROAD_CLOSURE' },
+            { icono: 'incidente-congestion', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CONGESTION' },
+            { icono: 'clima', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.CURRENT_WEATHER_BY_PORT' }
         ]
     },
     {
         grupo: 'Grupos (clic para acercar)',
         items: [
-            { icono: 'grupo-nave', texto: 'PORTTOS.MAPA_ICONOS.MOTONAVES_AGRUPADAS' },
-            { icono: 'grupo-camion', texto: 'PORTTOS.MAPA_ICONOS.CAMIONES_AGRUPADOS' },
-            { icono: 'grupo-peaje', texto: 'PORTTOS.MAPA_ICONOS.PEAJES_AGRUPADOS' },
-            { icono: 'grupo-incidente', texto: 'PORTTOS.MAPA_ICONOS.INCIDENTES_AGRUPADOS' }
+            { icono: 'grupo-nave', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.GROUPED_VESSELS' },
+            { icono: 'grupo-camion', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.GROUPED_TRUCKS' },
+            { icono: 'grupo-peaje', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.GROUPED_TOLLS' },
+            { icono: 'grupo-incidente', texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.GROUPED_INCIDENTS' }
         ]
     },
     {
         grupo: 'Modo reproducir',
         nota: 'Solo mientras se reproduce: el camino de los últimos 15 min',
         items: [
-            { color: COLORES_MAPA.recorridoNave, texto: 'PORTTOS.MAPA_ICONOS.ESTELA_DE_UNA_NAVE' },
-            { color: COLORES_MAPA.recorridoCamion, texto: 'PORTTOS.MAPA_ICONOS.ESTELA_DE_UN_CAMION' }
+            { color: COLORES_MAPA.recorridoNave, texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.SHIP_TRAIL' },
+            { color: COLORES_MAPA.recorridoCamion, texto: 'PORTTOS.WIDGETS.PANEL_MAPA.MAPA_LOGISTICO.TRUCK_TRAIL' }
         ]
     }
 ];

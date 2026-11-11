@@ -102,7 +102,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                     // this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'widgets', resp.aplicacion.imagenInicio)
                 },
                 error: () => {
-                    Swal.fire(traducir('PORTTOS.CRON_MONITOR.ERROR'), traducir('PORTTOS.GESTION_PUEERTO_PANEL.NO_SE_PUDO_OBTENER_EL'), 'error')
+                    Swal.fire(traducir('COMMON.ERROR'), traducir('PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.COULD_NOT_GET_PORT'), 'error')
                 }
             })
         }
@@ -159,7 +159,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                     this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
-                    this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
                 }
             })
         } else {
@@ -216,7 +216,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                 next: (resp: any) => {
                     if (resp.ok) {
                         form.resetForm()
-                        this._swalService.getAlertSuccess(this.translate.instant('PUERTOS.CREATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.PORT_CREATED_SUCCESSFULLY'))
                         this.router.navigate(['/porttos/puertos-panel'])
                     }
                 },
@@ -225,10 +225,10 @@ export class GestionPueertoPanelComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PUERTOS.CREATESUCCSESSFULLY')
+                        descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.PORT_CREATED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_PUEERTO_PANEL.NO_SE_PUDO_ACTUALIZAR_EL'))
+                    this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.COULD_NOT_UPDATE_PORT'))
                 }
             })
         } else {
@@ -238,7 +238,7 @@ export class GestionPueertoPanelComponent implements OnInit {
                     console.log('resp', resp)
                     if (resp.ok) {
                         form.resetForm()
-                        this._swalService.getAlertSuccess(this.translate.instant('PUERTOS.UPDATESUCCSESSFULLY'))
+                        this._swalService.getAlertSuccess(this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.PORT_UPDATED_SUCCESSFULLY'))
                         this.router.navigate(['/porttos/puertos-panel'])
                     }
                 },
@@ -247,10 +247,10 @@ export class GestionPueertoPanelComponent implements OnInit {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('PUERTOS.ELIMINAREXITOSA')
+                        descripcionLog: this.translate.instant('PORTTOS.ADMINISTACION.PUERTOS_PANEL.PORT_DELETED_SUCCESSFULLY')
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('PORTTOS.GESTION_PUEERTO_PANEL.NO_SE_PUDO_CREAR_EL'))
+                    this._swalService.getAlertError(traducir('PORTTOS.ADMINISTACION.PUERTOS_PANEL.GESTION.COULD_NOT_CREATE_PORT'))
                 }
             })
         }

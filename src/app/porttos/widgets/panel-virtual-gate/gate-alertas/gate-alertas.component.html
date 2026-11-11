@@ -1,12 +1,12 @@
-<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.GATE_ALERTAS.ALERTAS_OPERATIVAS' | translate)"
-    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.GATE_ALERTAS.MONITOREO_DE_INCIDENCIAS_EN_TIEMPO' | translate)"
+<app-widget-shell [titulo]="(data?.titulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.OPERATING_ALERTS' | translate)"
+    [subtitulo]="(data?.subtitulo | translate) || ('PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.REAL_TIME_INCIDENT_MONITORING' | translate)"
     [icono]="data?.icono || 'feather icon-alert-triangle'" [isEnfoque]="isEnfoque"
     (clickEnfoque)="maximizarDesdeShell()" [origen]="data?.origen">
 
     <!-- PROYECCIÓN AL HEADER: Badge indicador -->
     <div acciones-extra class="d-flex align-items-center">
         <span class="tc-badge badge-danger text-uppercase">
-            {{ 'PORTTOS.GATE_ALERTAS.CRITICAS' | translate: { p0: criticas, p1: totalAlertas } }}
+            {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.P0_CRITICAL_P1' | translate: { p0: criticas, p1: totalAlertas } }}
         </span>
     </div>
 
@@ -18,13 +18,13 @@
             <!-- Estado Cargando -->
             <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
                 <div class="spinner-border text-info spinner-border-sm me-2" role="status"></div>
-                {{ 'PORTTOS.GATE_ALERTAS.EVALUANDO_INCIDENCIAS_EN_PRE_GATE' | translate }}
+                {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.ASSESSING_PRE_GATE_INCIDENTS' | translate }}
             </div>
 
             <!-- Estado Vacío -->
             <div *ngIf="!isLoading && alertas.length === 0"
                 class="d-flex justify-content-center align-items-center h-100 text-muted small py-4">
-                <i class="feather icon-check-circle me-2 text-success"></i> {{ 'PORTTOS.GATE_ALERTAS.SISTEMA_OPERANDO_CON_NORMALIDAD' | translate }}
+                <i class="feather icon-check-circle me-2 text-success"></i> {{ 'PORTTOS.WIDGETS.PANEL_VIRTUAL_GATE.GATE_ALERTAS.SYSTEM_OPERATING_NORMALLY' | translate }}
             </div>
 
             <!-- Iteración de Alertas dinámicas (Referencia estable en memoria) -->

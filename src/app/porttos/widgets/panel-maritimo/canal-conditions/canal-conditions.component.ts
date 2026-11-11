@@ -150,7 +150,7 @@ export class CanalConditionsComponent implements OnInit, OnChanges, OnDestroy {
         return {
             ...origen,
             titulo: origen.titulo || 'CONDICIONES DEL CANAL',
-            subtitulo: origen.subtitulo || 'PORTTOS.CANAL_CONDITIONS.REPORTE_METEOROLOGICO_Y_ESTADO_DIMAR',
+            subtitulo: origen.subtitulo || 'COMMON.WEATHER_REPORT_DIMAR_STATUS',
             icono: origen.icono || 'feather icon-wind',
             marea: mareaTexto,
             visibilidad: visibilidadTexto,

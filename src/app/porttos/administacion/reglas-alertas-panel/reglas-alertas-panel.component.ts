@@ -84,7 +84,7 @@ export class ReglasAlertasPanelComponent implements OnInit, OnDestroy {
             next: (r) => this.aplicar(r),
             error: () => {
                 this.cargando = false;
-                this.toastr.error(traducir('PORTTOS.REGLAS_ALERTAS_PANEL.NO_SE_PUDIERON_LEER_LAS'), traducir('PORTTOS.REGLAS_ALERTAS_PANEL.REGLAS_DE_ALERTAS'));
+                this.toastr.error(traducir('PORTTOS.ADMINISTACION.REGLAS_ALERTAS_PANEL.COULD_NOT_READ_ALERT_RULES'), traducir('PORTTOS.ADMINISTACION.REGLAS_ALERTAS_PANEL.ALERT_RULES'));
             }
         }));
     }
@@ -107,12 +107,12 @@ export class ReglasAlertasPanelComponent implements OnInit, OnDestroy {
         fila.guardando = true;
         this.subs.add(this._reglasService.guardar(dto).subscribe({
             next: (r) => {
-                this.toastr.success(`${fila.regla.nombre}${this.puerto === '*' ? ' (global)' : ` · ${this.puerto}`}`, traducir('PORTTOS.REGLAS_ALERTAS_PANEL.REGLA_GUARDADA'));
+                this.toastr.success(`${fila.regla.nombre}${this.puerto === '*' ? ' (global)' : ` · ${this.puerto}`}`, traducir('PORTTOS.ADMINISTACION.REGLAS_ALERTAS_PANEL.RULE_SAVED'));
                 this.aplicar(r);
             },
             error: (e) => {
                 fila.guardando = false;
-                this.toastr.error(e?.error?.msg || traducir('PORTTOS.REGLAS_ALERTAS_PANEL.NO_SE_PUDO_GUARDAR_LA'), fila.regla.nombre);
+                this.toastr.error(e?.error?.msg || traducir('PORTTOS.ADMINISTACION.REGLAS_ALERTAS_PANEL.COULD_NOT_SAVE_RULE'), fila.regla.nombre);
             }
         }));
     }
@@ -121,12 +121,12 @@ export class ReglasAlertasPanelComponent implements OnInit, OnDestroy {
         fila.guardando = true;
         this.subs.add(this._reglasService.restablecer(fila.regla.codigo, this.puerto).subscribe({
             next: (r) => {
-                this.toastr.info(traducir('PORTTOS.REGLAS_ALERTAS_PANEL.VUELVE_A_GLOBAL', { regla: fila.regla.nombre }), traducir('PORTTOS.REGLAS_ALERTAS_PANEL.REGLA_RESTABLECIDA'));
+                this.toastr.info(traducir('PORTTOS.ADMINISTACION.REGLAS_ALERTAS_PANEL.REGLA_GOES_BACK_GLOBAL_SETTINGS', { regla: fila.regla.nombre }), traducir('PORTTOS.ADMINISTACION.REGLAS_ALERTAS_PANEL.RULE_RESET'));
                 this.aplicar(r);
             },
             error: (e) => {
                 fila.guardando = false;
-                this.toastr.error(e?.error?.msg || traducir('PORTTOS.REGLAS_ALERTAS_PANEL.NO_SE_PUDO_RESTABLECER_LA'), fila.regla.nombre);
+                this.toastr.error(e?.error?.msg || traducir('PORTTOS.ADMINISTACION.REGLAS_ALERTAS_PANEL.COULD_NOT_RESET_RULE'), fila.regla.nombre);
             }
         }));
     }
