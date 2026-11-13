@@ -14,7 +14,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { GradientConfig } from 'src/app/app-config';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
-import { DataTablesModule } from 'angular-datatables/src/angular-datatables.module';
+import { DataTablesModule } from 'angular-datatables';
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';

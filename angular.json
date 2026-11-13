@@ -57,10 +57,9 @@
                         "scripts": [
                             "node_modules/jquery/dist/jquery.min.js",
                             "node_modules/quill/dist/quill.js",
-                            "node_modules/datatables.net/js/jquery.dataTables.js",
+                            "node_modules/datatables.net/js/dataTables.js",
                             "node_modules/datatables.net-buttons/js/dataTables.buttons.js",
                             "node_modules/datatables.net-buttons/js/buttons.colVis.js",
-                            "node_modules/datatables.net-buttons/js/buttons.flash.js",
                             "node_modules/datatables.net-buttons/js/buttons.html5.js",
                             "node_modules/datatables.net-buttons/js/buttons.print.js",
                             "node_modules/datatables.net-colreorder/js/dataTables.colReorder.js",
@@ -155,6 +154,7 @@
     },
     "cli": {
         "analytics": "e61ef4bf-30a8-4a8e-9cf1-f010c91316be",
+        "packageManager": "npm",
         "schematicCollections": [
             "@angular-eslint/schematics"
         ]

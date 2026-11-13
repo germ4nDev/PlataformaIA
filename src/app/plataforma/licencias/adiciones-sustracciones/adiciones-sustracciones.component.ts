@@ -1,6 +1,7 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
+import type { Api } from 'datatables.net';
 
 @Component({
   selector: 'app-adiciones-sustracciones',
@@ -49,7 +50,7 @@ dtColumnSearchingOptions: object = {};
   }
 
   ngAfterViewInit(): void {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+    this.datatableElement.dtInstance.then((dtInstance: Api<any>) => {
       dtInstance.columns().every(function () {
         // eslint-disable-next-line
         const input = $('input', this.footer()) as any;
