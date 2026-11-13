@@ -3,7 +3,7 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import Swal from 'sweetalert2';
 
 import { SharedModule } from 'src/app/theme/shared/shared.module';

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Subscription, tap, catchError, of, Observable, BehaviorSubject, switchMap, combineLatest, startWith, map } from 'rxjs';
 import { PTLSeguimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoTK.model';
 import {

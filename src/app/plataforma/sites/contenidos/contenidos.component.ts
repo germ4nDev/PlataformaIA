@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';

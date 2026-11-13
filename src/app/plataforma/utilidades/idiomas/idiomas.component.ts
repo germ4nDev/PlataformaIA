@@ -3,7 +3,7 @@
 //#region IMPORTS
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';

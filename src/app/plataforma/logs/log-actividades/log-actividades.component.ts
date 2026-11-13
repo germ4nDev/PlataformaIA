@@ -1,6 +1,6 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { DataTablesModule, DataTableDirective } from 'angular-datatables';
+import { DataTablesModule, DataTableDirective } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import type { Api } from 'datatables.net';
 
 @Component({

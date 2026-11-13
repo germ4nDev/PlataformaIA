@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { GridsterConfig, GridsterItem, GridType, GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 

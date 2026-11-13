@@ -3,7 +3,7 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
 import { catchError, Observable, of, Subscription, tap } from 'rxjs';

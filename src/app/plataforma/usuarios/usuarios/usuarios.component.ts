@@ -3,7 +3,7 @@
 //#region IMPORTS
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';

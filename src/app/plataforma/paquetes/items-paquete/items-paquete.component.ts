@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Subscription, Observable, tap, catchError, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
