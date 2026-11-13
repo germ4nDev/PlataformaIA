@@ -48,7 +48,7 @@ const config: SocketIoConfig = {
     url: environment.sctUrl,
     options: {
         transports: ['polling'],
-        secure: true,
+        // secure: lo deduce socket.io de la URL https (ngx-socket-io 4.6 no lo tipa; OT-035)
         reconnection: true
     }
 };

@@ -12,7 +12,6 @@ import { TodoListRemoveDirective } from './directive/todo-list-remove.directive'
 import { TodoCardCompleteDirective } from './directive/todo-card-complete.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AlertComponent } from './components/alert/alert.component';
-import { GalleryModule } from '@ks89/angular-modal-gallery';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -50,7 +49,6 @@ const bootstrap = [
     CardComponent,
     BreadcrumbComponent,
     ModalModule,
-    GalleryModule,
     NgScrollbarModule,
     AlertComponent,
     bootstrap,
@@ -64,7 +62,6 @@ const bootstrap = [
     CardComponent,
     BreadcrumbComponent,
     ModalModule,
-    GalleryModule,
     DataFilterPipe,
     TodoListRemoveDirective,
     TodoCardCompleteDirective,

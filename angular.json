@@ -19,21 +19,13 @@
                     "options": {
                         "allowedCommonJsDependencies": [
                             "lodash",
-                            "lodash-es",
-                            "@ks89/angular-modal-gallery",
                             "mousetrap",
                             "hammerjs",
                             "rxjs",
-                            "rxjs-compat",
                             "bezier-easing",
                             "sweetalert2",
                             "contra/emitter",
-                            "highcharts",
-                            "dayjs",
-                            "quill",
-                            "angular2-chartjs",
-                            "angular2-text-mask",
-                            "apexcharts"
+                            "quill"
                         ],
                         "outputPath": "dist",
                         "index": "src/index.html",

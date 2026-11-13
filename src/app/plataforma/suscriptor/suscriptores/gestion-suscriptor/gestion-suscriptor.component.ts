@@ -19,7 +19,6 @@ import {
 } from 'src/app/theme/shared/service';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -42,7 +41,7 @@ import { PTLTipoPagoModel } from 'src/app/theme/shared/_helpers/models/PTLTiposP
 @Component({
     selector: 'app-gestion-suscriptor',
     standalone: true,
-    imports: [TranslateModule, CommonModule, SharedModule, NarikCustomValidatorsModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
     templateUrl: './gestion-suscriptor.component.html',
     styleUrl: './gestion-suscriptor.component.scss'
 })
