@@ -25,226 +25,237 @@ import { PTLParametroSistemaModel } from 'src/app/theme/shared/_helpers/models/P
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
-    selector: 'app-parametros',
-    standalone: true,
-    imports: [
-        CommonModule,
-        DataTablesModule,
-        SharedModule,
-        TranslateModule,
-        NavBarComponent,
-        NavContentComponent,
-        TableDataComponent,
-        DataLoaderComponent
-    ],
-    templateUrl: './parametros.component.html',
-    styleUrl: './parametros.component.scss'
+  selector: 'app-parametros',
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    TableDataComponent,
+    DataLoaderComponent
+  ],
+  templateUrl: './parametros.component.html',
+  styleUrl: './parametros.component.scss'
 })
 export class ParametrosComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    moduloTituloExcel: string = '';
-    hasFiltersSlot: boolean = false;
-    gradientConfig: any;
-    lang = localStorage.getItem('lang');
-    menuItems$!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
-    suscriptor: string = '';
+  moduloTituloExcel: string = '';
+  hasFiltersSlot: boolean = false;
+  gradientConfig: any;
+  lang = localStorage.getItem('lang');
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  suscriptor: string = '';
 
-    subscriptions = new Subscription();
+  subscriptions = new Subscription();
 
-    // 🟢 Filtros específicos de Parámetros
-    filtroLlaveSubject = new BehaviorSubject<string>('');
-    filtroNombreSubject = new BehaviorSubject<string>('');
-    filtroTipoSubject = new BehaviorSubject<string>('todos');
+  // 🟢 Filtros específicos de Parámetros
+  filtroLlaveSubject = new BehaviorSubject<string>('');
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroTipoSubject = new BehaviorSubject<string>('todos');
 
-    parametrosTransformados$: Observable<PTLParametroSistemaModel[]> = of([]);
-    parametrosFiltrados$: Observable<PTLParametroSistemaModel[]> = of([]);
-    parametros: PTLParametroSistemaModel[] = [];
+  parametrosTransformados$: Observable<PTLParametroSistemaModel[]> = of([]);
+  parametrosFiltrados$: Observable<PTLParametroSistemaModel[]> = of([]);
+  parametros: PTLParametroSistemaModel[] = [];
 
-    constructor(
-        private router: Router,
-        private cdr: ChangeDetectorRef,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _localStorageService: LocalStorageService,
-        private _logActividadesService: PtllogActividadesService,
-        private _registrosService: PTLParametrosSistemaService, // 🟢 Inyección del servicio
-        private _permisosService: PtlPermisosService,
-        private _swalService: SwalAlertService
-    ) {
-        this.gradientConfig = GradientConfig;
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-    }
+  constructor(
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
+    private _registrosService: PTLParametrosSistemaService, // 🟢 Inyección del servicio
+    private _permisosService: PtlPermisosService,
+    private _swalService: SwalAlertService
+  ) {
+    this.gradientConfig = GradientConfig;
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
-    ngOnInit(): void {
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
-        this.hasFiltersSlot = true;
-        this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Parámetros' : 'List of Parameters';
+  ngOnInit(): void {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+    this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Parámetros' : 'List of Parameters';
 
-        this.setupParametrosStream();
+    this.setupParametrosStream();
 
-        // 🟢 Carga inicial de datos usando el nuevo patrón
-        this.subscriptions.add(
-            this._registrosService.cargarRegistros().subscribe({
-                next: () => console.log('✅ Parámetros cargados en el servicio'),
-                error: (err) => console.error('❌ Error al cargar parámetros:', err)
-            })
-        );
-    }
+    // 🟢 Carga inicial de datos usando el nuevo patrón
+    this.subscriptions.add(
+      this._registrosService.cargarRegistros().subscribe({
+        next: () => console.log('✅ Parámetros cargados en el servicio'),
+        error: (err) => console.error('❌ Error al cargar parámetros:', err)
+      })
+    );
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-    setupParametrosStream(): void {
-        // 🟢 Stream 1: Transformación e Inyección de Permisos
-        this.parametrosTransformados$ = combineLatest([
-            this._registrosService.parametros$, // Observable expuesto en PTLParametrosSistemaService
-            this._permisosService.actividadesAutorizadas$
-        ]).pipe(
-            map(([params, permisos]: [PTLParametroSistemaModel[], string[]]) => {
-                if (!params || params.length === 0) return [];
+  setupParametrosStream(): void {
+    // 🟢 Stream 1: Transformación e Inyección de Permisos
+    this.parametrosTransformados$ = combineLatest([
+      this._registrosService.parametros$, // Observable expuesto en PTLParametrosSistemaService
+      this._permisosService.actividadesAutorizadas$
+    ]).pipe(
+      map(([params, permisos]: [PTLParametroSistemaModel[], string[]]) => {
+        if (!params || params.length === 0) return [];
 
-                return params.map((param: any) => {
-                    const newParam: any = { ...param };
-                    newParam.nomEstado = newParam.estadoParametro ? 'Activo' : 'Inactivo';
+        return params.map((param: any) => {
+          const newParam: any = { ...param };
+          newParam.nomEstado = newParam.estadoParametro ? 'Activo' : 'Inactivo';
 
-                    const accionesPermitidas: any[] = [];
+          const accionesPermitidas: any[] = [];
 
-                    // 🟢 Validación de Permisos (Ajustados a Parámetros)
-                    if (permisos.includes('ACT_SYST_ACTUALIZAR')) {
-                        accionesPermitidas.push({
-                            accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('COMMON.EDIT')
-                        });
-                    }
+          // 🟢 Validación de Permisos (Ajustados a Parámetros)
+          if (permisos.includes('ACT_SYST_ACTUALIZAR')) {
+            accionesPermitidas.push({
+              accion: 'MODIFICAR',
+              letra: 'M',
+              color: '#2a5dbd',
+              tooltip: this.translate.instant('COMMON.EDIT')
+            });
+          }
 
-                    if (permisos.includes('ACT_SYST_ELIMINAR')) {
-                        accionesPermitidas.push({
-                            accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('COMMON.DELETE')
-                        });
-                    }
+          if (permisos.includes('ACT_SYST_ELIMINAR')) {
+            accionesPermitidas.push({
+              accion: 'ELIMINAR',
+              letra: 'E',
+              color: '#dd1717',
+              tooltip: this.translate.instant('COMMON.DELETE')
+            });
+          }
 
-                    newParam._acciones = accionesPermitidas;
-                    return newParam as PTLParametroSistemaModel;
-                });
-            }),
-            tap((regs) => {
-                this.parametros = regs;
-                this.cdr.detectChanges(); // Forzamos el renderizado para evitar errores de ciclo de vida
-            }),
-            catchError(err => {
-                console.error('Error en el stream de parámetros:', err);
-                return of([]);
-            })
-        );
-
-        // 🟢 Stream 2: Aplicación de Filtros Reactivos en Caliente
-        this.parametrosFiltrados$ = combineLatest([
-            this.parametrosTransformados$.pipe(startWith([])),
-            this.filtroLlaveSubject,
-            this.filtroNombreSubject,
-            this.filtroTipoSubject
-        ]).pipe(
-            map(([params, llave, nombre, tipo]) => {
-                let filteredParams = params;
-
-                if (llave) {
-                    const textoFiltro = llave.toLowerCase();
-                    filteredParams = filteredParams.filter(p => (p.llaveParametro || '').toLowerCase().includes(textoFiltro));
-                }
-
-                if (nombre) {
-                    const textoFiltro = nombre.toLowerCase();
-                    filteredParams = filteredParams.filter(p => (p.nombreParametro || '').toLowerCase().includes(textoFiltro));
-                }
-
-                if (tipo !== 'todos') {
-                    filteredParams = filteredParams.filter(p => p.tipoDato === tipo);
-                }
-
-                return filteredParams;
-            })
-        );
-    }
-
-    onAccionPrincipal(evento: { accion: string, row: any }) {
-        const { accion, row } = evento;
-        const id = row.codigoParametro;
-
-        switch (accion) {
-            case 'MODIFICAR':
-                this._localStorageService.setObject('regId', id);
-                this.router.navigate(['sistema/gestion-parametro']);
-                break;
-
-            case 'ELIMINAR':
-                this.eliminarParametro(row);
-                break;
-
-            default:
-                console.warn(`Acción no reconocida: ${accion}`);
-                break;
-        }
-    }
-
-    eliminarParametro(row: any): void {
-        this._swalService.getAlertQuestionRequest(
-            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreParametro}".`,
-            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
-        ).subscribe(result => {
-            if (result) {
-                this._registrosService.eliminarParametro(row.codigoParametro).subscribe({
-                    next: (resp: any) => {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.msg
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        this._swalService.getAlertSuccess(resp.msg);
-                        // Refrescamos llamando al servicio si no está conectado vía sockets automáticos
-                        this._registrosService.cargarRegistros().subscribe();
-                    },
-                    error: (err: any) => {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + (err.error?.msg || err.message)
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        this._swalService.getAlertError(err.error?.msg || err.message);
-                    }
-                });
-            }
+          newParam._acciones = accionesPermitidas;
+          return newParam as PTLParametroSistemaModel;
         });
-    }
+      }),
+      tap((regs) => {
+        this.parametros = regs;
+        this.cdr.detectChanges(); // Forzamos el renderizado para evitar errores de ciclo de vida
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de parámetros:', err);
+        return of([]);
+      })
+    );
 
-    OnNuevoRegistroClick(): void {
-        this._localStorageService.setObject('regId', 'nuevo');
+    // 🟢 Stream 2: Aplicación de Filtros Reactivos en Caliente
+    this.parametrosFiltrados$ = combineLatest([
+      this.parametrosTransformados$.pipe(startWith([])),
+      this.filtroLlaveSubject,
+      this.filtroNombreSubject,
+      this.filtroTipoSubject
+    ]).pipe(
+      map(([params, llave, nombre, tipo]) => {
+        let filteredParams = params;
+
+        if (llave) {
+          const textoFiltro = llave.toLowerCase();
+          filteredParams = filteredParams.filter((p) => (p.llaveParametro || '').toLowerCase().includes(textoFiltro));
+        }
+
+        if (nombre) {
+          const textoFiltro = nombre.toLowerCase();
+          filteredParams = filteredParams.filter((p) => (p.nombreParametro || '').toLowerCase().includes(textoFiltro));
+        }
+
+        if (tipo !== 'todos') {
+          filteredParams = filteredParams.filter((p) => p.tipoDato === tipo);
+        }
+
+        return filteredParams;
+      })
+    );
+  }
+
+  onAccionPrincipal(evento: { accion: string; row: any }) {
+    const { accion, row } = evento;
+    const id = row.codigoParametro;
+
+    switch (accion) {
+      case 'MODIFICAR':
+        this._localStorageService.setObject('regId', id);
         this.router.navigate(['sistema/gestion-parametro']);
+        break;
+
+      case 'ELIMINAR':
+        this.eliminarParametro(row);
+        break;
+
+      default:
+        console.warn(`Acción no reconocida: ${accion}`);
+        break;
     }
+  }
 
-    // 🟢 Eventos del Sidebar
-    onFiltroLlaveChangeClick(evento: any) { this.filtroLlaveSubject.next(evento.target.value); }
-    onFiltroNombreChangeClick(evento: any) { this.filtroNombreSubject.next(evento.target.value); }
-    onFiltroTipoChangeClick(evento: any) { this.filtroTipoSubject.next(evento.target.value); }
-    toggleNav(): void { this.toggleSidebar.emit(); }
+  eliminarParametro(row: any): void {
+    this._swalService
+      .getAlertQuestionRequest(
+        this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreParametro}".`,
+        this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
+      )
+      .subscribe((result) => {
+        if (result) {
+          this._registrosService.eliminarParametro(row.codigoParametro).subscribe({
+            next: (resp: any) => {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '201',
+                descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.msg
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe();
+              this._swalService.getAlertSuccess(resp.msg);
+              // Refrescamos llamando al servicio si no está conectado vía sockets automáticos
+              this._registrosService.cargarRegistros().subscribe();
+            },
+            error: (err: any) => {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '501',
+                descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + (err.error?.msg || err.message)
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe();
+              this._swalService.getAlertError(err.error?.msg || err.message);
+            }
+          });
+        }
+      });
+  }
 
-    // 🟢 Columnas de la Tabla Principal
-    columnasRegistros: ColumnMetadata[] = [
-        { name: 'llaveParametro', header: 'SISTEMA.PARAMETROS.LOGICAL_KEY_ID', type: 'text' },
-        { name: 'nombreParametro', header: 'SISTEMA.PARAMETROS.DISPLAY_NAME', type: 'text' },
-        { name: 'valorParametro', header: 'SISTEMA.PARAMETROS.ASSIGNED_VALUE', type: 'text' },
-        { name: 'tipoDato', header: 'SISTEMA.PARAMETROS.DATA_TYPE', type: 'text' },
-        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
-    ];
+  OnNuevoRegistroClick(): void {
+    this._localStorageService.setObject('regId', 'nuevo');
+    this.router.navigate(['sistema/gestion-parametro']);
+  }
 
-    // 🟢 Columnas del Detalle (Opcional si enciendes el showDetail="true" en el HTML)
-    columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'descripcionParametro', header: 'COMMON.DETAILED_DESCRIPTION', type: 'text' }
-    ];
+  // 🟢 Eventos del Sidebar
+  onFiltroLlaveChangeClick(evento: any) {
+    this.filtroLlaveSubject.next(evento.target.value);
+  }
+  onFiltroNombreChangeClick(evento: any) {
+    this.filtroNombreSubject.next(evento.target.value);
+  }
+  onFiltroTipoChangeClick(evento: any) {
+    this.filtroTipoSubject.next(evento.target.value);
+  }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
+
+  // 🟢 Columnas de la Tabla Principal
+  columnasRegistros: ColumnMetadata[] = [
+    { name: 'llaveParametro', header: 'SISTEMA.PARAMETROS.LOGICAL_KEY_ID', type: 'text' },
+    { name: 'nombreParametro', header: 'SISTEMA.PARAMETROS.DISPLAY_NAME', type: 'text' },
+    { name: 'valorParametro', header: 'SISTEMA.PARAMETROS.ASSIGNED_VALUE', type: 'text' },
+    { name: 'tipoDato', header: 'SISTEMA.PARAMETROS.DATA_TYPE', type: 'text' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
+  ];
+
+  // 🟢 Columnas del Detalle (Opcional si enciendes el showDetail="true" en el HTML)
+  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionParametro', header: 'COMMON.DETAILED_DESCRIPTION', type: 'text' }];
 }

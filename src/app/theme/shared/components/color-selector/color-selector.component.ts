@@ -10,7 +10,6 @@ interface Setting {
 
 @Component({
   selector: 'app-color-selector',
-  standalone: true,
   imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './color-selector.component.html',
   styleUrl: './color-selector.component.scss'

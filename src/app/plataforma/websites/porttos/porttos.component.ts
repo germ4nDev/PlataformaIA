@@ -18,7 +18,6 @@ import { PieComponent } from './componentes/pie/pie.component';
 
 @Component({
   selector: 'app-porttos',
-  standalone: true,
   imports: [TranslateModule, AsyncPipe, RouterOutlet, EncabezadoComponent, PieComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -26,14 +25,20 @@ import { PieComponent } from './componentes/pie/pie.component';
   styleUrl: './porttos.component.scss'
 })
 export class PorttosComponent {
-  readonly config$ = inject(PortalPorttosService).config().pipe(catchError(() => of(null)));
+  readonly config$ = inject(PortalPorttosService)
+    .config()
+    .pipe(catchError(() => of(null)));
   @ViewChild('contenedor', { static: true }) contenedor!: ElementRef<HTMLElement>;
 
   constructor() {
     // La plataforma deja html y body sin desplazamiento: el portal se desplaza en su contenedor y vuelve arriba al cambiar de página.
     // Solo si cambia la ruta: elegir otro puerto en Puertos en vivo cambia la consulta (?puerto=) y no debe subir la página.
     let anterior = '';
-    inject(Router).events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd), takeUntilDestroyed())
+    inject(Router)
+      .events.pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        takeUntilDestroyed()
+      )
       .subscribe((e) => {
         const ruta = e.urlAfterRedirects.split(/[?#]/)[0];
         if (ruta !== anterior) this.contenedor?.nativeElement.scrollTo({ top: 0 });

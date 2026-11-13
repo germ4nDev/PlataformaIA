@@ -11,16 +11,17 @@ import { EnlaceComponent } from '../../enlace/enlace.component';
 
 @Component({
   selector: 'pp-seccion-hero',
-  standalone: true,
   imports: [TranslateModule, EnlaceComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './hero.component.html',
-  styleUrl: './hero.component.scss',
+  styleUrl: './hero.component.scss'
 })
 export class SeccionHeroComponent {
   @Input({ required: true }) s!: SeccionPortal;
   @Input() grande = false;
   readonly fondo = 'assets/images/porttos/fondo-puerto.svg';
   /** url("…") con comillas escapadas: una dirección de la base con espacios o paréntesis no rompe el estilo. */
-  get fondoCss(): string { return `url("${String(this.s?.imagen || this.fondo).replace(/["\\\n\r]/g, (c) => encodeURIComponent(c))}")`; }
+  get fondoCss(): string {
+    return `url("${String(this.s?.imagen || this.fondo).replace(/["\\\n\r]/g, (c) => encodeURIComponent(c))}")`;
+  }
 }

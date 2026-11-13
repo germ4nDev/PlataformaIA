@@ -23,87 +23,109 @@ import { PtlPaisesService, Pais } from 'src/app/theme/shared/service/ptlpaises.s
 import { traducir } from 'src/app/theme/shared/i18n/traducir';
 
 @Component({
-    selector: 'app-paises',
-    standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
-    templateUrl: './paises.component.html',
-    styleUrl: './paises.component.scss'
+  selector: 'app-paises',
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
+  templateUrl: './paises.component.html',
+  styleUrl: './paises.component.scss'
 })
 export class PaisesComponent implements OnInit {
-    @Output() toggleSidebar = new EventEmitter<void>();
-    activeTab: 'menu' | 'filters' = 'menu';
-    menuItems!: Observable<NavigationItem[]>;
-    cargando = true;
+  @Output() toggleSidebar = new EventEmitter<void>();
+  activeTab: 'menu' | 'filters' = 'menu';
+  menuItems!: Observable<NavigationItem[]>;
+  cargando = true;
 
-    readonly columnas: ColumnMetadata[] = [
-        { name: 'codigoPais', header: 'COMMON.CODE', type: 'text' },
-        { name: 'nomPais', header: 'COMMON.NAME', type: 'text' },
-        { name: 'moneda', header: 'COMMON.CURRENCY', type: 'text' },
-        { name: 'simboloMoneda', header: 'UTILIDADES.PAISES.SYMBOL', type: 'text' },
-        { name: 'indicativo', header: 'UTILIDADES.PAISES.DIALING_CODE', type: 'text' },
-        { name: 'zonaHoraria', header: 'UTILIDADES.PAISES.TIME_ZONE', type: 'text' },
-        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'text' }
-    ];
+  readonly columnas: ColumnMetadata[] = [
+    { name: 'codigoPais', header: 'COMMON.CODE', type: 'text' },
+    { name: 'nomPais', header: 'COMMON.NAME', type: 'text' },
+    { name: 'moneda', header: 'COMMON.CURRENCY', type: 'text' },
+    { name: 'simboloMoneda', header: 'UTILIDADES.PAISES.SYMBOL', type: 'text' },
+    { name: 'indicativo', header: 'UTILIDADES.PAISES.DIALING_CODE', type: 'text' },
+    { name: 'zonaHoraria', header: 'UTILIDADES.PAISES.TIME_ZONE', type: 'text' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'text' }
+  ];
 
-    private readonly paises$ = new BehaviorSubject<Pais[]>([]);
-    readonly filtroEstado$ = new BehaviorSubject<string>('todos');
-    readonly filtroTexto$ = new BehaviorSubject<string>('');
-    filtrados$: Observable<any[]> = of([]);
+  private readonly paises$ = new BehaviorSubject<Pais[]>([]);
+  readonly filtroEstado$ = new BehaviorSubject<string>('todos');
+  readonly filtroTexto$ = new BehaviorSubject<string>('');
+  filtrados$: Observable<any[]> = of([]);
 
-    constructor(
-        private readonly router: Router,
-        private readonly translate: TranslateService,
-        private readonly navegacion: NavigationService,
-        private readonly avisos: SwalAlertService,
-        private readonly paises: PtlPaisesService
-    ) {}
+  constructor(
+    private readonly router: Router,
+    private readonly translate: TranslateService,
+    private readonly navegacion: NavigationService,
+    private readonly avisos: SwalAlertService,
+    private readonly paises: PtlPaisesService
+  ) {}
 
-    ngOnInit(): void {
-        this.navegacion.getNavigationItems();
-        this.menuItems = this.navegacion.menuItems$;
-        this.filtrados$ = combineLatest([this.paises$, this.filtroEstado$, this.filtroTexto$]).pipe(
-            map(([lista, estado, texto]) => {
-                const t = texto.trim().toLowerCase();
-                const idioma = this.translate.currentLang || 'es';
-                return lista
-                    .map((p) => ({ ...p, nomPais: this.paises.nombreEn(p, idioma), nomEstado: p.estadoPais ? traducir('COMMON.ACTIVE') : traducir('COMMON.INACTIVE') }))
-                    .filter((p) => estado === 'todos' || (estado === 'activos') === p.estadoPais)
-                    .filter((p) => !t || `${p.codigoPais} ${p.codigoIso3} ${p.nombrePais} ${p.nomPais} ${p.moneda}`.toLowerCase().includes(t));
-            })
-        );
-        this.cargar();
-    }
+  ngOnInit(): void {
+    this.navegacion.getNavigationItems();
+    this.menuItems = this.navegacion.menuItems$;
+    this.filtrados$ = combineLatest([this.paises$, this.filtroEstado$, this.filtroTexto$]).pipe(
+      map(([lista, estado, texto]) => {
+        const t = texto.trim().toLowerCase();
+        const idioma = this.translate.currentLang || 'es';
+        return lista
+          .map((p) => ({
+            ...p,
+            nomPais: this.paises.nombreEn(p, idioma),
+            nomEstado: p.estadoPais ? traducir('COMMON.ACTIVE') : traducir('COMMON.INACTIVE')
+          }))
+          .filter((p) => estado === 'todos' || (estado === 'activos') === p.estadoPais)
+          .filter((p) => !t || `${p.codigoPais} ${p.codigoIso3} ${p.nombrePais} ${p.nomPais} ${p.moneda}`.toLowerCase().includes(t));
+      })
+    );
+    this.cargar();
+  }
 
-    cargar(): void {
-        this.cargando = true;
-        this.paises.listar().subscribe({
-            next: (l) => { this.paises$.next(l); this.cargando = false; },
-            error: () => { this.cargando = false; this.avisos.getAlertError(traducir('UTILIDADES.PAISES.COULD_NOT_GET_COUNTRIES')); }
-        });
-    }
+  cargar(): void {
+    this.cargando = true;
+    this.paises.listar().subscribe({
+      next: (l) => {
+        this.paises$.next(l);
+        this.cargando = false;
+      },
+      error: () => {
+        this.cargando = false;
+        this.avisos.getAlertError(traducir('UTILIDADES.PAISES.COULD_NOT_GET_COUNTRIES'));
+      }
+    });
+  }
 
-    alFiltrarEstado(e: any): void { this.filtroEstado$.next(e.target.value); }
-    alFiltrarTexto(e: any): void { this.filtroTexto$.next(e.target.value || ''); }
+  alFiltrarEstado(e: any): void {
+    this.filtroEstado$.next(e.target.value);
+  }
+  alFiltrarTexto(e: any): void {
+    this.filtroTexto$.next(e.target.value || '');
+  }
 
-    nuevo(): void { this.router.navigate(['utilidades/gestion-pais']); }
-    editar(codigo: string): void { this.router.navigate(['utilidades/gestion-pais'], { queryParams: { pais: codigo } }); }
+  nuevo(): void {
+    this.router.navigate(['utilidades/gestion-pais']);
+  }
+  editar(codigo: string): void {
+    this.router.navigate(['utilidades/gestion-pais'], { queryParams: { pais: codigo } });
+  }
 
-    eliminar(codigo: string): void {
-        Swal.fire({
-            title: this.translate.instant('UTILIDADES.PAISES.DELETE_COUNTRY'),
-            text: this.translate.instant('UTILIDADES.PAISES.COUNTRY_WITH_PRICE_LISTS_CANNOT_BE_DELETED'),
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: this.translate.instant('COMMON.YES'),
-            cancelButtonText: this.translate.instant('COMMON.CANCEL')
-        }).then((r) => {
-            if (!r.isConfirmed) return;
-            this.paises.eliminar(codigo).subscribe({
-                next: () => { this.avisos.getAlertConfirmSuccess(traducir('UTILIDADES.PAISES.COUNTRY_DELETED')); this.cargar(); },
-                error: (e) => this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.PAISES.COULD_NOT_DELETE_COUNTRY'))
-            });
-        });
-    }
+  eliminar(codigo: string): void {
+    Swal.fire({
+      title: this.translate.instant('UTILIDADES.PAISES.DELETE_COUNTRY'),
+      text: this.translate.instant('UTILIDADES.PAISES.COUNTRY_WITH_PRICE_LISTS_CANNOT_BE_DELETED'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translate.instant('COMMON.YES'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+      this.paises.eliminar(codigo).subscribe({
+        next: () => {
+          this.avisos.getAlertConfirmSuccess(traducir('UTILIDADES.PAISES.COUNTRY_DELETED'));
+          this.cargar();
+        },
+        error: (e) => this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.PAISES.COULD_NOT_DELETE_COUNTRY'))
+      });
+    });
+  }
 
-    toggleNav(): void { this.toggleSidebar.emit(); }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

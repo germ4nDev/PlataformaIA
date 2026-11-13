@@ -25,222 +25,225 @@ import { PTLVersionAP } from 'src/app/theme/shared/_helpers/models/PTLVersionAP.
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
-    selector: 'app-gestion-version',
-    standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
-    templateUrl: './gestion-version.component.html',
-    styleUrl: './gestion-version.component.scss'
+  selector: 'app-gestion-version',
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+  templateUrl: './gestion-version.component.html',
+  styleUrl: './gestion-version.component.scss'
 })
 export class GestionVersionComponent implements OnInit {
-    @ViewChild('validationForm') validationForm!: NgForm;
-    @Output() toggleSidebar = new EventEmitter<void>();
-    FormRegistro: PTLVersionAP = new PTLVersionAP();
+  @ViewChild('validationForm') validationForm!: NgForm;
+  @Output() toggleSidebar = new EventEmitter<void>();
+  FormRegistro: PTLVersionAP = new PTLVersionAP();
 
-    tipoEditorTexto = 'basica';
-    menuItems$!: Observable<NavigationItem[]>;
-    gradientConfig: any;
-    navCollapsed: boolean = false;
-    navCollapsedMob: boolean = false;
-    windowWidth: number = 0;
-    registroId: string = '';
-    isSubmit: boolean = false;
-    modoEdicion: boolean = false;
-    aplicacionesSub?: Subscription;
-    aplicaciones: PTLAplicacionModel[] = [];
-    codigosuite = uuidv4();
-    lockScreenSubscription: Subscription | undefined;
-    isLocked: boolean = false;
-    lockMessage: string = '';
+  tipoEditorTexto = 'basica';
+  menuItems$!: Observable<NavigationItem[]>;
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
+  registroId: string = '';
+  isSubmit: boolean = false;
+  modoEdicion: boolean = false;
+  aplicacionesSub?: Subscription;
+  aplicaciones: PTLAplicacionModel[] = [];
+  codigosuite = uuidv4();
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
-    // constructor
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private _registrosService: PtlversionesApService,
-        private _aplicacionesService: PtlAplicacionesService,
-        private _layoutInitializer: LayoutInitializerService,
-        private _localStorageService: LocalStorageService,
-        private _navigationService: NavigationService
-    ) {
-        this.isSubmit = false;
-        GradientConfig.header_fixed_layout = true;
-        this.gradientConfig = GradientConfig;
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
-        this.navCollapsedMob = false;
-        this.registroId = this._localStorageService.getObject<string>('regId') || 'nuevo'
-        if (this.registroId != 'nuevo') {
-            this.modoEdicion = true;
-            this._registrosService.getRegistroById(this.registroId).subscribe({
-                next: (resp: any) => {
-                    const version = resp.version;
-                    console.log('version', resp.version);
-                    this.FormRegistro = version;
-                    this.FormRegistro.fecha = this.setFechaRiesgo(new Date(version.fechaVersion));
-                    this.FormRegistro.descripcionVersion = version.descripcionVersion || '';
-                    console.log('formRegisto', this.FormRegistro);
-                },
-                error: () => {
-                    Swal.fire(traducir('COMMON.ERROR'), traducir('APLICACIONES.COULD_NOT_GET_SUITE_BY'), 'error');
-                }
-            });
-        } else {
-            this.modoEdicion = false;
-            console.log('FormRegistro loading', this.FormRegistro);
+  // constructor
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private _registrosService: PtlversionesApService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _layoutInitializer: LayoutInitializerService,
+    private _localStorageService: LocalStorageService,
+    private _navigationService: NavigationService
+  ) {
+    this.isSubmit = false;
+    GradientConfig.header_fixed_layout = true;
+    this.gradientConfig = GradientConfig;
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
+    this.registroId = this._localStorageService.getObject<string>('regId') || 'nuevo';
+    if (this.registroId != 'nuevo') {
+      this.modoEdicion = true;
+      this._registrosService.getRegistroById(this.registroId).subscribe({
+        next: (resp: any) => {
+          const version = resp.version;
+          console.log('version', resp.version);
+          this.FormRegistro = version;
+          this.FormRegistro.fecha = this.setFechaRiesgo(new Date(version.fechaVersion));
+          this.FormRegistro.descripcionVersion = version.descripcionVersion || '';
+          console.log('formRegisto', this.FormRegistro);
+        },
+        error: () => {
+          Swal.fire(traducir('COMMON.ERROR'), traducir('APLICACIONES.COULD_NOT_GET_SUITE_BY'), 'error');
         }
+      });
+    } else {
+      this.modoEdicion = false;
+      console.log('FormRegistro loading', this.FormRegistro);
     }
+  }
 
-    ngOnInit() {
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
-        this.consultarAplicaciones();
-        this._layoutInitializer.applyLayout();
-        this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
-            next: (message: string) => {
-                this._localStorageService.setFormRegistro(this.FormRegistro);
-                this.isLocked = true;
-                this.lockMessage = message;
-            },
-            error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
-        });
-        const form = this._localStorageService.getFormRegistro();
-        if (form != undefined) {
-            this.FormRegistro = form;
-            this._localStorageService.removeFormRegistro();
-        }
-        if (!this.modoEdicion) {
-            this.FormRegistro.codigoAplicacion = '';
-            this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-            this.FormRegistro.codigoVersion = uuidv4();
-            this.FormRegistro.version = '0.0.0.0';
-            this.FormRegistro.estadoVersion = true;
-        }
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.consultarAplicaciones();
+    this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
     }
-
-    setFechaRiesgo(fecha: Date) {
-        const year = fecha.getUTCFullYear();
-        const month = fecha.getUTCMonth() + 1;
-        const day = fecha.getUTCDate();
-        const dateStruct: NgbDateStruct = {
-            year: year,
-            month: month,
-            day: day
-        };
-        return dateStruct;
+    if (!this.modoEdicion) {
+      this.FormRegistro.codigoAplicacion = '';
+      this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+      this.FormRegistro.codigoVersion = uuidv4();
+      this.FormRegistro.version = '0.0.0.0';
+      this.FormRegistro.estadoVersion = true;
     }
+  }
 
-    actualizarDescripcionVersion(nuevoContenido: string): void {
-        this.FormRegistro.descripcionVersion = nuevoContenido;
-        console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionVersion);
-        // if (this.validationForm && this.isSubmit) {
-        // }
-    }
+  setFechaRiesgo(fecha: Date) {
+    const year = fecha.getUTCFullYear();
+    const month = fecha.getUTCMonth() + 1;
+    const day = fecha.getUTCDate();
+    const dateStruct: NgbDateStruct = {
+      year: year,
+      month: month,
+      day: day
+    };
+    return dateStruct;
+  }
 
-    consultarAplicaciones() {
-        this.aplicacionesSub = this._aplicacionesService
-            .getAplicaciones()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.aplicaciones = resp.aplicaciones;
-                        console.log('Todos las aplicaciones', this.aplicaciones);
-                        return;
-                    }
-                }),
-                catchError((err) => {
-                    console.log('Ha ocurrido un error', err);
-                    return of(null);
-                })
-            )
-            .subscribe();
-    }
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionVersion = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionVersion);
+    // if (this.validationForm && this.isSubmit) {
+    // }
+  }
 
-    onAplicacionchangeClick(event: any) {
-        const value = event.target.value;
-        const app = this.aplicaciones.find((x) => x.codigoAplicacion == value);
-        if (app) {
-            this.FormRegistro.codigoAplicacion = app.codigoAplicacion || '';
-        }
-    }
-
-    onDateChange(): void {
-        console.log('Fecha NgbDateStruct seleccionada:', this.FormRegistro.fecha);
-    }
-
-    btnGestionarRegistroClick(form: NgForm) {
-        // Tipado a NgForm
-        this.isSubmit = true;
-        const descripcionValida = this.FormRegistro.descripcionVersion && this.FormRegistro.descripcionVersion.trim() !== '';
-        if (!descripcionValida) {
-            Swal.fire(traducir('APLICACIONES.VERSIONES.GESTION.WARNING'), this.translate.instant('COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED'), 'warning');
+  consultarAplicaciones() {
+    this.aplicacionesSub = this._aplicacionesService
+      .getAplicaciones()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.aplicaciones = resp.aplicaciones;
+            console.log('Todos las aplicaciones', this.aplicaciones);
             return;
-        }
-        if (!form.valid) {
-            return;
-        }
-        console.log('======= modo edicion', this.modoEdicion);
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
 
-        const registroData = form.value as PTLVersionAP;
-        if (this.FormRegistro.fecha) {
-            const { year, month, day } = this.FormRegistro.fecha;
-            const fecha = new Date(year, month - 1, day).toISOString();
-            registroData.fechaVersion = fecha;
-        }
-        if (this.modoEdicion) {
-            if (!this.FormRegistro.fecha || !this.FormRegistro.fecha.year || !this.FormRegistro.fecha.month || !this.FormRegistro.fecha.day) {
-                return null;
-            }
-            const jsDate = new Date(this.FormRegistro.fecha.year, this.FormRegistro.fecha.month - 1, this.FormRegistro.fecha?.day);
-            registroData.codigoVersion = form.value.codigoVersion;
-            registroData.fechaVersion = jsDate.toISOString();
-            registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion || '';
-            registroData.fechaCreacion = this.FormRegistro.fechaCreacion || '';
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaModificacion = new Date().toISOString();
-            console.log('registroData', registroData);
-            this._registrosService.putModificarRegistro(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        Swal.fire('', this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'), 'success');
-                        this.router.navigate(['/aplicaciones/versiones']);
-                    } else {
-                        Swal.fire(traducir('COMMON.ERROR'), resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err);
-                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
-                }
-            });
-        } else {
-            registroData.codigoVersion = uuidv4();
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaCreacion = new Date().toISOString();
-            registroData.codigoUsuarioModificacion = '';
-            registroData.fechaModificacion = '';
-            console.log('insertar registro', registroData);
-            this._registrosService.postCrearRegistro(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        Swal.fire('', this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'), 'success');
-                        form.resetForm();
-                        this.isSubmit = false;
-                        this.router.navigate(['/aplicaciones/versiones']);
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err);
-                    Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'), 'error');
-                }
-            });
-        }
+  onAplicacionchangeClick(event: any) {
+    const value = event.target.value;
+    const app = this.aplicaciones.find((x) => x.codigoAplicacion == value);
+    if (app) {
+      this.FormRegistro.codigoAplicacion = app.codigoAplicacion || '';
     }
+  }
 
-    btnRegresarClick() {
-        this.router.navigate(['/aplicaciones/versiones']);
-    }
+  onDateChange(): void {
+    console.log('Fecha NgbDateStruct seleccionada:', this.FormRegistro.fecha);
+  }
 
-    toggleNav(): void {
-        this.toggleSidebar.emit();
+  btnGestionarRegistroClick(form: NgForm) {
+    // Tipado a NgForm
+    this.isSubmit = true;
+    const descripcionValida = this.FormRegistro.descripcionVersion && this.FormRegistro.descripcionVersion.trim() !== '';
+    if (!descripcionValida) {
+      Swal.fire(
+        traducir('APLICACIONES.VERSIONES.GESTION.WARNING'),
+        this.translate.instant('COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED'),
+        'warning'
+      );
+      return;
     }
+    if (!form.valid) {
+      return;
+    }
+    console.log('======= modo edicion', this.modoEdicion);
+
+    const registroData = form.value as PTLVersionAP;
+    if (this.FormRegistro.fecha) {
+      const { year, month, day } = this.FormRegistro.fecha;
+      const fecha = new Date(year, month - 1, day).toISOString();
+      registroData.fechaVersion = fecha;
+    }
+    if (this.modoEdicion) {
+      if (!this.FormRegistro.fecha || !this.FormRegistro.fecha.year || !this.FormRegistro.fecha.month || !this.FormRegistro.fecha.day) {
+        return null;
+      }
+      const jsDate = new Date(this.FormRegistro.fecha.year, this.FormRegistro.fecha.month - 1, this.FormRegistro.fecha?.day);
+      registroData.codigoVersion = form.value.codigoVersion;
+      registroData.fechaVersion = jsDate.toISOString();
+      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion || '';
+      registroData.fechaCreacion = this.FormRegistro.fechaCreacion || '';
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      console.log('registroData', registroData);
+      this._registrosService.putModificarRegistro(registroData).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', this.translate.instant('COMMON.RECORD_UPDATED_SUCCESSFULLY'), 'success');
+            this.router.navigate(['/aplicaciones/versiones']);
+          } else {
+            Swal.fire(traducir('COMMON.ERROR'), resp.message || this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_UPDATE_RECORD'), 'error');
+        }
+      });
+    } else {
+      registroData.codigoVersion = uuidv4();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = '';
+      registroData.fechaModificacion = '';
+      console.log('insertar registro', registroData);
+      this._registrosService.postCrearRegistro(registroData).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', this.translate.instant('COMMON.RECORD_INSERTED_SUCCESSFULLY'), 'success');
+            form.resetForm();
+            this.isSubmit = false;
+            this.router.navigate(['/aplicaciones/versiones']);
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('COMMON.COULD_NOT_INSERT_RECORD'), 'error');
+        }
+      });
+    }
+  }
+
+  btnRegresarClick() {
+    this.router.navigate(['/aplicaciones/versiones']);
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

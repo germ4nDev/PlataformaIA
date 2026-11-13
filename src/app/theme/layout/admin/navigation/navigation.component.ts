@@ -7,33 +7,32 @@ import { Observable } from 'rxjs';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
-    selector: 'app-navigation',
-    standalone: true,
-    imports: [CommonModule, NavContentComponent],
-    templateUrl: './navigation.component.html',
-    styleUrls: ['./navigation.component.scss']
+  selector: 'app-navigation',
+  imports: [CommonModule, NavContentComponent],
+  templateUrl: './navigation.component.html',
+  styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {
-    // public props
-    @Output() NavMobCollapse = new EventEmitter();
-    navigationItems!: Observable<NavigationItem[]>;
-    windowWidth: number;
-    gradientConfig;
+  // public props
+  @Output() NavMobCollapse = new EventEmitter();
+  navigationItems!: Observable<NavigationItem[]>;
+  windowWidth: number;
+  gradientConfig;
 
-    constructor(private _navigationService: NavigationService) {
-        this.gradientConfig = GradientConfig;
-        this.windowWidth = window.innerWidth;
-    }
+  constructor(private _navigationService: NavigationService) {
+    this.gradientConfig = GradientConfig;
+    this.windowWidth = window.innerWidth;
+  }
 
-    ngOnInit(): void {
-        this._navigationService.getNavigationItems();
-        this.navigationItems = this._navigationService.menuItems$ || [];
-        console.log('navigationItems full', this.navigationItems);
-    }
+  ngOnInit(): void {
+    this._navigationService.getNavigationItems();
+    this.navigationItems = this._navigationService.menuItems$ || [];
+    console.log('navigationItems full', this.navigationItems);
+  }
 
-    navMobCollapse() {
-        if (this.windowWidth < 992) {
-            this.NavMobCollapse.emit();
-        }
+  navMobCollapse() {
+    if (this.windowWidth < 992) {
+      this.NavMobCollapse.emit();
     }
+  }
 }

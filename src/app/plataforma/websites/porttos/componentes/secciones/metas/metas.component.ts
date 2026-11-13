@@ -13,11 +13,10 @@ import { EncabezadoSeccionComponent } from '../encabezado-seccion/encabezado-sec
 
 @Component({
   selector: 'pp-seccion-metas',
-  standalone: true,
   imports: [TranslateModule, IconoComponent, EncabezadoSeccionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './metas.component.html',
-  styleUrl: './metas.component.scss',
+  styleUrl: './metas.component.scss'
 })
 export class SeccionMetasComponent {
   @Input({ required: true }) s!: SeccionPortal;

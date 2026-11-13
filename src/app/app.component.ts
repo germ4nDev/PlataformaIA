@@ -1,36 +1,36 @@
-import { Component, OnInit, inject } from '@angular/core'
-import { TranslateService } from '@ngx-translate/core'
-import { registrarTraductor } from './theme/shared/i18n/traducir'
-import { RouterOutlet } from '@angular/router'
-import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component'
-import { NavigationEnd, Router } from '@angular/router'
+import { Component, OnInit, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { registrarTraductor } from './theme/shared/i18n/traducir';
+import { RouterOutlet } from '@angular/router';
+import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component';
+import { NavigationEnd, Router } from '@angular/router';
 import {
-    AuthenticationService,
-    LanguageService,
-    LocalStorageService,
-    PtlAplicacionesService,
-    PtlBibliotecasService,
-    PtlEmpresasScService,
-    PtlformatosGaleriaService,
-    PtlGaleriasService,
-    PtlidiomasService,
-    PtlmodulosApService,
-    PTLPaquetesSCService,
-    PTLPaquetesService,
-    PTLRolesAPService,
-    PtlSlidersInicioService,
-    PtlSuitesAPService,
-    PTLSuscriptoresService,
-    PtlTiposGaleriaService,
-    PtltiposItemsService,
-    PtlusuariosEmpresasScService,
-    PtlusuariosRolesApService,
-    PtlusuariosScService,
-    PtlColoresSettingsService,
-    ThemeService
-} from './theme/shared/service'
-import { PtlActividadesService } from './theme/shared/service/ptlactividades.service'
-import { PtlactividadesRolesService } from './theme/shared/service/ptlactividades-roles.service'
+  AuthenticationService,
+  LanguageService,
+  LocalStorageService,
+  PtlAplicacionesService,
+  PtlBibliotecasService,
+  PtlEmpresasScService,
+  PtlformatosGaleriaService,
+  PtlGaleriasService,
+  PtlidiomasService,
+  PtlmodulosApService,
+  PTLPaquetesSCService,
+  PTLPaquetesService,
+  PTLRolesAPService,
+  PtlSlidersInicioService,
+  PtlSuitesAPService,
+  PTLSuscriptoresService,
+  PtlTiposGaleriaService,
+  PtltiposItemsService,
+  PtlusuariosEmpresasScService,
+  PtlusuariosRolesApService,
+  PtlusuariosScService,
+  PtlColoresSettingsService,
+  ThemeService
+} from './theme/shared/service';
+import { PtlActividadesService } from './theme/shared/service/ptlactividades.service';
+import { PtlactividadesRolesService } from './theme/shared/service/ptlactividades-roles.service';
 // import { PuertosService } from './theme/shared/service/tablero-control/puertos.service'
 // import { TerminalesService } from './theme/shared/service/tablero-control/terminales.service'
 // import { MuellesService } from './theme/shared/service/tablero-control/muelles.service'
@@ -39,280 +39,282 @@ import { PtlactividadesRolesService } from './theme/shared/service/ptlactividade
 // import { FarosService } from './theme/shared/service/tablero-control/faros.service'
 // import { TiposTipoInfraestructuraService } from './theme/shared/service/tablero-control/tipos-infraestructura.service'
 // import { CronMonitorService } from './theme/shared/service/tablero-control/cron-monitor.service'
-import { PTLHistorialFacturacionService } from './theme/shared/service/ptlhistorial-facturacion.service'
-import { PtlItemsPaqueteService } from './theme/shared/service/ptlitems-paquete.service'
-import { PTLTiposPagoService } from './theme/shared/service/ptltipos-pago.service'
+import { PTLHistorialFacturacionService } from './theme/shared/service/ptlhistorial-facturacion.service';
+import { PtlItemsPaqueteService } from './theme/shared/service/ptlitems-paquete.service';
+import { PTLTiposPagoService } from './theme/shared/service/ptltipos-pago.service';
 import { PTLTiposPaqueteService } from './theme/shared/service/ptltipos-paquete.service';
-import { PTLModulosPaqueteService } from './theme/shared/service/ptlmodulos-paquete.service'
-import { PTLTiposRolesService } from './theme/shared/service/ptltipos-roles.service'
+import { PTLModulosPaqueteService } from './theme/shared/service/ptlmodulos-paquete.service';
+import { PTLTiposRolesService } from './theme/shared/service/ptltipos-roles.service';
 import { PTLUsuariosService } from './theme/shared/service/ptlusuarios.service';
 import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
 
 import { SocketManagerService } from './theme/shared/service/socket-manager.service';
-import { PTLWidgetsMaestroService } from './theme/shared/service/ptlwidgets-maestro.service'
-import { PtlWidgetsRolesService } from './theme/shared/service/ptlwidgets-roles.service'
-import { CronMonitorService } from './theme/shared/service/tablero-control/cron-monitor.service'
-import { FarosService } from './theme/shared/service/tablero-control/faros.service'
-import { MuellesService } from './theme/shared/service/tablero-control/muelles.service'
-import { PuertosService } from './theme/shared/service/tablero-control/puertos.service'
-import { TerminalesService } from './theme/shared/service/tablero-control/terminales.service'
-import { TiposTipoInfraestructuraService } from './theme/shared/service/tablero-control/tipos-infraestructura.service'
-import { WidgetsService } from './theme/shared/service/tablero-control/widgets.service'
-import { LayoutService } from './theme/shared/service/layout.service'
-import { PtlpestanasService } from './theme/shared/service/ptlpestanas.service'
-import { PtltiposWidgetService } from './theme/shared/service/ptltipos-widget.service'
-import { esRutaPublica } from './plataforma/websites/porttos/nucleo'
-import { esRutaEmbebida } from './plataforma/embebido/nucleo'
+import { PTLWidgetsMaestroService } from './theme/shared/service/ptlwidgets-maestro.service';
+import { PtlWidgetsRolesService } from './theme/shared/service/ptlwidgets-roles.service';
+import { CronMonitorService } from './theme/shared/service/tablero-control/cron-monitor.service';
+import { FarosService } from './theme/shared/service/tablero-control/faros.service';
+import { MuellesService } from './theme/shared/service/tablero-control/muelles.service';
+import { PuertosService } from './theme/shared/service/tablero-control/puertos.service';
+import { TerminalesService } from './theme/shared/service/tablero-control/terminales.service';
+import { TiposTipoInfraestructuraService } from './theme/shared/service/tablero-control/tipos-infraestructura.service';
+import { WidgetsService } from './theme/shared/service/tablero-control/widgets.service';
+import { LayoutService } from './theme/shared/service/layout.service';
+import { PtlpestanasService } from './theme/shared/service/ptlpestanas.service';
+import { PtltiposWidgetService } from './theme/shared/service/ptltipos-widget.service';
+import { esRutaPublica } from './plataforma/websites/porttos/nucleo';
+import { esRutaEmbebida } from './plataforma/embebido/nucleo';
 
 @Component({
-    selector: 'app-root',
-  standalone: true, // OT-023 fase 5 (regla 21)
+  selector: 'app-root', // OT-023 fase 5 (regla 21)
   imports: [RouterOutlet, SpinnerComponent],
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    // Regla 22 (OT-025): traducir() de los .ts usa el mismo TranslateService de las plantillas
-    private readonly _traduccion = (() => { const t = inject(TranslateService); registrarTraductor((k, p) => t.instant(k, p)); return t; })()
-    usuario: string = ''
+  // Regla 22 (OT-025): traducir() de los .ts usa el mismo TranslateService de las plantillas
+  private readonly _traduccion = (() => {
+    const t = inject(TranslateService);
+    registrarTraductor((k, p) => t.instant(k, p));
+    return t;
+  })();
+  usuario: string = '';
 
-    constructor(
-        private router: Router,
-        private _themeService: ThemeService,
-        private _permisosService: PtlPermisosService,
-        private _authenticationService: AuthenticationService,
-        private _localStorageService: LocalStorageService,
-        private _actividadesService: PtlActividadesService,
-        private _actividadesRolesService: PtlactividadesRolesService,
-        private _aplicacionesService: PtlAplicacionesService,
-        private _modulosService: PtlmodulosApService,
-        private _suitesService: PtlSuitesAPService,
-        private _usuariosRolesService: PtlusuariosRolesApService,
-        private _usuariosService: PTLUsuariosService,
-        private _usuariosSCService: PtlusuariosScService,
-        private _usuariosEmpresasService: PtlusuariosEmpresasScService,
-        private _bibliotecasService: PtlBibliotecasService,
-        private _galeriasService: PtlGaleriasService,
-        private _socketManager: SocketManagerService,
-        private _formatosGaleriaService: PtlformatosGaleriaService,
-        private _tiposGaleriaService: PtlTiposGaleriaService,
-        private _empresasSCService: PtlEmpresasScService,
-        private _idiomasService: LanguageService,
-        private _suscriptoresService: PTLSuscriptoresService,
-        private _slidersService: PtlSlidersInicioService,
-        private _rolesAPService: PTLRolesAPService,
-        private _paquetesService: PTLPaquetesService,
-        private _paquetesSCService: PTLPaquetesSCService,
-        private _historialFacturacionService: PTLHistorialFacturacionService,
-        private _tiposPaqueteService: PTLTiposPaqueteService,
-        private _tiposPagoService: PTLTiposPagoService,
-        private _tiposRolesService: PTLTiposRolesService,
-        private _tiposItemsService: PtltiposItemsService,
-        private _widgetsService: PTLWidgetsMaestroService,
-        private _widgetsRolesService: PtlWidgetsRolesService,
-        private _pestanasService: PTLModulosPaqueteService,
-        private _tiposWidgetService: PtltiposWidgetService,
-        private _modulosPaqueteService: PTLModulosPaqueteService,
-        private _coloresSettingsService: PtlColoresSettingsService,
+  constructor(
+    private router: Router,
+    private _themeService: ThemeService,
+    private _permisosService: PtlPermisosService,
+    private _authenticationService: AuthenticationService,
+    private _localStorageService: LocalStorageService,
+    private _actividadesService: PtlActividadesService,
+    private _actividadesRolesService: PtlactividadesRolesService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _modulosService: PtlmodulosApService,
+    private _suitesService: PtlSuitesAPService,
+    private _usuariosRolesService: PtlusuariosRolesApService,
+    private _usuariosService: PTLUsuariosService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _usuariosEmpresasService: PtlusuariosEmpresasScService,
+    private _bibliotecasService: PtlBibliotecasService,
+    private _galeriasService: PtlGaleriasService,
+    private _socketManager: SocketManagerService,
+    private _formatosGaleriaService: PtlformatosGaleriaService,
+    private _tiposGaleriaService: PtlTiposGaleriaService,
+    private _empresasSCService: PtlEmpresasScService,
+    private _idiomasService: LanguageService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _slidersService: PtlSlidersInicioService,
+    private _rolesAPService: PTLRolesAPService,
+    private _paquetesService: PTLPaquetesService,
+    private _paquetesSCService: PTLPaquetesSCService,
+    private _historialFacturacionService: PTLHistorialFacturacionService,
+    private _tiposPaqueteService: PTLTiposPaqueteService,
+    private _tiposPagoService: PTLTiposPagoService,
+    private _tiposRolesService: PTLTiposRolesService,
+    private _tiposItemsService: PtltiposItemsService,
+    private _widgetsService: PTLWidgetsMaestroService,
+    private _widgetsRolesService: PtlWidgetsRolesService,
+    private _pestanasService: PTLModulosPaqueteService,
+    private _tiposWidgetService: PtltiposWidgetService,
+    private _modulosPaqueteService: PTLModulosPaqueteService,
+    private _coloresSettingsService: PtlColoresSettingsService,
 
-        private _puertosService: PuertosService,
-        private _terminalesService: TerminalesService,
-        private _muellesService: MuellesService,
-        //private _rolesAPService: PTLRolesAPService,
-        // private _widgetsService: WidgetsService,
-        private _farosService: FarosService,
-        private _tiposInfraestructuraService: TiposTipoInfraestructuraService,
-        private _cronMonitorService: CronMonitorService,
-        private _layoutService: LayoutService
+    private _puertosService: PuertosService,
+    private _terminalesService: TerminalesService,
+    private _muellesService: MuellesService,
+    //private _rolesAPService: PTLRolesAPService,
+    // private _widgetsService: WidgetsService,
+    private _farosService: FarosService,
+    private _tiposInfraestructuraService: TiposTipoInfraestructuraService,
+    private _cronMonitorService: CronMonitorService,
+    private _layoutService: LayoutService
+  ) {}
 
-    ) { }
-
-    ngOnInit() {
-        this.router.events.subscribe(evt => {
-            if (evt instanceof NavigationEnd) {
-                window.scrollTo(0, 0)
-            }
-        })
-        const themeSettings = this._localStorageService.getThemeSettings()
-        if (themeSettings) {
-            this._themeService.setDarkTheme(themeSettings.isDarkTheme)
-        }
-        const token = this._localStorageService.getTokenLocalStorage()
-        // En una ruta pública un token vencido cuenta como sin sesión: cargar datos protegidos daría 401 y el interceptor sacaría al login
-        // /embebido (OT-014) tampoco va al login: espera la sesión de la app
-        const publica = esRutaPublica(window.location.pathname) || esRutaEmbebida(window.location.pathname)
-        if (token && !(publica && this._authenticationService.isTokenExpired(token))) {
-            console.log('AppComponent: Token detectado en carga, iniciando carga de datos...')
-            this.loadProtectedData()
-        } else if (!publica) {
-            // Sin sesión al login, salvo en las rutas públicas (portal porttos.co en /websites; la raíz la decide inicioPorDominioGuard)
-            this.router.navigate(['autenticacion/login'])
-        }
-        this._authenticationService.isLoggedIn$.subscribe(isLoggedIn => {
-            if (isLoggedIn) {
-                console.log('AppComponent: Notificación de Login exitoso recibida, iniciando carga de datos...')
-                this.loadProtectedData()
-            }
-        })
+  ngOnInit() {
+    this.router.events.subscribe((evt) => {
+      if (evt instanceof NavigationEnd) {
+        window.scrollTo(0, 0);
+      }
+    });
+    const themeSettings = this._localStorageService.getThemeSettings();
+    if (themeSettings) {
+      this._themeService.setDarkTheme(themeSettings.isDarkTheme);
     }
-
-    private loadProtectedData(): void {
-        this.usuario = this._localStorageService.getUsuarioLocalStorage() || 'SISTEMA_DEFAULT'
-
-        this._actividadesService.cargarRegistros().subscribe(
-            () => console.log('** Actividades cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar roles:', err)
-        )
-        this._actividadesRolesService.cargarRegistros().subscribe(
-            () => console.log('** Actividades Roles cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar roles:', err)
-        )
-        this._aplicacionesService.cargarAplicaciones().subscribe(
-            () => console.log('** Aplicaciones cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar aplicaciones:', err)
-        )
-        this._modulosService.cargarRegistros().subscribe(
-            () => console.log('** Modulos cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar modulos:', err)
-        )
-        this._suitesService.cargarRegistros().subscribe(
-            () => console.log('** Suites cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar suites:', err)
-        )
-        this._rolesAPService.cargarRegistros().subscribe(
-            () => console.log('** Roles cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar roles:', err)
-        )
-        this._usuariosService.cargarRegistros().subscribe(
-            () => console.log('** Usuarios cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar usuarios:', err)
-        )
-        this._usuariosRolesService.cargarRegistros().subscribe(
-            () => console.log('** Usuarios Roles cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar roles:', err)
-        )
-        this._suscriptoresService.getRegistros().subscribe(
-            () => console.log('** Suscriptores cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar Suscriptores:', err)
-        )
-        this._empresasSCService.cargarRegistros().subscribe(
-            () => console.log('** EmpresasSC cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar EmpresasSC:', err)
-        )
-        this._usuariosSCService.cargarRegistros().subscribe(
-            () => console.log('** UsuariosSC cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar UsuariosSC:', err)
-        )
-        this._bibliotecasService.cargarBibliotecas().subscribe(
-            () => console.log('** bibliotecas cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar bibliotecas:', err)
-        )
-        // this._galeriasService.cargarGaleria().subscribe(
-        //     () => console.log('** galerias cargadas y guardadas en el servicio'),
-        //     err => console.error('Error al cargar galerias:', err)
-        // )
-        this._formatosGaleriaService.cargarFormatosGaleria().subscribe(
-            () => console.log('** formatosGaleria cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar formatosGaleria:', err)
-        )
-        this._tiposGaleriaService.cargarTiposGaleria().subscribe(
-            () => console.log('** tiposGaleria cargadas y guardadas en el servicio'),
-            err => console.error('Error al cargar tiposGaleria:', err)
-        )
-        this._idiomasService.cargarRegistros().subscribe(
-            () => console.log('** idiomas cargados y guardados en el servicio'),
-            err => console.error('Error al cargar idiomas:', err)
-        )
-        this._slidersService.cargarSliders().subscribe(
-            () => console.log('** sliders cargados y guardados en el servicio'),
-            err => console.error('Error al cargar sliders:', err)
-        )
-        this._paquetesService.cargarRegistros().subscribe(
-            () => console.log('** paquetes cargados y guardados en el servicio'),
-            err => console.error('Error al cargar paquetes:', err)
-        )
-        this._paquetesSCService.cargarRegistros().subscribe(
-            () => console.log('** paquetesSC cargados y guardados en el servicio'),
-            err => console.error('Error al cargar paquetesSC:', err)
-        )
-        this._historialFacturacionService.cargarRegistros().subscribe(
-            () => console.log('** historiales facturacion cargados y guardados en el servicio'),
-            err => console.error('Error al cargar historiales facturacion:', err)
-        )
-        this._tiposPaqueteService.cargarRegistros().subscribe(
-            () => console.log('** tipos paquetes cargados y guardados en el servicio'),
-            err => console.error('Error al cargar tipos paquetes:', err)
-        )
-        this._tiposPagoService.cargarRegistros().subscribe(
-            () => console.log('** tipos pagos cargados y guardados en el servicio'),
-            err => console.error('Error al cargar tipos pagos:', err)
-        )
-        this._modulosPaqueteService.cargarRegistros().subscribe(
-            () => console.log('** modulos paquete cargados y guardados en el servicio'),
-            err => console.error('Error al cargar modulos paquete:', err)
-        )
-        this._tiposRolesService.cargarRegistros().subscribe(
-            () => console.log('** tipos de roles cargados y guardados en el servicio'),
-            err => console.error('Error al cargar tipos de roles:', err)
-        )
-        this._tiposItemsService.cargarRegistros().subscribe(
-            () => console.log('** tipos de items cargados y guardados en el servicio'),
-            err => console.error('Error al cargar tipos de items:', err)
-        )
-        this._usuariosEmpresasService.cargarRegistros().subscribe(
-            () => console.log('** Usuarios Empresas SC cargados y guardados en el servicio'),
-            err => console.error('Error al cargar Usuarios Empresas SC:', err)
-        )
-        this._widgetsService.cargarRegistros().subscribe(
-            () => console.log('** Widgets cargados y guardados en el servicio'),
-            err => console.error('Error al cargar Widgets:', err)
-        )
-        this._widgetsRolesService.cargarRegistros().subscribe(
-            () => console.log('** Widgets Roles cargados y guardados en el servicio'),
-            err => console.error('Error al cargar Widgets Roles', err)
-        )
-        this._pestanasService.cargarRegistros().subscribe(
-            () => console.log('** Pestanas cargados y guardados en el servicio'),
-            err => console.error('Error al cargarPestanas', err)
-        )
-        this._tiposWidgetService.cargarRegistros().subscribe(
-            () => console.log('** tipos de Widget cargados y guardados en el servicio'),
-            err => console.error('Error al cargar tipos de Widget', err)
-        )
-        this._layoutService.cargarRegistros().subscribe(
-            () => console.log('** Layouts cargados y guardados en el servicio'),
-            err => console.error('Error al cargar Layouts', err)
-        )
-        this._coloresSettingsService.cargarColoresSettings().subscribe(
-            () => console.log('** coloresSettings cargados y guardados en el servicio'),
-            err => console.error('Error al cargar coloresSettings', err)
-        )
-        //================================
-        // PORTTOS
-        //================================
-        this._puertosService.cargarPuertos().subscribe(
-            () => console.log('** puertos cargados y guardados en el servicio'),
-            err => console.error('Error al cargar puertos:', err)
-        )
-        this._terminalesService.cargarTerminals().subscribe(
-            () => console.log('** terminales cargados y guardados en el servicio'),
-            err => console.error('Error al cargar terminales:', err)
-        )
-        this._muellesService.cargarMuelles().subscribe(
-            () => console.log('** muelles cargados y guardados en el servicio'),
-            err => console.error('Error al cargar muelles:', err)
-        )
-        this._farosService.getAllFaros().subscribe(
-            () => console.log('** faros cargados y guardados en el servicio'),
-            err => console.error('Error al cargar faros:', err)
-        )
-        this._tiposInfraestructuraService.cargarTipoInfraestructuras().subscribe(
-            () => console.log('** tipos infraestructura cargados y guardados en el servicio'),
-            err => console.error('Error al cargar tipos infraestructura:', err)
-        )
-        this._cronMonitorService.obtenerHistorial().subscribe(
-            () => console.log('** ETL Cron Manager cargados y guardados en el servicio'),
-            err => console.error('Error al cargar Cron Manager:', err)
-        )
+    const token = this._localStorageService.getTokenLocalStorage();
+    // En una ruta pública un token vencido cuenta como sin sesión: cargar datos protegidos daría 401 y el interceptor sacaría al login
+    // /embebido (OT-014) tampoco va al login: espera la sesión de la app
+    const publica = esRutaPublica(window.location.pathname) || esRutaEmbebida(window.location.pathname);
+    if (token && !(publica && this._authenticationService.isTokenExpired(token))) {
+      console.log('AppComponent: Token detectado en carga, iniciando carga de datos...');
+      this.loadProtectedData();
+    } else if (!publica) {
+      // Sin sesión al login, salvo en las rutas públicas (portal porttos.co en /websites; la raíz la decide inicioPorDominioGuard)
+      this.router.navigate(['autenticacion/login']);
     }
+    this._authenticationService.isLoggedIn$.subscribe((isLoggedIn) => {
+      if (isLoggedIn) {
+        console.log('AppComponent: Notificación de Login exitoso recibida, iniciando carga de datos...');
+        this.loadProtectedData();
+      }
+    });
+  }
+
+  private loadProtectedData(): void {
+    this.usuario = this._localStorageService.getUsuarioLocalStorage() || 'SISTEMA_DEFAULT';
+
+    this._actividadesService.cargarRegistros().subscribe(
+      () => console.log('** Actividades cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar roles:', err)
+    );
+    this._actividadesRolesService.cargarRegistros().subscribe(
+      () => console.log('** Actividades Roles cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar roles:', err)
+    );
+    this._aplicacionesService.cargarAplicaciones().subscribe(
+      () => console.log('** Aplicaciones cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar aplicaciones:', err)
+    );
+    this._modulosService.cargarRegistros().subscribe(
+      () => console.log('** Modulos cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar modulos:', err)
+    );
+    this._suitesService.cargarRegistros().subscribe(
+      () => console.log('** Suites cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar suites:', err)
+    );
+    this._rolesAPService.cargarRegistros().subscribe(
+      () => console.log('** Roles cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar roles:', err)
+    );
+    this._usuariosService.cargarRegistros().subscribe(
+      () => console.log('** Usuarios cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar usuarios:', err)
+    );
+    this._usuariosRolesService.cargarRegistros().subscribe(
+      () => console.log('** Usuarios Roles cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar roles:', err)
+    );
+    this._suscriptoresService.getRegistros().subscribe(
+      () => console.log('** Suscriptores cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar Suscriptores:', err)
+    );
+    this._empresasSCService.cargarRegistros().subscribe(
+      () => console.log('** EmpresasSC cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar EmpresasSC:', err)
+    );
+    this._usuariosSCService.cargarRegistros().subscribe(
+      () => console.log('** UsuariosSC cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar UsuariosSC:', err)
+    );
+    this._bibliotecasService.cargarBibliotecas().subscribe(
+      () => console.log('** bibliotecas cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar bibliotecas:', err)
+    );
+    // this._galeriasService.cargarGaleria().subscribe(
+    //     () => console.log('** galerias cargadas y guardadas en el servicio'),
+    //     err => console.error('Error al cargar galerias:', err)
+    // )
+    this._formatosGaleriaService.cargarFormatosGaleria().subscribe(
+      () => console.log('** formatosGaleria cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar formatosGaleria:', err)
+    );
+    this._tiposGaleriaService.cargarTiposGaleria().subscribe(
+      () => console.log('** tiposGaleria cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar tiposGaleria:', err)
+    );
+    this._idiomasService.cargarRegistros().subscribe(
+      () => console.log('** idiomas cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar idiomas:', err)
+    );
+    this._slidersService.cargarSliders().subscribe(
+      () => console.log('** sliders cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar sliders:', err)
+    );
+    this._paquetesService.cargarRegistros().subscribe(
+      () => console.log('** paquetes cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar paquetes:', err)
+    );
+    this._paquetesSCService.cargarRegistros().subscribe(
+      () => console.log('** paquetesSC cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar paquetesSC:', err)
+    );
+    this._historialFacturacionService.cargarRegistros().subscribe(
+      () => console.log('** historiales facturacion cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar historiales facturacion:', err)
+    );
+    this._tiposPaqueteService.cargarRegistros().subscribe(
+      () => console.log('** tipos paquetes cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar tipos paquetes:', err)
+    );
+    this._tiposPagoService.cargarRegistros().subscribe(
+      () => console.log('** tipos pagos cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar tipos pagos:', err)
+    );
+    this._modulosPaqueteService.cargarRegistros().subscribe(
+      () => console.log('** modulos paquete cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar modulos paquete:', err)
+    );
+    this._tiposRolesService.cargarRegistros().subscribe(
+      () => console.log('** tipos de roles cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar tipos de roles:', err)
+    );
+    this._tiposItemsService.cargarRegistros().subscribe(
+      () => console.log('** tipos de items cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar tipos de items:', err)
+    );
+    this._usuariosEmpresasService.cargarRegistros().subscribe(
+      () => console.log('** Usuarios Empresas SC cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar Usuarios Empresas SC:', err)
+    );
+    this._widgetsService.cargarRegistros().subscribe(
+      () => console.log('** Widgets cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar Widgets:', err)
+    );
+    this._widgetsRolesService.cargarRegistros().subscribe(
+      () => console.log('** Widgets Roles cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar Widgets Roles', err)
+    );
+    this._pestanasService.cargarRegistros().subscribe(
+      () => console.log('** Pestanas cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargarPestanas', err)
+    );
+    this._tiposWidgetService.cargarRegistros().subscribe(
+      () => console.log('** tipos de Widget cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar tipos de Widget', err)
+    );
+    this._layoutService.cargarRegistros().subscribe(
+      () => console.log('** Layouts cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar Layouts', err)
+    );
+    this._coloresSettingsService.cargarColoresSettings().subscribe(
+      () => console.log('** coloresSettings cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar coloresSettings', err)
+    );
+    //================================
+    // PORTTOS
+    //================================
+    this._puertosService.cargarPuertos().subscribe(
+      () => console.log('** puertos cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar puertos:', err)
+    );
+    this._terminalesService.cargarTerminals().subscribe(
+      () => console.log('** terminales cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar terminales:', err)
+    );
+    this._muellesService.cargarMuelles().subscribe(
+      () => console.log('** muelles cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar muelles:', err)
+    );
+    this._farosService.getAllFaros().subscribe(
+      () => console.log('** faros cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar faros:', err)
+    );
+    this._tiposInfraestructuraService.cargarTipoInfraestructuras().subscribe(
+      () => console.log('** tipos infraestructura cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar tipos infraestructura:', err)
+    );
+    this._cronMonitorService.obtenerHistorial().subscribe(
+      () => console.log('** ETL Cron Manager cargados y guardados en el servicio'),
+      (err) => console.error('Error al cargar Cron Manager:', err)
+    );
+  }
 }

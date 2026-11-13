@@ -8,100 +8,111 @@ import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboa
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
-    selector: 'app-wdg-facturacion-area',
-    standalone: true,
-    imports: [TranslateModule, CommonModule, NgChartsModule, WidgetShellComponent],
-    templateUrl: './wdg-facturacion-area.component.html',
-    styleUrl: './wdg-facturacion-area.component.scss'
+  selector: 'app-wdg-facturacion-area',
+  imports: [TranslateModule, CommonModule, NgChartsModule, WidgetShellComponent],
+  templateUrl: './wdg-facturacion-area.component.html',
+  styleUrl: './wdg-facturacion-area.component.scss'
 })
 export class WdgFacturacionAreaComponent implements OnInit {
-    @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-    // 🟢 NUEVO ESTÁNDAR: Recibimos la configuración completa del selector
-    @Input() widgetConfig: any;
-    @Input() isEnfoque: boolean = false;
+  // 🟢 NUEVO ESTÁNDAR: Recibimos la configuración completa del selector
+  @Input() widgetConfig: any;
+  @Input() isEnfoque: boolean = false;
 
-    public lineChartType: 'line' = 'line';
+  public lineChartType: 'line' = 'line';
 
-    public lineChartData: ChartConfiguration<'line'>['data'] = {
-        labels: [],
-        datasets: [
-            {
-                label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.ANNUAL_LICENSES'),
-                data: [],
-                borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.3)',
-                fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
-            },
-            {
-                label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.SEMIANNUAL_QUARTERLY_RENEWALS'),
-                data: [],
-                borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.3)',
-                fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
-            },
-            {
-                label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.MONTHLY_SUBSCRIPTIONS'),
-                data: [],
-                borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.3)',
-                fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6
-            }
-        ]
-    };
+  public lineChartData: ChartConfiguration<'line'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.ANNUAL_LICENSES'),
+        data: [],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.3)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 6
+      },
+      {
+        label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.SEMIANNUAL_QUARTERLY_RENEWALS'),
+        data: [],
+        borderColor: '#8b5cf6',
+        backgroundColor: 'rgba(139, 92, 246, 0.3)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 6
+      },
+      {
+        label: traducir('STARTER.HOME.WIDGETS.WDG_FACTURACION_AREA.MONTHLY_SUBSCRIPTIONS'),
+        data: [],
+        borderColor: '#ec4899',
+        backgroundColor: 'rgba(236, 72, 153, 0.3)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 6
+      }
+    ]
+  };
 
-    public lineChartOptions: ChartConfiguration<'line'>['options'] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        scales: {
-            x: {
-                grid: { display: false },
-                ticks: { color: '#94a3b8' }
-            },
-            y: {
-                stacked: true,
-                border: { display: false },
-                grid: { color: 'rgba(255,255,255,0.05)' },
-                ticks: {
-                    color: '#94a3b8',
-                    callback: (value) => `$${value}k`
-                }
-            }
-        },
-        plugins: {
-            legend: { position: 'top', align: 'end', labels: { color: '#e2e8f0', usePointStyle: true, boxWidth: 8 } },
-            tooltip: {
-                callbacks: {
-                    label: (context) => ` ${context.dataset.label}: $${context.parsed.y}k`
-                }
-            }
+  public lineChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: '#94a3b8' }
+      },
+      y: {
+        stacked: true,
+        border: { display: false },
+        grid: { color: 'rgba(255,255,255,0.05)' },
+        ticks: {
+          color: '#94a3b8',
+          callback: (value) => `$${value}k`
         }
-    };
-
-    constructor(private _dashboardService: DashboardPlataformaService) { }
-
-    ngOnInit(): void {
-        this.cargarDatos();
-    }
-
-    cargarDatos(): void {
-        this._dashboardService.getChartFacturacionMRR().subscribe({
-            next: (data: any) => {
-                if (data) {
-                    this.lineChartData.labels = data.labels;
-                    this.lineChartData.datasets[0].data = data.anuales;
-                    this.lineChartData.datasets[1].data = data.intermedios;
-                    this.lineChartData.datasets[2].data = data.mensuales;
-                    this.chart?.update();
-                }
-            },
-            error: (err: any) => console.error('Error al cargar gráfica de facturación MRR:', err)
-        });
-    }
-
-    // 🟢 NUEVO: Función para comunicar el enfoque
-    maximizarDesdeShell() {
-        // Asegúrate de que tu servicio tenga este método o cámbialo por el correspondiente
-        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
-            (this._dashboardService as any).abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PLAT_FACTURACION_AREA', this.lineChartData);
+      }
+    },
+    plugins: {
+      legend: { position: 'top', align: 'end', labels: { color: '#e2e8f0', usePointStyle: true, boxWidth: 8 } },
+      tooltip: {
+        callbacks: {
+          label: (context) => ` ${context.dataset.label}: $${context.parsed.y}k`
         }
+      }
     }
+  };
+
+  constructor(private _dashboardService: DashboardPlataformaService) {}
+
+  ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  cargarDatos(): void {
+    this._dashboardService.getChartFacturacionMRR().subscribe({
+      next: (data: any) => {
+        if (data) {
+          this.lineChartData.labels = data.labels;
+          this.lineChartData.datasets[0].data = data.anuales;
+          this.lineChartData.datasets[1].data = data.intermedios;
+          this.lineChartData.datasets[2].data = data.mensuales;
+          this.chart?.update();
+        }
+      },
+      error: (err: any) => console.error('Error al cargar gráfica de facturación MRR:', err)
+    });
+  }
+
+  // 🟢 NUEVO: Función para comunicar el enfoque
+  maximizarDesdeShell() {
+    // Asegúrate de que tu servicio tenga este método o cámbialo por el correspondiente
+    if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+      (this._dashboardService as any).abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PLAT_FACTURACION_AREA', this.lineChartData);
+    }
+  }
 }

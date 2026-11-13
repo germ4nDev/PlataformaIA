@@ -13,16 +13,19 @@ import { IconoComponent } from '../icono/icono.component';
 
 @Component({
   selector: 'pp-planes',
-  standalone: true,
   imports: [TranslateModule, RouterLink, IconoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './planes.component.html',
-  styleUrl: './planes.component.scss',
+  styleUrl: './planes.component.scss'
 })
 export class PlanesComponent {
   @Input({ required: true }) datos!: PlanesPortal;
   periodo: Periodo = 'mensual';
   readonly contacto = `${RUTA_PORTAL}/contacto`;
-  precio(p: PlanPortal) { return precioDePlan(p, this.periodo); }
-  nombre(codigo: string): string { return this.datos.planes.find((p) => p.codigo === codigo)?.nombre || codigo; }
+  precio(p: PlanPortal) {
+    return precioDePlan(p, this.periodo);
+  }
+  nombre(codigo: string): string {
+    return this.datos.planes.find((p) => p.codigo === codigo)?.nombre || codigo;
+  }
 }

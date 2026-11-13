@@ -6,7 +6,6 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @Component({
   selector: 'app-chat-msg',
-  standalone: true,
   imports: [TranslateModule, CommonModule, FormsModule, NgScrollbarModule],
   templateUrl: './chat-msg.component.html',
   styleUrls: ['./chat-msg.component.scss']
@@ -23,8 +22,7 @@ export class ChatMsgComponent {
   newReplay = '';
 
   constructor(private rend: Renderer2) {
-        console.log('abriendo navbar-chat-msg');
-
+    console.log('abriendo navbar-chat-msg');
   }
 
   ngOnInit() {

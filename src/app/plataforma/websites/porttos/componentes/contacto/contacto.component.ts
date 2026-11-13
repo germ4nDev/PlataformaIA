@@ -10,17 +10,24 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ConfigPortal, MOTIVOS, MensajePortal, PlanPortal, mensajeDeError, motivosDe, revisarFormulario } from 'src/app/plataforma/websites/porttos/nucleo';
+import {
+  ConfigPortal,
+  MOTIVOS,
+  MensajePortal,
+  PlanPortal,
+  mensajeDeError,
+  motivosDe,
+  revisarFormulario
+} from 'src/app/plataforma/websites/porttos/nucleo';
 import { PortalPorttosService } from 'src/app/theme/shared/service/portal-porttos.service';
 import { IconoComponent } from '../icono/icono.component';
 
 @Component({
   selector: 'pp-contacto',
-  standalone: true,
   imports: [TranslateModule, FormsModule, IconoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './contacto.component.html',
-  styleUrl: './contacto.component.scss',
+  styleUrl: './contacto.component.scss'
 })
 export class ContactoComponent implements OnInit {
   @Input() config: ConfigPortal | null = null;
@@ -28,7 +35,9 @@ export class ContactoComponent implements OnInit {
   private readonly api = inject(PortalPorttosService);
   private readonly ruta = inject(ActivatedRoute);
   private readonly cd = inject(ChangeDetectorRef);
-  get motivos() { return motivosDe(this.config); }   // con los planes apagados, «Solicitar acceso» (CC-106)
+  get motivos() {
+    return motivosDe(this.config);
+  } // con los planes apagados, «Solicitar acceso» (CC-106)
   m: MensajePortal = this.vacio();
   errores: Record<string, string> = {};
   error: string | null = null;
@@ -44,7 +53,18 @@ export class ContactoComponent implements OnInit {
   }
 
   private vacio(): MensajePortal {
-    return { motivo: '', codigoPlan: '', nombre: '', empresa: '', correo: '', telefono: '', puerto: '', mensaje: '', aceptaDatos: false, sitioWeb: '' };
+    return {
+      motivo: '',
+      codigoPlan: '',
+      nombre: '',
+      empresa: '',
+      correo: '',
+      telefono: '',
+      puerto: '',
+      mensaje: '',
+      aceptaDatos: false,
+      sitioWeb: ''
+    };
   }
 
   enviar(): void {
@@ -56,8 +76,16 @@ export class ContactoComponent implements OnInit {
     }
     this.enviando = true;
     this.api.enviarMensaje({ ...this.m, aceptaDatos: true }).subscribe({
-      next: () => { this.enviando = false; this.enviado = true; this.cd.markForCheck(); },
-      error: (e) => { this.enviando = false; this.error = mensajeDeError(e); this.cd.markForCheck(); },
+      next: () => {
+        this.enviando = false;
+        this.enviado = true;
+        this.cd.markForCheck();
+      },
+      error: (e) => {
+        this.enviando = false;
+        this.error = mensajeDeError(e);
+        this.cd.markForCheck();
+      }
     });
   }
 

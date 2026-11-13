@@ -333,246 +333,251 @@ import { PTLModuloPQModel, PTLModuloPQModelAdm } from 'src/app/theme/shared/_hel
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 
 import {
-    PtlAplicacionesService,
-    PtlSuitesAPService,
-    PtlmodulosApService,
-    PtllogActividadesService,
-    SwalAlertService,
-    LocalStorageService,
-    NavigationService
+  PtlAplicacionesService,
+  PtlSuitesAPService,
+  PtlmodulosApService,
+  PtllogActividadesService,
+  SwalAlertService,
+  LocalStorageService,
+  NavigationService
 } from 'src/app/theme/shared/service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { PTLModulosPaqueteService } from 'src/app/theme/shared/service/ptlmodulos-paquete.service';
 
 @Component({
-    selector: 'app-gestion-modulopq',
-    standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, ReactiveFormsModule],
-    templateUrl: './gestion-modulopq.component.html',
-    styleUrl: './gestion-modulopq.component.scss'
+  selector: 'app-gestion-modulopq',
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, ReactiveFormsModule],
+  templateUrl: './gestion-modulopq.component.html',
+  styleUrl: './gestion-modulopq.component.scss'
 })
 export class GestionModulopqComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    // 🟢 1. Formulario Reactivo
-    formularioRegistro!: FormGroup;
+  // 🟢 1. Formulario Reactivo
+  formularioRegistro!: FormGroup;
 
-    menuItems$!: Observable<NavigationItem[]>;
-    gradientConfig: any;
-    navCollapsed: boolean = false;
-    windowWidth: number = 0;
+  menuItems$!: Observable<NavigationItem[]>;
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  windowWidth: number = 0;
 
-    // 🟢 2. Controladores de Estado UX
-    isSubmit: boolean = false;
-    isSaving: boolean = false;
+  // 🟢 2. Controladores de Estado UX
+  isSubmit: boolean = false;
+  isSaving: boolean = false;
 
-    aplicaciones: PTLAplicacionModel[] = [];
-    suites: PTLSuiteAPModel[] = [];
-    suitesFiltradas: PTLSuiteAPModel[] = [];
-    modulos: PTLModuloAP[] = [];
-    modulosPadre: PTLModuloAP[] = [];
-    modulosPQ: PTLModuloPQModel[] = [];
+  aplicaciones: PTLAplicacionModel[] = [];
+  suites: PTLSuiteAPModel[] = [];
+  suitesFiltradas: PTLSuiteAPModel[] = [];
+  modulos: PTLModuloAP[] = [];
+  modulosPadre: PTLModuloAP[] = [];
+  modulosPQ: PTLModuloPQModel[] = [];
 
-    codigoPaquete: string = '';
-    suscriptor: string = '';
-    lockScreenSubscription: Subscription | undefined;
+  codigoPaquete: string = '';
+  suscriptor: string = '';
+  lockScreenSubscription: Subscription | undefined;
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private fb: FormBuilder,
-        private _aplicacionesService: PtlAplicacionesService,
-        private _suitesService: PtlSuitesAPService,
-        private _registrosService: PTLModulosPaqueteService,
-        private _modulosService: PtlmodulosApService,
-        private _layoutInitializer: LayoutInitializerService,
-        private _logActividadesService: PtllogActividadesService,
-        private _swalAlertService: SwalAlertService,
-        private _localStorageService: LocalStorageService,
-        private _navigationService: NavigationService
-    ) {
-        GradientConfig.header_fixed_layout = true;
-        this.gradientConfig = GradientConfig;
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private fb: FormBuilder,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService,
+    private _registrosService: PTLModulosPaqueteService,
+    private _modulosService: PtlmodulosApService,
+    private _layoutInitializer: LayoutInitializerService,
+    private _logActividadesService: PtllogActividadesService,
+    private _swalAlertService: SwalAlertService,
+    private _localStorageService: LocalStorageService,
+    private _navigationService: NavigationService
+  ) {
+    GradientConfig.header_fixed_layout = true;
+    this.gradientConfig = GradientConfig;
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
 
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-        this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || '';
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || '';
 
-        this.inicializarFormulario();
+    this.inicializarFormulario();
+  }
+
+  get todosSeleccionados(): boolean {
+    return this.modulosPadre.length > 0 && this.modulosPadre.every((modu) => modu.checked);
+  }
+
+  get f() {
+    return this.formularioRegistro.controls;
+  }
+
+  inicializarFormulario() {
+    this.formularioRegistro = this.fb.group({
+      codigoAplicacion: ['', Validators.required],
+      codigoSuite: ['', Validators.required]
+    });
+  }
+
+  ngOnInit() {
+    this._layoutInitializer.applyLayout();
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: () => {
+        this._localStorageService.setFormRegistro(this.formularioRegistro.value);
+      }
+    });
+
+    // Carga de Data Maestra
+    this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
+    this.suites = this._suitesService.getSuitesActuales();
+    this.suitesFiltradas = this.suites;
+    this.modulos = this._modulosService.getModulosActuales();
+    this.modulosPQ = this._registrosService.getModulosPQActuales();
+
+    const savedForm = this._localStorageService.getFormRegistro();
+    if (savedForm) {
+      this.formularioRegistro.patchValue(savedForm);
+      this._localStorageService.removeFormRegistro();
+
+      // Si venía de un bloqueo, reactivamos las listas
+      if (savedForm.codigoAplicacion) this.filtrarSuites(savedForm.codigoAplicacion);
+      if (savedForm.codigoSuite) this.consultarModulos(savedForm.codigoSuite);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.lockScreenSubscription) {
+      this.lockScreenSubscription.unsubscribe();
+    }
+  }
+
+  // 🟢 Eventos de los Selectores (Formularios Reactivos)
+  onAplicacionChangeClick(event: any) {
+    const codigoApp = event.target.value;
+    this.filtrarSuites(codigoApp);
+
+    // Resetea la suite y modulos al cambiar de aplicación
+    this.formularioRegistro.get('codigoSuite')?.setValue('');
+    this.modulosPadre = [];
+  }
+
+  filtrarSuites(codigoApp: string) {
+    this.suitesFiltradas = this.suites.filter((x) => x.codigoAplicacion === codigoApp);
+  }
+
+  onSuiteChangeClick(event: any) {
+    const codigoSuite = event.target.value;
+    this.consultarModulos(codigoSuite);
+  }
+
+  consultarModulos(codSuite?: string) {
+    if (codSuite) {
+      // Filtramos los módulos padre de esta suite
+      const modulosPadreSuite = this.modulos.filter((x) => x.codigoSuite === codSuite && x.hijos === true);
+      const modulosPQSuite = this.modulosPQ.filter((x) => x.codigoSuite === codSuite && x.codigoPaquete === this.codigoPaquete);
+
+      // Marcamos los que ya están asignados al paquete
+      modulosPadreSuite.forEach((modulo: any) => {
+        const existe = modulosPQSuite.find((sel: any) => sel.codigoModulo === modulo.codigoModulo);
+        modulo.checked = !!existe;
+      });
+
+      this.modulosPadre = modulosPadreSuite;
+    } else {
+      this.modulosPadre = [];
+    }
+  }
+
+  btnAsociarTodosClick() {
+    const estadoDestino = !this.todosSeleccionados;
+    this.modulosPadre.forEach((modu) => (modu.checked = estadoDestino));
+  }
+
+  onModuloCheckChange(evento: any, modu: any) {
+    modu.checked = evento.target.checked;
+    const idx = this.modulosPadre.findIndex((x) => x.codigoModulo === modu.codigoModulo);
+    if (idx !== -1) {
+      this.modulosPadre[idx].checked = evento.target.checked;
+    }
+  }
+
+  btnGestionarRegistroClick() {
+    this.isSubmit = true;
+
+    if (this.formularioRegistro.invalid) {
+      this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
+      return;
     }
 
-    get todosSeleccionados(): boolean {
-        return this.modulosPadre.length > 0 && this.modulosPadre.every(modu => modu.checked);
+    const seleccionados = this.modulosPadre.filter((x) => x.checked);
+    if (seleccionados.length === 0) {
+      this._swalAlertService.getAlertError(traducir('PAQUETES.MODULOS_PAQUETE.GESTION.YOU_MUST_SELECT_AT_LEAST_ONE'));
+      return;
     }
 
-    get f() { return this.formularioRegistro.controls; }
+    this.isSaving = true;
+    const formValues = this.formularioRegistro.getRawValue();
+    const modulosFinal: any[] = [];
 
-    inicializarFormulario() {
-        this.formularioRegistro = this.fb.group({
-            codigoAplicacion: ['', Validators.required],
-            codigoSuite: ['', Validators.required]
-        });
+    seleccionados.forEach((modulo) => {
+      const registroData: PTLModuloPQModel = new PTLModuloPQModel();
+      registroData.codigoModuloPQ = uuidv4();
+      registroData.codigoModulo = modulo.codigoModulo;
+      registroData.codigoAplicacion = formValues.codigoAplicacion;
+      registroData.codigoSuite = formValues.codigoSuite;
+      registroData.codigoPaquete = this.codigoPaquete;
+      registroData.estadoModuloPQ = true;
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || 'SISTEMA';
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = '';
+      registroData.fechaModificacion = '';
+
+      modulosFinal.push(registroData);
+    });
+
+    const dataCrear: PTLModuloPQModelAdm = {
+      codigoPaquete: this.codigoPaquete,
+      codigoAplicacion: formValues.codigoAplicacion,
+      codigoSuite: formValues.codigoSuite,
+      modulos: modulosFinal
+    };
+
+    this._registrosService.postCrearRegistro(dataCrear).subscribe({
+      next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_INSERTED_SUCCESSFULLY'),
+      error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_INSERT_RECORD')
+    });
+  }
+
+  private manejarExito(resp: any, mensajeTra: string) {
+    this.isSaving = false;
+    if (resp.ok) {
+      const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant(mensajeTra) };
+      this._logActividadesService.postCrearRegistro(logData).subscribe();
+
+      this._swalAlertService.getAlertConfirmSuccess(this.translate.instant(mensajeTra));
+      this.btnRegresarClick();
     }
+  }
 
-    ngOnInit() {
-        this._layoutInitializer.applyLayout();
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
+  private manejarError(err: any, mensajeTra: string) {
+    this.isSaving = false;
+    console.error(err);
 
-        this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
-            next: () => {
-                this._localStorageService.setFormRegistro(this.formularioRegistro.value);
-            }
-        });
+    const logData = {
+      codigoTipoLog: '',
+      codigoRespuesta: '501',
+      descripcionLog: this.translate.instant(mensajeTra) + ', ' + (err.message || '')
+    };
+    this._logActividadesService.postCrearRegistro(logData).subscribe();
 
-        // Carga de Data Maestra
-        this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
-        this.suites = this._suitesService.getSuitesActuales();
-        this.suitesFiltradas = this.suites;
-        this.modulos = this._modulosService.getModulosActuales();
-        this.modulosPQ = this._registrosService.getModulosPQActuales();
+    this._swalAlertService.getAlertError(this.translate.instant(mensajeTra));
+  }
 
-        const savedForm = this._localStorageService.getFormRegistro();
-        if (savedForm) {
-            this.formularioRegistro.patchValue(savedForm);
-            this._localStorageService.removeFormRegistro();
+  btnRegresarClick() {
+    this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: this.codigoPaquete } });
+  }
 
-            // Si venía de un bloqueo, reactivamos las listas
-            if (savedForm.codigoAplicacion) this.filtrarSuites(savedForm.codigoAplicacion);
-            if (savedForm.codigoSuite) this.consultarModulos(savedForm.codigoSuite);
-        }
-    }
-
-    ngOnDestroy() {
-        if (this.lockScreenSubscription) {
-            this.lockScreenSubscription.unsubscribe();
-        }
-    }
-
-    // 🟢 Eventos de los Selectores (Formularios Reactivos)
-    onAplicacionChangeClick(event: any) {
-        const codigoApp = event.target.value;
-        this.filtrarSuites(codigoApp);
-
-        // Resetea la suite y modulos al cambiar de aplicación
-        this.formularioRegistro.get('codigoSuite')?.setValue('');
-        this.modulosPadre = [];
-    }
-
-    filtrarSuites(codigoApp: string) {
-        this.suitesFiltradas = this.suites.filter(x => x.codigoAplicacion === codigoApp);
-    }
-
-    onSuiteChangeClick(event: any) {
-        const codigoSuite = event.target.value;
-        this.consultarModulos(codigoSuite);
-    }
-
-    consultarModulos(codSuite?: string) {
-        if (codSuite) {
-            // Filtramos los módulos padre de esta suite
-            const modulosPadreSuite = this.modulos.filter(x => x.codigoSuite === codSuite && x.hijos === true);
-            const modulosPQSuite = this.modulosPQ.filter(x => x.codigoSuite === codSuite && x.codigoPaquete === this.codigoPaquete);
-
-            // Marcamos los que ya están asignados al paquete
-            modulosPadreSuite.forEach((modulo: any) => {
-                const existe = modulosPQSuite.find((sel: any) => sel.codigoModulo === modulo.codigoModulo);
-                modulo.checked = !!existe;
-            });
-
-            this.modulosPadre = modulosPadreSuite;
-        } else {
-            this.modulosPadre = [];
-        }
-    }
-
-    btnAsociarTodosClick() {
-        const estadoDestino = !this.todosSeleccionados;
-        this.modulosPadre.forEach(modu => modu.checked = estadoDestino);
-    }
-
-    onModuloCheckChange(evento: any, modu: any) {
-        modu.checked = evento.target.checked;
-        const idx = this.modulosPadre.findIndex(x => x.codigoModulo === modu.codigoModulo);
-        if (idx !== -1) {
-            this.modulosPadre[idx].checked = evento.target.checked;
-        }
-    }
-
-    btnGestionarRegistroClick() {
-        this.isSubmit = true;
-
-        if (this.formularioRegistro.invalid) {
-            this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
-            return;
-        }
-
-        const seleccionados = this.modulosPadre.filter(x => x.checked);
-        if (seleccionados.length === 0) {
-            this._swalAlertService.getAlertError(traducir('PAQUETES.MODULOS_PAQUETE.GESTION.YOU_MUST_SELECT_AT_LEAST_ONE'));
-            return;
-        }
-
-        this.isSaving = true;
-        const formValues = this.formularioRegistro.getRawValue();
-        const modulosFinal: any[] = [];
-
-        seleccionados.forEach(modulo => {
-            const registroData: PTLModuloPQModel = new PTLModuloPQModel();
-            registroData.codigoModuloPQ = uuidv4();
-            registroData.codigoModulo = modulo.codigoModulo;
-            registroData.codigoAplicacion = formValues.codigoAplicacion;
-            registroData.codigoSuite = formValues.codigoSuite;
-            registroData.codigoPaquete = this.codigoPaquete;
-            registroData.estadoModuloPQ = true;
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || 'SISTEMA';
-            registroData.fechaCreacion = new Date().toISOString();
-            registroData.codigoUsuarioModificacion = '';
-            registroData.fechaModificacion = '';
-
-            modulosFinal.push(registroData);
-        });
-
-        const dataCrear: PTLModuloPQModelAdm = {
-            codigoPaquete: this.codigoPaquete,
-            codigoAplicacion: formValues.codigoAplicacion,
-            codigoSuite: formValues.codigoSuite,
-            modulos: modulosFinal
-        };
-
-        this._registrosService.postCrearRegistro(dataCrear).subscribe({
-            next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_INSERTED_SUCCESSFULLY'),
-            error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_INSERT_RECORD')
-        });
-    }
-
-    private manejarExito(resp: any, mensajeTra: string) {
-        this.isSaving = false;
-        if (resp.ok) {
-            const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant(mensajeTra) };
-            this._logActividadesService.postCrearRegistro(logData).subscribe();
-
-            this._swalAlertService.getAlertConfirmSuccess(this.translate.instant(mensajeTra));
-            this.btnRegresarClick();
-        }
-    }
-
-    private manejarError(err: any, mensajeTra: string) {
-        this.isSaving = false;
-        console.error(err);
-
-        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant(mensajeTra) + ', ' + (err.message || '') };
-        this._logActividadesService.postCrearRegistro(logData).subscribe();
-
-        this._swalAlertService.getAlertError(this.translate.instant(mensajeTra));
-    }
-
-    btnRegresarClick() {
-        this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: this.codigoPaquete } });
-    }
-
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

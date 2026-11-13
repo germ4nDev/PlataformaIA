@@ -19,593 +19,595 @@ import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuar
 import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { AuthenticationService, PTLSuscriptoresService, PtlusuariosScService, UploadFilesService, UtilidadesService } from 'src/app/theme/shared/service';
+import {
+  AuthenticationService,
+  PTLSuscriptoresService,
+  PtlusuariosScService,
+  UploadFilesService,
+  UtilidadesService
+} from 'src/app/theme/shared/service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
-import { DataLoaderComponent } from "src/app/theme/shared/components/data-loader/data-loader.component";
-import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
+import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
 import { EmailService } from 'src/app/theme/shared/service/email.service';
 
 @Component({
-    selector: 'app-usuarios-suscriptor',
-    standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavContentComponent, NavBarComponent, DataLoaderComponent, TableDataComponent],
-    templateUrl: './usuarios-suscriptor.component.html',
-    styleUrl: './usuarios-suscriptor.component.scss'
+  selector: 'app-usuarios-suscriptor',
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavContentComponent,
+    NavBarComponent,
+    DataLoaderComponent,
+    TableDataComponent
+  ],
+  templateUrl: './usuarios-suscriptor.component.html',
+  styleUrl: './usuarios-suscriptor.component.scss'
 })
 export class UsuariosSuscriptorComponent implements OnInit {
+  @Output() toggleSidebar = new EventEmitter<void>();
+  FormRegistro: PTLUsuarioModel = new PTLUsuarioModel();
 
-    @Output() toggleSidebar = new EventEmitter<void>();
-    FormRegistro: PTLUsuarioModel = new PTLUsuarioModel()
+  // Estado de la UI
+  gradientConfig;
+  hasFiltersSlot: boolean = false;
+  menuItems!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  suscPlataforma: string = '';
+  lang: string = localStorage.getItem('lang') || '';
 
-    // Estado de la UI
-    gradientConfig;
-    hasFiltersSlot: boolean = false;
-    menuItems!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
-    suscPlataforma: string = '';
-    lang: string = localStorage.getItem('lang') || '';
+  // Fuente de datos principal
+  private usuariosSubject = new BehaviorSubject<any[]>([]);
+  usuariosFiltrados$!: Observable<any[]>;
 
-    // Fuente de datos principal
-    private usuariosSubject = new BehaviorSubject<any[]>([]);
-    usuariosFiltrados$!: Observable<any[]>;
+  // Subjects para filtros
+  subscriptions = new Subscription();
+  filtroSuscriptorSubject = new BehaviorSubject<string>('');
+  filtroIdentificacionSubject = new BehaviorSubject<string>('');
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroCorreoSubject = new BehaviorSubject<string>('');
+  filtroUsernameSubject = new BehaviorSubject<string>('');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-    // Subjects para filtros
-    subscriptions = new Subscription()
-    filtroSuscriptorSubject = new BehaviorSubject<string>('')
-    filtroIdentificacionSubject = new BehaviorSubject<string>('')
-    filtroNombreSubject = new BehaviorSubject<string>('')
-    filtroCorreoSubject = new BehaviorSubject<string>('')
-    filtroUsernameSubject = new BehaviorSubject<string>('')
-    filtroDescripcionSubject = new BehaviorSubject<string>('')
-    filtroEstadoSubject = new BehaviorSubject<string>('todos')
+  //#region VARIABLES
+  registrosTransformadas$: Observable<PTLUsuarioSCModel[]> = of([]);
+  registrosFiltrado$: Observable<PTLUsuarioSCModel[]> = of([]);
+  registros: PTLUsuarioSCModel[] = [];
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  suscriptoresSub?: Subscription;
+  suscriptores: PTLSuscriptorModel[] = [];
+  usuarios: PTLUsuarioModel[] = [];
+  stId: string = '';
+  cargandoExcel: boolean = false;
+  mostrarModalPassword: boolean = false;
+  registroSeleccionado: string = '';
 
-    //#region VARIABLES
-    registrosTransformadas$: Observable<PTLUsuarioSCModel[]> = of([]);
-    registrosFiltrado$: Observable<PTLUsuarioSCModel[]> = of([]);
-    registros: PTLUsuarioSCModel[] = [];
-    usuariosSC: PTLUsuarioSCModel[] = [];
-    suscriptoresSub?: Subscription;
-    suscriptores: PTLSuscriptorModel[] = [];
-    usuarios: PTLUsuarioModel[] = [];
-    stId: string = '';
-    cargandoExcel: boolean = false;
-    mostrarModalPassword: boolean = false;
-    registroSeleccionado: string = ''
+  claveActual: string = '';
+  claveNueva: string = '';
+  confirmarClave: string = '';
+  usuarioSeleccionadoParaClave: any = null;
 
-    claveActual: string = '';
-    claveNueva: string = '';
-    confirmarClave: string = '';
-    usuarioSeleccionadoParaClave: any = null;
+  //#endregion VARIABLES
 
-
-    //#endregion VARIABLES
-
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private cdr: ChangeDetectorRef,
-        private translate: TranslateService,
-        private _swalService: SwalAlertService,
-        private _authService: AuthenticationService,
-        private _logActividadesService: PtllogActividadesService,
-        private _usuariosService: PTLUsuariosService,
-        private _usuariosSCService: PtlusuariosScService,
-        private _suscriptoresService: PTLSuscriptoresService,
-        private _navigationService: NavigationService,
-        private _utilidadesService: UtilidadesService,
-        private _localStorageService: LocalStorageService,
-        private _permisosService: PtlPermisosService,
-        private _emailService: EmailService,
-        private _uploadService: UploadFilesService
-    ) {
-        this.gradientConfig = GradientConfig;
-        this.stId = this._localStorageService.getObject<string>('regId') || ''
-        if (this.stId) {
-            this.filtroSuscriptorSubject.next(this.stId);
-        }
-        this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService,
+    private _swalService: SwalAlertService,
+    private _authService: AuthenticationService,
+    private _logActividadesService: PtllogActividadesService,
+    private _usuariosService: PTLUsuariosService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _navigationService: NavigationService,
+    private _utilidadesService: UtilidadesService,
+    private _localStorageService: LocalStorageService,
+    private _permisosService: PtlPermisosService,
+    private _emailService: EmailService,
+    private _uploadService: UploadFilesService
+  ) {
+    this.gradientConfig = GradientConfig;
+    this.stId = this._localStorageService.getObject<string>('regId') || '';
+    if (this.stId) {
+      this.filtroSuscriptorSubject.next(this.stId);
     }
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
-    ngOnInit() {
-        this._navigationService.getNavigationItems();
-        this.menuItems = this._navigationService.menuItems$;
-        this.hasFiltersSlot = true;
-        // this.consultarSuscriptores();
-        // this.consultarUsuarios();
-        // this.consultarRegistros();
-        setTimeout(() => {
-            this.setupRegistrosStream();
-        }, 100);
-        this.subscriptions.add(
-            this._usuariosSCService.cargarRegistros().subscribe(
-                () => console.log('UsuariosSC cargados y guardados en el servicio'),
-                (err) => console.error('Error al cargar los UsuariosSC:', err)
-            )
-        );
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+    // this.consultarSuscriptores();
+    // this.consultarUsuarios();
+    // this.consultarRegistros();
+    setTimeout(() => {
+      this.setupRegistrosStream();
+    }, 100);
+    this.subscriptions.add(
+      this._usuariosSCService.cargarRegistros().subscribe(
+        () => console.log('UsuariosSC cargados y guardados en el servicio'),
+        (err) => console.error('Error al cargar los UsuariosSC:', err)
+      )
+    );
+  }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'avatarUsuario',
+      header: 'COMMON.PHOTO',
+      type: 'avatar',
+      isSortable: false
+    },
+    {
+      name: 'identificacionUsuario',
+      header: 'COMMON.IDENTIFICATION',
+      type: 'text'
+    },
+    {
+      name: 'nombreUsuario',
+      header: 'COMMON.NAME',
+      type: 'text'
+    },
+    {
+      name: 'userNameUsuario',
+      header: 'COMMON.USERNAME_2',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'COMMON.STATUS',
+      type: 'estado'
     }
+  ];
 
-    columnasRegistros: ColumnMetadata[] = [
-        {
-            name: 'avatarUsuario',
-            header: 'COMMON.PHOTO',
-            type: 'avatar',
-            isSortable: false
-        },
-        {
-            name: 'identificacionUsuario',
-            header: 'COMMON.IDENTIFICATION',
-            type: 'text'
-        },
-        {
-            name: 'nombreUsuario',
-            header: 'COMMON.NAME',
-            type: 'text'
-        },
-        {
-            name: 'userNameUsuario',
-            header: 'COMMON.USERNAME_2',
-            type: 'text'
-        },
-        {
-            name: 'nomEstado',
-            header: 'COMMON.STATUS',
-            type: 'estado'
-        }
-    ]
-
-    columnasDetailRegistros: ColumnMetadata[] = [
-        {
-            name: 'correoUsuario',
-            header: 'COMMON.EMAIL',
-            type: 'text'
-        },
-        {
-            name: 'descripcionUsuario',
-            header: 'COMMON.DESCRIPTION',
-            type: 'text'
-        },
-        {
-            name: 'roles',
-            header: 'COMMON.ROLES',
-            type: 'json-tabla'
-        }
-    ]
-
-    setupRegistrosStream(): void {
-        this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-        let codigo = this.suscPlataforma;
-
-        this.registrosTransformadas$ = combineLatest([
-            this._usuariosService.usuarios$,
-            this._usuariosSCService.usuariosSC$,
-            this._permisosService.actividadesAutorizadas$
-        ]).pipe(
-            map(([usuariosMaster, usuariosSC, permisos]: [PTLUsuarioModel[], any[], string[]]) => {
-                if (!usuariosMaster || usuariosMaster.length === 0 || !usuariosSC || usuariosSC.length === 0) return [];
-
-                this.usuarios = usuariosMaster;
-                this.usuariosSC = usuariosSC;
-
-                const relacionesDeEsteSuscriptor = usuariosSC.filter(x => x.codigoSuscriptor === this.stId);
-
-                const transformedUsuarios: PTLUsuarioModel[] = relacionesDeEsteSuscriptor.map((relacionSC: any) => {
-                    const user = usuariosMaster.find(u => u.codigoUsuario === relacionSC.codigoUsuario);
-                    if (!user) return null;
-
-                    const userSC = usuariosSC.find(u => u.codigoUsuario === relacionSC.codigoUsuario);
-
-                    const newReg: any = { ...user };
-
-                    newReg.codigoUsuarioSC = userSC.codigoUsuarioSC;
-                    newReg.codigoSuscriptor = userSC.codigoSuscriptor;
-                    newReg.nomEstado = newReg.estadoUsuario ? 'Activo' : 'Inactivo';
-                    newReg.avatarUsuario = this._uploadService.getFilePath(codigo, 'usuarios', newReg.fotoUsuario);
-
-                    newReg.letraDinamica1 = newReg.estadoUsuario ? 'I' : 'A';
-                    newReg.colorDinamico1 = newReg.estadoUsuario ? '#ff0000' : '#28a745';
-                    newReg.tooltipDinamico1 = newReg.estadoUsuario ? 'Inactivar Usuario' : 'Activar Usuario';
-
-                    const accionesPermitidas: any[] = [];
-
-                    if (permisos.includes('ACT_USUSC_INACTIVAR')) {
-                        accionesPermitidas.push({
-                            accion: 'INACTIVAR',
-                            letra: 'I',
-                            color: '#ff0000',
-                            tooltip: this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')
-                        });
-                    }
-                    if (permisos.includes('ACT_USUSC_CAMBIAR')) {
-                        accionesPermitidas.push({
-                            accion: 'CAMBIAR',
-                            letra: 'C',
-                            color: '#25a042',
-                            tooltip: this.translate.instant('COMMON.CHANGE_PASSWORD_2')
-                        });
-                    }
-                    if (permisos.includes('ACT_USUSC_RESETEAR')) {
-                        accionesPermitidas.push({
-                            accion: 'RESETEAR',
-                            letra: 'R',
-                            color: '#d3751d',
-                            tooltip: this.translate.instant('COMMON.RESET_PASSWORD_2')
-                        });
-                    }
-                    if (permisos.includes('ACT_USUSC_ROLES')) {
-                        accionesPermitidas.push({
-                            accion: 'ROLES',
-                            letra: 'R',
-                            color: '#c41dd3',
-                            tooltip: this.translate.instant('COMMON.ROLES')
-                        });
-                    }
-
-                    return {
-                        ...newReg,
-                        '_acciones': accionesPermitidas
-                    } as PTLUsuarioModel;
-
-                }).filter((item): item is PTLUsuarioModel => item !== null);
-
-                return transformedUsuarios;
-            }),
-            tap((regs) => {
-                this.registros = regs;
-                this.cdr.detectChanges();
-            }),
-            catchError(err => {
-                console.error('Error en el stream de usuarios:', err);
-                return of([]);
-            })
-        );
-
-        this.registrosFiltrado$ = combineLatest([
-            this.registrosTransformadas$.pipe(startWith([])),
-            this.filtroIdentificacionSubject,
-            this.filtroNombreSubject,
-            this.filtroCorreoSubject,
-            this.filtroUsernameSubject,
-            this.filtroDescripcionSubject,
-            this.filtroEstadoSubject
-        ]).pipe(
-            map(([usuarios, identificacion, nombre, correo, username, descripcion, estado]) => {
-                let filteredRegistros: PTLUsuarioModel[] = usuarios;
-
-                if (identificacion) {
-                    const text = identificacion.toLowerCase();
-                    filteredRegistros = filteredRegistros.filter(reg =>
-                        (reg.identificacionUsuario?.toString() || '').toLowerCase().includes(text)
-                    );
-                }
-                if (nombre) {
-                    const text = nombre.toLowerCase();
-                    filteredRegistros = filteredRegistros.filter(reg =>
-                        (reg.nombreUsuario || '').toLowerCase().includes(text)
-                    );
-                }
-                if (correo) {
-                    const text = correo.toLowerCase();
-                    filteredRegistros = filteredRegistros.filter(reg =>
-                        (reg.correoUsuario || '').toLowerCase().includes(text)
-                    );
-                }
-                if (username) {
-                    const text = username.toLowerCase();
-                    filteredRegistros = filteredRegistros.filter(reg =>
-                        (reg.userNameUsuario || '').toLowerCase().includes(text)
-                    );
-                }
-                if (estado !== 'todos') {
-                    const estadoBoolean = estado === 'true';
-                    filteredRegistros = filteredRegistros.filter(reg => reg.estadoUsuario === estadoBoolean);
-                }
-                if (descripcion) {
-                    const textoFiltro = descripcion.toLowerCase();
-                    filteredRegistros = filteredRegistros.filter(reg =>
-                        (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro)
-                    );
-                }
-                return filteredRegistros;
-            })
-        );
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'correoUsuario',
+      header: 'COMMON.EMAIL',
+      type: 'text'
+    },
+    {
+      name: 'descripcionUsuario',
+      header: 'COMMON.DESCRIPTION',
+      type: 'text'
+    },
+    {
+      name: 'roles',
+      header: 'COMMON.ROLES',
+      type: 'json-tabla'
     }
+  ];
 
-    onFiltroSuscriptorChangeClick(evento: any) {
-        const value = evento.target.value;
-        this.filtroSuscriptorSubject.next(value);
-    }
+  setupRegistrosStream(): void {
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    let codigo = this.suscPlataforma;
 
-    onFiltroNombreChangeClick(evento: any) {
-        const value = evento.target.value;
-        this.filtroNombreSubject.next(value);
-    }
+    this.registrosTransformadas$ = combineLatest([
+      this._usuariosService.usuarios$,
+      this._usuariosSCService.usuariosSC$,
+      this._permisosService.actividadesAutorizadas$
+    ]).pipe(
+      map(([usuariosMaster, usuariosSC, permisos]: [PTLUsuarioModel[], any[], string[]]) => {
+        if (!usuariosMaster || usuariosMaster.length === 0 || !usuariosSC || usuariosSC.length === 0) return [];
 
-    onFiltroEstadoChangeClick(evento: any) {
-        const value = evento.target.value;
-        this.filtroEstadoSubject.next(value);
-    }
+        this.usuarios = usuariosMaster;
+        this.usuariosSC = usuariosSC;
 
-    OnNuevoRegistroClick() {
-        this._localStorageService.setObject('regId', 'nuevo')
-        this._localStorageService.setObject('stId', this.stId)
-        this.router.navigate(['/suscriptor/gestion-usuario-suscriptor']);
-    }
+        const relacionesDeEsteSuscriptor = usuariosSC.filter((x) => x.codigoSuscriptor === this.stId);
 
-    onAccionPrincipal(evento: { accion: string, row: any }) {
-        const { accion, row } = evento;
-        const id = row.codigoUsuario || row.id;
+        const transformedUsuarios: PTLUsuarioModel[] = relacionesDeEsteSuscriptor
+          .map((relacionSC: any) => {
+            const user = usuariosMaster.find((u) => u.codigoUsuario === relacionSC.codigoUsuario);
+            if (!user) return null;
 
-        console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
+            const userSC = usuariosSC.find((u) => u.codigoUsuario === relacionSC.codigoUsuario);
 
-        switch (accion) {
-            case 'INACTIVAR':
-                console.log('inactivar usuario codigo', id);
-                const usuario = this.usuarios.find(x => x.codigoUsuario === id);
-                if (!usuario) return;
-                this._swalService.getAlertQuestionRequest(
-                    this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
-                    this.translate.instant('COMMON.CHANGE_USER_STATUS'),
-                    this.translate.instant('COMMON.CHANGE_STATUS'),
-                    this.translate.instant('COMMON.CANCEL')
-                ).subscribe(result => {
-                    if (result) {
-                        usuario.estadoUsuario = usuario.estadoUsuario == true ? false : true;
-                        console.log('usuario a inactivar', usuario);
-                        this._usuariosService.actualizarUsuario(usuario).subscribe({
-                            next: (resp: any) => {
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('COMMON.USER_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE'));
-                                this.setupRegistrosStream()
-                            },
-                            error: (err: any) => {
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
-                                // this.setupRegistrosStream()
-                                console.error('Error eliminando', err)
-                            }
-                        })
-                    }
-                });
-                break;
-            case 'CAMBIAR':
-                const value = id;
-                console.log('opcion 1 click', value);
-                this.registroSeleccionado = id;
-                //this._prepararDatosDeRenovacion(event);
-                this.mostrarModalPassword = true;
-                this.FormRegistro = {}
-                this.usuarioSeleccionadoParaClave = this.usuarios.find(x => x.codigoUsuario === id);
-                this.claveActual = '';
-                this.claveNueva = '';
-                this.confirmarClave = '';
-                break;
-            case 'RESETEAR':
-                this.registroSeleccionado = id;
-                const nuevaClave = this._utilidadesService.generarClaveSegura();
-                console.log('La nueva clave generada es:', nuevaClave);
-                this.procesarCambioClave(id, nuevaClave);
-                break;
-            case 'ROLES':
-                console.log('Redirigirse a la pagina de roles:', id);
-                this._localStorageService.setObject('regId', id)
-                this._localStorageService.setObject('susId', this.stId)
-                this.router.navigate(['/suscriptor/usuarios-roles'])
-                break;
-            default:
-                console.warn(`Acción no reconocida: ${accion}`);
-                break;
-        }
-    }
+            const newReg: any = { ...user };
 
-    onFileExcelSelected(event: any) {
-        const file: File = event.target.files[0];
+            newReg.codigoUsuarioSC = userSC.codigoUsuarioSC;
+            newReg.codigoSuscriptor = userSC.codigoSuscriptor;
+            newReg.nomEstado = newReg.estadoUsuario ? 'Activo' : 'Inactivo';
+            newReg.avatarUsuario = this._uploadService.getFilePath(codigo, 'usuarios', newReg.fotoUsuario);
 
-        if (file) {
-            // 1. Validación rápida de formato en el frontend
-            const extension = file.name.split('.').pop()?.toLowerCase();
-            if (extension !== 'xlsx' && extension !== 'xls') {
-                console.error('El archivo seleccionado no es un formato de Excel válido.');
-                // Aquí puedes lanzar una alerta (ej. SweetAlert o Toast)
-                return;
+            newReg.letraDinamica1 = newReg.estadoUsuario ? 'I' : 'A';
+            newReg.colorDinamico1 = newReg.estadoUsuario ? '#ff0000' : '#28a745';
+            newReg.tooltipDinamico1 = newReg.estadoUsuario ? 'Inactivar Usuario' : 'Activar Usuario';
+
+            const accionesPermitidas: any[] = [];
+
+            if (permisos.includes('ACT_USUSC_INACTIVAR')) {
+              accionesPermitidas.push({
+                accion: 'INACTIVAR',
+                letra: 'I',
+                color: '#ff0000',
+                tooltip: this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')
+              });
+            }
+            if (permisos.includes('ACT_USUSC_CAMBIAR')) {
+              accionesPermitidas.push({
+                accion: 'CAMBIAR',
+                letra: 'C',
+                color: '#25a042',
+                tooltip: this.translate.instant('COMMON.CHANGE_PASSWORD_2')
+              });
+            }
+            if (permisos.includes('ACT_USUSC_RESETEAR')) {
+              accionesPermitidas.push({
+                accion: 'RESETEAR',
+                letra: 'R',
+                color: '#d3751d',
+                tooltip: this.translate.instant('COMMON.RESET_PASSWORD_2')
+              });
+            }
+            if (permisos.includes('ACT_USUSC_ROLES')) {
+              accionesPermitidas.push({
+                accion: 'ROLES',
+                letra: 'R',
+                color: '#c41dd3',
+                tooltip: this.translate.instant('COMMON.ROLES')
+              });
             }
 
-            this.cargandoExcel = true;
+            return {
+              ...newReg,
+              _acciones: accionesPermitidas
+            } as PTLUsuarioModel;
+          })
+          .filter((item): item is PTLUsuarioModel => item !== null);
 
-            // 2. Obtener el ID del usuario actual (reemplaza esto con tu variable de sesión)
-            const usuarioLogueado = 'SISTEMA_O_ID_USUARIO';
+        return transformedUsuarios;
+      }),
+      tap((regs) => {
+        this.registros = regs;
+        this.cdr.detectChanges();
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de usuarios:', err);
+        return of([]);
+      })
+    );
 
-            // 3. Llamar al servicio
-            this._usuariosService.cargueMasivoExcel(file, usuarioLogueado).subscribe({
-                next: (resp) => {
-                    this.cargandoExcel = false;
-                    console.log('✅ Éxito:', resp.msg);
+    this.registrosFiltrado$ = combineLatest([
+      this.registrosTransformadas$.pipe(startWith([])),
+      this.filtroIdentificacionSubject,
+      this.filtroNombreSubject,
+      this.filtroCorreoSubject,
+      this.filtroUsernameSubject,
+      this.filtroDescripcionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([usuarios, identificacion, nombre, correo, username, descripcion, estado]) => {
+        let filteredRegistros: PTLUsuarioModel[] = usuarios;
 
-                    // Refrescar la tabla de usuarios
-                    // this.cargarUsuarios();
+        if (identificacion) {
+          const text = identificacion.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.identificacionUsuario?.toString() || '').toLowerCase().includes(text));
+        }
+        if (nombre) {
+          const text = nombre.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.nombreUsuario || '').toLowerCase().includes(text));
+        }
+        if (correo) {
+          const text = correo.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.correoUsuario || '').toLowerCase().includes(text));
+        }
+        if (username) {
+          const text = username.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.userNameUsuario || '').toLowerCase().includes(text));
+        }
+        if (estado !== 'todos') {
+          const estadoBoolean = estado === 'true';
+          filteredRegistros = filteredRegistros.filter((reg) => reg.estadoUsuario === estadoBoolean);
+        }
+        if (descripcion) {
+          const textoFiltro = descripcion.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro));
+        }
+        return filteredRegistros;
+      })
+    );
+  }
 
-                    // Limpiar el input para permitir subir el mismo archivo si hubo correcciones
-                    event.target.value = '';
+  onFiltroSuscriptorChangeClick(evento: any) {
+    const value = evento.target.value;
+    this.filtroSuscriptorSubject.next(value);
+  }
+
+  onFiltroNombreChangeClick(evento: any) {
+    const value = evento.target.value;
+    this.filtroNombreSubject.next(value);
+  }
+
+  onFiltroEstadoChangeClick(evento: any) {
+    const value = evento.target.value;
+    this.filtroEstadoSubject.next(value);
+  }
+
+  OnNuevoRegistroClick() {
+    this._localStorageService.setObject('regId', 'nuevo');
+    this._localStorageService.setObject('stId', this.stId);
+    this.router.navigate(['/suscriptor/gestion-usuario-suscriptor']);
+  }
+
+  onAccionPrincipal(evento: { accion: string; row: any }) {
+    const { accion, row } = evento;
+    const id = row.codigoUsuario || row.id;
+
+    console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
+
+    switch (accion) {
+      case 'INACTIVAR':
+        console.log('inactivar usuario codigo', id);
+        const usuario = this.usuarios.find((x) => x.codigoUsuario === id);
+        if (!usuario) return;
+        this._swalService
+          .getAlertQuestionRequest(
+            this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
+            this.translate.instant('COMMON.CHANGE_USER_STATUS'),
+            this.translate.instant('COMMON.CHANGE_STATUS'),
+            this.translate.instant('COMMON.CANCEL')
+          )
+          .subscribe((result) => {
+            if (result) {
+              usuario.estadoUsuario = usuario.estadoUsuario == true ? false : true;
+              console.log('usuario a inactivar', usuario);
+              this._usuariosService.actualizarUsuario(usuario).subscribe({
+                next: (resp: any) => {
+                  const logData = {
+                    codigoTipoLog: '',
+                    codigoRespuesta: '201',
+                    descripcionLog: this.translate.instant('COMMON.USER_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
+                  };
+                  this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                  this._swalService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE'));
+                  this.setupRegistrosStream();
                 },
-                error: (err) => {
-                    this.cargandoExcel = false;
-                    console.error('❌ Error en el cargue:', err);
-
-                    // Si tu backend devolvió la lista de filas con error, puedes mostrarla aquí
-                    if (err.error && err.error.errores) {
-                        console.log('Detalle de filas con error:', err.error.errores);
-                    }
-
-                    event.target.value = '';
+                error: (err: any) => {
+                  const logData = {
+                    codigoTipoLog: '',
+                    codigoRespuesta: '201',
+                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
+                  };
+                  this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                  this._swalService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje);
+                  // this.setupRegistrosStream()
+                  console.error('Error eliminando', err);
                 }
-            });
-        }
-    }
-
-    procesarArchivoExcel(file: File): void {
-        if (!file) return;
-
-        const extension = file.name.split('.').pop()?.toLowerCase();
-        if (extension !== 'xlsx' && extension !== 'xls') {
-            console.error('Por favor, selecciona un archivo de Excel válido.');
-            // Opcional: muestra una alerta con tu _swalService
-            return;
-        }
-
-        this.cargandoExcel = true;
-
-        // Obtenemos el código del usuario logueado actualmente de forma dinámica
-        const usuarioLogueado = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || 'ADMIN_SISTEMA';
-
-        // Obtenemos también el código del suscriptor activo por si el Excel no lo trae explícitamente en cada fila
-        const codigoSuscriptorActual = this._localStorageService.getObject<string>('regId') || this.stId;
-
-        // Llamamos al servicio de usuariosSC pasándole el archivo, el suscriptor por defecto y el usuario creador
-        this._usuariosSCService.cargueMasivoExcel(file, codigoSuscriptorActual, usuarioLogueado).subscribe({
-            next: (resp: any) => {
-                this.cargandoExcel = false;
-
-                console.log('✅ Éxito:', resp.msg || 'Cargue masivo completado.');
-
-                // Recargamos el stream para que el Datatable se actualice y pinte los usuarios nuevos en vivo
-                this.setupRegistrosStream();
-            },
-            error: (err: any) => {
-                this.cargandoExcel = false;
-
-                const mensajePrincipal = err.error?.msg || 'Error interno al procesar el archivo de usuarios SC.';
-                console.error('❌ Error de cargue:', mensajePrincipal);
-
-                if (err.error?.errores) {
-                    console.warn('Detalle de validación de Joi en filas:', err.error.errores);
-                }
+              });
             }
-        });
+          });
+        break;
+      case 'CAMBIAR':
+        const value = id;
+        console.log('opcion 1 click', value);
+        this.registroSeleccionado = id;
+        //this._prepararDatosDeRenovacion(event);
+        this.mostrarModalPassword = true;
+        this.FormRegistro = {};
+        this.usuarioSeleccionadoParaClave = this.usuarios.find((x) => x.codigoUsuario === id);
+        this.claveActual = '';
+        this.claveNueva = '';
+        this.confirmarClave = '';
+        break;
+      case 'RESETEAR':
+        this.registroSeleccionado = id;
+        const nuevaClave = this._utilidadesService.generarClaveSegura();
+        console.log('La nueva clave generada es:', nuevaClave);
+        this.procesarCambioClave(id, nuevaClave);
+        break;
+      case 'ROLES':
+        console.log('Redirigirse a la pagina de roles:', id);
+        this._localStorageService.setObject('regId', id);
+        this._localStorageService.setObject('susId', this.stId);
+        this.router.navigate(['/suscriptor/usuarios-roles']);
+        break;
+      default:
+        console.warn(`Acción no reconocida: ${accion}`);
+        break;
     }
+  }
 
-    OnBackButtonClic(event: any) {
-        this.router.navigate(['/suscriptor/suscriptores']);
-    }
+  onFileExcelSelected(event: any) {
+    const file: File = event.target.files[0];
 
-    OnEditarRegistroClick(event: any) {
-        console.log('event codigoUsuarioSC', event);
+    if (file) {
+      // 1. Validación rápida de formato en el frontend
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      if (extension !== 'xlsx' && extension !== 'xls') {
+        console.error('El archivo seleccionado no es un formato de Excel válido.');
+        // Aquí puedes lanzar una alerta (ej. SweetAlert o Toast)
+        return;
+      }
 
-        const id = event.id || event;
-        this._localStorageService.setObject('regId', id)
-        this._localStorageService.setObject('stId', this.stId)
-        this.router.navigate(['/suscriptor/gestion-usuario-suscriptor']);
-    }
+      this.cargandoExcel = true;
 
-    OnEliminarRegistroClick(event: any) {
-        console.log('Eliminar usuario:', event.id || event);
-    }
+      // 2. Obtener el ID del usuario actual (reemplaza esto con tu variable de sesión)
+      const usuarioLogueado = 'SISTEMA_O_ID_USUARIO';
 
-    getCambiarClave(form: any) {
+      // 3. Llamar al servicio
+      this._usuariosService.cargueMasivoExcel(file, usuarioLogueado).subscribe({
+        next: (resp) => {
+          this.cargandoExcel = false;
+          console.log('✅ Éxito:', resp.msg);
 
-        console.log(form);
-        const registroData = form.value
-        console.log('registroData', registroData);
+          // Refrescar la tabla de usuarios
+          // this.cargarUsuarios();
 
-        if (!registroData.claveUsuario || !registroData.claveNew || !registroData.claveConfirm) {
-            console.warn('Todos los campos son obligatorios.');
-            return;
+          // Limpiar el input para permitir subir el mismo archivo si hubo correcciones
+          event.target.value = '';
+        },
+        error: (err) => {
+          this.cargandoExcel = false;
+          console.error('❌ Error en el cargue:', err);
+
+          // Si tu backend devolvió la lista de filas con error, puedes mostrarla aquí
+          if (err.error && err.error.errores) {
+            console.log('Detalle de filas con error:', err.error.errores);
+          }
+
+          event.target.value = '';
         }
+      });
+    }
+  }
 
-        if (registroData.claveNew !== registroData.claveConfirm) {
-            console.warn('La confirmación no coincide con la nueva clave.');
-            return;
-        }
+  procesarArchivoExcel(file: File): void {
+    if (!file) return;
 
-        const username = this.usuarioSeleccionadoParaClave.userNameUsuario;
-        const correo = this.usuarioSeleccionadoParaClave.correoUsuario;
-
-        this._authService.verificarClaveActual(username, registroData.claveUsuario).subscribe({
-            next: (respValidacion) => {
-                const usuarioActualizado = {
-                    ...this.usuarioSeleccionadoParaClave,
-                    claveUsuario: registroData.claveNew
-                };
-
-                this._usuariosService.actualizarUsuarioClave(usuarioActualizado).subscribe({
-                    next: (respUpdate) => {
-                        console.log('✅ Cambio de clave exitoso', respUpdate);
-                        this.registroSeleccionado = '';
-                        this.mostrarModalPassword = false;
-
-                        this._emailService.enviarClaveUsuario(correo, registroData.claveNew).subscribe({
-                            next: (respEmail) => {
-                                console.log('📧 Correo enviado con éxito', respEmail);
-                            },
-                            error: (errEmail) => {
-                                console.error('❌ La clave se actualizó, pero falló el envío del correo', errEmail);
-                            }
-                        });
-
-                        this._swalService.getAlertConfirmSuccess(this.translate.instant('COMMON.PASSWORD_WAS_CHANGED_SUCCESSFULLY'));
-                    },
-                    error: (errUpdate) => {
-                        console.error('❌ Error guardando la nueva clave', errUpdate);
-                    }
-                });
-
-            },
-            error: (errValidacion) => {
-                console.error('❌ La clave actual ingresada no es correcta', errValidacion);
-            }
-        });
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    if (extension !== 'xlsx' && extension !== 'xls') {
+      console.error('Por favor, selecciona un archivo de Excel válido.');
+      // Opcional: muestra una alerta con tu _swalService
+      return;
     }
 
-    procesarCambioClave(id: string, nuevaClave: string) {
-        const usuario = this.usuarios.find(x => x.codigoUsuario === id);
-        if (!usuario) {
-            console.error('Usuario no encontrado en la tabla');
-            return;
-        }
+    this.cargandoExcel = true;
 
-        const correo = usuario.correoUsuario || 'german.valencia10@gmail.com';
-        const usuarioActualizado = { ...usuario, claveUsuario: nuevaClave };
+    // Obtenemos el código del usuario logueado actualmente de forma dinámica
+    const usuarioLogueado = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || 'ADMIN_SISTEMA';
+
+    // Obtenemos también el código del suscriptor activo por si el Excel no lo trae explícitamente en cada fila
+    const codigoSuscriptorActual = this._localStorageService.getObject<string>('regId') || this.stId;
+
+    // Llamamos al servicio de usuariosSC pasándole el archivo, el suscriptor por defecto y el usuario creador
+    this._usuariosSCService.cargueMasivoExcel(file, codigoSuscriptorActual, usuarioLogueado).subscribe({
+      next: (resp: any) => {
+        this.cargandoExcel = false;
+
+        console.log('✅ Éxito:', resp.msg || 'Cargue masivo completado.');
+
+        // Recargamos el stream para que el Datatable se actualice y pinte los usuarios nuevos en vivo
+        this.setupRegistrosStream();
+      },
+      error: (err: any) => {
+        this.cargandoExcel = false;
+
+        const mensajePrincipal = err.error?.msg || 'Error interno al procesar el archivo de usuarios SC.';
+        console.error('❌ Error de cargue:', mensajePrincipal);
+
+        if (err.error?.errores) {
+          console.warn('Detalle de validación de Joi en filas:', err.error.errores);
+        }
+      }
+    });
+  }
+
+  OnBackButtonClic(event: any) {
+    this.router.navigate(['/suscriptor/suscriptores']);
+  }
+
+  OnEditarRegistroClick(event: any) {
+    console.log('event codigoUsuarioSC', event);
+
+    const id = event.id || event;
+    this._localStorageService.setObject('regId', id);
+    this._localStorageService.setObject('stId', this.stId);
+    this.router.navigate(['/suscriptor/gestion-usuario-suscriptor']);
+  }
+
+  OnEliminarRegistroClick(event: any) {
+    console.log('Eliminar usuario:', event.id || event);
+  }
+
+  getCambiarClave(form: any) {
+    console.log(form);
+    const registroData = form.value;
+    console.log('registroData', registroData);
+
+    if (!registroData.claveUsuario || !registroData.claveNew || !registroData.claveConfirm) {
+      console.warn('Todos los campos son obligatorios.');
+      return;
+    }
+
+    if (registroData.claveNew !== registroData.claveConfirm) {
+      console.warn('La confirmación no coincide con la nueva clave.');
+      return;
+    }
+
+    const username = this.usuarioSeleccionadoParaClave.userNameUsuario;
+    const correo = this.usuarioSeleccionadoParaClave.correoUsuario;
+
+    this._authService.verificarClaveActual(username, registroData.claveUsuario).subscribe({
+      next: (respValidacion) => {
+        const usuarioActualizado = {
+          ...this.usuarioSeleccionadoParaClave,
+          claveUsuario: registroData.claveNew
+        };
 
         this._usuariosService.actualizarUsuarioClave(usuarioActualizado).subscribe({
-            next: (respUpdate) => {
-                console.log('✅ Clave actualizada en BD correctamente', respUpdate);
+          next: (respUpdate) => {
+            console.log('✅ Cambio de clave exitoso', respUpdate);
+            this.registroSeleccionado = '';
+            this.mostrarModalPassword = false;
 
-                this._emailService.enviarClaveUsuario(correo, nuevaClave).subscribe({
-                    next: (respEmail) => {
-                        console.log('📧 Correo enviado con éxito', respEmail);
-                    },
-                    error: (errEmail) => {
-                        console.error('❌ La clave se actualizó, pero falló el envío del correo', errEmail);
-                    }
-                });
-            },
-            error: (errUpdate) => {
-                console.error('❌ Error actualizando la clave en la base de datos', errUpdate);
-            }
+            this._emailService.enviarClaveUsuario(correo, registroData.claveNew).subscribe({
+              next: (respEmail) => {
+                console.log('📧 Correo enviado con éxito', respEmail);
+              },
+              error: (errEmail) => {
+                console.error('❌ La clave se actualizó, pero falló el envío del correo', errEmail);
+              }
+            });
+
+            this._swalService.getAlertConfirmSuccess(this.translate.instant('COMMON.PASSWORD_WAS_CHANGED_SUCCESSFULLY'));
+          },
+          error: (errUpdate) => {
+            console.error('❌ Error guardando la nueva clave', errUpdate);
+          }
         });
+      },
+      error: (errValidacion) => {
+        console.error('❌ La clave actual ingresada no es correcta', errValidacion);
+      }
+    });
+  }
 
+  procesarCambioClave(id: string, nuevaClave: string) {
+    const usuario = this.usuarios.find((x) => x.codigoUsuario === id);
+    if (!usuario) {
+      console.error('Usuario no encontrado en la tabla');
+      return;
     }
 
-    cerrarModal() {
-        this.mostrarModalPassword = false;
-        //this.registroSeleccionado = null;
-    }
+    const correo = usuario.correoUsuario || 'german.valencia10@gmail.com';
+    const usuarioActualizado = { ...usuario, claveUsuario: nuevaClave };
 
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
+    this._usuariosService.actualizarUsuarioClave(usuarioActualizado).subscribe({
+      next: (respUpdate) => {
+        console.log('✅ Clave actualizada en BD correctamente', respUpdate);
 
-    OnRegresarClick(event: any) {
-        console.log('ejecutando opcion Regresar Suscriptor', event);
-        this.router.navigate(['suscriptor/suscriptores']);
-    }
+        this._emailService.enviarClaveUsuario(correo, nuevaClave).subscribe({
+          next: (respEmail) => {
+            console.log('📧 Correo enviado con éxito', respEmail);
+          },
+          error: (errEmail) => {
+            console.error('❌ La clave se actualizó, pero falló el envío del correo', errEmail);
+          }
+        });
+      },
+      error: (errUpdate) => {
+        console.error('❌ Error actualizando la clave en la base de datos', errUpdate);
+      }
+    });
+  }
+
+  cerrarModal() {
+    this.mostrarModalPassword = false;
+    //this.registroSeleccionado = null;
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
+
+  OnRegresarClick(event: any) {
+    console.log('ejecutando opcion Regresar Suscriptor', event);
+    this.router.navigate(['suscriptor/suscriptores']);
+  }
 }

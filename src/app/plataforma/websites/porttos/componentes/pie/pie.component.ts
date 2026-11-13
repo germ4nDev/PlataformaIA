@@ -14,16 +14,17 @@ import { TiendasComponent } from '../tiendas/tiendas.component';
 import { DispositivoPortalService } from '../../dispositivo-portal.service';
 
 @Component({
-    selector: 'pp-pie',
-    standalone: true,
-    imports: [TranslateModule, RouterLink, EnlaceComponent, TiendasComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './pie.component.html',
-  styleUrl: './pie.component.scss',
+  selector: 'pp-pie',
+  imports: [TranslateModule, RouterLink, EnlaceComponent, TiendasComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './pie.component.html',
+  styleUrl: './pie.component.scss'
 })
 export class PieComponent {
-    @Input() config: ConfigPortal | null = null;
-    get menu() { return menuDe(MENU, this.config); }   // Planes solo con planesActivos = '1' (CC-106)
-    readonly anio = new Date().getFullYear();
-    readonly movil = inject(DispositivoPortalService).movil;
+  @Input() config: ConfigPortal | null = null;
+  get menu() {
+    return menuDe(MENU, this.config);
+  } // Planes solo con planesActivos = '1' (CC-106)
+  readonly anio = new Date().getFullYear();
+  readonly movil = inject(DispositivoPortalService).movil;
 }

@@ -18,7 +18,6 @@ interface titleType {
 
 @Component({
   selector: 'app-breadcrumb',
-  standalone: true,
   imports: [TranslateModule, RouterModule],
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss']

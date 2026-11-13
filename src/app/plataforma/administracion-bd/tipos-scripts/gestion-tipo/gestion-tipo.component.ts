@@ -19,127 +19,146 @@ import { PTLTiposScriptsModel } from 'src/app/theme/shared/_helpers/models/PTLTi
 import { LocalStorageService } from 'src/app/theme/shared/service';
 
 @Component({
-    selector: 'app-gestion-tipo',
-    standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterModule,
-        TranslateModule,
-        NavBarComponent, // <- Importado para el HTML
-        NavContentComponent // <- Importado para el HTML
-    ],
-    templateUrl: './gestion-tipo.component.html',
-    styleUrl: './gestion-tipo.component.scss'
+  selector: 'app-gestion-tipo',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TranslateModule,
+    NavBarComponent, // <- Importado para el HTML
+    NavContentComponent // <- Importado para el HTML
+  ],
+  templateUrl: './gestion-tipo.component.html',
+  styleUrl: './gestion-tipo.component.scss'
 })
 export class GestionTipoComponent implements OnInit {
-    tipoForm!: FormGroup;
-    esNuevo: boolean = true;
-    tipoId: string = '';
+  tipoForm!: FormGroup;
+  esNuevo: boolean = true;
+  tipoId: string = '';
 
-    menuItems$!: Observable<NavigationItem[]>;
-    @Output() toggleSidebar = new EventEmitter<void>();
+  menuItems$!: Observable<NavigationItem[]>;
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    constructor(
-        private fb: FormBuilder,
-        private route: ActivatedRoute,
-        private router: Router,
-        private _tiposScriptsService: PTLTiposScriptsService,
-        private _localStorageService: LocalStorageService,
-        private translate: TranslateService,
-        private _navigationService: NavigationService
-    ) {
-        this.crearFormulario();
-        const registroId = this._localStorageService.getObject<string>('regId') || 'nuevo'
-        if (registroId && registroId !== 'nuevo') {
-            this.esNuevo = false;
-            this.tipoId = registroId;
-            this.cargarTipo(registroId);
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private _tiposScriptsService: PTLTiposScriptsService,
+    private _localStorageService: LocalStorageService,
+    private translate: TranslateService,
+    private _navigationService: NavigationService
+  ) {
+    this.crearFormulario();
+    const registroId = this._localStorageService.getObject<string>('regId') || 'nuevo';
+    if (registroId && registroId !== 'nuevo') {
+      this.esNuevo = false;
+      this.tipoId = registroId;
+      this.cargarTipo(registroId);
+    }
+  }
+
+  ngOnInit(): void {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+  }
+
+  crearFormulario(): void {
+    this.tipoForm = this.fb.group({
+      codigoTipo: ['', [Validators.required]],
+      nombreTipo: ['', [Validators.required]],
+      descripcionTipo: [''],
+      estadoTipo: [true, [Validators.required]]
+    });
+  }
+
+  cargarTipo(id: string): void {
+    this._tiposScriptsService.getRegistroById(id).subscribe({
+      next: (resp: any) => {
+        if (resp.ok && resp.tipoScript) {
+          this.tipoForm.patchValue({
+            codigoTipo: resp.tipoScript.codigoTipo,
+            nombreTipo: resp.tipoScript.nombreTipo,
+            descripcionTipo: resp.tipoScript.descripcionTipo,
+            estadoTipo: resp.tipoScript.estadoTipo
+          });
+          this.tipoForm.get('codigoTipo')?.disable();
         }
+      },
+      error: () => {
+        Swal.fire(
+          traducir('COMMON.ERROR'),
+          traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.COULD_NOT_LOAD_SCRIPT_TYPE_INFORMATION'),
+          'error'
+        );
+        this.volver();
+      }
+    });
+  }
+
+  guardar(): void {
+    if (this.tipoForm.invalid) {
+      Object.values(this.tipoForm.controls).forEach((control) => control.markAsTouched());
+      return;
     }
 
-    ngOnInit(): void {
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
-    }
+    const tipoData: PTLTiposScriptsModel = {
+      ...this.tipoForm.getRawValue(),
+      codigoUsuarioCreacion: 'ADMIN',
+      fechaCreacion: new Date().toISOString(),
+      codigoUsuarioModificacion: 'ADMIN',
+      fechaModificacion: new Date().toISOString()
+    };
 
-    crearFormulario(): void {
-        this.tipoForm = this.fb.group({
-            codigoTipo: ['', [Validators.required]],
-            nombreTipo: ['', [Validators.required]],
-            descripcionTipo: [''],
-            estadoTipo: [true, [Validators.required]]
-        });
-    }
-
-    cargarTipo(id: string): void {
-        this._tiposScriptsService.getRegistroById(id).subscribe({
-            next: (resp: any) => {
-                if (resp.ok && resp.tipoScript) {
-                    this.tipoForm.patchValue({
-                        codigoTipo: resp.tipoScript.codigoTipo,
-                        nombreTipo: resp.tipoScript.nombreTipo,
-                        descripcionTipo: resp.tipoScript.descripcionTipo,
-                        estadoTipo: resp.tipoScript.estadoTipo
-                    });
-                    this.tipoForm.get('codigoTipo')?.disable();
-                }
-            },
-            error: () => {
-                Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.COULD_NOT_LOAD_SCRIPT_TYPE_INFORMATION'), 'error');
-                this.volver();
-            }
-        });
-    }
-
-    guardar(): void {
-        if (this.tipoForm.invalid) {
-            Object.values(this.tipoForm.controls).forEach((control) => control.markAsTouched());
-            return;
+    if (this.esNuevo) {
+      this._tiposScriptsService.postCrearRegistro(tipoData).subscribe({
+        next: () => {
+          Swal.fire(
+            traducir('COMMON.SUCCESS'),
+            traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.SCRIPT_TYPE_CREATED_SUCCESSFULLY'),
+            'success'
+          );
+          this.volver();
+        },
+        error: (err) => {
+          console.error(err);
+          Swal.fire(
+            traducir('COMMON.ERROR'),
+            traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.ERROR_OCCURRED_CREATING_SCRIPT_TYPE'),
+            'error'
+          );
         }
-
-        const tipoData: PTLTiposScriptsModel = {
-            ...this.tipoForm.getRawValue(),
-            codigoUsuarioCreacion: 'ADMIN',
-            fechaCreacion: new Date().toISOString(),
-            codigoUsuarioModificacion: 'ADMIN',
-            fechaModificacion: new Date().toISOString()
-        };
-
-        if (this.esNuevo) {
-            this._tiposScriptsService.postCrearRegistro(tipoData).subscribe({
-                next: () => {
-                    Swal.fire(traducir('COMMON.SUCCESS'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.SCRIPT_TYPE_CREATED_SUCCESSFULLY'), 'success');
-                    this.volver();
-                },
-                error: (err) => {
-                    console.error(err);
-                    Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.ERROR_OCCURRED_CREATING_SCRIPT_TYPE'), 'error');
-                }
-            });
-        } else {
-            this._tiposScriptsService.putModificarRegistro(tipoData).subscribe({
-                next: () => {
-                    Swal.fire(traducir('COMMON.SUCCESS'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.SCRIPT_TYPE_UPDATED_SUCCESSFULLY'), 'success');
-                    this.volver();
-                },
-                error: (err) => {
-                    console.error(err);
-                    Swal.fire(traducir('COMMON.ERROR'), traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.ERROR_OCCURRED_UPDATING_SCRIPT_TYPE'), 'error');
-                }
-            });
+      });
+    } else {
+      this._tiposScriptsService.putModificarRegistro(tipoData).subscribe({
+        next: () => {
+          Swal.fire(
+            traducir('COMMON.SUCCESS'),
+            traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.SCRIPT_TYPE_UPDATED_SUCCESSFULLY'),
+            'success'
+          );
+          this.volver();
+        },
+        error: (err) => {
+          console.error(err);
+          Swal.fire(
+            traducir('COMMON.ERROR'),
+            traducir('ADMINISTRACION_BD.TIPOS_SCRIPTS.GESTION.ERROR_OCCURRED_UPDATING_SCRIPT_TYPE'),
+            'error'
+          );
         }
+      });
     }
+  }
 
-    volver(): void {
-        this.router.navigate(['/administracion-bd/tipos-scripts']);
-    }
+  volver(): void {
+    this.router.navigate(['/administracion-bd/tipos-scripts']);
+  }
 
-    campoNoValido(campo: string): boolean {
-        return this.tipoForm.get(campo)?.invalid && this.tipoForm.get(campo)?.touched ? true : false;
-    }
+  campoNoValido(campo: string): boolean {
+    return this.tipoForm.get(campo)?.invalid && this.tipoForm.get(campo)?.touched ? true : false;
+  }
 
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

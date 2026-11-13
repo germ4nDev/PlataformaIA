@@ -10,97 +10,95 @@ import { TABLER_ICONS_LIST } from '../../constants/tabler-icons.const';
 import { IconComponent } from '../icon/icon.component';
 
 const ICON_PICKER_VALUE_ACCESSOR: any = {
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => IconPickerComponent),
-    multi: true
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => IconPickerComponent),
+  multi: true
 };
 
 @Component({
-    selector: 'app-icon-picker',
-    standalone: true,
-    imports: [CommonModule, TranslateModule, IconComponent],
-    templateUrl: './icon-picker.component.html',
-    styleUrl: './icon-picker.component.scss',
-    providers: [ICON_PICKER_VALUE_ACCESSOR]
+  selector: 'app-icon-picker',
+  imports: [CommonModule, TranslateModule, IconComponent],
+  templateUrl: './icon-picker.component.html',
+  styleUrl: './icon-picker.component.scss',
+  providers: [ICON_PICKER_VALUE_ACCESSOR]
 })
 export class IconPickerComponent implements ControlValueAccessor {
+  // 🟢 Unimos ambas listas para tener el catálogo definitivo
+  @Input() catalogoIconos: string[] = [...FEATHER_ICONS_LIST, ...TABLER_ICONS_LIST];
 
-    // 🟢 Unimos ambas listas para tener el catálogo definitivo
-    @Input() catalogoIconos: string[] = [...FEATHER_ICONS_LIST, ...TABLER_ICONS_LIST];
+  valorSeleccionado: string = '';
+  isDisabled: boolean = false;
+  mostrarModal: boolean = false;
 
-    valorSeleccionado: string = '';
-    isDisabled: boolean = false;
-    mostrarModal: boolean = false;
+  onChange = (value: string) => {};
+  onTouched = () => {};
 
-    onChange = (value: string) => { };
-    onTouched = () => { };
-
-    // ==========================================
-    // LÓGICA DE CLASES DINÁMICAS (Feather vs Tabler)
-    // ==========================================
-    obtenerClaseIcono(icono: string, clasesExtra: string = ''): string {
-        if (!icono) {
-            // Ícono por defecto cuando el input está vacío
-            return `feather icon-more-horizontal ${clasesExtra}`.trim();
-        }
-
-        let claseBase = '';
-
-        // Detecta si es Tabler (ej: 'ti ti-brand-aws')
-        if (icono.startsWith('ti')) {
-            claseBase = icono;
-        }
-        // Detecta si es Feather (ej: 'icon-server')
-        else if (icono.startsWith('icon-')) {
-            claseBase = `feather ${icono}`;
-        }
-        // Respaldo
-        else {
-            claseBase = icono;
-        }
-
-        return `${claseBase} ${clasesExtra}`.trim();
+  // ==========================================
+  // LÓGICA DE CLASES DINÁMICAS (Feather vs Tabler)
+  // ==========================================
+  obtenerClaseIcono(icono: string, clasesExtra: string = ''): string {
+    if (!icono) {
+      // Ícono por defecto cuando el input está vacío
+      return `feather icon-more-horizontal ${clasesExtra}`.trim();
     }
 
-    // ==========================================
-    // MANEJO DEL MODAL
-    // ==========================================
-    abrirModal() {
-        if (!this.isDisabled) {
-            this.mostrarModal = true;
-            document.body.classList.add('modal-open');
-        }
+    let claseBase = '';
+
+    // Detecta si es Tabler (ej: 'ti ti-brand-aws')
+    if (icono.startsWith('ti')) {
+      claseBase = icono;
+    }
+    // Detecta si es Feather (ej: 'icon-server')
+    else if (icono.startsWith('icon-')) {
+      claseBase = `feather ${icono}`;
+    }
+    // Respaldo
+    else {
+      claseBase = icono;
     }
 
-    cerrarModal() {
-        this.mostrarModal = false;
-        document.body.classList.remove('modal-open');
-    }
+    return `${claseBase} ${clasesExtra}`.trim();
+  }
 
-    seleccionarIcono(icono: string) {
-        if (this.isDisabled) return;
-        this.valorSeleccionado = icono;
-        this.cerrarModal();
-        this.onChange(this.valorSeleccionado);
-        this.onTouched();
+  // ==========================================
+  // MANEJO DEL MODAL
+  // ==========================================
+  abrirModal() {
+    if (!this.isDisabled) {
+      this.mostrarModal = true;
+      document.body.classList.add('modal-open');
     }
+  }
 
-    // ==========================================
-    // CONTROL VALUE ACCESSOR
-    // ==========================================
-    writeValue(value: any): void {
-        this.valorSeleccionado = value || '';
-    }
+  cerrarModal() {
+    this.mostrarModal = false;
+    document.body.classList.remove('modal-open');
+  }
 
-    registerOnChange(fn: any): void {
-        this.onChange = fn;
-    }
+  seleccionarIcono(icono: string) {
+    if (this.isDisabled) return;
+    this.valorSeleccionado = icono;
+    this.cerrarModal();
+    this.onChange(this.valorSeleccionado);
+    this.onTouched();
+  }
 
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
+  // ==========================================
+  // CONTROL VALUE ACCESSOR
+  // ==========================================
+  writeValue(value: any): void {
+    this.valorSeleccionado = value || '';
+  }
 
-    setDisabledState(isDisabled: boolean): void {
-        this.isDisabled = isDisabled;
-    }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
 }

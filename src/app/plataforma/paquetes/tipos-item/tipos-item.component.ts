@@ -21,205 +21,221 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoItem.model';
 
 @Component({
-    selector: 'app-tipos-item',
-    standalone: true,
-    imports: [
-        CommonModule,
-        DataTablesModule,
-        SharedModule,
-        TranslateModule,
-        NavBarComponent,
-        NavContentComponent,
-        TableDataComponent,
-        DataLoaderComponent
-    ],
-    templateUrl: './tipos-item.component.html',
-    styleUrl: './tipos-item.component.scss'
+  selector: 'app-tipos-item',
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    TableDataComponent,
+    DataLoaderComponent
+  ],
+  templateUrl: './tipos-item.component.html',
+  styleUrl: './tipos-item.component.scss'
 })
 export class TiposItemComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    hasFiltersSlot: boolean = true;
-    gradientConfig;
-    menuItems$!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' = 'menu';
-    suscriptor: string = '';
+  hasFiltersSlot: boolean = true;
+  gradientConfig;
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' = 'menu';
+  suscriptor: string = '';
 
-    subscriptions = new Subscription();
-    filtroNombreSubject = new BehaviorSubject<string>('');
-    filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  subscriptions = new Subscription();
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-    _tiposTransformados$: Observable<any[]> = of([]);
-    _tiposFiltrados$: Observable<any[]> = of([]);
-    tiposCatalogo: PTLTipoItemModel[] = [];
+  _tiposTransformados$: Observable<any[]> = of([]);
+  _tiposFiltrados$: Observable<any[]> = of([]);
+  tiposCatalogo: PTLTipoItemModel[] = [];
 
-    constructor(
-        private router: Router,
-        private cdr: ChangeDetectorRef,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _localStorageService: LocalStorageService,
-        private _logActividadesService: PtllogActividadesService,
-        private _permisosService: PtlPermisosService,
-        private _swalService: SwalAlertService,
-        private _registrosService: PtltiposItemsService // Inyección de Tipos
-    ) {
-        this.gradientConfig = GradientConfig;
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-    }
+  constructor(
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
+    private _permisosService: PtlPermisosService,
+    private _swalService: SwalAlertService,
+    private _registrosService: PtltiposItemsService // Inyección de Tipos
+  ) {
+    this.gradientConfig = GradientConfig;
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
-    ngOnInit(): void {
-        this._localStorageService.removeObject('regId');
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
+  ngOnInit(): void {
+    this._localStorageService.removeObject('regId');
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
 
-        this.setupTiposStream();
+    this.setupTiposStream();
 
-        this.subscriptions.add(
-            this._registrosService.cargarRegistros().subscribe({
-                next: () => console.log('✅ Tipos de Ítem cargados en el servicio'),
-                error: (err) => console.error('❌ Error al cargar tipos de ítem:', err)
-            })
-        );
-    }
+    this.subscriptions.add(
+      this._registrosService.cargarRegistros().subscribe({
+        next: () => console.log('✅ Tipos de Ítem cargados en el servicio'),
+        error: (err) => console.error('❌ Error al cargar tipos de ítem:', err)
+      })
+    );
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-    setupTiposStream(): void {
-        this._tiposTransformados$ = combineLatest([
-            this._registrosService.tiposItems$,
-            this._permisosService.actividadesAutorizadas$
-        ]).pipe(
-            map(([tiposBD, permisos]: [any[], string[]]) => {
-                if (!tiposBD || tiposBD.length === 0) return [];
+  setupTiposStream(): void {
+    this._tiposTransformados$ = combineLatest([this._registrosService.tiposItems$, this._permisosService.actividadesAutorizadas$]).pipe(
+      map(([tiposBD, permisos]: [any[], string[]]) => {
+        if (!tiposBD || tiposBD.length === 0) return [];
 
-                return tiposBD.map((tipo: any) => {
-                    const newTipo: any = { ...tipo };
-                    newTipo.nomEstado = newTipo.estadoTipo ? 'Activo' : 'Inactivo';
+        return tiposBD.map((tipo: any) => {
+          const newTipo: any = { ...tipo };
+          newTipo.nomEstado = newTipo.estadoTipo ? 'Activo' : 'Inactivo';
 
-                    let claseBase = newTipo.iconoTipo || 'feather icon-more-horizontal';
-                    if (claseBase.startsWith('icon-')) {
-                        claseBase = `feather ${claseBase}`; // Si es Feather, le agregamos la familia
-                    }
+          let claseBase = newTipo.iconoTipo || 'feather icon-more-horizontal';
+          if (claseBase.startsWith('icon-')) {
+            claseBase = `feather ${claseBase}`; // Si es Feather, le agregamos la familia
+          }
 
-                    newTipo.claseIconoTabla = claseBase;
-                    const accionesPermitidas: any[] = [];
+          newTipo.claseIconoTabla = claseBase;
+          const accionesPermitidas: any[] = [];
 
-                    if (permisos.includes('ACT_TIPOS_ITEM_MODIFICAR')) {
-                        accionesPermitidas.push({
-                            accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('COMMON.EDIT')
-                        });
-                    }
+          if (permisos.includes('ACT_TIPOS_ITEM_MODIFICAR')) {
+            accionesPermitidas.push({
+              accion: 'MODIFICAR',
+              letra: 'M',
+              color: '#2a5dbd',
+              tooltip: this.translate.instant('COMMON.EDIT')
+            });
+          }
 
-                    if (permisos.includes('ACT_TIPOS_ITEM_ELIMINAR')) {
-                        accionesPermitidas.push({
-                            accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('COMMON.DELETE')
-                        });
-                    }
+          if (permisos.includes('ACT_TIPOS_ITEM_ELIMINAR')) {
+            accionesPermitidas.push({
+              accion: 'ELIMINAR',
+              letra: 'E',
+              color: '#dd1717',
+              tooltip: this.translate.instant('COMMON.DELETE')
+            });
+          }
 
-                    newTipo._acciones = accionesPermitidas;
-                    return newTipo;
-                });
-            }),
-            tap((regs) => {
-                this.tiposCatalogo = regs;
-                this.cdr.detectChanges();
-            }),
-            catchError(err => {
-                console.error('Error en el stream de tipos de ítems:', err);
-                return of([]);
-            })
-        );
-
-        // 2. Aplicación de filtros en tiempo real
-        this._tiposFiltrados$ = combineLatest([
-            this._tiposTransformados$.pipe(startWith([])),
-            this.filtroNombreSubject,
-            this.filtroEstadoSubject
-        ]).pipe(
-            map(([tipos, nombre, estado]) => {
-                let listado = tipos;
-
-                if (nombre) {
-                    const txt = nombre.toLowerCase();
-                    listado = listado.filter(t => (t.nombreTipo || '').toLowerCase().includes(txt));
-                }
-
-                if (estado !== 'todos') {
-                    const bEstado = estado === 'true';
-                    listado = listado.filter(t => t.estadoTipo === bEstado);
-                }
-
-                return listado;
-            })
-        );
-    }
-
-    onAccionPrincipal(evento: { accion: string, row: any }) {
-        const { accion, row } = evento;
-        const id = row.codigoTipoItem;
-
-        switch (accion) {
-            case 'MODIFICAR':
-                this._localStorageService.setObject('regId', id);
-                this.router.navigate(['paquetes/gestion-tipo-item']);
-                break;
-
-            case 'ELIMINAR':
-                this.eliminarRegistro(row);
-                break;
-
-            default:
-                console.warn(`Acción no reconocida: ${accion}`);
-                break;
-        }
-    }
-
-    OnNuevoRegistroClick(): void {
-        this._localStorageService.setObject('regId', 'nuevo');
-        this.router.navigate(['paquetes/gestion-tipo-item']);
-    }
-
-    eliminarRegistro(row: any): void {
-        this._swalService.getAlertQuestionRequest(
-            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreTipo}".`,
-            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
-        ).subscribe(result => {
-            if (result) {
-                this._registrosService.deleteEliminarRegistro(row.codigoTipoItem).subscribe({
-                    next: (resp: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        this._swalService.getAlertSuccess(resp.mensaje);
-                        this._registrosService.cargarRegistros().subscribe();
-                    },
-                    error: (err: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + err.mensaje };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        this._swalService.getAlertError(err.mensaje);
-                        this._registrosService.cargarRegistros().subscribe();
-                    }
-                });
-            }
+          newTipo._acciones = accionesPermitidas;
+          return newTipo;
         });
+      }),
+      tap((regs) => {
+        this.tiposCatalogo = regs;
+        this.cdr.detectChanges();
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de tipos de ítems:', err);
+        return of([]);
+      })
+    );
+
+    // 2. Aplicación de filtros en tiempo real
+    this._tiposFiltrados$ = combineLatest([
+      this._tiposTransformados$.pipe(startWith([])),
+      this.filtroNombreSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([tipos, nombre, estado]) => {
+        let listado = tipos;
+
+        if (nombre) {
+          const txt = nombre.toLowerCase();
+          listado = listado.filter((t) => (t.nombreTipo || '').toLowerCase().includes(txt));
+        }
+
+        if (estado !== 'todos') {
+          const bEstado = estado === 'true';
+          listado = listado.filter((t) => t.estadoTipo === bEstado);
+        }
+
+        return listado;
+      })
+    );
+  }
+
+  onAccionPrincipal(evento: { accion: string; row: any }) {
+    const { accion, row } = evento;
+    const id = row.codigoTipoItem;
+
+    switch (accion) {
+      case 'MODIFICAR':
+        this._localStorageService.setObject('regId', id);
+        this.router.navigate(['paquetes/gestion-tipo-item']);
+        break;
+
+      case 'ELIMINAR':
+        this.eliminarRegistro(row);
+        break;
+
+      default:
+        console.warn(`Acción no reconocida: ${accion}`);
+        break;
     }
+  }
 
-    onFiltroNombreChangeClick(evento: any) { this.filtroNombreSubject.next(evento.target.value); }
-    onFiltroEstadoChangeClick(evento: any) { this.filtroEstadoSubject.next(evento.target.value); }
-    toggleNav(): void { this.toggleSidebar.emit(); }
+  OnNuevoRegistroClick(): void {
+    this._localStorageService.setObject('regId', 'nuevo');
+    this.router.navigate(['paquetes/gestion-tipo-item']);
+  }
 
-    columnasTipos: ColumnMetadata[] = [
-        { name: 'claseIconoTabla', header: 'COMMON.ICON', type: 'icon' },
-        { name: 'nombreTipo', header: 'PAQUETES.TIPOS_ITEM.TYPE_NAME', type: 'text' },
-        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
-    ];
+  eliminarRegistro(row: any): void {
+    this._swalService
+      .getAlertQuestionRequest(
+        this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreTipo}".`,
+        this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
+      )
+      .subscribe((result) => {
+        if (result) {
+          this._registrosService.deleteEliminarRegistro(row.codigoTipoItem).subscribe({
+            next: (resp: any) => {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '201',
+                descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe();
+              this._swalService.getAlertSuccess(resp.mensaje);
+              this._registrosService.cargarRegistros().subscribe();
+            },
+            error: (err: any) => {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '501',
+                descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + err.mensaje
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe();
+              this._swalService.getAlertError(err.mensaje);
+              this._registrosService.cargarRegistros().subscribe();
+            }
+          });
+        }
+      });
+  }
 
-    columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoTipoItem', header: 'PAQUETES.INTERNAL_CODE', type: 'text' },
-        { name: 'descripcionTipo', header: 'COMMON.DESCRIPTION', type: 'text' }
-    ];
+  onFiltroNombreChangeClick(evento: any) {
+    this.filtroNombreSubject.next(evento.target.value);
+  }
+  onFiltroEstadoChangeClick(evento: any) {
+    this.filtroEstadoSubject.next(evento.target.value);
+  }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
+
+  columnasTipos: ColumnMetadata[] = [
+    { name: 'claseIconoTabla', header: 'COMMON.ICON', type: 'icon' },
+    { name: 'nombreTipo', header: 'PAQUETES.TIPOS_ITEM.TYPE_NAME', type: 'text' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    { name: 'codigoTipoItem', header: 'PAQUETES.INTERNAL_CODE', type: 'text' },
+    { name: 'descripcionTipo', header: 'COMMON.DESCRIPTION', type: 'text' }
+  ];
 }

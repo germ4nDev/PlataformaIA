@@ -10,7 +10,6 @@ import { NavGroupComponent } from '../nav-group/nav-group.component';
 
 @Component({
   selector: 'app-nav-collapse',
-  standalone: true,
   imports: [CommonModule, NavItemComponent, NavGroupComponent, TranslateModule, RouterModule],
   templateUrl: './nav-collapse.component.html',
   styleUrls: ['./nav-collapse.component.scss'],

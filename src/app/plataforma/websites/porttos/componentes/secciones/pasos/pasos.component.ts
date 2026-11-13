@@ -13,15 +13,18 @@ import { EncabezadoSeccionComponent } from '../encabezado-seccion/encabezado-sec
 
 @Component({
   selector: 'pp-seccion-pasos',
-  standalone: true,
   imports: [TranslateModule, EncabezadoSeccionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './pasos.component.html',
-  styleUrl: './pasos.component.scss',
+  styleUrl: './pasos.component.scss'
 })
 export class SeccionPasosComponent {
   @Input({ required: true }) s!: SeccionPortal;
   /** Fechas si algún paso trae un valor que no es número. */
-  get conFechas(): boolean { return this.s.elementos.some((e) => !!e.valor && !esNumeroDePaso(e.valor)); }
-  puntos(t: string | null) { return puntosDe(t); }
+  get conFechas(): boolean {
+    return this.s.elementos.some((e) => !!e.valor && !esNumeroDePaso(e.valor));
+  }
+  puntos(t: string | null) {
+    return puntosDe(t);
+  }
 }

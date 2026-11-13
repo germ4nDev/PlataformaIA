@@ -12,11 +12,10 @@ import { EncabezadoSeccionComponent } from '../encabezado-seccion/encabezado-sec
 
 @Component({
   selector: 'pp-seccion-tableros',
-  standalone: true,
   imports: [TranslateModule, IconoComponent, EnlaceComponent, EncabezadoSeccionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tableros.component.html',
-  styleUrl: './tableros.component.scss',
+  styleUrl: './tableros.component.scss'
 })
 export class SeccionTablerosComponent {
   @Input({ required: true }) s!: SeccionPortal;

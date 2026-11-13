@@ -22,7 +22,6 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 
 @Component({
   selector: 'app-contenidos',
-  standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './contenidos.component.html',
   styleUrls: ['./contenidos.component.scss']

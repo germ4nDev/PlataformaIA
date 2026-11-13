@@ -5,13 +5,12 @@ import type { Api } from 'datatables.net';
 
 @Component({
   selector: 'app-log-actividades',
-  standalone: true,
   imports: [DataTablesModule],
   templateUrl: './log-actividades.component.html',
   styleUrl: './log-actividades.component.scss'
 })
 export class LogActividadesComponent implements OnInit, AfterViewInit {
-dtColumnSearchingOptions: object = {};
+  dtColumnSearchingOptions: object = {};
   @ViewChild(DataTableDirective)
   datatableElement!: DataTableDirective;
 

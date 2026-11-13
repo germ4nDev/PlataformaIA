@@ -13,15 +13,16 @@ import { IconoComponent } from '../icono/icono.component';
 
 @Component({
   selector: 'pp-tiendas',
-  standalone: true,
   imports: [TranslateModule, IconoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tiendas.component.html',
-  styleUrl: './tiendas.component.scss',
+  styleUrl: './tiendas.component.scss'
 })
 export class TiendasComponent {
   private readonly sistema = inject(DispositivoPortalService).sistema;
   @Input() compactas = false;
   tiendas: TiendaApp[] = tiendasDe(null, this.sistema);
-  @Input() set config(c: ConfigPortal | null | undefined) { this.tiendas = tiendasDe(c, this.sistema); }
+  @Input() set config(c: ConfigPortal | null | undefined) {
+    this.tiendas = tiendasDe(c, this.sistema);
+  }
 }

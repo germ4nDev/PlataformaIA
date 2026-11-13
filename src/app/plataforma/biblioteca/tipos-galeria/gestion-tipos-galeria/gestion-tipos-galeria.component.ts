@@ -21,111 +21,109 @@ import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 
 @Component({
-    selector: 'app-gestion-tipos-galeria',
-    standalone: true,
-    imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
-    templateUrl: './gestion-tipos-galeria.component.html',
-    styleUrl: './gestion-tipos-galeria.component.scss'
+  selector: 'app-gestion-tipos-galeria',
+  imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+  templateUrl: './gestion-tipos-galeria.component.html',
+  styleUrl: './gestion-tipos-galeria.component.scss'
 })
 export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
-    FormRegistro: PTLTipoGaleria = new PTLTipoGaleria();
-    menuItems$!: Observable<NavigationItem[]>;
-    gradientConfig: any;
-    navCollapsed: boolean = false;
-    navCollapsedMob: boolean = false;
-    windowWidth: number = 0;
+  @Output() toggleSidebar = new EventEmitter<void>();
+  FormRegistro: PTLTipoGaleria = new PTLTipoGaleria();
+  menuItems$!: Observable<NavigationItem[]>;
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
 
-    isSubmit: boolean = false;
-    modoEdicion: boolean = false;
-    codeTipo = uuidv4();
-    tipoEditorTexto = 'basica';
-    lockScreenSubscription: Subscription | undefined;
-    isLocked: boolean = false;
+  isSubmit: boolean = false;
+  modoEdicion: boolean = false;
+  codeTipo = uuidv4();
+  tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _localStorageService: LocalStorageService,
-        private _tiposGaleriaService: PtlTiposGaleriaService,
-        private _swalService: SwalAlertService
-    ) {
-        this.gradientConfig = GradientConfig;
-        this._navigationService.getNavigationItems();
-        const regId = this._localStorageService.getObject<string>('regId') || 'nuevo'
-        if (regId !== 'nuevo') {
-            this.modoEdicion = true;
-            this._tiposGaleriaService.getTipoGaleriaById(regId).subscribe({
-                next: (resp: any) => {
-                    this.FormRegistro = resp.tipoGaleria;
-                    this.codeTipo = resp.tipoGaleria.codigoTipoGaleria;
-                },
-                error: () => Swal.fire(traducir('COMMON.ERROR'), traducir('BIBLIOTECA.TIPOS_GALERIA.GESTION.COULD_NOT_GET_GALLERY_TYPE'), 'error')
-            });
-        }
-
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
+    private _tiposGaleriaService: PtlTiposGaleriaService,
+    private _swalService: SwalAlertService
+  ) {
+    this.gradientConfig = GradientConfig;
+    this._navigationService.getNavigationItems();
+    const regId = this._localStorageService.getObject<string>('regId') || 'nuevo';
+    if (regId !== 'nuevo') {
+      this.modoEdicion = true;
+      this._tiposGaleriaService.getTipoGaleriaById(regId).subscribe({
+        next: (resp: any) => {
+          this.FormRegistro = resp.tipoGaleria;
+          this.codeTipo = resp.tipoGaleria.codigoTipoGaleria;
+        },
+        error: () => Swal.fire(traducir('COMMON.ERROR'), traducir('BIBLIOTECA.TIPOS_GALERIA.GESTION.COULD_NOT_GET_GALLERY_TYPE'), 'error')
+      });
     }
+  }
 
-    ngOnInit() {
-        this.menuItems$ = this._navigationService.menuItems$;
-        if (this.modoEdicion == false) {
-            this.FormRegistro.codigoTipoGaleria = uuidv4();
-            this.FormRegistro.estadoTipo = true;
-        }
+  ngOnInit() {
+    this.menuItems$ = this._navigationService.menuItems$;
+    if (this.modoEdicion == false) {
+      this.FormRegistro.codigoTipoGaleria = uuidv4();
+      this.FormRegistro.estadoTipo = true;
     }
+  }
 
-    ngOnDestroy() {
-        if (this.lockScreenSubscription) this.lockScreenSubscription.unsubscribe();
+  ngOnDestroy() {
+    if (this.lockScreenSubscription) this.lockScreenSubscription.unsubscribe();
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionTipo = nuevoContenido;
+  }
+
+  btnGestionarTipoClick(form: any) {
+    if (this.modoEdicion) {
+      this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      this.FormRegistro.fechaModificacion = new Date().toISOString();
+      this._tiposGaleriaService.actualizarTipoGaleria(this.FormRegistro).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.GESTION.TYPE_UPDATED_SUCCESSFULLY'));
+            form.resetForm();
+            this.router.navigate(['/biblioteca/tipos-galeria']);
+          }
+        },
+        error: () => this._swalService.getAlertError(traducir('BIBLIOTECA.COULD_NOT_UPDATE'))
+      });
+    } else {
+      form.tipoId = 0;
+      const registroData = form.value as PTLTipoGaleria;
+      registroData.codigoTipoGaleria = this.FormRegistro.codigoTipoGaleria;
+      registroData.descripcionTipo = this.FormRegistro.descripcionTipo;
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+
+      this._tiposGaleriaService.crearTipoGaleria(registroData).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.GESTION.TYPE_CREATED_SUCCESSFULLY'));
+            form.resetForm();
+            this.router.navigate(['/biblioteca/tipos-galeria']);
+          }
+        },
+        error: () => this._swalService.getAlertError(traducir('BIBLIOTECA.COULD_NOT_CREATE'))
+      });
     }
+  }
 
-    actualizarDescripcionVersion(nuevoContenido: string): void {
-        this.FormRegistro.descripcionTipo = nuevoContenido;
-    }
+  btnRegresarClick() {
+    this.router.navigate(['/biblioteca/tipos-galeria']);
+  }
 
-    btnGestionarTipoClick(form: any) {
-        if (this.modoEdicion) {
-            this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            this.FormRegistro.fechaModificacion = new Date().toISOString();
-            this._tiposGaleriaService.actualizarTipoGaleria(this.FormRegistro).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.GESTION.TYPE_UPDATED_SUCCESSFULLY'));
-                        form.resetForm();
-                        this.router.navigate(['/biblioteca/tipos-galeria']);
-                    }
-                },
-                error: () => this._swalService.getAlertError(traducir('BIBLIOTECA.COULD_NOT_UPDATE'))
-            });
-        } else {
-            form.tipoId = 0;
-            const registroData = form.value as PTLTipoGaleria;
-            registroData.codigoTipoGaleria = this.FormRegistro.codigoTipoGaleria;
-            registroData.descripcionTipo = this.FormRegistro.descripcionTipo;
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaCreacion = new Date().toISOString();
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaModificacion = new Date().toISOString();
-
-            this._tiposGaleriaService.crearTipoGaleria(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.GESTION.TYPE_CREATED_SUCCESSFULLY'));
-                        form.resetForm();
-                        this.router.navigate(['/biblioteca/tipos-galeria']);
-                    }
-                },
-                error: () => this._swalService.getAlertError(traducir('BIBLIOTECA.COULD_NOT_CREATE'))
-            });
-        }
-    }
-
-    btnRegresarClick() {
-        this.router.navigate(['/biblioteca/tipos-galeria']);
-    }
-
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

@@ -11,11 +11,10 @@ import { EncabezadoSeccionComponent } from '../encabezado-seccion/encabezado-sec
 
 @Component({
   selector: 'pp-seccion-niveles',
-  standalone: true,
   imports: [TranslateModule, EncabezadoSeccionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './niveles.component.html',
-  styleUrl: './niveles.component.scss',
+  styleUrl: './niveles.component.scss'
 })
 export class SeccionNivelesComponent {
   @Input({ required: true }) s!: SeccionPortal;

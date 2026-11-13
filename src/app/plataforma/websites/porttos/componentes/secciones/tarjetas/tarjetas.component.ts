@@ -11,11 +11,10 @@ import { EncabezadoSeccionComponent } from '../encabezado-seccion/encabezado-sec
 
 @Component({
   selector: 'pp-seccion-tarjetas',
-  standalone: true,
   imports: [TranslateModule, IconoComponent, EncabezadoSeccionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tarjetas.component.html',
-  styleUrl: './tarjetas.component.scss',
+  styleUrl: './tarjetas.component.scss'
 })
 export class SeccionTarjetasComponent {
   @Input({ required: true }) s!: SeccionPortal;

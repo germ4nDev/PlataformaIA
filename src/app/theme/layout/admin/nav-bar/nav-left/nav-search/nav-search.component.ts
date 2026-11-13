@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-nav-search',
-  standalone: true,
   imports: [TranslateModule, CommonModule],
   templateUrl: './nav-search.component.html',
   styleUrls: ['./nav-search.component.scss']

@@ -10,7 +10,6 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-configuration',
-standalone: true,
   imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './configuration.component.html',
   styleUrls: ['./configuration.component.scss'],

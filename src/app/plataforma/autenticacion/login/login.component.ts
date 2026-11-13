@@ -1,331 +1,330 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
-import { Component, OnInit, OnDestroy, inject } from '@angular/core'
-import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service'
-import { loginDeDominio } from 'src/app/plataforma/dominios/nucleo'
-import { CommonModule } from '@angular/common'
-import { RouterModule, Router, ActivatedRoute } from '@angular/router'
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component'
-import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component'
-import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model'
-import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model'
-import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
-import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model'
-import { Subscription } from 'rxjs'
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service';
+import { loginDeDominio } from 'src/app/plataforma/dominios/nucleo';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
+import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
+import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
+import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
+import { Subscription } from 'rxjs';
 import {
-    AuthenticationService,
-    LanguageService,
-    LocalStorageService,
-    PtlactividadesRolesService,
-    PtlActividadesService,
-    PtlEmpresasScService,
-    PTLPaquetesSCService,
-    PTLRolesAPService,
-    PTLSuscriptoresService,
-    PtlusuariosEmpresasScService,
-    PtlusuariosScService,
-    SocketService,
-    SwalAlertService,
-    ThemeService
-} from 'src/app/theme/shared/service'
-import { SocialNetworksComponent } from 'src/app/theme/shared/components/social-networks/social-networks.component'
-import { PTLIdioma } from 'src/app/theme/shared/_helpers/models/PTLIdioma.model'
-import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
-import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model'
-import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model'
-import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model'
+  AuthenticationService,
+  LanguageService,
+  LocalStorageService,
+  PtlactividadesRolesService,
+  PtlActividadesService,
+  PtlEmpresasScService,
+  PTLPaquetesSCService,
+  PTLRolesAPService,
+  PTLSuscriptoresService,
+  PtlusuariosEmpresasScService,
+  PtlusuariosScService,
+  SocketService,
+  SwalAlertService,
+  ThemeService
+} from 'src/app/theme/shared/service';
+import { SocialNetworksComponent } from 'src/app/theme/shared/components/social-networks/social-networks.component';
+import { PTLIdioma } from 'src/app/theme/shared/_helpers/models/PTLIdioma.model';
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model';
+import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
+import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { catchError, tap, switchMap, map } from 'rxjs/operators';
 import { armarUsuariosSC, normalizarListasSesion } from 'src/app/plataforma/sesion/nucleo';
 import { of, forkJoin, take } from 'rxjs';
-import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUser.model'
-import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model'
-import { PTLModulosPaqueteService } from 'src/app/theme/shared/service/ptlmodulos-paquete.service'
+import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUser.model';
+import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model';
+import { PTLModulosPaqueteService } from 'src/app/theme/shared/service/ptlmodulos-paquete.service';
 import { PtlusuariosRolesApService } from '../../../theme/shared/service/ptlusuarios-roles-ap.service';
-import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service'
-import { LayoutService } from 'src/app/theme/shared/service/layout.service'
-import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
-import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
+import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
+import { LayoutService } from 'src/app/theme/shared/service/layout.service';
+import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
+import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service';
 import { v4 as uuidv4 } from 'uuid';
-import { PtlSesionesService } from 'src/app/theme/shared/service/ptlsesiones.service'
+import { PtlSesionesService } from 'src/app/theme/shared/service/ptlsesiones.service';
 
 @Component({
-    selector: 'app-login',
-    standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        RouterModule,
-        LanguageSelectorComponent,
-        SharedModule,
-        TranslateModule,
-        FullScreenSliderComponent,
-        SocialNetworksComponent
-    ],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.scss'
+  selector: 'app-login',
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    LanguageSelectorComponent,
+    SharedModule,
+    TranslateModule,
+    FullScreenSliderComponent,
+    SocialNetworksComponent
+  ],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit, OnDestroy {
-    //#region VARIABLES
-    currentUser: CurrentUserModel = new CurrentUserModel();
-    registrosSub?: Subscription
-    registros: PTLSuscriptorModel[] = []
-    usuariosSCSub?: Subscription
-    usuariosSC: PTLUsuarioSCModel[] = []
-    usuariosSub?: Subscription
-    usuarios: PTLUsuarioModel[] = []
-    empresasSCSub?: Subscription
-    empresasSC: PTLEmpresaSCModel[] = []
-    modulosPQ: PTLModuloPQModel[] = []
-    usuariosRoles: PTLUsuarioRoleAPModel[] = []
-    retorno: number = 0
+  //#region VARIABLES
+  currentUser: CurrentUserModel = new CurrentUserModel();
+  registrosSub?: Subscription;
+  registros: PTLSuscriptorModel[] = [];
+  usuariosSCSub?: Subscription;
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  usuariosSub?: Subscription;
+  usuarios: PTLUsuarioModel[] = [];
+  empresasSCSub?: Subscription;
+  empresasSC: PTLEmpresaSCModel[] = [];
+  modulosPQ: PTLModuloPQModel[] = [];
+  usuariosRoles: PTLUsuarioRoleAPModel[] = [];
+  retorno: number = 0;
 
-    suscriptores: PTLSuscriptorModel[] = []
-    suitesApp: PTLSuiteAPModel[] = []
-    empresaSC: PTLEmpresaSCModel[] = []
-    empresaSCFiltradas: PTLEmpresaSCModel[] = []
-    mostrarSeleccionRoles: boolean = false
-    usuarioEmpresaSC: PTLUsuaioEmpresasSCModel[] = []
-    roles: PTLRoleAPModel[] = []
+  suscriptores: PTLSuscriptorModel[] = [];
+  suitesApp: PTLSuiteAPModel[] = [];
+  empresaSC: PTLEmpresaSCModel[] = [];
+  empresaSCFiltradas: PTLEmpresaSCModel[] = [];
+  mostrarSeleccionRoles: boolean = false;
+  usuarioEmpresaSC: PTLUsuaioEmpresasSCModel[] = [];
+  roles: PTLRoleAPModel[] = [];
 
-    loginForm!: FormGroup
-    loginSub?: Subscription
-    usernameValue: string = ''
-    userPassword: string = ''
-    returnUrl!: string
-    error: string = ''
-    loading: boolean = false
-    submitted: boolean = false
-    remember: boolean = false
-    idiomas: PTLIdioma[] = []
-    showPassword = false // Variable reactiva para el ícono del ojo
-    // Multidominio (OT-012): el login muestra la marca del dominio (porttos.co → Porttos); sin marca, el título de siempre
-    readonly marcaDominio = inject(ContextoDominioService).contexto.marca.nombre;
-    // CC-104: en un dominio de aplicación con portal, pantalla dividida con el diseño del portal; si no, el login de siempre
-    readonly loginDominio = loginDeDominio(inject(ContextoDominioService).contexto);
-    //#endregion VARIABLES
+  loginForm!: FormGroup;
+  loginSub?: Subscription;
+  usernameValue: string = '';
+  userPassword: string = '';
+  returnUrl!: string;
+  error: string = '';
+  loading: boolean = false;
+  submitted: boolean = false;
+  remember: boolean = false;
+  idiomas: PTLIdioma[] = [];
+  showPassword = false; // Variable reactiva para el ícono del ojo
+  // Multidominio (OT-012): el login muestra la marca del dominio (porttos.co → Porttos); sin marca, el título de siempre
+  readonly marcaDominio = inject(ContextoDominioService).contexto.marca.nombre;
+  // CC-104: en un dominio de aplicación con portal, pantalla dividida con el diseño del portal; si no, el login de siempre
+  readonly loginDominio = loginDeDominio(inject(ContextoDominioService).contexto);
+  //#endregion VARIABLES
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private route: ActivatedRoute,
-        private router: Router,
-        private translate: TranslateService,
-        private _localstorageService: LocalStorageService,
-        private _swalService: SwalAlertService,
-        private _themeService: ThemeService,
-        private _suscriptoresService: PTLSuscriptoresService,
-        private _localStorageService: LocalStorageService,
-        private _layoutService: LayoutService,
-        private _usuariosSCService: PtlusuariosScService,
-        private _empresasSCService: PtlEmpresasScService,
-        private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
-        private _usuariosRolesService: PtlusuariosRolesApService,
-        private _rolesService: PTLRolesAPService,
-        private _paquetesSCService: PTLPaquetesSCService,
-        private _modulosPaqueteService: PTLModulosPaqueteService,
-        private _permisosService: PtlPermisosService,
-        private _ptlSesionesService: PtlSesionesService,
-        private _widgetsMaestroService: PTLWidgetsMaestroService,
-        private _widgetsRolesService: PtlWidgetsRolesService,
-        private _languagesService: LanguageService,
-        private _socketService: SocketService,
-        private _authenticationService: AuthenticationService
-    ) {
-        this.translate.use(localStorage.getItem('lang') || 'es')
-        if (this._authenticationService.currentUserValue) {
-            //    this.router.navigate(['/dashboard/analytics']);
-        }
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private translate: TranslateService,
+    private _localstorageService: LocalStorageService,
+    private _swalService: SwalAlertService,
+    private _themeService: ThemeService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _localStorageService: LocalStorageService,
+    private _layoutService: LayoutService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _empresasSCService: PtlEmpresasScService,
+    private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
+    private _usuariosRolesService: PtlusuariosRolesApService,
+    private _rolesService: PTLRolesAPService,
+    private _paquetesSCService: PTLPaquetesSCService,
+    private _modulosPaqueteService: PTLModulosPaqueteService,
+    private _permisosService: PtlPermisosService,
+    private _ptlSesionesService: PtlSesionesService,
+    private _widgetsMaestroService: PTLWidgetsMaestroService,
+    private _widgetsRolesService: PtlWidgetsRolesService,
+    private _languagesService: LanguageService,
+    private _socketService: SocketService,
+    private _authenticationService: AuthenticationService
+  ) {
+    this.translate.use(localStorage.getItem('lang') || 'es');
+    if (this._authenticationService.currentUserValue) {
+      //    this.router.navigate(['/dashboard/analytics']);
+    }
+  }
+
+  ngOnInit() {
+    const alertaExpiracion = localStorage.getItem('alerta_expiracion');
+
+    if (alertaExpiracion) {
+      // Usamos el Toast Info o el Warning según prefieras de tu servicio
+      this._swalService.getAlertInfo(alertaExpiracion);
+
+      // Borramos la nota para no crear un bucle infinito al refrescar la página
+      localStorage.removeItem('alerta_expiracion');
     }
 
-    ngOnInit() {
-        const alertaExpiracion = localStorage.getItem('alerta_expiracion');
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+    this.idiomas = this._languagesService.getRegistrosActuales();
+    console.log('idiomas actuales', this.idiomas);
+  }
 
-        if (alertaExpiracion) {
-            // Usamos el Toast Info o el Warning según prefieras de tu servicio
-            this._swalService.getAlertInfo(alertaExpiracion);
+  ngOnDestroy() {
+    this.loginSub?.unsubscribe();
+  }
 
-            // Borramos la nota para no crear un bucle infinito al refrescar la página
-            localStorage.removeItem('alerta_expiracion');
-        }
+  get formValues() {
+    return this.loginForm.controls;
+  }
 
-        this.loginForm = this.formBuilder.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required]
+  get usernameControl() {
+    return this.loginForm.get('username');
+  }
+
+  get passwordControl() {
+    return this.loginForm.get('password');
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  onLoginUserClick(): void {
+    this.submitted = true;
+
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    this.error = '';
+    this.loading = true;
+    const userName = this.formValues?.['username']?.value;
+    const password = this.formValues?.['password']?.value;
+
+    this.loginSub = this._authenticationService
+      .login(userName, password)
+      .pipe(
+        switchMap((respLogin: any) => {
+          if (!respLogin.ok) {
+            this._swalService.getAlertError(this.translate.instant('AUTENTICACION.LOGIN.USER_NOT_FOUND'));
+            return of(null);
+          }
+
+          this._localstorageService.setTokenLocalStorage(respLogin.token);
+          this.currentUser = this._localstorageService.getCurrentUserLocalStorage();
+          console.log('++++++++ usuario activo', this.currentUser);
+
+          return forkJoin({
+            respLogin: of(respLogin),
+            currentUser: of(this.currentUser),
+            usuariosSC: this._usuariosSCService.cargarRegistros().pipe(take(1)),
+            usuariosEmpresasSC: this._usuariosEmpresasSCService.cargarRegistros().pipe(take(1)),
+            empresasSC: this._empresasSCService.cargarRegistros().pipe(take(1)),
+            suscriptores: this._suscriptoresService.getRegistros().pipe(take(1)),
+            paquetesSC: this._paquetesSCService.cargarRegistros().pipe(take(1)),
+            modulosPQ: this._modulosPaqueteService.cargarRegistros().pipe(take(1)),
+            usuariosRoles: this._usuariosRolesService.cargarRegistros().pipe(take(1)),
+            rolesMaestros: this._rolesService.cargarRegistros().pipe(take(1))
+          });
+        }),
+        tap((data: any) => {
+          this.loading = false;
+          console.log('++++++++ datos forkjoin', data);
+
+          if (!data) return;
+
+          // Árbol usuario → suscriptores → empresas (roles) y paquetes (módulos): pieza común (plataforma/sesion/nucleo, CC-109)
+          const suscUsu = armarUsuariosSC(data.currentUser.usuario?.codigoUsuario, normalizarListasSesion(data));
+
+          this.currentUser.usuariosSC = suscUsu;
+
+          // const nuevoCodigoSesion = uuidv4();
+          const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
+          this._socketService.conectarConUsuario(codigoUsuario);
+
+          const navSettingsActual = JSON.parse(sessionStorage.getItem('navsettings') || '{}');
+
+          const usuarioObj = this.currentUser.usuario || {};
+          const codigoSesionUnico = uuidv4();
+          usuarioObj.codigoSesion = codigoSesionUnico;
+          this.currentUser.usuario = usuarioObj;
+
+          this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
+
+          // 🟢 2. Armamos el payload exacto
+          const payloadSesion = {
+            codigoSesion: codigoSesionUnico,
+            codigoUsuario: usuarioObj.codigoUsuario,
+            nombreUsuario: usuarioObj.nombreUsuario || 'Usuario QPLUS',
+            correo: usuarioObj.correoUsuario || '',
+            codigoModulo: '19dbd560-5ace-4386-865a-17605dd9bca4',
+            dispositivo: navigator.userAgent.includes('Mobile') ? 'Móvil' : 'Desktop'
+          };
+
+          this._ptlSesionesService.registrarSesion(payloadSesion).subscribe({
+            next: (resp) => {
+              // 🟢 LOG 2: ¡El backend respondió OK!
+              console.log('✅ [LOGIN] Respuesta exitosa del Backend al guardar sesión:', resp);
+
+              this._socketService.conectarConUsuario(codigoUsuario, codigoSesionUnico);
+              this.cargarYGuardarLayoutUsuario(this.currentUser);
+              this._permisosService.inicializarPermisosPorDefecto().subscribe(() => {
+                this.router.navigate(['/starter/inicio-suscriptores']);
+              });
+            },
+            error: (err) => {
+              // 🔴 LOG 3: El backend rechazó la petición o hubo un error de red
+              console.error('❌ [LOGIN] Error del Backend al intentar guardar sesión:', err);
+              this.router.navigate(['/starter/inicio-suscriptores']);
+            }
+          });
+
+          console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes) armada exitosamente!', this.currentUser);
+
+          this._permisosService.inicializarPermisosPorDefecto().subscribe({
+            next: (actividades) => {
+              console.log('🛡️ Permisos (UI/Rutas) cacheados exitosamente. Actividades:', actividades.length);
+              this.router.navigate(['/starter/inicio-suscriptores']);
+            },
+            error: (err) => {
+              console.error('⚠️ Error al cachear permisos, navegando con modo restringido.', err);
+              this.router.navigate(['/starter/inicio-suscriptores']);
+            }
+          });
+        }),
+        catchError((err) => {
+          this.loading = false;
+          this.error = err;
+          console.error('Error en el Login:', err);
+          this._swalService.getAlertError(this.translate.instant('AUTENTICACION.LOGIN.INCORRECT_USERNAME_OR_PASSWORD'));
+          return of(null);
         })
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl']
-        this.idiomas = this._languagesService.getRegistrosActuales()
-        console.log('idiomas actuales', this.idiomas)
-    }
+      )
+      .subscribe();
+  }
 
-    ngOnDestroy() {
-        this.loginSub?.unsubscribe()
-    }
-
-    get formValues() {
-        return this.loginForm.controls
-    }
-
-    get usernameControl() {
-        return this.loginForm.get('username')
-    }
-
-    get passwordControl() {
-        return this.loginForm.get('password')
-    }
-
-    togglePasswordVisibility() {
-        this.showPassword = !this.showPassword;
-    }
-
-    onLoginUserClick(): void {
-        this.submitted = true;
-
-        if (this.loginForm.invalid) {
-            return;
+  private async cargarYGuardarLayoutUsuario(codigoUsuario: any): Promise<void> {
+    return new Promise((resolve) => {
+      this._layoutService.getLayoutByUsuario(codigoUsuario.usuario.codigoUsuario).subscribe({
+        next: (res) => {
+          if (res.ok && res.layout) {
+            // Si el usuario ya tiene un layout personalizado en BD, lo guardamos en sessionStorage
+            codigoUsuario.usuario.layout = JSON.stringify(res.layout);
+            this._localstorageService.setCurrentUserLocalStorage(codigoUsuario);
+            console.log('☁️ Layout personalizado cargado desde BD en el Login.');
+          } else {
+            codigoUsuario.usuario.layout = [];
+            this._localstorageService.setCurrentUserLocalStorage(codigoUsuario);
+            console.log('ℹ️ El usuario no tiene layout en BD, se usará el por defecto.');
+          }
+          resolve();
+        },
+        error: (err) => {
+          console.warn('⚠️ Error al consultar el layout en el login, se usará el por defecto.', err);
+          resolve();
         }
+      });
+    });
+  }
 
-        this.error = '';
-        this.loading = true;
-        const userName = this.formValues?.['username']?.value;
-        const password = this.formValues?.['password']?.value;
+  onChangePasswordClick() {
+    this.router.navigate(['/autenticacion/change-password']);
+  }
 
-        this.loginSub = this._authenticationService.login(userName, password)
-            .pipe(
-                switchMap((respLogin: any) => {
+  onResetPasswordClick() {
+    this.router.navigate(['/autenticacion/reset-password']);
+  }
 
-                    if (!respLogin.ok) {
-                        this._swalService.getAlertError(this.translate.instant('AUTENTICACION.LOGIN.USER_NOT_FOUND'));
-                        return of(null);
-                    }
-
-                    this._localstorageService.setTokenLocalStorage(respLogin.token);
-                    this.currentUser = this._localstorageService.getCurrentUserLocalStorage();
-                    console.log('++++++++ usuario activo', this.currentUser);
-
-                    return forkJoin({
-                        respLogin: of(respLogin),
-                        currentUser: of(this.currentUser),
-                        usuariosSC: this._usuariosSCService.cargarRegistros().pipe(take(1)),
-                        usuariosEmpresasSC: this._usuariosEmpresasSCService.cargarRegistros().pipe(take(1)),
-                        empresasSC: this._empresasSCService.cargarRegistros().pipe(take(1)),
-                        suscriptores: this._suscriptoresService.getRegistros().pipe(take(1)),
-                        paquetesSC: this._paquetesSCService.cargarRegistros().pipe(take(1)),
-                        modulosPQ: this._modulosPaqueteService.cargarRegistros().pipe(take(1)),
-                        usuariosRoles: this._usuariosRolesService.cargarRegistros().pipe(take(1)),
-                        rolesMaestros: this._rolesService.cargarRegistros().pipe(take(1))
-                    });
-                }),
-                tap((data: any) => {
-                    this.loading = false;
-                    console.log('++++++++ datos forkjoin', data);
-
-                    if (!data) return;
-
-                    // Árbol usuario → suscriptores → empresas (roles) y paquetes (módulos): pieza común (plataforma/sesion/nucleo, CC-109)
-                    const suscUsu = armarUsuariosSC(data.currentUser.usuario?.codigoUsuario, normalizarListasSesion(data));
-
-                    this.currentUser.usuariosSC = suscUsu;
-
-                    // const nuevoCodigoSesion = uuidv4();
-                    const codigoUsuario = this.currentUser.usuario?.codigoUsuario || '';
-                    this._socketService.conectarConUsuario(codigoUsuario);
-
-                    const navSettingsActual = JSON.parse(sessionStorage.getItem('navsettings') || '{}');
-
-                    const usuarioObj = this.currentUser.usuario || {};
-                    const codigoSesionUnico = uuidv4();
-                    usuarioObj.codigoSesion = codigoSesionUnico;
-                    this.currentUser.usuario = usuarioObj;
-
-                    this._localstorageService.setCurrentUserLocalStorage(this.currentUser);
-
-                    // 🟢 2. Armamos el payload exacto
-                    const payloadSesion = {
-                        codigoSesion: codigoSesionUnico,
-                        codigoUsuario: usuarioObj.codigoUsuario,
-                        nombreUsuario: usuarioObj.nombreUsuario || 'Usuario QPLUS',
-                        correo: usuarioObj.correoUsuario || '',
-                        codigoModulo: '19dbd560-5ace-4386-865a-17605dd9bca4',
-                        dispositivo: navigator.userAgent.includes('Mobile') ? 'Móvil' : 'Desktop'
-                    };
-
-                    this._ptlSesionesService.registrarSesion(payloadSesion).subscribe({
-                        next: (resp) => {
-                            // 🟢 LOG 2: ¡El backend respondió OK!
-                            console.log('✅ [LOGIN] Respuesta exitosa del Backend al guardar sesión:', resp);
-
-                            this._socketService.conectarConUsuario(codigoUsuario, codigoSesionUnico);
-                            this.cargarYGuardarLayoutUsuario(this.currentUser);
-                            this._permisosService.inicializarPermisosPorDefecto().subscribe(() => {
-                                this.router.navigate(['/starter/inicio-suscriptores']);
-                            });
-                        },
-                        error: (err) => {
-                            // 🔴 LOG 3: El backend rechazó la petición o hubo un error de red
-                            console.error('❌ [LOGIN] Error del Backend al intentar guardar sesión:', err);
-                            this.router.navigate(['/starter/inicio-suscriptores']);
-                        }
-                    });
-
-                    console.log('✅ ¡Estructura de memoria (Tenant/Roles/Paquetes) armada exitosamente!', this.currentUser);
-
-                    this._permisosService.inicializarPermisosPorDefecto().subscribe({
-                        next: (actividades) => {
-                            console.log('🛡️ Permisos (UI/Rutas) cacheados exitosamente. Actividades:', actividades.length);
-                            this.router.navigate(['/starter/inicio-suscriptores']);
-                        },
-                        error: (err) => {
-                            console.error('⚠️ Error al cachear permisos, navegando con modo restringido.', err);
-                            this.router.navigate(['/starter/inicio-suscriptores']);
-                        }
-                    });
-                }),
-                catchError(err => {
-                    this.loading = false;
-                    this.error = err;
-                    console.error('Error en el Login:', err);
-                    this._swalService.getAlertError(this.translate.instant('AUTENTICACION.LOGIN.INCORRECT_USERNAME_OR_PASSWORD'));
-                    return of(null);
-                })
-            )
-            .subscribe();
-    }
-
-    private async cargarYGuardarLayoutUsuario(codigoUsuario: any): Promise<void> {
-        return new Promise((resolve) => {
-            this._layoutService.getLayoutByUsuario(codigoUsuario.usuario.codigoUsuario).subscribe({
-                next: (res) => {
-                    if (res.ok && res.layout) {
-                        // Si el usuario ya tiene un layout personalizado en BD, lo guardamos en sessionStorage
-                        codigoUsuario.usuario.layout = JSON.stringify(res.layout);
-                        this._localstorageService.setCurrentUserLocalStorage(codigoUsuario);
-                        console.log('☁️ Layout personalizado cargado desde BD en el Login.');
-                    } else {
-                        codigoUsuario.usuario.layout = [];
-                        this._localstorageService.setCurrentUserLocalStorage(codigoUsuario);
-                        console.log('ℹ️ El usuario no tiene layout en BD, se usará el por defecto.');
-                    }
-                    resolve();
-                },
-                error: (err) => {
-                    console.warn('⚠️ Error al consultar el layout en el login, se usará el por defecto.', err);
-                    resolve();
-                }
-            });
-        });
-    }
-
-    onChangePasswordClick() {
-        this.router.navigate(['/autenticacion/change-password'])
-    }
-
-    onResetPasswordClick() {
-        this.router.navigate(['/autenticacion/reset-password'])
-    }
-
-    toggleTheme() {
-        this._themeService.toggleDarkTheme()
-    }
+  toggleTheme() {
+    this._themeService.toggleDarkTheme();
+  }
 }

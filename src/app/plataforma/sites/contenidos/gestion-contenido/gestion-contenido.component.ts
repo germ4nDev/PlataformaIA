@@ -22,7 +22,6 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 
 @Component({
   selector: 'app-geston-contenido',
-  standalone: true,
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-contenido.component.html',
   styleUrl: './gestion-contenido.component.scss'

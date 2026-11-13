@@ -23,7 +23,6 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 
 @Component({
   selector: 'app-enlaces',
-  standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './enlaces.component.html',
   styleUrls: ['./enlaces.component.scss']

@@ -13,11 +13,10 @@ import { EncabezadoSeccionComponent } from '../encabezado-seccion/encabezado-sec
 
 @Component({
   selector: 'pp-seccion-lista',
-  standalone: true,
   imports: [TranslateModule, IconoComponent, EnlaceComponent, EncabezadoSeccionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lista.component.html',
-  styleUrl: './lista.component.scss',
+  styleUrl: './lista.component.scss'
 })
 export class SeccionListaComponent {
   @Input({ required: true }) s!: SeccionPortal;

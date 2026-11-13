@@ -5,13 +5,12 @@ import type { Api } from 'datatables.net';
 
 @Component({
   selector: 'app-adiciones-sustracciones',
-  standalone: true,
   imports: [DataTablesModule],
   templateUrl: './adiciones-sustracciones.component.html',
   styleUrl: './adiciones-sustracciones.component.scss'
 })
-export class AdicionesSustraccionesComponent implements OnInit, AfterViewInit{
-dtColumnSearchingOptions: object = {};
+export class AdicionesSustraccionesComponent implements OnInit, AfterViewInit {
+  dtColumnSearchingOptions: object = {};
   @ViewChild(DataTableDirective)
   datatableElement!: DataTableDirective;
 

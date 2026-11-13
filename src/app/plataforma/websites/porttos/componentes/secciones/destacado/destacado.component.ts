@@ -13,14 +13,17 @@ import { EnlaceComponent } from '../../enlace/enlace.component';
 
 @Component({
   selector: 'pp-seccion-destacado',
-  standalone: true,
   imports: [TranslateModule, IconoComponent, EnlaceComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './destacado.component.html',
-  styleUrl: './destacado.component.scss',
+  styleUrl: './destacado.component.scss'
 })
 export class SeccionDestacadoComponent {
   @Input({ required: true }) s!: SeccionPortal;
-  get puntos() { return this.s.elementos.filter((e) => !e.url && (e.titulo || e.texto)); }
-  get botones() { return this.s.elementos.filter((e) => !!e.url && !!e.titulo); }
+  get puntos() {
+    return this.s.elementos.filter((e) => !e.url && (e.titulo || e.texto));
+  }
+  get botones() {
+    return this.s.elementos.filter((e) => !!e.url && !!e.titulo);
+  }
 }

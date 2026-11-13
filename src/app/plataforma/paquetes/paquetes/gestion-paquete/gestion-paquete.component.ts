@@ -19,253 +19,246 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
 // Servicios y Modelos
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import {
-    PtllogActividadesService,
-    SwalAlertService,
-    LocalStorageService,
-    UploadFilesService,
-    NavigationService,
-    PTLPaquetesService,
-    PtlAplicacionesService
+  PtllogActividadesService,
+  SwalAlertService,
+  LocalStorageService,
+  UploadFilesService,
+  NavigationService,
+  PTLPaquetesService,
+  PtlAplicacionesService
 } from 'src/app/theme/shared/service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { PTLListasPreciosService, ReferenciaPaquete } from 'src/app/theme/shared/service/ptllistas-precios.service';
 
 @Component({
-    selector: 'app-gestion-paquete',
-    standalone: true,
-    imports: [
-        CommonModule,
-        SharedModule,
-        TranslateModule,
-        NavBarComponent,
-        NavContentComponent,
-        TextEditorComponent,
-        ReactiveFormsModule
-    ],
-    templateUrl: './gestion-paquete.component.html',
-    styleUrl: './gestion-paquete.component.scss'
+  selector: 'app-gestion-paquete',
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent, ReactiveFormsModule],
+  templateUrl: './gestion-paquete.component.html',
+  styleUrl: './gestion-paquete.component.scss'
 })
 export class GestionPaqueteComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    // 🟢 1. Formulario Reactivo
-    formularioRegistro!: FormGroup;
+  // 🟢 1. Formulario Reactivo
+  formularioRegistro!: FormGroup;
 
-    menuItems$!: Observable<NavigationItem[]>;
-    gradientConfig: any;
-    navCollapsed: boolean = false;
-    windowWidth: number = 0;
+  menuItems$!: Observable<NavigationItem[]>;
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  windowWidth: number = 0;
 
-    // 🟢 2. Controladores de Estado UX
-    isSubmit: boolean = false;
-    isSaving: boolean = false;
-    modoEdicion: boolean = false;
-    paqueteId: string = '';
+  // 🟢 2. Controladores de Estado UX
+  isSubmit: boolean = false;
+  isSaving: boolean = false;
+  modoEdicion: boolean = false;
+  paqueteId: string = '';
 
-    // Manejo de Imágenes
-    selectedFileImagenUrl: string | ArrayBuffer | null = null;
-    selectedFileIconoUrl: string | ArrayBuffer | null = null;
+  // Manejo de Imágenes
+  selectedFileImagenUrl: string | ArrayBuffer | null = null;
+  selectedFileIconoUrl: string | ArrayBuffer | null = null;
 
-    lockScreenSubscription: Subscription | undefined;
-    isLocked: boolean = false;
-    lockMessage: string = '';
-    /** OT-029: precio del paquete en la lista vigente y suma de sus ítems (solo de referencia; se fija en Listas de precios). */
-    referenciaPrecio: ReferenciaPaquete | null = null;
-    suscriptor: string = '';
-    tipoEditorTexto: string = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
+  /** OT-029: precio del paquete en la lista vigente y suma de sus ítems (solo de referencia; se fija en Listas de precios). */
+  referenciaPrecio: ReferenciaPaquete | null = null;
+  suscriptor: string = '';
+  tipoEditorTexto: string = 'basica';
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private fb: FormBuilder,
-        private _registrosService: PTLPaquetesService,
-        private _layoutInitializer: LayoutInitializerService,
-        private _logActividadesService: PtllogActividadesService,
-        private _swalAlertService: SwalAlertService,
-        private _localStorageService: LocalStorageService,
-        private _uploadService: UploadFilesService,
-        private _navigationService: NavigationService,
-        private _listasPrecios: PTLListasPreciosService
-    ) {
-        GradientConfig.header_fixed_layout = true;
-        this.gradientConfig = GradientConfig;
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private fb: FormBuilder,
+    private _registrosService: PTLPaquetesService,
+    private _layoutInitializer: LayoutInitializerService,
+    private _logActividadesService: PtllogActividadesService,
+    private _swalAlertService: SwalAlertService,
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService,
+    private _navigationService: NavigationService,
+    private _listasPrecios: PTLListasPreciosService
+  ) {
+    GradientConfig.header_fixed_layout = true;
+    this.gradientConfig = GradientConfig;
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
 
-        this.inicializarFormulario();
+    this.inicializarFormulario();
 
-        // Recuperamos el ID guardado por el botón 'Nuevo' o 'Modificar'
-        this.paqueteId = this._localStorageService.getObject<string>('regId') || 'nuevo';
-        this.modoEdicion = this.paqueteId !== 'nuevo';
+    // Recuperamos el ID guardado por el botón 'Nuevo' o 'Modificar'
+    this.paqueteId = this._localStorageService.getObject<string>('regId') || 'nuevo';
+    this.modoEdicion = this.paqueteId !== 'nuevo';
 
-        if (this.modoEdicion) {
-            this.cargarDatosEdicion();
+    if (this.modoEdicion) {
+      this.cargarDatosEdicion();
+    } else {
+      // Inicializar valores para un nuevo paquete
+      this.formularioRegistro.patchValue({
+        codigoPaquete: uuidv4(),
+        imagenPaquete: 'no-image.png',
+        iconoPaquete: 'no-image.png'
+      });
+    }
+  }
+
+  get f() {
+    return this.formularioRegistro.controls;
+  }
+
+  inicializarFormulario() {
+    this.formularioRegistro = this.fb.group({
+      codigoPaquete: ['', Validators.required],
+      nombrePaquete: ['', [Validators.required, Validators.maxLength(150)]],
+      descripcionPaquete: ['', Validators.required],
+      acuerdoLicencia: ['', Validators.required],
+      estadoPaquete: [true, Validators.required],
+      imagenPaquete: [''],
+      iconoPaquete: ['']
+    });
+  }
+
+  ngOnInit() {
+    this._layoutInitializer.applyLayout();
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.formularioRegistro.value);
+        this.isLocked = true;
+        this.lockMessage = message;
+      }
+    });
+
+    const savedForm = this._localStorageService.getFormRegistro();
+    if (savedForm) {
+      this.formularioRegistro.patchValue(savedForm);
+      this._localStorageService.removeFormRegistro();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.lockScreenSubscription) {
+      this.lockScreenSubscription.unsubscribe();
+    }
+  }
+
+  cargarDatosEdicion() {
+    this._registrosService.getRegistroById(this.paqueteId).subscribe({
+      next: (resp: any) => {
+        if (resp.paquete) {
+          this.formularioRegistro.patchValue(resp.paquete);
+          this._listasPrecios.referenciaPaquete(resp.paquete.codigoPaquete).subscribe({
+            next: (r) => (this.referenciaPrecio = r),
+            error: () => (this.referenciaPrecio = null)
+          });
+
+          // Cargar previsualización de imágenes si existen
+          if (resp.paquete.imagenPaquete && resp.paquete.imagenPaquete !== 'no-image.png') {
+            this.selectedFileImagenUrl = this._uploadService.getFilePath('paquetes', 'paquetes', resp.paquete.imagenPaquete);
+          }
+          if (resp.paquete.iconoPaquete && resp.paquete.iconoPaquete !== 'no-image.png') {
+            this.selectedFileIconoUrl = this._uploadService.getFilePath('paquetes', 'paquetes', resp.paquete.iconoPaquete);
+          }
+        }
+      },
+      error: () => this.manejarError('No se pudo obtener la información del paquete', 'PLATAFORMA.ERROR')
+    });
+  }
+
+  actualizarDescripcionPaquete(htmlContent: string) {
+    this.formularioRegistro.get('descripcionPaquete')?.setValue(htmlContent);
+    this.formularioRegistro.get('descripcionPaquete')?.markAsDirty();
+  }
+
+  actualizarAcuerdoLicencia(htmlContent: string) {
+    this.formularioRegistro.get('acuerdoLicencia')?.setValue(htmlContent);
+    this.formularioRegistro.get('acuerdoLicencia')?.markAsDirty();
+  }
+
+  onFileSelectedClick(event: any, tipo: 'imagen' | 'icono') {
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        if (tipo === 'imagen') {
+          this.selectedFileImagenUrl = e.target.result;
+          // Aquí iría la llamada a tu _uploadService real si lo guardas al vuelo
+          // this.formularioRegistro.patchValue({ imagenPaquete: path.nombreArchivo });
         } else {
-            // Inicializar valores para un nuevo paquete
-            this.formularioRegistro.patchValue({
-                codigoPaquete: uuidv4(),
-                imagenPaquete: 'no-image.png',
-                iconoPaquete: 'no-image.png'
-            });
+          this.selectedFileIconoUrl = e.target.result;
+          // this.formularioRegistro.patchValue({ iconoPaquete: path.nombreArchivo });
         }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  btnGestionarRegistroClick() {
+    this.isSubmit = true;
+
+    if (this.formularioRegistro.invalid) {
+      this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
+      return;
     }
 
-    get f() { return this.formularioRegistro.controls; }
+    this.isSaving = true;
+    const formValues = this.formularioRegistro.getRawValue();
 
-    inicializarFormulario() {
-        this.formularioRegistro = this.fb.group({
-            codigoPaquete: ['', Validators.required],
-            nombrePaquete: ['', [Validators.required, Validators.maxLength(150)]],
-            descripcionPaquete: ['', Validators.required],
-            acuerdoLicencia: ['', Validators.required],
-            estadoPaquete: [true, Validators.required],
-            imagenPaquete: [''],
-            iconoPaquete: ['']
-        });
+    const usuarioActual = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || '';
+
+    const dataGuardar = {
+      ...formValues,
+      codigoUsuarioModificacion: this.modoEdicion ? usuarioActual : '',
+      fechaModificacion: this.modoEdicion ? new Date().toISOString() : '',
+      codigoUsuarioCreacion: !this.modoEdicion ? usuarioActual : undefined,
+      fechaCreacion: !this.modoEdicion ? new Date().toISOString() : undefined,
+      colorPaquete: '' // Mantener por retrocompatibilidad con BD si aplica
+    };
+
+    if (!this.modoEdicion) {
+      this._registrosService.postCrearRegistro(dataGuardar).subscribe({
+        next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_INSERTED_SUCCESSFULLY'),
+        error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_INSERT_RECORD')
+      });
+    } else {
+      this._registrosService.putModificarRegistro(dataGuardar).subscribe({
+        next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_UPDATED_SUCCESSFULLY'),
+        error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_UPDATE_RECORD')
+      });
     }
+  }
 
-    ngOnInit() {
-        this._layoutInitializer.applyLayout();
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
+  private manejarExito(resp: any, mensajeTra: string) {
+    this.isSaving = false;
+    if (resp.ok) {
+      const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant(mensajeTra) };
+      this._logActividadesService.postCrearRegistro(logData).subscribe();
 
-        this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
-            next: (message: string) => {
-                this._localStorageService.setFormRegistro(this.formularioRegistro.value);
-                this.isLocked = true;
-                this.lockMessage = message;
-            }
-        });
-
-        const savedForm = this._localStorageService.getFormRegistro();
-        if (savedForm) {
-            this.formularioRegistro.patchValue(savedForm);
-            this._localStorageService.removeFormRegistro();
-        }
+      this._swalAlertService.getAlertConfirmSuccess(resp.mensaje || this.translate.instant(mensajeTra));
+      this.btnRegresarClick();
+    } else {
+      // Manejo si el backend devuelve 200 pero con ok: false
+      this.manejarError(resp, 'COMMON.COULD_NOT_UPDATE_RECORD');
     }
+  }
 
-    ngOnDestroy() {
-        if (this.lockScreenSubscription) {
-            this.lockScreenSubscription.unsubscribe();
-        }
-    }
+  private manejarError(err: any, mensajeTra: string) {
+    this.isSaving = false;
+    console.error(err);
 
-    cargarDatosEdicion() {
-        this._registrosService.getRegistroById(this.paqueteId).subscribe({
-            next: (resp: any) => {
-                if (resp.paquete) {
-                    this.formularioRegistro.patchValue(resp.paquete);
-                    this._listasPrecios.referenciaPaquete(resp.paquete.codigoPaquete).subscribe({
-                        next: (r) => (this.referenciaPrecio = r),
-                        error: () => (this.referenciaPrecio = null)
-                    });
+    const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant(mensajeTra) };
+    this._logActividadesService.postCrearRegistro(logData).subscribe();
 
-                    // Cargar previsualización de imágenes si existen
-                    if (resp.paquete.imagenPaquete && resp.paquete.imagenPaquete !== 'no-image.png') {
-                        this.selectedFileImagenUrl = this._uploadService.getFilePath('paquetes', 'paquetes', resp.paquete.imagenPaquete);
-                    }
-                    if (resp.paquete.iconoPaquete && resp.paquete.iconoPaquete !== 'no-image.png') {
-                        this.selectedFileIconoUrl = this._uploadService.getFilePath('paquetes', 'paquetes', resp.paquete.iconoPaquete);
-                    }
-                }
-            },
-            error: () => this.manejarError('No se pudo obtener la información del paquete', 'PLATAFORMA.ERROR')
-        });
-    }
+    this._swalAlertService.getAlertError(err.error?.msg || err.message || this.translate.instant(mensajeTra));
+  }
 
-    actualizarDescripcionPaquete(htmlContent: string) {
-        this.formularioRegistro.get('descripcionPaquete')?.setValue(htmlContent);
-        this.formularioRegistro.get('descripcionPaquete')?.markAsDirty();
-    }
+  btnRegresarClick() {
+    this.router.navigate(['/aplicaciones/paquetes']);
+  }
 
-    actualizarAcuerdoLicencia(htmlContent: string) {
-        this.formularioRegistro.get('acuerdoLicencia')?.setValue(htmlContent);
-        this.formularioRegistro.get('acuerdoLicencia')?.markAsDirty();
-    }
-
-    onFileSelectedClick(event: any, tipo: 'imagen' | 'icono') {
-        const file: File = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e: any) => {
-                if (tipo === 'imagen') {
-                    this.selectedFileImagenUrl = e.target.result;
-                    // Aquí iría la llamada a tu _uploadService real si lo guardas al vuelo
-                    // this.formularioRegistro.patchValue({ imagenPaquete: path.nombreArchivo });
-                } else {
-                    this.selectedFileIconoUrl = e.target.result;
-                    // this.formularioRegistro.patchValue({ iconoPaquete: path.nombreArchivo });
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    btnGestionarRegistroClick() {
-        this.isSubmit = true;
-
-        if (this.formularioRegistro.invalid) {
-            this._swalAlertService.getAlertError(this.translate.instant('COMMON.CHECK_FORM_SOME_REQUIRED_FIELDS_ARE'));
-            return;
-        }
-
-        this.isSaving = true;
-        const formValues = this.formularioRegistro.getRawValue();
-
-        const usuarioActual = this._localStorageService.getUsuarioLocalStorage()?.codigoUsuario || '';
-
-        const dataGuardar = {
-            ...formValues,
-            codigoUsuarioModificacion: this.modoEdicion ? usuarioActual : '',
-            fechaModificacion: this.modoEdicion ? new Date().toISOString() : '',
-            codigoUsuarioCreacion: !this.modoEdicion ? usuarioActual : undefined,
-            fechaCreacion: !this.modoEdicion ? new Date().toISOString() : undefined,
-            colorPaquete: '' // Mantener por retrocompatibilidad con BD si aplica
-        };
-
-        if (!this.modoEdicion) {
-            this._registrosService.postCrearRegistro(dataGuardar).subscribe({
-                next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_INSERTED_SUCCESSFULLY'),
-                error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_INSERT_RECORD')
-            });
-        } else {
-            this._registrosService.putModificarRegistro(dataGuardar).subscribe({
-                next: (resp: any) => this.manejarExito(resp, 'COMMON.RECORD_UPDATED_SUCCESSFULLY'),
-                error: (err: any) => this.manejarError(err, 'COMMON.COULD_NOT_UPDATE_RECORD')
-            });
-        }
-    }
-
-    private manejarExito(resp: any, mensajeTra: string) {
-        this.isSaving = false;
-        if (resp.ok) {
-            const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant(mensajeTra) };
-            this._logActividadesService.postCrearRegistro(logData).subscribe();
-
-            this._swalAlertService.getAlertConfirmSuccess(resp.mensaje || this.translate.instant(mensajeTra));
-            this.btnRegresarClick();
-        } else {
-            // Manejo si el backend devuelve 200 pero con ok: false
-            this.manejarError(resp, 'COMMON.COULD_NOT_UPDATE_RECORD');
-        }
-    }
-
-    private manejarError(err: any, mensajeTra: string) {
-        this.isSaving = false;
-        console.error(err);
-
-        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant(mensajeTra) };
-        this._logActividadesService.postCrearRegistro(logData).subscribe();
-
-        this._swalAlertService.getAlertError(err.error?.msg || err.message || this.translate.instant(mensajeTra));
-    }
-
-    btnRegresarClick() {
-        this.router.navigate(['/aplicaciones/paquetes']);
-    }
-
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

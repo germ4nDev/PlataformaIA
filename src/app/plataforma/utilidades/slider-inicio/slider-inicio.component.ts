@@ -1,330 +1,344 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { DataTablesModule } from 'angular-datatables'
-import { Router } from '@angular/router'
-import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { TranslateModule } from '@ngx-translate/core'
-import { TranslateService } from '@ngx-translate/core'
-import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model'
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service'
-import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap, tap } from 'rxjs'
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
-import { of, Subscription } from 'rxjs'
-import Swal from 'sweetalert2'
-import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service'
-import { PTLSliderInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model'
-import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders-inicio.service'
-import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { environment } from 'src/environments/environment'
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
-import { LocalStorageService, PtlAplicacionesService, UploadFilesService } from 'src/app/theme/shared/service'
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DataTablesModule } from 'angular-datatables';
+import { Router } from '@angular/router';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
+import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap, tap } from 'rxjs';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { of, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
+import { PTLSliderInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model';
+import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders-inicio.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { environment } from 'src/environments/environment';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { LocalStorageService, PtlAplicacionesService, UploadFilesService } from 'src/app/theme/shared/service';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
-const base_url = environment.apiUrl
+const base_url = environment.apiUrl;
 //#endregion IMPORTS
 
 @Component({
-    selector: 'app-slider-inicio',
-    standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent],
-    templateUrl: './slider-inicio.component.html',
-    styleUrl: './slider-inicio.component.scss'
+  selector: 'app-slider-inicio',
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    DatatableComponent,
+    TableDataComponent
+  ],
+  templateUrl: './slider-inicio.component.html',
+  styleUrl: './slider-inicio.component.scss'
 })
 export class SliderInicioComponent implements OnInit {
-    //#region VARIABLES
-    @Output() toggleSidebar = new EventEmitter<void>()
-    slidersTransformadas$: Observable<PTLSliderInicioModel[]> = of([])
-    slidersFiltradas$: Observable<PTLSliderInicioModel[]> = of([])
-    sliders: PTLSliderInicioModel[] = []
-    aplicaciones: PTLAplicacionModel[] = []
-    subscriptions = new Subscription()
+  //#region VARIABLES
+  @Output() toggleSidebar = new EventEmitter<void>();
+  slidersTransformadas$: Observable<PTLSliderInicioModel[]> = of([]);
+  slidersFiltradas$: Observable<PTLSliderInicioModel[]> = of([]);
+  sliders: PTLSliderInicioModel[] = [];
+  aplicaciones: PTLAplicacionModel[] = [];
+  subscriptions = new Subscription();
 
-    filtroNombreSubject = new BehaviorSubject<string>('todos')
-    filtroDescripcionSubject = new BehaviorSubject<string>('')
-    filtroEstadoSubject = new BehaviorSubject<string>('todos')
-    activeTab: 'menu' | 'filters' | 'main' = 'menu'
-    menuItems!: Observable<NavigationItem[]>
-    registrosSub?: Subscription
-    registros: PTLSliderInicioModel[] = []
-    registrosFiltrado: PTLUsuarioModel[] = []
-    lang: string = localStorage.getItem('lang') || ''
-    tituloPagina: string = ''
-    //#endregion VARIABLES
-    suscPlataforma: string = ''
+  filtroNombreSubject = new BehaviorSubject<string>('todos');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  menuItems!: Observable<NavigationItem[]>;
+  registrosSub?: Subscription;
+  registros: PTLSliderInicioModel[] = [];
+  registrosFiltrado: PTLUsuarioModel[] = [];
+  lang: string = localStorage.getItem('lang') || '';
+  tituloPagina: string = '';
+  //#endregion VARIABLES
+  suscPlataforma: string = '';
 
-    constructor(
-        private router: Router,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _swalService: SwalAlertService,
-        private _registrosService: PtlSlidersInicioService,
-        private _aplicacionesService: PtlAplicacionesService,
-        private _languageService: LanguageService,
-        private _localStorageService: LocalStorageService,
-        private _uploadService: UploadFilesService
-    ) {
-        this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-    }
+  constructor(
+    private router: Router,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _swalService: SwalAlertService,
+    private _registrosService: PtlSlidersInicioService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _languageService: LanguageService,
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService
+  ) {
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
-    ngOnInit() {
-        this._navigationService.getNavigationItems()
-        this.menuItems = this._navigationService.menuItems$
-        console.log('elementos menu componente', this.menuItems)
-        this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
-        this.setupSlidersStream()
-        this.subscriptions.add(
-            this._registrosService.cargarSliders().subscribe(
-                () => console.log('Sliders cargadas y guardadas en el servicio'),
-                err => console.error('Error al cargar sliders:', err)
-            )
-        )
-    }
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    console.log('elementos menu componente', this.menuItems);
+    this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
+    this.setupSlidersStream();
+    this.subscriptions.add(
+      this._registrosService.cargarSliders().subscribe(
+        () => console.log('Sliders cargadas y guardadas en el servicio'),
+        (err) => console.error('Error al cargar sliders:', err)
+      )
+    );
+  }
 
-    ngOnDestroy(): void {
-        console.log('entrando a componente usuarios')
-        this.registrosSub?.unsubscribe()
-    }
+  ngOnDestroy(): void {
+    console.log('entrando a componente usuarios');
+    this.registrosSub?.unsubscribe();
+  }
 
-    getFileType(url: string): 'capture' | 'video' | 'documento' | 'desconocido' {
-        if (!url) return 'desconocido'
+  getFileType(url: string): 'capture' | 'video' | 'documento' | 'desconocido' {
+    if (!url) return 'desconocido';
 
-        const cleanUrl = url.split(/[#?]/)[0]
-        const extension = cleanUrl.split('.').pop()?.toLowerCase() || ''
+    const cleanUrl = url.split(/[#?]/)[0];
+    const extension = cleanUrl.split('.').pop()?.toLowerCase() || '';
 
-        const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp']
-        const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
-        const docExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt']
+    const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'];
+    const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'];
+    const docExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'];
 
-        if (imageExts.includes(extension)) return 'capture'
-        if (videoExts.includes(extension)) return 'video'
-        if (docExts.includes(extension)) return 'documento'
+    if (imageExts.includes(extension)) return 'capture';
+    if (videoExts.includes(extension)) return 'video';
+    if (docExts.includes(extension)) return 'documento';
 
-        return 'desconocido'
-    }
+    return 'desconocido';
+  }
 
-    consultarRegistros() {
-        this.registrosSub = this._registrosService
-            .getRegistros()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.registros = resp.slidersInicio
-                        this.registrosFiltrado = resp.slidersInicio
-                        console.log('Todos las sliders', this.registros)
-                        return
-                    }
-                }),
-                catchError(err => {
-                    console.log('Ha ocurrido un error', err)
-                    return of(null)
-                })
-            )
-            .subscribe()
-    }
-
-    setupSlidersStream(): void {
-        this.slidersTransformadas$ = this._registrosService.slider$.pipe(
-            switchMap((slids: PTLSliderInicioModel[]) => {
-                if (!slids) return of([])
-                const transformedSliders = slids.map((slider: any) => {
-                    console.log('data slider', slider)
-                    slider.nomEstado = slider.estadoSlider == true ? 'Activo' : 'Inactivo'
-                    const app = this.aplicaciones.filter(x => x.codigoAplicacion == slider.codigoAplicacion)[0];
-                    slider.nomAplicacion = app.nombreAplicacion;
-                    const tipoMedia = this.getFileType(this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider))
-                    if (tipoMedia == 'capture') {
-                        slider.urlSlider = this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider)
-                        slider.capture = slider.urlSlider
-                        slider.tipo = 'capture'
-                    }
-                    console.log('tipo media', tipoMedia)
-                    return slider as PTLSliderInicioModel
-                })
-                this.registros = transformedSliders
-                console.log('todas las sliders', this.registros)
-                return of(transformedSliders)
-            }),
-            catchError(err => {
-                console.error('Error en el stream de sliders:', err)
-                return of([])
-            })
-        )
-
-        this.slidersFiltradas$ = combineLatest([
-            this.slidersTransformadas$.pipe(startWith([])), // Usa la fuente de datos transformada
-            this.filtroNombreSubject,
-            this.filtroDescripcionSubject,
-            this.filtroEstadoSubject
-        ]).pipe(
-            map(([slids, nombre, descripcion, estado]) => {
-                let filteredSliders = slids
-
-                if (nombre !== 'todos') {
-                    filteredSliders = filteredSliders.filter(app => app.nombreSlider === nombre)
-                }
-
-                if (estado !== 'todos') {
-                    const estadoBoolean = estado === 'true'
-                    filteredSliders = filteredSliders.filter(app => app.estadoSlider === estadoBoolean)
-                }
-
-                if (descripcion) {
-                    const textoFiltro = descripcion.toLowerCase()
-                    filteredSliders = filteredSliders.filter(app => (app.descripcionSlider || '').toLowerCase().includes(textoFiltro))
-                }
-                console.log('**************data de las sliders', filteredSliders)
-
-                return filteredSliders
-            })
-        )
-    }
-
-    columnasRegistros: ColumnMetadata[] = [
-        {
-            name: 'urlSlider',
-            header: 'COMMON.IMAGE',
-            type: 'image'
-        },
-        {
-            name: 'nomAplicacion',
-            header: 'COMMON.APPLICATION',
-            type: 'text'
-        },
-        {
-            name: 'nombreSlider',
-            header: 'COMMON.NAME',
-            type: 'text'
-        },
-        {
-            name: 'nomEstado',
-            header: 'COMMON.STATUS',
-            type: 'estado'
-        }
-    ]
-
-    columnasDetailRegistros: ColumnMetadata[] = [
-        {
-            name: 'descripcionSlider',
-            header: 'COMMON.DESCRIPTION',
-            type: 'text'
-        },
-        {
-            name: 'capture',
-            header: 'COMMON.DESCRIPTION',
-            type: 'capture'
-        }
-    ]
-
-    getEstado(estado: boolean): string {
-        return estado ? 'Activo' : 'Inactivo'
-    }
-
-    OnNuevoRegistroClick() {
-        this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['utilidades/gestion-slider'])
-    }
-
-    OnEditarRegistroClick(id: number) {
-        this._localStorageService.setObject('regId', id)
-        this.router.navigate(['utilidades/gestion-slider'])
-    }
-
-    OnEliminarRegistroClick(id: number) {
-        const nombre = this.registrosFiltrado.filter(x => x.usuarioId == id)[0]
-        Swal.fire({
-            title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
-            text: `this.translate.instant('UTILIDADES.USER_WILL_BE_DELETED') + "${nombre.nombreUsuario}".`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: this.translate.instant('COMMON.DELETE'),
-            cancelButtonText: this.translate.instant('COMMON.CANCEL')
-        }).then((result: any) => {
-            if (result.isConfirmed) {
-                this._registrosService.deleteEliminarRegistro(id).subscribe({
-                    next: (resp: any) => {
-                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.USER_WAS_DELETED_SUCCESSFULLY') + ', ' + resp.mensaje)
-                        this.registros = this.registros.filter(s => s.sliderId !== id)
-                    },
-                    error: (err: any) => {
-                        this._swalService.getAlertError(this.translate.instant('UTILIDADES.SLIDER_INICIO.COULD_NOT_DELETE_SLIDER') + ', ' + err)
-                        console.error('Error eliminando', err)
-                    }
-                })
-            }
+  consultarRegistros() {
+    this.registrosSub = this._registrosService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.registros = resp.slidersInicio;
+            this.registrosFiltrado = resp.slidersInicio;
+            console.log('Todos las sliders', this.registros);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
         })
-    }
+      )
+      .subscribe();
+  }
 
-    onFiltroIdentificacionChangeClick(evento: any) {
-        console.log('filtrar el nombre ', evento.target.value)
-        const textoFiltro = evento.target.value
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros]
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter(usuario => String(usuario.identificacionUsuario || 0).includes(textoFiltro))
+  setupSlidersStream(): void {
+    this.slidersTransformadas$ = this._registrosService.slider$.pipe(
+      switchMap((slids: PTLSliderInicioModel[]) => {
+        if (!slids) return of([]);
+        const transformedSliders = slids.map((slider: any) => {
+          console.log('data slider', slider);
+          slider.nomEstado = slider.estadoSlider == true ? 'Activo' : 'Inactivo';
+          const app = this.aplicaciones.filter((x) => x.codigoAplicacion == slider.codigoAplicacion)[0];
+          slider.nomAplicacion = app.nombreAplicacion;
+          const tipoMedia = this.getFileType(this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider));
+          if (tipoMedia == 'capture') {
+            slider.urlSlider = this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider);
+            slider.capture = slider.urlSlider;
+            slider.tipo = 'capture';
+          }
+          console.log('tipo media', tipoMedia);
+          return slider as PTLSliderInicioModel;
+        });
+        this.registros = transformedSliders;
+        console.log('todas las sliders', this.registros);
+        return of(transformedSliders);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de sliders:', err);
+        return of([]);
+      })
+    );
+
+    this.slidersFiltradas$ = combineLatest([
+      this.slidersTransformadas$.pipe(startWith([])), // Usa la fuente de datos transformada
+      this.filtroNombreSubject,
+      this.filtroDescripcionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([slids, nombre, descripcion, estado]) => {
+        let filteredSliders = slids;
+
+        if (nombre !== 'todos') {
+          filteredSliders = filteredSliders.filter((app) => app.nombreSlider === nombre);
         }
-    }
 
-    onFiltroNombreChangeClick(evento: any) {
-        console.log('filtrar el nombre ', evento.target.value)
-        const textoFiltro = evento.target.value.toLowerCase()
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros]
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter(usuario => (usuario.nombreUsuario || '').toLowerCase().includes(textoFiltro))
+        if (estado !== 'todos') {
+          const estadoBoolean = estado === 'true';
+          filteredSliders = filteredSliders.filter((app) => app.estadoSlider === estadoBoolean);
         }
-    }
 
-    onFiltroCorreoChangeClick(evento: any) {
-        console.log('filtrar el correo ', evento.target.value)
-        const textoFiltro = evento.target.value.toLowerCase()
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros]
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter(usuario => (usuario.correoUsuario || '').toLowerCase().includes(textoFiltro))
+        if (descripcion) {
+          const textoFiltro = descripcion.toLowerCase();
+          filteredSliders = filteredSliders.filter((app) => (app.descripcionSlider || '').toLowerCase().includes(textoFiltro));
         }
-    }
+        console.log('**************data de las sliders', filteredSliders);
 
-    onFiltroUsernameChangeClick(evento: any) {
-        console.log('filtrar el username ', evento.target.value)
-        const textoFiltro = evento.target.value.toLowerCase()
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros]
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter(usuario => (usuario.userNameUsuario || '').toLowerCase().includes(textoFiltro))
-        }
-    }
+        return filteredSliders;
+      })
+    );
+  }
 
-    onFiltroDescripcionChangeClick(evento: any) {
-        console.log('filtrar el descripcion ', evento.target.value)
-        const textoFiltro = evento.target.value.toLowerCase()
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros]
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter(usuario =>
-                (usuario.descripcionUsuario || '').toLowerCase().includes(textoFiltro)
-            )
-        }
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'urlSlider',
+      header: 'COMMON.IMAGE',
+      type: 'image'
+    },
+    {
+      name: 'nomAplicacion',
+      header: 'COMMON.APPLICATION',
+      type: 'text'
+    },
+    {
+      name: 'nombreSlider',
+      header: 'COMMON.NAME',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'COMMON.STATUS',
+      type: 'estado'
     }
+  ];
 
-    onFiltroEstadoChangeClick(evento: any) {
-        console.log('filtrar el estado ', evento.target.value)
-        if (evento.target.value == 'todos') {
-            this.registrosFiltrado = [...this.registros]
-        } else {
-            const estado = evento.target.value == 'true' ? true : false
-            console.log('Usuarios', this.registrosFiltrado)
-            this.registrosFiltrado = this.registros.filter(x => (x.estadoSlider = estado))
-        }
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionSlider',
+      header: 'COMMON.DESCRIPTION',
+      type: 'text'
+    },
+    {
+      name: 'capture',
+      header: 'COMMON.DESCRIPTION',
+      type: 'capture'
     }
+  ];
 
-    toggleNav(): void {
-        this.toggleSidebar.emit()
+  getEstado(estado: boolean): string {
+    return estado ? 'Activo' : 'Inactivo';
+  }
+
+  OnNuevoRegistroClick() {
+    this._localStorageService.setObject('regId', 'nuevo');
+    this.router.navigate(['utilidades/gestion-slider']);
+  }
+
+  OnEditarRegistroClick(id: number) {
+    this._localStorageService.setObject('regId', id);
+    this.router.navigate(['utilidades/gestion-slider']);
+  }
+
+  OnEliminarRegistroClick(id: number) {
+    const nombre = this.registrosFiltrado.filter((x) => x.usuarioId == id)[0];
+    Swal.fire({
+      title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE'),
+      text: `this.translate.instant('UTILIDADES.USER_WILL_BE_DELETED') + "${nombre.nombreUsuario}".`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this._registrosService.deleteEliminarRegistro(id).subscribe({
+          next: (resp: any) => {
+            this._swalService.getAlertSuccess(this.translate.instant('COMMON.USER_WAS_DELETED_SUCCESSFULLY') + ', ' + resp.mensaje);
+            this.registros = this.registros.filter((s) => s.sliderId !== id);
+          },
+          error: (err: any) => {
+            this._swalService.getAlertError(this.translate.instant('UTILIDADES.SLIDER_INICIO.COULD_NOT_DELETE_SLIDER') + ', ' + err);
+            console.error('Error eliminando', err);
+          }
+        });
+      }
+    });
+  }
+
+  onFiltroIdentificacionChangeClick(evento: any) {
+    console.log('filtrar el nombre ', evento.target.value);
+    const textoFiltro = evento.target.value;
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) => String(usuario.identificacionUsuario || 0).includes(textoFiltro));
     }
+  }
+
+  onFiltroNombreChangeClick(evento: any) {
+    console.log('filtrar el nombre ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.nombreUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
+  }
+
+  onFiltroCorreoChangeClick(evento: any) {
+    console.log('filtrar el correo ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.correoUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
+  }
+
+  onFiltroUsernameChangeClick(evento: any) {
+    console.log('filtrar el username ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.userNameUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
+  }
+
+  onFiltroDescripcionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.descripcionUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
+  }
+
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      const estado = evento.target.value == 'true' ? true : false;
+      console.log('Usuarios', this.registrosFiltrado);
+      this.registrosFiltrado = this.registros.filter((x) => (x.estadoSlider = estado));
+    }
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

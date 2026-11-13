@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-nav-group',
-  standalone: true,
   imports: [CommonModule, TranslateModule],
   templateUrl: './nav-group.component.html',
   styleUrls: ['./nav-group.component.scss']

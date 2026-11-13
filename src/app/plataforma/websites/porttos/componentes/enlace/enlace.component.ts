@@ -11,18 +11,23 @@ import { RUTA_PORTAL, enlaceDe } from 'src/app/plataforma/websites/porttos/nucle
 
 @Component({
   selector: 'pp-enlace',
-  standalone: true,
   imports: [RouterLink, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './enlace.component.html',
-  styleUrl: './enlace.component.scss',
+  styleUrl: './enlace.component.scss'
 })
 export class EnlaceComponent {
   @Input() clase = '';
   private u: string | null | undefined = null;
   private b: string = RUTA_PORTAL;
   /** Base de las rutas internas: la del portal por defecto; '' para rutas de la plataforma (el login). */
-  @Input() set base(v: string) { this.b = v ?? RUTA_PORTAL; this.destino = enlaceDe(this.u, this.b); }
+  @Input() set base(v: string) {
+    this.b = v ?? RUTA_PORTAL;
+    this.destino = enlaceDe(this.u, this.b);
+  }
   destino: ReturnType<typeof enlaceDe> = null;
-  @Input({ required: true }) set url(v: string | null | undefined) { this.u = v; this.destino = enlaceDe(v, this.b); }
+  @Input({ required: true }) set url(v: string | null | undefined) {
+    this.u = v;
+    this.destino = enlaceDe(v, this.b);
+  }
 }

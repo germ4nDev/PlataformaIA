@@ -503,7 +503,16 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { LanguageService, LocalStorageService, PTLHistorialFacturacionService, PTLPaquetesSCService, PTLPaquetesService, SwalAlertService, UploadFilesService, UtilidadesService } from 'src/app/theme/shared/service';
+import {
+  LanguageService,
+  LocalStorageService,
+  PTLHistorialFacturacionService,
+  PTLPaquetesSCService,
+  PTLPaquetesService,
+  SwalAlertService,
+  UploadFilesService,
+  UtilidadesService
+} from 'src/app/theme/shared/service';
 import Swal from 'sweetalert2';
 import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
 import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
@@ -514,531 +523,548 @@ import { PTLHistorialFacturacionModel } from 'src/app/theme/shared/_helpers/mode
 import { PTLTiposPagoService } from 'src/app/theme/shared/service/ptltipos-pago.service';
 import { PTLTipoPagoModel } from 'src/app/theme/shared/_helpers/models/PTLTiposPago.model';
 import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
-import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
-import { DataLoaderComponent } from "src/app/theme/shared/components/data-loader/data-loader.component";
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
+import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component';
 import { PtlAprovisionamientosService, Aprovisionamiento } from 'src/app/theme/shared/service/ptlaprovisionamientos.service';
 import { AppPermisoDirective } from 'src/app/theme/shared/directive/app-permiso.directive';
 
 @Component({
-    selector: 'app-paquetes-suscriptor',
-    standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent, TableDataComponent, DataLoaderComponent, AppPermisoDirective],
-    templateUrl: './paquetes-suscriptor.component.html',
-    styleUrl: './paquetes-suscriptor.component.scss'
+  selector: 'app-paquetes-suscriptor',
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    DatatableComponent,
+    TableDataComponent,
+    DataLoaderComponent,
+    AppPermisoDirective
+  ],
+  templateUrl: './paquetes-suscriptor.component.html',
+  styleUrl: './paquetes-suscriptor.component.scss'
 })
 export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    //#region VARIABLES
-    FormRegistro: PTLPaquetesSCModel = new PTLPaquetesSCModel();
-    historial: PTLHistorialFacturacionModel = new PTLHistorialFacturacionModel();
-    paqueteSC: PTLPaquetesSCModel = new PTLPaquetesSCModel();
-    isSubmit: boolean = false;
-    subscriptions = new Subscription();
-    suscriptores: PTLSuscriptorModel[] = [];
-    paquetes: PTLPaqueteModel[] = [];
-    paquetesSC: PTLPaquetesSCModel[] = [];
-    tiposPaquete: PTLTipoPaqueteModel[] = [];
-    tiposPago: PTLTipoPagoModel[] = [];
-    historiales: PTLHistorialFacturacionModel[] = [];
-    private socketSub!: Subscription;
-    private historialSocketSub!: Subscription;
-    mostrarModalRenovacion: boolean = false;
-    registroSeleccionado: any = null;
-    registrosTransformadas$: Observable<PTLPaquetesSCModel[]> = of([]);
-    registrosFiltrados$: Observable<PTLPaquetesSCModel[]> = of([]);
-    registros: PTLPaquetesSCModel[] = [];
-    suscriptor: string = ''
+  //#region VARIABLES
+  FormRegistro: PTLPaquetesSCModel = new PTLPaquetesSCModel();
+  historial: PTLHistorialFacturacionModel = new PTLHistorialFacturacionModel();
+  paqueteSC: PTLPaquetesSCModel = new PTLPaquetesSCModel();
+  isSubmit: boolean = false;
+  subscriptions = new Subscription();
+  suscriptores: PTLSuscriptorModel[] = [];
+  paquetes: PTLPaqueteModel[] = [];
+  paquetesSC: PTLPaquetesSCModel[] = [];
+  tiposPaquete: PTLTipoPaqueteModel[] = [];
+  tiposPago: PTLTipoPagoModel[] = [];
+  historiales: PTLHistorialFacturacionModel[] = [];
+  private socketSub!: Subscription;
+  private historialSocketSub!: Subscription;
+  mostrarModalRenovacion: boolean = false;
+  registroSeleccionado: any = null;
+  registrosTransformadas$: Observable<PTLPaquetesSCModel[]> = of([]);
+  registrosFiltrados$: Observable<PTLPaquetesSCModel[]> = of([]);
+  registros: PTLPaquetesSCModel[] = [];
+  suscriptor: string = '';
 
-    //  filtroCodigoSubject = new BehaviorSubject<string>('todos');
-    filtroPaqueteSubject = new BehaviorSubject<string>('todos');
-    filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  //  filtroCodigoSubject = new BehaviorSubject<string>('todos');
+  filtroPaqueteSubject = new BehaviorSubject<string>('todos');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-    lang: string = localStorage.getItem('lang') || 'es';
-    tituloPagina: string = '';
-    suscPlataforma: string = '';
-    codigoSuscriptor: string = '';
-    codigoTipoPago: string = '';
+  lang: string = localStorage.getItem('lang') || 'es';
+  tituloPagina: string = '';
+  suscPlataforma: string = '';
+  codigoSuscriptor: string = '';
+  codigoTipoPago: string = '';
 
-    gradientConfig;
-    hasFiltersSlot: boolean = false;
-    menuItems!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  gradientConfig;
+  hasFiltersSlot: boolean = false;
+  menuItems!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-    colorOpcion1 = '#ec5914';
-    letraOpcion1 = 'R';
-    //#endregion VARIABLES
+  colorOpcion1 = '#ec5914';
+  letraOpcion1 = 'R';
+  //#endregion VARIABLES
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private cdr: ChangeDetectorRef,
-        private _suscriptoresService: PTLSuscriptoresService,
-        private _navigationService: NavigationService,
-        private _localStorageService: LocalStorageService,
-        private _languageService: LanguageService,
-        private _paquetesService: PTLPaquetesService,
-        private _paquetesSCService: PTLPaquetesSCService,
-        private _tiposPaqueteService: PTLTiposPaqueteService,
-        private _tiposPagoService: PTLTiposPagoService,
-        private _historialFacturacionService: PTLHistorialFacturacionService,
-        private _utilidaddesService: UtilidadesService,
-        private _swalService: SwalAlertService,
-        private _permisosService: PtlPermisosService,
-        private _aprovisionamientos: PtlAprovisionamientosService
-    ) {
-        this.gradientConfig = GradientConfig;
-        this.codigoSuscriptor = this._localStorageService.getObject<string>('regId') || '';
-        this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
+    private _languageService: LanguageService,
+    private _paquetesService: PTLPaquetesService,
+    private _paquetesSCService: PTLPaquetesSCService,
+    private _tiposPaqueteService: PTLTiposPaqueteService,
+    private _tiposPagoService: PTLTiposPagoService,
+    private _historialFacturacionService: PTLHistorialFacturacionService,
+    private _utilidaddesService: UtilidadesService,
+    private _swalService: SwalAlertService,
+    private _permisosService: PtlPermisosService,
+    private _aprovisionamientos: PtlAprovisionamientosService
+  ) {
+    this.gradientConfig = GradientConfig;
+    this.codigoSuscriptor = this._localStorageService.getObject<string>('regId') || '';
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+
+    this.cargarCatalogosEstaticos();
+    this.iniciarEscuchasSockets();
+    this.setupRegistrosStream();
+    this.cargarBases();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    if (this.socketSub) {
+      this.socketSub.unsubscribe();
     }
-
-    ngOnInit() {
-        this._navigationService.getNavigationItems();
-        this.menuItems = this._navigationService.menuItems$;
-        this.hasFiltersSlot = true;
-
-        this.cargarCatalogosEstaticos();
-        this.iniciarEscuchasSockets();
-        this.setupRegistrosStream();
-        this.cargarBases();
+    if (this.historialSocketSub) {
+      this.historialSocketSub.unsubscribe();
     }
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-        if (this.socketSub) {
-            this.socketSub.unsubscribe();
-        }
-        if (this.historialSocketSub) {
-            this.historialSocketSub.unsubscribe();
-        }
-    }
+  // =========================================================================
+  // INICIALIZACIÓN Y SOCKETS
+  // =========================================================================
+  private cargarCatalogosEstaticos(): void {
+    this.subscriptions.add(
+      this._suscriptoresService.getRegistros().subscribe(
+        () => console.log('Suscriptores cargados y guardadas en el servicio'),
+        (err) => console.error('Error al cargar los Suscriptores:', err)
+      )
+    );
+    this.subscriptions.add(
+      this._languageService.currentLang$.subscribe((lang) => {
+        this.lang = lang;
+        this.letraOpcion1 = lang == 'es' ? 'R' : 'R';
+      })
+    );
 
-    // =========================================================================
-    // INICIALIZACIÓN Y SOCKETS
-    // =========================================================================
-    private cargarCatalogosEstaticos(): void {
-        this.subscriptions.add(
-            this._suscriptoresService.getRegistros().subscribe(
-                () => console.log('Suscriptores cargados y guardadas en el servicio'),
-                (err) => console.error('Error al cargar los Suscriptores:', err)
-            )
-        );
-        this.subscriptions.add(
-            this._languageService.currentLang$.subscribe(lang => {
-                this.lang = lang;
-                this.letraOpcion1 = lang == 'es' ? 'R' : 'R';
-            })
-        );
+    this.suscriptores = this._suscriptoresService.getSuscriptoresActuales();
+    this.paquetes = this._paquetesService.getPaquetesActuales();
+    this.paquetesSC = this._paquetesSCService.getPaquetesSCActuales();
+    this.tiposPaquete = this._tiposPaqueteService.getTiposPaqueteActuales();
+    this.tiposPago = this._tiposPagoService.getTiposPagoActuales();
+    this.historiales = this._historialFacturacionService.getHistorialesActuales();
+  }
 
-        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales();
-        this.paquetes = this._paquetesService.getPaquetesActuales();
+  private iniciarEscuchasSockets(): void {
+    this.socketSub = this._paquetesSCService.paquetesSCChange$
+      .pipe(
+        tap((payload) => console.log('¡Aviso del socket paquetes recibido en el componente!', payload)),
+        switchMap(() => this._paquetesSCService.cargarRegistros()),
+        switchMap(() => this._historialFacturacionService.getRegistros())
+      )
+      .subscribe((resp: any) => {
         this.paquetesSC = this._paquetesSCService.getPaquetesSCActuales();
-        this.tiposPaquete = this._tiposPaqueteService.getTiposPaqueteActuales();
-        this.tiposPago = this._tiposPagoService.getTiposPagoActuales();
-        this.historiales = this._historialFacturacionService.getHistorialesActuales();
-    }
+        this.historiales = resp.historiales || resp;
+        this.setupRegistrosStream();
+      });
 
-    private iniciarEscuchasSockets(): void {
-        this.socketSub = this._paquetesSCService.paquetesSCChange$.pipe(
-            tap(payload => console.log('¡Aviso del socket paquetes recibido en el componente!', payload)),
-            switchMap(() => this._paquetesSCService.cargarRegistros()),
-            switchMap(() => this._historialFacturacionService.getRegistros())
-        ).subscribe((resp: any) => {
-            this.paquetesSC = this._paquetesSCService.getPaquetesSCActuales();
-            this.historiales = resp.historiales || resp;
-            this.setupRegistrosStream();
+    this.historialSocketSub = this._historialFacturacionService.historialesChange$
+      .pipe(
+        tap((payload) => console.log('¡Aviso del socket facturación (historial) recibido!', payload)),
+        switchMap(() => this._historialFacturacionService.getRegistros())
+      )
+      .subscribe((resp: any) => {
+        this.historiales = resp.historiales;
+        this.setupRegistrosStream();
+      });
+  }
+
+  setupRegistrosStream(): void {
+    this.registrosTransformadas$ = combineLatest([this._paquetesSCService.paquetesSC$, this._permisosService.actividadesAutorizadas$]).pipe(
+      map(([paqs, permisos]: [PTLPaquetesSCModel[], string[]]) => {
+        if (!paqs || paqs.length === 0) return [];
+
+        console.log('paquetes', paqs);
+        const pqsSuscriptor = paqs.filter((x) => x.codigoSuscriptor == this.codigoSuscriptor);
+        console.log('paquetes suscriptor', pqsSuscriptor);
+
+        return pqsSuscriptor.map((reg: any) => {
+          const newReg = this._estructurarPaqueteConHistorial(reg);
+
+          const accionesPermitidas: any[] = [];
+
+          const puedeModificar = permisos.includes('ACT_SUSCPAQ_MODIFICAR');
+          if (puedeModificar) {
+            accionesPermitidas.push({
+              accion: 'MODIFICAR',
+              letra: 'M',
+              color: '#007bff',
+              tooltip: this.translate.instant('COMMON.EDIT_2')
+            });
+          }
+
+          const puedeEliminar = permisos.includes('ACT_SUSCPAQ_ELIMINAR');
+          if (puedeEliminar) {
+            accionesPermitidas.push({
+              accion: 'ELIMINAR',
+              letra: 'E',
+              color: '#dc3545',
+              tooltip: this.translate.instant('COMMON.DELETE')
+            });
+          }
+
+          const puedeRenovar = permisos.includes('ACT_SUSCPAQ_RENOVAR');
+          if (puedeRenovar) {
+            accionesPermitidas.push({
+              accion: 'RENOVAR',
+              letra: 'R',
+              color: '#ec5914',
+              tooltip: this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEW')
+            });
+          }
+
+          return {
+            ...newReg,
+            _acciones: accionesPermitidas
+          } as PTLPaquetesSCModel;
         });
+      }),
+      tap((regs) => {
+        this.registros = regs;
+        console.log('todos los registros', this.registros);
+        this.cdr.detectChanges();
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de datos:', err);
+        return of([]);
+      })
+    );
 
-        this.historialSocketSub = this._historialFacturacionService.historialesChange$.pipe(
-            tap(payload => console.log('¡Aviso del socket facturación (historial) recibido!', payload)),
-            switchMap(() => this._historialFacturacionService.getRegistros())
-        ).subscribe((resp: any) => {
-            this.historiales = resp.historiales;
-            this.setupRegistrosStream();
-        });
-    }
+    this.registrosFiltrados$ = combineLatest([
+      this.registrosTransformadas$.pipe(startWith([])),
+      this.filtroPaqueteSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([paqs, paquete, estado]) => {
+        let filteredpaquetes = paqs;
 
-    setupRegistrosStream(): void {
-        this.registrosTransformadas$ = combineLatest([
-            this._paquetesSCService.paquetesSC$,
-            this._permisosService.actividadesAutorizadas$
-        ]).pipe(
-            map(([paqs, permisos]: [PTLPaquetesSCModel[], string[]]) => {
-                if (!paqs || paqs.length === 0) return [];
+        if (paquete !== 'todos') {
+          filteredpaquetes = filteredpaquetes.filter((mod: any) => mod.codigoPaquete === paquete);
+        }
 
-                console.log('paquetes', paqs);
-                const pqsSuscriptor = paqs.filter(x => x.codigoSuscriptor == this.codigoSuscriptor);
-                console.log('paquetes suscriptor', pqsSuscriptor);
+        if (estado !== 'todos') {
+          const estadoBoolean = estado === 'true';
+          filteredpaquetes = filteredpaquetes.filter((mod: any) => mod.estadoLicencia === estadoBoolean);
+        }
 
-                return pqsSuscriptor.map((reg: any) => {
+        return filteredpaquetes;
+      })
+    );
+  }
 
-                    const newReg = this._estructurarPaqueteConHistorial(reg);
+  private _estructurarPaqueteConHistorial(reg: any): PTLPaquetesSCModel {
+    const newReg = { ...reg };
+    newReg.nomSuscriptor = this.suscriptores.find((x) => x.codigoSuscriptor == newReg.codigoSuscriptor)?.nombreSuscriptor;
+    newReg.nomPaquete = this.paquetes.find((x) => x.codigoPaquete == newReg.codigoPaquete)?.nombrePaquete;
+    newReg.nomEstado = newReg.estadoLicencia ? 'Activo' : 'Inactivo';
 
-                    const accionesPermitidas: any[] = [];
+    const rawHistoriales = this.historiales.filter(
+      (x) => x.codigoPaquete == reg.codigoPaquete && x.codigoSuscriptor == newReg.codigoSuscriptor
+    );
 
-                    const puedeModificar = permisos.includes('ACT_SUSCPAQ_MODIFICAR');
-                    if (puedeModificar) {
-                        accionesPermitidas.push({
-                            accion: 'MODIFICAR',
-                            letra: 'M',
-                            color: '#007bff',
-                            tooltip: (this.translate.instant('COMMON.EDIT_2'))
-                        });
-                    }
+    const histos = rawHistoriales.map((histo: any) => ({
+      fechaPago: new Date(histo.fechaPago).toLocaleDateString(),
+      numFactura: histo.numFactura,
+      tipoPago: this.tiposPago.find((x) => x.codigoTipoPago == histo.codigoTipoPago)?.nombreTipoPago,
+      montoPagado: this._utilidaddesService.formatearMoneda(histo.montoPagado, 2),
+      numeroCuota: histo.numeroCuota,
+      estadoPago: histo.estadoPago == true ? 'Pagado' : 'Pendiente'
+    }));
 
-                    const puedeEliminar = permisos.includes('ACT_SUSCPAQ_ELIMINAR');
-                    if (puedeEliminar) {
-                        accionesPermitidas.push({
-                            accion: 'ELIMINAR',
-                            letra: 'E',
-                            color: '#dc3545',
-                            tooltip: (this.translate.instant('COMMON.DELETE'))
-                        });
-                    }
+    newReg.historiales = histos.sort((a, b) => b.numeroCuota - a.numeroCuota) || [];
+    return newReg as PTLPaquetesSCModel;
+  }
 
-                    const puedeRenovar = permisos.includes('ACT_SUSCPAQ_RENOVAR');
-                    if (puedeRenovar) {
-                        accionesPermitidas.push({
-                            accion: 'RENOVAR',
-                            letra: 'R',
-                            color: '#ec5914',
-                            tooltip: (this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEW'))
-                        });
-                    }
+  // =========================================================================
+  // EVENTOS DE LA UI Y FILTROS
+  // =========================================================================
+  onFiltroPaqueteChangeClick(evento: any) {
+    console.log('filtrar el paquete ', evento.target.value);
+    this.filtroPaqueteSubject.next(evento.target.value);
+  }
 
-                    return {
-                        ...newReg,
-                        '_acciones': accionesPermitidas
-                    } as PTLPaquetesSCModel;
-                });
-            }),
-            tap((regs) => {
-                this.registros = regs;
-                console.log('todos los registros', this.registros);
-                this.cdr.detectChanges();
-            }),
-            catchError((err) => {
-                console.error('Error en el stream de datos:', err);
-                return of([]);
-            })
-        );
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    this.filtroEstadoSubject.next(evento.target.value);
+  }
 
-        this.registrosFiltrados$ = combineLatest([
-            this.registrosTransformadas$.pipe(startWith([])),
-            this.filtroPaqueteSubject,
-            this.filtroEstadoSubject
-        ]).pipe(
-            map(([paqs, paquete, estado]) => {
-                let filteredpaquetes = paqs;
+  onTipoPaqueteChangeClick(event: any) {
+    const tipoPaquete = this.tiposPaquete.find((x) => x.codigoTipoPaquete == event.target.value);
+    this.FormRegistro.descuentoMeses = tipoPaquete?.descuentoMeses || 0;
+    this.FormRegistro.mesesCobertura = tipoPaquete?.numMeses || 0;
+  }
 
-                if (paquete !== 'todos') {
-                    filteredpaquetes = filteredpaquetes.filter((mod: any) => mod.codigoPaquete === paquete);
-                }
+  onTipoPagoChangeClick(event: any) {
+    console.log('asi va el form', this.FormRegistro);
+    this.codigoTipoPago = event.target.value;
+  }
 
-                if (estado !== 'todos') {
-                    const estadoBoolean = estado === 'true';
-                    filteredpaquetes = filteredpaquetes.filter((mod: any) => mod.estadoLicencia === estadoBoolean);
-                }
+  columnasRegistros: any[] = [
+    { name: 'nomSuscriptor', header: 'COMMON.SUBSCRIBER', type: 'text', isSortable: true, searchable: false },
+    { name: 'nomPaquete', header: 'COMMON.PACKAGE', type: 'text', isSortable: true, searchable: false },
+    { name: 'fechaInicio', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.START_DATE', type: 'date', isSortable: true, searchable: false },
+    { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.EXPIRATION', type: 'date', isSortable: true, searchable: false },
+    { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL', type: 'date', isSortable: true, searchable: false },
+    { name: 'numRenovaciones', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWALS', type: 'estado', isSortable: true, searchable: false },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado', isSortable: true, searchable: false }
+  ];
 
-                return filteredpaquetes;
-            })
-        );
-    }
+  columnasDetailRegistros: ColumnMetadata[] = [
+    { name: 'codigoPaquete', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_CODE', type: 'text' },
+    { name: 'codigoLicencia', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE', type: 'text' },
+    { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL', type: 'date' },
+    { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT', type: 'date' },
+    { name: 'historiales', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PROCESSED_PAYMENTS', type: 'json-tabla' }
+  ];
 
-    private _estructurarPaqueteConHistorial(reg: any): PTLPaquetesSCModel {
-        const newReg = { ...reg };
-        newReg.nomSuscriptor = this.suscriptores.find(x => x.codigoSuscriptor == newReg.codigoSuscriptor)?.nombreSuscriptor;
-        newReg.nomPaquete = this.paquetes.find(x => x.codigoPaquete == newReg.codigoPaquete)?.nombrePaquete;
-        newReg.nomEstado = newReg.estadoLicencia ? 'Activo' : 'Inactivo';
+  // =========================================================================
+  // NAVEGACIÓN Y ACCIONES DE TABLA
+  // =========================================================================
+  OnNuevoRegistroClick() {
+    this._localStorageService.setObject('regId', this.codigoSuscriptor);
+    this._localStorageService.removeObject('paqId');
+    this.router.navigate(['/suscriptor/gestion-paquete-suscriptor']);
+  }
 
-        const rawHistoriales = this.historiales.filter(x =>
-            x.codigoPaquete == reg.codigoPaquete && x.codigoSuscriptor == newReg.codigoSuscriptor
-        );
+  OnRegresarClick(event: any) {
+    this.router.navigate(['/suscriptor/suscriptores']);
+  }
 
-        const histos = rawHistoriales.map((histo: any) => ({
-            fechaPago: new Date(histo.fechaPago).toLocaleDateString(),
-            numFactura: histo.numFactura,
-            tipoPago: this.tiposPago.find(x => x.codigoTipoPago == histo.codigoTipoPago)?.nombreTipoPago,
-            montoPagado: this._utilidaddesService.formatearMoneda(histo.montoPagado, 2),
-            numeroCuota: histo.numeroCuota,
-            estadoPago: histo.estadoPago == true ? 'Pagado' : 'Pendiente'
-        }));
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 
-        newReg.historiales = histos.sort((a, b) => b.numeroCuota - a.numeroCuota) || [];
-        return newReg as PTLPaquetesSCModel;
-    }
+  cerrarModal() {
+    this.mostrarModalRenovacion = false;
+    this.registroSeleccionado = null;
+  }
 
-    // =========================================================================
-    // EVENTOS DE LA UI Y FILTROS
-    // =========================================================================
-    onFiltroPaqueteChangeClick(evento: any) {
-        console.log('filtrar el paquete ', evento.target.value);
-        this.filtroPaqueteSubject.next(evento.target.value);
-    }
+  onAccionPrincipal(evento: { accion: string; row: any }) {
+    const { accion, row } = evento;
+    const id = row.codigoSuscriptorPaquete || row.id;
 
-    onFiltroEstadoChangeClick(evento: any) {
-        console.log('filtrar el estado ', evento.target.value);
-        this.filtroEstadoSubject.next(evento.target.value);
-    }
+    console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
 
-    onTipoPaqueteChangeClick(event: any) {
-        const tipoPaquete = this.tiposPaquete.find(x => x.codigoTipoPaquete == event.target.value);
-        this.FormRegistro.descuentoMeses = tipoPaquete?.descuentoMeses || 0;
-        this.FormRegistro.mesesCobertura = tipoPaquete?.numMeses || 0;
-    }
+    switch (accion) {
+      case 'MODIFICAR':
+        console.log('inactivar usuario codigo', id);
+        console.log('ejecutando opcion 1 empresas Suscriptor', id);
+        this._localStorageService.setObject('regId', id);
+        this.router.navigate(['/suscriptor/gestion-suscriptor']);
+        break;
+      case 'ELIMINAR':
+        const value = id;
+        console.log('opcion 1 click', value);
+        console.log('ejecutando opcion 2 UsuariosSuscriptor', id);
+        console.log('cancelar el paquete', value);
 
-    onTipoPagoChangeClick(event: any) {
-        console.log('asi va el form', this.FormRegistro);
-        this.codigoTipoPago = event.target.value;
-    }
+        const paqueteToCancel = this.paquetesSC.find((x) => x.codigoSuscriptorPaquete == value);
 
-    columnasRegistros: any[] = [
-        { name: 'nomSuscriptor', header: 'COMMON.SUBSCRIBER', type: 'text', isSortable: true, searchable: false },
-        { name: 'nomPaquete', header: 'COMMON.PACKAGE', type: 'text', isSortable: true, searchable: false },
-        { name: 'fechaInicio', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.START_DATE', type: 'date', isSortable: true, searchable: false },
-        { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.EXPIRATION', type: 'date', isSortable: true, searchable: false },
-        { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL', type: 'date', isSortable: true, searchable: false },
-        { name: 'numRenovaciones', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWALS', type: 'estado', isSortable: true, searchable: false },
-        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado', isSortable: true, searchable: false }
-    ];
+        if (!paqueteToCancel) {
+          console.error('No se encontró el paquete a cancelar');
+          return;
+        }
 
-    columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoPaquete', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_CODE', type: 'text' },
-        { name: 'codigoLicencia', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE', type: 'text' },
-        { name: 'fechaRenovacion', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEWAL', type: 'date' },
-        { name: 'fechaProximoPago', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT', type: 'date' },
-        { name: 'historiales', header: 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PROCESSED_PAYMENTS', type: 'json-tabla' }
-    ];
+        const paqueteInfo = this.paquetes.find((x) => x.codigoPaquete == paqueteToCancel.codigoPaquete);
 
-    // =========================================================================
-    // NAVEGACIÓN Y ACCIONES DE TABLA
-    // =========================================================================
-    OnNuevoRegistroClick() {
-        this._localStorageService.setObject('regId', this.codigoSuscriptor);
-        this._localStorageService.removeObject('paqId');
-        this.router.navigate(['/suscriptor/gestion-paquete-suscriptor']);
-    }
+        const titulo = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ARE_YOU_SURE_YOU_WANT_CANCEL');
+        const confirmText = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.YES_CANCEL_PACKAGE');
+        const cancelText = this.translate.instant('COMMON.CANCEL');
+        const placeholder = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ENTER_REASON_CANCELLATION');
+        const errorobs = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.YOU_MUST_ENTER_REASON_OR_COMMENT');
 
-    OnRegresarClick(event: any) {
-        this.router.navigate(['/suscriptor/suscriptores']);
-    }
-
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
-
-    cerrarModal() {
-        this.mostrarModalRenovacion = false;
-        this.registroSeleccionado = null;
-    }
-
-    onAccionPrincipal(evento: { accion: string, row: any }) {
-        const { accion, row } = evento;
-        const id = row.codigoSuscriptorPaquete || row.id;
-
-        console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
-
-        switch (accion) {
-            case 'MODIFICAR':
-                console.log('inactivar usuario codigo', id);
-                console.log('ejecutando opcion 1 empresas Suscriptor', id);
-                this._localStorageService.setObject('regId', id);
-                this.router.navigate(['/suscriptor/gestion-suscriptor']);
-                break;
-            case 'ELIMINAR':
-                const value = id;
-                console.log('opcion 1 click', value);
-                console.log('ejecutando opcion 2 UsuariosSuscriptor', id);
-                console.log('cancelar el paquete', value);
-
-                const paqueteToCancel = this.paquetesSC.find(x => x.codigoSuscriptorPaquete == value);
-
-                if (!paqueteToCancel) {
-                    console.error('No se encontró el paquete a cancelar');
-                    return;
-                }
-
-                const paqueteInfo = this.paquetes.find(x => x.codigoPaquete == paqueteToCancel.codigoPaquete);
-
-                const titulo = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ARE_YOU_SURE_YOU_WANT_CANCEL');
-                const confirmText = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.YES_CANCEL_PACKAGE');
-                const cancelText = this.translate.instant('COMMON.CANCEL');
-                const placeholder = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ENTER_REASON_CANCELLATION');
-                const errorobs = this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.YOU_MUST_ENTER_REASON_OR_COMMENT');
-
-                const htmlBody = `
+        const htmlBody = `
                     <div style="margin-bottom: 10px;">
                         ${this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.CANCELING_PACKAGE_SUBSCRIBER_CHANGES_PACKAGE_STATUS')}
                     </div>
                     <small><b>"${paqueteInfo?.nombrePaquete || paqueteToCancel.codigoPaquete}"</b></small>
                     `;
 
-                this._swalService.getAlertConfirmWithTextarea(titulo, htmlBody, placeholder, confirmText, cancelText, errorobs)
-                    .then((resultado) => {
+        this._swalService
+          .getAlertConfirmWithTextarea(titulo, htmlBody, placeholder, confirmText, cancelText, errorobs)
+          .then((resultado) => {
+            if (resultado.isConfirmed) {
+              const paqueteActualizado: PTLPaquetesSCModel = {
+                ...paqueteToCancel,
+                estadoLicencia: false,
+                observaciones: resultado.value,
+                fechaCancelacion: new Date().toISOString(),
+                codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '',
+                fechaModificacion: new Date().toISOString()
+              };
 
-                        if (resultado.isConfirmed) {
-
-                            const paqueteActualizado: PTLPaquetesSCModel = {
-                                ...paqueteToCancel,
-                                estadoLicencia: false,
-                                observaciones: resultado.value,
-                                fechaCancelacion: new Date().toISOString(),
-                                codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '',
-                                fechaModificacion: new Date().toISOString()
-                            };
-
-                            this.subscriptions.add(
-                                this._paquetesSCService.putModificarRegistro(paqueteActualizado).subscribe({
-                                    next: (resp: any) => {
-                                        this._swalService.getAlertConfirmSuccess(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_CANCELED_SUCCESSFULLY'));
-                                    },
-                                    error: (err: any) => {
-                                        this._swalService.getAlertConfirmError(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.THERE_WAS_ERROR_CANCELING_PACKAGE'));
-                                        console.error('Error cancelando paquete', err);
-                                    }
-                                })
-                            );
-                        }
-                    });
-
-                break;
-            case 'RENOVAR':
-                console.log('ejecutando opcion 3 paquetesSuscriptor', id);
-                this.registroSeleccionado = event;
-                this._prepararDatosDeRenovacion(id);
-                this.mostrarModalRenovacion = true;
-                break;
-            default:
-                console.warn(`Acción no reconocida: ${accion}`);
-                break;
-        }
-    }
-
-    // =====================================================================
-    // OT-030: bases del suscriptor (una por aplicación de su paquete) y reintento
-    // =====================================================================
-    bases: Aprovisionamiento[] = [];
-
-    cargarBases(): void {
-        if (!this.codigoSuscriptor) return;
-        this._aprovisionamientos.listar(this.codigoSuscriptor).subscribe({ next: (b) => (this.bases = b), error: () => (this.bases = []) });
-    }
-
-    reintentarBase(b: Aprovisionamiento): void {
-        this._aprovisionamientos.reintentar(b.codigoSuscriptor, b.codigoAplicacion).subscribe({
-            next: () => { this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.DATABASE_QUEUED_AGAIN')); setTimeout(() => this.cargarBases(), 3000); },
-            error: (e: any) => this._swalService.getAlertError(e?.error?.msg || this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.COULD_NOT_RETRY_DATABASE'))
-        });
-    }
-
-    private _prepararDatosDeRenovacion(codigoSuscriptorPaquete: string): void {
-        let paSc = this.paquetesSC.find(x => x.codigoSuscriptorPaquete == codigoSuscriptorPaquete) || new PTLPaquetesSCModel();
-        let paquete = this.paquetes.find(x => x.codigoPaquete == paSc?.codigoPaquete);
-        let tipoPaquete = this.tiposPaquete.find(x => x.codigoTipoPaquete == paquete?.codigoTipoPaquete);
-
-        console.log('datros para renovar:', paSc);
-        console.log('datos paquete:', paquete);
-        console.log('datos tipoPaquete:', tipoPaquete);
-
-        // OT-029: la renovación cobra el precio con el que se vendió (foto en PTLPaquetesSC), no el de la lista de hoy
-        const numMeses = paSc?.mesesCobertura || tipoPaquete?.numMeses || 0;
-        const desc = Number(paSc?.porcentajeDescuento ?? tipoPaquete?.descuentoMeses ?? 0);
-        const valorFactura = Number(paSc?.valorFinal || 0);
-        const precio = numMeses ? Math.round((Number(paSc?.valorPeriodo || 0) / numMeses) * 100) / 100 : 0;
-        const precioFinalPorMes = numMeses ? Math.round((valorFactura / numMeses) * 100) / 100 : 0;
-
-        const fechaVencimiento = new Date();
-        fechaVencimiento.setMonth(fechaVencimiento.getMonth() + Number(numMeses));
-        const fechaVencimientoStr = fechaVencimiento.toISOString();
-
-        this.FormRegistro = {
-            ...this.FormRegistro,
-            codigoTipoPago: '',
-            codigoLicencia: paSc?.codigoLicencia,
-            codigoTipoPaquete: paSc?.codigoTipoPaquete,
-            precioPaquete: precio,
-            mesesCobertura: numMeses,
-            descuentoMeses: desc,
-            valorMes: precioFinalPorMes,
-            valorPago: valorFactura,
-            fechaProximoPagoDate: fechaVencimiento.toLocaleDateString(),
-            fechaProximoPago: fechaVencimientoStr
-        };
-
-        console.log('gestionar formulario paquete sc', this.FormRegistro);
-        console.log('todos los historiales', this.historiales);
-
-        const historialLocal = this.historiales.filter(x =>
-            x.codigoSuscriptor == this.FormRegistro.codigoSuscriptor && x.codigoPaquete == this.FormRegistro.codigoPaquete
-        );
-        const ultimHistorial = historialLocal[historialLocal.length - 1];
-        console.log('ultimHistorial', ultimHistorial);
-
-        let numeroCuota = this.historiales.length + 1;
-        const fechaActual = new Date().toISOString();
-        const usuarioId = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '';
-
-        this.historial = {
-            codigoHistorial: uuidv4(),
-            codigoSuscriptor: paSc?.codigoSuscriptor,
-            codigoLicencia: paSc?.codigoLicencia,
-            codigoTipoPago: this.codigoTipoPago,
-            codigoPaquete: paquete?.codigoPaquete,
-            fechaPago: fechaActual,
-            numFactura: '',
-            numeroCuota: numeroCuota,
-            montoPagado: valorFactura,
-            estadoPago: true,
-            codigoUsuarioCreacion: usuarioId,
-            fechaCreacion: fechaActual
-        } as PTLHistorialFacturacionModel;
-
-        console.log('historial facturacion:', this.historial);
-
-        this.paqueteSC = {
-            ...paSc,
-            observaciones: '',
-            fechaCancelacion: '',
-            codigoUsuarioModificacion: usuarioId,
-            fechaModificacion: fechaActual,
-            fechaProximoPago: fechaVencimiento.toISOString(),
-            fechaRenovacion: fechaActual,
-            numRenovaciones: numeroCuota
-        };
-
-        console.log('paqueteSC renovar:', this.paqueteSC);
-    }
-
-    gestionarPaqueteSuscriptor() {
-        console.log('GESTIONAR paquete', this.paqueteSC);
-        this._paquetesSCService.putModificarRegistro(this.paqueteSC).subscribe({
-            next: (data: any) => {
-                console.log('paqueteSC MODIFICADO', data.paqueteSC);
-            },
-            error: (err) => {
-                const rutaTraduccion = `SUSCRIPTORES.GESTION.${err}`;
-                console.error(rutaTraduccion);
+              this.subscriptions.add(
+                this._paquetesSCService.putModificarRegistro(paqueteActualizado).subscribe({
+                  next: (resp: any) => {
+                    this._swalService.getAlertConfirmSuccess(
+                      this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_CANCELED_SUCCESSFULLY')
+                    );
+                  },
+                  error: (err: any) => {
+                    this._swalService.getAlertConfirmError(
+                      this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.THERE_WAS_ERROR_CANCELING_PACKAGE')
+                    );
+                    console.error('Error cancelando paquete', err);
+                  }
+                })
+              );
             }
-        });
+          });
+
+        break;
+      case 'RENOVAR':
+        console.log('ejecutando opcion 3 paquetesSuscriptor', id);
+        this.registroSeleccionado = event;
+        this._prepararDatosDeRenovacion(id);
+        this.mostrarModalRenovacion = true;
+        break;
+      default:
+        console.warn(`Acción no reconocida: ${accion}`);
+        break;
     }
+  }
 
-    procesarRenovacion() {
-        console.log('Procesando renovación para:', this.registroSeleccionado);
-        this.historial.codigoTipoPago = this.codigoTipoPago;
-        console.log('Crear el historial:', this.historial);
+  // =====================================================================
+  // OT-030: bases del suscriptor (una por aplicación de su paquete) y reintento
+  // =====================================================================
+  bases: Aprovisionamiento[] = [];
 
-        this._historialFacturacionService.postCrearRegistroManual(this.historial).subscribe({
-            next: (data: any) => {
-                console.log('historial CREADO', data.historial);
-                this.gestionarPaqueteSuscriptor();
-            },
-            error: (err) => {
-                const rutaTraduccion = `SUSCRIPTORES.GESTION.${err}`;
-                console.error(rutaTraduccion);
-            }
-        });
+  cargarBases(): void {
+    if (!this.codigoSuscriptor) return;
+    this._aprovisionamientos.listar(this.codigoSuscriptor).subscribe({ next: (b) => (this.bases = b), error: () => (this.bases = []) });
+  }
 
-        this.cerrarModal();
-    }
+  reintentarBase(b: Aprovisionamiento): void {
+    this._aprovisionamientos.reintentar(b.codigoSuscriptor, b.codigoAplicacion).subscribe({
+      next: () => {
+        this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.DATABASE_QUEUED_AGAIN'));
+        setTimeout(() => this.cargarBases(), 3000);
+      },
+      error: (e: any) =>
+        this._swalService.getAlertError(e?.error?.msg || this.translate.instant('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.COULD_NOT_RETRY_DATABASE'))
+    });
+  }
+
+  private _prepararDatosDeRenovacion(codigoSuscriptorPaquete: string): void {
+    let paSc = this.paquetesSC.find((x) => x.codigoSuscriptorPaquete == codigoSuscriptorPaquete) || new PTLPaquetesSCModel();
+    let paquete = this.paquetes.find((x) => x.codigoPaquete == paSc?.codigoPaquete);
+    let tipoPaquete = this.tiposPaquete.find((x) => x.codigoTipoPaquete == paquete?.codigoTipoPaquete);
+
+    console.log('datros para renovar:', paSc);
+    console.log('datos paquete:', paquete);
+    console.log('datos tipoPaquete:', tipoPaquete);
+
+    // OT-029: la renovación cobra el precio con el que se vendió (foto en PTLPaquetesSC), no el de la lista de hoy
+    const numMeses = paSc?.mesesCobertura || tipoPaquete?.numMeses || 0;
+    const desc = Number(paSc?.porcentajeDescuento ?? tipoPaquete?.descuentoMeses ?? 0);
+    const valorFactura = Number(paSc?.valorFinal || 0);
+    const precio = numMeses ? Math.round((Number(paSc?.valorPeriodo || 0) / numMeses) * 100) / 100 : 0;
+    const precioFinalPorMes = numMeses ? Math.round((valorFactura / numMeses) * 100) / 100 : 0;
+
+    const fechaVencimiento = new Date();
+    fechaVencimiento.setMonth(fechaVencimiento.getMonth() + Number(numMeses));
+    const fechaVencimientoStr = fechaVencimiento.toISOString();
+
+    this.FormRegistro = {
+      ...this.FormRegistro,
+      codigoTipoPago: '',
+      codigoLicencia: paSc?.codigoLicencia,
+      codigoTipoPaquete: paSc?.codigoTipoPaquete,
+      precioPaquete: precio,
+      mesesCobertura: numMeses,
+      descuentoMeses: desc,
+      valorMes: precioFinalPorMes,
+      valorPago: valorFactura,
+      fechaProximoPagoDate: fechaVencimiento.toLocaleDateString(),
+      fechaProximoPago: fechaVencimientoStr
+    };
+
+    console.log('gestionar formulario paquete sc', this.FormRegistro);
+    console.log('todos los historiales', this.historiales);
+
+    const historialLocal = this.historiales.filter(
+      (x) => x.codigoSuscriptor == this.FormRegistro.codigoSuscriptor && x.codigoPaquete == this.FormRegistro.codigoPaquete
+    );
+    const ultimHistorial = historialLocal[historialLocal.length - 1];
+    console.log('ultimHistorial', ultimHistorial);
+
+    let numeroCuota = this.historiales.length + 1;
+    const fechaActual = new Date().toISOString();
+    const usuarioId = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '';
+
+    this.historial = {
+      codigoHistorial: uuidv4(),
+      codigoSuscriptor: paSc?.codigoSuscriptor,
+      codigoLicencia: paSc?.codigoLicencia,
+      codigoTipoPago: this.codigoTipoPago,
+      codigoPaquete: paquete?.codigoPaquete,
+      fechaPago: fechaActual,
+      numFactura: '',
+      numeroCuota: numeroCuota,
+      montoPagado: valorFactura,
+      estadoPago: true,
+      codigoUsuarioCreacion: usuarioId,
+      fechaCreacion: fechaActual
+    } as PTLHistorialFacturacionModel;
+
+    console.log('historial facturacion:', this.historial);
+
+    this.paqueteSC = {
+      ...paSc,
+      observaciones: '',
+      fechaCancelacion: '',
+      codigoUsuarioModificacion: usuarioId,
+      fechaModificacion: fechaActual,
+      fechaProximoPago: fechaVencimiento.toISOString(),
+      fechaRenovacion: fechaActual,
+      numRenovaciones: numeroCuota
+    };
+
+    console.log('paqueteSC renovar:', this.paqueteSC);
+  }
+
+  gestionarPaqueteSuscriptor() {
+    console.log('GESTIONAR paquete', this.paqueteSC);
+    this._paquetesSCService.putModificarRegistro(this.paqueteSC).subscribe({
+      next: (data: any) => {
+        console.log('paqueteSC MODIFICADO', data.paqueteSC);
+      },
+      error: (err) => {
+        const rutaTraduccion = `SUSCRIPTORES.GESTION.${err}`;
+        console.error(rutaTraduccion);
+      }
+    });
+  }
+
+  procesarRenovacion() {
+    console.log('Procesando renovación para:', this.registroSeleccionado);
+    this.historial.codigoTipoPago = this.codigoTipoPago;
+    console.log('Crear el historial:', this.historial);
+
+    this._historialFacturacionService.postCrearRegistroManual(this.historial).subscribe({
+      next: (data: any) => {
+        console.log('historial CREADO', data.historial);
+        this.gestionarPaqueteSuscriptor();
+      },
+      error: (err) => {
+        const rutaTraduccion = `SUSCRIPTORES.GESTION.${err}`;
+        console.error(rutaTraduccion);
+      }
+    });
+
+    this.cerrarModal();
+  }
 }

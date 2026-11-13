@@ -1,432 +1,437 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { Router, ActivatedRoute } from '@angular/router'
-import { GradientConfig } from 'src/app/app-config'
-import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
-import { SharedModule } from 'src/app/theme/shared/shared.module'
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { GradientConfig } from 'src/app/app-config';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 import {
-    LocalStorageService,
-    PtlAplicacionesService,
-    PtllogActividadesService,
-    SwalAlertService,
-    UploadFilesService
-} from 'src/app/theme/shared/service'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
-import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
-import { Observable, Subscription } from 'rxjs'
-import { v4 as uuidv4 } from 'uuid'
-import Swal from 'sweetalert2'
+  LocalStorageService,
+  PtlAplicacionesService,
+  PtllogActividadesService,
+  SwalAlertService,
+  UploadFilesService
+} from 'src/app/theme/shared/service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { Observable, Subscription } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
 
 // import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 // import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 
 @Component({
-    selector: 'app-gestion-aplicacion',
-    standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
-    templateUrl: './gestion-aplicacion.component.html',
-    styleUrl: './gestion-aplicacion.component.scss'
+  selector: 'app-gestion-aplicacion',
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+  templateUrl: './gestion-aplicacion.component.html',
+  styleUrl: './gestion-aplicacion.component.scss'
 })
 export class GestionAplicacionComponent implements OnInit {
-    @Output() toggleSidebar = new EventEmitter<void>()
-    FormRegistro: PTLAplicacionModel = new PTLAplicacionModel()
-    logActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
-    menuItems$!: Observable<NavigationItem[]>
-    gradientConfig: any
-    navCollapsed: boolean = false
-    navCollapsedMob: boolean = false
-    windowWidth: number = 0
+  @Output() toggleSidebar = new EventEmitter<void>();
+  FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
+  logActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
+  menuItems$!: Observable<NavigationItem[]>;
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
 
-    selectedFile: File | null = null
-    previewUrl: string | ArrayBuffer | null = null
-    userPhotoUrl: string = ''
-    fileName: string | null = null
-    selectedFileUrl: string | null = null
+  selectedFile: File | null = null;
+  previewUrl: string | ArrayBuffer | null = null;
+  userPhotoUrl: string = '';
+  fileName: string | null = null;
+  selectedFileUrl: string | null = null;
 
-    selectedFileUI: File | null = null
-    previewUrlUI: string | ArrayBuffer | null = null
-    userPhotoUrlUI: string = ''
-    fileNameUI: string | null = null
-    selectedFileUrlUI: string | null = null
+  selectedFileUI: File | null = null;
+  previewUrlUI: string | ArrayBuffer | null = null;
+  userPhotoUrlUI: string = '';
+  fileNameUI: string | null = null;
+  selectedFileUrlUI: string | null = null;
 
-    selectedFileUIB: File | null = null
-    previewUrlUIB: string | ArrayBuffer | null = null
-    userPhotoUrlUIB: string = ''
-    fileNameUIB: string | null = null
-    selectedFileUrlUIB: string | null = null
+  selectedFileUIB: File | null = null;
+  previewUrlUIB: string | ArrayBuffer | null = null;
+  userPhotoUrlUIB: string = '';
+  fileNameUIB: string | null = null;
+  selectedFileUrlUIB: string | null = null;
 
-    selectedFileIcono: File | null = null
-    previewUrlIcono: string | ArrayBuffer | null = null
-    userPhotoUrlIcono: string = ''
-    fileNameIcono: string | null = null
-    selectedFileUrlIcono: string | null = null
+  selectedFileIcono: File | null = null;
+  previewUrlIcono: string | ArrayBuffer | null = null;
+  userPhotoUrlIcono: string = '';
+  fileNameIcono: string | null = null;
+  selectedFileUrlIcono: string | null = null;
 
-    selectedFileLogo: File | null = null
-    previewUrlLogo: string | ArrayBuffer | null = null
-    userPhotoUrlLogo: string = ''
-    fileNameLogo: string | null = null
-    selectedFileUrlLogo: string | null = null
+  selectedFileLogo: File | null = null;
+  previewUrlLogo: string | ArrayBuffer | null = null;
+  userPhotoUrlLogo: string = '';
+  fileNameLogo: string | null = null;
+  selectedFileUrlLogo: string | null = null;
 
-    selectedFileLogoB: File | null = null
-    previewUrlLogoB: string | ArrayBuffer | null = null
-    userPhotoUrlLogoB: string = ''
-    fileNameLogoB: string | null = null
-    selectedFileUrlLogoB: string | null = null
+  selectedFileLogoB: File | null = null;
+  previewUrlLogoB: string | ArrayBuffer | null = null;
+  userPhotoUrlLogoB: string = '';
+  fileNameLogoB: string | null = null;
+  selectedFileUrlLogoB: string | null = null;
 
-    form: undefined
-    isSubmit: boolean = false
-    modoEdicion: boolean = false
-    codeAplicacion = uuidv4()
-    tipoEditorTexto = 'basica'
-    lockScreenSubscription: Subscription | undefined
-    isLocked: boolean = false
-    lockMessage: string = ''
-    suscriptor: string = ''
+  form: undefined;
+  isSubmit: boolean = false;
+  modoEdicion: boolean = false;
+  codeAplicacion = uuidv4();
+  tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
+  suscriptor: string = '';
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _localStorageService: LocalStorageService,
-        private _logActividadesService: PtllogActividadesService,
-        private _aplicacionesService: PtlAplicacionesService,
-        private _swalService: SwalAlertService,
-        private _translate: TranslateService,
-        private _uploadService: UploadFilesService
-    ) {
-        this.isSubmit = false
-        GradientConfig.header_fixed_layout = true
-        this.gradientConfig = GradientConfig
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
-        this.navCollapsedMob = false
-        this._navigationService.getNavigationItems()
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        const regId = this._localStorageService.getObject<string>('regId') || 'nuevo'
-        if (regId !== 'nuevo') {
-            this.modoEdicion = true
-            this._aplicacionesService.getAplicacionById(regId).subscribe({
-                next: (resp: any) => {
-                    this.FormRegistro = resp.aplicacion
-                    this.codeAplicacion = resp.aplicacion.codigoAplicacion
-                    this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenInicio) || 'no-image.png';
-                    this.selectedFileUrlUI = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenUI) || 'no-image.png';
-                    this.selectedFileUrlUIB = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenUIB) || 'no-image.png';
-                    this.selectedFileUrlLogo = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenLogo) || 'no-image.png';
-                    this.selectedFileUrlLogoB = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenLogoB) || 'no-image.png';
-                    this.selectedFileUrlIcono = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenIcono) || 'no-image.png';
-                },
-                error: () => {
-                    Swal.fire(traducir('COMMON.ERROR'), traducir('COMMON.COULD_NOT_GET_APPLICATION'), 'error')
-                }
-            })
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _swalService: SwalAlertService,
+    private _translate: TranslateService,
+    private _uploadService: UploadFilesService
+  ) {
+    this.isSubmit = false;
+    GradientConfig.header_fixed_layout = true;
+    this.gradientConfig = GradientConfig;
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
+    this._navigationService.getNavigationItems();
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    const regId = this._localStorageService.getObject<string>('regId') || 'nuevo';
+    if (regId !== 'nuevo') {
+      this.modoEdicion = true;
+      this._aplicacionesService.getAplicacionById(regId).subscribe({
+        next: (resp: any) => {
+          this.FormRegistro = resp.aplicacion;
+          this.codeAplicacion = resp.aplicacion.codigoAplicacion;
+          this.selectedFileUrl =
+            this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenInicio) || 'no-image.png';
+          this.selectedFileUrlUI =
+            this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenUI) || 'no-image.png';
+          this.selectedFileUrlUIB =
+            this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenUIB) || 'no-image.png';
+          this.selectedFileUrlLogo =
+            this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenLogo) || 'no-image.png';
+          this.selectedFileUrlLogoB =
+            this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenLogoB) || 'no-image.png';
+          this.selectedFileUrlIcono =
+            this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenIcono) || 'no-image.png';
+        },
+        error: () => {
+          Swal.fire(traducir('COMMON.ERROR'), traducir('COMMON.COULD_NOT_GET_APPLICATION'), 'error');
         }
+      });
     }
+  }
 
-    ngOnInit() {
-        this.menuItems$ = this._navigationService.menuItems$
-        this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
-            next: (message: string) => {
-                this._localStorageService.setFormRegistro(this.FormRegistro)
-                this.isLocked = true
-                this.lockMessage = message
-            },
-            error: err => console.error('Error al suscribirse al evento de bloqueo:', err)
-        })
-        const form = this._localStorageService.getFormRegistro()
-        if (form != undefined) {
-            this.FormRegistro = form
-            this._localStorageService.removeFormRegistro()
-        }
-        if (this.modoEdicion == false) {
-            this.FormRegistro.codigoAplicacion = uuidv4()
-            this.FormRegistro.imagenInicio = 'no-image.png'
-            this.FormRegistro.imagenUI = 'no-image.png'
-            this.FormRegistro.imagenUIB = 'no-image.png'
-            this.FormRegistro.imagenLogo = 'no-image.png'
-            this.FormRegistro.imagenIcono = 'no-image.png'
-            console.log('FormRegistro loading', this.FormRegistro)
-        }
-        console.log('Inicial formregistro', this.FormRegistro)
-        // const navSettings = this._localStorageService.getNavSettingsLocalStorage();
-        console.log('data del log', this.logActividad)
+  ngOnInit() {
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
     }
-
-    actualizarDescripcionVersion(nuevoContenido: string): void {
-        this.FormRegistro.descripcionAplicacion = nuevoContenido
-        console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionAplicacion)
-        // if (this.validationForm && this.isSubmit) {
-        // }
+    if (this.modoEdicion == false) {
+      this.FormRegistro.codigoAplicacion = uuidv4();
+      this.FormRegistro.imagenInicio = 'no-image.png';
+      this.FormRegistro.imagenUI = 'no-image.png';
+      this.FormRegistro.imagenUIB = 'no-image.png';
+      this.FormRegistro.imagenLogo = 'no-image.png';
+      this.FormRegistro.imagenIcono = 'no-image.png';
+      console.log('FormRegistro loading', this.FormRegistro);
     }
+    console.log('Inicial formregistro', this.FormRegistro);
+    // const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+    console.log('data del log', this.logActividad);
+  }
 
-    onFileSelectedClick(event: any) {
-        const file: File = event.target.files[0]
-        const objUpload = {
-            susc: this.suscriptor,
-            tipo: 'aplicaciones'
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionAplicacion = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionAplicacion);
+    // if (this.validationForm && this.isSubmit) {
+    // }
+  }
+
+  onFileSelectedClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this.suscriptor,
+      tipo: 'aplicaciones'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          const resp = path.data.respuesta;
+          this.FormRegistro.imagenInicio = resp.fileName;
+          this.userPhotoUrl = resp.fileName;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
         }
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrl = e.target.result
-            }
-            reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    const resp = path.data.respuesta
-                    this.FormRegistro.imagenInicio = resp.fileName
-                    this.userPhotoUrl = resp.fileName
-                },
-                error: () => {
-                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
-                }
-            })
-        } else {
-            this.selectedFileUrl = null
-            this.userPhotoUrl = ''
-        }
+      });
+    } else {
+      this.selectedFileUrl = null;
+      this.userPhotoUrl = '';
     }
+  }
 
-    onFileSelectedUIClick(event: any) {
-        const file: File = event.target.files[0]
-        const objUpload = {
-            susc: this.suscriptor,
-            tipo: 'aplicaciones'
+  onFileSelectedUIClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this.suscriptor,
+      tipo: 'aplicaciones'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrlUI = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          const resp = path.data.respuesta;
+          this.FormRegistro.imagenUI = resp.fileName;
+          this.userPhotoUrlUI = resp.fileName;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
         }
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrlUI = e.target.result
-            }
-            reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    const resp = path.data.respuesta
-                    this.FormRegistro.imagenUI = resp.fileName
-                    this.userPhotoUrlUI = resp.fileName
-                },
-                error: () => {
-                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
-                }
-            })
-        } else {
-            this.selectedFileUrl = null
-            this.userPhotoUrl = ''
-        }
+      });
+    } else {
+      this.selectedFileUrl = null;
+      this.userPhotoUrl = '';
     }
+  }
 
-    onFileSelectedUIBClick(event: any) {
-        const file: File = event.target.files[0]
-        const objUpload = {
-            susc: this.suscriptor,
-            tipo: 'aplicaciones'
+  onFileSelectedUIBClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this.suscriptor,
+      tipo: 'aplicaciones'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrlUIB = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          const resp = path.data.respuesta;
+          this.FormRegistro.imagenUIB = resp.fileName;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
         }
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrlUIB = e.target.result
-            }
-            reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    const resp = path.data.respuesta
-                    this.FormRegistro.imagenUIB = resp.fileName
-                },
-                error: () => {
-                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
-                }
-            })
-        } else {
-            this.selectedFileUrlUIB = null
-        }
+      });
+    } else {
+      this.selectedFileUrlUIB = null;
     }
+  }
 
-    onFileSelectedLogoClick(event: any) {
-        const file: File = event.target.files[0]
-        const objUpload = {
-            susc: this.suscriptor,
-            tipo: 'aplicaciones'
+  onFileSelectedLogoClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this.suscriptor,
+      tipo: 'aplicaciones'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrlLogo = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          const resp = path.data.respuesta;
+          this.FormRegistro.imagenLogo = resp.fileName;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
         }
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrlLogo = e.target.result
-            }
-            reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    const resp = path.data.respuesta
-                    this.FormRegistro.imagenLogo = resp.fileName
-                },
-                error: () => {
-                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
-                }
-            })
-        } else {
-            this.selectedFileUrlLogo = null
-        }
+      });
+    } else {
+      this.selectedFileUrlLogo = null;
     }
+  }
 
-    onFileSelectedLogoBClick(event: any) {
-        const file: File = event.target.files[0]
-        const objUpload = {
-            susc: this.suscriptor,
-            tipo: 'aplicaciones'
+  onFileSelectedLogoBClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this.suscriptor,
+      tipo: 'aplicaciones'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrlLogoB = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          const resp = path.data.respuesta;
+          this.FormRegistro.imagenLogoB = resp.fileName;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
         }
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrlLogoB = e.target.result
-            }
-            reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    const resp = path.data.respuesta
-                    this.FormRegistro.imagenLogoB = resp.fileName
-                },
-                error: () => {
-                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
-                }
-            })
-        } else {
-            this.selectedFileUrlLogoB = null
+      });
+    } else {
+      this.selectedFileUrlLogoB = null;
+    }
+  }
+
+  onFileSelectedIconoClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this.suscriptor,
+      tipo: 'aplicaciones'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrlIcono = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          const resp = path.data.respuesta;
+          this.FormRegistro.imagenIcono = resp.fileName;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'));
         }
+      });
+    } else {
+      this.selectedFileUrlIcono = null;
     }
+  }
+  btnGestionarAplicacionClick(form: any) {
+    // this.isSubmit = true;
+    const registroData = form.value as PTLAplicacionModel;
 
-    onFileSelectedIconoClick(event: any) {
-        const file: File = event.target.files[0]
-        const objUpload = {
-            susc: this.suscriptor,
-            tipo: 'aplicaciones'
+    if (this.modoEdicion) {
+      registroData.imagenInicio = this.FormRegistro.imagenInicio;
+      registroData.imagenUI = this.FormRegistro.imagenUI;
+      registroData.imagenUIB = this.FormRegistro.imagenUIB;
+      registroData.imagenLogo = this.FormRegistro.imagenLogo;
+      registroData.imagenLogoB = this.FormRegistro.imagenLogoB;
+      registroData.imagenIcono = this.FormRegistro.imagenIcono;
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._aplicacionesService.actualizarAplicacion(registroData).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY'));
+            form.resetForm();
+            // this.isSubmit = false;
+            this.router.navigate(['/aplicaciones/aplicaciones']);
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_APPLICATION'));
         }
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-                this.selectedFileUrlIcono = e.target.result
-            }
-            reader.readAsDataURL(file)
-            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-                next: (path: any) => {
-                    const resp = path.data.respuesta
-                    this.FormRegistro.imagenIcono = resp.fileName
-                },
-                error: () => {
-                    this._swalService.getAlertError(this._translate.instant('COMMON.ERROR_UPLOADING_IMAGE'))
-                }
-            })
-        } else {
-            this.selectedFileUrlIcono = null
+      });
+    } else {
+      form.aplicacionId = 0;
+      registroData.codigoAplicacion = uuidv4();
+      registroData.imagenInicio = this.FormRegistro.imagenInicio;
+      registroData.imagenUI = this.FormRegistro.imagenUI;
+      registroData.imagenUIB = this.FormRegistro.imagenUIB;
+      registroData.imagenLogo = this.FormRegistro.imagenLogo;
+      registroData.imagenLogoB = this.FormRegistro.imagenLogoB;
+      registroData.imagenIcono = this.FormRegistro.imagenIcono;
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '';
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || '';
+      registroData.fechaModificacion = new Date().toISOString();
+      console.log('nueva aplicacion', registroData);
+
+      this._aplicacionesService.crearAplicacion(registroData).subscribe({
+        next: (resp: any) => {
+          console.log('resp', resp);
+          if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_UPDATED_SUCCESSFULLY'));
+            form.resetForm();
+            // this.isSubmit = false;
+            this.router.navigate(['/aplicaciones/aplicaciones']);
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '500',
+            descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalService.getAlertError(traducir('COMMON.COULD_NOT_CREATE_APPLICATION'));
         }
+      });
     }
-    btnGestionarAplicacionClick(form: any) {
-        // this.isSubmit = true;
-        const registroData = form.value as PTLAplicacionModel
+  }
 
-        if (this.modoEdicion) {
-            registroData.imagenInicio = this.FormRegistro.imagenInicio
-            registroData.imagenUI = this.FormRegistro.imagenUI
-            registroData.imagenUIB = this.FormRegistro.imagenUIB
-            registroData.imagenLogo = this.FormRegistro.imagenLogo
-            registroData.imagenLogoB = this.FormRegistro.imagenLogoB
-            registroData.imagenIcono = this.FormRegistro.imagenIcono
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-            registroData.fechaModificacion = new Date().toISOString()
-            this._aplicacionesService.actualizarAplicacion(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY'))
-                        form.resetForm()
-                        // this.isSubmit = false;
-                        this.router.navigate(['/aplicaciones/aplicaciones'])
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err)
-                    const logData = {
-                        codigoTipoLog: '',
-                        codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
-                    }
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('COMMON.COULD_NOT_UPDATE_APPLICATION'))
-                }
-            })
-        } else {
-            form.aplicacionId = 0
-            registroData.codigoAplicacion = uuidv4()
-            registroData.imagenInicio = this.FormRegistro.imagenInicio
-            registroData.imagenUI = this.FormRegistro.imagenUI
-            registroData.imagenUIB = this.FormRegistro.imagenUIB
-            registroData.imagenLogo = this.FormRegistro.imagenLogo
-            registroData.imagenLogoB = this.FormRegistro.imagenLogoB
-            registroData.imagenIcono = this.FormRegistro.imagenIcono
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
-            registroData.fechaCreacion = new Date().toISOString()
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
-            registroData.fechaModificacion = new Date().toISOString()
-            console.log('nueva aplicacion', registroData);
+  btnRegresarClick() {
+    this.router.navigate(['/aplicaciones/aplicaciones']);
+  }
 
-            this._aplicacionesService.crearAplicacion(registroData).subscribe({
-                next: (resp: any) => {
-                    console.log('resp', resp)
-                    if (resp.ok) {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_UPDATED_SUCCESSFULLY'))
-                        form.resetForm()
-                        // this.isSubmit = false;
-                        this.router.navigate(['/aplicaciones/aplicaciones'])
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err)
-                    const logData = {
-                        codigoTipoLog: '',
-                        codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
-                    }
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError(traducir('COMMON.COULD_NOT_CREATE_APPLICATION'))
-                }
-            })
-        }
+  navMobClick() {
+    if (this.windowWidth < 992) {
+      if (this.navCollapsedMob && !document.querySelector('app-navigation.pcoded-navbar')?.classList.contains('mob-open')) {
+        this.navCollapsedMob = !this.navCollapsedMob;
+        setTimeout(() => {
+          this.navCollapsedMob = !this.navCollapsedMob;
+        }, 100);
+      } else {
+        this.navCollapsedMob = !this.navCollapsedMob;
+      }
     }
+  }
 
-    btnRegresarClick() {
-        this.router.navigate(['/aplicaciones/aplicaciones'])
-    }
-
-    navMobClick() {
-        if (this.windowWidth < 992) {
-            if (this.navCollapsedMob && !document.querySelector('app-navigation.pcoded-navbar')?.classList.contains('mob-open')) {
-                this.navCollapsedMob = !this.navCollapsedMob
-                setTimeout(() => {
-                    this.navCollapsedMob = !this.navCollapsedMob
-                }, 100)
-            } else {
-                this.navCollapsedMob = !this.navCollapsedMob
-            }
-        }
-    }
-
-    toggleNav(): void {
-        this.toggleSidebar.emit()
-    }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

@@ -25,169 +25,168 @@ import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSessi
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
-    selector: 'app-tipos-galeria',
-    standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-    templateUrl: './tipos-galeria.component.html',
-    styleUrl: './tipos-galeria.component.scss'
+  selector: 'app-tipos-galeria',
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+  templateUrl: './tipos-galeria.component.html',
+  styleUrl: './tipos-galeria.component.scss'
 })
 export class TiposGaleriaComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
-    DataModel: BaseSessionModel = new BaseSessionModel();
-    DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
-    hasFiltersSlot: boolean = false;
-    gradientConfig;
-    menuItems$!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  @Output() toggleSidebar = new EventEmitter<void>();
+  DataModel: BaseSessionModel = new BaseSessionModel();
+  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
+  hasFiltersSlot: boolean = false;
+  gradientConfig;
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-    subscriptions = new Subscription();
-    filtroCodigoSubject = new BehaviorSubject<string>('todos');
-    filtroNombreSubject = new BehaviorSubject<string>('todos');
-    filtroDescripcionSubject = new BehaviorSubject<string>('');
-    filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  subscriptions = new Subscription();
+  filtroCodigoSubject = new BehaviorSubject<string>('todos');
+  filtroNombreSubject = new BehaviorSubject<string>('todos');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-    tiposTransformada$: Observable<PTLTipoGaleria[]> = of([]);
-    tiposFiltrada$: Observable<PTLTipoGaleria[]> = of([]);
-    tipos: PTLTipoGaleria[] = [];
+  tiposTransformada$: Observable<PTLTipoGaleria[]> = of([]);
+  tiposFiltrada$: Observable<PTLTipoGaleria[]> = of([]);
+  tipos: PTLTipoGaleria[] = [];
 
-    constructor(
-        private router: Router,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _logActividadesService: PtllogActividadesService,
-        private _localStorageService: LocalStorageService,
-        private _tiposGaleriaService: PtlTiposGaleriaService
-    ) {
-        this.gradientConfig = GradientConfig;
-    }
+  constructor(
+    private router: Router,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _logActividadesService: PtllogActividadesService,
+    private _localStorageService: LocalStorageService,
+    private _tiposGaleriaService: PtlTiposGaleriaService
+  ) {
+    this.gradientConfig = GradientConfig;
+  }
 
-    cargarDatos(): void {
-        this.subscriptions.add(
-            this._tiposGaleriaService.cargarTiposGaleria().subscribe(
-                () => console.log('Datos de Tipos de Galería actualizados'),
-                (err: any) => console.error('Error al cargar Tipos de Galería:', err)
-            )
-        );
-    }
+  cargarDatos(): void {
+    this.subscriptions.add(
+      this._tiposGaleriaService.cargarTiposGaleria().subscribe(
+        () => console.log('Datos de Tipos de Galería actualizados'),
+        (err: any) => console.error('Error al cargar Tipos de Galería:', err)
+      )
+    );
+  }
 
-    ngOnInit(): void {
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
-        this.hasFiltersSlot = true;
-        this.setupTiposStream();
+  ngOnInit(): void {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+    this.setupTiposStream();
 
-        this.subscriptions.add();
-        this.cargarDatos();
-    }
+    this.subscriptions.add();
+    this.cargarDatos();
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-    setupTiposStream(): void {
-        this.tiposTransformada$ = this._tiposGaleriaService.tiposGaleria$.pipe(
-            switchMap((tipos: PTLTipoGaleria[]) => {
-                if (!tipos) return of([]);
-                const transformed = tipos.map((t: any) => {
-                    t.nomEstado = t.estadoTipo ? 'Activo' : 'Inactivo';
-                    return t as PTLTipoGaleria;
-                });
-                this.tipos = transformed;
-                return of(transformed);
-            }),
-            catchError((err) => {
-                console.error('Error en el stream de Tipos de Galería:', err);
-                return of([]);
-            })
-        );
-
-        this.tiposFiltrada$ = combineLatest([
-            this.tiposTransformada$.pipe(startWith([])),
-            this.filtroCodigoSubject,
-            this.filtroNombreSubject,
-            this.filtroDescripcionSubject,
-            this.filtroEstadoSubject
-        ]).pipe(
-            map(([tipos, codigo, nombre, descripcion, estado]) => {
-                let filtered = tipos;
-
-                if (codigo !== 'todos') filtered = filtered.filter((t) => t.codigoTipoGaleria === codigo);
-                if (nombre !== 'todos') filtered = filtered.filter((t) => t.nombreTipo === nombre);
-                if (estado !== 'todos') {
-                    const estadoBoolean = estado === 'true';
-                    filtered = filtered.filter((t) => t.estadoTipo === estadoBoolean);
-                }
-                if (descripcion) {
-                    const textoFiltro = descripcion.toLowerCase();
-                    filtered = filtered.filter((t) => (t.descripcionTipo || '').toLowerCase().includes(textoFiltro));
-                }
-                console.log('filtrados', filtered);
-
-                return filtered;
-            })
-        );
-    }
-
-    onFiltroCodigoChangeClick(evento: any): void {
-        this.filtroCodigoSubject.next(evento.target.value);
-    }
-    onFiltroNombreChangeClick(evento: any): void {
-        this.filtroNombreSubject.next(evento.target.value);
-    }
-    onFiltroDescripcionChangeClick(evento: any): void {
-        this.filtroDescripcionSubject.next(evento.target.value);
-    }
-    onFiltroEstadoChangeClick(evento: any): void {
-        this.filtroEstadoSubject.next(evento.target.value);
-    }
-
-    columnasTipos: ColumnMetadata[] = [
-        { name: 'codigoTipo', header: 'COMMON.CODE', type: 'text' },
-        { name: 'nombreTipo', header: 'BIBLIOTECA.TIPOS_GALERIA.TYPE_NAME', type: 'text' },
-        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
-    ];
-
-    columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionTipo', header: 'COMMON.DESCRIPTION', type: 'text' }];
-
-    OnNuevoTipoClick(): void {
-        this._localStorageService.setObject('regId', 'nuevo');
-        this.router.navigate(['/biblioteca/gestion-tipos-galeria']);
-    }
-
-    OnEditarTipoClick(id: string): void {
-        this._localStorageService.setObject('regId', id);
-        this.router.navigate(['/biblioteca/gestion-tipos-galeria']);
-    }
-
-    OnEliminarTipoClick(evento: any): void {
-        const id = typeof evento === 'string' ? evento : evento?.codigoTipo || evento?.id;
-
-        if (!id) {
-            console.error('No se pudo extraer el ID del registro a eliminar. El evento recibido fue:', evento);
-            return;
-        }
-
-        Swal.fire({
-            title: this.translate.instant('COMMON.ARE_YOU_SURE'),
-            text: this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.TYPE_WILL_BE_DELETED'),
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: this.translate.instant('COMMON.DELETE'),
-            cancelButtonText: this.translate.instant('COMMON.CANCEL')
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this._tiposGaleriaService.eliminarTipoGaleria(id).subscribe({
-                    next: (resp: any) => {
-                        Swal.fire(this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.TYPE_DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
-                        this.cargarDatos();
-                    },
-                    error: () => Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('BIBLIOTECA.COULD_NOT_DELETE'), 'error')
-                });
-            }
+  setupTiposStream(): void {
+    this.tiposTransformada$ = this._tiposGaleriaService.tiposGaleria$.pipe(
+      switchMap((tipos: PTLTipoGaleria[]) => {
+        if (!tipos) return of([]);
+        const transformed = tipos.map((t: any) => {
+          t.nomEstado = t.estadoTipo ? 'Activo' : 'Inactivo';
+          return t as PTLTipoGaleria;
         });
+        this.tipos = transformed;
+        return of(transformed);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de Tipos de Galería:', err);
+        return of([]);
+      })
+    );
+
+    this.tiposFiltrada$ = combineLatest([
+      this.tiposTransformada$.pipe(startWith([])),
+      this.filtroCodigoSubject,
+      this.filtroNombreSubject,
+      this.filtroDescripcionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([tipos, codigo, nombre, descripcion, estado]) => {
+        let filtered = tipos;
+
+        if (codigo !== 'todos') filtered = filtered.filter((t) => t.codigoTipoGaleria === codigo);
+        if (nombre !== 'todos') filtered = filtered.filter((t) => t.nombreTipo === nombre);
+        if (estado !== 'todos') {
+          const estadoBoolean = estado === 'true';
+          filtered = filtered.filter((t) => t.estadoTipo === estadoBoolean);
+        }
+        if (descripcion) {
+          const textoFiltro = descripcion.toLowerCase();
+          filtered = filtered.filter((t) => (t.descripcionTipo || '').toLowerCase().includes(textoFiltro));
+        }
+        console.log('filtrados', filtered);
+
+        return filtered;
+      })
+    );
+  }
+
+  onFiltroCodigoChangeClick(evento: any): void {
+    this.filtroCodigoSubject.next(evento.target.value);
+  }
+  onFiltroNombreChangeClick(evento: any): void {
+    this.filtroNombreSubject.next(evento.target.value);
+  }
+  onFiltroDescripcionChangeClick(evento: any): void {
+    this.filtroDescripcionSubject.next(evento.target.value);
+  }
+  onFiltroEstadoChangeClick(evento: any): void {
+    this.filtroEstadoSubject.next(evento.target.value);
+  }
+
+  columnasTipos: ColumnMetadata[] = [
+    { name: 'codigoTipo', header: 'COMMON.CODE', type: 'text' },
+    { name: 'nombreTipo', header: 'BIBLIOTECA.TIPOS_GALERIA.TYPE_NAME', type: 'text' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionTipo', header: 'COMMON.DESCRIPTION', type: 'text' }];
+
+  OnNuevoTipoClick(): void {
+    this._localStorageService.setObject('regId', 'nuevo');
+    this.router.navigate(['/biblioteca/gestion-tipos-galeria']);
+  }
+
+  OnEditarTipoClick(id: string): void {
+    this._localStorageService.setObject('regId', id);
+    this.router.navigate(['/biblioteca/gestion-tipos-galeria']);
+  }
+
+  OnEliminarTipoClick(evento: any): void {
+    const id = typeof evento === 'string' ? evento : evento?.codigoTipo || evento?.id;
+
+    if (!id) {
+      console.error('No se pudo extraer el ID del registro a eliminar. El evento recibido fue:', evento);
+      return;
     }
 
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
+    Swal.fire({
+      title: this.translate.instant('COMMON.ARE_YOU_SURE'),
+      text: this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.TYPE_WILL_BE_DELETED'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translate.instant('COMMON.DELETE'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._tiposGaleriaService.eliminarTipoGaleria(id).subscribe({
+          next: (resp: any) => {
+            Swal.fire(this.translate.instant('BIBLIOTECA.TIPOS_GALERIA.TYPE_DELETED_SUCCESSFULLY'), resp.mensaje, 'success');
+            this.cargarDatos();
+          },
+          error: () => Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('BIBLIOTECA.COULD_NOT_DELETE'), 'error')
+        });
+      }
+    });
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

@@ -14,14 +14,15 @@ import { EncabezadoSeccionComponent } from '../encabezado-seccion/encabezado-sec
 
 @Component({
   selector: 'pp-seccion-perfiles',
-  standalone: true,
   imports: [TranslateModule, IconoComponent, EnlaceComponent, EncabezadoSeccionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './perfiles.component.html',
-  styleUrl: './perfiles.component.scss',
+  styleUrl: './perfiles.component.scss'
 })
 export class SeccionPerfilesComponent {
   @Input({ required: true }) s!: SeccionPortal;
   @Input() planes: readonly PlanPortal[] = [];
-  accion(e: SeccionPortal['elementos'][number]) { return accionDePerfil(e, this.planes); }
+  accion(e: SeccionPortal['elementos'][number]) {
+    return accionDePerfil(e, this.planes);
+  }
 }

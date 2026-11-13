@@ -5,13 +5,12 @@ import type { Api } from 'datatables.net';
 
 @Component({
   selector: 'app-historial-pagos',
-  standalone: true,
   imports: [DataTablesModule],
   templateUrl: './historial-pagos.component.html',
   styleUrl: './historial-pagos.component.scss'
 })
 export class HistorialPagosComponent implements OnInit, AfterViewInit {
-dtColumnSearchingOptions: object = {};
+  dtColumnSearchingOptions: object = {};
   @ViewChild(DataTableDirective)
   datatableElement!: DataTableDirective;
 

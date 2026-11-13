@@ -27,557 +27,572 @@ import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidget
 // Componentes
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { WidgetLobbyComponent } from "src/app/plataforma/starter/home/widget-lobby/widget-lobby.component";
-import { WidgetSelectorComponent } from "src/app/plataforma/starter/home/widget-selector/widget-selector.component";
+import { WidgetLobbyComponent } from 'src/app/plataforma/starter/home/widget-lobby/widget-lobby.component';
+import { WidgetSelectorComponent } from 'src/app/plataforma/starter/home/widget-selector/widget-selector.component';
 import { PtlUsuariosWidgetsService } from 'src/app/theme/shared/service/ptlusuarios-widgets.service';
 
 @Component({
-    selector: 'app-home',
-    standalone: true,
-    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, WidgetSelectorComponent, GridsterComponent, GridsterItemComponent, WidgetLobbyComponent],
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.scss'
+  selector: 'app-home',
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    WidgetSelectorComponent,
+    GridsterComponent,
+    GridsterItemComponent,
+    WidgetLobbyComponent
+  ],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    //#region VARIABLES
-    usuario: any = {};
-    private saveLayoutSubject = new Subject<any>();
-    private subs: Subscription = new Subscription();
-    private widgetsSub?: Subscription;
+  //#region VARIABLES
+  usuario: any = {};
+  private saveLayoutSubject = new Subject<any>();
+  private subs: Subscription = new Subscription();
+  private widgetsSub?: Subscription;
 
-    registrosSub?: Subscription;
-    registros: PTLSitiosAPModel[] = [];
-    registrosFiltrado: PTLSitiosAPModel[] = [];
-    aplicaciones: PTLAplicacionModel[] = [];
-    aplicacionesSub?: Subscription;
-    lang: string = localStorage.getItem('lang') || '';
-    tituloPagina: string = '';
-    gradientConfig;
-    hasFiltersSlot: boolean = false;
-    menuItems$!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  registrosSub?: Subscription;
+  registros: PTLSitiosAPModel[] = [];
+  registrosFiltrado: PTLSitiosAPModel[] = [];
+  aplicaciones: PTLAplicacionModel[] = [];
+  aplicacionesSub?: Subscription;
+  lang: string = localStorage.getItem('lang') || '';
+  tituloPagina: string = '';
+  gradientConfig;
+  hasFiltersSlot: boolean = false;
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-    public options!: GridsterConfig;
-    public dashboard: Array<GridsterItem & { type: string, data: any }> = [];
-    public isLoading: boolean = false;
-    public mostrarLobby: boolean = false;
-    public cargando: boolean = true;
-    public tableroBloqueado: boolean = true;
-    public widgetEnfoque: { type: string, data: any } | null = null;
-    public hayCambiosSinGuardar: boolean = false;
+  public options!: GridsterConfig;
+  public dashboard: Array<GridsterItem & { type: string; data: any }> = [];
+  public isLoading: boolean = false;
+  public mostrarLobby: boolean = false;
+  public cargando: boolean = true;
+  public tableroBloqueado: boolean = true;
+  public widgetEnfoque: { type: string; data: any } | null = null;
+  public hayCambiosSinGuardar: boolean = false;
 
-    public lsWidgetsMaestro: PTLWidgetMaestroModel[] = [];
-    public lsWidgets: PTLWidgetMaestroModel[] = [];
-    public lsLayout: any[] = [];
-    public pestanaActiva: string = 'TAB_PLAT_PRINCIPAL';
-    textoBienvenida = '';
+  public lsWidgetsMaestro: PTLWidgetMaestroModel[] = [];
+  public lsWidgets: PTLWidgetMaestroModel[] = [];
+  public lsLayout: any[] = [];
+  public pestanaActiva: string = 'TAB_PLAT_PRINCIPAL';
+  textoBienvenida = '';
 
-    private readonly LAYOUT_POR_DEFECTO: any[] = [];
+  private readonly LAYOUT_POR_DEFECTO: any[] = [];
 
-    //#endregion VARIABLES
+  //#endregion VARIABLES
 
-    constructor(
-        private router: Router,
-        private translate: TranslateService,
-        private _localStoragoService: LocalStorageService,
-        private _torreService: DashboardService,
-        private _navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
-        private _widgetsMaestroService: PTLWidgetsMaestroService,
-        private _usuariosWidgetsService: PtlUsuariosWidgetsService,
-        private _socketManager: SocketManagerService,
-        private _swalAlertService: SwalAlertService
-    ) {
-        this.gradientConfig = GradientConfig;
-        this.usuario = _localStoragoService.getCurrentUserLocalStorage().usuario;
+  constructor(
+    private router: Router,
+    private translate: TranslateService,
+    private _localStoragoService: LocalStorageService,
+    private _torreService: DashboardService,
+    private _navigationService: NavigationService,
+    private cdr: ChangeDetectorRef,
+    private _widgetsMaestroService: PTLWidgetsMaestroService,
+    private _usuariosWidgetsService: PtlUsuariosWidgetsService,
+    private _socketManager: SocketManagerService,
+    private _swalAlertService: SwalAlertService
+  ) {
+    this.gradientConfig = GradientConfig;
+    this.usuario = _localStoragoService.getCurrentUserLocalStorage().usuario;
+  }
+
+  async ngOnInit() {
+    // this.iniciarConfiguracionGridster();
+    // this.escucharDatosTiempoReal();
+
+    // // Suscripción de Auto-Guardado (Debounce)
+    // this.subs.add(
+    //     this.saveLayoutSubject.pipe(debounceTime(1500)).subscribe(layoutToSave => {
+    //         this.persistirLayoutEnServidor(layoutToSave);
+    //     })
+    // );
+
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+    // this.lsWidgetsMaestro = this._widgetsMaestroService.getWidgetsActuales();
+
+    // try {
+    //     this.cargando = true;
+
+    //     await this.cargarCatalogoWidgets();
+    //     await this.cargarLayoutInicial();
+
+    //     this.validarActualizacionesDeWidgetsMaestro();
+
+    //     const tableroState = await this._localStoragoService.getTableroLocalStorage() || {};
+    //     this.pestanaActiva = tableroState.pestana?.includes('TAB_PLAT') ? tableroState.pestana : 'TAB_PLAT_PRINCIPAL';
+    //     this.cambiarPestana(this.pestanaActiva);
+
+    // } catch (error) {
+    //     console.error('❌ Error al inicializar el home:', error);
+    //     this.cargando = false;
+    // }
+
+    // this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
+    //     this.widgetEnfoque = widget;
+    //     this.cdr.detectChanges();
+    // }));
+
+    // this.escucharCambiosWidgets();
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    if (this.widgetsSub) {
+      this.widgetsSub.unsubscribe();
     }
+  }
 
-    async ngOnInit() {
-        // this.iniciarConfiguracionGridster();
-        // this.escucharDatosTiempoReal();
+  // ==========================================
+  // 🟢 METODOS DE CARGA DE DATOS
+  // ==========================================
+  async cargarCatalogoWidgets(): Promise<void> {
+    const resp = await firstValueFrom(this._widgetsMaestroService.getWidgetsActivos());
+    const catalogoFresco = resp.widgets || [];
 
-        // // Suscripción de Auto-Guardado (Debounce)
-        // this.subs.add(
-        //     this.saveLayoutSubject.pipe(debounceTime(1500)).subscribe(layoutToSave => {
-        //         this.persistirLayoutEnServidor(layoutToSave);
-        //     })
-        // );
+    const widgetsPermitidos = this.usuario?.widgets || [];
+    const codigosPermitidos = widgetsPermitidos.map((w: any) => w.codigoWidget);
 
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
-        this.hasFiltersSlot = true;
-        // this.lsWidgetsMaestro = this._widgetsMaestroService.getWidgetsActuales();
+    this.lsWidgets = catalogoFresco.filter((w: any) => codigosPermitidos.includes(w.codigoWidget));
+    console.log('📦 Catálogo filtrado por Roles (Lobby):', this.lsWidgets);
+  }
 
-        // try {
-        //     this.cargando = true;
+  // ==========================================
+  // 🟢 ACTUALIZACIÓN DE MÉTRICAS EN TIEMPO REAL
+  // ==========================================
+  escucharDatosTiempoReal(): void {
+    this.subs.add(
+      this._socketManager.datosTablero$.subscribe((eventoData: any) => {
+        if (!eventoData || !eventoData.codigoWidget) return;
 
-        //     await this.cargarCatalogoWidgets();
-        //     await this.cargarLayoutInicial();
+        // 1. Verificamos si el widget afectado está actualmente visible en el Gridster
+        const widgetEnPantalla = this.dashboard.find((w) => w.type === eventoData.codigoWidget);
 
-        //     this.validarActualizacionesDeWidgetsMaestro();
+        if (widgetEnPantalla) {
+          console.log(`⚡ [Live Data] Actualizando widget ${eventoData.codigoWidget}`, eventoData.payload);
 
-        //     const tableroState = await this._localStoragoService.getTableroLocalStorage() || {};
-        //     this.pestanaActiva = tableroState.pestana?.includes('TAB_PLAT') ? tableroState.pestana : 'TAB_PLAT_PRINCIPAL';
-        //     this.cambiarPestana(this.pestanaActiva);
+          // 2. Fusionamos la data nueva con la existente (para no borrar configuraciones previas)
+          widgetEnPantalla.data = {
+            ...widgetEnPantalla.data,
+            ...eventoData.payload
+          };
 
-        // } catch (error) {
-        //     console.error('❌ Error al inicializar el home:', error);
-        //     this.cargando = false;
-        // }
-
-        // this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
-        //     this.widgetEnfoque = widget;
-        //     this.cdr.detectChanges();
-        // }));
-
-        // this.escucharCambiosWidgets();
-    }
-
-    ngOnDestroy() {
-        this.subs.unsubscribe();
-        if (this.widgetsSub) {
-            this.widgetsSub.unsubscribe();
+          // 3. Notificamos a la API de Gridster y a Angular que repinten este componente
+          if (this.options.api && this.options.api.optionsChanged) {
+            this.options.api.optionsChanged();
+          }
+          this.cdr.detectChanges();
         }
-    }
+      })
+    );
+  }
 
-    // ==========================================
-    // 🟢 METODOS DE CARGA DE DATOS
-    // ==========================================
-    async cargarCatalogoWidgets(): Promise<void> {
-        const resp = await firstValueFrom(this._widgetsMaestroService.getWidgetsActivos());
-        const catalogoFresco = resp.widgets || [];
+  async cargarLayoutInicial(): Promise<void> {
+    const wdtsActivos = this.lsWidgetsMaestro.filter((x) => x.estadoWidget == true && x.inicial == true);
+    console.log('widgets por defacto activos', wdtsActivos);
+    wdtsActivos.forEach((wdgt: any) => {
+      const wt = {
+        type: wdgt.codigoWidget,
+        cols: wdgt.defaultCols,
+        rows: wdgt.defaultRows,
+        x: wdgt.pos_x,
+        y: wdgt.pos_y,
+        pestana: wdgt.pestana,
+        visible: true,
+        data: { tipo: wdgt.tipo }
+      };
 
-        const widgetsPermitidos = this.usuario?.widgets || [];
-        const codigosPermitidos = widgetsPermitidos.map((w: any) => w.codigoWidget);
+      this.LAYOUT_POR_DEFECTO.push(wt);
+    });
+    console.log('widgets por defacto activos', this.LAYOUT_POR_DEFECTO);
 
-        this.lsWidgets = catalogoFresco.filter((w: any) => codigosPermitidos.includes(w.codigoWidget));
-        console.log('📦 Catálogo filtrado por Roles (Lobby):', this.lsWidgets);
-    }
+    try {
+      const layoutDesdeBD = await firstValueFrom(this._usuariosWidgetsService.getLayoutUsuario(this.usuario.codigoUsuario));
 
-    // ==========================================
-    // 🟢 ACTUALIZACIÓN DE MÉTRICAS EN TIEMPO REAL
-    // ==========================================
-    escucharDatosTiempoReal(): void {
-        this.subs.add(
-            this._socketManager.datosTablero$.subscribe((eventoData: any) => {
-                if (!eventoData || !eventoData.codigoWidget) return;
-
-                // 1. Verificamos si el widget afectado está actualmente visible en el Gridster
-                const widgetEnPantalla = this.dashboard.find(w => w.type === eventoData.codigoWidget);
-
-                if (widgetEnPantalla) {
-                    console.log(`⚡ [Live Data] Actualizando widget ${eventoData.codigoWidget}`, eventoData.payload);
-
-                    // 2. Fusionamos la data nueva con la existente (para no borrar configuraciones previas)
-                    widgetEnPantalla.data = {
-                        ...widgetEnPantalla.data,
-                        ...eventoData.payload
-                    };
-
-                    // 3. Notificamos a la API de Gridster y a Angular que repinten este componente
-                    if (this.options.api && this.options.api.optionsChanged) {
-                        this.options.api.optionsChanged();
-                    }
-                    this.cdr.detectChanges();
-                }
-            })
-        );
-    }
-
-    async cargarLayoutInicial(): Promise<void> {
-        const wdtsActivos = this.lsWidgetsMaestro.filter(x => x.estadoWidget == true && x.inicial == true);
-        console.log('widgets por defacto activos', wdtsActivos);
-        wdtsActivos.forEach((wdgt: any) => {
-            const wt = {
-                type: wdgt.codigoWidget,
-                cols: wdgt.defaultCols,
-                rows: wdgt.defaultRows,
-                x: wdgt.pos_x,
-                y: wdgt.pos_y,
-                pestana: wdgt.pestana,
-                visible: true,
-                data: { tipo: wdgt.tipo }
-            };
-
-            this.LAYOUT_POR_DEFECTO.push(wt);
-        });
-        console.log('widgets por defacto activos', this.LAYOUT_POR_DEFECTO);
-
-        try {
-            const layoutDesdeBD = await firstValueFrom(this._usuariosWidgetsService.getLayoutUsuario(this.usuario.codigoUsuario));
-
-            if (layoutDesdeBD && layoutDesdeBD.length > 0) {
-                this.lsLayout = layoutDesdeBD.map((item: any) => ({
-                    ...item,
-                    type: item.codigoWidget
-                }));
-            } else {
-                const tableroState = await this._localStoragoService.getTableroLocalStorage() || {};
-                if (tableroState.layout && tableroState.layout.length > 0) {
-                    this.lsLayout = tableroState.layout;
-                } else {
-                    this.lsLayout = this.LAYOUT_POR_DEFECTO;
-                }
-
-                this.saveLayoutSubject.next(this.lsLayout);
-            }
-        } catch (error) {
-            console.error('⚠️ Error al cargar layout desde SQL. Usando default.', error);
-            this.lsLayout = this.LAYOUT_POR_DEFECTO;
-        }
-    }
-
-    resetearLayout() {
-        // 🟢 Usamos el método reactivo pasándole la descripción, el título y los textos de los botones
-        this._swalAlertService.getAlertQuestionRequest(
-            traducir('COMMON.ARE_YOU_SURE_YOU_WANT_RESET'),
-            traducir('COMMON.RESET_DASHBOARD'),
-            traducir('COMMON.YES_RESET'),
-            traducir('COMMON.CANCEL')
-        ).subscribe((confirmado: boolean) => {
-
-            // Si el usuario hace clic en "Cancelar" o presiona Escape, 'confirmado' será false
-            if (confirmado) {
-                this.cargando = true;
-
-                // 1. Matamos los widgets en pantalla para que la sincronización automática no los reviva
-                this.dashboard = [];
-
-                // 2. Clonamos el layout por defecto
-                this.lsLayout = this.LAYOUT_POR_DEFECTO.map(item => ({ ...item }));
-
-                // 3. Disparamos el guardado hacia SQL Server
-                this.saveLayoutSubject.next(this.lsLayout);
-
-                // 4. Sincronizamos la sesión en el navegador
-                this.sincronizarLayoutEnSessionStorage();
-
-                // 5. Refrescamos la vista de Gridster
-                this.cambiarPestana(this.pestanaActiva);
-            }
-        });
-    }
-
-    escucharCambiosWidgets(): void {
-        this.widgetsSub = this._socketManager.widgetsActualizados$.subscribe(async (data: any) => {
-            if (data.action === 'inactivado') {
-                this.lsWidgets = this.lsWidgets.filter(w => w.codigoWidget !== data.codigoWidget);
-                this.lsLayout = this.lsLayout.filter(l => (l.type !== data.codigoWidget) && (l.codigoWidget !== data.codigoWidget));
-                this.dashboard = this.dashboard.filter(w => (w.type !== data.codigoWidget) && (w['codigoWidget'] !== data.codigoWidget));
-
-                if (this.options.api && this.options.api.optionsChanged) {
-                    this.options.api.optionsChanged();
-                }
-                this.cdr.detectChanges();
-
-                this.sincronizarLayoutEnSessionStorage();
-                this.saveLayoutSubject.next(this.lsLayout);
-
-                console.log(`[Realtime] ${data.msg}`);
-            }
-
-            if (data.action === 'update') {
-                await this.cargarCatalogoWidgets();
-                this.validarActualizacionesDeWidgetsMaestro();
-                this.cambiarPestana(this.pestanaActiva);
-                console.log(`[Realtime] ${data.msg}`);
-            }
-        });
-
-        this.subs.add(
-            this._socketManager.layoutActualizado$.subscribe((data: any) => {
-                if (data.action === 'layout-limpiado') {
-                    console.log('🔄 [Realtime] Layout personal sincronizado por el servidor:', data);
-
-                    this.lsLayout = data.nuevoLayout.map((item: any) => ({
-                        ...item,
-                        type: item.codigoWidget || item.type
-                    }));
-
-                    if (this.usuario) {
-                        this.usuario.layout = JSON.stringify(this.lsLayout);
-                        this.sincronizarLayoutEnSessionStorage();
-                    }
-
-                    this.cambiarPestana(this.pestanaActiva);
-                }
-            })
-        );
-    }
-
-    iniciarConfiguracionGridster() {
-        this.options = {
-            gridType: GridType.ScrollVertical,
-            margin: 16,
-            outerMargin: false,
-            minCols: 12, maxCols: 12,
-            minRows: 1, maxRows: 1000,
-            fixedRowHeight: 120,
-            pushItems: true,
-            swap: true,
-            compactType: 'compactUp&Left',
-            defaultItemCols: 4, defaultItemRows: 3,
-            displayGrid: 'onDrag&Resize',
-            draggable: { enabled: !this.tableroBloqueado },
-            pushDirections: { north: false, east: false, south: true, west: false },
-            resizable: { enabled: !this.tableroBloqueado },
-            mobileBreakpoint: 960, keepFixedHeightInMobile: true,
-            itemResizeCallback: () => {
-                this.hayCambiosSinGuardar = true;
-                this.sincronizarDashboardAMaestro();
-                this.saveLayoutSubject.next(this.lsLayout);
-            },
-            itemChangeCallback: () => {
-                this.hayCambiosSinGuardar = true;
-                this.sincronizarDashboardAMaestro();
-                this.saveLayoutSubject.next(this.lsLayout);
-            }
-        };
-    }
-
-    validarActualizacionesDeWidgetsMaestro(): void {
-        let huboCambios = false;
-        const layoutFiltrado: any[] = [];
-
-        this.lsLayout.forEach(itemLayout => {
-            const widgetMaestro = this.lsWidgets.find((w: any) => w.codigoWidget === itemLayout.type);
-
-            if (!widgetMaestro) {
-                huboCambios = true;
-                console.log(`🚫 Widget ${itemLayout.type} expulsado del tablero (Sin permisos o Inactivo).`);
-                return;
-            }
-
-            if ((itemLayout.version || 1) < (widgetMaestro.layoutVersion || 1)) {
-                itemLayout.cols = widgetMaestro.defaultCols;
-                itemLayout.rows = widgetMaestro.defaultRows;
-                itemLayout.version = widgetMaestro.layoutVersion || 1;
-                huboCambios = true;
-            }
-
-            layoutFiltrado.push(itemLayout);
-        });
-
-        this.lsLayout = layoutFiltrado;
-        if (huboCambios) {
-            this.saveLayoutSubject.next(this.lsLayout);
-        }
-    }
-
-    persistirLayoutEnServidor(layoutData: any[]) {
-        const codigoUsuario = this.usuario?.codigoUsuario;
-        if (!codigoUsuario) return;
-
-        // 🟢 LIMPIEZA DE PAYLOAD: Extraemos estrictamente lo que va a la tabla
-        const layoutLimpio = layoutData.map(item => ({
-            codigoUsuario: codigoUsuario, // 🟢 Agregado para satisfacer la tabla y Joi
-            codigoWidget: item.codigoWidget || item.type,
-            pestana: item.pestana || 'TAB_PLAT_PRINCIPAL',
-            cols: item.cols,
-            rows: item.rows,
-            x: item.x,
-            y: item.y,
-            visible: item.visible,
-            codigoUsuarioCreacion: codigoUsuario,
-            fechaCreacion: new Date().toISOString()
+      if (layoutDesdeBD && layoutDesdeBD.length > 0) {
+        this.lsLayout = layoutDesdeBD.map((item: any) => ({
+          ...item,
+          type: item.codigoWidget
         }));
-
-        this._usuariosWidgetsService.guardarLayoutUsuario(codigoUsuario, layoutLimpio).subscribe({
-            next: (res: any) => {
-                if (res.ok) {
-                    this.hayCambiosSinGuardar = false;
-                    console.log('💾 Layout SQL sincronizado exitosamente (Payload optimizado).');
-                }
-            },
-            error: (err) => console.error('❌ Error al guardar el layout SQL:', err)
-        });
-    }
-
-    async cambiarPestana(nuevaPestana: string) {
-        this.sincronizarDashboardAMaestro();
-
-        this.isLoading = true;
-        this.cargando = true;
-        this.pestanaActiva = nuevaPestana;
-        this.dashboard = [];
-
-        this._localStoragoService.setPestanaLocalStorage(nuevaPestana, this.usuario.codigoUsuario);
-
-        const layoutParaRenderizar = this.armarDashboardPorPestana(nuevaPestana);
-        const estadoActual = await this._localStoragoService.getTableroLocalStorage() || {};
-
-        estadoActual.layout = layoutParaRenderizar;
-        estadoActual.pestana = nuevaPestana;
-
-        if (typeof (this._localStoragoService as any).setTableroLocalStorage === 'function') {
-            (this._localStoragoService as any).setTableroLocalStorage(estadoActual);
+      } else {
+        const tableroState = (await this._localStoragoService.getTableroLocalStorage()) || {};
+        if (tableroState.layout && tableroState.layout.length > 0) {
+          this.lsLayout = tableroState.layout;
         } else {
-            localStorage.setItem('tableroState', JSON.stringify(estadoActual));
+          this.lsLayout = this.LAYOUT_POR_DEFECTO;
         }
 
-        this.renderizarLayoutDesdeCache(layoutParaRenderizar, nuevaPestana);
+        this.saveLayoutSubject.next(this.lsLayout);
+      }
+    } catch (error) {
+      console.error('⚠️ Error al cargar layout desde SQL. Usando default.', error);
+      this.lsLayout = this.LAYOUT_POR_DEFECTO;
     }
+  }
 
-    armarDashboardPorPestana(pestana: string): any[] {
-        return this.lsLayout
-            .map(layoutItem => {
-                const widgetConfig = this.lsWidgets.find(w => w.codigoWidget === layoutItem.type);
-                return { ...widgetConfig, ...layoutItem };
-            })
-            .filter((item: any) => item.codigoWidget && item.pestana === pestana);
-    }
+  resetearLayout() {
+    // 🟢 Usamos el método reactivo pasándole la descripción, el título y los textos de los botones
+    this._swalAlertService
+      .getAlertQuestionRequest(
+        traducir('COMMON.ARE_YOU_SURE_YOU_WANT_RESET'),
+        traducir('COMMON.RESET_DASHBOARD'),
+        traducir('COMMON.YES_RESET'),
+        traducir('COMMON.CANCEL')
+      )
+      .subscribe((confirmado: boolean) => {
+        // Si el usuario hace clic en "Cancelar" o presiona Escape, 'confirmado' será false
+        if (confirmado) {
+          this.cargando = true;
 
-    renderizarLayoutDesdeCache(layoutCrudo: any[], codigoDashboard: string) {
-        this.cargando = true;
-        this.dashboard = [];
-        this.options.gridType = GridType.ScrollVertical;
+          // 1. Matamos los widgets en pantalla para que la sincronización automática no los reviva
+          this.dashboard = [];
+
+          // 2. Clonamos el layout por defecto
+          this.lsLayout = this.LAYOUT_POR_DEFECTO.map((item) => ({ ...item }));
+
+          // 3. Disparamos el guardado hacia SQL Server
+          this.saveLayoutSubject.next(this.lsLayout);
+
+          // 4. Sincronizamos la sesión en el navegador
+          this.sincronizarLayoutEnSessionStorage();
+
+          // 5. Refrescamos la vista de Gridster
+          this.cambiarPestana(this.pestanaActiva);
+        }
+      });
+  }
+
+  escucharCambiosWidgets(): void {
+    this.widgetsSub = this._socketManager.widgetsActualizados$.subscribe(async (data: any) => {
+      if (data.action === 'inactivado') {
+        this.lsWidgets = this.lsWidgets.filter((w) => w.codigoWidget !== data.codigoWidget);
+        this.lsLayout = this.lsLayout.filter((l) => l.type !== data.codigoWidget && l.codigoWidget !== data.codigoWidget);
+        this.dashboard = this.dashboard.filter((w) => w.type !== data.codigoWidget && w['codigoWidget'] !== data.codigoWidget);
 
         if (this.options.api && this.options.api.optionsChanged) {
-            this.options.api.optionsChanged();
+          this.options.api.optionsChanged();
         }
         this.cdr.detectChanges();
 
-        // 🟢 FIX: Filtramos y ORDENAMOS matemáticamente de arriba hacia abajo y de izquierda a derecha
-        const layoutBase = layoutCrudo
-            .filter((w: any) => w.visible === true || w.visible === 'true' || w.visible === 1)
-            .sort((a, b) => {
-                if (a.y === b.y) {
-                    return a.x - b.x; // Si están en la misma fila, ordenamos por columna
-                }
-                return a.y - b.y; // Ordenamos por fila
-            });
+        this.sincronizarLayoutEnSessionStorage();
+        this.saveLayoutSubject.next(this.lsLayout);
 
-        setTimeout(() => {
-            this.dashboard = [...layoutBase].map(item => ({ ...item }));
-            this.cargando = false;
-            this.isLoading = false;
+        console.log(`[Realtime] ${data.msg}`);
+      }
 
-            if (this.options.api && this.options.api.optionsChanged) {
-                this.options.api.optionsChanged();
-            }
-            this.cdr.detectChanges();
-        }, 100);
-    }
+      if (data.action === 'update') {
+        await this.cargarCatalogoWidgets();
+        this.validarActualizacionesDeWidgetsMaestro();
+        this.cambiarPestana(this.pestanaActiva);
+        console.log(`[Realtime] ${data.msg}`);
+      }
+    });
 
-    sincronizarDashboardAMaestro() {
-        if (!this.dashboard || this.dashboard.length === 0) return;
+    this.subs.add(
+      this._socketManager.layoutActualizado$.subscribe((data: any) => {
+        if (data.action === 'layout-limpiado') {
+          console.log('🔄 [Realtime] Layout personal sincronizado por el servidor:', data);
 
-        this.dashboard.forEach(widgetEnPantalla => {
-            const index = this.lsLayout.findIndex(l => l.type === widgetEnPantalla.type);
-            if (index !== -1) {
-                this.lsLayout[index] = { ...this.lsLayout[index], ...widgetEnPantalla };
-            } else {
-                this.lsLayout.push({ ...widgetEnPantalla });
-            }
-        });
-    }
+          this.lsLayout = data.nuevoLayout.map((item: any) => ({
+            ...item,
+            type: item.codigoWidget || item.type
+          }));
 
-    abrirLobby() {
-        this.mostrarLobby = true;
-        this.cdr.detectChanges();
-    }
-
-    actualizarWidgetDesdeLobby(evento: { codigoWidget: string, seleccionado: boolean }) {
-        const { codigoWidget, seleccionado } = evento;
-        const indexLayout = this.lsLayout.findIndex(l => l.type === codigoWidget || l.codigoWidget === codigoWidget);
-
-        if (indexLayout !== -1) {
-            this.lsLayout[indexLayout].visible = seleccionado;
-            if (seleccionado) {
-                this.lsLayout[indexLayout].x = 0;
-                this.lsLayout[indexLayout].y = 0;
-            }
-        } else if (seleccionado) {
-            const widgetMaster = this.lsWidgets.find(w => w.codigoWidget === codigoWidget);
-            if (widgetMaster) {
-                this.lsLayout.push({
-                    type: widgetMaster.codigoWidget,
-                    cols: widgetMaster.defaultCols,
-                    rows: widgetMaster.defaultRows,
-                    x: 0, y: 0,
-                    pestana: this.pestanaActiva,
-                    visible: true,
-                    data: { tipo: widgetMaster.tipo },
-                    version: widgetMaster.layoutVersion
-                });
-            }
-        }
-
-        const layoutActualizado = this.armarDashboardPorPestana(this.pestanaActiva);
-        this.dashboard = [...layoutActualizado].filter(w => w.visible === true || w.visible === 'true' || w.visible === 1);
-
-        if (this.options.api && this.options.api.optionsChanged) {
-            this.options.api.optionsChanged();
-        }
-        this.cdr.detectChanges();
-
-        if (this.usuario) {
+          if (this.usuario) {
             this.usuario.layout = JSON.stringify(this.lsLayout);
             this.sincronizarLayoutEnSessionStorage();
-        }
+          }
 
+          this.cambiarPestana(this.pestanaActiva);
+        }
+      })
+    );
+  }
+
+  iniciarConfiguracionGridster() {
+    this.options = {
+      gridType: GridType.ScrollVertical,
+      margin: 16,
+      outerMargin: false,
+      minCols: 12,
+      maxCols: 12,
+      minRows: 1,
+      maxRows: 1000,
+      fixedRowHeight: 120,
+      pushItems: true,
+      swap: true,
+      compactType: 'compactUp&Left',
+      defaultItemCols: 4,
+      defaultItemRows: 3,
+      displayGrid: 'onDrag&Resize',
+      draggable: { enabled: !this.tableroBloqueado },
+      pushDirections: { north: false, east: false, south: true, west: false },
+      resizable: { enabled: !this.tableroBloqueado },
+      mobileBreakpoint: 960,
+      keepFixedHeightInMobile: true,
+      itemResizeCallback: () => {
         this.hayCambiosSinGuardar = true;
+        this.sincronizarDashboardAMaestro();
         this.saveLayoutSubject.next(this.lsLayout);
+      },
+      itemChangeCallback: () => {
+        this.hayCambiosSinGuardar = true;
+        this.sincronizarDashboardAMaestro();
+        this.saveLayoutSubject.next(this.lsLayout);
+      }
+    };
+  }
+
+  validarActualizacionesDeWidgetsMaestro(): void {
+    let huboCambios = false;
+    const layoutFiltrado: any[] = [];
+
+    this.lsLayout.forEach((itemLayout) => {
+      const widgetMaestro = this.lsWidgets.find((w: any) => w.codigoWidget === itemLayout.type);
+
+      if (!widgetMaestro) {
+        huboCambios = true;
+        console.log(`🚫 Widget ${itemLayout.type} expulsado del tablero (Sin permisos o Inactivo).`);
+        return;
+      }
+
+      if ((itemLayout.version || 1) < (widgetMaestro.layoutVersion || 1)) {
+        itemLayout.cols = widgetMaestro.defaultCols;
+        itemLayout.rows = widgetMaestro.defaultRows;
+        itemLayout.version = widgetMaestro.layoutVersion || 1;
+        huboCambios = true;
+      }
+
+      layoutFiltrado.push(itemLayout);
+    });
+
+    this.lsLayout = layoutFiltrado;
+    if (huboCambios) {
+      this.saveLayoutSubject.next(this.lsLayout);
     }
+  }
 
-    private sincronizarLayoutEnSessionStorage() {
-        try {
-            const keysToUpdate = ['currentUser'];
-            for (const key of keysToUpdate) {
-                const rawData = sessionStorage.getItem(key) || localStorage.getItem(key);
-                if (rawData) {
-                    const parsed = JSON.parse(rawData);
+  persistirLayoutEnServidor(layoutData: any[]) {
+    const codigoUsuario = this.usuario?.codigoUsuario;
+    if (!codigoUsuario) return;
 
-                    // 🟢 Reemplazamos el JSON.stringify por el arreglo nativo directo
-                    if (parsed && parsed.usuario) {
-                        parsed.usuario.layout = this.lsLayout;
-                        if (sessionStorage.getItem(key)) sessionStorage.setItem(key, JSON.stringify(parsed));
-                        else localStorage.setItem(key, JSON.stringify(parsed));
-                        break;
-                    }
-                    else if (parsed && parsed.codigoUsuario) {
-                        parsed.layout = this.lsLayout;
-                        if (sessionStorage.getItem(key)) sessionStorage.setItem(key, JSON.stringify(parsed));
-                        else localStorage.setItem(key, JSON.stringify(parsed));
-                        break;
-                    }
-                }
-            }
-        } catch (e) {
-            console.warn('⚠️ No se pudo actualizar el layout en la sesión:', e);
+    // 🟢 LIMPIEZA DE PAYLOAD: Extraemos estrictamente lo que va a la tabla
+    const layoutLimpio = layoutData.map((item) => ({
+      codigoUsuario: codigoUsuario, // 🟢 Agregado para satisfacer la tabla y Joi
+      codigoWidget: item.codigoWidget || item.type,
+      pestana: item.pestana || 'TAB_PLAT_PRINCIPAL',
+      cols: item.cols,
+      rows: item.rows,
+      x: item.x,
+      y: item.y,
+      visible: item.visible,
+      codigoUsuarioCreacion: codigoUsuario,
+      fechaCreacion: new Date().toISOString()
+    }));
+
+    this._usuariosWidgetsService.guardarLayoutUsuario(codigoUsuario, layoutLimpio).subscribe({
+      next: (res: any) => {
+        if (res.ok) {
+          this.hayCambiosSinGuardar = false;
+          console.log('💾 Layout SQL sincronizado exitosamente (Payload optimizado).');
         }
+      },
+      error: (err) => console.error('❌ Error al guardar el layout SQL:', err)
+    });
+  }
+
+  async cambiarPestana(nuevaPestana: string) {
+    this.sincronizarDashboardAMaestro();
+
+    this.isLoading = true;
+    this.cargando = true;
+    this.pestanaActiva = nuevaPestana;
+    this.dashboard = [];
+
+    this._localStoragoService.setPestanaLocalStorage(nuevaPestana, this.usuario.codigoUsuario);
+
+    const layoutParaRenderizar = this.armarDashboardPorPestana(nuevaPestana);
+    const estadoActual = (await this._localStoragoService.getTableroLocalStorage()) || {};
+
+    estadoActual.layout = layoutParaRenderizar;
+    estadoActual.pestana = nuevaPestana;
+
+    if (typeof (this._localStoragoService as any).setTableroLocalStorage === 'function') {
+      (this._localStoragoService as any).setTableroLocalStorage(estadoActual);
+    } else {
+      localStorage.setItem('tableroState', JSON.stringify(estadoActual));
     }
 
-    // ==========================================
-    // 🟢 UTILIDADES
-    // ==========================================
-    toggleBloqueoGridster() {
-        this.tableroBloqueado = !this.tableroBloqueado;
-        if (this.options.draggable && this.options.resizable) {
-            this.options.draggable.enabled = !this.tableroBloqueado;
-            this.options.resizable.enabled = !this.tableroBloqueado;
+    this.renderizarLayoutDesdeCache(layoutParaRenderizar, nuevaPestana);
+  }
+
+  armarDashboardPorPestana(pestana: string): any[] {
+    return this.lsLayout
+      .map((layoutItem) => {
+        const widgetConfig = this.lsWidgets.find((w) => w.codigoWidget === layoutItem.type);
+        return { ...widgetConfig, ...layoutItem };
+      })
+      .filter((item: any) => item.codigoWidget && item.pestana === pestana);
+  }
+
+  renderizarLayoutDesdeCache(layoutCrudo: any[], codigoDashboard: string) {
+    this.cargando = true;
+    this.dashboard = [];
+    this.options.gridType = GridType.ScrollVertical;
+
+    if (this.options.api && this.options.api.optionsChanged) {
+      this.options.api.optionsChanged();
+    }
+    this.cdr.detectChanges();
+
+    // 🟢 FIX: Filtramos y ORDENAMOS matemáticamente de arriba hacia abajo y de izquierda a derecha
+    const layoutBase = layoutCrudo
+      .filter((w: any) => w.visible === true || w.visible === 'true' || w.visible === 1)
+      .sort((a, b) => {
+        if (a.y === b.y) {
+          return a.x - b.x; // Si están en la misma fila, ordenamos por columna
         }
-        if (this.options.api && this.options.api.optionsChanged) {
-            this.options.api.optionsChanged();
+        return a.y - b.y; // Ordenamos por fila
+      });
+
+    setTimeout(() => {
+      this.dashboard = [...layoutBase].map((item) => ({ ...item }));
+      this.cargando = false;
+      this.isLoading = false;
+
+      if (this.options.api && this.options.api.optionsChanged) {
+        this.options.api.optionsChanged();
+      }
+      this.cdr.detectChanges();
+    }, 100);
+  }
+
+  sincronizarDashboardAMaestro() {
+    if (!this.dashboard || this.dashboard.length === 0) return;
+
+    this.dashboard.forEach((widgetEnPantalla) => {
+      const index = this.lsLayout.findIndex((l) => l.type === widgetEnPantalla.type);
+      if (index !== -1) {
+        this.lsLayout[index] = { ...this.lsLayout[index], ...widgetEnPantalla };
+      } else {
+        this.lsLayout.push({ ...widgetEnPantalla });
+      }
+    });
+  }
+
+  abrirLobby() {
+    this.mostrarLobby = true;
+    this.cdr.detectChanges();
+  }
+
+  actualizarWidgetDesdeLobby(evento: { codigoWidget: string; seleccionado: boolean }) {
+    const { codigoWidget, seleccionado } = evento;
+    const indexLayout = this.lsLayout.findIndex((l) => l.type === codigoWidget || l.codigoWidget === codigoWidget);
+
+    if (indexLayout !== -1) {
+      this.lsLayout[indexLayout].visible = seleccionado;
+      if (seleccionado) {
+        this.lsLayout[indexLayout].x = 0;
+        this.lsLayout[indexLayout].y = 0;
+      }
+    } else if (seleccionado) {
+      const widgetMaster = this.lsWidgets.find((w) => w.codigoWidget === codigoWidget);
+      if (widgetMaster) {
+        this.lsLayout.push({
+          type: widgetMaster.codigoWidget,
+          cols: widgetMaster.defaultCols,
+          rows: widgetMaster.defaultRows,
+          x: 0,
+          y: 0,
+          pestana: this.pestanaActiva,
+          visible: true,
+          data: { tipo: widgetMaster.tipo },
+          version: widgetMaster.layoutVersion
+        });
+      }
+    }
+
+    const layoutActualizado = this.armarDashboardPorPestana(this.pestanaActiva);
+    this.dashboard = [...layoutActualizado].filter((w) => w.visible === true || w.visible === 'true' || w.visible === 1);
+
+    if (this.options.api && this.options.api.optionsChanged) {
+      this.options.api.optionsChanged();
+    }
+    this.cdr.detectChanges();
+
+    if (this.usuario) {
+      this.usuario.layout = JSON.stringify(this.lsLayout);
+      this.sincronizarLayoutEnSessionStorage();
+    }
+
+    this.hayCambiosSinGuardar = true;
+    this.saveLayoutSubject.next(this.lsLayout);
+  }
+
+  private sincronizarLayoutEnSessionStorage() {
+    try {
+      const keysToUpdate = ['currentUser'];
+      for (const key of keysToUpdate) {
+        const rawData = sessionStorage.getItem(key) || localStorage.getItem(key);
+        if (rawData) {
+          const parsed = JSON.parse(rawData);
+
+          // 🟢 Reemplazamos el JSON.stringify por el arreglo nativo directo
+          if (parsed && parsed.usuario) {
+            parsed.usuario.layout = this.lsLayout;
+            if (sessionStorage.getItem(key)) sessionStorage.setItem(key, JSON.stringify(parsed));
+            else localStorage.setItem(key, JSON.stringify(parsed));
+            break;
+          } else if (parsed && parsed.codigoUsuario) {
+            parsed.layout = this.lsLayout;
+            if (sessionStorage.getItem(key)) sessionStorage.setItem(key, JSON.stringify(parsed));
+            else localStorage.setItem(key, JSON.stringify(parsed));
+            break;
+          }
         }
+      }
+    } catch (e) {
+      console.warn('⚠️ No se pudo actualizar el layout en la sesión:', e);
     }
+  }
 
-    ingresarQplusWeb(): void {
-        this.router.navigate(['/websites/plataforma']);
+  // ==========================================
+  // 🟢 UTILIDADES
+  // ==========================================
+  toggleBloqueoGridster() {
+    this.tableroBloqueado = !this.tableroBloqueado;
+    if (this.options.draggable && this.options.resizable) {
+      this.options.draggable.enabled = !this.tableroBloqueado;
+      this.options.resizable.enabled = !this.tableroBloqueado;
     }
+    if (this.options.api && this.options.api.optionsChanged) {
+      this.options.api.optionsChanged();
+    }
+  }
 
-    cerrarModalEnfoque() {
-        this.widgetEnfoque = null;
-        this._torreService.cerrarModoEnfoque();
-    }
+  ingresarQplusWeb(): void {
+    this.router.navigate(['/websites/plataforma']);
+  }
 
-    toggleNav(): void {
-        this.toggleSidebar.emit();
-    }
+  cerrarModalEnfoque() {
+    this.widgetEnfoque = null;
+    this._torreService.cerrarModoEnfoque();
+  }
 
-    trackByWidget(index: number, widget: any): string {
-        return widget.codigoWidget || widget.type;
-    }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
+
+  trackByWidget(index: number, widget: any): string {
+    return widget.codigoWidget || widget.type;
+  }
 }

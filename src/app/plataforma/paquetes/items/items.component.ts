@@ -23,204 +23,220 @@ import { PTLItemsService } from 'src/app/theme/shared/service/ptlitems.service';
 import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoItem.model';
 
 @Component({
-    selector: 'app-items',
-    standalone: true,
-    imports: [
-        CommonModule,
-        DataTablesModule,
-        SharedModule,
-        TranslateModule,
-        NavBarComponent,
-        NavContentComponent,
-        TableDataComponent,
-        DataLoaderComponent
-    ],
-    templateUrl: './items.component.html',
-    styleUrl: './items.component.scss'
+  selector: 'app-items',
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    TableDataComponent,
+    DataLoaderComponent
+  ],
+  templateUrl: './items.component.html',
+  styleUrl: './items.component.scss'
 })
 export class ItemsComponent implements OnInit, OnDestroy {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    hasFiltersSlot: boolean = true;
-    gradientConfig;
-    menuItems$!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' = 'menu';
-    suscriptor: string = '';
+  hasFiltersSlot: boolean = true;
+  gradientConfig;
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' = 'menu';
+  suscriptor: string = '';
 
-    subscriptions = new Subscription();
-    filtroNombreSubject = new BehaviorSubject<string>('');
-    filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  subscriptions = new Subscription();
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-    _itemsTransformados$: Observable<any[]> = of([]);
-    _itemsFiltrados$: Observable<any[]> = of([]);
-    itemsCatologo: PTLItemModel[] = [];
-    tiposItems: PTLTipoItemModel[] = [];
+  _itemsTransformados$: Observable<any[]> = of([]);
+  _itemsFiltrados$: Observable<any[]> = of([]);
+  itemsCatologo: PTLItemModel[] = [];
+  tiposItems: PTLTipoItemModel[] = [];
 
-    constructor(
-        private router: Router,
-        private cdr: ChangeDetectorRef,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _localStorageService: LocalStorageService,
-        private _logActividadesService: PtllogActividadesService,
-        private _permisosService: PtlPermisosService,
-        private _tiposItemsService: PtltiposItemsService,
-        private _swalService: SwalAlertService,
-        private _registrosService: PTLItemsService // 👈 Descomenta esto
-    ) {
-        this.gradientConfig = GradientConfig;
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-    }
+  constructor(
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
+    private _permisosService: PtlPermisosService,
+    private _tiposItemsService: PtltiposItemsService,
+    private _swalService: SwalAlertService,
+    private _registrosService: PTLItemsService // 👈 Descomenta esto
+  ) {
+    this.gradientConfig = GradientConfig;
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
-    ngOnInit(): void {
-        this._localStorageService.removeObject('regId');
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
-        this.tiposItems = this._tiposItemsService.getTiposItemsActuales();
-        this.setupItemsStream();
+  ngOnInit(): void {
+    this._localStorageService.removeObject('regId');
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.tiposItems = this._tiposItemsService.getTiposItemsActuales();
+    this.setupItemsStream();
 
-        this.subscriptions.add(
-            this._registrosService.cargarRegistros().subscribe({
-                next: () => console.log('✅ Ítems cargados en el servicio'),
-                error: (err) => console.error('❌ Error al cargar ítems:', err)
-            })
-        );
-    }
+    this.subscriptions.add(
+      this._registrosService.cargarRegistros().subscribe({
+        next: () => console.log('✅ Ítems cargados en el servicio'),
+        error: (err) => console.error('❌ Error al cargar ítems:', err)
+      })
+    );
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-    setupItemsStream(): void {
-        this._itemsTransformados$ = combineLatest([
-            this._registrosService.items$,
-            this._permisosService.actividadesAutorizadas$
-        ]).pipe(
-            map(([itemsBD, permisos]: [any[], string[]]) => {
-                if (!itemsBD || itemsBD.length === 0) return [];
+  setupItemsStream(): void {
+    this._itemsTransformados$ = combineLatest([this._registrosService.items$, this._permisosService.actividadesAutorizadas$]).pipe(
+      map(([itemsBD, permisos]: [any[], string[]]) => {
+        if (!itemsBD || itemsBD.length === 0) return [];
 
-                return itemsBD.map((item: any) => {
-                    const newItem: any = { ...item };
-                    newItem.nomEstado = newItem.estadoItem ? 'Activo' : 'Inactivo';
-                    const tipo = this.tiposItems.find(x => x.codigoTipoItem == newItem.codigoTipoItem);
-                    newItem.nomTipoItem = tipo?.nombreTipo;
+        return itemsBD.map((item: any) => {
+          const newItem: any = { ...item };
+          newItem.nomEstado = newItem.estadoItem ? 'Activo' : 'Inactivo';
+          const tipo = this.tiposItems.find((x) => x.codigoTipoItem == newItem.codigoTipoItem);
+          newItem.nomTipoItem = tipo?.nombreTipo;
 
-                    const accionesPermitidas: any[] = [];
+          const accionesPermitidas: any[] = [];
 
-                    if (permisos.includes('ACT_ITEMS_MODIFICAR')) {
-                        accionesPermitidas.push({
-                            accion: 'MODIFICAR', letra: 'M', color: '#2a5dbd',
-                            tooltip: this.translate.instant('COMMON.EDIT')
-                        });
-                    }
+          if (permisos.includes('ACT_ITEMS_MODIFICAR')) {
+            accionesPermitidas.push({
+              accion: 'MODIFICAR',
+              letra: 'M',
+              color: '#2a5dbd',
+              tooltip: this.translate.instant('COMMON.EDIT')
+            });
+          }
 
-                    if (permisos.includes('ACT_ITEMS_ELIMINAR')) {
-                        accionesPermitidas.push({
-                            accion: 'ELIMINAR', letra: 'E', color: '#dd1717',
-                            tooltip: this.translate.instant('COMMON.DELETE')
-                        });
-                    }
+          if (permisos.includes('ACT_ITEMS_ELIMINAR')) {
+            accionesPermitidas.push({
+              accion: 'ELIMINAR',
+              letra: 'E',
+              color: '#dd1717',
+              tooltip: this.translate.instant('COMMON.DELETE')
+            });
+          }
 
-                    newItem._acciones = accionesPermitidas;
-                    return newItem;
-                });
-            }),
-            tap((regs) => {
-                this.itemsCatologo = regs;
-                this.cdr.detectChanges();
-            }),
-            catchError(err => {
-                console.error('Error en el stream de ítems:', err);
-                return of([]);
-            })
-        );
-
-        this._itemsFiltrados$ = combineLatest([
-            this._itemsTransformados$.pipe(startWith([])),
-            this.filtroNombreSubject,
-            this.filtroEstadoSubject
-        ]).pipe(
-            map(([items, nombre, estado]) => {
-                let listado = items;
-
-                if (nombre) {
-                    const txt = nombre.toLowerCase();
-                    listado = listado.filter(i => (i.nombreValor || '').toLowerCase().includes(txt));
-                }
-
-                if (estado !== 'todos') {
-                    const bEstado = estado === 'true';
-                    listado = listado.filter(i => i.estadoValor === bEstado);
-                }
-
-                return listado;
-            })
-        );
-    }
-
-    onAccionPrincipal(evento: { accion: string, row: any }) {
-        const { accion, row } = evento;
-        const id = row.codigoItem;
-
-        switch (accion) {
-            case 'MODIFICAR':
-                console.log('modificar registro', id);
-                this._localStorageService.setObject('regId', id);
-                this.router.navigate(['paquetes/gestion-item']);
-                break;
-
-            case 'ELIMINAR':
-                this.eliminarRegistro(row);
-                break;
-
-            default:
-                console.warn(`Acción no reconocida: ${accion}`);
-                break;
-        }
-    }
-
-    OnNuevoRegistroClick(): void {
-        this._localStorageService.setObject('regId', 'nuevo');
-        this.router.navigate(['paquetes/gestion-item']);
-    }
-
-    eliminarRegistro(row: any): void {
-        this._swalService.getAlertQuestionRequest(
-            this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreValor}".`,
-            this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
-        ).subscribe(result => {
-            if (result) {
-                this._registrosService.deleteEliminarRegistro(row.codigoValor).subscribe({
-                    next: (resp: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '201', descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        this._swalService.getAlertSuccess(resp.mensaje);
-                        this._registrosService.cargarRegistros().subscribe();
-                    },
-                    error: (err: any) => {
-                        const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + err.mensaje };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe();
-                        this._swalService.getAlertError(err.mensaje);
-                        this._registrosService.cargarRegistros().subscribe();
-                    }
-                });
-            }
+          newItem._acciones = accionesPermitidas;
+          return newItem;
         });
+      }),
+      tap((regs) => {
+        this.itemsCatologo = regs;
+        this.cdr.detectChanges();
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de ítems:', err);
+        return of([]);
+      })
+    );
+
+    this._itemsFiltrados$ = combineLatest([
+      this._itemsTransformados$.pipe(startWith([])),
+      this.filtroNombreSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([items, nombre, estado]) => {
+        let listado = items;
+
+        if (nombre) {
+          const txt = nombre.toLowerCase();
+          listado = listado.filter((i) => (i.nombreValor || '').toLowerCase().includes(txt));
+        }
+
+        if (estado !== 'todos') {
+          const bEstado = estado === 'true';
+          listado = listado.filter((i) => i.estadoValor === bEstado);
+        }
+
+        return listado;
+      })
+    );
+  }
+
+  onAccionPrincipal(evento: { accion: string; row: any }) {
+    const { accion, row } = evento;
+    const id = row.codigoItem;
+
+    switch (accion) {
+      case 'MODIFICAR':
+        console.log('modificar registro', id);
+        this._localStorageService.setObject('regId', id);
+        this.router.navigate(['paquetes/gestion-item']);
+        break;
+
+      case 'ELIMINAR':
+        this.eliminarRegistro(row);
+        break;
+
+      default:
+        console.warn(`Acción no reconocida: ${accion}`);
+        break;
     }
+  }
 
-    onFiltroNombreChangeClick(evento: any) { this.filtroNombreSubject.next(evento.target.value); }
-    onFiltroEstadoChangeClick(evento: any) { this.filtroEstadoSubject.next(evento.target.value); }
-    toggleNav(): void { this.toggleSidebar.emit(); }
+  OnNuevoRegistroClick(): void {
+    this._localStorageService.setObject('regId', 'nuevo');
+    this.router.navigate(['paquetes/gestion-item']);
+  }
 
-    columnasItems: ColumnMetadata[] = [
-        { name: 'nombreItem', header: 'PAQUETES.ITEMS.ITEM_NAME', type: 'text' },
-        { name: 'nomTipoItem', header: 'COMMON.TYPE', type: 'text' },
-        { name: 'costoItem', header: 'PAQUETES.COST', type: 'price' },
-        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
-    ];
+  eliminarRegistro(row: any): void {
+    this._swalService
+      .getAlertQuestionRequest(
+        this.translate.instant('COMMON.APPLICATION_WILL_BE_DELETED') + ` "${row.nombreValor}".`,
+        this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE')
+      )
+      .subscribe((result) => {
+        if (result) {
+          this._registrosService.deleteEliminarRegistro(row.codigoValor).subscribe({
+            next: (resp: any) => {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '201',
+                descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe();
+              this._swalService.getAlertSuccess(resp.mensaje);
+              this._registrosService.cargarRegistros().subscribe();
+            },
+            error: (err: any) => {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '501',
+                descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_APPLICATION') + ' ' + err.mensaje
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe();
+              this._swalService.getAlertError(err.mensaje);
+              this._registrosService.cargarRegistros().subscribe();
+            }
+          });
+        }
+      });
+  }
 
-    columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoValor', header: 'PAQUETES.INTERNAL_CODE', type: 'text' },
-        { name: 'descripcionValor', header: 'COMMON.DESCRIPTION', type: 'text' }
-    ];
+  onFiltroNombreChangeClick(evento: any) {
+    this.filtroNombreSubject.next(evento.target.value);
+  }
+  onFiltroEstadoChangeClick(evento: any) {
+    this.filtroEstadoSubject.next(evento.target.value);
+  }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
+
+  columnasItems: ColumnMetadata[] = [
+    { name: 'nombreItem', header: 'PAQUETES.ITEMS.ITEM_NAME', type: 'text' },
+    { name: 'nomTipoItem', header: 'COMMON.TYPE', type: 'text' },
+    { name: 'costoItem', header: 'PAQUETES.COST', type: 'price' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    { name: 'codigoValor', header: 'PAQUETES.INTERNAL_CODE', type: 'text' },
+    { name: 'descripcionValor', header: 'COMMON.DESCRIPTION', type: 'text' }
+  ];
 }

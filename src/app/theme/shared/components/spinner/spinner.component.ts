@@ -8,8 +8,7 @@ import { DOCUMENT } from '@angular/common';
 import { Spinkit } from './spinkits';
 
 @Component({
-  selector: 'app-spinner',
-  standalone: true, // OT-023 fase 5 (regla 21)
+  selector: 'app-spinner', // OT-023 fase 5 (regla 21)
   imports: [CommonModule],
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.scss', './spinkit-css/sk-line-material.scss'],

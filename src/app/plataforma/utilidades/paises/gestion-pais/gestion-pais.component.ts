@@ -22,85 +22,124 @@ import { traducir } from 'src/app/theme/shared/i18n/traducir';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
-    selector: 'app-gestion-pais',
-    standalone: true,
-    imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, AppPermisoDirective, TextEditorComponent],
-    templateUrl: './gestion-pais.component.html',
-    styleUrl: './gestion-pais.component.scss'
+  selector: 'app-gestion-pais',
+  imports: [
+    CommonModule,
+    FormsModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    AppPermisoDirective,
+    TextEditorComponent
+  ],
+  templateUrl: './gestion-pais.component.html',
+  styleUrl: './gestion-pais.component.scss'
 })
 export class GestionPaisComponent implements OnInit {
-    @Output() toggleSidebar = new EventEmitter<void>();
-    menuItems!: Observable<NavigationItem[]>;
-    modoEdicion = false;
-    enviado = false;
-    guardando = false;
-    tipoEditorTexto = 'basica';
+  @Output() toggleSidebar = new EventEmitter<void>();
+  menuItems!: Observable<NavigationItem[]>;
+  modoEdicion = false;
+  enviado = false;
+  guardando = false;
+  tipoEditorTexto = 'basica';
 
-    pais: Pais = {
-        codigoPais: '', codigoIso3: '', codigoNumerico: '', nombrePais: '', moneda: '', simboloMoneda: '', decimalesMoneda: 2,
-        indicativo: '', zonaHoraria: '', idioma: '', descripcion: '', estadoPais: true
-    };
-    /** Zonas IANA que conoce el navegador (para la lista de sugerencias). */
-    readonly zonas: string[] = (() => { try { return (Intl as any).supportedValuesOf('timeZone') as string[]; } catch { return []; } })();
-
-    constructor(
-        private readonly router: Router,
-        private readonly route: ActivatedRoute,
-        private readonly navegacion: NavigationService,
-        private readonly avisos: SwalAlertService,
-        private readonly paises: PtlPaisesService
-    ) { }
-
-    ngOnInit(): void {
-        this.navegacion.getNavigationItems();
-        this.menuItems = this.navegacion.menuItems$;
-        const codigo = this.route.snapshot.queryParamMap.get('pais');
-        if (codigo) {
-            this.modoEdicion = true;
-            this.paises.obtener(codigo).subscribe({
-                next: (p) => (this.pais = { ...p, codigoPais: String(p.codigoPais).trim(), estadoPais: !!p.estadoPais }),
-                error: () => this.avisos.getAlertError(traducir('UTILIDADES.PAISES.COULD_NOT_GET_COUNTRIES'))
-            });
-        }
+  pais: Pais = {
+    codigoPais: '',
+    codigoIso3: '',
+    codigoNumerico: '',
+    nombrePais: '',
+    moneda: '',
+    simboloMoneda: '',
+    decimalesMoneda: 2,
+    indicativo: '',
+    zonaHoraria: '',
+    idioma: '',
+    descripcion: '',
+    estadoPais: true
+  };
+  /** Zonas IANA que conoce el navegador (para la lista de sugerencias). */
+  readonly zonas: string[] = (() => {
+    try {
+      return (Intl as any).supportedValuesOf('timeZone') as string[];
+    } catch {
+      return [];
     }
+  })();
 
-    /** Propone el nombre en español al escribir un código alfa-2 válido (si el nombre está vacío). */
-    alEscribirCodigo(): void {
-        this.pais.codigoPais = (this.pais.codigoPais || '').toUpperCase();
-        if (/^[A-Z]{2}$/.test(this.pais.codigoPais) && !this.pais.nombrePais) {
-            try { this.pais.nombrePais = new Intl.DisplayNames(['es'], { type: 'region' }).of(this.pais.codigoPais) || ''; } catch { /* sin Intl */ }
-        }
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly navegacion: NavigationService,
+    private readonly avisos: SwalAlertService,
+    private readonly paises: PtlPaisesService
+  ) {}
+
+  ngOnInit(): void {
+    this.navegacion.getNavigationItems();
+    this.menuItems = this.navegacion.menuItems$;
+    const codigo = this.route.snapshot.queryParamMap.get('pais');
+    if (codigo) {
+      this.modoEdicion = true;
+      this.paises.obtener(codigo).subscribe({
+        next: (p) => (this.pais = { ...p, codigoPais: String(p.codigoPais).trim(), estadoPais: !!p.estadoPais }),
+        error: () => this.avisos.getAlertError(traducir('UTILIDADES.PAISES.COULD_NOT_GET_COUNTRIES'))
+      });
     }
+  }
 
-    get valido(): boolean {
-        const p = this.pais;
-        return /^[A-Z]{2}$/.test(p.codigoPais) && /^[A-Za-z]{3}$/.test(p.codigoIso3) && !!p.nombrePais?.trim() && /^[A-Za-z]{3}$/.test(p.moneda);
+  /** Propone el nombre en español al escribir un código alfa-2 válido (si el nombre está vacío). */
+  alEscribirCodigo(): void {
+    this.pais.codigoPais = (this.pais.codigoPais || '').toUpperCase();
+    if (/^[A-Z]{2}$/.test(this.pais.codigoPais) && !this.pais.nombrePais) {
+      try {
+        this.pais.nombrePais = new Intl.DisplayNames(['es'], { type: 'region' }).of(this.pais.codigoPais) || '';
+      } catch {
+        /* sin Intl */
+      }
     }
+  }
 
-    actualizarDescripcionSuscriptor(nuevoContenido: string): void {
-        this.pais.descripcion = nuevoContenido;
-        console.log('Descripción del pais actualizada:', this.pais.descripcion);
-        // if (this.validationForm && this.isSubmit) {
-        // }
-    }
+  get valido(): boolean {
+    const p = this.pais;
+    return (
+      /^[A-Z]{2}$/.test(p.codigoPais) && /^[A-Za-z]{3}$/.test(p.codigoIso3) && !!p.nombrePais?.trim() && /^[A-Za-z]{3}$/.test(p.moneda)
+    );
+  }
 
-    guardar(): void {
-        this.enviado = true;
-        if (!this.valido || this.guardando) return;
-        this.guardando = true;
-        const datos = { ...this.pais, codigoIso3: this.pais.codigoIso3.toUpperCase(), moneda: this.pais.moneda.toUpperCase() };
-        const peticion = this.modoEdicion ? this.paises.modificar(datos.codigoPais, datos) : this.paises.crear(datos);
-        peticion.subscribe({
-            next: () => {
-                this.guardando = false;
-                this.avisos.getAlertSuccess(traducir(this.modoEdicion ? 'UTILIDADES.PAISES.GESTION.COUNTRY_UPDATED' : 'UTILIDADES.PAISES.GESTION.COUNTRY_CREATED'));
-                this.volver();
-            },
-            error: (e) => { this.guardando = false; this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.PAISES.GESTION.COULD_NOT_SAVE_COUNTRY')); }
-        });
-    }
+  actualizarDescripcionSuscriptor(nuevoContenido: string): void {
+    this.pais.descripcion = nuevoContenido;
+    console.log('Descripción del pais actualizada:', this.pais.descripcion);
+    // if (this.validationForm && this.isSubmit) {
+    // }
+  }
 
-    volver(): void { this.router.navigate(['utilidades/paises']); }
+  guardar(): void {
+    this.enviado = true;
+    if (!this.valido || this.guardando) return;
+    this.guardando = true;
+    const datos = { ...this.pais, codigoIso3: this.pais.codigoIso3.toUpperCase(), moneda: this.pais.moneda.toUpperCase() };
+    const peticion = this.modoEdicion ? this.paises.modificar(datos.codigoPais, datos) : this.paises.crear(datos);
+    peticion.subscribe({
+      next: () => {
+        this.guardando = false;
+        this.avisos.getAlertSuccess(
+          traducir(this.modoEdicion ? 'UTILIDADES.PAISES.GESTION.COUNTRY_UPDATED' : 'UTILIDADES.PAISES.GESTION.COUNTRY_CREATED')
+        );
+        this.volver();
+      },
+      error: (e) => {
+        this.guardando = false;
+        this.avisos.getAlertError(e?.error?.msg || traducir('UTILIDADES.PAISES.GESTION.COULD_NOT_SAVE_COUNTRY'));
+      }
+    });
+  }
 
-    toggleNav(): void { this.toggleSidebar.emit(); }
+  volver(): void {
+    this.router.navigate(['utilidades/paises']);
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

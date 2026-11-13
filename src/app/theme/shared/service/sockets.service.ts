@@ -196,7 +196,7 @@ export class SocketService {
     // ==========================================
 
     public fromEvent<T = any>(eventName: string): Observable<T> {
-        return this.socket.fromEvent<T>(eventName);
+        return this.socket.fromEvent(eventName) as Observable<T>; // ngx-socket-io 4.8 tipa el evento con dos parámetros
     }
 
     public listen<T = any>(eventName: string): Observable<T> {

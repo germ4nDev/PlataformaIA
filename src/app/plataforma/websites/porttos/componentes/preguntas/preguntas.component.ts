@@ -10,11 +10,10 @@ import { PreguntaPortal } from 'src/app/plataforma/websites/porttos/nucleo';
 
 @Component({
   selector: 'pp-preguntas',
-  standalone: true,
   imports: [TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './preguntas.component.html',
-  styleUrl: './preguntas.component.scss',
+  styleUrl: './preguntas.component.scss'
 })
 export class PreguntasComponent {
   @Input() preguntas: PreguntaPortal[] = [];

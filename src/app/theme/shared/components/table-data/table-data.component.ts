@@ -1,417 +1,405 @@
 /* eslint-disable valid-typeof */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms'
-import { TranslateModule } from '@ngx-translate/core'
-import * as XLSX from 'xlsx'
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    OnInit,
-    OnChanges,
-    SimpleChanges,
-    AfterViewInit,
-    Renderer2
-} from '@angular/core'
-import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model'
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
-import { VideoPlayerComponent } from '../video-player/video-player.component'
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import * as XLSX from 'xlsx';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, AfterViewInit, Renderer2 } from '@angular/core';
+import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { VideoPlayerComponent } from '../video-player/video-player.component';
 import { LanguageService } from '../../service/lenguage.service';
 import { Subscription } from 'rxjs';
 import { AppPermisoDirective } from '../../directive/app-permiso.directive';
 import { PtlPermisosService } from '../../service/ptlpermisos.service';
 
 @Component({
-    selector: 'app-table-data',
-    standalone: true,
-    imports: [CommonModule, TranslateModule, FormsModule, VideoPlayerComponent, AppPermisoDirective],
-    templateUrl: './table-data.component.html',
-    styleUrl: './table-data.component.scss'
+  selector: 'app-table-data',
+  imports: [CommonModule, TranslateModule, FormsModule, VideoPlayerComponent, AppPermisoDirective],
+  templateUrl: './table-data.component.html',
+  styleUrl: './table-data.component.scss'
 })
 export class TableDataComponent implements OnInit, OnChanges, AfterViewInit {
+  @Input() data: any[] = [];
+  @Input() metadataColumns: any[] = [];
+  @Input() metadataDetailColumns: any[] = [];
+  @Input() columnTitles: string[] = [];
+  @Input() detailColumns: string[] = [];
+  @Input() detailTitles: string[] = [];
 
-    @Input() data: any[] = []
-    @Input() metadataColumns: any[] = []
-    @Input() metadataDetailColumns: any[] = []
-    @Input() columnTitles: string[] = []
-    @Input() detailColumns: string[] = []
-    @Input() detailTitles: string[] = []
+  @Input() idField: string = 'id';
+  @Input() tableTitle: string = '';
+  @Input() tableSubtitle: string = '';
+  @Input() exportLabel: string = 'Exportar Excel';
+  @Input() newButtonLabel: string = 'Nuevo Registro';
+  @Input() backButtonLabel: string = 'Regresar';
+  @Input() buttonsClass: string = 'btn btn-primary';
+  @Input() src: string = '';
 
-    @Input() idField: string = 'id'
-    @Input() tableTitle: string = ''
-    @Input() tableSubtitle: string = ''
-    @Input() exportLabel: string = 'Exportar Excel'
-    @Input() newButtonLabel: string = 'Nuevo Registro'
-    @Input() backButtonLabel: string = 'Regresar'
-    @Input() buttonsClass: string = 'btn btn-primary'
-    @Input() src: string = ''
+  @Input() permisoNew: string = '';
+  @Input() permisoView: string = '';
+  @Input() permisoEdit: string = '';
+  @Input() permisoDelete: string = '';
+  /** OT-020 (CC-131): llave de los botones de carga (Excel y modal de cargue masivo) */
+  @Input() permisoUpload: string = '';
 
-    @Input() permisoNew: string = '';
-    @Input() permisoView: string = '';
-    @Input() permisoEdit: string = '';
-    @Input() permisoDelete: string = '';
-    /** OT-020 (CC-131): llave de los botones de carga (Excel y modal de cargue masivo) */
-    @Input() permisoUpload: string = '';
+  @Input() showDetail: boolean = false;
+  @Input() showSearchBox: boolean = true;
+  @Input() showAvatar: boolean = false;
+  @Input() showImage: boolean = false;
+  @Input() showActions: boolean = true;
+  @Input() showBackButton: boolean = false;
+  @Input() showNewButton: boolean = false;
+  @Input() showViewButton: boolean = false;
+  @Input() showEditButton: boolean = false;
+  @Input() showDeleteButton: boolean = false;
+  @Input() showDetailActions: boolean = false;
 
-    @Input() showDetail: boolean = false
-    @Input() showSearchBox: boolean = true
-    @Input() showAvatar: boolean = false
-    @Input() showImage: boolean = false
-    @Input() showActions: boolean = true
-    @Input() showBackButton: boolean = false
-    @Input() showNewButton: boolean = false
-    @Input() showViewButton: boolean = false
-    @Input() showEditButton: boolean = false
-    @Input() showDeleteButton: boolean = false
-    @Input() showDetailActions: boolean = false
+  @Output() backRecord = new EventEmitter<void>();
+  @Output() viewRecord = new EventEmitter<void>();
+  @Output() newRecord = new EventEmitter<void>();
+  @Output() editRecord = new EventEmitter<any>();
+  @Output() deleteRecord = new EventEmitter<any>();
+  @Output() excelExport = new EventEmitter<void>();
 
-    @Output() backRecord = new EventEmitter<void>()
-    @Output() viewRecord = new EventEmitter<void>()
-    @Output() newRecord = new EventEmitter<void>()
-    @Output() editRecord = new EventEmitter<any>()
-    @Output() deleteRecord = new EventEmitter<any>()
-    @Output() excelExport = new EventEmitter<void>()
+  // 🟢 NUEVOS OUTPUTS: Manejo universal por arreglos para principal y subtabla
+  @Output() accionPrincipalClick = new EventEmitter<{ accion: string; row: any }>();
+  @Output() accionSubtablaClick = new EventEmitter<{ accion: string; filaSubtabla: any; filaPadre: any }>();
 
-    // 🟢 NUEVOS OUTPUTS: Manejo universal por arreglos para principal y subtabla
-    @Output() accionPrincipalClick = new EventEmitter<{ accion: string, row: any }>()
-    @Output() accionSubtablaClick = new EventEmitter<{ accion: string, filaSubtabla: any, filaPadre: any }>()
+  @Input() showUploadButton: boolean = false;
+  @Input() cargandoExcel: boolean = false;
 
-    @Input() showUploadButton: boolean = false;
-    @Input() cargandoExcel: boolean = false;
+  @Output() excelUpload = new EventEmitter<File>();
+  @Input() showUploadModalButton: boolean = false;
+  @Input() uploadModalLabel: string = 'Cargar Excel Masivo';
 
-    @Output() excelUpload = new EventEmitter<File>();
-    @Input() showUploadModalButton: boolean = false;
-    @Input() uploadModalLabel: string = 'Cargar Excel Masivo';
+  // 🟢 2. Nuevo Output que avisa al componente padre
+  @Output() uploadModalClick = new EventEmitter<void>();
 
-    // 🟢 2. Nuevo Output que avisa al componente padre
-    @Output() uploadModalClick = new EventEmitter<void>();
+  private langSub = new Subscription();
+  idiomaActual: string = '';
+  public finalColumns: ColumnMetadata[] = [];
+  public filteredData: any[] = [];
+  public paginatedData: any[] = [];
+  public currentPage: number = 1;
+  public itemsPerPage: number = 10;
+  public totalPages: number = 1;
+  public filterValues: { [key: string]: string } = {};
+  public sortByColumn: string | null = null;
+  public sortDirection: 'asc' | 'desc' = 'asc';
+  public registroId: number | null = null;
 
-    private langSub = new Subscription();
-    idiomaActual: string = '';
-    public finalColumns: ColumnMetadata[] = []
-    public filteredData: any[] = []
-    public paginatedData: any[] = []
-    public currentPage: number = 1
-    public itemsPerPage: number = 10
-    public totalPages: number = 1
-    public filterValues: { [key: string]: string } = {}
-    public sortByColumn: string | null = null
-    public sortDirection: 'asc' | 'desc' = 'asc'
-    public registroId: number | null = null
+  public lang: string = 'es';
+  public viewLetter: string = 'V';
+  public updateLetter: string = 'M';
+  public deleteLetter: string = 'E';
 
-    public lang: string = 'es'
-    public viewLetter: string = 'V'
-    public updateLetter: string = 'M'
-    public deleteLetter: string = 'E'
+  constructor(
+    private sanitizer: DomSanitizer,
+    private _languageService: LanguageService,
+    private renderer: Renderer2,
+    private _permisosService: PtlPermisosService
+  ) {}
 
-    constructor(
-        private sanitizer: DomSanitizer,
-        private _languageService: LanguageService,
-        private renderer: Renderer2,
-        private _permisosService: PtlPermisosService
-    ) { }
+  ngAfterViewInit(): void {}
 
-    ngAfterViewInit(): void { }
+  safeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
 
-    safeHtml(html: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(html)
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+
+  ngOnInit(): void {
+    const sub = this._languageService.currentLang$.subscribe((lang) => {
+      this.idiomaActual = lang;
+      this.viewLetter = lang == 'es' ? 'V' : 'V';
+      this.updateLetter = lang == 'es' ? 'M' : 'U';
+      this.deleteLetter = lang == 'es' ? 'E' : 'D';
+    });
+
+    this.langSub.add(sub);
+    this.processDataAndColumns();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] || changes['metadataColumns']) {
+      this.currentPage = 1;
+      this.processDataAndColumns();
+    }
+  }
+
+  preserveOrder = (a: any, b: any): number => {
+    return 0;
+  };
+
+  processDataAndColumns(): void {
+    if (!this.data || this.data.length === 0) {
+      this.finalColumns = [];
+      this.filteredData = [];
+      this.paginatedData = [];
+      this.totalPages = 1;
+      return;
     }
 
-    isArray(value: any): boolean {
-        return Array.isArray(value)
-    }
-
-    ngOnInit(): void {
-        const sub = this._languageService.currentLang$.subscribe(lang => {
-            this.idiomaActual = lang;
-            this.viewLetter = lang == 'es' ? 'V' : 'V';
-            this.updateLetter = lang == 'es' ? 'M' : 'U';
-            this.deleteLetter = lang == 'es' ? 'E' : 'D';
-        });
-
-        this.langSub.add(sub);
-        this.processDataAndColumns()
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['data'] || changes['metadataColumns']) {
-            this.currentPage = 1
-            this.processDataAndColumns()
+    if (this.metadataColumns && this.metadataColumns.length > 0) {
+      this.finalColumns = this.metadataColumns.map((col) => {
+        if (typeof col === 'string') {
+          return this.generateMetadata(col, this.data[0][col]);
         }
+        return col as ColumnMetadata;
+      });
+    } else {
+      this.finalColumns = this.generateInferredMetadata(this.data[0]);
     }
 
-    preserveOrder = (a: any, b: any): number => {
-        return 0
-    }
+    this.applyFiltersAndPagination();
+  }
 
-    processDataAndColumns(): void {
-        if (!this.data || this.data.length === 0) {
-            this.finalColumns = []
-            this.filteredData = []
-            this.paginatedData = []
-            this.totalPages = 1
-            return
+  private generateInferredMetadata(firstRow: any): ColumnMetadata[] {
+    const metadata: ColumnMetadata[] = [];
+
+    for (const key in firstRow) {
+      if (firstRow.hasOwnProperty(key)) {
+        // Ocultamos las llaves de control internas que empiezan por "_"
+        if (!key.startsWith('_')) {
+          metadata.push(this.generateMetadata(key, firstRow[key]));
         }
+      }
+    }
+    return metadata;
+  }
 
-        if (this.metadataColumns && this.metadataColumns.length > 0) {
-            this.finalColumns = this.metadataColumns.map(col => {
-                if (typeof col === 'string') {
-                    return this.generateMetadata(col, this.data[0][col])
-                }
-                return col as ColumnMetadata
-            })
-        } else {
-            this.finalColumns = this.generateInferredMetadata(this.data[0])
+  private generateMetadata(key: string, value: any): ColumnMetadata {
+    let type: ColumnMetadata['type'] = 'text';
+    if (Array.isArray(value)) {
+      const lowerKey = key.toLowerCase();
+      if (lowerKey.includes('tags') || lowerKey.includes('permisos') || lowerKey.includes('roles')) {
+        type = 'array_tags';
+      } else {
+        type = 'array_text';
+      }
+    } else if (key.toLowerCase().includes('color') || key.toLowerCase().includes('hex')) {
+      type = 'color_chip';
+    } else if (typeof value === 'number') {
+      type = 'number';
+    } else if (key.toLowerCase().includes('foto') || key.toLowerCase().includes('avatar')) {
+      type = 'avatar';
+    } else if (key.toLowerCase().includes('imagen') || key.toLowerCase().includes('img')) {
+      type = 'image';
+    } else if (key.toLowerCase().includes('capture')) {
+      type = 'capture';
+    } else if (key.toLowerCase().includes('video')) {
+      type = 'video';
+    } else if (
+      value &&
+      typeof value === 'string' &&
+      value.length > 5 &&
+      new Date(value).toString() !== 'Invalid Date' &&
+      !isNaN(new Date(value) as any)
+    ) {
+      type = 'date';
+    }
+
+    return {
+      name: key,
+      header: key,
+      type: type,
+      isSortable:
+        type !== 'avatar' && type !== 'image' && type !== 'video' && type !== 'capture' && type !== 'array_text' && type !== 'array_tags'
+    };
+  }
+
+  applyFiltersAndPagination(): void {
+    let tempFilteredData = this.data.filter((row) => {
+      for (const key of Object.keys(this.filterValues)) {
+        const filterValue = this.filterValues[key].toLowerCase();
+        const rowValue = String(row[key] || '').toLowerCase();
+        if (filterValue && !rowValue.includes(filterValue)) {
+          return false;
         }
-
-        this.applyFiltersAndPagination()
+      }
+      return true;
+    });
+    if (this.sortByColumn) {
+      tempFilteredData = this.sortData(tempFilteredData);
     }
+    this.filteredData = tempFilteredData;
+    this.totalPages = Math.ceil(this.filteredData.length / this.itemsPerPage);
 
-    private generateInferredMetadata(firstRow: any): ColumnMetadata[] {
-        const metadata: ColumnMetadata[] = []
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages > 0 ? this.totalPages : 1;
+    } else if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.itemsPerPage);
+  }
 
-        for (const key in firstRow) {
-            if (firstRow.hasOwnProperty(key)) {
-                // Ocultamos las llaves de control internas que empiezan por "_"
-                if (!key.startsWith('_')) {
-                    metadata.push(this.generateMetadata(key, firstRow[key]))
-                }
-            }
+  onSort(columnName: string): void {
+    const columnMeta = this.finalColumns.find((c) => c.name === columnName);
+    if (columnMeta && columnMeta.isSortable === false) {
+      return;
+    }
+    if (this.sortByColumn === columnName) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortByColumn = columnName;
+      this.sortDirection = 'asc';
+    }
+    this.applyFiltersAndPagination();
+  }
+
+  onItemsPerPageChange(): void {
+    this.currentPage = 1;
+    this.applyFiltersAndPagination();
+  }
+
+  onPageChange(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.applyFiltersAndPagination();
+    }
+  }
+
+  sortData(data: any[]): any[] {
+    const column = this.sortByColumn;
+    if (!column) {
+      return data;
+    }
+    return [...data].sort((a, b) => {
+      const aValue = a[column];
+      const bValue = b[column];
+      let comparison = 0;
+
+      const columnType = this.finalColumns.find((c) => c.name === column)?.type;
+      if (columnType === 'number') {
+        const numA = Number(aValue);
+        const numB = Number(bValue);
+        if (!isNaN(numA) && !isNaN(numB)) {
+          comparison = numA - numB;
         }
-        return metadata
-    }
-
-    private generateMetadata(key: string, value: any): ColumnMetadata {
-        let type: ColumnMetadata['type'] = 'text'
-        if (Array.isArray(value)) {
-            const lowerKey = key.toLowerCase()
-            if (lowerKey.includes('tags') || lowerKey.includes('permisos') || lowerKey.includes('roles')) {
-                type = 'array_tags'
-            } else {
-                type = 'array_text'
-            }
-        } else if (key.toLowerCase().includes('color') || key.toLowerCase().includes('hex')) {
-            type = 'color_chip'
-        } else if (typeof value === 'number') {
-            type = 'number'
-        } else if (key.toLowerCase().includes('foto') || key.toLowerCase().includes('avatar')) {
-            type = 'avatar'
-        } else if (key.toLowerCase().includes('imagen') || key.toLowerCase().includes('img')) {
-            type = 'image'
-        } else if (key.toLowerCase().includes('capture')) {
-            type = 'capture'
-        } else if (key.toLowerCase().includes('video')) {
-            type = 'video'
-        } else if (
-            value &&
-            typeof value === 'string' &&
-            value.length > 5 &&
-            new Date(value).toString() !== 'Invalid Date' &&
-            !isNaN(new Date(value) as any)
-        ) {
-            type = 'date'
+      } else {
+        const strA = String(aValue || '');
+        const strB = String(bValue || '');
+        if (strA > strB) {
+          comparison = 1;
+        } else if (strA < strB) {
+          comparison = -1;
         }
+      }
+      return this.sortDirection === 'desc' ? comparison * -1 : comparison;
+    });
+  }
 
-        return {
-            name: key,
-            header: key,
-            type: type,
-            isSortable:
-                type !== 'avatar' && type !== 'image' && type !== 'video' && type !== 'capture' && type !== 'array_text' && type !== 'array_tags'
-        }
+  getPages(): number[] {
+    const maxPagesToShow = 5;
+    const pages: number[] = [];
+    let startPage: number;
+    let endPage: number;
+
+    if (this.totalPages <= maxPagesToShow) {
+      startPage = 1;
+      endPage = this.totalPages;
+    } else {
+      startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+      endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+      if (endPage - startPage + 1 < maxPagesToShow) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+      }
     }
 
-    applyFiltersAndPagination(): void {
-        let tempFilteredData = this.data.filter(row => {
-            for (const key of Object.keys(this.filterValues)) {
-                const filterValue = this.filterValues[key].toLowerCase()
-                const rowValue = String(row[key] || '').toLowerCase()
-                if (filterValue && !rowValue.includes(filterValue)) {
-                    return false
-                }
-            }
-            return true
-        })
-        if (this.sortByColumn) {
-            tempFilteredData = this.sortData(tempFilteredData)
-        }
-        this.filteredData = tempFilteredData
-        this.totalPages = Math.ceil(this.filteredData.length / this.itemsPerPage)
-
-        if (this.currentPage > this.totalPages) {
-            this.currentPage = this.totalPages > 0 ? this.totalPages : 1
-        } else if (this.currentPage < 1) {
-            this.currentPage = 1
-        }
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage
-        this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.itemsPerPage)
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
     }
+    return pages;
+  }
 
-    onSort(columnName: string): void {
-        const columnMeta = this.finalColumns.find(c => c.name === columnName)
-        if (columnMeta && columnMeta.isSortable === false) {
-            return
-        }
-        if (this.sortByColumn === columnName) {
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
-        } else {
-            this.sortByColumn = columnName
-            this.sortDirection = 'asc'
-        }
-        this.applyFiltersAndPagination()
+  onView(row: any): void {
+    this.viewRecord.emit(row[this.idField]);
+  }
+
+  onEdit(row: any): void {
+    this.editRecord.emit(row[this.idField]);
+  }
+
+  onBackClick() {
+    this.backRecord.emit();
+  }
+
+  onDelete(row: any): void {
+    this.deleteRecord.emit({ id: row[this.idField] });
+  }
+
+  onFilter(column: string, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.filterValues[column] = target.value;
+    this.currentPage = 1;
+    this.applyFiltersAndPagination();
+  }
+
+  /** OT-020 (CC-131): oculta las acciones de fila cuya llave (btn.permiso) no tiene el usuario; sin llave se muestra */
+  accionesVisibles(acciones: any[] | null | undefined): any[] {
+    return (acciones || []).filter((b: any) => !b?.permiso || this._permisosService.tienePermiso(b.permiso));
+  }
+
+  onNewRecord(): void {
+    this.newRecord.emit();
+  }
+
+  onFileExcelSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.excelUpload.emit(file);
     }
+    event.target.value = '';
+  }
 
-    onItemsPerPageChange(): void {
-        this.currentPage = 1
-        this.applyFiltersAndPagination()
-    }
+  onExcelExport(): void {
+    this.excelExport.emit();
+    const exportData = this.filteredData.map((row) => {
+      const newRow: any = {};
+      this.finalColumns.forEach((col) => {
+        newRow[col.header] = row[col.name];
+      });
+      return newRow;
+    });
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, this.tableTitle || 'Datos');
+    const hoy = new Date();
+    const timestamp = hoy.getTime();
+    const bookName = (this.tableTitle || 'export') + '_' + timestamp + '.xlsx';
+    XLSX.writeFile(wb, bookName);
+  }
 
-    onPageChange(page: number): void {
-        if (page >= 1 && page <= this.totalPages) {
-            this.currentPage = page
-            this.applyFiltersAndPagination()
-        }
-    }
+  onUploadModalClick(): void {
+    this.uploadModalClick.emit();
+  }
 
-    sortData(data: any[]): any[] {
-        const column = this.sortByColumn
-        if (!column) {
-            return data
-        }
-        return [...data].sort((a, b) => {
-            const aValue = a[column]
-            const bValue = b[column]
-            let comparison = 0
+  toggleDetails(row: any): void {
+    this.registroId = this.registroId === row[this.idField] ? null : row[this.idField];
+  }
 
-            const columnType = this.finalColumns.find(c => c.name === column)?.type
-            if (columnType === 'number') {
-                const numA = Number(aValue)
-                const numB = Number(bValue)
-                if (!isNaN(numA) && !isNaN(numB)) {
-                    comparison = numA - numB
-                }
-            } else {
-                const strA = String(aValue || '')
-                const strB = String(bValue || '')
-                if (strA > strB) {
-                    comparison = 1
-                } else if (strA < strB) {
-                    comparison = -1
-                }
-            }
-            return this.sortDirection === 'desc' ? comparison * -1 : comparison
-        })
-    }
+  // 🟢 Emisores universales para botones dinámicos en arreglo
+  emitirAccionPrincipal(accion: string, row: any): void {
+    this.accionPrincipalClick.emit({ accion, row });
+  }
 
-    getPages(): number[] {
-        const maxPagesToShow = 5
-        const pages: number[] = []
-        let startPage: number
-        let endPage: number
+  emitirAccionSubtabla(accion: string, filaSubtabla: any, filaPadre: any): void {
+    this.accionSubtablaClick.emit({ accion, filaSubtabla, filaPadre });
+  }
 
-        if (this.totalPages <= maxPagesToShow) {
-            startPage = 1
-            endPage = this.totalPages
-        } else {
-            startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2))
-            endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1)
-
-            if (endPage - startPage + 1 < maxPagesToShow) {
-                startPage = Math.max(1, endPage - maxPagesToShow + 1)
-            }
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i)
-        }
-        return pages
-    }
-
-    onView(row: any): void {
-        this.viewRecord.emit(row[this.idField])
-    }
-
-    onEdit(row: any): void {
-        this.editRecord.emit(row[this.idField])
-    }
-
-    onBackClick() {
-        this.backRecord.emit()
-    }
-
-    onDelete(row: any): void {
-        this.deleteRecord.emit({ id: row[this.idField] })
-    }
-
-    onFilter(column: string, event: Event): void {
-        const target = event.target as HTMLInputElement
-        this.filterValues[column] = target.value
-        this.currentPage = 1
-        this.applyFiltersAndPagination()
-    }
-
-    /** OT-020 (CC-131): oculta las acciones de fila cuya llave (btn.permiso) no tiene el usuario; sin llave se muestra */
-    accionesVisibles(acciones: any[] | null | undefined): any[] {
-        return (acciones || []).filter((b: any) => !b?.permiso || this._permisosService.tienePermiso(b.permiso));
-    }
-
-    onNewRecord(): void {
-        this.newRecord.emit()
-    }
-
-    onFileExcelSelected(event: any): void {
-        const file: File = event.target.files[0];
-        if (file) {
-            this.excelUpload.emit(file);
-        }
-        event.target.value = '';
-    }
-
-    onExcelExport(): void {
-        this.excelExport.emit()
-        const exportData = this.filteredData.map(row => {
-            const newRow: any = {}
-            this.finalColumns.forEach(col => {
-                newRow[col.header] = row[col.name]
-            })
-            return newRow
-        })
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData)
-        const wb: XLSX.WorkBook = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(wb, ws, this.tableTitle || 'Datos')
-        const hoy = new Date()
-        const timestamp = hoy.getTime()
-        const bookName = (this.tableTitle || 'export') + '_' + timestamp + '.xlsx'
-        XLSX.writeFile(wb, bookName)
-    }
-
-    onUploadModalClick(): void {
-        this.uploadModalClick.emit();
-    }
-
-    toggleDetails(row: any): void {
-        this.registroId = this.registroId === row[this.idField] ? null : row[this.idField]
-    }
-
-    // 🟢 Emisores universales para botones dinámicos en arreglo
-    emitirAccionPrincipal(accion: string, row: any): void {
-        this.accionPrincipalClick.emit({ accion, row });
-    }
-
-    emitirAccionSubtabla(accion: string, filaSubtabla: any, filaPadre: any): void {
-        this.accionSubtablaClick.emit({ accion, filaSubtabla, filaPadre });
-    }
-
-    hexToRgb(hex: any) {
-        if (!hex) return '0, 0, 0'
-        const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
-        hex = hex.replace(shorthandRegex, function (m: any, r: any, g: any, b: any) {
-            return r + r + g + g + b + b
-        })
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0'
-    }
+  hexToRgb(hex: any) {
+    if (!hex) return '0, 0, 0';
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m: any, r: any, g: any, b: any) {
+      return r + r + g + g + b + b;
+    });
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0';
+  }
 }

@@ -16,11 +16,10 @@ import { TiendasComponent } from '../../tiendas/tiendas.component';
 
 @Component({
   selector: 'pp-seccion-app',
-  standalone: true,
   imports: [TranslateModule, IconoComponent, EnlaceComponent, TiendasComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrl: './app.component.scss'
 })
 export class SeccionAppComponent implements AfterViewInit {
   @Input({ required: true }) s!: SeccionPortal;

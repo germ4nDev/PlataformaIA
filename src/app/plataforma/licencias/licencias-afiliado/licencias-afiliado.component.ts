@@ -5,13 +5,12 @@ import type { Api } from 'datatables.net';
 
 @Component({
   selector: 'app-licencias-afiliado',
-  standalone: true,
   imports: [DataTablesModule],
   templateUrl: './licencias-afiliado.component.html',
   styleUrl: './licencias-afiliado.component.scss'
 })
 export class LicenciasAfiliadoComponent implements OnInit, AfterViewInit {
-dtColumnSearchingOptions: object = {};
+  dtColumnSearchingOptions: object = {};
   @ViewChild(DataTableDirective)
   datatableElement!: DataTableDirective;
 

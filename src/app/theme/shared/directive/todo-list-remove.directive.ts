@@ -2,7 +2,8 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[appTodoListRemove]'
+  selector: '[appTodoListRemove]',
+  standalone: false
 })
 export class TodoListRemoveDirective {
   // constructor

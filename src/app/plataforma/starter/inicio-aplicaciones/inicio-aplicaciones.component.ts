@@ -1,13 +1,20 @@
 import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, OnDestroy, OnInit } from '@angular/core'
-import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { RouterModule } from '@angular/router'
-import { Router, ActivatedRoute } from '@angular/router'
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap'
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { RouterModule } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { AuthenticationService, PtlAplicacionesService, PTLRolesAPService, PtlusuariosRolesApService, PtlusuariosScService, UploadFilesService } from 'src/app/theme/shared/service';
+import {
+  AuthenticationService,
+  PtlAplicacionesService,
+  PTLRolesAPService,
+  PtlusuariosRolesApService,
+  PtlusuariosScService,
+  UploadFilesService
+} from 'src/app/theme/shared/service';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
@@ -16,204 +23,210 @@ import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fulls
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
-import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActividades.model'
-import { PTLActividadRoleModel } from 'src/app/theme/shared/_helpers/models/PTLActividadesRoles.model'
-import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
-import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model'
+import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActividades.model';
+import { PTLActividadRoleModel } from 'src/app/theme/shared/_helpers/models/PTLActividadesRoles.model';
+import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
+import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model';
 import { PtlmodulosApService } from '../../../theme/shared/service/ptlmodulos-ap.service';
 import { Subscription } from 'rxjs';
-import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service'
-import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service'
-import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service'
-import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service'
-import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service'
-import { aplicacionesDelDominio } from 'src/app/plataforma/dominios/nucleo'
-import { contextoDeUsuario, rolesYWidgetsDeAplicacion } from 'src/app/plataforma/sesion/nucleo'
+import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.service';
+import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
+import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-roles.service';
+import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service';
+import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
+import { aplicacionesDelDominio } from 'src/app/plataforma/dominios/nucleo';
+import { contextoDeUsuario, rolesYWidgetsDeAplicacion } from 'src/app/plataforma/sesion/nucleo';
 
 @Component({
-    selector: 'app-inicio-aplicaciones',
-    standalone: true,
-    imports: [TranslateModule, NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
-    templateUrl: './inicio-aplicaciones.component.html',
-    styleUrl: './inicio-aplicaciones.component.scss'
+  selector: 'app-inicio-aplicaciones',
+  imports: [
+    TranslateModule,
+    NgbDropdownModule,
+    RouterModule,
+    ColorPickerModule,
+    SharedModule,
+    LanguageSelectorComponent,
+    FullScreenSliderComponent
+  ],
+  templateUrl: './inicio-aplicaciones.component.html',
+  styleUrl: './inicio-aplicaciones.component.scss'
 })
 export class InicioAplicacionesComponent implements OnInit, OnDestroy {
-    subscriptions = new Subscription();
-    aplicacionesSub?: Subscription;
-    aplicaciones: PTLAplicacionModel[] = [];
-    roles: PTLRoleAPModel[] = [];
-    usuariosRoles: PTLUsuarioRoleAPModel[] = [];
-    usuariosSC: PTLUsuarioSCModel[] = [];
-    usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
-    actividades: PTLActividadModel[] = []
-    actividadesRoles: PTLActividadRoleModel[] = []
-    ModulosPQ: PTLModuloPQModel[] = []
-    modulos: PTLModuloAP[] = []
-    public appCode: string = '';
-    retorno: number = 0
-    suscriptor: any;
-    suscImagenes: string = '';
-    logoUrl: string = '';
+  subscriptions = new Subscription();
+  aplicacionesSub?: Subscription;
+  aplicaciones: PTLAplicacionModel[] = [];
+  roles: PTLRoleAPModel[] = [];
+  usuariosRoles: PTLUsuarioRoleAPModel[] = [];
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
+  actividades: PTLActividadModel[] = [];
+  actividadesRoles: PTLActividadRoleModel[] = [];
+  ModulosPQ: PTLModuloPQModel[] = [];
+  modulos: PTLModuloAP[] = [];
+  public appCode: string = '';
+  retorno: number = 0;
+  suscriptor: any;
+  suscImagenes: string = '';
+  logoUrl: string = '';
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private _authenticationService: AuthenticationService,
-        private _aplicacionesService: PtlAplicacionesService,
-        private _modulosService: PtlmodulosApService,
-        private _rolesService: PTLRolesAPService,
-        private _usuariosRolesService: PtlusuariosRolesApService,
-        private _usuariosSCRolesService: PtlusuariosScService,
-        private _widgetsMaestroService: PTLWidgetsMaestroService,
-        private _widgetsRolesService: PtlWidgetsRolesService,
-        private _permisosService: PtlPermisosService,
-        private _localStorageService: LocalStorageService,
-        private _uploadService: UploadFilesService,
-        private _contextoDominio: ContextoDominioService,
-        private _swalService: SwalAlertService
-    ) {
-        console.log('no hay suscriptor suscriptor')
-        this.suscImagenes = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-    }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private _authenticationService: AuthenticationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _modulosService: PtlmodulosApService,
+    private _rolesService: PTLRolesAPService,
+    private _usuariosRolesService: PtlusuariosRolesApService,
+    private _usuariosSCRolesService: PtlusuariosScService,
+    private _widgetsMaestroService: PTLWidgetsMaestroService,
+    private _widgetsRolesService: PtlWidgetsRolesService,
+    private _permisosService: PtlPermisosService,
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService,
+    private _contextoDominio: ContextoDominioService,
+    private _swalService: SwalAlertService
+  ) {
+    console.log('no hay suscriptor suscriptor');
+    this.suscImagenes = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
-    ngOnInit(): void {
-        const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+  ngOnInit(): void {
+    const navSettings = this._localStorageService.getNavSettingsLocalStorage();
 
-        if (!navSettings.suscriptor) {
-            let paqsSuscriptor: any[] = []
-            let modulosPaquete: any[] = []
-            this._localStorageService.removeObject('navsettings');
-            this.suscriptor = this._localStorageService.getObject<any>('suscriptor');
-            const susPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-            paqsSuscriptor = this.suscriptor.paquetesActivos || []
+    if (!navSettings.suscriptor) {
+      let paqsSuscriptor: any[] = [];
+      let modulosPaquete: any[] = [];
+      this._localStorageService.removeObject('navsettings');
+      this.suscriptor = this._localStorageService.getObject<any>('suscriptor');
+      const susPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+      paqsSuscriptor = this.suscriptor.paquetesActivos || [];
 
-            paqsSuscriptor.forEach(paq => {
-                const mods = paq.modulosPaquete || []
-                modulosPaquete.push(...mods)
+      paqsSuscriptor.forEach((paq) => {
+        const mods = paq.modulosPaquete || [];
+        modulosPaquete.push(...mods);
+      });
+
+      let aplicaciones = this._aplicacionesService.getBAplicacionesActuales();
+      this.ModulosPQ = modulosPaquete;
+      this.modulos = this._modulosService.getModulosActuales();
+      this.roles = this._rolesService.getRolesActuales();
+      this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales();
+      this.usuariosSC = this._usuariosSCRolesService.getUsuariosSCActuales();
+      let apps: any[] = [];
+
+      modulosPaquete.forEach((item: any) => {
+        if (item.codigoAplicacion) {
+          const idx = apps.findIndex((x) => x.codigoAplicacion == item.codigoAplicacion);
+          if (idx == -1) {
+            const aplicacion = aplicaciones.find((x) => x.codigoAplicacion == item.codigoAplicacion) || {};
+            const imagen = aplicacion.imagenInicio || 'no-imagen.png';
+            const imagenLogo = aplicacion.imagenLogoB || 'no-imagen.png';
+            aplicacion.imagenLogo = this._uploadService.getFilePath(susPlataforma, 'aplicaciones', imagenLogo) || 'no-image.png';
+            aplicacion.imagenInicio = this._uploadService.getFilePath(this.suscImagenes, 'aplicaciones', imagen);
+            const modsApp = modulosPaquete.filter((x) => x.codigoAplicacion == item.codigoAplicacion);
+
+            modsApp.forEach((mod) => {
+              const modData = this.modulos.find((x) => x.codigoModulo == mod.codigoModulo);
+              const modSubs = this.modulos.filter((x) => x.codigoPadre == mod.codigoModulo);
+              mod.modulo = modData;
+              mod.submodulos = modSubs;
             });
 
-            let aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
-            this.ModulosPQ = modulosPaquete
-            this.modulos = this._modulosService.getModulosActuales()
-            this.roles = this._rolesService.getRolesActuales()
-            this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales()
-            this.usuariosSC = this._usuariosSCRolesService.getUsuariosSCActuales()
-            let apps: any[] = [];
+            aplicacion.modulos = modsApp;
+            apps.push(aplicacion);
+          }
+        }
+      });
 
-            modulosPaquete.forEach((item: any) => {
-                if (item.codigoAplicacion) {
-                    const idx = apps.findIndex(x => x.codigoAplicacion == item.codigoAplicacion)
-                    if (idx == -1) {
-                        const aplicacion = aplicaciones.find(x => x.codigoAplicacion == item.codigoAplicacion) || {}
-                        const imagen = aplicacion.imagenInicio || 'no-imagen.png';
-                        const imagenLogo = aplicacion.imagenLogoB || 'no-imagen.png';
-                        aplicacion.imagenLogo = this._uploadService.getFilePath(susPlataforma, 'aplicaciones', imagenLogo) || 'no-image.png';
-                        aplicacion.imagenInicio = this._uploadService.getFilePath(this.suscImagenes, 'aplicaciones', imagen)
-                        const modsApp = modulosPaquete.filter(x => x.codigoAplicacion == item.codigoAplicacion);
+      // Multidominio (OT-012): en el dominio de una aplicación solo se ofrece esa, y se entra directo
+      const ctx = this._contextoDominio.contexto;
+      apps = aplicacionesDelDominio(ctx, apps);
 
-                        modsApp.forEach(mod => {
-                            const modData = this.modulos.find(x => x.codigoModulo == mod.codigoModulo)
-                            const modSubs = this.modulos.filter(x => x.codigoPadre == mod.codigoModulo)
-                            mod.modulo = modData
-                            mod.submodulos = modSubs
-                        });
+      this._localStorageService.setObject('aplicaciones', apps);
+      this.aplicaciones = apps;
 
-                        aplicacion.modulos = modsApp
-                        apps.push(aplicacion)
-                    }
-                }
-            });
-
-            // Multidominio (OT-012): en el dominio de una aplicación solo se ofrece esa, y se entra directo
-            const ctx = this._contextoDominio.contexto;
-            apps = aplicacionesDelDominio(ctx, apps);
-
-            this._localStorageService.setObject('aplicaciones', apps);
-            this.aplicaciones = apps;
-
-            if (ctx.tipo === 'aplicacion') {
-                if (apps.length === 1) {
-                    this.ingresarPlataforma(apps[0]);
-                } else {
-                    this._swalService.getAlertError(`Este suscriptor no tiene ${ctx.marca.nombre || 'esta aplicación'} en sus paquetes.`);
-                    this.router.navigate(['/starter/inicio-suscriptores']);
-                }
-            }
+      if (ctx.tipo === 'aplicacion') {
+        if (apps.length === 1) {
+          this.ingresarPlataforma(apps[0]);
         } else {
-            this._localStorageService.setNavSettingsLocalStorage(navSettings);
-            this.aplicaciones = navSettings.aplicaciones as PTLAplicacionModel[];
-
-            if (this.aplicaciones.length === 1) {
-                this.ingresarPlataforma(this.aplicaciones[0]);
-            }
+          this._swalService.getAlertError(`Este suscriptor no tiene ${ctx.marca.nombre || 'esta aplicación'} en sus paquetes.`);
+          this.router.navigate(['/starter/inicio-suscriptores']);
         }
+      }
+    } else {
+      this._localStorageService.setNavSettingsLocalStorage(navSettings);
+      this.aplicaciones = navSettings.aplicaciones as PTLAplicacionModel[];
 
+      if (this.aplicaciones.length === 1) {
+        this.ingresarPlataforma(this.aplicaciones[0]);
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  ingresarPlataforma(app: PTLAplicacionModel) {
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    const apps = this._localStorageService.getObject<any>('aplicaciones');
+    const suscriptor = this._localStorageService.getObject<any>('suscriptor');
+    const aplicaciones = this._localStorageService.getObject<any>('aplicaciones');
+
+    // Roles del usuario en la aplicación y sus widgets: pieza común (plataforma/sesion/nucleo, CC-109)
+    const { roles, widgets } = rolesYWidgetsDeAplicacion({
+      codigoUsuario: current.usuario.codigoUsuario,
+      codigoAplicacion: app.codigoAplicacion,
+      usuariosSC: this.usuariosSC,
+      roles: this.roles,
+      usuariosRoles: this.usuariosRoles,
+      widgetsMaestro: this._widgetsMaestroService.getWidgetsActuales() || [],
+      widgetsRoles: this._widgetsRolesService.getWidgetRolesActuales() || []
+    });
+
+    current.usuario.roles = roles;
+    current.usuario.widgets = widgets;
+
+    if (current.usuario.layout && typeof current.usuario.layout === 'string') {
+      try {
+        current.usuario.layout = JSON.parse(current.usuario.layout);
+      } catch (e) {
+        console.warn('⚠️ No se pudo parsear el layout antiguo. Se asignó un arreglo vacío.');
+        current.usuario.layout = [];
+      }
     }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe()
-    }
+    this._localStorageService.setCurrentUserLocalStorage(current);
+    const contexto = contextoDeUsuario(current);
 
-    ingresarPlataforma(app: PTLAplicacionModel) {
-        const current = this._localStorageService.getCurrentUserLocalStorage();
-        const apps = this._localStorageService.getObject<any>('aplicaciones');
-        const suscriptor = this._localStorageService.getObject<any>('suscriptor');
-        const aplicaciones = this._localStorageService.getObject<any>('aplicaciones');
+    const navsettings = {
+      aplicacion: app,
+      suite: {},
+      modulo: {},
+      contexto: contexto,
+      suscriptor: suscriptor,
+      aplicaciones: aplicaciones
+    };
+    this._localStorageService.setNavSettingsLocalStorage(navsettings);
 
-        // Roles del usuario en la aplicación y sus widgets: pieza común (plataforma/sesion/nucleo, CC-109)
-        const { roles, widgets } = rolesYWidgetsDeAplicacion({
-            codigoUsuario: current.usuario.codigoUsuario,
-            codigoAplicacion: app.codigoAplicacion,
-            usuariosSC: this.usuariosSC,
-            roles: this.roles,
-            usuariosRoles: this.usuariosRoles,
-            widgetsMaestro: this._widgetsMaestroService.getWidgetsActuales() || [],
-            widgetsRoles: this._widgetsRolesService.getWidgetRolesActuales() || []
-        });
+    this._permisosService.inicializarPermisosPorDefecto().subscribe({
+      next: (permisos) => {
+        this._localStorageService.removeObject('suscriptor');
+        this._localStorageService.removeObject('contexto');
+        this._localStorageService.removeObject('aplicaciones');
 
-        current.usuario.roles = roles;
-        current.usuario.widgets = widgets;
+        this.router.navigate([`/starter/inicio-suites`]);
+      },
+      error: (err) => {
+        console.error('❌ Error inicializando permisos', err);
+      }
+    });
+  }
 
-        if (current.usuario.layout && typeof current.usuario.layout === 'string') {
-            try {
-                current.usuario.layout = JSON.parse(current.usuario.layout);
-            } catch (e) {
-                console.warn('⚠️ No se pudo parsear el layout antiguo. Se asignó un arreglo vacío.');
-                current.usuario.layout = [];
-            }
-        }
-
-        this._localStorageService.setCurrentUserLocalStorage(current);
-        const contexto = contextoDeUsuario(current);
-
-        const navsettings = {
-            aplicacion: app,
-            suite: {},
-            modulo: {},
-            contexto: contexto,
-            suscriptor: suscriptor,
-            aplicaciones: aplicaciones
-        };
-        this._localStorageService.setNavSettingsLocalStorage(navsettings);
-
-        this._permisosService.inicializarPermisosPorDefecto().subscribe({
-            next: (permisos) => {
-                this._localStorageService.removeObject('suscriptor');
-                this._localStorageService.removeObject('contexto');
-                this._localStorageService.removeObject('aplicaciones');
-
-                this.router.navigate([`/starter/inicio-suites`]);
-            },
-            error: (err) => {
-                console.error('❌ Error inicializando permisos', err);
-            }
-        });
-    }
-
-    regresar() {
-        this._localStorageService.removeObject('suscriptor')
-        this._localStorageService.removeObject('aplicaciones')
-        this._authenticationService.logout();
-        this.router.navigate(['autenticacion/login']);
-    }
+  regresar() {
+    this._localStorageService.removeObject('suscriptor');
+    this._localStorageService.removeObject('aplicaciones');
+    this._authenticationService.logout();
+    this.router.navigate(['autenticacion/login']);
+  }
 }

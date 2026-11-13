@@ -10,18 +10,22 @@ import { EnlaceComponent } from '../../enlace/enlace.component';
 
 @Component({
   selector: 'pp-seccion-texto',
-  standalone: true,
   imports: [TranslateModule, EnlaceComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './texto.component.html',
-  styleUrl: './texto.component.scss',
+  styleUrl: './texto.component.scss'
 })
 export class SeccionTextoComponent {
   parrafos: string[] = [];
   private seccion!: SeccionPortal;
-  get s(): SeccionPortal { return this.seccion; }
+  get s(): SeccionPortal {
+    return this.seccion;
+  }
   @Input({ required: true }) set s(v: SeccionPortal) {
     this.seccion = v;
-    this.parrafos = String(v?.cuerpo || '').split(/\n+/).map((x) => x.trim()).filter(Boolean);
+    this.parrafos = String(v?.cuerpo || '')
+      .split(/\n+/)
+      .map((x) => x.trim())
+      .filter(Boolean);
   }
 }

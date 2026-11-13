@@ -228,7 +228,6 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 //         );
 //     }
 
-
 //     columnasRegistros: ColumnMetadata[] = [
 //         {
 //             name: 'nomSuscriptor',
@@ -397,304 +396,314 @@ import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import {
-    NavigationService,
-    PtlusuariosRolesApService,
-    PTLUsuariosService,
-    PtlusuariosScService,
-    LocalStorageService,
-    PTLSuscriptoresService,
-    PTLRolesAPService,
-    SwalAlertService,
-    PtllogActividadesService
+  NavigationService,
+  PtlusuariosRolesApService,
+  PTLUsuariosService,
+  PtlusuariosScService,
+  LocalStorageService,
+  PTLSuscriptoresService,
+  PTLRolesAPService,
+  SwalAlertService,
+  PtllogActividadesService
 } from 'src/app/theme/shared/service';
-import { TableDataComponent } from "src/app/theme/shared/components/table-data/table-data.component";
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
-    selector: 'app-usuarios-role',
-    standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
-    templateUrl: './usuarios-roles.component.html',
-    styleUrl: './usuarios-roles.component.scss'
+  selector: 'app-usuarios-role',
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
+  templateUrl: './usuarios-roles.component.html',
+  styleUrl: './usuarios-roles.component.scss'
 })
 export class UsuariosRolesComponent implements OnInit {
-    @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-    rolActual: PTLRoleAPModel = new PTLRoleAPModel();
-    codigoRoleBase: string = '';
-    tituloPagina: string = '';
+  rolActual: PTLRoleAPModel = new PTLRoleAPModel();
+  codigoRoleBase: string = '';
+  tituloPagina: string = '';
 
-    menuItems$!: Observable<NavigationItem[]>;
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
-    subscriptions = new Subscription();
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  subscriptions = new Subscription();
 
-    filtroEstadoSubject = new BehaviorSubject<string>('todos');
-    filtroSuscriptorSubject = new BehaviorSubject<string>('todos');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  filtroSuscriptorSubject = new BehaviorSubject<string>('todos');
 
-    registrosTransformados$: Observable<PTLUsuarioRoleAPModel[]> = of([]);
-    registrosFiltrado$: Observable<PTLUsuarioRoleAPModel[]> = of([]);
+  registrosTransformados$: Observable<PTLUsuarioRoleAPModel[]> = of([]);
+  registrosFiltrado$: Observable<PTLUsuarioRoleAPModel[]> = of([]);
 
-    roles: PTLRoleAPModel[] = [];
-    usuariosRoles: PTLUsuarioRoleAPModel[] = [];
-    usuarios: PTLUsuarioModel[] = [];
-    usuariosSC: PTLUsuarioSCModel[] = [];
-    suscriptores: PTLSuscriptorModel[] = [];
+  roles: PTLRoleAPModel[] = [];
+  usuariosRoles: PTLUsuarioRoleAPModel[] = [];
+  usuarios: PTLUsuarioModel[] = [];
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  suscriptores: PTLSuscriptorModel[] = [];
 
-    colorOpcion1 = '#3db120'
-    letraOpcion1 = 'I'
+  colorOpcion1 = '#3db120';
+  letraOpcion1 = 'I';
 
-    constructor(
-        private router: Router,
-        private translate: TranslateService,
-        private _navigationService: NavigationService,
-        private _usuariosRolesService: PtlusuariosRolesApService,
-        private _usuariosService: PTLUsuariosService,
-        private _usuariosSCService: PtlusuariosScService,
-        private _rolesAPService: PTLRolesAPService,
-        private _suscriptoresService: PTLSuscriptoresService,
-        private _swalAlertService: SwalAlertService,
-        private _logActividadesService: PtllogActividadesService,
-        private _localStorageService: LocalStorageService
-    ) {
-        // En este componente, regId representa el ID del ROL, no del usuario
-        this.codigoRoleBase = this._localStorageService.getObject<string>('regId') || '';
-    }
+  constructor(
+    private router: Router,
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _usuariosRolesService: PtlusuariosRolesApService,
+    private _usuariosService: PTLUsuariosService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _rolesAPService: PTLRolesAPService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _swalAlertService: SwalAlertService,
+    private _logActividadesService: PtllogActividadesService,
+    private _localStorageService: LocalStorageService
+  ) {
+    // En este componente, regId representa el ID del ROL, no del usuario
+    this.codigoRoleBase = this._localStorageService.getObject<string>('regId') || '';
+  }
 
-    ngOnInit() {
-        this._navigationService.getNavigationItems();
-        this.menuItems$ = this._navigationService.menuItems$;
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
 
-        this.roles = this._rolesAPService.getRolesActuales();
-        this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales();
-        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales();
-        this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales();
-        this.usuarios = this._usuariosService.getUsuariosActuales();
+    this.roles = this._rolesAPService.getRolesActuales();
+    this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales();
+    this.suscriptores = this._suscriptoresService.getSuscriptoresActuales();
+    this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales();
+    this.usuarios = this._usuariosService.getUsuariosActuales();
 
-        this.rolActual = this.roles.find(x => x.codigoRole === this.codigoRoleBase) || new PTLRoleAPModel();
-        this.tituloPagina = `Usuarios con el Rol: ${this.rolActual.nombreRole || 'Desconocido'}`;
+    this.rolActual = this.roles.find((x) => x.codigoRole === this.codigoRoleBase) || new PTLRoleAPModel();
+    this.tituloPagina = `Usuarios con el Rol: ${this.rolActual.nombreRole || 'Desconocido'}`;
 
-        setTimeout(() => { this.setupUsuariosStream(); }, 100);
+    setTimeout(() => {
+      this.setupUsuariosStream();
+    }, 100);
 
-        this.subscriptions.add(
-            this._usuariosRolesService.cargarRegistros().subscribe()
-        );
-    }
+    this.subscriptions.add(this._usuariosRolesService.cargarRegistros().subscribe());
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-    setupUsuariosStream(): void {
-        this.registrosTransformados$ = this._usuariosRolesService._usuariosRoles$.pipe(
-            switchMap((usuariosRoles: PTLUsuarioRoleAPModel[]) => {
-                if (!usuariosRoles || usuariosRoles.length === 0) return of([]);
+  setupUsuariosStream(): void {
+    this.registrosTransformados$ = this._usuariosRolesService._usuariosRoles$.pipe(
+      switchMap((usuariosRoles: PTLUsuarioRoleAPModel[]) => {
+        if (!usuariosRoles || usuariosRoles.length === 0) return of([]);
 
-                // 1. Filtrar la tabla puente SOLO por el rol actual
-                const usuariosDelRol = usuariosRoles.filter(ur => ur.codigoRole === this.codigoRoleBase);
+        // 1. Filtrar la tabla puente SOLO por el rol actual
+        const usuariosDelRol = usuariosRoles.filter((ur) => ur.codigoRole === this.codigoRoleBase);
 
-                // 2. Mapear los nombres de los usuarios y suscriptores
-                const transformedUsers = usuariosDelRol.map((ur: any) => {
-                    ur.nomEstado = ur.estadoUsuarioRole ? 'Activo' : 'Inactivo';
+        // 2. Mapear los nombres de los usuarios y suscriptores
+        const transformedUsers = usuariosDelRol.map((ur: any) => {
+          ur.nomEstado = ur.estadoUsuarioRole ? 'Activo' : 'Inactivo';
 
-                    // Formatear fecha para visualización
-                    ur.fechaCreacionFormateada = ur.fechaCreacion ? new Date(ur.fechaCreacion).toLocaleDateString() : 'N/A';
+          // Formatear fecha para visualización
+          ur.fechaCreacionFormateada = ur.fechaCreacion ? new Date(ur.fechaCreacion).toLocaleDateString() : 'N/A';
 
-                    const relacionSC = this.usuariosSC.find(x => x.codigoUsuarioSC === ur.codigoUsuarioSC);
+          const relacionSC = this.usuariosSC.find((x) => x.codigoUsuarioSC === ur.codigoUsuarioSC);
 
-                    const usuarioBase = relacionSC ? this.usuarios.find(u => u.codigoUsuario === relacionSC.codigoUsuario) : null;
-                    ur.nomUsuario = usuarioBase ? usuarioBase.nombreUsuario : 'Usuario No Encontrado';
+          const usuarioBase = relacionSC ? this.usuarios.find((u) => u.codigoUsuario === relacionSC.codigoUsuario) : null;
+          ur.nomUsuario = usuarioBase ? usuarioBase.nombreUsuario : 'Usuario No Encontrado';
 
-                    const suscriptor = relacionSC ? this.suscriptores.find(s => s.codigoSuscriptor === relacionSC.codigoSuscriptor) : null;
-                    ur.nomSuscriptor = suscriptor ? suscriptor.nombreSuscriptor : 'Plataforma (Global)';
-                    ur.codigoSuscriptor = suscriptor ? suscriptor.codigoSuscriptor : 'plataforma'; // Para el filtro
+          const suscriptor = relacionSC ? this.suscriptores.find((s) => s.codigoSuscriptor === relacionSC.codigoSuscriptor) : null;
+          ur.nomSuscriptor = suscriptor ? suscriptor.nombreSuscriptor : 'Plataforma (Global)';
+          ur.codigoSuscriptor = suscriptor ? suscriptor.codigoSuscriptor : 'plataforma'; // Para el filtro
 
-                    return {
-                        ...ur,
-                        '_acciones': [
-                            { accion: 'INACTIVAR', permiso: 'ACT_USUSC_ROLES', letra: 'I', color: '#3db120', tooltip: (this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')) }
-                        ],
-                    } as PTLUsuarioRoleAPModel;
-                });
-
-                return of(transformedUsers);
-            }),
-            catchError(err => {
-                console.error('Error en el stream de usuarios:', err);
-                return of([]);
-            })
-        );
-
-        this.registrosFiltrado$ = combineLatest([
-            this.registrosTransformados$.pipe(startWith([])),
-            this.filtroEstadoSubject,
-            this.filtroSuscriptorSubject
-        ]).pipe(
-            map(([registros, estado, suscriptor]) => {
-                let filtrados = registros;
-
-                if (estado !== 'todos') {
-                    const estadoBool = estado === 'true';
-                    filtrados = filtrados.filter(reg => reg.estadoUsuarioRole === estadoBool);
-                }
-                if (suscriptor !== 'todos') {
-                    filtrados = filtrados.filter((reg: any) => reg.codigoSuscriptor === suscriptor);
-                }
-
-                return filtrados;
-            })
-        );
-    }
-
-    columnasRegistros: ColumnMetadata[] = [
-        { name: 'nomUsuario', header: 'USUARIOS.USUARIOS_ROLES.USERNAME', type: 'text' },
-        { name: 'nomSuscriptor', header: 'USUARIOS.USUARIOS_ROLES.ASSIGNED_SUBSCRIBER', type: 'text' },
-        { name: 'fechaCreacionFormateada', header: 'USUARIOS.USUARIOS_ROLES.ASSIGNMENT_DATE', type: 'text' },
-        { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
-    ];
-
-    columnasDetailRegistros: ColumnMetadata[] = [
-        {
-            name: 'nomAplicacion',
-            header: 'COMMON.APPLICATION',
-            type: 'text'
-        },
-        {
-            name: 'nomSuite',
-            header: 'COMMON.SUITE',
-            type: 'text'
-        }
-    ]
-
-    onFiltroEstadoChangeClick(evento: any): void {
-        this.filtroEstadoSubject.next(evento.target.value);
-    }
-
-    onFiltroSuscriptorChangeClick(evento: any): void {
-        this.filtroSuscriptorSubject.next(evento.target.value);
-    }
-
-    OnNuevoRegistroClick() {
-        this._localStorageService.setObject('regId', this.codigoRoleBase);
-        this.router.navigate(['usuarios/gestion-usuarios-role'])
-    }
-
-    OnRegresarClick(evento: any) {
-        this._localStorageService.removeObject('regId');
-        this.router.navigate(['usuarios/roles'])
-    }
-
-    OnEliminarRegistroClick(id: any) {
-        this._swalAlertService.getAlertQuestionRequest(
-            this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE'),
-            this.translate.instant('COMMON.ARE_YOU_SURE'),
-            this.translate.instant('COMMON.DELETE'),
-            this.translate.instant('COMMON.CANCEL')
-        ).subscribe(result => {
-            if (result) {
-                this._usuariosRolesService.deleteTodosUsuarioRole(id.id).subscribe({
-                    next: (resp: any) => {
-                        if (resp.ok) {
-                            this.setupUsuariosStream();
-                            this._swalAlertService.getAlertSuccess(traducir('USUARIOS.USUARIOS_ROLES.RELATION_DELETED_SUCCESSFULLY'));
-                        }
-                    },
-                    error: (err: any) => {
-                        this._swalAlertService.getAlertError(traducir('USUARIOS.USUARIOS_ROLES.COULD_NOT_DELETE_RELATION'));
-                    }
-                });
-            }
+          return {
+            ...ur,
+            _acciones: [
+              {
+                accion: 'INACTIVAR',
+                permiso: 'ACT_USUSC_ROLES',
+                letra: 'I',
+                color: '#3db120',
+                tooltip: this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE')
+              }
+            ]
+          } as PTLUsuarioRoleAPModel;
         });
-    }
 
-    onAccionPrincipal(evento: { accion: string, row: any }) {
-        const { accion, row } = evento;
-        const id = row.codigoUsuarioRole || row.id;
+        return of(transformedUsers);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de usuarios:', err);
+        return of([]);
+      })
+    );
 
-        console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
+    this.registrosFiltrado$ = combineLatest([
+      this.registrosTransformados$.pipe(startWith([])),
+      this.filtroEstadoSubject,
+      this.filtroSuscriptorSubject
+    ]).pipe(
+      map(([registros, estado, suscriptor]) => {
+        let filtrados = registros;
 
-        switch (accion) {
-            case 'INACTIVAR':
-                this._swalAlertService.getAlertQuestionRequest(
-                    this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
-                    this.translate.instant('USUARIOS.USUARIOS_ROLES.CHANGE_USER_ROLE_STATUS'),
-                    this.translate.instant('COMMON.CHANGE_STATUS'),
-                    this.translate.instant('COMMON.CANCEL')
-                ).subscribe(result => {
-                    if (result) {
-                        console.log('inactivar usuario codigo', id);
-                        const value = id;
-                        console.log('opcion 1 click', value);
-                        const usuRole = this.usuariosRoles.find(x => x.codigoUsuarioRole == value) || {}
-                        usuRole.estadoUsuarioRole = usuRole?.estadoUsuarioRole ? false : true;
-                        usuRole.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-                        usuRole.fechaCreacion = new Date().toISOString();
-                        console.log('opcion 1 usuRole modificaar', usuRole);
-
-                        this._usuariosRolesService.putModificarRegistro(usuRole).subscribe({
-                            next: (resp: any) => {
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this.setupUsuariosStream()
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje)
-                            },
-                            error: (err: any) => {
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
-                                }
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
-                                console.error('Error eliminando', err)
-                            }
-                        })
-
-                    }
-                });
-                break;
-            default:
-                console.warn(`Acción no reconocida: ${accion}`);
-                break;
+        if (estado !== 'todos') {
+          const estadoBool = estado === 'true';
+          filtrados = filtrados.filter((reg) => reg.estadoUsuarioRole === estadoBool);
         }
+        if (suscriptor !== 'todos') {
+          filtrados = filtrados.filter((reg: any) => reg.codigoSuscriptor === suscriptor);
+        }
+
+        return filtrados;
+      })
+    );
+  }
+
+  columnasRegistros: ColumnMetadata[] = [
+    { name: 'nomUsuario', header: 'USUARIOS.USUARIOS_ROLES.USERNAME', type: 'text' },
+    { name: 'nomSuscriptor', header: 'USUARIOS.USUARIOS_ROLES.ASSIGNED_SUBSCRIBER', type: 'text' },
+    { name: 'fechaCreacionFormateada', header: 'USUARIOS.USUARIOS_ROLES.ASSIGNMENT_DATE', type: 'text' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'estado' }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'nomAplicacion',
+      header: 'COMMON.APPLICATION',
+      type: 'text'
+    },
+    {
+      name: 'nomSuite',
+      header: 'COMMON.SUITE',
+      type: 'text'
     }
+  ];
 
-    // OnOption1Click(id: any) {
-    //     const value = id;
-    //     console.log('opcion 1 click', value);
-    //     const usuRole = this.usuariosRoles.find(x => x.codigoUsuarioRole == value) || {}
-    //     usuRole.estadoUsuarioRole = usuRole?.estadoUsuarioRole ? false : true;
-    //     usuRole.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-    //     usuRole.fechaCreacion = new Date().toISOString();
-    //     console.log('opcion 1 usuRole modificaar', usuRole);
+  onFiltroEstadoChangeClick(evento: any): void {
+    this.filtroEstadoSubject.next(evento.target.value);
+  }
 
-    //     this._usuariosRolesService.putModificarRegistro(usuRole).subscribe({
-    //         next: (resp: any) => {
-    //             const logData = {
-    //                 codigoTipoLog: '',
-    //                 codigoRespuesta: '201',
-    //                 descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
-    //             }
-    //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //             this.setupUsuariosStream()
-    //             this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje)
-    //         },
-    //         error: (err: any) => {
-    //             const logData = {
-    //                 codigoTipoLog: '',
-    //                 codigoRespuesta: '201',
-    //                 descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
-    //             }
-    //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-    //             this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
-    //             console.error('Error eliminando', err)
-    //         }
-    //     })
-    // }
+  onFiltroSuscriptorChangeClick(evento: any): void {
+    this.filtroSuscriptorSubject.next(evento.target.value);
+  }
 
-    toggleNav(): void {
-        this.toggleSidebar.emit();
+  OnNuevoRegistroClick() {
+    this._localStorageService.setObject('regId', this.codigoRoleBase);
+    this.router.navigate(['usuarios/gestion-usuarios-role']);
+  }
+
+  OnRegresarClick(evento: any) {
+    this._localStorageService.removeObject('regId');
+    this.router.navigate(['usuarios/roles']);
+  }
+
+  OnEliminarRegistroClick(id: any) {
+    this._swalAlertService
+      .getAlertQuestionRequest(
+        this.translate.instant('COMMON.WILL_DELETE_ACTIVITY_YOU_WONT_BE'),
+        this.translate.instant('COMMON.ARE_YOU_SURE'),
+        this.translate.instant('COMMON.DELETE'),
+        this.translate.instant('COMMON.CANCEL')
+      )
+      .subscribe((result) => {
+        if (result) {
+          this._usuariosRolesService.deleteTodosUsuarioRole(id.id).subscribe({
+            next: (resp: any) => {
+              if (resp.ok) {
+                this.setupUsuariosStream();
+                this._swalAlertService.getAlertSuccess(traducir('USUARIOS.USUARIOS_ROLES.RELATION_DELETED_SUCCESSFULLY'));
+              }
+            },
+            error: (err: any) => {
+              this._swalAlertService.getAlertError(traducir('USUARIOS.USUARIOS_ROLES.COULD_NOT_DELETE_RELATION'));
+            }
+          });
+        }
+      });
+  }
+
+  onAccionPrincipal(evento: { accion: string; row: any }) {
+    const { accion, row } = evento;
+    const id = row.codigoUsuarioRole || row.id;
+
+    console.log(`Acción ejecutada: [${accion}] sobre el registro ID:`, id);
+
+    switch (accion) {
+      case 'INACTIVAR':
+        this._swalAlertService
+          .getAlertQuestionRequest(
+            this.translate.instant('COMMON.ACTIVATE_OR_DEACTIVATE'),
+            this.translate.instant('USUARIOS.USUARIOS_ROLES.CHANGE_USER_ROLE_STATUS'),
+            this.translate.instant('COMMON.CHANGE_STATUS'),
+            this.translate.instant('COMMON.CANCEL')
+          )
+          .subscribe((result) => {
+            if (result) {
+              console.log('inactivar usuario codigo', id);
+              const value = id;
+              console.log('opcion 1 click', value);
+              const usuRole = this.usuariosRoles.find((x) => x.codigoUsuarioRole == value) || {};
+              usuRole.estadoUsuarioRole = usuRole?.estadoUsuarioRole ? false : true;
+              usuRole.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+              usuRole.fechaCreacion = new Date().toISOString();
+              console.log('opcion 1 usuRole modificaar', usuRole);
+
+              this._usuariosRolesService.putModificarRegistro(usuRole).subscribe({
+                next: (resp: any) => {
+                  const logData = {
+                    codigoTipoLog: '',
+                    codigoRespuesta: '201',
+                    descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
+                  };
+                  this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                  this.setupUsuariosStream();
+                  this._swalAlertService.getAlertSuccess(
+                    this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
+                  );
+                },
+                error: (err: any) => {
+                  const logData = {
+                    codigoTipoLog: '',
+                    codigoRespuesta: '201',
+                    descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
+                  };
+                  this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                  this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje);
+                  console.error('Error eliminando', err);
+                }
+              });
+            }
+          });
+        break;
+      default:
+        console.warn(`Acción no reconocida: ${accion}`);
+        break;
     }
+  }
+
+  // OnOption1Click(id: any) {
+  //     const value = id;
+  //     console.log('opcion 1 click', value);
+  //     const usuRole = this.usuariosRoles.find(x => x.codigoUsuarioRole == value) || {}
+  //     usuRole.estadoUsuarioRole = usuRole?.estadoUsuarioRole ? false : true;
+  //     usuRole.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+  //     usuRole.fechaCreacion = new Date().toISOString();
+  //     console.log('opcion 1 usuRole modificaar', usuRole);
+
+  //     this._usuariosRolesService.putModificarRegistro(usuRole).subscribe({
+  //         next: (resp: any) => {
+  //             const logData = {
+  //                 codigoTipoLog: '',
+  //                 codigoRespuesta: '201',
+  //                 descripcionLog: this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje
+  //             }
+  //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+  //             this.setupUsuariosStream()
+  //             this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.ROLE_WAS_DELETED_SUCCESSFULLY') + ' ' + resp.mensaje)
+  //         },
+  //         error: (err: any) => {
+  //             const logData = {
+  //                 codigoTipoLog: '',
+  //                 codigoRespuesta: '201',
+  //                 descripcionLog: this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje
+  //             }
+  //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+  //             this._swalAlertService.getAlertSuccess(this.translate.instant('COMMON.COULD_NOT_DELETE_ROLE') + ' ' + err.mensaje)
+  //             console.error('Error eliminando', err)
+  //         }
+  //     })
+  // }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

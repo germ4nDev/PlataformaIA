@@ -5,13 +5,12 @@ import type { Api } from 'datatables.net';
 
 @Component({
   selector: 'app-estadisticas',
-  standalone: true,
   imports: [DataTablesModule],
   templateUrl: './estadisticas.component.html',
   styleUrl: './estadisticas.component.scss'
 })
-export class EstadisticasComponent implements OnInit, AfterViewInit{
-dtColumnSearchingOptions: object = {};
+export class EstadisticasComponent implements OnInit, AfterViewInit {
+  dtColumnSearchingOptions: object = {};
   @ViewChild(DataTableDirective)
   datatableElement!: DataTableDirective;
 

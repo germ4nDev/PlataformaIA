@@ -6,57 +6,55 @@ import { DashboardPlataformaService } from '../../../../../theme/shared/service/
 import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-shell/widget-shell.component';
 
 @Component({
-    selector: 'app-wdg-kpi-aplicaciones',
-    standalone: true,
-    imports: [TranslateModule, CommonModule, WidgetShellComponent],
-    templateUrl: './wdg-kpi-aplicaciones.component.html',
-    // Opcional, pero recomendado si necesitas estilos específicos para este KPI:
-    styleUrls: ['./wdg-kpi-aplicaciones.component.scss']
+  selector: 'app-wdg-kpi-aplicaciones',
+  imports: [TranslateModule, CommonModule, WidgetShellComponent],
+  templateUrl: './wdg-kpi-aplicaciones.component.html',
+  // Opcional, pero recomendado si necesitas estilos específicos para este KPI:
+  styleUrls: ['./wdg-kpi-aplicaciones.component.scss']
 })
 export class WdgKpiAplicacionesComponent implements OnInit, OnDestroy {
+  // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa y el estado de enfoque
+  @Input() widgetConfig: any;
+  @Input() isEnfoque: boolean = false;
 
-    // 🟢 NUEVO ESTÁNDAR: Recibimos la config completa y el estado de enfoque
-    @Input() widgetConfig: any;
-    @Input() isEnfoque: boolean = false;
+  public isLoading: boolean = true;
+  public total: number = 0;
+  private dataSub!: Subscription;
 
-    public isLoading: boolean = true;
-    public total: number = 0;
-    private dataSub!: Subscription;
+  constructor(
+    private _dashboardService: DashboardPlataformaService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-    constructor(
-        private _dashboardService: DashboardPlataformaService,
-        private cdr: ChangeDetectorRef
-    ) { }
+  ngOnInit() {
+    this.cargarDatos();
+  }
 
-    ngOnInit() {
-        this.cargarDatos();
+  cargarDatos() {
+    this.isLoading = true;
+
+    this.dataSub = this._dashboardService.getKpiTotales().subscribe({
+      next: (res: any) => {
+        this.total = res?.totalAplicaciones || 0;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error KPI Aplicaciones:', err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // 🟢 NUEVO: Función para comunicar el enfoque
+  maximizarDesdeShell() {
+    if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
+      (this._dashboardService as any).abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PLAT_KPI_APLICACIONES', { total: this.total });
     }
+  }
 
-    cargarDatos() {
-        this.isLoading = true;
-
-        this.dataSub = this._dashboardService.getKpiTotales().subscribe({
-            next: (res: any) => {
-                this.total = res?.totalAplicaciones || 0;
-                this.isLoading = false;
-                this.cdr.detectChanges();
-            },
-            error: (err) => {
-                console.error('Error KPI Aplicaciones:', err);
-                this.isLoading = false;
-                this.cdr.detectChanges();
-            }
-        });
-    }
-
-    // 🟢 NUEVO: Función para comunicar el enfoque
-    maximizarDesdeShell() {
-        if (typeof (this._dashboardService as any).abrirModoEnfoque === 'function') {
-            (this._dashboardService as any).abrirModoEnfoque(this.widgetConfig?.type || 'WDG_PLAT_KPI_APLICACIONES', { total: this.total });
-        }
-    }
-
-    ngOnDestroy() {
-        if (this.dataSub) this.dataSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    if (this.dataSub) this.dataSub.unsubscribe();
+  }
 }

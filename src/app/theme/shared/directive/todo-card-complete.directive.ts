@@ -2,7 +2,8 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[appTodoCardComplete]'
+  selector: '[appTodoCardComplete]',
+  standalone: false
 })
 export class TodoCardCompleteDirective {
   // constructor

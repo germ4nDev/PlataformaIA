@@ -7,109 +7,107 @@ import * as XLSX from 'xlsx';
 import { SwalAlertService } from '../../service/swal-alert.service';
 
 @Component({
-    selector: 'app-excel-uploader',
-    standalone: true,
-    imports: [TranslateModule, CommonModule],
-    templateUrl: './excel-loader.component.html',
-    styleUrls: ['./excel-loader.component.scss'],
+  selector: 'app-excel-uploader',
+  imports: [TranslateModule, CommonModule],
+  templateUrl: './excel-loader.component.html',
+  styleUrls: ['./excel-loader.component.scss']
 })
 export class ExcelUploaderComponent {
-    @Input() apiUrl!: string; // URL donde se hará el POST
-    @Input() columnsMap!: { [key: string]: string };
-    @Input() extraData: any = {};
+  @Input() apiUrl!: string; // URL donde se hará el POST
+  @Input() columnsMap!: { [key: string]: string };
+  @Input() extraData: any = {};
 
-    archivoSeleccionado: File | null = null;
+  archivoSeleccionado: File | null = null;
 
-    constructor(
-        private http: HttpClient,
-        private swal: SwalAlertService
-    ) { }
+  constructor(
+    private http: HttpClient,
+    private swal: SwalAlertService
+  ) {}
 
-    onFileChange(event: any): void {
-        const target: DataTransfer = <DataTransfer>(event.target);
-        if (target.files.length !== 1) {
-            this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.YOU_CAN_ONLY_SELECT_ONE_FILE'));
-            return;
+  onFileChange(event: any): void {
+    const target: DataTransfer = <DataTransfer>event.target;
+    if (target.files.length !== 1) {
+      this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.YOU_CAN_ONLY_SELECT_ONE_FILE'));
+      return;
+    }
+    this.archivoSeleccionado = target.files[0];
+  }
+
+  procesarYEnviar(fileInput: HTMLInputElement): void {
+    if (!this.archivoSeleccionado || !this.apiUrl || !this.columnsMap) {
+      this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.CONFIGURATION_PARAMETERS_ARE_MISSING_URL_OR'));
+      return;
+    }
+
+    this.swal.showLoading('Leyendo archivo Excel...');
+
+    const reader: FileReader = new FileReader();
+
+    // Cuando el archivo termine de leerse...
+    reader.onload = (e: any) => {
+      try {
+        const bstr: string = e.target.result;
+        const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+
+        // Tomamos la primera hoja del Excel
+        const wsname: string = wb.SheetNames[0];
+        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+        // Convertimos la hoja a un Array de JSONs
+        const dataOriginal = XLSX.utils.sheet_to_json(ws);
+
+        // Transformamos los datos según el columnsMap
+        const dataFormateada = this.transformarDatos(dataOriginal);
+
+        // Enviamos a la API
+        this.enviarApi(dataFormateada, fileInput);
+      } catch (error) {
+        this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.ERROR_READING_EXCEL_FILE_CHECK_FORMAT'));
+        console.error(error);
+      }
+    };
+
+    // Iniciar la lectura del archivo
+    reader.readAsBinaryString(this.archivoSeleccionado);
+  }
+
+  // Organiza los datos del Excel para que coincidan con tu Base de Datos
+  private transformarDatos(dataOriginal: any[]): any[] {
+    return dataOriginal.map((filaOriginal) => {
+      const filaNueva: any = { ...this.extraData }; // Agregamos data extra (ej. idEmpresa)
+
+      // Iteramos sobre las llaves del mapa (las columnas que esperamos del Excel)
+      Object.keys(this.columnsMap).forEach((columnaExcel) => {
+        const columnaBD = this.columnsMap[columnaExcel];
+
+        // Si la fila del Excel tiene esa columna, la asignamos al nuevo nombre de BD
+        if (filaOriginal[columnaExcel] !== undefined) {
+          filaNueva[columnaBD] = filaOriginal[columnaExcel];
         }
-        this.archivoSeleccionado = target.files[0];
-    }
+      });
 
-    procesarYEnviar(fileInput: HTMLInputElement): void {
-        if (!this.archivoSeleccionado || !this.apiUrl || !this.columnsMap) {
-            this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.CONFIGURATION_PARAMETERS_ARE_MISSING_URL_OR'));
-            return;
-        }
+      return filaNueva;
+    });
+  }
 
-        this.swal.showLoading('Leyendo archivo Excel...');
+  private enviarApi(payload: any[], fileInput: HTMLInputElement): void {
+    this.swal.showLoading('Guardando registros en la base de datos...');
 
-        const reader: FileReader = new FileReader();
+    // Asumimos que tu backend recibe un array de objetos (ej. bulkCreate en Sequelize)
+    this.http.post(this.apiUrl, { registros: payload }).subscribe({
+      next: (resp: any) => {
+        this.swal.getAlertConfirmSuccess(`Se guardaron ${payload.length} registros correctamente.`);
+        this.resetearInput(fileInput);
+      },
+      error: (err) => {
+        this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.THERE_WAS_ERROR_SAVING_DATA_ON'));
+        console.error('Error API:', err);
+      }
+    });
+  }
 
-        // Cuando el archivo termine de leerse...
-        reader.onload = (e: any) => {
-            try {
-                const bstr: string = e.target.result;
-                const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-
-                // Tomamos la primera hoja del Excel
-                const wsname: string = wb.SheetNames[0];
-                const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
-                // Convertimos la hoja a un Array de JSONs
-                const dataOriginal = XLSX.utils.sheet_to_json(ws);
-
-                // Transformamos los datos según el columnsMap
-                const dataFormateada = this.transformarDatos(dataOriginal);
-
-                // Enviamos a la API
-                this.enviarApi(dataFormateada, fileInput);
-
-            } catch (error) {
-                this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.ERROR_READING_EXCEL_FILE_CHECK_FORMAT'));
-                console.error(error);
-            }
-        };
-
-        // Iniciar la lectura del archivo
-        reader.readAsBinaryString(this.archivoSeleccionado);
-    }
-
-    // Organiza los datos del Excel para que coincidan con tu Base de Datos
-    private transformarDatos(dataOriginal: any[]): any[] {
-        return dataOriginal.map(filaOriginal => {
-            const filaNueva: any = { ...this.extraData }; // Agregamos data extra (ej. idEmpresa)
-
-            // Iteramos sobre las llaves del mapa (las columnas que esperamos del Excel)
-            Object.keys(this.columnsMap).forEach(columnaExcel => {
-                const columnaBD = this.columnsMap[columnaExcel];
-
-                // Si la fila del Excel tiene esa columna, la asignamos al nuevo nombre de BD
-                if (filaOriginal[columnaExcel] !== undefined) {
-                    filaNueva[columnaBD] = filaOriginal[columnaExcel];
-                }
-            });
-
-            return filaNueva;
-        });
-    }
-
-    private enviarApi(payload: any[], fileInput: HTMLInputElement): void {
-        this.swal.showLoading('Guardando registros en la base de datos...');
-
-        // Asumimos que tu backend recibe un array de objetos (ej. bulkCreate en Sequelize)
-        this.http.post(this.apiUrl, { registros: payload }).subscribe({
-            next: (resp: any) => {
-                this.swal.getAlertConfirmSuccess(`Se guardaron ${payload.length} registros correctamente.`);
-                this.resetearInput(fileInput);
-            },
-            error: (err) => {
-                this.swal.getAlertError(traducir('SHARED.EXCEL_LOADER.THERE_WAS_ERROR_SAVING_DATA_ON'));
-                console.error('Error API:', err);
-            }
-        });
-    }
-
-    private resetearInput(fileInput: HTMLInputElement) {
-        fileInput.value = ''; // Limpia el input HTML
-        this.archivoSeleccionado = null; // Limpia la variable
-    }
+  private resetearInput(fileInput: HTMLInputElement) {
+    fileInput.value = ''; // Limpia el input HTML
+    this.archivoSeleccionado = null; // Limpia la variable
+  }
 }

@@ -23,7 +23,6 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 
 @Component({
   selector: 'app-gestion-site',
-  standalone: true,
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-site.component.html',
   styleUrl: './gestion-site.component.scss'

@@ -26,7 +26,6 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 
 @Component({
   selector: 'app-sites',
-  standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss'
@@ -96,7 +95,7 @@ export class SitesComponent implements OnInit {
       header: 'COMMON.APPLICATION_NAME',
       type: 'text'
     },
-{
+    {
       name: 'nombreSitio',
       header: 'COMMON.NAME',
       type: 'text'

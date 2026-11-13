@@ -14,69 +14,72 @@ import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/P
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import {
-    UploadFilesService,
-    LocalStorageService,
-    AuthenticationService
-} from 'src/app/theme/shared/service';
+import { UploadFilesService, LocalStorageService, AuthenticationService } from 'src/app/theme/shared/service';
 import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUser.model';
 
 @Component({
-    selector: 'app-inicio-suscriptores',
-    standalone: true,
-    imports: [TranslateModule, NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
-    templateUrl: './inicio-suscriptores.component.html',
-    styleUrl: './inicio-suscriptores.component.scss'
+  selector: 'app-inicio-suscriptores',
+  imports: [
+    TranslateModule,
+    NgbDropdownModule,
+    RouterModule,
+    ColorPickerModule,
+    SharedModule,
+    LanguageSelectorComponent,
+    FullScreenSliderComponent
+  ],
+  templateUrl: './inicio-suscriptores.component.html',
+  styleUrl: './inicio-suscriptores.component.scss'
 })
 export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
-    currentUser: CurrentUserModel = new CurrentUserModel();
+  currentUser: CurrentUserModel = new CurrentUserModel();
 
-    public suscCode: string = '';
-    suscriptores: PTLSuscriptorModel[] = [];
-    suscriptor: string = '';
-    subscriptions = new Subscription();
-    usuariosSC: PTLUsuarioSCModel[] = [];
-    empresasSC: PTLEmpresaSCModel[] = [];
-    usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
-    usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
-    usuarioEmpresaSC: PTLUsuaioEmpresasSCModel = {} as PTLUsuaioEmpresasSCModel;
+  public suscCode: string = '';
+  suscriptores: PTLSuscriptorModel[] = [];
+  suscriptor: string = '';
+  subscriptions = new Subscription();
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  empresasSC: PTLEmpresaSCModel[] = [];
+  usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
+  usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
+  usuarioEmpresaSC: PTLUsuaioEmpresasSCModel = {} as PTLUsuaioEmpresasSCModel;
 
-    constructor(
-        private _authenticationService: AuthenticationService,
-        private _uploadService: UploadFilesService,
-        private _localStorageService: LocalStorageService,
-        private router: Router
-    ) {
-        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-    }
+  constructor(
+    private _authenticationService: AuthenticationService,
+    private _uploadService: UploadFilesService,
+    private _localStorageService: LocalStorageService,
+    private router: Router
+  ) {
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
-    ngOnInit(): void {
-        this.suscriptores = [];
-        console.log('ingresa a la plataforma');
-        this.currentUser = this._localStorageService.getCurrentUserLocalStorage();
-        const usuariosSC = this.currentUser.usuariosSC;
-        usuariosSC.forEach((user: any) => {
-            user.suscriptores.forEach((susc: any) => {
-                susc.logo = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSuscriptor)
-                this.suscriptores.push(susc)
-            });
-        });
-    }
+  ngOnInit(): void {
+    this.suscriptores = [];
+    console.log('ingresa a la plataforma');
+    this.currentUser = this._localStorageService.getCurrentUserLocalStorage();
+    const usuariosSC = this.currentUser.usuariosSC;
+    usuariosSC.forEach((user: any) => {
+      user.suscriptores.forEach((susc: any) => {
+        susc.logo = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSuscriptor);
+        this.suscriptores.push(susc);
+      });
+    });
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-    ingresarPlataforma(susc: PTLSuscriptorModel) {
-        const current = this._localStorageService.getCurrentUserLocalStorage();
-        this._localStorageService.setObject('suscriptor', susc)
-        this.router.navigate(['/starter/inicio-aplicaciones']);
-    }
+  ingresarPlataforma(susc: PTLSuscriptorModel) {
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    this._localStorageService.setObject('suscriptor', susc);
+    this.router.navigate(['/starter/inicio-aplicaciones']);
+  }
 
-    regresar() {
-        this._localStorageService.removeObject('suscriptor')
-        this._localStorageService.removeObject('aplicaciones')
-        this._authenticationService.logout();
-        this.router.navigate(['autenticacion/login']);
-    }
+  regresar() {
+    this._localStorageService.removeObject('suscriptor');
+    this._localStorageService.removeObject('aplicaciones');
+    this._authenticationService.logout();
+    this.router.navigate(['autenticacion/login']);
+  }
 }
