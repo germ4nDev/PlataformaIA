@@ -1,72 +1,87 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      }
 
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'COMMON.FILTERS' | translate }}</h6>
-
-                    <div class="filtro">
-                        <small>{{ 'COMMON.CODE' | translate }}</small>
-                        <select (change)="onFiltroCodigoWidgetChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <!-- 🟢 Iteramos el catálogo maestro de widgets -->
-                            <option [value]="wdg.codigoWidget" *ngFor="let wdg of widgetsMaestros">
-                                {{ wdg.nombreWidget || wdg.codigoWidget }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="filtro">
-                        <small>{{ 'COMMON.ROLE' | translate }}</small>
-                        <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="rol.codigoRole" *ngFor="let rol of roles">
-                                {{ rol.nombreRole }}
-                            </option>
-                        </select>
-                    </div>
-
-                </div>
-            </ng-container>
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'COMMON.FILTERS' | translate }}</h6>
+          <div class="filtro">
+            <small>{{ 'COMMON.CODE' | translate }}</small>
+            <select (change)="onFiltroCodigoWidgetChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <!-- 🟢 Iteramos el catálogo maestro de widgets -->
+              @for (wdg of widgetsMaestros; track wdg) {
+                <option [value]="wdg.codigoWidget">
+                  {{ wdg.nombreWidget || wdg.codigoWidget }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.ROLE' | translate }}</small>
+            <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (rol of roles; track rol) {
+                <option [value]="rol.codigoRole">
+                  {{ rol.nombreRole }}
+                </option>
+              }
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <!-- 🟢 Inyectamos el observable filtrado de Widgets Roles -->
-                <ng-container *ngIf="widgetsRolesFiltrados$ | async as dataFiltrada">
-                    <!-- Es clave pasar null al idField si la tabla se basa en el evento.row que contiene ambas llaves compuestas -->
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoRol'"
-                        [tableTitle]="'UTILIDADES.WIDGETS.WIDGETS_ROLES.WIDGET_ROLES' | translate"
-                        [tableSubtitle]="'UTILIDADES.WIDGETS.WIDGETS_ROLES.WIDGETS_EACH_ROLE_CAN_SEE' | translate"
-                        [newButtonLabel]="'UTILIDADES.WIDGETS.WIDGETS_ROLES.ASSIGN_ROLES' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
-                        [metadataColumns]="columnasAplicaciopnes" [metadataDetailColumns]="columnasDetailRegistros"
-                        [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
-                        [showEditButton]="false" [showSearchBox]="false" [showBackButton]="true"
-                        (newRecord)="OnNuevoRegistroClick()" (backRecord)="OnRegresarClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_WDGT_ROLES">
-                    </app-table-data>
-                </ng-container>
-
-                <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando Permisos de Widgets ..."> </app-data-loader>
-                </ng-template>
-            </div>
-        </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        <!-- 🟢 Inyectamos el observable filtrado de Widgets Roles -->
+        @if (widgetsRolesFiltrados$ | async; as dataFiltrada) {
+          <!-- Es clave pasar null al idField si la tabla se basa en el evento.row que contiene ambas llaves compuestas -->
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoRol'"
+            [tableTitle]="'UTILIDADES.WIDGETS.WIDGETS_ROLES.WIDGET_ROLES' | translate"
+            [tableSubtitle]="'UTILIDADES.WIDGETS.WIDGETS_ROLES.WIDGETS_EACH_ROLE_CAN_SEE' | translate"
+            [newButtonLabel]="'UTILIDADES.WIDGETS.WIDGETS_ROLES.ASSIGN_ROLES' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            [metadataColumns]="columnasAplicaciopnes"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="false"
+            [showSearchBox]="false"
+            [showBackButton]="true"
+            (newRecord)="OnNuevoRegistroClick()"
+            (backRecord)="OnRegresarClick($event)"
+            (accionPrincipalClick)="onAccionPrincipal($event)"
+            permisoNew="ACT_WDGT_ROLES"
+          >
+          </app-table-data>
+        }
+
+        <ng-template #loading>
+          <app-data-loader [isLoading]="true" message="Cargando Permisos de Widgets ..."> </app-data-loader>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>

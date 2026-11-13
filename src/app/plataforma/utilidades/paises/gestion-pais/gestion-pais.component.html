@@ -1,138 +1,207 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
-    </aside>
-    <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky pb-0 border-bottom-0">
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
-                    <div class="d-flex flex-column pe-3">
-                        <h4 class="titulo-formulario">
-                            <span>{{ (modoEdicion ? 'UTILIDADES.PAISES.GESTION.EDIT_COUNTRY' :
-                                'UTILIDADES.PAISES.NEW_COUNTRY') | translate }}</span>
-                            <span class="titulo-container"> - {{ 'UTILIDADES.PAISES.COUNTRIES' | translate }}</span>
-                        </h4>
-                        <h6 class="subtitulo-formulario mb-0">{{ 'UTILIDADES.PAISES.ISO_CODE_CURRENCY_REGIONAL_DATA' |
-                            translate }}</h6>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
-                            {{ 'COMMON.BACK' | translate }}<i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-                        <button *appPermiso="modoEdicion ? 'ACT_PAIS_MODIFICAR' : 'ACT_PAIS_CREAR'" type="button"
-                            class="btn btn-primary btn-NuevoRegistro" [disabled]="guardando" (click)="guardar()">
-                            {{ (guardando ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                    </div>
-                </div>
-                <hr class="mb-0"><br>
-            </div>
-            <div class="card-body form-scroll-wrapper">
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisCodigo">{{ 'UTILIDADES.PAISES.GESTION.ISO_ALPHA_2' |
-                            translate }}</label>
-                        <input id="paisCodigo" name="paisCodigo" class="form-control form-input text-uppercase"
-                            maxlength="2" [(ngModel)]="pais.codigoPais" (ngModelChange)="alEscribirCodigo()"
-                            [readonly]="modoEdicion" [placeholder]="'CO'" />
-                        @if (enviado && !(pais.codigoPais.length === 2)) { <small class="text-danger">{{
-                            'UTILIDADES.PAISES.GESTION.TWO_LETTERS' | translate }}</small> }
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisIso3">{{ 'UTILIDADES.PAISES.GESTION.ISO_ALPHA_3' | translate
-                            }}</label>
-                        <input id="paisIso3" name="paisIso3" class="form-control form-input text-uppercase"
-                            maxlength="3" [(ngModel)]="pais.codigoIso3" [placeholder]="'COL'" />
-                        @if (enviado && !(pais.codigoIso3.length === 3)) { <small class="text-danger">{{
-                            'UTILIDADES.PAISES.GESTION.THREE_LETTERS' | translate }}</small> }
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisNumerico">{{ 'UTILIDADES.PAISES.GESTION.NUMERIC_CODE' |
-                            translate }}</label>
-                        <input id="paisNumerico" name="paisNumerico" class="form-control form-input" maxlength="3"
-                            [(ngModel)]="pais.codigoNumerico" [placeholder]="'170'" />
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisNombre">{{ 'COMMON.NAME' | translate }}</label>
-                        <input id="paisNombre" name="paisNombre" class="form-control form-input" maxlength="100"
-                            [(ngModel)]="pais.nombrePais" />
-                        @if (enviado && !pais.nombrePais.trim()) { <small class="text-danger">{{ 'COMMON.NAME_REQUIRED'
-                            | translate }}</small> }
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisMoneda">{{ 'COMMON.CURRENCY' | translate }}</label>
-                        <input id="paisMoneda" name="paisMoneda" class="form-control form-input text-uppercase"
-                            maxlength="3" [(ngModel)]="pais.moneda" [placeholder]="'COP'" />
-                        @if (enviado && !(pais.moneda.length === 3)) { <small class="text-danger">{{
-                            'UTILIDADES.PAISES.GESTION.THREE_LETTERS' | translate }}</small> }
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisSimbolo">{{ 'UTILIDADES.PAISES.SYMBOL' | translate }}</label>
-                        <input id="paisSimbolo" name="paisSimbolo" class="form-control form-input" maxlength="5"
-                            [(ngModel)]="pais.simboloMoneda" [placeholder]="'$'" />
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisDecimales">{{ 'UTILIDADES.PAISES.GESTION.DECIMALS' |
-                            translate }}</label>
-                        <input id="paisDecimales" name="paisDecimales" type="number" min="0" max="4"
-                            class="form-control form-input" [(ngModel)]="pais.decimalesMoneda" />
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisIndicativo">{{ 'UTILIDADES.PAISES.DIALING_CODE' | translate
-                            }}</label>
-                        <input id="paisIndicativo" name="paisIndicativo" class="form-control form-input" maxlength="6"
-                            [(ngModel)]="pais.indicativo" [placeholder]="'+57'" />
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisIdioma">{{ 'UTILIDADES.PAISES.GESTION.LANGUAGE_CODE' |
-                            translate }}</label>
-                        <input id="paisIdioma" name="paisIdioma" class="form-control form-input" maxlength="10"
-                            [(ngModel)]="pais.idioma" [placeholder]="'es-CO'" />
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="paisZona">{{ 'UTILIDADES.PAISES.TIME_ZONE' | translate }}</label>
-                        <input id="paisZona" name="paisZona" class="form-control form-input" list="paisZonas"
-                            maxlength="64" [(ngModel)]="pais.zonaHoraria" [placeholder]="'America/Bogota'" />
-                        <datalist id="paisZonas">@for (z of zonas; track z) { <option [value]="z"></option> }</datalist>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate
-                                }}</label>
-                            <app-text-editor [toolbarType]="tipoEditorTexto" [contentHtml]="pais.descripcion ?? ''"
-                                (contentHtmlChange)="actualizarDescripcionSuscriptor($event)" name="descripcion"
-                                [(ngModel)]="pais.descripcion" [ngClass]="{
-                                        'is-invalid': !descripcion.valid && (descripcion.dirty || descripcion.touched)
-                                    }" #descripcion="ngModel" required rows="5">
-                            </app-text-editor>
-                            <label *ngIf="!descripcion.valid && (descripcion.dirty || descripcion.touched)"
-                                class="error jquery-validation-error small form-text invalid-feedback">
-                                {{ 'COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED' | translate }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
-                            <div class="radio-buttons">
-                                <label class="radio-button">
-                                    <input name="estadoPais" type="radio" [value]="true" [(ngModel)]="pais.estadoPais">
-                                    <div class="radio-circle"></div>
-                                    <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
-                                </label>
-
-                                <label class="radio-button">
-                                    <input name="estadoPais" type="radio" [value]="false" [(ngModel)]="pais.estadoPais">
-                                    <div class="radio-circle"></div>
-                                    <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <aside class="aside-left">
+    <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
+  </aside>
+  <div class="content-area">
+    <div class="card">
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario">
+              <span>{{ (modoEdicion ? 'UTILIDADES.PAISES.GESTION.EDIT_COUNTRY' : 'UTILIDADES.PAISES.NEW_COUNTRY') | translate }}</span>
+              <span class="titulo-container"> - {{ 'UTILIDADES.PAISES.COUNTRIES' | translate }}</span>
+            </h4>
+            <h6 class="subtitulo-formulario mb-0">{{ 'UTILIDADES.PAISES.ISO_CODE_CURRENCY_REGIONAL_DATA' | translate }}</h6>
+          </div>
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
+              {{ 'COMMON.BACK' | translate }}<i class="feather icon-arrow-left ms-2"></i>
+            </button>
+            <button
+              *appPermiso="modoEdicion ? 'ACT_PAIS_MODIFICAR' : 'ACT_PAIS_CREAR'"
+              type="button"
+              class="btn btn-primary btn-NuevoRegistro"
+              [disabled]="guardando"
+              (click)="guardar()"
+            >
+              {{ (guardando ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+              <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+            </button>
+          </div>
         </div>
+        <hr class="mb-0" /><br />
+      </div>
+      <div class="card-body form-scroll-wrapper">
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisCodigo">{{ 'UTILIDADES.PAISES.GESTION.ISO_ALPHA_2' | translate }}</label>
+            <input
+              id="paisCodigo"
+              name="paisCodigo"
+              class="form-control form-input text-uppercase"
+              maxlength="2"
+              [(ngModel)]="pais.codigoPais"
+              (ngModelChange)="alEscribirCodigo()"
+              [readonly]="modoEdicion"
+              [placeholder]="'CO'"
+            />
+            @if (enviado && !(pais.codigoPais.length === 2)) {
+              <small class="text-danger">{{ 'UTILIDADES.PAISES.GESTION.TWO_LETTERS' | translate }}</small>
+            }
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisIso3">{{ 'UTILIDADES.PAISES.GESTION.ISO_ALPHA_3' | translate }}</label>
+            <input
+              id="paisIso3"
+              name="paisIso3"
+              class="form-control form-input text-uppercase"
+              maxlength="3"
+              [(ngModel)]="pais.codigoIso3"
+              [placeholder]="'COL'"
+            />
+            @if (enviado && !(pais.codigoIso3.length === 3)) {
+              <small class="text-danger">{{ 'UTILIDADES.PAISES.GESTION.THREE_LETTERS' | translate }}</small>
+            }
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisNumerico">{{ 'UTILIDADES.PAISES.GESTION.NUMERIC_CODE' | translate }}</label>
+            <input
+              id="paisNumerico"
+              name="paisNumerico"
+              class="form-control form-input"
+              maxlength="3"
+              [(ngModel)]="pais.codigoNumerico"
+              [placeholder]="'170'"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisNombre">{{ 'COMMON.NAME' | translate }}</label>
+            <input id="paisNombre" name="paisNombre" class="form-control form-input" maxlength="100" [(ngModel)]="pais.nombrePais" />
+            @if (enviado && !pais.nombrePais.trim()) {
+              <small class="text-danger">{{ 'COMMON.NAME_REQUIRED' | translate }}</small>
+            }
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisMoneda">{{ 'COMMON.CURRENCY' | translate }}</label>
+            <input
+              id="paisMoneda"
+              name="paisMoneda"
+              class="form-control form-input text-uppercase"
+              maxlength="3"
+              [(ngModel)]="pais.moneda"
+              [placeholder]="'COP'"
+            />
+            @if (enviado && !(pais.moneda.length === 3)) {
+              <small class="text-danger">{{ 'UTILIDADES.PAISES.GESTION.THREE_LETTERS' | translate }}</small>
+            }
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisSimbolo">{{ 'UTILIDADES.PAISES.SYMBOL' | translate }}</label>
+            <input
+              id="paisSimbolo"
+              name="paisSimbolo"
+              class="form-control form-input"
+              maxlength="5"
+              [(ngModel)]="pais.simboloMoneda"
+              [placeholder]="'$'"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisDecimales">{{ 'UTILIDADES.PAISES.GESTION.DECIMALS' | translate }}</label>
+            <input
+              id="paisDecimales"
+              name="paisDecimales"
+              type="number"
+              min="0"
+              max="4"
+              class="form-control form-input"
+              [(ngModel)]="pais.decimalesMoneda"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisIndicativo">{{ 'UTILIDADES.PAISES.DIALING_CODE' | translate }}</label>
+            <input
+              id="paisIndicativo"
+              name="paisIndicativo"
+              class="form-control form-input"
+              maxlength="6"
+              [(ngModel)]="pais.indicativo"
+              [placeholder]="'+57'"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisIdioma">{{ 'UTILIDADES.PAISES.GESTION.LANGUAGE_CODE' | translate }}</label>
+            <input
+              id="paisIdioma"
+              name="paisIdioma"
+              class="form-control form-input"
+              maxlength="10"
+              [(ngModel)]="pais.idioma"
+              [placeholder]="'es-CO'"
+            />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="paisZona">{{ 'UTILIDADES.PAISES.TIME_ZONE' | translate }}</label>
+            <input
+              id="paisZona"
+              name="paisZona"
+              class="form-control form-input"
+              list="paisZonas"
+              maxlength="64"
+              [(ngModel)]="pais.zonaHoraria"
+              [placeholder]="'America/Bogota'"
+            />
+            <datalist id="paisZonas">
+              @for (z of zonas; track z) {
+                <option [value]="z"></option>
+              }
+            </datalist>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+              <app-text-editor
+                [toolbarType]="tipoEditorTexto"
+                [contentHtml]="pais.descripcion ?? ''"
+                (contentHtmlChange)="actualizarDescripcionSuscriptor($event)"
+                name="descripcion"
+                [(ngModel)]="pais.descripcion"
+                [ngClass]="{
+                  'is-invalid': !descripcion.valid && (descripcion.dirty || descripcion.touched)
+                }"
+                #descripcion="ngModel"
+                required
+                rows="5"
+              >
+              </app-text-editor>
+              @if (!descripcion.valid && (descripcion.dirty || descripcion.touched)) {
+                <label class="error jquery-validation-error small form-text invalid-feedback">
+                  {{ 'COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED' | translate }}
+                </label>
+              }
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
+              <div class="radio-buttons">
+                <label class="radio-button">
+                  <input name="estadoPais" type="radio" [value]="true" [(ngModel)]="pais.estadoPais" />
+                  <div class="radio-circle"></div>
+                  <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                </label>
+
+                <label class="radio-button">
+                  <input name="estadoPais" type="radio" [value]="false" [(ngModel)]="pais.estadoPais" />
+                  <div class="radio-circle"></div>
+                  <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

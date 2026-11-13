@@ -1,6 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboard-plataforma.service';
@@ -10,7 +10,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 
 @Component({
   selector: 'app-wdg-paquetes-dgt',
-  imports: [TranslateModule, CommonModule, NgChartsModule, WidgetShellComponent],
+  imports: [TranslateModule, NgChartsModule, WidgetShellComponent],
   templateUrl: './wdg-paquetes-dgt.component.html',
   styleUrls: ['./wdg-paquetes-dgt.component.scss'] // Corregido a styleUrls
 })

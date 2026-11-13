@@ -1,91 +1,102 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+          {{ 'COMMON.FILTERS' | translate }}
+        </button>
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
-                    </DIV>
-                    <div class="filtro">
-                        <div class="form-group">
-                            <small>{{ 'COMMON.ROLE_TYPE' | translate }}</small>
-                            <select (change)="onFiltroTipoRolChangeClick($event)" class="form-control form-select"
-                                style="cursor: pointer">
-                                <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                                <option value="plataforma">{{ 'SUSCRIPTOR.USUARIOS_ROLES.PLATFORM_ROLE' |
-                                    translate
-                                    }}</option>
-                                <option value="suscriptor">{{ 'SUSCRIPTOR.USUARIOS_ROLES.SUBSCRIBER_ROLE' |
-                                    translate
-                                    }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'SUSCRIPTOR.USUARIOS_ROLES.FILTER_BY_USER' | translate }}</small>
-                        <select (change)="onFiltroCodigoUsuariosRolesChangeClick($event)"
-                            class="form-control form-select" style="cursor: pointer">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="reg.codigoUsuario" *ngFor="let reg of usuarios">
-                                {{ reg.nombreUsuario }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'SUSCRIPTOR.USUARIOS_ROLES.FILTER_BY_ROLE' | translate }}</small>
-                        <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select"
-                            style="cursor: pointer">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="reg.codigoRole" *ngFor="let reg of roles">
-                                {{ reg.nombreRole }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
-                            style="cursor: pointer" required>
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada; else loading">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoUsuarioRole'" [tableTitle]="tituloPagina"
-                        [tableSubtitle]="subtituloPagina" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
-                        [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
-                        [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
-                        [showEditButton]="false" [showDeleteButton]="true" [showSearchBox]="false"
-                        [showBackButton]="true" [newButtonLabel]="'SUSCRIPTOR.USUARIOS_ROLES.NEW_USER_ROLE' | translate"
-                        (newRecord)="OnNuevoRegistroClick()" (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" (backRecord)="OnRegresarClick($event)" permisoNew="ACT_USUSC_ROLES" permisoDelete="ACT_USUSC_ROLES">
-                    </app-table-data>
-                </ng-container>
-                <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
-                </ng-template>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      }
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <DIV class="text-center">
+            <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
+          </DIV>
+          <div class="filtro">
+            <div class="form-group">
+              <small>{{ 'COMMON.ROLE_TYPE' | translate }}</small>
+              <select (change)="onFiltroTipoRolChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+                <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                <option value="plataforma">{{ 'SUSCRIPTOR.USUARIOS_ROLES.PLATFORM_ROLE' | translate }}</option>
+                <option value="suscriptor">{{ 'SUSCRIPTOR.USUARIOS_ROLES.SUBSCRIBER_ROLE' | translate }}</option>
+              </select>
             </div>
+          </div>
+          <div class="filtro">
+            <small>{{ 'SUSCRIPTOR.USUARIOS_ROLES.FILTER_BY_USER' | translate }}</small>
+            <select (change)="onFiltroCodigoUsuariosRolesChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (reg of usuarios; track reg) {
+                <option [value]="reg.codigoUsuario">
+                  {{ reg.nombreUsuario }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'SUSCRIPTOR.USUARIOS_ROLES.FILTER_BY_ROLE' | translate }}</small>
+            <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (reg of roles; track reg) {
+                <option [value]="reg.codigoRole">
+                  {{ reg.nombreRole }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer" required>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (registrosFiltrado$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoUsuarioRole'"
+            [tableTitle]="tituloPagina"
+            [tableSubtitle]="subtituloPagina"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            [metadataColumns]="columnasRegistros"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="false"
+            [showDeleteButton]="true"
+            [showSearchBox]="false"
+            [showBackButton]="true"
+            [newButtonLabel]="'SUSCRIPTOR.USUARIOS_ROLES.NEW_USER_ROLE' | translate"
+            (newRecord)="OnNuevoRegistroClick()"
+            (deleteRecord)="OnEliminarRegistroClick($event)"
+            (accionPrincipalClick)="onAccionPrincipal($event)"
+            (backRecord)="OnRegresarClick($event)"
+            permisoNew="ACT_USUSC_ROLES"
+            permisoDelete="ACT_USUSC_ROLES"
+          >
+          </app-table-data>
+        } @else {
+          <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
+        }
+      </div>
+    </div>
+  </div>
 </div>

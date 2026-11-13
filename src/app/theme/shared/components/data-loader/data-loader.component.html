@@ -1,6 +1,8 @@
-<div class="loader-overlay" *ngIf="isLoading">
-  <div class="loader-container">
-    <div class="modern-spinner"></div>
-    <span class="loader-text">{{ message }}</span>
+@if (isLoading) {
+  <div class="loader-overlay">
+    <div class="loader-container">
+      <div class="modern-spinner"></div>
+      <span class="loader-text">{{ message }}</span>
+    </div>
   </div>
-</div>
+}

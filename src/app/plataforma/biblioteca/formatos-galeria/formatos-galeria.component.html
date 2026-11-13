@@ -1,66 +1,90 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">{{
-          'COMMON.FILTERS' | translate
-        }}</button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'COMMON.FILTERS' | translate }}</button>
+        }
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      }
 
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'COMMON.FILTERS' | translate }}</h6>
-
-                    <div class="filtro">
-                        <small>{{ 'COMMON.CODE' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'COMMON.FILTERS' | translate }}</h6>
+          <div class="filtro">
+            <small>{{ 'COMMON.CODE' | translate }}</small>
+            <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-              <option [value]="f.codigoFormato" *ngFor="let f of formatos">{{ f.codigoFormato }}</option>
+              @for (f of formatos; track f) {
+                <option [value]="f.codigoFormato">{{ f.codigoFormato }}</option>
+              }
             </select>
-                    </div>
-
-                    <div class="filtro">
-                        <small>{{ 'COMMON.NAME' | translate }}</small>
-                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.NAME' | translate }}</small>
+            <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-              <option [value]="f.nombreFormato" *ngFor="let f of formatos">{{ f.nombreFormato }}</option>
+              @for (f of formatos; track f) {
+                <option [value]="f.nombreFormato">{{ f.nombreFormato }}</option>
+              }
             </select>
-                    </div>
-
-                    <div class="filtro">
-                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input" placeholder="{{ 'COMMON.SEARCH_2' | translate }}" />
-                    </div>
-
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroDescripcionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'COMMON.SEARCH_2' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
               <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
               <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
             </select>
-                    </div>
-                </div>
-            </ng-container>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="formatosFiltrada$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoFormato'" [tableTitle]="'BIBLIOTECA.FORMATOS_GALERIA.GALLERY_FORMATS_MANAGEMENT' | translate" [metadataColumns]="columnasFormatos" [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true" [showNewButton]="true"
-                        [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'BIBLIOTECA.FORMATOS_GALERIA.NEW_FORMAT' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoFormatoClick()"
-                        (editRecord)="OnEditarFormatoClick($event)" (deleteRecord)="OnEliminarFormatoClick($event)" permisoNew="ACT_FORMATOSGAL_CREAR" permisoEdit="ACT_FORMATOSGAL_MODIFICAR" permisoDelete="ACT_FORMATOSGAL_ELIMINAR">
-                    </app-data-table>
-                </ng-container>
-            </div>
-        </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (formatosFiltrada$ | async; as dataFiltrada) {
+          <app-data-table
+            [data]="dataFiltrada"
+            [idField]="'codigoFormato'"
+            [tableTitle]="'BIBLIOTECA.FORMATOS_GALERIA.GALLERY_FORMATS_MANAGEMENT' | translate"
+            [metadataColumns]="columnasFormatos"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="true"
+            [showDeleteButton]="true"
+            [showSearchBox]="false"
+            [newButtonLabel]="'BIBLIOTECA.FORMATOS_GALERIA.NEW_FORMAT' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            (newRecord)="OnNuevoFormatoClick()"
+            (editRecord)="OnEditarFormatoClick($event)"
+            (deleteRecord)="OnEliminarFormatoClick($event)"
+            permisoNew="ACT_FORMATOSGAL_CREAR"
+            permisoEdit="ACT_FORMATOSGAL_MODIFICAR"
+            permisoDelete="ACT_FORMATOSGAL_ELIMINAR"
+          >
+          </app-data-table>
+        }
+      </div>
+    </div>
+  </div>
 </div>

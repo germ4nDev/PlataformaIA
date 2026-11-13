@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
       No registra otra sesión: es la misma de la app (sesión única). Fuera de la app muestra un aviso y no hace nada más.
 */
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { firstValueFrom, forkJoin, take } from 'rxjs';
 import {
@@ -54,7 +54,7 @@ type Estado = 'fuera' | 'esperando' | 'entrando' | 'error';
 
 @Component({
   selector: 'app-embebido',
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule],
   templateUrl: './embebido.component.html',
   styleUrl: './embebido.component.scss'
 })

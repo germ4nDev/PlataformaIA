@@ -1,170 +1,203 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button>
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button>
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+      </div>
 
-            <ng-container>
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="form-area">
-        <div class="card">
-            <div class="card-header card-header-sticky pb-0 border-bottom-0">
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
-
-                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
-                    <div class="d-flex flex-column pe-3">
-                        <h4 class="titulo-formulario">
-                            <span *ngIf="!modoEdicion">{{ 'ADMINISTRACION_BD.SERVIDORES.NEW_SERVER' | translate
-                                }}</span>
-                            <span *ngIf="modoEdicion">{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.EDIT_SERVER' | translate
-                                }}</span>
-                            <span class="titulo-container"> - {{ 'ADMINISTRACION_BD.SERVIDORES.SERVER_MANAGEMENT' |
-                                translate
-                                }}</span>
-                        </h4>
-                        <h6 class="subtitulo-formulario mb-0">
-                            {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_DETAILS' | translate }}
-                        </h6>
-                    </div>
-
-                    <!-- Bloque Derecho: Botones con Spinners -->
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                            (click)="btnRegresarClick()">
-                            {{ 'COMMON.BACK' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-                        <button *ngIf="!modoEdicion" type="button"
-                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                            (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.CREATE_SERVER' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                        <button *ngIf="modoEdicion" type="button"
-                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                            (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.EDIT_SERVER' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                    </div>
-                </div>
-                <hr class="mb-0"><br>
-            </div>
-
-            <div class="card-body form-scroll-wrapper">
-                <form #validationForm="ngForm" class="editForm" novalidate>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="nombreServidor">{{
-                                    'COMMON.NAME' | translate }}</label>
-                                <input class="form-control form-input" id="nombreServidor" name="nombreServidor"
-                                    type="text"
-                                    placeholder="{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_NAME' | translate }}"
-                                    [ngClass]="{ 'is-invalid': !nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit) }"
-                                    #nombreServidor="ngModel" required [(ngModel)]="FormRegistro.nombreServidor" />
-                                <label
-                                    *ngIf="!nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.ENTER_NAME_FIELD_REQUIRED_2' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.CODE' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="codigoServidor"
-                                    [placeholder]="'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_CODE_2' | translate"
-                                    [ngClass]="{ 'is-invalid': !codigoServidor.valid && (codigoServidor.dirty || codigoServidor.touched || isSubmit) }"
-                                    #codigoServidor="ngModel" required [(ngModel)]="FormRegistro.codigoServidor"
-                                    readonly />
-                                <label
-                                    *ngIf="!codigoServidor.valid && (codigoServidor.dirty || codigoServidor.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_CODE' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="rutaServidor">{{
-                                    'COMMON.PATH' | translate }}</label>
-                                <input class="form-control form-input" id="rutaServidor" name="rutaServidor" type="text"
-                                    placeholder="{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_PATH' | translate }}"
-                                    [ngClass]="{ 'is-invalid': !rutaServidor.valid && (rutaServidor.dirty || rutaServidor.touched || isSubmit) }"
-                                    #rutaServidor="ngModel" required [(ngModel)]="FormRegistro.rutaServidor" />
-                                <label
-                                    *ngIf="!rutaServidor.valid && (rutaServidor.dirty || rutaServidor.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.ENTER_PATH_FIELD_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="rutaServidor">{{
-                                    'ADMINISTRACION_BD.SERVIDORES.GESTION.IP_ADDRESS' | translate }}</label>
-                                <input class="form-control form-input" id="direccionIP" name="direccionIP" type="text"
-                                    placeholder="{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_PATH' | translate }}"
-                                    [ngClass]="{ 'is-invalid': !direccionIP.valid && (direccionIP.dirty || direccionIP.touched || isSubmit) }"
-                                    #direccionIP="ngModel" required [(ngModel)]="FormRegistro.direccionIP" />
-                                <label
-                                    *ngIf="!direccionIP.valid && (direccionIP.dirty || direccionIP.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.ENTER_IP_ADDRESS_FIELD_REQUIRED' |
-                                    translate }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate
-                                    }}</label>
-                                <app-text-editor [toolbarType]="tipoEditorTexto"
-                                    [contentHtml]="FormRegistro.descripcionServidor ?? ''"
-                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
-                                    name="descripcionServidor" [(ngModel)]="FormRegistro.descripcionServidor" [ngClass]="{
-                    'is-invalid': !descripcionServidor.valid && (descripcionServidor.dirty || descripcionServidor.touched || isSubmit)
-                  }" #descripcionServidor="ngModel" required rows="5">
-                                </app-text-editor>
-                                <label
-                                    *ngIf="!descripcionServidor.valid && (descripcionServidor.dirty || descripcionServidor.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.STATUS' | translate
-                                    }}</label>
-                                <div class="radio-buttons">
-                                    <label class="radio-button">
-                                        <input name="option" type="radio" [value]="true"
-                                            [(ngModel)]="FormRegistro.estadoServidor" />
-                                        <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
-                                    </label>
-                                    <label class="radio-button">
-                                        <input name="option" type="radio" [value]="false"
-                                            [(ngModel)]="FormRegistro.estadoServidor" />
-                                        <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+      <ng-container>
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      </ng-container>
     </div>
+  </aside>
+
+  <div class="form-area">
+    <div class="card">
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario">
+              @if (!modoEdicion) {
+                <span>{{ 'ADMINISTRACION_BD.SERVIDORES.NEW_SERVER' | translate }}</span>
+              }
+              @if (modoEdicion) {
+                <span>{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.EDIT_SERVER' | translate }}</span>
+              }
+              <span class="titulo-container"> - {{ 'ADMINISTRACION_BD.SERVIDORES.SERVER_MANAGEMENT' | translate }}</span>
+            </h4>
+            <h6 class="subtitulo-formulario mb-0">
+              {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_DETAILS' | translate }}
+            </h6>
+          </div>
+
+          <!-- Bloque Derecho: Botones con Spinners -->
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
+              {{ 'COMMON.BACK' | translate }}
+              <i class="feather icon-arrow-left ms-2"></i>
+            </button>
+            @if (!modoEdicion) {
+              <button
+                type="button"
+                class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                (click)="btnGestionarRegistroClick(validationForm)"
+              >
+                {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.CREATE_SERVER' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+            @if (modoEdicion) {
+              <button
+                type="button"
+                class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                (click)="btnGestionarRegistroClick(validationForm)"
+              >
+                {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.EDIT_SERVER' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+          </div>
+        </div>
+        <hr class="mb-0" /><br />
+      </div>
+
+      <div class="card-body form-scroll-wrapper">
+        <form #validationForm="ngForm" class="editForm" novalidate>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="nombreServidor">{{ 'COMMON.NAME' | translate }}</label>
+                <input
+                  class="form-control form-input"
+                  id="nombreServidor"
+                  name="nombreServidor"
+                  type="text"
+                  placeholder="{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_NAME' | translate }}"
+                  [ngClass]="{ 'is-invalid': !nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit) }"
+                  #nombreServidor="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.nombreServidor"
+                />
+                @if (!nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.ENTER_NAME_FIELD_REQUIRED_2' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">{{ 'COMMON.CODE' | translate }}</label>
+                <input
+                  type="text"
+                  class="form-control form-input"
+                  name="codigoServidor"
+                  [placeholder]="'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_CODE_2' | translate"
+                  [ngClass]="{ 'is-invalid': !codigoServidor.valid && (codigoServidor.dirty || codigoServidor.touched || isSubmit) }"
+                  #codigoServidor="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.codigoServidor"
+                  readonly
+                />
+                @if (!codigoServidor.valid && (codigoServidor.dirty || codigoServidor.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_CODE' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="rutaServidor">{{ 'COMMON.PATH' | translate }}</label>
+                <input
+                  class="form-control form-input"
+                  id="rutaServidor"
+                  name="rutaServidor"
+                  type="text"
+                  placeholder="{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_PATH' | translate }}"
+                  [ngClass]="{ 'is-invalid': !rutaServidor.valid && (rutaServidor.dirty || rutaServidor.touched || isSubmit) }"
+                  #rutaServidor="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.rutaServidor"
+                />
+                @if (!rutaServidor.valid && (rutaServidor.dirty || rutaServidor.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.ENTER_PATH_FIELD_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="rutaServidor">{{
+                  'ADMINISTRACION_BD.SERVIDORES.GESTION.IP_ADDRESS' | translate
+                }}</label>
+                <input
+                  class="form-control form-input"
+                  id="direccionIP"
+                  name="direccionIP"
+                  type="text"
+                  placeholder="{{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.SERVER_PATH' | translate }}"
+                  [ngClass]="{ 'is-invalid': !direccionIP.valid && (direccionIP.dirty || direccionIP.touched || isSubmit) }"
+                  #direccionIP="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.direccionIP"
+                />
+                @if (!direccionIP.valid && (direccionIP.dirty || direccionIP.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'ADMINISTRACION_BD.SERVIDORES.GESTION.ENTER_IP_ADDRESS_FIELD_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+                <app-text-editor
+                  [toolbarType]="tipoEditorTexto"
+                  [contentHtml]="FormRegistro.descripcionServidor ?? ''"
+                  (contentHtmlChange)="actualizarDescripcionVersion($event)"
+                  name="descripcionServidor"
+                  [(ngModel)]="FormRegistro.descripcionServidor"
+                  [ngClass]="{
+                    'is-invalid': !descripcionServidor.valid && (descripcionServidor.dirty || descripcionServidor.touched || isSubmit)
+                  }"
+                  #descripcionServidor="ngModel"
+                  required
+                  rows="5"
+                >
+                </app-text-editor>
+                @if (!descripcionServidor.valid && (descripcionServidor.dirty || descripcionServidor.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
+                <div class="radio-buttons">
+                  <label class="radio-button">
+                    <input name="option" type="radio" [value]="true" [(ngModel)]="FormRegistro.estadoServidor" />
+                    <div class="radio-circle"></div>
+                    <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                  </label>
+                  <label class="radio-button">
+                    <input name="option" type="radio" [value]="false" [(ngModel)]="FormRegistro.estadoServidor" />
+                    <div class="radio-circle"></div>
+                    <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

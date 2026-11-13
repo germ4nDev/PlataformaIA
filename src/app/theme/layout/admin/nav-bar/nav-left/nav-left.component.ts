@@ -1,11 +1,11 @@
 // Angular Import
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { NavSearchComponent } from './nav-search/nav-search.component';
 
 @Component({
   selector: 'app-nav-left',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './nav-left.component.html',
   styleUrls: ['./nav-left.component.scss']
 })

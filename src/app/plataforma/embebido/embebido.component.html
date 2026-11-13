@@ -1,8 +1,16 @@
 <div class="embebido">
-    <ng-container [ngSwitch]="estado">
-        <p *ngSwitchCase="'fuera'">{{ 'EMBEBIDO.PAGE_ONLY_OPENS_INSIDE_PORTTOS_APP' | translate }}</p>
-        <p *ngSwitchCase="'esperando'">{{ 'EMBEBIDO.CONNECTING_APP' | translate }}</p>
-        <p *ngSwitchCase="'entrando'">{{ 'EMBEBIDO.LOADING_DASHBOARD' | translate }}</p>
-        <p *ngSwitchCase="'error'">{{ mensaje }}</p>
-    </ng-container>
+  @switch (estado) {
+    @case ('fuera') {
+      <p>{{ 'EMBEBIDO.PAGE_ONLY_OPENS_INSIDE_PORTTOS_APP' | translate }}</p>
+    }
+    @case ('esperando') {
+      <p>{{ 'EMBEBIDO.CONNECTING_APP' | translate }}</p>
+    }
+    @case ('entrando') {
+      <p>{{ 'EMBEBIDO.LOADING_DASHBOARD' | translate }}</p>
+    }
+    @case ('error') {
+      <p>{{ mensaje }}</p>
+    }
+  }
 </div>

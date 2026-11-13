@@ -1,47 +1,48 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || ('STARTER.HOME.WIDGETS.WDG_TICKETS.SUPPORT_TICKETS' | translate)"
-    [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.WDG_TICKETS.CUSTOMER_SERVICE' | translate)"
-    [icono]="widgetConfig?.icono || 'feather icon-life-buoy'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell
+  [titulo]="widgetConfig?.titulo || ('STARTER.HOME.WIDGETS.WDG_TICKETS.SUPPORT_TICKETS' | translate)"
+  [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.WDG_TICKETS.CUSTOMER_SERVICE' | translate)"
+  [icono]="widgetConfig?.icono || 'feather icon-life-buoy'"
+  [isEnfoque]="isEnfoque"
+  (clickEnfoque)="maximizarDesdeShell()"
+>
+  <!-- 🟢 PROYECCIÓN AL HEADER: Botón de Refresh para Sockets -->
+  <div acciones-extra class="d-flex align-items-center gap-2">
+    <button class="tc-action-btn" (click)="cargarTicketsReales()" [title]="'STARTER.HOME.WIDGETS.RELOAD_DATA' | translate">
+      <i class="feather icon-refresh-cw"></i>
+    </button>
+  </div>
 
-    <!-- 🟢 PROYECCIÓN AL HEADER: Botón de Refresh para Sockets -->
-    <div acciones-extra class="d-flex align-items-center gap-2">
-        <button class="tc-action-btn" (click)="cargarTicketsReales()" [title]="'STARTER.HOME.WIDGETS.RELOAD_DATA' | translate">
-            <i class="feather icon-refresh-cw"></i>
-        </button>
+  <!-- 🟢 CUERPO ÚNICO DEL WIDGET -->
+  <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center w-100 h-100 p-2 animate__animated animate__fadeIn">
+    <!-- Este texto solo se muestra en la vista grande -->
+    @if (isEnfoque) {
+      <p class="text-muted text-center mb-4 small">
+        {{ 'STARTER.HOME.WIDGETS.WDG_TICKETS.CONSOLIDATED_SUMMARY_CURRENT_STATUS_CUSTOMER_SERVICE' | translate }}
+      </p>
+    }
+
+    <!-- Grilla de estado de tickets con bordes adaptados a modo oscuro -->
+    <div class="row text-center w-100 m-0">
+      <div class="col-4 border-end border-secondary border-opacity-25">
+        <h2 class="text-danger m-0 fw-bold" [ngClass]="isEnfoque ? 'display-4' : ''">{{ ticketsAbiertos }}</h2>
+        <small class="text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px">{{
+          'STARTER.HOME.WIDGETS.OPEN' | translate
+        }}</small>
+      </div>
+
+      <div class="col-4 border-end border-secondary border-opacity-25">
+        <h2 class="text-warning m-0 fw-bold" [ngClass]="isEnfoque ? 'display-4' : ''">{{ ticketsEnProceso }} </h2>
+        <small class="text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px">{{
+          'STARTER.HOME.WIDGETS.WDG_TICKETS.PROCESS' | translate
+        }}</small>
+      </div>
+
+      <div class="col-4">
+        <h2 class="text-success m-0 fw-bold" [ngClass]="isEnfoque ? 'display-4' : ''">{{ ticketsResueltos }} </h2>
+        <small class="text-muted text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px">{{
+          'STARTER.HOME.WIDGETS.RESOLVED' | translate
+        }}</small>
+      </div>
     </div>
-
-    <!-- 🟢 CUERPO ÚNICO DEL WIDGET -->
-    <div
-        class="flex-grow-1 d-flex flex-column justify-content-center align-items-center w-100 h-100 p-2 animate__animated animate__fadeIn">
-
-        <!-- Este texto solo se muestra en la vista grande -->
-        <p *ngIf="isEnfoque" class="text-muted text-center mb-4 small">
-            {{ 'STARTER.HOME.WIDGETS.WDG_TICKETS.CONSOLIDATED_SUMMARY_CURRENT_STATUS_CUSTOMER_SERVICE' | translate }}
-        </p>
-
-        <!-- Grilla de estado de tickets con bordes adaptados a modo oscuro -->
-        <div class="row text-center w-100 m-0">
-            <div class="col-4 border-end border-secondary border-opacity-25">
-                <h2 class="text-danger m-0 fw-bold" [ngClass]="isEnfoque ? 'display-4' : ''">{{ ticketsAbiertos }}</h2>
-                <small class="text-muted text-uppercase"
-                    style="font-size: 0.7rem; letter-spacing: 0.5px;">{{ 'STARTER.HOME.WIDGETS.OPEN' | translate }}</small>
-            </div>
-
-            <div class="col-4 border-end border-secondary border-opacity-25">
-                <h2 class="text-warning m-0 fw-bold" [ngClass]="isEnfoque ? 'display-4' : ''">{{ ticketsEnProceso }}
-                </h2>
-                <small class="text-muted text-uppercase"
-                    style="font-size: 0.7rem; letter-spacing: 0.5px;">{{ 'STARTER.HOME.WIDGETS.WDG_TICKETS.PROCESS' | translate }}</small>
-            </div>
-
-            <div class="col-4">
-                <h2 class="text-success m-0 fw-bold" [ngClass]="isEnfoque ? 'display-4' : ''">{{ ticketsResueltos }}
-                </h2>
-                <small class="text-muted text-uppercase"
-                    style="font-size: 0.7rem; letter-spacing: 0.5px;">{{ 'STARTER.HOME.WIDGETS.RESOLVED' | translate }}</small>
-            </div>
-        </div>
-
-    </div>
-
+  </div>
 </app-widget-shell>

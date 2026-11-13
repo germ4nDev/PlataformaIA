@@ -1,123 +1,158 @@
 <div class="navbar d-flex justify-content-between align-items-center px-3 py-2">
-    <ul class="navbar-nav d-flex align-items-center gap-3 flex-row ms-auto">
-        <li>
-            <div class="dropdown icon-style" ngbDropdown placement="auto">
-                <a ngbDropdownToggle href="javascript:" class="icono-tema">
-                    <i class="icon feather icon-bell icon-lg icon-style"
-                        [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.NOTIFICATION' | translate"></i>
-                    <span class="badge bg-danger"><span class="sr-only"></span></span>
-                </a>
-                <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
-                    <div class="noti-head">
-                        <h6 class="d-inline-block m-b-0">{{ 'COMMON.NOTIFICATIONS' | translate }}</h6>
-                        <div class="float-end">
-                            <a href="javascript:" class="m-r-10">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MARK_AS_READ' |
-                                translate }}</a>
-                            <a href="javascript:">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CLEAR_LIST' | translate }}</a>
-                        </div>
-                    </div>
-                    <ul class="noti-body">
-                        <li class="n-title">
-                            <p class="m-b-0">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.RECENT' | translate }}</p>
-                        </li>
-                        <li class="notification">
-                            <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-1.jpg"
-                                    [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate" />
-                                <div class="media-body">
-                                    <p><strong>John Doe</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock"></i>{{
-                                            'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span></p>
-                                    <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.NEW_TICKET_ADDED' | translate }}</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="n-title">
-                            <p class="m-b-0">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.EARLIER' | translate }}</p>
-                        </li>
-                        <li class="notification">
-                            <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-2.jpg"
-                                    [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate" />
-                                <div class="media-body">
-                                    <p><strong>Joseph William</strong><span class="n-time text-muted"><i
-                                                data-feather="clock"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' |
-                                            translate }}</span></p>
-                                    <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PURCHASE_NEW_THEME_MAKE_PAYMENT' | translate
-                                        }}</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="notification">
-                            <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-3.jpg"
-                                    [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate" />
-                                <div class="media-body">
-                                    <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock m-r-10"></i>{{
-                                            'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span></p>
-                                    <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CURRENTLY_ONLINE' | translate }}</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="noti-footer icono-tema">
-                        <a href="javascript:">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.SHOW_ALL' | translate }}</a>
-                    </div>
+  <ul class="navbar-nav d-flex align-items-center gap-3 flex-row ms-auto">
+    <li>
+      <div class="dropdown icon-style" ngbDropdown placement="auto">
+        <a ngbDropdownToggle href="javascript:" class="icono-tema">
+          <i class="icon feather icon-bell icon-lg icon-style" [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.NOTIFICATION' | translate"></i>
+          <span class="badge bg-danger"><span class="sr-only"></span></span>
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
+          <div class="noti-head">
+            <h6 class="d-inline-block m-b-0">{{ 'COMMON.NOTIFICATIONS' | translate }}</h6>
+            <div class="float-end">
+              <a href="javascript:" class="m-r-10">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MARK_AS_READ' | translate }}</a>
+              <a href="javascript:">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CLEAR_LIST' | translate }}</a>
+            </div>
+          </div>
+          <ul class="noti-body">
+            <li class="n-title">
+              <p class="m-b-0">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.RECENT' | translate }}</p>
+            </li>
+            <li class="notification">
+              <div class="media">
+                <img
+                  class="img-radius"
+                  src="assets/images/user/avatar-1.jpg"
+                  [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate"
+                />
+                <div class="media-body">
+                  <p
+                    ><strong>John Doe</strong
+                    ><span class="n-time text-muted"
+                      ><i class="icon feather icon-clock"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span
+                    ></p
+                  >
+                  <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.NEW_TICKET_ADDED' | translate }}</p>
                 </div>
-            </div>
-        </li>
-        <li (click)="this.visibleUserList = !this.visibleUserList">
-            <div class="dropdown">
-                <a href="javascript:void(0)" class="displayChatbox dropdown-toggle icono-tema">
-                    <i class="icon feather icon-mail icon-lg icon-style"
-                        [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MAIL_INBOX' | translate"></i>
-                    <span class="badge bg-success"><span class="sr-only"></span></span>
-                </a>
-            </div>
-        </li>
-        <li>
-            <i class="icon feather icon-monitor icon-lg icon-style"
-                title="{{ 'COMMON.SUBSCRIBERS' | translate }}" (click)="suscriptorsScreen()"
-                style="cursor: pointer"></i>
-        </li>
-        <li>
-            <i class="icon feather icon-grid icon-lg icon-style"
-                title="{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.APPLICATIONS' | translate }}" (click)="aplicacionesScreen()"
-                style="cursor: pointer"></i>
-        </li>
-        <li>
-            <i class="icon feather icon-home icon-lg icon-style"
-                title="{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.SUITES' | translate }}" (click)="suitesScreen()"
-                style="cursor: pointer"></i>
-        </li>
-        <li>
-            <i class="icon feather icon-help-circle icon-lg icon-style" title="{{ 'COMMON.HELP' | translate }}"
-                (click)="helpsClick()" style="cursor: pointer"></i>
-        </li>
-        <li>
-            <app-language-selector></app-language-selector>
-        </li>
-        <li>
-            <app-profile-drp></app-profile-drp>
-        </li>
-    </ul>
-    <section *ngIf="visibleUserList && !gradientConfig.isRtlLayout" class="header-user-list"
-        [ngClass]="{ open: visibleUserList }" [@slideInOutLeft]>
-        <app-chat-user-list (ChatToggle)="onChatToggle($event)"
-            (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"></app-chat-user-list>
+              </div>
+            </li>
+            <li class="n-title">
+              <p class="m-b-0">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.EARLIER' | translate }}</p>
+            </li>
+            <li class="notification">
+              <div class="media">
+                <img
+                  class="img-radius"
+                  src="assets/images/user/avatar-2.jpg"
+                  [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate"
+                />
+                <div class="media-body">
+                  <p
+                    ><strong>Joseph William</strong
+                    ><span class="n-time text-muted"
+                      ><i data-feather="clock"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span
+                    ></p
+                  >
+                  <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PURCHASE_NEW_THEME_MAKE_PAYMENT' | translate }}</p>
+                </div>
+              </div>
+            </li>
+            <li class="notification">
+              <div class="media">
+                <img
+                  class="img-radius"
+                  src="assets/images/user/avatar-3.jpg"
+                  [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate"
+                />
+                <div class="media-body">
+                  <p
+                    ><strong>Sara Soudein</strong
+                    ><span class="n-time text-muted"
+                      ><i class="icon feather icon-clock m-r-10"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span
+                    ></p
+                  >
+                  <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CURRENTLY_ONLINE' | translate }}</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="noti-footer icono-tema">
+            <a href="javascript:">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.SHOW_ALL' | translate }}</a>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li (click)="this.visibleUserList = !this.visibleUserList">
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="displayChatbox dropdown-toggle icono-tema">
+          <i class="icon feather icon-mail icon-lg icon-style" [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MAIL_INBOX' | translate"></i>
+          <span class="badge bg-success"><span class="sr-only"></span></span>
+        </a>
+      </div>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-monitor icon-lg icon-style"
+        title="{{ 'COMMON.SUBSCRIBERS' | translate }}"
+        (click)="suscriptorsScreen()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-grid icon-lg icon-style"
+        title="{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.APPLICATIONS' | translate }}"
+        (click)="aplicacionesScreen()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-home icon-lg icon-style"
+        title="{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.SUITES' | translate }}"
+        (click)="suitesScreen()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-help-circle icon-lg icon-style"
+        title="{{ 'COMMON.HELP' | translate }}"
+        (click)="helpsClick()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <app-language-selector></app-language-selector>
+    </li>
+    <li>
+      <app-profile-drp></app-profile-drp>
+    </li>
+  </ul>
+  @if (visibleUserList && !gradientConfig.isRtlLayout) {
+    <section class="header-user-list" [ngClass]="{ open: visibleUserList }" [@slideInOutLeft]>
+      <app-chat-user-list
+        (ChatToggle)="onChatToggle($event)"
+        (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"
+      ></app-chat-user-list>
     </section>
-    <section *ngIf="chatMessage && !gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }"
-        [@slideInOutLeft]>
-        <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
+  }
+  @if (chatMessage && !gradientConfig.isRtlLayout) {
+    <section class="header-chat" [ngClass]="{ open: chatMessage }" [@slideInOutLeft]>
+      <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
     </section>
-    <section *ngIf="visibleUserList && gradientConfig.isRtlLayout" class="header-user-list"
-        [ngClass]="{ open: visibleUserList }" [@slideInOutRight]>
-        <app-chat-user-list (ChatToggle)="onChatToggle($event)"
-            (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"></app-chat-user-list>
+  }
+  @if (visibleUserList && gradientConfig.isRtlLayout) {
+    <section class="header-user-list" [ngClass]="{ open: visibleUserList }" [@slideInOutRight]>
+      <app-chat-user-list
+        (ChatToggle)="onChatToggle($event)"
+        (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"
+      ></app-chat-user-list>
     </section>
-    <section *ngIf="chatMessage && gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }"
-        [@slideInOutRight]>
-        <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
+  }
+  @if (chatMessage && gradientConfig.isRtlLayout) {
+    <section class="header-chat" [ngClass]="{ open: chatMessage }" [@slideInOutRight]>
+      <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
     </section>
+  }
 </div>

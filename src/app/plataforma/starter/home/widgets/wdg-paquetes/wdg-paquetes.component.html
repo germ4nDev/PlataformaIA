@@ -1,58 +1,68 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || ('STARTER.HOME.WIDGETS.WDG_PAQUETES.PACKAGES_BY_SUBSCRIBER' | translate)"
-    [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.WDG_PAQUETES.PLATFORM' | translate)" [icono]="widgetConfig?.icono || 'feather icon-package'"
-    [isEnfoque]="isEnfoque" (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell
+  [titulo]="widgetConfig?.titulo || ('STARTER.HOME.WIDGETS.WDG_PAQUETES.PACKAGES_BY_SUBSCRIBER' | translate)"
+  [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.WDG_PAQUETES.PLATFORM' | translate)"
+  [icono]="widgetConfig?.icono || 'feather icon-package'"
+  [isEnfoque]="isEnfoque"
+  (clickEnfoque)="maximizarDesdeShell()"
+>
+  <!-- 🟢 1. PROYECCIÓN AL HEADER: Botón de Refresh -->
+  <div acciones-extra class="d-flex align-items-center gap-2">
+    <!-- Reutilizamos tu lógica, pero con el diseño de botón del header -->
+    <button class="tc-action-btn" (click)="cargarMetricasReales()" [title]="'STARTER.HOME.WIDGETS.RELOAD_DATA' | translate">
+      <i class="feather icon-refresh-cw"></i>
+    </button>
+  </div>
 
-    <!-- 🟢 1. PROYECCIÓN AL HEADER: Botón de Refresh -->
-    <div acciones-extra class="d-flex align-items-center gap-2">
-        <!-- Reutilizamos tu lógica, pero con el diseño de botón del header -->
-        <button class="tc-action-btn" (click)="cargarMetricasReales()" [title]="'STARTER.HOME.WIDGETS.RELOAD_DATA' | translate">
-            <i class="feather icon-refresh-cw"></i>
-        </button>
-    </div>
-
-    <!-- 🟢 2. PLANTILLA MAESTRA (Renderiza la lista adaptada a oscuro) -->
-    <ng-template #listaDePaquetes>
-        <div class="flex-grow-1 overflow-auto pe-2 w-100 h-100 mt-2 custom-scrollbar">
-
-            <div *ngIf="paquetesUnificados.length === 0" class="text-center text-muted py-4 small">
-                {{ 'STARTER.HOME.WIDGETS.WDG_PAQUETES.NO_PACKAGES_REGISTERED' | translate }}
-            </div>
-
-            <div *ngFor="let item of paquetesUnificados" class="mb-4">
-                <div class="fw-semibold text-truncate small mb-2 text-white">{{ item.suscriptor }}</div>
-
-                <!-- Barra Activos -->
-                <div class="d-flex align-items-center mb-2">
-                    <span class="badge bg-success text-white me-2 d-flex justify-content-center align-items-center"
-                        style="width: 35px; height: 20px;">{{ item.activos }}</span>
-                    <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05);">
-                        <div class="progress-bar bg-success rounded-pill" role="progressbar"
-                            [style.width.%]="item.pctActivos"></div>
-                    </div>
-                </div>
-
-                <!-- Barra Inactivos -->
-                <div class="d-flex align-items-center">
-                    <span class="badge bg-danger text-white me-2 d-flex justify-content-center align-items-center"
-                        style="width: 35px; height: 20px;">{{ item.inactivos }}</span>
-                    <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05);">
-                        <div class="progress-bar bg-danger rounded-pill" role="progressbar"
-                            [style.width.%]="item.pctInactivos"></div>
-                    </div>
-                </div>
-            </div>
-
+  <!-- 🟢 2. PLANTILLA MAESTRA (Renderiza la lista adaptada a oscuro) -->
+  <ng-template #listaDePaquetes>
+    <div class="flex-grow-1 overflow-auto pe-2 w-100 h-100 mt-2 custom-scrollbar">
+      @if (paquetesUnificados.length === 0) {
+        <div class="text-center text-muted py-4 small">
+          {{ 'STARTER.HOME.WIDGETS.WDG_PAQUETES.NO_PACKAGES_REGISTERED' | translate }}
         </div>
-    </ng-template>
+      }
 
-    <!-- 🟢 3. RENDERIZADO SEGÚN VISTA -->
-    <ng-container *ngIf="!isEnfoque">
-        <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
-    </ng-container>
-
-    <div *ngIf="isEnfoque" class="w-100 h-100 p-2 d-flex flex-column animate__animated animate__fadeIn">
-        <p class="text-muted small mb-3">{{ 'STARTER.HOME.WIDGETS.WDG_PAQUETES.PROPORTIONAL_DISTRIBUTION_ACTIVE_INACTIVE_PACKAGES_BY' | translate }}</p>
-        <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
+      @for (item of paquetesUnificados; track item) {
+        <div class="mb-4">
+          <div class="fw-semibold text-truncate small mb-2 text-white">{{ item.suscriptor }}</div>
+          <!-- Barra Activos -->
+          <div class="d-flex align-items-center mb-2">
+            <span
+              class="badge bg-success text-white me-2 d-flex justify-content-center align-items-center"
+              style="width: 35px; height: 20px"
+              >{{ item.activos }}</span
+            >
+            <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05)">
+              <div class="progress-bar bg-success rounded-pill" role="progressbar" [style.width.%]="item.pctActivos"></div>
+            </div>
+          </div>
+          <!-- Barra Inactivos -->
+          <div class="d-flex align-items-center">
+            <span
+              class="badge bg-danger text-white me-2 d-flex justify-content-center align-items-center"
+              style="width: 35px; height: 20px"
+              >{{ item.inactivos }}</span
+            >
+            <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255, 255, 255, 0.05)">
+              <div class="progress-bar bg-danger rounded-pill" role="progressbar" [style.width.%]="item.pctInactivos"></div>
+            </div>
+          </div>
+        </div>
+      }
     </div>
+  </ng-template>
 
+  <!-- 🟢 3. RENDERIZADO SEGÚN VISTA -->
+  @if (!isEnfoque) {
+    <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
+  }
+
+  @if (isEnfoque) {
+    <div class="w-100 h-100 p-2 d-flex flex-column animate__animated animate__fadeIn">
+      <p class="text-muted small mb-3">{{
+        'STARTER.HOME.WIDGETS.WDG_PAQUETES.PROPORTIONAL_DISTRIBUTION_ACTIVE_INACTIVE_PACKAGES_BY' | translate
+      }}</p>
+      <ng-container *ngTemplateOutlet="listaDePaquetes"></ng-container>
+    </div>
+  }
 </app-widget-shell>

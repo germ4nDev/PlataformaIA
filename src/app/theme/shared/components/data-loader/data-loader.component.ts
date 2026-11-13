@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-data-loader',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './data-loader.component.html',
   styleUrl: './data-loader.component.scss'
 })

@@ -1,65 +1,89 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'TICKETS.SEGUIMIENTOS.TRACKING_FILTERS' | translate }}</h6>
-                    </DIV>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.NAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'TICKETS.SEGUIMIENTOS.TRACKING_NAME' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
-                            class="form-control form-input"
-                            placeholder="{{ 'TICKETS.SEGUIMIENTOS.TRACKING_DESCRIPTION_2' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select class="form-control form-select" style="cursor: pointer;"
-                            (change)="onFiltroEstadoChangeClick($event)">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="estado.siglaEstado" *ngFor="let estado of estadosSeguimiento">
-                                {{ estado.nombreEstado }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+      }
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <DIV class="text-center">
+            <h6 class="filtros-title">{{ 'TICKETS.SEGUIMIENTOS.TRACKING_FILTERS' | translate }}</h6>
+          </DIV>
+          <div class="filtro">
+            <small>{{ 'COMMON.NAME' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'TICKETS.SEGUIMIENTOS.TRACKING_NAME' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroDescripcionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'TICKETS.SEGUIMIENTOS.TRACKING_DESCRIPTION_2' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select class="form-control form-select" style="cursor: pointer" (change)="onFiltroEstadoChangeClick($event)">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (estado of estadosSeguimiento; track estado) {
+                <option [value]="estado.siglaEstado"> {{ estado.nombreEstado }}</option>
+              }
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoSeguimiento'"
-                        [tableTitle]="'TICKETS.SEGUIMIENTOS.TRACKING_MANAGEMENT' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true"
-                        [showBackButton]="codigoRegistro !== '0'" [showNewButton]="true" [showViewButton]="false"
-                        [showEditButton]="true" [showDeleteButton]="true" [showDetail]="true" [showSearchBox]="false"
-                        [newButtonLabel]="'TICKETS.SEGUIMIENTOS.NEW_TRACKING' | translate"
-                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                        (backRecord)="OnBackRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_SEGUIMIENTOS_CREAR" permisoEdit="ACT_SEGUIMIENTOS_MODIFICAR" permisoDelete="ACT_SEGUIMIENTOS_ELIMINAR">
-                    </app-table-data>
-                </ng-container>
-            </div>
-        </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (registrosFiltrado$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoSeguimiento'"
+            [tableTitle]="'TICKETS.SEGUIMIENTOS.TRACKING_MANAGEMENT' | translate"
+            [metadataColumns]="columnasRegistros"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showActions]="true"
+            [showBackButton]="codigoRegistro !== '0'"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="true"
+            [showDeleteButton]="true"
+            [showDetail]="true"
+            [showSearchBox]="false"
+            [newButtonLabel]="'TICKETS.SEGUIMIENTOS.NEW_TRACKING' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            (newRecord)="OnNuevoRegistroClick()"
+            (backRecord)="OnBackRegistroClick()"
+            (editRecord)="OnEditarRegistroClick($event)"
+            (deleteRecord)="OnEliminarRegistroClick($event)"
+            permisoNew="ACT_SEGUIMIENTOS_CREAR"
+            permisoEdit="ACT_SEGUIMIENTOS_MODIFICAR"
+            permisoDelete="ACT_SEGUIMIENTOS_ELIMINAR"
+          >
+          </app-table-data>
+        }
+      </div>
+    </div>
+  </div>
 </div>

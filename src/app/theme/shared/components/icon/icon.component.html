@@ -1,7 +1,10 @@
-<span *ngIf="esMaterial" class="material-symbols-outlined {{ customClass }}">
+@if (esMaterial) {
+  <span class="material-symbols-outlined {{ customClass }}">
     {{ name }}
-</span>
+  </span>
+}
 
 <!-- Renderiza Feather o Tabler -->
-<i *ngIf="!esMaterial && name" [class]="claseGenerada + ' ' + customClass">
-</i>
+@if (!esMaterial && name) {
+  <i [class]="claseGenerada + ' ' + customClass"> </i>
+}

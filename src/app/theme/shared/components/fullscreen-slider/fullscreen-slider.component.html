@@ -1,26 +1,57 @@
 <div class="slider-container" [class.slider-container--contenido]="contenido">
+  <div class="image-wrapper">
+    @for (imageUrl of images; track imageUrl; let i = $index) {
+      <img
+        [ngSrc]="imageUrl.imageSlider ?? ''"
+        [fill]="true"
+        [priority]="i === 0"
+        [attr.alt]="imageUrl.nombreSlider + ' ' + (i + 1)"
+        [ngClass]="{ active: i === currentIndex }"
+        class="slider-image"
+        (error)="onImageError($event, i)"
+      />
+    }
+  </div>
 
-    <div class="image-wrapper">
-        <img *ngFor="let imageUrl of images; let i = index" [ngSrc]="imageUrl.imageSlider?? ''" [fill]="true"
-            [priority]="i === 0" [attr.alt]="imageUrl.nombreSlider + ' ' + (i + 1)"
-            [ngClass]="{ 'active': i === currentIndex }" class="slider-image" (error)="onImageError($event, i)">
+  <!-- CC-104: leyenda del slide (texto plano de la gestión; nunca HTML) -->
+  @if (leyendas && images.length) {
+    <div class="slider-leyenda" aria-live="polite">
+      @if (leyenda.titulo) {
+        <h2 class="slider-leyenda__titulo">{{ leyenda.titulo }}</h2>
+      }
+      @if (leyenda.texto) {
+        <p class="slider-leyenda__texto">{{ leyenda.texto }}</p>
+      }
     </div>
+  }
 
-    <!-- CC-104: leyenda del slide (texto plano de la gestión; nunca HTML) -->
-    <div class="slider-leyenda" *ngIf="leyendas && images.length" aria-live="polite">
-        <h2 class="slider-leyenda__titulo" *ngIf="leyenda.titulo">{{ leyenda.titulo }}</h2>
-        <p class="slider-leyenda__texto" *ngIf="leyenda.texto">{{ leyenda.texto }}</p>
-    </div>
-
-    <div class="indicators" [class.indicators--leyenda]="leyendas" *ngIf="images.length > 1">
-        <button *ngFor="let image of images; let i = index" [ngClass]="{ 'active': i === currentIndex }"
-            (click)="goToImage(i)" class="indicator-dot" [attr.aria-label]="('SHARED.GO_IMAGE' | translate) + (i + 1)">
+  @if (images.length > 1) {
+    <div class="indicators" [class.indicators--leyenda]="leyendas">
+      @for (image of images; track image; let i = $index) {
+        <button
+          [ngClass]="{ active: i === currentIndex }"
+          (click)="goToImage(i)"
+          class="indicator-dot"
+          [attr.aria-label]="('SHARED.GO_IMAGE' | translate) + (i + 1)"
+        >
         </button>
-        <button *ngIf="leyendas" type="button" class="slider-pausa" (click)="alternarPausa()"
-            [attr.aria-label]="pausado ? ('SHARED.FULLSCREEN_SLIDER.RESUME' | translate) : ('COMMON.PAUSE' | translate)" [attr.aria-pressed]="pausado">
-            <span *ngIf="!pausado" class="slider-pausa__barras" aria-hidden="true"></span>
-            <span *ngIf="pausado" class="slider-pausa__play" aria-hidden="true"></span>
+      }
+      @if (leyendas) {
+        <button
+          type="button"
+          class="slider-pausa"
+          (click)="alternarPausa()"
+          [attr.aria-label]="pausado ? ('SHARED.FULLSCREEN_SLIDER.RESUME' | translate) : ('COMMON.PAUSE' | translate)"
+          [attr.aria-pressed]="pausado"
+        >
+          @if (!pausado) {
+            <span class="slider-pausa__barras" aria-hidden="true"></span>
+          }
+          @if (pausado) {
+            <span class="slider-pausa__play" aria-hidden="true"></span>
+          }
         </button>
+      }
     </div>
-
+  }
 </div>

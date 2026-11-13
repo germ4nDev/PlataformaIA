@@ -1,104 +1,191 @@
 <div class="panel-ia-sidebar-desplazable" [ngClass]="{ 'is-open': sidebarAbierto }">
-    <div class="panel-ia-header-sidebar" (click)="alternarSidebar()">
-        <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center gap-2">
-                <span class="asis-sello">{{ 'COMMON.AI' | translate }}</span>
-                <div class="titulos-header">
-                    <label>{{ 'SHARED.IA_CHAT_FLOTANTE.IA_ASSISTANT' | translate }}</label><br>
-                    <span class="text-muted-sidebar">{{ 'SHARED.IA_CHAT_FLOTANTE.PORT_OPERATIONS_P0' | translate: { p0: puerto ? ' · ' + puerto : '' } }}</span>
-                </div>
-            </div>
-            <span class="flecha-indicadora">{{ sidebarAbierto ? '▼' : '▲' }}</span>
+  <div class="panel-ia-header-sidebar" (click)="alternarSidebar()">
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center gap-2">
+        <span class="asis-sello">{{ 'COMMON.AI' | translate }}</span>
+        <div class="titulos-header">
+          <label>{{ 'SHARED.IA_CHAT_FLOTANTE.IA_ASSISTANT' | translate }}</label
+          ><br />
+          <span class="text-muted-sidebar">{{
+            'SHARED.IA_CHAT_FLOTANTE.PORT_OPERATIONS_P0' | translate: { p0: puerto ? ' · ' + puerto : '' }
+          }}</span>
         </div>
+      </div>
+      <span class="flecha-indicadora">{{ sidebarAbierto ? '▼' : '▲' }}</span>
     </div>
+  </div>
 
-    <div class="panel-ia-sliding-content">
-        <div class="p-2 text-center">
-            <small class="texto-ia">{{ 'SHARED.IA_CHAT_FLOTANTE.ASK_ABOUT_OPERATIONS_SHIPS_GATE_CARGO' | translate }}</small>
-        </div>
-        <div class="panel-ia-footer-sidebar">
-            <div class="input-group-sidebar" style="padding: 10px;">
-                <textarea class="form-control form-input asis-texto" [(ngModel)]="promptUsuario" (keydown.enter)="$event.preventDefault(); enviarConsulta()"
-                    placeholder="{{ 'SHARED.IA_CHAT_FLOTANTE.ASK' | translate }}" [disabled]="cargando" rows="3" maxlength="1000"></textarea>
-                <div class="wrapper-boton-sidebar">
-                    <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="enviarConsulta()" [disabled]="cargando || !promptUsuario.trim()">
-                        {{ 'COMMON.SEND' | translate }}
-                    </button>
-                    <button type="button" class="btn btn-link btn-sm" *ngIf="historialInteracciones.length" (click)="abrirModal()">{{ 'SHARED.IA_CHAT_FLOTANTE.VIEW_CONVERSATION' | translate }}</button>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="cargando" class="text-center p-2 text-muted asis-pequeno">
-            <span class="spinner-border spinner-border-sm me-1" role="status"></span> {{ 'SHARED.IA_CHAT_FLOTANTE.CHECKING_PORTTOS_DATA' | translate }}
-        </div>
+  <div class="panel-ia-sliding-content">
+    <div class="p-2 text-center">
+      <small class="texto-ia">{{ 'SHARED.IA_CHAT_FLOTANTE.ASK_ABOUT_OPERATIONS_SHIPS_GATE_CARGO' | translate }}</small>
     </div>
+    <div class="panel-ia-footer-sidebar">
+      <div class="input-group-sidebar" style="padding: 10px">
+        <textarea
+          class="form-control form-input asis-texto"
+          [(ngModel)]="promptUsuario"
+          (keydown.enter)="$event.preventDefault(); enviarConsulta()"
+          placeholder="{{ 'SHARED.IA_CHAT_FLOTANTE.ASK' | translate }}"
+          [disabled]="cargando"
+          rows="3"
+          maxlength="1000"
+        ></textarea>
+        <div class="wrapper-boton-sidebar">
+          <button
+            type="button"
+            class="btn btn-primary btn-NuevoRegistro"
+            (click)="enviarConsulta()"
+            [disabled]="cargando || !promptUsuario.trim()"
+          >
+            {{ 'COMMON.SEND' | translate }}
+          </button>
+          @if (historialInteracciones.length) {
+            <button type="button" class="btn btn-link btn-sm" (click)="abrirModal()">{{
+              'SHARED.IA_CHAT_FLOTANTE.VIEW_CONVERSATION' | translate
+            }}</button>
+          }
+        </div>
+      </div>
+    </div>
+    @if (cargando) {
+      <div class="text-center p-2 text-muted asis-pequeno">
+        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+        {{ 'SHARED.IA_CHAT_FLOTANTE.CHECKING_PORTTOS_DATA' | translate }}
+      </div>
+    }
+  </div>
 </div>
 
-<div class="asis-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
-    <div class="asis-modal" (click)="$event.stopPropagation()" role="dialog" [attr.aria-label]="'SHARED.IA_CHAT_FLOTANTE.PORTTOS_ASSISTANT' | translate">
-        <header class="asis-encabezado">
-            <div>
-                <h5><span class="asis-sello">{{ 'COMMON.AI' | translate }}</span>{{ 'SHARED.IA_CHAT_FLOTANTE.PORTTOS_ASSISTANT' | translate }}</h5>
-                <small>{{ 'SHARED.IA_CHAT_FLOTANTE.P0_PORT_LOGISTICS_TOPICS_ONLY_ANSWERS' | translate: { p0: puerto ? 'Puerto: ' + puerto : 'Todos los puertos' } }}</small>
-            </div>
-            <div class="d-flex gap-2 align-items-start">
-                <button type="button" class="btn btn-sm btn-outline-secondary" *ngIf="historialInteracciones.length" (click)="nuevaConversacion()">{{ 'COMMON.NEW_2' | translate }}</button>
-                <button type="button" class="asis-cerrar" (click)="cerrarModal()" [attr.aria-label]="'COMMON.CLOSE' | translate">✕</button>
-            </div>
-        </header>
-
-        <div class="asis-cuerpo" #cuerpo>
-            <div class="asis-vacio" *ngIf="!historialInteracciones.length">
-                <p>{{ 'SHARED.IA_CHAT_FLOTANTE.HI_I_ANSWER_QUESTIONS_ABOUT_PORT' | translate }}</p>
-                <button type="button" class="asis-sugerencia" *ngFor="let e of ejemplos" (click)="usarSugerencia(e)">{{ e }}</button>
-            </div>
-
-            <div class="asis-turno" *ngFor="let i of historialInteracciones">
-                <div class="asis-pregunta">{{ i.pregunta }}</div>
-
-                <div class="asis-respuesta" [ngClass]="'dec-' + (i.resultado?.decision || 'dentro')">
-                    <div *ngIf="i.cargando" class="asis-pequeno text-muted">
-                        <span class="spinner-border spinner-border-sm me-1" role="status"></span> {{ 'SHARED.IA_CHAT_FLOTANTE.CHECKING_DASHBOARDS_TRENDS_ALERTS' | translate }}
-                    </div>
-                    <div *ngIf="i.error" class="asis-aviso error">{{ i.error }}</div>
-
-                    <ng-container *ngIf="i.resultado as r">
-                        <div class="asis-etiquetas">
-                            <span class="asis-etiqueta" *ngIf="mensajeEstado(i) as m" [ngClass]="'est-' + r.estado">{{ m }}</span>
-                            <span class="asis-etiqueta frontera" *ngIf="r.decision === 'frontera'" [title]="'SHARED.IA_CHAT_FLOTANTE.ONLY_ITS_EFFECT_ON_OPERATIONS_ANSWERED' | translate">{{ 'SHARED.IA_CHAT_FLOTANTE.OPERATING_CONTEXT' | translate }}</span>
-                        </div>
-                        <div class="asis-texto-respuesta" [innerHTML]="r.respuesta | markdown"></div>
-
-                        <div class="asis-aviso" *ngIf="r.verificacion && !r.verificacion.ok">
-                            {{ 'SHARED.IA_CHAT_FLOTANTE.FIGURES_DO_NOT_APPEAR_IN_DATA' | translate: { p0: r.verificacion.sinRespaldo.join(', ') } }}
-                        </div>
-
-                        <div class="asis-fuentes" *ngIf="r.fuentes?.length">
-                            <small>{{ 'COMMON.SOURCES' | translate }}</small>
-                            <span class="asis-fuente" *ngFor="let f of r.fuentes" [title]="f.detalle">{{ etiqueta(f.herramienta) }}<em *ngIf="f.detalle"> · {{ f.detalle }}</em></span>
-                        </div>
-
-                        <div class="asis-sugerencias" *ngIf="r.sugerencias?.length">
-                            <button type="button" class="asis-sugerencia" *ngFor="let s of r.sugerencias" (click)="usarSugerencia(s)" [disabled]="cargando">{{ s }}</button>
-                        </div>
-
-                        <div class="asis-votos" *ngIf="r.id && (r.estado === 'RESPONDIDA' || r.estado === 'SIN_DATOS')">
-                            <small class="text-muted">{{ 'COMMON.WAS_IT_USEFUL' | translate }}</small>
-                            <button type="button" class="asis-voto" [class.marcado]="i.voto === true" [disabled]="i.voto !== null" (click)="votar(i, true)">{{ 'SHARED.IA_CHAT_FLOTANTE.USEFUL' | translate }}</button>
-                            <button type="button" class="asis-voto" [class.marcado]="i.voto === false" [disabled]="i.voto !== null" (click)="votar(i, false)">{{ 'SHARED.IA_CHAT_FLOTANTE.IT_WASNT' | translate }}</button>
-                            <small class="text-muted ms-auto">{{ i.fecha | date: 'HH:mm' }}</small>
-                        </div>
-                    </ng-container>
-                </div>
-            </div>
+@if (modalAbierto) {
+  <div class="asis-overlay" (click)="cerrarModal()">
+    <div
+      class="asis-modal"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      [attr.aria-label]="'SHARED.IA_CHAT_FLOTANTE.PORTTOS_ASSISTANT' | translate"
+    >
+      <header class="asis-encabezado">
+        <div>
+          <h5
+            ><span class="asis-sello">{{ 'COMMON.AI' | translate }}</span
+            >{{ 'SHARED.IA_CHAT_FLOTANTE.PORTTOS_ASSISTANT' | translate }}</h5
+          >
+          <small>{{
+            'SHARED.IA_CHAT_FLOTANTE.P0_PORT_LOGISTICS_TOPICS_ONLY_ANSWERS'
+              | translate: { p0: puerto ? 'Puerto: ' + puerto : 'Todos los puertos' }
+          }}</small>
         </div>
-
-        <footer class="asis-pie">
-            <input type="text" class="form-control" [(ngModel)]="promptUsuario" (keyup.enter)="enviarConsulta()" maxlength="1000"
-                [placeholder]="'SHARED.IA_CHAT_FLOTANTE.ASK_ABOUT_PORT_OPERATIONS' | translate" [disabled]="cargando" />
-            <button type="button" class="btn btn-primary" (click)="enviarConsulta()" [disabled]="cargando || !promptUsuario.trim()">
-                {{ 'COMMON.SEND' | translate }}
-            </button>
-        </footer>
+        <div class="d-flex gap-2 align-items-start">
+          @if (historialInteracciones.length) {
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="nuevaConversacion()">{{
+              'COMMON.NEW_2' | translate
+            }}</button>
+          }
+          <button type="button" class="asis-cerrar" (click)="cerrarModal()" [attr.aria-label]="'COMMON.CLOSE' | translate">✕</button>
+        </div>
+      </header>
+      <div class="asis-cuerpo" #cuerpo>
+        @if (!historialInteracciones.length) {
+          <div class="asis-vacio">
+            <p>{{ 'SHARED.IA_CHAT_FLOTANTE.HI_I_ANSWER_QUESTIONS_ABOUT_PORT' | translate }}</p>
+            @for (e of ejemplos; track e) {
+              <button type="button" class="asis-sugerencia" (click)="usarSugerencia(e)">{{ e }}</button>
+            }
+          </div>
+        }
+        @for (i of historialInteracciones; track i) {
+          <div class="asis-turno">
+            <div class="asis-pregunta">{{ i.pregunta }}</div>
+            <div class="asis-respuesta" [ngClass]="'dec-' + (i.resultado?.decision || 'dentro')">
+              @if (i.cargando) {
+                <div class="asis-pequeno text-muted">
+                  <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                  {{ 'SHARED.IA_CHAT_FLOTANTE.CHECKING_DASHBOARDS_TRENDS_ALERTS' | translate }}
+                </div>
+              }
+              @if (i.error) {
+                <div class="asis-aviso error">{{ i.error }}</div>
+              }
+              @if (i.resultado; as r) {
+                <div class="asis-etiquetas">
+                  @if (mensajeEstado(i); as m) {
+                    <span class="asis-etiqueta" [ngClass]="'est-' + r.estado">{{ m }}</span>
+                  }
+                  @if (r.decision === 'frontera') {
+                    <span
+                      class="asis-etiqueta frontera"
+                      [title]="'SHARED.IA_CHAT_FLOTANTE.ONLY_ITS_EFFECT_ON_OPERATIONS_ANSWERED' | translate"
+                      >{{ 'SHARED.IA_CHAT_FLOTANTE.OPERATING_CONTEXT' | translate }}</span
+                    >
+                  }
+                </div>
+                <div class="asis-texto-respuesta" [innerHTML]="r.respuesta | markdown"></div>
+                @if (r.verificacion && !r.verificacion.ok) {
+                  <div class="asis-aviso">
+                    {{ 'SHARED.IA_CHAT_FLOTANTE.FIGURES_DO_NOT_APPEAR_IN_DATA' | translate: { p0: r.verificacion.sinRespaldo.join(', ') } }}
+                  </div>
+                }
+                @if (r.fuentes?.length) {
+                  <div class="asis-fuentes">
+                    <small>{{ 'COMMON.SOURCES' | translate }}</small>
+                    @for (f of r.fuentes; track f) {
+                      <span class="asis-fuente" [title]="f.detalle"
+                        >{{ etiqueta(f.herramienta) }}
+                        @if (f.detalle) {
+                          <em> · {{ f.detalle }}</em>
+                        }
+                      </span>
+                    }
+                  </div>
+                }
+                @if (r.sugerencias?.length) {
+                  <div class="asis-sugerencias">
+                    @for (s of r.sugerencias; track s) {
+                      <button type="button" class="asis-sugerencia" (click)="usarSugerencia(s)" [disabled]="cargando">{{ s }}</button>
+                    }
+                  </div>
+                }
+                @if (r.id && (r.estado === 'RESPONDIDA' || r.estado === 'SIN_DATOS')) {
+                  <div class="asis-votos">
+                    <small class="text-muted">{{ 'COMMON.WAS_IT_USEFUL' | translate }}</small>
+                    <button
+                      type="button"
+                      class="asis-voto"
+                      [class.marcado]="i.voto === true"
+                      [disabled]="i.voto !== null"
+                      (click)="votar(i, true)"
+                      >{{ 'SHARED.IA_CHAT_FLOTANTE.USEFUL' | translate }}</button
+                    >
+                    <button
+                      type="button"
+                      class="asis-voto"
+                      [class.marcado]="i.voto === false"
+                      [disabled]="i.voto !== null"
+                      (click)="votar(i, false)"
+                      >{{ 'SHARED.IA_CHAT_FLOTANTE.IT_WASNT' | translate }}</button
+                    >
+                    <small class="text-muted ms-auto">{{ i.fecha | date: 'HH:mm' }}</small>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
+      </div>
+      <footer class="asis-pie">
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="promptUsuario"
+          (keyup.enter)="enviarConsulta()"
+          maxlength="1000"
+          [placeholder]="'SHARED.IA_CHAT_FLOTANTE.ASK_ABOUT_PORT_OPERATIONS' | translate"
+          [disabled]="cargando"
+        />
+        <button type="button" class="btn btn-primary" (click)="enviarConsulta()" [disabled]="cargando || !promptUsuario.trim()">
+          {{ 'COMMON.SEND' | translate }}
+        </button>
+      </footer>
     </div>
-</div>
+  </div>
+}

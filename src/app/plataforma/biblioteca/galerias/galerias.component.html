@@ -6,39 +6,42 @@
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
           {{ 'COMMON.MENU' | translate }}
         </button>
-        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'COMMON.FILTERS' | translate }}
-        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
       </div>
 
-      <ng-container *ngIf="activeTab === 'menu'">
+      @if (activeTab === 'menu') {
         <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="activeTab === 'filters'">
+      @if (activeTab === 'filters') {
         <div class="p-3 filtros-scroll-wrapper">
           <h6 class="filtros-title">{{ 'BIBLIOTECA.GALERIAS.GALLERY_FILTERS' | translate }}</h6>
-
           <div class="filtro">
             <small>{{ 'COMMON.CODE' | translate }}</small>
             <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-              <option [value]="gal.codigoGaleria" *ngFor="let gal of galerias">
-                {{ gal.codigoGaleria }}
-              </option>
+              @for (gal of galerias; track gal) {
+                <option [value]="gal.codigoGaleria">
+                  {{ gal.codigoGaleria }}
+                </option>
+              }
             </select>
           </div>
-
           <div class="filtro">
             <small>{{ 'COMMON.NAME' | translate }}</small>
             <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-              <option [value]="gal.nombreGaleria" *ngFor="let gal of galerias">
-                {{ gal.nombreGaleria }}
-              </option>
+              @for (gal of galerias; track gal) {
+                <option [value]="gal.nombreGaleria">
+                  {{ gal.nombreGaleria }}
+                </option>
+              }
             </select>
           </div>
-
           <div class="filtro">
             <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
             <input
@@ -48,7 +51,6 @@
               placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}"
             />
           </div>
-
           <div class="filtro">
             <small>{{ 'COMMON.STATUS' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
@@ -58,14 +60,14 @@
             </select>
           </div>
         </div>
-      </ng-container>
+      }
     </div>
   </aside>
 
   <div class="content-area">
     <div class="card card-table content-scroll-wrapper">
       <div class="card-body">
-        <ng-container *ngIf="galeriaFiltrada$ | async as dataFiltrada">
+        @if (galeriaFiltrada$ | async; as dataFiltrada) {
           <app-data-table
             [data]="dataFiltrada"
             [idField]="'codigoGaleria'"
@@ -85,9 +87,13 @@
             (newRecord)="OnNuevaGaleriaClick()"
             (editRecord)="OnEditarGaleriaClick($event)"
             (deleteRecord)="OnEliminarGaleriaClick($event)"
-            (backRecord)="OnRegresarBibliotecaClick()" permisoNew="ACT_GALERIAS_CREAR" permisoEdit="ACT_GALERIAS_MODIFICAR" permisoDelete="ACT_GALERIAS_ELIMINAR">
+            (backRecord)="OnRegresarBibliotecaClick()"
+            permisoNew="ACT_GALERIAS_CREAR"
+            permisoEdit="ACT_GALERIAS_MODIFICAR"
+            permisoDelete="ACT_GALERIAS_ELIMINAR"
+          >
           </app-data-table>
-        </ng-container>
+        }
       </div>
     </div>
   </div>

@@ -3,14 +3,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../service/lenguage.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { Observable, of, Subscription } from 'rxjs';
 import { PTLIdioma } from '../../_helpers/models/PTLIdioma.model';
 import { LocalStorageService, PtlidiomasService, UploadFilesService } from '../../service';
 
 @Component({
   selector: 'app-language-selector',
-  imports: [CommonModule, NgSelectModule, FormsModule],
+  imports: [NgSelectModule, FormsModule],
   templateUrl: './language-selector.component.html',
   styleUrl: './language-selector.component.scss'
 })

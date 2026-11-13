@@ -1,14 +1,14 @@
 import { traducir } from '../../i18n/traducir';
 import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { HttpClient } from '@angular/common/http';
 import * as XLSX from 'xlsx';
 import { SwalAlertService } from '../../service/swal-alert.service';
 
 @Component({
   selector: 'app-excel-uploader',
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule],
   templateUrl: './excel-loader.component.html',
   styleUrls: ['./excel-loader.component.scss']
 })

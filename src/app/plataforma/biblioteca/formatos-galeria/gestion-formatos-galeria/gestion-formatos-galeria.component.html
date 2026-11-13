@@ -1,121 +1,154 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button>{{ 'COMMON.MENU' | translate }}</button>
-            </div>
-            <ng-container>
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="form-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'BIBLIOTECA.FORMATOS_GALERIA.NEW_FORMAT' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'BIBLIOTECA.FORMATOS_GALERIA.GESTION.MODIFY_FORMAT' | translate }}</h4>
-                    </div>
-                    <div class="d-flex">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'COMMON.BACK' | translate }} <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="btnGestionarFormatoClick(validationForm)">
-                            {{ modoEdicion ? ('BIBLIOTECA.FORMATOS_GALERIA.GESTION.MODIFY_FORMAT' | translate) : ('BIBLIOTECA.FORMATOS_GALERIA.GESTION.CREATE_FORMAT' |
-                            translate) }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body form-scroll-wrapper">
-                <form #validationForm="ngForm" class="editForm" novalidate>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.CODE' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="codigoFormato" [ngClass]="{
-                    'is-invalid': !codigoFormato.valid && (codigoFormato.dirty || codigoFormato.touched || isSubmit)
-                  }" #codigoFormato="ngModel" required [(ngModel)]="FormRegistro.codigoFormato" readonly />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoTipoGaleria">{{
-                                    'BIBLIOTECA.FORMATOS_GALERIA.GESTION.GALLERY_TYPE' | translate
-                                    }}</label>
-                                <select class="form-control form-select" id="codigoTipoGaleria"
-                                    name="codigoTipoGaleria"
-                                    [ngClass]="{ 'is-invalid': !codigoTipoGaleria.valid && (codigoTipoGaleria.dirty || codigoTipoGaleria.touched || isSubmit) }"
-                                    #codigoTipoGaleria="ngModel" required [(ngModel)]="FormRegistro.codigoTipoGaleria">
-                                    <option value="" disabled selected>{{ 'BIBLIOTECA.FORMATOS_GALERIA.GESTION.SELECT_GALLERY_TYPE' |
-                                        translate }}
-                                    </option>
-
-                                    <option *ngFor="let tipo of listaTipos" [value]="tipo.codigoTipoGaleria">
-                                        {{ tipo.nombreTipo }}
-                                    </option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoTipoGaleria.valid && (codigoTipoGaleria.dirty || codigoTipoGaleria.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'BIBLIOTECA.GALLERY_TYPE_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="nombreFormato">{{ 'BIBLIOTECA.FORMATOS_GALERIA.FORMAT_NAME' |
-                                    translate }}</label>
-                                <input class="form-control form-input" id="nombreFormato" name="nombreFormato"
-                                    type="text" placeholder="{{ 'BIBLIOTECA.FORMATOS_GALERIA.GESTION.E_G_PDF_JPG_MP4' | translate }}" [ngClass]="{
-                    'is-invalid': !nombreFormato.valid && (nombreFormato.dirty || nombreFormato.touched || isSubmit)
-                  }" #nombreFormato="ngModel" required [(ngModel)]="FormRegistro.nombreFormato" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
-                                <app-text-editor [toolbarType]="tipoEditorTexto"
-                                    [contentHtml]="FormRegistro.descripcionFormato ?? ''"
-                                    (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionFormato"
-                                    [(ngModel)]="FormRegistro.descripcionFormato" [ngClass]="{
-                    'is-invalid':
-                      !descripcionFormato.valid &&
-                      (descripcionFormato.dirty || descripcionFormato.touched || isSubmit)
-                  }" #descripcionFormato="ngModel" required rows="5"></app-text-editor>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
-                                <div class="radio-buttons">
-                                    <label class="radio-button">
-                                        <input name="estadoFormato" type="radio" [value]="true"
-                                            [(ngModel)]="FormRegistro.estadoFormato" />
-                                        <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
-                                    </label>
-                                    <label class="radio-button">
-                                        <input name="estadoFormato" type="radio" [value]="false"
-                                            [(ngModel)]="FormRegistro.estadoFormato" />
-                                        <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button>{{ 'COMMON.MENU' | translate }}</button>
+      </div>
+      <ng-container>
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      </ng-container>
     </div>
+  </aside>
+
+  <div class="form-area">
+    <div class="card">
+      <div class="card-header card-header-sticky">
+        <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center">
+            @if (!modoEdicion) {
+              <h4 class="datatable-title">{{ 'BIBLIOTECA.FORMATOS_GALERIA.NEW_FORMAT' | translate }}</h4>
+            }
+            @if (modoEdicion) {
+              <h4 class="datatable-title">{{ 'BIBLIOTECA.FORMATOS_GALERIA.GESTION.MODIFY_FORMAT' | translate }}</h4>
+            }
+          </div>
+          <div class="d-flex">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+              {{ 'COMMON.BACK' | translate }} <i class="feather icon-arrow-left ms-2"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarFormatoClick(validationForm)">
+              {{
+                modoEdicion
+                  ? ('BIBLIOTECA.FORMATOS_GALERIA.GESTION.MODIFY_FORMAT' | translate)
+                  : ('BIBLIOTECA.FORMATOS_GALERIA.GESTION.CREATE_FORMAT' | translate)
+              }}
+              <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body form-scroll-wrapper">
+        <form #validationForm="ngForm" class="editForm" novalidate>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">{{ 'COMMON.CODE' | translate }}</label>
+                <input
+                  type="text"
+                  class="form-control form-input"
+                  name="codigoFormato"
+                  [ngClass]="{
+                    'is-invalid': !codigoFormato.valid && (codigoFormato.dirty || codigoFormato.touched || isSubmit)
+                  }"
+                  #codigoFormato="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.codigoFormato"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="codigoTipoGaleria">{{
+                  'BIBLIOTECA.FORMATOS_GALERIA.GESTION.GALLERY_TYPE' | translate
+                }}</label>
+                <select
+                  class="form-control form-select"
+                  id="codigoTipoGaleria"
+                  name="codigoTipoGaleria"
+                  [ngClass]="{
+                    'is-invalid': !codigoTipoGaleria.valid && (codigoTipoGaleria.dirty || codigoTipoGaleria.touched || isSubmit)
+                  }"
+                  #codigoTipoGaleria="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.codigoTipoGaleria"
+                >
+                  <option value="" disabled selected>{{ 'BIBLIOTECA.FORMATOS_GALERIA.GESTION.SELECT_GALLERY_TYPE' | translate }} </option>
+
+                  @for (tipo of listaTipos; track tipo) {
+                    <option [value]="tipo.codigoTipoGaleria">
+                      {{ tipo.nombreTipo }}
+                    </option>
+                  }
+                </select>
+                @if (!codigoTipoGaleria.valid && (codigoTipoGaleria.dirty || codigoTipoGaleria.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'BIBLIOTECA.GALLERY_TYPE_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="nombreFormato">{{ 'BIBLIOTECA.FORMATOS_GALERIA.FORMAT_NAME' | translate }}</label>
+                <input
+                  class="form-control form-input"
+                  id="nombreFormato"
+                  name="nombreFormato"
+                  type="text"
+                  placeholder="{{ 'BIBLIOTECA.FORMATOS_GALERIA.GESTION.E_G_PDF_JPG_MP4' | translate }}"
+                  [ngClass]="{
+                    'is-invalid': !nombreFormato.valid && (nombreFormato.dirty || nombreFormato.touched || isSubmit)
+                  }"
+                  #nombreFormato="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.nombreFormato"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+                <app-text-editor
+                  [toolbarType]="tipoEditorTexto"
+                  [contentHtml]="FormRegistro.descripcionFormato ?? ''"
+                  (contentHtmlChange)="actualizarDescripcionVersion($event)"
+                  name="descripcionFormato"
+                  [(ngModel)]="FormRegistro.descripcionFormato"
+                  [ngClass]="{
+                    'is-invalid': !descripcionFormato.valid && (descripcionFormato.dirty || descripcionFormato.touched || isSubmit)
+                  }"
+                  #descripcionFormato="ngModel"
+                  required
+                  rows="5"
+                ></app-text-editor>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
+                <div class="radio-buttons">
+                  <label class="radio-button">
+                    <input name="estadoFormato" type="radio" [value]="true" [(ngModel)]="FormRegistro.estadoFormato" />
+                    <div class="radio-circle"></div>
+                    <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                  </label>
+                  <label class="radio-button">
+                    <input name="estadoFormato" type="radio" [value]="false" [(ngModel)]="FormRegistro.estadoFormato" />
+                    <div class="radio-circle"></div>
+                    <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

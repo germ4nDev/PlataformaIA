@@ -1,110 +1,129 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+          {{ 'COMMON.FILTERS' | translate }}
+        </button>
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <DIV class="text-center">
-                        <h6 class="filtros-title">{{ ROLES.FILTROS.TITULO' | translate }}</h6>
-                    </DIV>
-                    <div class="filtro">
-                        <div class="form-group">
-                            <small>{{ ROLES.FILTROS.FILTROTIPOROL' | translate }}</small>
-                            <select (change)="onFiltroTipoRolChangeClick($event)" class="form-control form-select"
-                                style="cursor: pointer">
-                                <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                                <option value="plataforma">{{ ROLES.FILTROS.ROLPLATAFORMA' | translate }}
-                                </option>
-                                <option value="suscriptor">{{ ROLES.FILTROS.ROLSUSCRIPTOR' | translate }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ ROLES.FILTROS.FILTROCODIGOROLE' | translate }}</small>
-                        <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select"
-                            style="cursor: pointer">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="reg.codigoRole" *ngFor="let reg of roles">
-                                {{ reg.nombreRole }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ ROLES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
-                        <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select"
-                            style="cursor: pointer">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="reg.codigoAplicacion" *ngFor="let reg of aplicaciones">
-                                {{ reg.nombreAplicacion }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ ROLES.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
-                        <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select"
-                            style="cursor: pointer">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="reg.codigoSuite" *ngFor="let reg of suites">
-                                {{ reg.nombreSuite }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ ROLES.FILTROS.NOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ ROLES.FILTROS.NOMBREHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ ROLES.FILTROS.DECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
-                            class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.ROLES.ROLE_DESCRIPTION' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ ROLES.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
-                            style="cursor: pointer" required>
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada; else loading">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoRole'"
-                        [tableTitle]="'USUARIOS.ROLES.ROLE_MANAGEMENT' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="false" [showSearchBox]="false" [showBackButton]="false"
-                        [newButtonLabel]="'USUARIOS.ROLES.NEW_ROLE' | translate" [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
-                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_ROLES_CREAR" permisoEdit="ACT_ROLES_MODIFICAR">
-                    </app-table-data>
-                </ng-container>
-                <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
-                </ng-template>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      }
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <DIV class="text-center">
+            <h6 class="filtros-title">{{ ROLES.FILTROS.TITULO' | translate }}</h6>
+          </DIV>
+          <div class="filtro">
+            <div class="form-group">
+              <small>{{ ROLES.FILTROS.FILTROTIPOROL' | translate }}</small>
+              <select (change)="onFiltroTipoRolChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+                <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+                <option value="plataforma">{{ ROLES.FILTROS.ROLPLATAFORMA' | translate }} </option>
+                <option value="suscriptor">{{ ROLES.FILTROS.ROLSUSCRIPTOR' | translate }} </option>
+              </select>
             </div>
+          </div>
+          <div class="filtro">
+            <small>{{ ROLES.FILTROS.FILTROCODIGOROLE' | translate }}</small>
+            <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (reg of roles; track reg) {
+                <option [value]="reg.codigoRole">
+                  {{ reg.nombreRole }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ ROLES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
+            <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (reg of aplicaciones; track reg) {
+                <option [value]="reg.codigoAplicacion">
+                  {{ reg.nombreAplicacion }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ ROLES.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
+            <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (reg of suites; track reg) {
+                <option [value]="reg.codigoSuite">
+                  {{ reg.nombreSuite }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ ROLES.FILTROS.NOMBRE' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ ROLES.FILTROS.NOMBREHOLDER' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ ROLES.FILTROS.DECRIPCION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroDescripcionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'USUARIOS.ROLES.ROLE_DESCRIPTION' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ ROLES.FILTROS.ESTADO' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer" required>
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (registrosFiltrado$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoRole'"
+            [tableTitle]="'USUARIOS.ROLES.ROLE_MANAGEMENT' | translate"
+            [metadataColumns]="columnasRegistros"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="true"
+            [showDeleteButton]="false"
+            [showSearchBox]="false"
+            [showBackButton]="false"
+            [newButtonLabel]="'USUARIOS.ROLES.NEW_ROLE' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            (newRecord)="OnNuevoRegistroClick()"
+            (editRecord)="OnEditarRegistroClick($event)"
+            (accionPrincipalClick)="onAccionPrincipal($event)"
+            permisoNew="ACT_ROLES_CREAR"
+            permisoEdit="ACT_ROLES_MODIFICAR"
+          >
+          </app-table-data>
+        } @else {
+          <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
+        }
+      </div>
+    </div>
+  </div>
 </div>

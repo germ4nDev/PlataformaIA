@@ -6,39 +6,42 @@
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
           {{ 'COMMON.MENU' | translate }}
         </button>
-        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'COMMON.FILTERS' | translate }}
-        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
       </div>
 
-      <ng-container *ngIf="activeTab === 'menu'">
+      @if (activeTab === 'menu') {
         <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="activeTab === 'filters'">
+      @if (activeTab === 'filters') {
         <div class="p-3 filtros-scroll-wrapper">
           <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
-
           <div class="filtro">
             <small>{{ 'COMMON.FILTER_BY_CODE' | translate }}</small>
             <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-              <option [value]="lib.codigoBiblioteca" *ngFor="let lib of bibliotecas">
-                {{ lib.codigoBiblioteca }}
-              </option>
+              @for (lib of bibliotecas; track lib) {
+                <option [value]="lib.codigoBiblioteca">
+                  {{ lib.codigoBiblioteca }}
+                </option>
+              }
             </select>
           </div>
-
           <div class="filtro">
             <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
             <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-              <option [value]="lib.nombreBiblioteca" *ngFor="let lib of bibliotecas">
-                {{ lib.nombreBiblioteca }}
-              </option>
+              @for (lib of bibliotecas; track lib) {
+                <option [value]="lib.nombreBiblioteca">
+                  {{ lib.nombreBiblioteca }}
+                </option>
+              }
             </select>
           </div>
-
           <div class="filtro">
             <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
             <input
@@ -48,7 +51,6 @@
               placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}"
             />
           </div>
-
           <div class="filtro">
             <small>{{ 'COMMON.STATUS' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
@@ -58,14 +60,14 @@
             </select>
           </div>
         </div>
-      </ng-container>
+      }
     </div>
   </aside>
 
   <div class="content-area">
     <div class="card card-table content-scroll-wrapper">
       <div class="card-body">
-        <ng-container *ngIf="bibliotecaFiltrada$ | async as dataFiltrada">
+        @if (bibliotecaFiltrada$ | async; as dataFiltrada) {
           <app-data-table
             [data]="dataFiltrada"
             [idField]="'codigoBiblioteca'"
@@ -88,9 +90,13 @@
             (newRecord)="OnNuevaBibliotecaClick()"
             (editRecord)="OnEditarBibliotecaClick($event)"
             (deleteRecord)="OnEliminarBibliotecaClick($event)"
-            (option1Record)="OnOption1Click($event)" permisoNew="ACT_BBT_CREAR" permisoEdit="ACT_BBT_MODIFICAR" permisoDelete="ACT_BBT_ELIMINAR">
+            (option1Record)="OnOption1Click($event)"
+            permisoNew="ACT_BBT_CREAR"
+            permisoEdit="ACT_BBT_MODIFICAR"
+            permisoDelete="ACT_BBT_ELIMINAR"
+          >
           </app-data-table>
-        </ng-container>
+        }
       </div>
     </div>
   </div>

@@ -6,15 +6,17 @@
         <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
           {{ 'COMMON.MENU' | translate }}
         </button>
-        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-          {{ 'COMMON.FILTERS' | translate }}
-        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
       </div>
 
-      <ng-container *ngIf="activeTab === 'menu'">
+      @if (activeTab === 'menu') {
         <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-      </ng-container>
-      <ng-container *ngIf="activeTab === 'filters'">
+      }
+      @if (activeTab === 'filters') {
         <div class="p-3 filtros-scroll-wrapper">
           <h6 class="filtros-title">{{ 'SITES.CONTENIDOS.CONTENT_FILTERS' | translate }}</h6>
           <div class="filtro">
@@ -44,7 +46,7 @@
             </select>
           </div>
         </div>
-      </ng-container>
+      }
     </div>
   </aside>
 
@@ -67,7 +69,11 @@
           [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
           (newRecord)="OnNuevoRegistroClick()"
           (editRecord)="OnEditarRegistroClick($event)"
-          (deleteRecord)="OnEliminarRegistroClick($event)" permisoNew="ACT_CONTENIDOS_CREAR" permisoEdit="ACT_CONTENIDOS_MODIFICAR" permisoDelete="ACT_CONTENIDOS_ELIMINAR">
+          (deleteRecord)="OnEliminarRegistroClick($event)"
+          permisoNew="ACT_CONTENIDOS_CREAR"
+          permisoEdit="ACT_CONTENIDOS_MODIFICAR"
+          permisoDelete="ACT_CONTENIDOS_ELIMINAR"
+        >
         </app-data-table>
       </div>
     </div>

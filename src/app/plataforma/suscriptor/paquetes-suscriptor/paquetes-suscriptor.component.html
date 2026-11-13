@@ -1,249 +1,325 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
-
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-            </ng-container>
-
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
-                    <div class="filtro">
-                        <small>{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.FILTER_BY_ID_NUMBER' | translate }}</small>
-                        <select (change)="onFiltroPaqueteChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <!-- Las opciones se cargan del array local 'aplicaciones' -->
-                            <option [value]="app.codigoPaquete" *ngFor="let app of paquetes">
-                                {{ app.nombrePaquete }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select"
-                            style="cursor: pointer">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="content-area">
-        <!-- OT-030: una base por aplicación del paquete; se crea al asignar el paquete -->
-        @if (bases.length) {
-        <div class="alert alert-light border d-flex flex-wrap align-items-center gap-3 py-2 mb-2">
-            <small class="fw-semibold">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SUBSCRIBER_DATABASES' | translate }}</small>
-            @for (b of bases; track b.codigoAprovisionamiento) {
-            <span class="d-inline-flex align-items-center gap-1" [title]="b.mensaje || b.nombreBD">
-                <i class="feather" [ngClass]="b.estado === 'LISTA' ? 'icon-check-circle text-success' : b.estado === 'ERROR' ? 'icon-alert-triangle text-danger' : 'icon-clock text-warning'"></i>
-                <small>{{ b.nombreAplicacion || b.codigoAplicacion }} · <code>{{ b.nombreBD }}</code> · {{ ('SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ENUM.DATABASE_STATUS.' + b.estado) | translate }}</small>
-                @if (b.estado === 'ERROR') {
-                <button *appPermiso="'ACT_SUSCPAQ_MODIFICAR'" type="button" class="btn btn-sm btn-outline-danger py-0" (click)="reintentarBase(b)">{{ 'COMMON.RETRY' | translate }}</button>
-                }
-            </span>
-            }
-        </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
         }
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="registrosFiltrados$ | async as dataFiltrada; else loading">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoSuscriptorPaquete'"
-                        [tableTitle]="'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SUBSCRIBER_PACKAGES' | translate"
-                        [newButtonLabel]="'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEW_SUBSCRIBER_PACKAGE' | translate"
-                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true" [showNewButton]="true"
-                        [showViewButton]="false" [showEditButton]="false" [showDeleteButton]="false" [showDetail]="true"
-                        [showSearchBox]="false" [showBackButton]="true" (newRecord)="OnNuevoRegistroClick()"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_SUSCPAQ_CREAR"
-                        (backRecord)="OnRegresarClick($event)">
-                    </app-table-data>
-                </ng-container>
+      </div>
 
-                <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
-                </ng-template>
-            </div>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+      }
+
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
+          <div class="filtro">
+            <small>{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.FILTER_BY_ID_NUMBER' | translate }}</small>
+            <select (change)="onFiltroPaqueteChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <!-- Las opciones se cargan del array local 'aplicaciones' -->
+              @for (app of paquetes; track app) {
+                <option [value]="app.codigoPaquete">
+                  {{ app.nombrePaquete }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <!-- OT-030: una base por aplicación del paquete; se crea al asignar el paquete -->
+    @if (bases.length) {
+      <div class="alert alert-light border d-flex flex-wrap align-items-center gap-3 py-2 mb-2">
+        <small class="fw-semibold">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SUBSCRIBER_DATABASES' | translate }}</small>
+        @for (b of bases; track b.codigoAprovisionamiento) {
+          <span class="d-inline-flex align-items-center gap-1" [title]="b.mensaje || b.nombreBD">
+            <i
+              class="feather"
+              [ngClass]="
+                b.estado === 'LISTA'
+                  ? 'icon-check-circle text-success'
+                  : b.estado === 'ERROR'
+                    ? 'icon-alert-triangle text-danger'
+                    : 'icon-clock text-warning'
+              "
+            ></i>
+            <small
+              >{{ b.nombreAplicacion || b.codigoAplicacion }} · <code>{{ b.nombreBD }}</code> ·
+              {{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.ENUM.DATABASE_STATUS.' + b.estado | translate }}</small
+            >
+            @if (b.estado === 'ERROR') {
+              <button
+                *appPermiso="'ACT_SUSCPAQ_MODIFICAR'"
+                type="button"
+                class="btn btn-sm btn-outline-danger py-0"
+                (click)="reintentarBase(b)"
+                >{{ 'COMMON.RETRY' | translate }}</button
+              >
+            }
+          </span>
+        }
+      </div>
+    }
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (registrosFiltrados$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoSuscriptorPaquete'"
+            [tableTitle]="'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SUBSCRIBER_PACKAGES' | translate"
+            [newButtonLabel]="'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEW_SUBSCRIBER_PACKAGE' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            [metadataColumns]="columnasRegistros"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="false"
+            [showDeleteButton]="false"
+            [showDetail]="true"
+            [showSearchBox]="false"
+            [showBackButton]="true"
+            (newRecord)="OnNuevoRegistroClick()"
+            (accionPrincipalClick)="onAccionPrincipal($event)"
+            permisoNew="ACT_SUSCPAQ_CREAR"
+            (backRecord)="OnRegresarClick($event)"
+          >
+          </app-table-data>
+        } @else {
+          <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
+        }
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ========================================================================= -->
 <!-- MODAL DE RENOVACIÓN (Controlado por *ngIf) -->
 <!-- ========================================================================= -->
-<div class="modal fade" [ngClass]="{'show d-block': mostrarModalRenovacion}" tabindex="-1"
-    *ngIf="mostrarModalRenovacion" style="background-color: rgba(0,0,0,0.6);">
+@if (mostrarModalRenovacion) {
+  <div class="modal fade" [ngClass]="{ 'show d-block': mostrarModalRenovacion }" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.6)">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEW_PACKAGE' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'COMMON.CLOSE' | translate"
-                    (click)="cerrarModal()"></button>
-            </div>
-
-            <div class="modal-body p-4">
-                <form #validationForm="ngForm" class="editForm" novalidate>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE' | translate
-                                    }}</label>
-                                <input type="text" class="form-control form-input" name="codigoLicencia"
-                                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE_2' | translate }}"
-                                    [ngClass]="{ 'is-invalid': !codigoLicencia.valid && (codigoLicencia.dirty || codigoLicencia.touched || isSubmit) }"
-                                    #codigoLicencia="ngModel" required [(ngModel)]="FormRegistro.codigoLicencia"
-                                    readonly />
-                                <label
-                                    *ngIf="!codigoLicencia.valid && (codigoLicencia.dirty || codigoLicencia.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.REQUIRED_FIELD' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="codigoTipoPaquete"> {{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_TYPE'
-                                    | translate }}</label>
-                                <select class="form-control form-select" style="cursor: pointer" name="codigoTipoPaquete"
-                                    id="codigoTipoPaquete"
-                                    [ngClass]="{ 'is-invalid': !codigoTipoPaquete.valid && (codigoTipoPaquete.dirty || codigoTipoPaquete.touched || isSubmit) }"
-                                    #codigoTipoPaquete="ngModel" required [(ngModel)]="FormRegistro.codigoTipoPaquete"
-                                    (change)="onTipoPagoChangeClick($event)">
-                                    <option value="" disabled>{{
-                                        'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SELECT_PACKAGE_TYPE' | translate }}
-                                    </option>
-                                    <option [value]="tpsp.codigoTipoPaquete" *ngFor="let tpsp of tiposPaquete"> {{
-                                        tpsp.nombreTipoPaquete }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoTipoPaquete.valid && (codigoTipoPaquete.dirty || codigoTipoPaquete.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_TYPE_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="precioPaquete">{{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.MONTHLY_PACKAGE_PRICE' | translate }}</label>
-                                <input class="form-control form-input" id="precioPaquete" name="precioPaquete"
-                                    type="text" readonly
-                                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_PRICE_PER_MONTH' | translate }}"
-                                    #precioPaquete="ngModel" required [(ngModel)]="FormRegistro.precioPaquete" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="mesesCobertura">{{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.COVERAGE_MONTHS' | translate }}</label>
-                                <input class="form-control form-input" id="mesesCobertura" name="mesesCobertura"
-                                    type="text" readonly
-                                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.MONTHS_COVERED_BY_PACKAGE_TYPE' | translate }}"
-                                    #mesesCobertura="ngModel" required [(ngModel)]="FormRegistro.mesesCobertura" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="descuentoMeses">{{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.DISCOUNT' | translate }}</label>
-                                <input class="form-control form-input" id="descuentoMeses" name="descuentoMeses"
-                                    type="text" readonly
-                                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.DISCOUNT_PROVIDED_BY_PACKAGE_TYPE' | translate }}"
-                                    #descuentoMeses="ngModel" required [(ngModel)]="FormRegistro.descuentoMeses" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="valorMes">{{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.TOTAL_MONTHLY_VALUE' | translate }}</label>
-                                <input class="form-control form-input" id="valorMes" name="valorMes" type="text"
-                                    readonly
-                                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.TOTAL_MONTHLY_VALUE' | translate }}"
-                                    #valorMes="ngModel" required [(ngModel)]="FormRegistro.valorMes" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="valorPago">{{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.INVOICE_VALUE' | translate }}</label>
-                                <input class="form-control form-input" id="valorPago" name="valorPago" type="text"
-                                    readonly
-                                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.TOTAL_INVOICE_VALUE' | translate }}"
-                                    #valorPago="ngModel" required [(ngModel)]="FormRegistro.valorPago" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="fechaProximoPagoDate">{{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT_DATE' | translate }}</label>
-                                <input class="form-control form-input" id="fechaProximoPagoDate"
-                                    name="fechaProximoPagoDate" type="text" readonly
-                                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT_DATE' | translate }}"
-                                    #fechaProximoPagoDate="ngModel" required
-                                    [(ngModel)]="FormRegistro.fechaProximoPagoDate" />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="modal-label" for="codigoTipoPago"> {{
-                                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PAYMENT_TYPE'
-                                    | translate }}</label>
-                                <select class="form-control form-select" style="cursor: pointer" name="codigoTipoPago"
-                                    id="codigoTipoPago"
-                                    [ngClass]="{ 'is-invalid': !codigoTipoPago.valid && (codigoTipoPago.dirty || codigoTipoPago.touched || isSubmit) }"
-                                    #codigoTipoPago="ngModel" required [(ngModel)]="FormRegistro.codigoTipoPago"
-                                    (change)="onTipoPagoChangeClick($event)">
-                                    <option value="" disabled>{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SELECT_PAYMENT_TYPE'
-                                        | translate }}
-                                    </option>
-                                    <option [value]="tpsp.codigoTipoPago" *ngFor="let tpsp of tiposPago"> {{
-                                        tpsp.nombreTipoPago }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoTipoPago.valid && (codigoTipoPago.dirty || codigoTipoPago.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PAYMENT_TYPE_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModal()">
-                    {{ 'COMMON.CANCEL' | translate }}
-                </button>
-                <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="procesarRenovacion()">
-                    {{ 'COMMON.SAVE' | translate }}
-                </button>
-            </div>
-
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.RENEW_PACKAGE' | translate }}</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-custom"
+            [attr.aria-label]="'COMMON.CLOSE' | translate"
+            (click)="cerrarModal()"
+          ></button>
         </div>
+        <div class="modal-body p-4">
+          <form #validationForm="ngForm" class="editForm" novalidate>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE' | translate }}</label>
+                  <input
+                    type="text"
+                    class="form-control form-input"
+                    name="codigoLicencia"
+                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.LICENSE_CODE_2' | translate }}"
+                    [ngClass]="{ 'is-invalid': !codigoLicencia.valid && (codigoLicencia.dirty || codigoLicencia.touched || isSubmit) }"
+                    #codigoLicencia="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.codigoLicencia"
+                    readonly
+                  />
+                  @if (!codigoLicencia.valid && (codigoLicencia.dirty || codigoLicencia.touched || isSubmit)) {
+                    <label class="error jquery-validation-error small form-text invalid-feedback">
+                      {{ 'COMMON.REQUIRED_FIELD' | translate }}
+                    </label>
+                  }
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="codigoTipoPaquete">
+                    {{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_TYPE' | translate }}</label
+                  >
+                  <select
+                    class="form-control form-select"
+                    style="cursor: pointer"
+                    name="codigoTipoPaquete"
+                    id="codigoTipoPaquete"
+                    [ngClass]="{
+                      'is-invalid': !codigoTipoPaquete.valid && (codigoTipoPaquete.dirty || codigoTipoPaquete.touched || isSubmit)
+                    }"
+                    #codigoTipoPaquete="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.codigoTipoPaquete"
+                    (change)="onTipoPagoChangeClick($event)"
+                  >
+                    <option value="" disabled>{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SELECT_PACKAGE_TYPE' | translate }} </option>
+                    @for (tpsp of tiposPaquete; track tpsp) {
+                      <option [value]="tpsp.codigoTipoPaquete"> {{ tpsp.nombreTipoPaquete }}</option>
+                    }
+                  </select>
+                  @if (!codigoTipoPaquete.valid && (codigoTipoPaquete.dirty || codigoTipoPaquete.touched || isSubmit)) {
+                    <label class="error jquery-validation-error small form-text invalid-feedback">
+                      {{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_TYPE_REQUIRED' | translate }}
+                    </label>
+                  }
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="precioPaquete">{{
+                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.MONTHLY_PACKAGE_PRICE' | translate
+                  }}</label>
+                  <input
+                    class="form-control form-input"
+                    id="precioPaquete"
+                    name="precioPaquete"
+                    type="text"
+                    readonly
+                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PACKAGE_PRICE_PER_MONTH' | translate }}"
+                    #precioPaquete="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.precioPaquete"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="mesesCobertura">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.COVERAGE_MONTHS' | translate }}</label>
+                  <input
+                    class="form-control form-input"
+                    id="mesesCobertura"
+                    name="mesesCobertura"
+                    type="text"
+                    readonly
+                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.MONTHS_COVERED_BY_PACKAGE_TYPE' | translate }}"
+                    #mesesCobertura="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.mesesCobertura"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="descuentoMeses">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.DISCOUNT' | translate }}</label>
+                  <input
+                    class="form-control form-input"
+                    id="descuentoMeses"
+                    name="descuentoMeses"
+                    type="text"
+                    readonly
+                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.DISCOUNT_PROVIDED_BY_PACKAGE_TYPE' | translate }}"
+                    #descuentoMeses="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.descuentoMeses"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="valorMes">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.TOTAL_MONTHLY_VALUE' | translate }}</label>
+                  <input
+                    class="form-control form-input"
+                    id="valorMes"
+                    name="valorMes"
+                    type="text"
+                    readonly
+                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.TOTAL_MONTHLY_VALUE' | translate }}"
+                    #valorMes="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.valorMes"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="valorPago">{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.INVOICE_VALUE' | translate }}</label>
+                  <input
+                    class="form-control form-input"
+                    id="valorPago"
+                    name="valorPago"
+                    type="text"
+                    readonly
+                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.TOTAL_INVOICE_VALUE' | translate }}"
+                    #valorPago="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.valorPago"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="fechaProximoPagoDate">{{
+                    'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT_DATE' | translate
+                  }}</label>
+                  <input
+                    class="form-control form-input"
+                    id="fechaProximoPagoDate"
+                    name="fechaProximoPagoDate"
+                    type="text"
+                    readonly
+                    placeholder="{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.NEXT_PAYMENT_DATE' | translate }}"
+                    #fechaProximoPagoDate="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.fechaProximoPagoDate"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="modal-label" for="codigoTipoPago"> {{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PAYMENT_TYPE' | translate }}</label>
+                  <select
+                    class="form-control form-select"
+                    style="cursor: pointer"
+                    name="codigoTipoPago"
+                    id="codigoTipoPago"
+                    [ngClass]="{ 'is-invalid': !codigoTipoPago.valid && (codigoTipoPago.dirty || codigoTipoPago.touched || isSubmit) }"
+                    #codigoTipoPago="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.codigoTipoPago"
+                    (change)="onTipoPagoChangeClick($event)"
+                  >
+                    <option value="" disabled>{{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.SELECT_PAYMENT_TYPE' | translate }} </option>
+                    @for (tpsp of tiposPago; track tpsp) {
+                      <option [value]="tpsp.codigoTipoPago"> {{ tpsp.nombreTipoPago }}</option>
+                    }
+                  </select>
+                  @if (!codigoTipoPago.valid && (codigoTipoPago.dirty || codigoTipoPago.touched || isSubmit)) {
+                    <label class="error jquery-validation-error small form-text invalid-feedback">
+                      {{ 'SUSCRIPTOR.PAQUETES_SUSCRIPTOR.PAYMENT_TYPE_REQUIRED' | translate }}
+                    </label>
+                  }
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModal()">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="procesarRenovacion()">
+            {{ 'COMMON.SAVE' | translate }}
+          </button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+}

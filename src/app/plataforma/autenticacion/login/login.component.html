@@ -1,122 +1,140 @@
 <!-- CC-104: en un dominio de aplicación con portal (porttos.co) el login toma el diseño del portal: los slides a la izquierda con su
-     leyenda y el formulario en un panel a la derecha. En la consola y los demás dominios se ve como siempre. Un solo formulario. -->
+leyenda y el formulario en un panel a la derecha. En la consola y los demás dominios se ve como siempre. Un solo formulario. -->
 <div class="plafaforma-auth-screen" [class.login-portal]="loginDominio.portal">
-    @if (loginDominio.portal) {
+  @if (loginDominio.portal) {
     <section class="login-portal__escena" [attr.aria-label]="'AUTENTICACION.LOGIN.APPLICATION_IMAGES' | translate">
-        <app-full-screen-slider [tipoSlider]="1" [leyendas]="true" [contenido]="true"></app-full-screen-slider>
-        <a class="login-portal__volver" [routerLink]="loginDominio.rutaPortal">
-            <i class="feather icon-arrow-left" aria-hidden="true"></i>{{ 'AUTENTICACION.LOGIN.BACK_WEBSITE' | translate
-            }}
-        </a>
+      <app-full-screen-slider [tipoSlider]="1" [leyendas]="true" [contenido]="true"></app-full-screen-slider>
+      <a class="login-portal__volver" [routerLink]="loginDominio.rutaPortal">
+        <i class="feather icon-arrow-left" aria-hidden="true"></i>{{ 'AUTENTICACION.LOGIN.BACK_WEBSITE' | translate }}
+      </a>
     </section>
-    } @else {
+  } @else {
     <app-full-screen-slider [tipoSlider]="1" class="plafaforma-auth-bg"></app-full-screen-slider>
-    }
-    <nav class="navbar fixed-top navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"></a>
-            <div class="nav-right">
-                <app-language-selector></app-language-selector>
-            </div>
-        </div>
-    </nav>
-
-    <div class="plafaforma-auth-card card-body login-overlay">
-        <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
-            @if (loginDominio.portal) {
-            <div class="login-portal__encabezado">
-                @if (loginDominio.logo) {
-                <img class="login-portal__logo" [src]="loginDominio.logo" [alt]="loginDominio.marca || ''" width="148"
-                    height="40" />
-                } @else if (loginDominio.marca) {
-                <p class="login-portal__marca">{{ loginDominio.marca }}</p>
-                }
-                <p class="login-portal__antetitulo">{{ 'AUTENTICACION.LOGIN.USER_ACCESS' | translate }}</p>
-                <h1 class="login-portal__titulo">{{ 'AUTENTICACION.LOGIN.WELCOME_BACK' | translate }}</h1>
-                <p class="login-portal__subtitulo">{{ 'AUTENTICACION.LOGIN.SIGN_IN_MARCA_WITH_YOUR_USERNAME' | translate: { marca:
-                    loginDominio.marca || '' } }}</p>
-            </div>
-            } @else {
-            <div class="plafaforma-auth-header text-center">
-                <!-- <h3 class="auth-title">{{ 'COMMON.USER_ACCESS' | translate }}</h3> -->
-                <h2 class="auth-title">{{ marcaDominio || ('AUTENTICACION.LOGIN.PLATFORM' | translate) }}</h2>
-                <p class="auth-subtitle">{{ 'AUTENTICACION.LOGIN.USER_ACCESS_2' | translate }}</p>
-                <hr>
-            </div>
-            }
-            <div class="input-group mb-3">
-                <span class="input-group-text form-input" id="basic-addon1"><i class="feather icon-user"></i></span>
-                <input type="text" placeholder="{{ 'COMMON.ENTER_YOUR_USERNAME' | translate }}"
-                    [attr.aria-label]="'COMMON.ENTER_YOUR_USERNAME' | translate" autocomplete="username"
-                    formControlName="username" class="form-control form-input"
-                    [ngClass]="{ 'is-invalid': usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched) }" />
-                @if (usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched)) {
-                <div class="invalid-feedback">
-                    @if (usernameControl?.errors?.['required']) {
-                    <div>{{ 'COMMON.USERNAME_REQUIRED' | translate }}</div>
-                    }
-                </div>
-                }
-            </div>
-            <div class="input-group mb-4">
-                <span class="input-group-text form-input" id="basic-addon2"><i class="feather icon-lock"></i></span>
-                <input id="password" [type]="showPassword ? 'text' : 'password'"
-                    placeholder="{{ 'COMMON.ENTER_YOUR_PASSWORD' | translate }}"
-                    [attr.aria-label]="'COMMON.ENTER_YOUR_PASSWORD' | translate" autocomplete="current-password"
-                    formControlName="password" class="form-control form-input"
-                    [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }" />
-                <!-- CC-104: el ojo no tenía acción; ahora muestra u oculta la clave -->
-                <button type="button" class="input-group-text form-input login-ver-clave" id="togglePassword"
-                    (click)="togglePasswordVisibility()" [attr.aria-pressed]="showPassword"
-                    [attr.aria-label]="'AUTENTICACION.LOGIN.SHOW_OR_HIDE_PASSWORD' | translate">
-                    <i class="feather" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'" aria-hidden="true"></i>
-                </button>
-                @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
-                <div class="invalid-feedback">
-                    @if (passwordControl?.errors?.['required']) {
-                    <div>{{ 'COMMON.PASSWORD_REQUIRED' | translate }}</div>
-                    }
-                </div>
-                }
-            </div>
-            <div class="form-group text-start mt-2">
-                <div class="checkbox checkbox-primary d-inline">
-                    <input type="checkbox" name="checkbox-p-1" id="checkbox-p-1" checked="" />
-                    <label for="checkbox-p-1" class="cr">{{ 'COMMON.REMEMBER_ME' | translate }}</label>
-                </div>
-            </div>
-            <div class="d-grid">
-                <button class="btn plafaforma-auth-btn" type="submit" [disabled]="!loginForm.valid || loading">
-                    <span *ngIf="!loading">{{ 'COMMON.SIGN_IN' | translate }}</span>
-                    <span *ngIf="loading">
-                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        {{ 'COMMON.LOADING' | translate }}
-                    </span>
-                </button>
-            </div>
-            @if (error) {
-            <div class="alert alert-danger mt-3 mb-0">{{ error }}</div>
-            }
-            <div class="d-grid text-center login-enlaces">
-                <br />
-                <p class="text-muted">{{ 'COMMON.CHANGE_PASSWORD' | translate }}
-                    <a [routerLink]="['/autenticacion/change-password']" class="link-label">{{
-                        'COMMON.HERE' | translate }}</a>
-                </p>
-                <p class="text-muted">{{ 'COMMON.RESET_PASSWORD' | translate }}
-                    <a [routerLink]="['/autenticacion/reset-password']" class="link-label">{{
-                        'COMMON.HERE' | translate }}</a>
-                </p>
-            </div>
-        </form>
-
-        @if (loginDominio.acceso; as acceso) {
-        <p class="login-portal__acceso">{{ 'AUTENTICACION.LOGIN.DONT_HAVE_ACCESS_YET' | translate }}
-            <a [routerLink]="acceso.ruta" [queryParams]="acceso.query" class="link-label">{{
-                'COMMON.REQUEST_ACCESS' | translate }}</a>
-        </p>
-        } @else {
-        <app-social-networks></app-social-networks>
-        }
+  }
+  <nav class="navbar fixed-top navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"></a>
+      <div class="nav-right">
+        <app-language-selector></app-language-selector>
+      </div>
     </div>
+  </nav>
+
+  <div class="plafaforma-auth-card card-body login-overlay">
+    <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
+      @if (loginDominio.portal) {
+        <div class="login-portal__encabezado">
+          @if (loginDominio.logo) {
+            <img class="login-portal__logo" [src]="loginDominio.logo" [alt]="loginDominio.marca || ''" width="148" height="40" />
+          } @else if (loginDominio.marca) {
+            <p class="login-portal__marca">{{ loginDominio.marca }}</p>
+          }
+          <p class="login-portal__antetitulo">{{ 'AUTENTICACION.LOGIN.USER_ACCESS' | translate }}</p>
+          <h1 class="login-portal__titulo">{{ 'AUTENTICACION.LOGIN.WELCOME_BACK' | translate }}</h1>
+          <p class="login-portal__subtitulo">{{
+            'AUTENTICACION.LOGIN.SIGN_IN_MARCA_WITH_YOUR_USERNAME' | translate: { marca: loginDominio.marca || '' }
+          }}</p>
+        </div>
+      } @else {
+        <div class="plafaforma-auth-header text-center">
+          <!-- <h3 class="auth-title">{{ 'COMMON.USER_ACCESS' | translate }}</h3> -->
+          <h2 class="auth-title">{{ marcaDominio || ('AUTENTICACION.LOGIN.PLATFORM' | translate) }}</h2>
+          <p class="auth-subtitle">{{ 'AUTENTICACION.LOGIN.USER_ACCESS_2' | translate }}</p>
+          <hr />
+        </div>
+      }
+      <div class="input-group mb-3">
+        <span class="input-group-text form-input" id="basic-addon1"><i class="feather icon-user"></i></span>
+        <input
+          type="text"
+          placeholder="{{ 'COMMON.ENTER_YOUR_USERNAME' | translate }}"
+          [attr.aria-label]="'COMMON.ENTER_YOUR_USERNAME' | translate"
+          autocomplete="username"
+          formControlName="username"
+          class="form-control form-input"
+          [ngClass]="{ 'is-invalid': usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched) }"
+        />
+        @if (usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched)) {
+          <div class="invalid-feedback">
+            @if (usernameControl?.errors?.['required']) {
+              <div>{{ 'COMMON.USERNAME_REQUIRED' | translate }}</div>
+            }
+          </div>
+        }
+      </div>
+      <div class="input-group mb-4">
+        <span class="input-group-text form-input" id="basic-addon2"><i class="feather icon-lock"></i></span>
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="{{ 'COMMON.ENTER_YOUR_PASSWORD' | translate }}"
+          [attr.aria-label]="'COMMON.ENTER_YOUR_PASSWORD' | translate"
+          autocomplete="current-password"
+          formControlName="password"
+          class="form-control form-input"
+          [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }"
+        />
+        <!-- CC-104: el ojo no tenía acción; ahora muestra u oculta la clave -->
+        <button
+          type="button"
+          class="input-group-text form-input login-ver-clave"
+          id="togglePassword"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-pressed]="showPassword"
+          [attr.aria-label]="'AUTENTICACION.LOGIN.SHOW_OR_HIDE_PASSWORD' | translate"
+        >
+          <i class="feather" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'" aria-hidden="true"></i>
+        </button>
+        @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
+          <div class="invalid-feedback">
+            @if (passwordControl?.errors?.['required']) {
+              <div>{{ 'COMMON.PASSWORD_REQUIRED' | translate }}</div>
+            }
+          </div>
+        }
+      </div>
+      <div class="form-group text-start mt-2">
+        <div class="checkbox checkbox-primary d-inline">
+          <input type="checkbox" name="checkbox-p-1" id="checkbox-p-1" checked="" />
+          <label for="checkbox-p-1" class="cr">{{ 'COMMON.REMEMBER_ME' | translate }}</label>
+        </div>
+      </div>
+      <div class="d-grid">
+        <button class="btn plafaforma-auth-btn" type="submit" [disabled]="!loginForm.valid || loading">
+          @if (!loading) {
+            <span>{{ 'COMMON.SIGN_IN' | translate }}</span>
+          }
+          @if (loading) {
+            <span>
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ 'COMMON.LOADING' | translate }}
+            </span>
+          }
+        </button>
+      </div>
+      @if (error) {
+        <div class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+      }
+      <div class="d-grid text-center login-enlaces">
+        <br />
+        <p class="text-muted"
+          >{{ 'COMMON.CHANGE_PASSWORD' | translate }}
+          <a [routerLink]="['/autenticacion/change-password']" class="link-label">{{ 'COMMON.HERE' | translate }}</a>
+        </p>
+        <p class="text-muted"
+          >{{ 'COMMON.RESET_PASSWORD' | translate }}
+          <a [routerLink]="['/autenticacion/reset-password']" class="link-label">{{ 'COMMON.HERE' | translate }}</a>
+        </p>
+      </div>
+    </form>
+
+    @if (loginDominio.acceso; as acceso) {
+      <p class="login-portal__acceso"
+        >{{ 'AUTENTICACION.LOGIN.DONT_HAVE_ACCESS_YET' | translate }}
+        <a [routerLink]="acceso.ruta" [queryParams]="acceso.query" class="link-label">{{ 'COMMON.REQUEST_ACCESS' | translate }}</a>
+      </p>
+    } @else {
+      <app-social-networks></app-social-networks>
+    }
+  </div>
 </div>

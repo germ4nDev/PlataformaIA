@@ -18,11 +18,11 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "skipLibCheck": true,
     "target": "es2022", // this will auto target to latest by angular cli
-    "module": "es2020",
+    "module": "es2022",
     "lib": [
       "es2022", // this will auto target to latest by angular cli
       "dom"

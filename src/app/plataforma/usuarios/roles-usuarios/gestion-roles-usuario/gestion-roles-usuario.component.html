@@ -1,211 +1,263 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button>{{ 'COMMON.MENU' | translate }}</button>
-            </div>
-            <ng-container>
-                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="form-area">
-        <div class="card">
-            <div class="card-header card-header-sticky pb-0 border-bottom-0">
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
-
-                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
-                    <div class="d-flex flex-column pe-3">
-                        <h4 class="titulo-formulario">
-                            <span *ngIf="!modoEdicion">{{ tituloPagina }}</span>
-                            <span *ngIf="modoEdicion">{{ tituloPagina }}</span>
-                            <span class="titulo-container"> - {{ 'COMMON.USER_ROLE_MANAGEMENT' | translate
-                                }}</span>
-                        </h4>
-                        <h6 class="subtitulo-formulario mb-0">
-                            {{ 'COMMON.USER_ROLE_DETAILS' | translate }}
-                        </h6>
-                    </div>
-
-                    <!-- Bloque Derecho: Botones con Spinners -->
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'COMMON.BACK' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            [disabled]="roles.length === 0" (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'COMMON.CREATE_USER_ROLE' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="btnGestionarRegistroClick(validationForm)">
-                            {{ 'COMMON.UPDATE_USER_ROLE' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                    </div>
-                </div>
-                <hr class="mb-0"><br>
-            </div>
-
-            <div class="card-body form-scroll-wrapper">
-                <form #validationForm="ngForm" class="editForm" novalidate>
-                    <div class="row">
-                        <!-- Suscriptor -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoSuscriptor">{{
-                                    'COMMON.SUBSCRIBER' | translate }}</label>
-                                <select class="form-control input-md form-select" style="cursor: pointer"
-                                    name="codigoSuscriptor" id="codigoSuscriptor"
-                                    [ngClass]="{ 'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
-                                    #codigoSuscriptor="ngModel" required [(ngModel)]="FormRegistro.codigoSuscriptor"
-                                    (change)="onSuscriptorChangeClick($event)">
-                                    <option value="" disabled>{{ 'COMMON.SELECT_SUBSCRIBER_2'
-                                        | translate }}</option>
-                                    <option [value]="app.codigoSuscriptor" *ngFor="let app of suscriptores">{{
-                                        app.nombreSuscriptor }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.SUBSCRIBER_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Empresas SC -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoEmpresaSC">{{
-                                    'COMMON.SUBSCRIBER_COMPANY' | translate }}</label>
-                                <select class="form-control input-md form-select" style="cursor: pointer"
-                                    name="codigoEmpresaSC" id="codigoEmpresaSC"
-                                    [ngClass]="{ 'is-invalid': !codigoEmpresaSC.valid && (codigoEmpresaSC.dirty || codigoEmpresaSC.touched || isSubmit) }"
-                                    #codigoEmpresaSC="ngModel" required [(ngModel)]="FormRegistro.codigoEmpresaSC"
-                                    (change)="onEmpresaSCChangeClick($event)">
-                                    <option value="" disabled>{{ 'COMMON.SELECT_SUBSCRIBER_COMPANY' |
-                                        translate }}</option>
-                                    <option [value]="app.codigoEmpresaSC" *ngFor="let app of empresasSC">{{
-                                        app.nombreEmpresa }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoEmpresaSC.valid && (codigoEmpresaSC.dirty || codigoEmpresaSC.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.SUBSCRIBER_COMPANY_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Tipo de Rol -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoTipoRole">{{
-                                    'COMMON.ROLE_TYPE_2' | translate }}</label>
-                                <select class="form-control input-md form-select" style="cursor: pointer"
-                                    name="codigoTipoRole" id="codigoTipoRole"
-                                    [ngClass]="{ 'is-invalid': !codigoTipoRoleVal.valid && (codigoTipoRoleVal.dirty || codigoTipoRoleVal.touched || isSubmit) }"
-                                    #codigoTipoRoleVal="ngModel" required [(ngModel)]="FormRegistro.codigoTipoRole"
-                                    (change)="onTipoRoleChangeClick($event)">
-                                    <option value="" disabled selected>{{
-                                        'COMMON.SELECT_ROLE_TYPE' | translate }}</option>
-                                    <option [value]="app.codigoTipoRole" *ngFor="let app of tiposRoles">{{
-                                        app.nombreTipoRole }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoTipoRoleVal.valid && (codigoTipoRoleVal.dirty || codigoTipoRoleVal.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.ROLE_TYPE_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Aplicación (Oculto si es Plataforma) -->
-                        <div class="col-md-6" *ngIf="esRolSuscriptor">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoAplicacion">{{
-                                    'COMMON.APPLICATION' | translate }}</label>
-                                <select class="form-control input-md form-select" style="cursor: pointer"
-                                    name="codigoAplicacion" id="codigoAplicacion"
-                                    [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
-                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
-                                    (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled>{{ 'COMMON.SELECT_APPLICATION_2' |
-                                        translate }}</option>
-                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{
-                                        app.nombreAplicacion }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED_2' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Suite (Oculto si es Plataforma) -->
-                        <div class="col-md-6" *ngIf="esRolSuscriptor">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoSuite">{{
-                                    'COMMON.SUITE' | translate }}</label>
-                                <select class="form-control form-select" style="cursor: pointer" name="codigoSuite"
-                                    id="codigoSuite"
-                                    [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
-                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite"
-                                    (change)="onSuiteChangeClick($event)">
-                                    <option value="" disabled>{{ 'COMMON.SELECT_SUITE_2' |
-                                        translate }}</option>
-                                    <option [value]="sui.codigoSuite" *ngFor="let sui of suitesFiltradas">{{
-                                        sui.nombreSuite }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.SELECT_SUITE_FIELD_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Header Roles -->
-                        <div class="col-md-12" *ngIf="roles.length > 0">
-                            <div class="text-center flex flex-col justify-center"><br />
-                                <h4 class="titulo-container">{{ 'COMMON.USER_ROLE_MANAGEMENT' | translate }}
-                                </h4>
-                                <h6 class="subtitulo-container">{{ 'COMMON.ROLES_ASSOCIATED_WITH_USER_2' | translate
-                                    }}
-                                </h6><br>
-                                <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
-                                    (click)="btnAsociarTodosClick()">
-                                    {{ 'COMMON.SELECT_ALL' | translate }}
-                                </button><br /><br />
-                            </div>
-                        </div>
-
-                        <!-- Lista de Roles -->
-                        <div class="col-md-12" *ngIf="roles.length > 0">
-                            <div class="col-md-12" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
-                                <div class="row mx-0">
-                                    <div class="col-md-6 mb-3" *ngFor="let rol of roles; let i = index">
-                                        <label class="checkbox-container custom-check-form" [for]="'modu_' + i">
-                                            <input class="custom-checkbox" type="checkbox" [(ngModel)]="rol.checked"
-                                                [name]="'modCheck_' + i" [id]="'modu_' + i"
-                                                (change)="onRoleCheckChange($event, rol)" />
-                                            <div class="text-wrapper ml-2">
-                                                <span class="titulo-container">{{ rol.nombreRole }}</span>
-                                                <span class="subtitulo-container"
-                                                    [innerHTML]="rol.descripcionRole || 'Habilita este role para ejecutar la actividad.'">
-                                                </span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button>{{ 'COMMON.MENU' | translate }}</button>
+      </div>
+      <ng-container>
+        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+      </ng-container>
     </div>
+  </aside>
+
+  <div class="form-area">
+    <div class="card">
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario">
+              @if (!modoEdicion) {
+                <span>{{ tituloPagina }}</span>
+              }
+              @if (modoEdicion) {
+                <span>{{ tituloPagina }}</span>
+              }
+              <span class="titulo-container"> - {{ 'COMMON.USER_ROLE_MANAGEMENT' | translate }}</span>
+            </h4>
+            <h6 class="subtitulo-formulario mb-0">
+              {{ 'COMMON.USER_ROLE_DETAILS' | translate }}
+            </h6>
+          </div>
+
+          <!-- Bloque Derecho: Botones con Spinners -->
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+              {{ 'COMMON.BACK' | translate }}
+              <i class="feather icon-arrow-left ms-2"></i>
+            </button>
+            @if (!modoEdicion) {
+              <button
+                type="button"
+                class="btn btn-primary btn-NuevoRegistro"
+                [disabled]="roles.length === 0"
+                (click)="btnGestionarRegistroClick(validationForm)"
+              >
+                {{ 'COMMON.CREATE_USER_ROLE' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+            @if (modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarRegistroClick(validationForm)">
+                {{ 'COMMON.UPDATE_USER_ROLE' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+          </div>
+        </div>
+        <hr class="mb-0" /><br />
+      </div>
+
+      <div class="card-body form-scroll-wrapper">
+        <form #validationForm="ngForm" class="editForm" novalidate>
+          <div class="row">
+            <!-- Suscriptor -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="codigoSuscriptor">{{ 'COMMON.SUBSCRIBER' | translate }}</label>
+                <select
+                  class="form-control input-md form-select"
+                  style="cursor: pointer"
+                  name="codigoSuscriptor"
+                  id="codigoSuscriptor"
+                  [ngClass]="{ 'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
+                  #codigoSuscriptor="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.codigoSuscriptor"
+                  (change)="onSuscriptorChangeClick($event)"
+                >
+                  <option value="" disabled>{{ 'COMMON.SELECT_SUBSCRIBER_2' | translate }}</option>
+                  @for (app of suscriptores; track app) {
+                    <option [value]="app.codigoSuscriptor">{{ app.nombreSuscriptor }}</option>
+                  }
+                </select>
+                @if (!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.SUBSCRIBER_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+
+            <!-- Empresas SC -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="codigoEmpresaSC">{{ 'COMMON.SUBSCRIBER_COMPANY' | translate }}</label>
+                <select
+                  class="form-control input-md form-select"
+                  style="cursor: pointer"
+                  name="codigoEmpresaSC"
+                  id="codigoEmpresaSC"
+                  [ngClass]="{ 'is-invalid': !codigoEmpresaSC.valid && (codigoEmpresaSC.dirty || codigoEmpresaSC.touched || isSubmit) }"
+                  #codigoEmpresaSC="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.codigoEmpresaSC"
+                  (change)="onEmpresaSCChangeClick($event)"
+                >
+                  <option value="" disabled>{{ 'COMMON.SELECT_SUBSCRIBER_COMPANY' | translate }}</option>
+                  @for (app of empresasSC; track app) {
+                    <option [value]="app.codigoEmpresaSC">{{ app.nombreEmpresa }}</option>
+                  }
+                </select>
+                @if (!codigoEmpresaSC.valid && (codigoEmpresaSC.dirty || codigoEmpresaSC.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.SUBSCRIBER_COMPANY_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+
+            <!-- Tipo de Rol -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="codigoTipoRole">{{ 'COMMON.ROLE_TYPE_2' | translate }}</label>
+                <select
+                  class="form-control input-md form-select"
+                  style="cursor: pointer"
+                  name="codigoTipoRole"
+                  id="codigoTipoRole"
+                  [ngClass]="{
+                    'is-invalid': !codigoTipoRoleVal.valid && (codigoTipoRoleVal.dirty || codigoTipoRoleVal.touched || isSubmit)
+                  }"
+                  #codigoTipoRoleVal="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.codigoTipoRole"
+                  (change)="onTipoRoleChangeClick($event)"
+                >
+                  <option value="" disabled selected>{{ 'COMMON.SELECT_ROLE_TYPE' | translate }}</option>
+                  @for (app of tiposRoles; track app) {
+                    <option [value]="app.codigoTipoRole">{{ app.nombreTipoRole }}</option>
+                  }
+                </select>
+                @if (!codigoTipoRoleVal.valid && (codigoTipoRoleVal.dirty || codigoTipoRoleVal.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.ROLE_TYPE_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+
+            <!-- Aplicación (Oculto si es Plataforma) -->
+            @if (esRolSuscriptor) {
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="codigoAplicacion">{{ 'COMMON.APPLICATION' | translate }}</label>
+                  <select
+                    class="form-control input-md form-select"
+                    style="cursor: pointer"
+                    name="codigoAplicacion"
+                    id="codigoAplicacion"
+                    [ngClass]="{
+                      'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)
+                    }"
+                    #codigoAplicacion="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.codigoAplicacion"
+                    (change)="onAplicacionchangeClick($event)"
+                  >
+                    <option value="" disabled>{{ 'COMMON.SELECT_APPLICATION_2' | translate }}</option>
+                    @for (app of aplicaciones; track app) {
+                      <option [value]="app.codigoAplicacion">{{ app.nombreAplicacion }}</option>
+                    }
+                  </select>
+                  @if (!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)) {
+                    <label class="error jquery-validation-error small form-text invalid-feedback">
+                      {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED_2' | translate }}
+                    </label>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Suite (Oculto si es Plataforma) -->
+            @if (esRolSuscriptor) {
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="codigoSuite">{{ 'COMMON.SUITE' | translate }}</label>
+                  <select
+                    class="form-control form-select"
+                    style="cursor: pointer"
+                    name="codigoSuite"
+                    id="codigoSuite"
+                    [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
+                    #codigoSuite="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.codigoSuite"
+                    (change)="onSuiteChangeClick($event)"
+                  >
+                    <option value="" disabled>{{ 'COMMON.SELECT_SUITE_2' | translate }}</option>
+                    @for (sui of suitesFiltradas; track sui) {
+                      <option [value]="sui.codigoSuite">{{ sui.nombreSuite }}</option>
+                    }
+                  </select>
+                  @if (!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)) {
+                    <label class="error jquery-validation-error small form-text invalid-feedback">
+                      {{ 'COMMON.SELECT_SUITE_FIELD_REQUIRED' | translate }}
+                    </label>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Header Roles -->
+            @if (roles.length > 0) {
+              <div class="col-md-12">
+                <div class="text-center flex flex-col justify-center"
+                  ><br />
+                  <h4 class="titulo-container">{{ 'COMMON.USER_ROLE_MANAGEMENT' | translate }} </h4>
+                  <h6 class="subtitulo-container">{{ 'COMMON.ROLES_ASSOCIATED_WITH_USER_2' | translate }} </h6><br />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro transition" (click)="btnAsociarTodosClick()">
+                    {{ 'COMMON.SELECT_ALL' | translate }} </button
+                  ><br /><br />
+                </div>
+              </div>
+            }
+
+            <!-- Lista de Roles -->
+            @if (roles.length > 0) {
+              <div class="col-md-12">
+                <div class="col-md-12" style="max-height: 400px; overflow-y: auto; overflow-x: hidden">
+                  <div class="row mx-0">
+                    @for (rol of roles; track rol; let i = $index) {
+                      <div class="col-md-6 mb-3">
+                        <label class="checkbox-container custom-check-form" [for]="'modu_' + i">
+                          <input
+                            class="custom-checkbox"
+                            type="checkbox"
+                            [(ngModel)]="rol.checked"
+                            [name]="'modCheck_' + i"
+                            [id]="'modu_' + i"
+                            (change)="onRoleCheckChange($event, rol)"
+                          />
+                          <div class="text-wrapper ml-2">
+                            <span class="titulo-container">{{ rol.nombreRole }}</span>
+                            <span
+                              class="subtitulo-container"
+                              [innerHTML]="rol.descripcionRole || 'Habilita este role para ejecutar la actividad.'"
+                            >
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

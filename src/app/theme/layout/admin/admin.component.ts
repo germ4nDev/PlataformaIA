@@ -1,13 +1,13 @@
 // Angular Import
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, Location, LocationStrategy } from '@angular/common';
+import { Location, LocationStrategy } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
 import { RouterModule } from '@angular/router';
 import { ContextoNavegacionService } from '../../shared/service/contexto-navegacion.service';
 
 @Component({
   selector: 'app-admin',
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })

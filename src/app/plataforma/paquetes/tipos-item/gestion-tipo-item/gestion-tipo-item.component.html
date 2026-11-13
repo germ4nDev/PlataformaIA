@@ -1,129 +1,132 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button>{{ 'COMMON.MENU' | translate }}</button>
-            </div>
-            <ng-container>
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="form-area">
-        <div class="card">
-            <div class="card-header card-header-sticky pb-0 border-bottom-0">
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
-
-                    <div class="d-flex flex-column pe-3">
-                        <h4 class="titulo-formulario mb-1">
-                            <span *ngIf="!modoEdicion">{{ 'PAQUETES.TIPOS_ITEM.GESTION.NEW_ITEM_TYPE' | translate }}</span>
-                            <span *ngIf="modoEdicion">{{ 'PAQUETES.TIPOS_ITEM.GESTION.EDIT_ITEM_TYPE' | translate }}</span>
-                        </h4>
-                        <h6 class="subtitulo-formulario mb-0">
-                            {{ 'PAQUETES.TIPOS_ITEM.GESTION.ITEM_TYPE_DETAILS' | translate }}
-                            <!-- Configure el nombre y el ícono representativo de esta clasificación. -->
-                        </h6>
-                    </div>
-
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-secondary btn-animacion ms-2" (click)="btnRegresarClick()">
-                            {{ 'COMMON.BACK' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-
-                        <button type="button" class="btn btn-primary btn-animacion ms-2"
-                            (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
-                            <span *ngIf="!isSaving">
-                                {{ modoEdicion ? ('COMMON.EDIT_2' | translate) : ('PAQUETES.CREATE' | translate)
-                                }}
-                                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                            </span>
-                            <span *ngIf="isSaving">{{ 'COMMON.SAVING' | translate }} <span class="spinner-border spinner-border-sm ms-2"
-                                    role="status"></span></span>
-                        </button>
-                    </div>
-                </div>
-                <hr class="mb-0">
-            </div>
-
-            <div class="card-body form-scroll-wrapper pt-4">
-                <form [formGroup]="formularioRegistro" novalidate>
-                    <div class="row">
-
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoTipoItem">{{ 'COMMON.CODE' |
-                                    translate }}</label>
-                                <input type="text" class="form-control form-input bg-light" id="codigoTipoItem"
-                                    formControlName="codigoTipoItem" readonly />
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label class="form-control-label" for="nombreTipo">{{ 'COMMON.NAME' |
-                                    translate }}</label>
-                                <input type="text" class="form-control form-input" id="nombreTipo"
-                                    formControlName="nombreTipo"
-                                    placeholder="{{ 'PAQUETES.TIPOS_ITEM.GESTION.ITEM_TYPE_NAME' | translate }}"
-                                    [ngClass]="{ 'is-invalid': f['nombreTipo'].invalid && (f['nombreTipo'].dirty || f['nombreTipo'].touched || isSubmit) }" />
-
-                                <label
-                                    *ngIf="f['nombreTipo'].invalid && (f['nombreTipo'].dirty || f['nombreTipo'].touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.ENTER_NAME_FIELD_REQUIRED_2' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label class="form-control-label">{{ 'COMMON.ICON' | translate }}</label>
-                                <app-icon-picker formControlName="iconoTipo" containerHeight="350px">
-                                </app-icon-picker>
-                                <label
-                                    *ngIf="f['iconoTipo'].invalid && (f['iconoTipo'].dirty || f['iconoTipo'].touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback d-block mt-1">
-                                    {{ 'PAQUETES.TIPOS_ITEM.GESTION.SELECT_ICON_FIELD_REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                                <label class="form-control-label">{{ 'COMMON.DESCRIPTION' | translate
-                                    }}</label>
-                                <app-text-editor [toolbarType]="'basica'"
-                                    [contentHtml]="f['descripcionTipo'].value || ''"
-                                    (contentHtmlChange)="actualizarDescripcionValor($event)">
-                                </app-text-editor>
-                                <input type="hidden" formControlName="descripcionTipo">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label class="form-control-label">{{ 'COMMON.STATUS' | translate }}</label>
-                                <div class="radio-buttons">
-                                    <label class="radio-button">
-                                        <input formControlName="estadoTipo" type="radio" [value]="true" />
-                                        <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
-                                    </label>
-                                    <label class="radio-button">
-                                        <input formControlName="estadoTipo" type="radio" [value]="false" />
-                                        <div class="radio-circle"></div>
-                                        <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-        </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button>{{ 'COMMON.MENU' | translate }}</button>
+      </div>
+      <ng-container>
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      </ng-container>
     </div>
+  </aside>
+
+  <div class="form-area">
+    <div class="card">
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario mb-1">
+              @if (!modoEdicion) {
+                <span>{{ 'PAQUETES.TIPOS_ITEM.GESTION.NEW_ITEM_TYPE' | translate }}</span>
+              }
+              @if (modoEdicion) {
+                <span>{{ 'PAQUETES.TIPOS_ITEM.GESTION.EDIT_ITEM_TYPE' | translate }}</span>
+              }
+            </h4>
+            <h6 class="subtitulo-formulario mb-0">
+              {{ 'PAQUETES.TIPOS_ITEM.GESTION.ITEM_TYPE_DETAILS' | translate }}
+              <!-- Configure el nombre y el ícono representativo de esta clasificación. -->
+            </h6>
+          </div>
+
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-secondary btn-animacion ms-2" (click)="btnRegresarClick()">
+              {{ 'COMMON.BACK' | translate }}
+              <i class="feather icon-arrow-left ms-2"></i>
+            </button>
+
+            <button type="button" class="btn btn-primary btn-animacion ms-2" (click)="btnGestionarRegistroClick()" [disabled]="isSaving">
+              @if (!isSaving) {
+                <span>
+                  {{ modoEdicion ? ('COMMON.EDIT_2' | translate) : ('PAQUETES.CREATE' | translate) }}
+                  <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                </span>
+              }
+              @if (isSaving) {
+                <span>{{ 'COMMON.SAVING' | translate }} <span class="spinner-border spinner-border-sm ms-2" role="status"></span></span>
+              }
+            </button>
+          </div>
+        </div>
+        <hr class="mb-0" />
+      </div>
+
+      <div class="card-body form-scroll-wrapper pt-4">
+        <form [formGroup]="formularioRegistro" novalidate>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="form-group">
+                <label class="form-control-label" for="codigoTipoItem">{{ 'COMMON.CODE' | translate }}</label>
+                <input type="text" class="form-control form-input bg-light" id="codigoTipoItem" formControlName="codigoTipoItem" readonly />
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="form-group">
+                <label class="form-control-label" for="nombreTipo">{{ 'COMMON.NAME' | translate }}</label>
+                <input
+                  type="text"
+                  class="form-control form-input"
+                  id="nombreTipo"
+                  formControlName="nombreTipo"
+                  placeholder="{{ 'PAQUETES.TIPOS_ITEM.GESTION.ITEM_TYPE_NAME' | translate }}"
+                  [ngClass]="{ 'is-invalid': f['nombreTipo'].invalid && (f['nombreTipo'].dirty || f['nombreTipo'].touched || isSubmit) }"
+                />
+
+                @if (f['nombreTipo'].invalid && (f['nombreTipo'].dirty || f['nombreTipo'].touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.ENTER_NAME_FIELD_REQUIRED_2' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="form-group">
+                <label class="form-control-label">{{ 'COMMON.ICON' | translate }}</label>
+                <app-icon-picker formControlName="iconoTipo" containerHeight="350px"> </app-icon-picker>
+                @if (f['iconoTipo'].invalid && (f['iconoTipo'].dirty || f['iconoTipo'].touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback d-block mt-1">
+                    {{ 'PAQUETES.TIPOS_ITEM.GESTION.SELECT_ICON_FIELD_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <div class="form-group">
+                <label class="form-control-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+                <app-text-editor
+                  [toolbarType]="'basica'"
+                  [contentHtml]="f['descripcionTipo'].value || ''"
+                  (contentHtmlChange)="actualizarDescripcionValor($event)"
+                >
+                </app-text-editor>
+                <input type="hidden" formControlName="descripcionTipo" />
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="form-group">
+                <label class="form-control-label">{{ 'COMMON.STATUS' | translate }}</label>
+                <div class="radio-buttons">
+                  <label class="radio-button">
+                    <input formControlName="estadoTipo" type="radio" [value]="true" />
+                    <div class="radio-circle"></div>
+                    <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                  </label>
+                  <label class="radio-button">
+                    <input formControlName="estadoTipo" type="radio" [value]="false" />
+                    <div class="radio-circle"></div>
+                    <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

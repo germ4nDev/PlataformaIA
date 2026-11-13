@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-icon',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './icon.component.html',
   styleUrl: './icon.component.scss'
 })

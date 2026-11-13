@@ -2,64 +2,86 @@
 <div class="layout-wrapper"></div>
 
 <aside class="aside-left">
-    <div class="card">
-        <div class="nav-tabs-custom">
-            <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate
-                }}</button>
-            <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">{{
-                'COMMON.FILTERS' | translate
-                }}</button>
-        </div>
-        <ng-container *ngIf="activeTab === 'menu'">
-            <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-        </ng-container>
-        <ng-container *ngIf="activeTab === 'filters'">
-            <div class="p-3 filtros-scroll-wrapper">
-                <h6 class="filtros-title">{{ 'COMMON.FILTERS' | translate }}</h6>
-                <div class="filtro">
-                    <small>{{ 'COMMON.CODE' | translate }}</small>
-                    <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-                        <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                        <option [value]="t.codigoTipoGaleria" *ngFor="let t of tipos">{{ t.codigoTipoGaleria }}</option>
-                    </select>
-                </div>
-                <div class="filtro">
-                    <small>{{ 'COMMON.NAME' | translate }}</small>
-                    <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-                        <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                        <option [value]="t.nombreTipo" *ngFor="let t of tipos">{{ t.nombreTipo }}</option>
-                    </select>
-                </div>
-                <div class="filtro">
-                    <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
-                    <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
-                        placeholder="{{ 'COMMON.SEARCH_2' | translate }}" />
-                </div>
-                <div class="filtro">
-                    <small>{{ 'COMMON.STATUS' | translate }}</small>
-                    <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                        <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                        <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-                        <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-                    </select>
-                </div>
-            </div>
-        </ng-container>
+  <div class="card">
+    <div class="nav-tabs-custom">
+      <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
+      @if (hasFiltersSlot) {
+        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'COMMON.FILTERS' | translate }}</button>
+      }
     </div>
+    @if (activeTab === 'menu') {
+      <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+    }
+    @if (activeTab === 'filters') {
+      <div class="p-3 filtros-scroll-wrapper">
+        <h6 class="filtros-title">{{ 'COMMON.FILTERS' | translate }}</h6>
+        <div class="filtro">
+          <small>{{ 'COMMON.CODE' | translate }}</small>
+          <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+            @for (t of tipos; track t) {
+              <option [value]="t.codigoTipoGaleria">{{ t.codigoTipoGaleria }}</option>
+            }
+          </select>
+        </div>
+        <div class="filtro">
+          <small>{{ 'COMMON.NAME' | translate }}</small>
+          <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+            @for (t of tipos; track t) {
+              <option [value]="t.nombreTipo">{{ t.nombreTipo }}</option>
+            }
+          </select>
+        </div>
+        <div class="filtro">
+          <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
+          <input
+            type="text"
+            (keyup)="onFiltroDescripcionChangeClick($event)"
+            class="form-control form-input"
+            placeholder="{{ 'COMMON.SEARCH_2' | translate }}"
+          />
+        </div>
+        <div class="filtro">
+          <small>{{ 'COMMON.STATUS' | translate }}</small>
+          <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+          </select>
+        </div>
+      </div>
+    }
+  </div>
 </aside>
 <div class="content-area">
-    <div class="card card-table content-scroll-wrapper">
-        <div class="card-body">
-            <ng-container *ngIf="tiposFiltrada$ | async as dataFiltrada">
-                <app-data-table [data]="dataFiltrada" [idField]="'codigoTipo'"
-                    [tableTitle]="'BIBLIOTECA.TIPOS_GALERIA.GALLERY_TYPES_MANAGEMENT' | translate" [metadataColumns]="columnasTipos"
-                    [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                    [showNewButton]="true" [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true"
-                    [showSearchBox]="false" [newButtonLabel]="'COMMON.NEW_TYPE' | translate"
-                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoTipoClick()"
-                    (editRecord)="OnEditarTipoClick($event)" (deleteRecord)="OnEliminarTipoClick($event)" permisoNew="ACT_TIPOSGAL_CREAR" permisoEdit="ACT_TIPOSGAL_MODIFICAR" permisoDelete="ACT_TIPOSGAL_ELIMINAR">
-                </app-data-table>
-            </ng-container>
-        </div>
+  <div class="card card-table content-scroll-wrapper">
+    <div class="card-body">
+      @if (tiposFiltrada$ | async; as dataFiltrada) {
+        <app-data-table
+          [data]="dataFiltrada"
+          [idField]="'codigoTipo'"
+          [tableTitle]="'BIBLIOTECA.TIPOS_GALERIA.GALLERY_TYPES_MANAGEMENT' | translate"
+          [metadataColumns]="columnasTipos"
+          [metadataDetailColumns]="columnasDetailRegistros"
+          [showDetail]="true"
+          [showActions]="true"
+          [showNewButton]="true"
+          [showViewButton]="false"
+          [showEditButton]="true"
+          [showDeleteButton]="true"
+          [showSearchBox]="false"
+          [newButtonLabel]="'COMMON.NEW_TYPE' | translate"
+          [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+          (newRecord)="OnNuevoTipoClick()"
+          (editRecord)="OnEditarTipoClick($event)"
+          (deleteRecord)="OnEliminarTipoClick($event)"
+          permisoNew="ACT_TIPOSGAL_CREAR"
+          permisoEdit="ACT_TIPOSGAL_MODIFICAR"
+          permisoDelete="ACT_TIPOSGAL_ELIMINAR"
+        >
+        </app-data-table>
+      }
     </div>
+  </div>
 </div>

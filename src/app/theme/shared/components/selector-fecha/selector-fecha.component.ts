@@ -9,7 +9,7 @@
       También funciona con [(ngModel)] y formularios reactivos (ControlValueAccessor): el valor es el mismo texto ISO.
 */
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, forwardRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Celda, Dia, aIso, igual, leerFecha, mostrar, moverMes, permitido, semanas } from './selector-fecha.util';
@@ -18,7 +18,7 @@ let siguiente = 0;
 
 @Component({
   selector: 'app-selector-fecha',
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './selector-fecha.component.html',
   styleUrl: './selector-fecha.component.scss',
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectorFechaComponent), multi: true }]

@@ -7,7 +7,7 @@
       o empresas no se tocan). Mismo API que Suscriptores › Usuarios › Roles (POST /api/usuarios-roles/sincronizar, ACT_USUSC_ROLES).
 */
 import { Component, Input, OnChanges, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,7 +35,7 @@ interface RolMarcable {
 
 @Component({
   selector: 'app-asignacion-roles-usuario',
-  imports: [CommonModule, FormsModule, TranslateModule, AppPermisoDirective],
+  imports: [FormsModule, TranslateModule, AppPermisoDirective],
   templateUrl: './asignacion-roles-usuario.component.html',
   styleUrl: './asignacion-roles-usuario.component.scss'
 })

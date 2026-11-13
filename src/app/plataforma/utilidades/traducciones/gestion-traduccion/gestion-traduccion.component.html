@@ -1,104 +1,120 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
-    </aside>
-    <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky pb-0 border-bottom-0">
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+  <aside class="aside-left">
+    <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
+  </aside>
+  <div class="content-area">
+    <div class="card">
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario">
+              <span>{{ (modoEdicion ? 'UTILIDADES.TRADUCCIONES.GESTION.EDIT_KEY' : 'UTILIDADES.TRADUCCIONES.NEW_KEY') | translate }}</span>
+              <span class="titulo-container"> - {{ 'UTILIDADES.TRADUCCIONES.TRANSLATIONS' | translate }}</span>
+            </h4>
+            <h6 class="subtitulo-formulario mb-0"
+              >{{ 'UTILIDADES.TRADUCCIONES.GESTION.FIRST_LEVEL_MODULE_SUBMODULE_GOES_INSIDE' | translate }}
+            </h6>
+          </div>
 
-                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
-                    <div class="d-flex flex-column pe-3">
-                        <h4 class="titulo-formulario">
-                            <span>{{ (modoEdicion ? 'UTILIDADES.TRADUCCIONES.GESTION.EDIT_KEY' :
-                                'UTILIDADES.TRADUCCIONES.NEW_KEY') |
-                                translate }}</span>
-                            <span class="titulo-container"> - {{ 'UTILIDADES.TRADUCCIONES.TRANSLATIONS' | translate }}</span>
-                        </h4>
-                        <h6 class="subtitulo-formulario mb-0">{{ 'UTILIDADES.TRADUCCIONES.GESTION.FIRST_LEVEL_MODULE_SUBMODULE_GOES_INSIDE' | translate }}
-                        </h6>
-                    </div>
-
-                    <!-- Bloque Derecho: Botones con Spinners -->
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
-                            {{ 'COMMON.BACK' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="guardar()">
-                            {{ 'UTILIDADES.CREATE_SLIDER' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="guardar()">
-                            {{ 'UTILIDADES.EDIT_SLIDER' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                    </div>
-                </div>
-                <hr class="mb-0"><br>
-            </div>
-            <div class="card-body form-scroll-wrapper">
-                @if (!modoEdicion) {
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="tradModulo">{{ 'COMMON.MODULE' | translate
-                            }}</label>
-                        <select id="tradModulo" name="tradModulo" class="form-select" [(ngModel)]="modulo"
-                            (ngModelChange)="alCambiarModulo()">
-                            <option value="">{{ 'COMMON.SELECT_MODULE' | translate }}</option>
-                            @for (r of ramas; track r.modulo) { <option [value]="r.modulo">{{ r.modulo }}</option> }
-                            <option [value]="NUEVO">{{ 'UTILIDADES.TRADUCCIONES.GESTION.NEW_MODULE' | translate }}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" for="tradSub">{{ 'UTILIDADES.TRADUCCIONES.GESTION.SUBMODULE' | translate
-                            }}</label>
-                        <select id="tradSub" name="tradSub" class="form-select" [(ngModel)]="submodulo"
-                            [disabled]="!modulo">
-                            <option value="">{{ 'UTILIDADES.TRADUCCIONES.GESTION.NO_SUBMODULE' | translate }}</option>
-                            @for (s of submodulos; track s) { <option [value]="s">{{ s }}</option> }
-                            <option [value]="NUEVO">{{ 'UTILIDADES.TRADUCCIONES.GESTION.NEW_SUBMODULE' | translate }}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-control-label" for="tradNombre">{{ 'UTILIDADES.TRADUCCIONES.GESTION.KEY_NAME'
-                                | translate
-                                }}</label>
-                            <input class="form-control form-input" id="tradNombre" name="tradNombre" type="text"
-                                placeholder="{{ 'UTILIDADES.TRADUCCIONES.GESTION.EG_SAVE_CHANGES' | translate }}"
-                                [ngClass]="{'is-invalid': !tradNombre.valid && (tradNombre.dirty || tradNombre.touched)}"
-                                #tradNombre="ngModel" required [(ngModel)]="nombre" />
-                            <label *ngIf="!tradNombre.valid && (tradNombre.dirty || tradNombre.touched)"
-                                class="error jquery-validation-error small form-text invalid-feedback">
-                                {{ 'UTILIDADES.TRADUCCIONES.GESTION.KEY_NAME_REQUIRED' | translate }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                }
-                <div class="form-group">
-                    <label class="form-label">{{ 'UTILIDADES.TRADUCCIONES.KEY' | translate }}</label>
-                    <div><code>{{ llave }}</code></div>
-                    @if (enviado && !llaveValida) { <small class="text-danger">{{
-                        'UTILIDADES.TRADUCCIONES.GESTION.FILL_IN_MODULE_NAME_KEY_UPPERCASE' | translate }}</small> }
-                </div>
-                <div class="row">
-                    @for (i of idiomas; track i) {
-                    <div class="col-md-6 form-group">
-                        <label class="form-label" [for]="'tradTexto' + i">{{ 'UTILIDADES.TRADUCCIONES.GESTION.TEXT_IN_IDIOMA' |
-                            translate: { idioma: i.toUpperCase() } }}</label>
-                        <textarea class="form-control form-input" rows="3" [id]="'tradTexto' + i"
-                            [name]="'tradTexto' + i" [(ngModel)]="textos[i]"></textarea>
-                        @if (enviado && !(textos[i] || '').trim()) { <small class="text-danger">{{
-                            'UTILIDADES.TRADUCCIONES.GESTION.TEXT_REQUIRED' | translate }}</small> }
-                    </div>
-                    }
-                </div>
-            </div>
+          <!-- Bloque Derecho: Botones con Spinners -->
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
+              {{ 'COMMON.BACK' | translate }}
+              <i class="feather icon-arrow-left ms-2"></i>
+            </button>
+            @if (!modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="guardar()">
+                {{ 'UTILIDADES.CREATE_SLIDER' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+            @if (modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="guardar()">
+                {{ 'UTILIDADES.EDIT_SLIDER' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+          </div>
         </div>
+        <hr class="mb-0" /><br />
+      </div>
+      <div class="card-body form-scroll-wrapper">
+        @if (!modoEdicion) {
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label class="form-label" for="tradModulo">{{ 'COMMON.MODULE' | translate }}</label>
+              <select id="tradModulo" name="tradModulo" class="form-select" [(ngModel)]="modulo" (ngModelChange)="alCambiarModulo()">
+                <option value="">{{ 'COMMON.SELECT_MODULE' | translate }}</option>
+                @for (r of ramas; track r.modulo) {
+                  <option [value]="r.modulo">{{ r.modulo }}</option>
+                }
+                <option [value]="NUEVO">{{ 'UTILIDADES.TRADUCCIONES.GESTION.NEW_MODULE' | translate }}</option>
+              </select>
+            </div>
+            <div class="col-md-6 form-group">
+              <label class="form-label" for="tradSub">{{ 'UTILIDADES.TRADUCCIONES.GESTION.SUBMODULE' | translate }}</label>
+              <select id="tradSub" name="tradSub" class="form-select" [(ngModel)]="submodulo" [disabled]="!modulo">
+                <option value="">{{ 'UTILIDADES.TRADUCCIONES.GESTION.NO_SUBMODULE' | translate }}</option>
+                @for (s of submodulos; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+                <option [value]="NUEVO">{{ 'UTILIDADES.TRADUCCIONES.GESTION.NEW_SUBMODULE' | translate }}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="tradNombre">{{ 'UTILIDADES.TRADUCCIONES.GESTION.KEY_NAME' | translate }}</label>
+                <input
+                  class="form-control form-input"
+                  id="tradNombre"
+                  name="tradNombre"
+                  type="text"
+                  placeholder="{{ 'UTILIDADES.TRADUCCIONES.GESTION.EG_SAVE_CHANGES' | translate }}"
+                  [ngClass]="{ 'is-invalid': !tradNombre.valid && (tradNombre.dirty || tradNombre.touched) }"
+                  #tradNombre="ngModel"
+                  required
+                  [(ngModel)]="nombre"
+                />
+                @if (!tradNombre.valid && (tradNombre.dirty || tradNombre.touched)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'UTILIDADES.TRADUCCIONES.GESTION.KEY_NAME_REQUIRED' | translate }}
+                  </label>
+                }
+              </div>
+            </div>
+          </div>
+        }
+        <div class="form-group">
+          <label class="form-label">{{ 'UTILIDADES.TRADUCCIONES.KEY' | translate }}</label>
+          <div
+            ><code>{{ llave }}</code></div
+          >
+          @if (enviado && !llaveValida) {
+            <small class="text-danger">{{ 'UTILIDADES.TRADUCCIONES.GESTION.FILL_IN_MODULE_NAME_KEY_UPPERCASE' | translate }}</small>
+          }
+        </div>
+        <div class="row">
+          @for (i of idiomas; track i) {
+            <div class="col-md-6 form-group">
+              <label class="form-label" [for]="'tradTexto' + i">{{
+                'UTILIDADES.TRADUCCIONES.GESTION.TEXT_IN_IDIOMA' | translate: { idioma: i.toUpperCase() }
+              }}</label>
+              <textarea
+                class="form-control form-input"
+                rows="3"
+                [id]="'tradTexto' + i"
+                [name]="'tradTexto' + i"
+                [(ngModel)]="textos[i]"
+              ></textarea>
+              @if (enviado && !(textos[i] || '').trim()) {
+                <small class="text-danger">{{ 'UTILIDADES.TRADUCCIONES.GESTION.TEXT_REQUIRED' | translate }}</small>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
+  </div>
 </div>

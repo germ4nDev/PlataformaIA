@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 
 import { AppModule } from './app/app.module';
@@ -13,5 +13,5 @@ if (environment.production) {
 // AppModule queda como módulo de proveedores (rutas, traducción, sockets, toastr, interceptores, APP_INITIALIZER): todo se toma de él.
 // Antes: platformBrowserDynamic().bootstrapModule(AppModule) (copia en _respaldos/2026-11-08_ot023-fases-4-5).
 bootstrapApplication(AppComponent, {
-  providers: [importProvidersFrom(AppModule)]
+  providers: [provideZoneChangeDetection(), importProvidersFrom(AppModule)]
 }).catch((err) => console.error(err));

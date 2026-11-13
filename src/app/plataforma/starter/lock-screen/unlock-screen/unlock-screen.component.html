@@ -1,60 +1,74 @@
 <div class="auth-wrapper align-items-stretch aut-bg-img">
-        <app-full-screen-slider [tipoSlider]="1"></app-full-screen-slider>
-    <nav class="navbar fixed-top navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"></a>
-            <div class="nav-right">
-                <app-language-selector></app-language-selector>
-            </div>
-        </div>
-    </nav>
-    <div class="card card-body panel-overlay"><br>
-        <div class="text-center">
-            <h3 class="filtros-title">{{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.UNLOCK_SCREEN' | translate }}</h3>
-        </div><br><br>
-        <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
-            <div class="input-group mb-4">
-                <span class="input-group-text form-input" id="basic-addon2"><i class="feather icon-lock"></i></span>
-                <input type="password" placeholder="{{ 'COMMON.ENTER_YOUR_PASSWORD' | translate }}" formControlName="password"
-                    class="form-control form-input"
-                    [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }" />
-                @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
-                <div class="invalid-feedback">
-                    @if (passwordControl?.errors?.['required']) {
-                    <div>{{ 'COMMON.PASSWORD_REQUIRED' | translate }}</div>
-                    }
-                </div>
-                }
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <button class="btn btn-primary btn-cancel" type="button" (click)="cancelarUnlock()">{{
-                        'COMMON.CANCEL' | translate }}</button>&nbsp;
-                    <button class="btn btn-primary btn-NuevoRegistro" type="submit" [disabled]="!loginForm.valid || loading">
-                        <span *ngIf="!loading">{{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.UNLOCK' | translate }}</span>
-                        <span *ngIf="loading">
-                            <span class="spinner-border spinner-border-sm"></span>
-                            {{ 'COMMON.LOADING' | translate }}
-                        </span>
-                    </button>
-                </div>
-            </div>
-            @if (error) {
-            <div class="alert alert-danger mt-3 mb-0">{{ error }}</div>
-            }
-        </form><br><br>
-        <div class="text-center">
-            <p><b>{{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.SOCIAL_NETWORKS' | translate }}</b></p>
-            <button class="btn text-white bg-facebook mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="facebook"><i
-                    class="fab fa-facebook-f"></i></button>
-            <button class="btn text-white bg-googlePlus mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="Google"><i
-                    class="fab fa-google-plus-g"></i></button>
-            <button class="btn text-white bg-twitter mb-2 wid-40 px-0 hei-40 rounded-circle" title="Twitter"><i
-                    class="fab fa-twitter"></i></button>
-        </div>
-        <br><br>
-        <div class="card-footer text-center">
-            {{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.2025_D_M_SOFTWARE_SOLUTIONS_SAS' | translate }}
-        </div>
+  <app-full-screen-slider [tipoSlider]="1"></app-full-screen-slider>
+  <nav class="navbar fixed-top navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"></a>
+      <div class="nav-right">
+        <app-language-selector></app-language-selector>
+      </div>
     </div>
+  </nav>
+  <div class="card card-body panel-overlay"
+    ><br />
+    <div class="text-center">
+      <h3 class="filtros-title">{{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.UNLOCK_SCREEN' | translate }}</h3> </div
+    ><br /><br />
+    <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
+      <div class="input-group mb-4">
+        <span class="input-group-text form-input" id="basic-addon2"><i class="feather icon-lock"></i></span>
+        <input
+          type="password"
+          placeholder="{{ 'COMMON.ENTER_YOUR_PASSWORD' | translate }}"
+          formControlName="password"
+          class="form-control form-input"
+          [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }"
+        />
+        @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
+          <div class="invalid-feedback">
+            @if (passwordControl?.errors?.['required']) {
+              <div>{{ 'COMMON.PASSWORD_REQUIRED' | translate }}</div>
+            }
+          </div>
+        }
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <button class="btn btn-primary btn-cancel" type="button" (click)="cancelarUnlock()">{{ 'COMMON.CANCEL' | translate }}</button
+          >&nbsp;
+          <button class="btn btn-primary btn-NuevoRegistro" type="submit" [disabled]="!loginForm.valid || loading">
+            @if (!loading) {
+              <span>{{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.UNLOCK' | translate }}</span>
+            }
+            @if (loading) {
+              <span>
+                <span class="spinner-border spinner-border-sm"></span>
+                {{ 'COMMON.LOADING' | translate }}
+              </span>
+            }
+          </button>
+        </div>
+      </div>
+      @if (error) {
+        <div class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+      }</form
+    ><br /><br />
+    <div class="text-center">
+      <p
+        ><b>{{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.SOCIAL_NETWORKS' | translate }}</b></p
+      >
+      <button class="btn text-white bg-facebook mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="facebook"
+        ><i class="fab fa-facebook-f"></i
+      ></button>
+      <button class="btn text-white bg-googlePlus mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="Google"
+        ><i class="fab fa-google-plus-g"></i
+      ></button>
+      <button class="btn text-white bg-twitter mb-2 wid-40 px-0 hei-40 rounded-circle" title="Twitter"
+        ><i class="fab fa-twitter"></i
+      ></button>
+    </div>
+    <br /><br />
+    <div class="card-footer text-center">
+      {{ 'STARTER.LOCK_SCREEN.UNLOCK_SCREEN.2025_D_M_SOFTWARE_SOLUTIONS_SAS' | translate }}
+    </div>
+  </div>
 </div>

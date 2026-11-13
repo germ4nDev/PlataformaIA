@@ -1,11 +1,11 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-widget-lobby',
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule],
   templateUrl: './widget-lobby.component.html',
   styleUrls: ['./widget-lobby.component.scss']
 })

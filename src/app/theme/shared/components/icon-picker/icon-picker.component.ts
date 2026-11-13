@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, forwardRef, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -17,7 +17,7 @@ const ICON_PICKER_VALUE_ACCESSOR: any = {
 
 @Component({
   selector: 'app-icon-picker',
-  imports: [CommonModule, TranslateModule, IconComponent],
+  imports: [TranslateModule, IconComponent],
   templateUrl: './icon-picker.component.html',
   styleUrl: './icon-picker.component.scss',
   providers: [ICON_PICKER_VALUE_ACCESSOR]

@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DashboardService } from '../../service/tablero-control/dashboard.service';
@@ -7,7 +7,7 @@ import { DashboardService } from '../../service/tablero-control/dashboard.servic
 
 @Component({
   selector: 'app-widget-header',
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule],
   templateUrl: './widget-header.component.html',
   styleUrls: ['./widget-header.component.scss']
 })

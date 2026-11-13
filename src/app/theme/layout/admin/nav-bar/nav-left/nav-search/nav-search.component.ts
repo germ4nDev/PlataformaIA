@@ -1,10 +1,9 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-nav-search',
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule],
   templateUrl: './nav-search.component.html',
   styleUrls: ['./nav-search.component.scss']
 })

@@ -1,94 +1,121 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.FILTER_BY_CODE' | translate }}</small>
-                        <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.nombreAplicacion }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.FILTER_BY_SUITE' | translate }}</small>
-                        <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="sui.codigoSuite" *ngFor="let sui of suites">
-                                {{ sui.nombreSuite }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'ACTIVIDADES.FILTER_BY_MODULE' | translate }}</small>
-                        <select (change)="onFiltroCodigoModuloChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.ALL' | translate }}</option>
-                            <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre">
-                                {{ mod.nombreModulo }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
-                            class="form-control form-input"
-                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      }
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
+          <div class="filtro">
+            <small>{{ 'COMMON.FILTER_BY_CODE' | translate }}</small>
+            <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (app of aplicaciones; track app) {
+                <option [value]="app.codigoAplicacion">
+                  {{ app.nombreAplicacion }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.FILTER_BY_SUITE' | translate }}</small>
+            <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (sui of suites; track sui) {
+                <option [value]="sui.codigoSuite">
+                  {{ sui.nombreSuite }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'ACTIVIDADES.FILTER_BY_MODULE' | translate }}</small>
+            <select (change)="onFiltroCodigoModuloChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.ALL' | translate }}</option>
+              @for (mod of modulosPadre; track mod) {
+                <option [value]="mod.codigoModulo">
+                  {{ mod.nombreModulo }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroDescripcionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="actividadesFiltradas$ | async as dataFiltrada">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoActividad'"
-                        [tableTitle]="'ACTIVIDADES.ACTIVITY_MANAGEMENT' | translate" [newButtonLabel]="'ACTIVIDADES.NEW_ACTIVITY' | translate"
-                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [metadataColumns]="columnasAplicaciopnes"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false" [showSearchBox]="false"
-                        [showDeleteButton]="false" (viewRecord)="OnViewRegistroClick($event)"
-                        [showDetailActions]="true" (newRecord)="OnNuevoRegistroClick()"
-                        (accionSubtablaClick)="onAccionSubtabla($event)"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_ACT_CREAR">
-                    </app-table-data>
-                </ng-container>
-
-                <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando Actividades ..."> </app-data-loader>
-                </ng-template>
-
-            </div>
-        </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (actividadesFiltradas$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoActividad'"
+            [tableTitle]="'ACTIVIDADES.ACTIVITY_MANAGEMENT' | translate"
+            [newButtonLabel]="'ACTIVIDADES.NEW_ACTIVITY' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            [metadataColumns]="columnasAplicaciopnes"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="false"
+            [showSearchBox]="false"
+            [showDeleteButton]="false"
+            (viewRecord)="OnViewRegistroClick($event)"
+            [showDetailActions]="true"
+            (newRecord)="OnNuevoRegistroClick()"
+            (accionSubtablaClick)="onAccionSubtabla($event)"
+            (accionPrincipalClick)="onAccionPrincipal($event)"
+            permisoNew="ACT_ACT_CREAR"
+          >
+          </app-table-data>
+        }
+
+        <ng-template #loading>
+          <app-data-loader [isLoading]="true" message="Cargando Actividades ..."> </app-data-loader>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>

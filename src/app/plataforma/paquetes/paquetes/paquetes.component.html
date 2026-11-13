@@ -1,66 +1,85 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      }
 
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
-                            class="form-control form-input"
-                            placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6>
+          <div class="filtro">
+            <small>{{ 'COMMON.FILTER_BY_NAME' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'COMMON.SEARCH_BY_NAME' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.FILTER_BY_DESCRIPTION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroDescripcionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'COMMON.SEARCH_BY_DESCRIPTION' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <!-- 🟢 Se usa ng-template #loading y se cambia app-data-table por app-table-data -->
-                <ng-container *ngIf="paquetesFiltrados$ | async as dataFiltrada; else loading">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoPaquete'"
-                        [tableTitle]="'PAQUETES.PACKAGE_MANAGEMENT' | translate" [metadataColumns]="columnasPaquetes"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="false"
-                        [showDeleteButton]="false" [showSearchBox]="false" [newButtonLabel]="'PAQUETES.NEW_PACKAGE' | translate"
-                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                        (accionPrincipalClick)="onAccionPrincipal($event)" permisoNew="ACT_PAQS_CREAR">
-                    </app-table-data>
-                </ng-container>
-
-                <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando paquetes ..."></app-data-loader>
-                </ng-template>
-            </div>
-        </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        <!-- 🟢 Se usa ng-template #loading y se cambia app-data-table por app-table-data -->
+        @if (paquetesFiltrados$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoPaquete'"
+            [tableTitle]="'PAQUETES.PACKAGE_MANAGEMENT' | translate"
+            [metadataColumns]="columnasPaquetes"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="false"
+            [showDeleteButton]="false"
+            [showSearchBox]="false"
+            [newButtonLabel]="'PAQUETES.NEW_PACKAGE' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            (newRecord)="OnNuevoRegistroClick()"
+            (accionPrincipalClick)="onAccionPrincipal($event)"
+            permisoNew="ACT_PAQS_CREAR"
+          >
+          </app-table-data>
+        } @else {
+          <app-data-loader [isLoading]="true" message="Cargando paquetes ..."></app-data-loader>
+        }
+      </div>
+    </div>
+  </div>
 </div>

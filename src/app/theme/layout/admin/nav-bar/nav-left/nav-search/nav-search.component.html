@@ -1,7 +1,13 @@
-    <a href="javascript:" (click)="searchOn = true" class="pop-search" [title]="'COMMON.SEARCH' | translate">
-      <i class="feather icon-search"></i>
-    </a>
-    <div class="search-bar" *ngIf="searchOn">
-      <input type="text" class="form-control border-0 shadow-none" [placeholder]="'LAYOUT.ADMIN.NAV_BAR.NAV_LEFT.NAV_SEARCH.SEARCH_HERE' | translate" />
-      <button (click)="searchOn = false" type="button" class="btn-close close" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
-    </div>
+<a href="javascript:" (click)="searchOn = true" class="pop-search" [title]="'COMMON.SEARCH' | translate">
+  <i class="feather icon-search"></i>
+</a>
+@if (searchOn) {
+  <div class="search-bar">
+    <input
+      type="text"
+      class="form-control border-0 shadow-none"
+      [placeholder]="'LAYOUT.ADMIN.NAV_BAR.NAV_LEFT.NAV_SEARCH.SEARCH_HERE' | translate"
+    />
+    <button (click)="searchOn = false" type="button" class="btn-close close" [attr.aria-label]="'COMMON.CLOSE' | translate"></button>
+  </div>
+}

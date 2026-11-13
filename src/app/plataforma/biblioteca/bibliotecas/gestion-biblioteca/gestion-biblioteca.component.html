@@ -16,32 +16,30 @@
       <div class="card-header card-header-sticky">
         <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
           <div class="d-flex align-items-center">
-            <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'BIBLIOTECA.BIBLIOTECAS.NEW_LIBRARY' | translate }}</h4>
-            <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.EDIT_LIBRARY' | translate }}</h4>
+            @if (!modoEdicion) {
+              <h4 class="datatable-title">{{ 'BIBLIOTECA.BIBLIOTECAS.NEW_LIBRARY' | translate }}</h4>
+            }
+            @if (modoEdicion) {
+              <h4 class="datatable-title">{{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.EDIT_LIBRARY' | translate }}</h4>
+            }
           </div>
           <div class="d-flex">
             <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
               {{ 'COMMON.BACK' | translate }}
               <i class="feather icon-arrow-left ms-2"></i>
             </button>
-            <button
-              *ngIf="!modoEdicion"
-              type="button"
-              class="btn btn-primary btn-NuevoRegistro"
-              (click)="btnGestionarBibliotecaClick(validationForm)"
-            >
-              {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.CREATE_LIBRARY' | translate }}
-              <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-            </button>
-            <button
-              *ngIf="modoEdicion"
-              type="button"
-              class="btn btn-primary btn-NuevoRegistro"
-              (click)="btnGestionarBibliotecaClick(validationForm)"
-            >
-              {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.EDIT_LIBRARY' | translate }}
-              <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-            </button>
+            @if (!modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarBibliotecaClick(validationForm)">
+                {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.CREATE_LIBRARY' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+            @if (modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarBibliotecaClick(validationForm)">
+                {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.EDIT_LIBRARY' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
           </div>
         </div>
       </div>
@@ -62,12 +60,11 @@
                   [(ngModel)]="FormRegistro.codigoBiblioteca"
                   readonly
                 />
-                <label
-                  *ngIf="!codigoBiblioteca.valid && (codigoBiblioteca.dirty || codigoBiblioteca.touched || isSubmit)"
-                  class="error jquery-validation-error small form-text invalid-feedback"
-                >
-                  {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_CODE' | translate }}
-                </label>
+                @if (!codigoBiblioteca.valid && (codigoBiblioteca.dirty || codigoBiblioteca.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_CODE' | translate }}
+                  </label>
+                }
               </div>
             </div>
 
@@ -85,12 +82,11 @@
                   required
                   [(ngModel)]="FormRegistro.nombreBiblioteca"
                 />
-                <label
-                  *ngIf="!nombreBiblioteca.valid && (nombreBiblioteca.dirty || nombreBiblioteca.touched || isSubmit)"
-                  class="error jquery-validation-error small form-text invalid-feedback"
-                >
-                  {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_NAME' | translate }}
-                </label>
+                @if (!nombreBiblioteca.valid && (nombreBiblioteca.dirty || nombreBiblioteca.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_NAME' | translate }}
+                  </label>
+                }
               </div>
             </div>
 
@@ -109,14 +105,15 @@
                   (change)="onAplicacionChangeClick($event)"
                 >
                   <option value>{{ 'COMMON.SELECT_APPLICATION' | translate }} </option>
-                  <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{ app.nombreAplicacion }}</option>
+                  @for (app of aplicaciones; track app) {
+                    <option [value]="app.codigoAplicacion"> {{ app.nombreAplicacion }}</option>
+                  }
                 </select>
-                <label
-                  *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
-                  class="error jquery-validation-error small form-text invalid-feedback"
-                >
-                  {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
-                </label>
+                @if (!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
+                  </label>
+                }
               </div>
             </div>
 
@@ -135,11 +132,13 @@
                   (change)="onSuiteChangeClick($event)"
                 >
                   <option value="">{{ 'COMMON.SELECT_SUITE' | translate }} </option>
-                  <option [value]="sui.codigoSuite" *ngFor="let sui of listaSuitesFiltradas"> {{ sui.nombreSuite }} </option>
+                  @for (sui of listaSuitesFiltradas; track sui) {
+                    <option [value]="sui.codigoSuite"> {{ sui.nombreSuite }} </option>
+                  }
                 </select>
                 <!-- <label *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
-                                </label> -->
+                {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED' | translate }}
+              </label> -->
               </div>
             </div>
             <div class="col-md-6">
@@ -155,7 +154,9 @@
                   [(ngModel)]="FormRegistro.codigoModulo"
                 >
                   <option value="">{{ 'COMMON.SELECT_PARENT_MODULE' | translate }} </option>
-                  <option [value]="mod.codigoModulo" *ngFor="let mod of listaModulosFilrados"> {{ mod.nombreModulo }}</option>
+                  @for (mod of listaModulosFilrados; track mod) {
+                    <option [value]="mod.codigoModulo"> {{ mod.nombreModulo }}</option>
+                  }
                 </select>
               </div>
             </div>
@@ -177,19 +178,20 @@
                   rows="5"
                 >
                 </app-text-editor>
-                <label
-                  *ngIf="!descripcionBiblioteca.valid && (descripcionBiblioteca.dirty || descripcionBiblioteca.touched || isSubmit)"
-                  class="error jquery-validation-error small form-text invalid-feedback"
-                >
-                  {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_DESCRIPTION' | translate }}
-                </label>
+                @if (!descripcionBiblioteca.valid && (descripcionBiblioteca.dirty || descripcionBiblioteca.touched || isSubmit)) {
+                  <label class="error jquery-validation-error small form-text invalid-feedback">
+                    {{ 'BIBLIOTECA.BIBLIOTECAS.GESTION.LIBRARY_DESCRIPTION' | translate }}
+                  </label>
+                }
               </div>
             </div>
 
             <div class="col-md-12">
               <div class="form-group">
                 <label class="form-label">{{ 'COMMON.APLICATION_IMAGE' | translate }}</label>
-                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview" />
+                @if (selectedFileUrl) {
+                  <img [src]="selectedFileUrl" class="image-preview" />
+                }
                 <div class="file-input-wrapper">
                   <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
                     {{ 'Seleccionar archivo' | translate }}

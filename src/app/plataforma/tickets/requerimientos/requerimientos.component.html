@@ -1,66 +1,88 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+          {{ 'COMMON.FILTERS' | translate }}
+        </button>
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'TICKETS.REQUERIMIENTOS.REQUIREMENT_FILTERS' | translate }}</h6>
-                    </DIV>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.NAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'TICKETS.REQUERIMIENTOS.REQUIREMENT_NAME' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
-                            class="form-control form-input"
-                            placeholder="{{ 'TICKETS.REQUERIMIENTOS.REQUIREMENT_DESCRIPTION' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select class="form-control form-select" style="cursor: pointer;"
-                            (change)="onFiltroEstadoChangeClick($event)">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option value="1">{{ 'COMMON.ACTIVE' | translate }}</option>
-                            <option value="0">{{ 'COMMON.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      }
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <DIV class="text-center">
+            <h6 class="filtros-title">{{ 'TICKETS.REQUERIMIENTOS.REQUIREMENT_FILTERS' | translate }}</h6>
+          </DIV>
+          <div class="filtro">
+            <small>{{ 'COMMON.NAME' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'TICKETS.REQUERIMIENTOS.REQUIREMENT_NAME' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroDescripcionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'TICKETS.REQUERIMIENTOS.REQUIREMENT_DESCRIPTION' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select class="form-control form-select" style="cursor: pointer" (change)="onFiltroEstadoChangeClick($event)">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="1">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="0">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoRequerimiento'"
-                        [tableTitle]="'TICKETS.REQUERIMIENTOS.REQUIREMENT_MANAGEMENT' | translate"
-                        [newButtonLabel]="'TICKETS.REQUERIMIENTOS.NEW_REQUIREMENT' | translate"
-                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" [metadataColumns]="columnasRegistros"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [showBackButton]="true" [showSearchBox]="false"
-                        (viewRecord)="OnViewRegistroClick($event)" (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (option1Record)="OnOption1Click($event)" (backRecord)="OnRegresarClick($event)" permisoNew="ACT_REQUERIMIENTOS_CREAR" permisoEdit="ACT_REQUERIMIENTOS_MODIFICAR" permisoDelete="ACT_REQUERIMIENTOS_ELIMINAR">
-                    </app-table-data>
-                </ng-container>
-            </div>
-        </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (registrosFiltrado$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoRequerimiento'"
+            [tableTitle]="'TICKETS.REQUERIMIENTOS.REQUIREMENT_MANAGEMENT' | translate"
+            [newButtonLabel]="'TICKETS.REQUERIMIENTOS.NEW_REQUIREMENT' | translate"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            [metadataColumns]="columnasRegistros"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="true"
+            [showDeleteButton]="true"
+            [showBackButton]="true"
+            [showSearchBox]="false"
+            (viewRecord)="OnViewRegistroClick($event)"
+            (newRecord)="OnNuevoRegistroClick()"
+            (editRecord)="OnEditarRegistroClick($event)"
+            (deleteRecord)="OnEliminarRegistroClick($event)"
+            (option1Record)="OnOption1Click($event)"
+            (backRecord)="OnRegresarClick($event)"
+            permisoNew="ACT_REQUERIMIENTOS_CREAR"
+            permisoEdit="ACT_REQUERIMIENTOS_MODIFICAR"
+            permisoDelete="ACT_REQUERIMIENTOS_ELIMINAR"
+          >
+          </app-table-data>
+        }
+      </div>
+    </div>
+  </div>
 </div>

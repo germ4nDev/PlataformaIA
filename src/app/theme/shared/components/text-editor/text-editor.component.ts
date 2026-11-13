@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, forwardRef, Input, OnInit, Output, EventEmitter } from '@angular/core'; // Se añadieron Output y EventEmitter
-import { CommonModule } from '@angular/common';
+
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 
@@ -14,7 +14,7 @@ const CUSTOM_VALUE_ACCESSOR: any = {
 
 @Component({
   selector: 'app-text-editor',
-  imports: [CommonModule, QuillModule, FormsModule, ReactiveFormsModule],
+  imports: [QuillModule, FormsModule, ReactiveFormsModule],
   templateUrl: './text-editor.component.html',
   styleUrl: './text-editor.component.scss',
   providers: [CUSTOM_VALUE_ACCESSOR]

@@ -1,116 +1,134 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button>
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button>
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+      </div>
 
-            <ng-container>
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
-        </div>
-    </aside>
-
-    <div class="form-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-                    <div class="d-flex align-items-center">
-                    </div>
-                    <div class="d-flex">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'COMMON.BACK' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'COMMON.SAVE' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'COMMON.UPDATE' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="card-header card-header-sticky pb-0 border-bottom-0">
-                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
-
-                    <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
-                    <div class="d-flex flex-column pe-3">
-                        <h4 class="titulo-formulario">
-                            <span *ngIf="!modoEdicion">{{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.NEW_ASSIGNMENT' | translate }}</span>
-                            <span *ngIf="modoEdicion">{{ 'COMMON.UPDATE' | translate }}</span>
-                            <span class="titulo-container"> - {{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.WIDGETS_BY_ROLE' | translate }}</span>
-                        </h4>
-                        <h6 class="subtitulo-formulario mb-0">
-                            {{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.APPLICATION_ROLES_THAT_CAN_SEE_WIDGET' | translate }}
-                        </h6>
-                    </div>
-
-                    <!-- Bloque Derecho: Botones con Spinners -->
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'COMMON.BACK' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
-
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'COMMON.SAVE' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
-                            (click)="btnGestionarWidgetRoleClick()">
-                            {{ 'COMMON.UPDATE' | translate }}
-                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                    </div>
-                </div>
-                <hr class="mb-0"><br>
-            </div>
-
-            <div class="card-body form-scroll-wrapper">
-                <div class="col-md-12" *ngIf="rolesConCheck.length > 0">
-                    <div class="text-center flex flex-col justify-center"><br />
-                        <h4 class="titulo-container">{{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.P0_ROLES_LINKED_WIDGET' | translate: { p0: ('UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.CREATE_OR_UPDATE_WIDGET_ROLE' | translate) } }}</h4>
-                        <!-- Se muestra el nombre del widget o su código como fallback -->
-                        <h6 class="subtitulo-container"> {{ widgetMaestro.nombreWidget || widgetMaestro.codigoWidget }}
-                        </h6><br>
-
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
-                            (click)="btnAsociarTodosClick()">
-                            {{ 'COMMON.SELECT_ALL' | translate }}
-                        </button><br /><br />
-                    </div>
-                </div>
-
-                <div class="col-md-12" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
-                    <div class="row mx-0">
-                        <div class="col-md-6 mb-3" *ngFor="let rol of rolesConCheck; let i = index">
-                            <label class="checkbox-container custom-check-form" [for]="'modu_' + i">
-                                <input class="custom-checkbox" type="checkbox" [(ngModel)]="rol.checked"
-                                    [name]="'modCheck_' + i" [id]="'modu_' + i"
-                                    (change)="onRoleCheckChange($event, rol)" />
-                                <div class="text-wrapper ml-2">
-                                    <span class="titulo-container">{{ rol.nombreRole }}</span>
-                                    <span class="subtitulo-container"
-                                        [innerHTML]="rol.descripcionRole || 'Habilita este role para renderizar el widget en el panel.'">
-                                    </span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <ng-container>
+        <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+      </ng-container>
     </div>
+  </aside>
+
+  <div class="form-area">
+    <div class="card">
+      <div class="card-header card-header-sticky">
+        <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center"> </div>
+          <div class="d-flex">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+              {{ 'COMMON.BACK' | translate }}
+              <i class="feather icon-arrow-left ms-2"></i>
+            </button>
+
+            @if (!modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarWidgetRoleClick()">
+                {{ 'COMMON.SAVE' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+
+            @if (modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarWidgetRoleClick()">
+                {{ 'COMMON.UPDATE' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <!-- Bloque Izquierdo: Título Integrado y Subtítulo -->
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario">
+              @if (!modoEdicion) {
+                <span>{{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.NEW_ASSIGNMENT' | translate }}</span>
+              }
+              @if (modoEdicion) {
+                <span>{{ 'COMMON.UPDATE' | translate }}</span>
+              }
+              <span class="titulo-container"> - {{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.WIDGETS_BY_ROLE' | translate }}</span>
+            </h4>
+            <h6 class="subtitulo-formulario mb-0">
+              {{ 'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.APPLICATION_ROLES_THAT_CAN_SEE_WIDGET' | translate }}
+            </h6>
+          </div>
+
+          <!-- Bloque Derecho: Botones con Spinners -->
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+              {{ 'COMMON.BACK' | translate }}
+              <i class="feather icon-arrow-left ms-2"></i>
+            </button>
+
+            @if (!modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarWidgetRoleClick()">
+                {{ 'COMMON.SAVE' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+
+            @if (modoEdicion) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarWidgetRoleClick()">
+                {{ 'COMMON.UPDATE' | translate }}
+                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+              </button>
+            }
+          </div>
+        </div>
+        <hr class="mb-0" /><br />
+      </div>
+
+      <div class="card-body form-scroll-wrapper">
+        @if (rolesConCheck.length > 0) {
+          <div class="col-md-12">
+            <div class="text-center flex flex-col justify-center"
+              ><br />
+              <h4 class="titulo-container">{{
+                'UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.P0_ROLES_LINKED_WIDGET'
+                  | translate: { p0: ('UTILIDADES.WIDGETS.WIDGETS_ROLES.GESTION.CREATE_OR_UPDATE_WIDGET_ROLE' | translate) }
+              }}</h4>
+              <!-- Se muestra el nombre del widget o su código como fallback -->
+              <h6 class="subtitulo-container"> {{ widgetMaestro.nombreWidget || widgetMaestro.codigoWidget }} </h6><br />
+              <button type="button" class="btn btn-primary btn-NuevoRegistro transition" (click)="btnAsociarTodosClick()">
+                {{ 'COMMON.SELECT_ALL' | translate }} </button
+              ><br /><br />
+            </div>
+          </div>
+        }
+
+        <div class="col-md-12" style="max-height: 400px; overflow-y: auto; overflow-x: hidden">
+          <div class="row mx-0">
+            @for (rol of rolesConCheck; track rol; let i = $index) {
+              <div class="col-md-6 mb-3">
+                <label class="checkbox-container custom-check-form" [for]="'modu_' + i">
+                  <input
+                    class="custom-checkbox"
+                    type="checkbox"
+                    [(ngModel)]="rol.checked"
+                    [name]="'modCheck_' + i"
+                    [id]="'modu_' + i"
+                    (change)="onRoleCheckChange($event, rol)"
+                  />
+                  <div class="text-wrapper ml-2">
+                    <span class="titulo-container">{{ rol.nombreRole }}</span>
+                    <span
+                      class="subtitulo-container"
+                      [innerHTML]="rol.descripcionRole || 'Habilita este role para renderizar el widget en el panel.'"
+                    >
+                    </span>
+                  </div>
+                </label>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

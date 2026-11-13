@@ -1,133 +1,172 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'COMMON.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'COMMON.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'COMMON.MENU' | translate }}
+        </button>
+        @if (hasFiltersSlot) {
+          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+            {{ 'COMMON.FILTERS' | translate }}
+          </button>
+        }
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.SUBSCRIBER_USER_FILTERS' | translate }}</h6>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.SUBSCRIBER' | translate }}</small>
-                        <select class="form-control form-select" style="cursor: pointer;"
-                            (change)="onFiltroSuscriptorChangeClick($event)">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option [value]="suscriptor.codigoSuscriptor" *ngFor="let suscriptor of suscriptores">
-                                {{ suscriptor.nombreSuscriptor }}</option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.NAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.SUBSCRIBER_USER_NAME' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'COMMON.STATUS' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-                            <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+      @if (activeTab === 'menu') {
+        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+      }
+      @if (activeTab === 'filters') {
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.SUBSCRIBER_USER_FILTERS' | translate }}</h6>
+          <div class="filtro">
+            <small>{{ 'COMMON.SUBSCRIBER' | translate }}</small>
+            <select class="form-control form-select" style="cursor: pointer" (change)="onFiltroSuscriptorChangeClick($event)">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              @for (suscriptor of suscriptores; track suscriptor) {
+                <option [value]="suscriptor.codigoSuscriptor"> {{ suscriptor.nombreSuscriptor }}</option>
+              }
+            </select>
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.NAME' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.SUBSCRIBER_USER_NAME' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'COMMON.STATUS' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
+              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-table-data [data]="dataFiltrada" [idField]="'codigoUsuarioSC'"
-                        [tableTitle]="'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.SUBSCRIBER_USER_MANAGEMENT' | translate"
-                        [metadataColumns]="columnasRegistros" [metadataDetailColumns]="columnasDetailRegistros"
-                        [showDetail]="true" [showActions]="true" [showNewButton]="true" [showViewButton]="false"
-                        [showEditButton]="true" [showUploadButton]="true" [showDeleteButton]="false"
-                        [showSearchBox]="false" [showBackButton]="true" permisoNew="ACT_USUSC_CREAR"
-                        [newButtonLabel]="'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.NEW_SUBSCRIBER_USER' | translate"
-                        [cargandoExcel]="cargandoExcel" (excelUpload)="procesarArchivoExcel($event)"
-                        [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)"
-                        (backRecord)="OnBackButtonClic($event)" (accionPrincipalClick)="onAccionPrincipal($event)" permisoEdit="ACT_USUSC_CAMBIAR" permisoDelete="ACT_USUSC_ELIMINAR" permisoUpload="ACT_USUSC_CARGUE">
-                    </app-table-data>
-                </ng-container>
-
-                <ng-template #loading>
-                    <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
-                </ng-template>
-            </div>
-        </div>
+      }
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        @if (registrosFiltrado$ | async; as dataFiltrada) {
+          <app-table-data
+            [data]="dataFiltrada"
+            [idField]="'codigoUsuarioSC'"
+            [tableTitle]="'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.SUBSCRIBER_USER_MANAGEMENT' | translate"
+            [metadataColumns]="columnasRegistros"
+            [metadataDetailColumns]="columnasDetailRegistros"
+            [showDetail]="true"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showViewButton]="false"
+            [showEditButton]="true"
+            [showUploadButton]="true"
+            [showDeleteButton]="false"
+            [showSearchBox]="false"
+            [showBackButton]="true"
+            permisoNew="ACT_USUSC_CREAR"
+            [newButtonLabel]="'SUSCRIPTOR.USUARIOS_SUSCRIPTOR.NEW_SUBSCRIBER_USER' | translate"
+            [cargandoExcel]="cargandoExcel"
+            (excelUpload)="procesarArchivoExcel($event)"
+            [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
+            (newRecord)="OnNuevoRegistroClick()"
+            (editRecord)="OnEditarRegistroClick($event)"
+            (deleteRecord)="OnEliminarRegistroClick($event)"
+            (backRecord)="OnBackButtonClic($event)"
+            (accionPrincipalClick)="onAccionPrincipal($event)"
+            permisoEdit="ACT_USUSC_CAMBIAR"
+            permisoDelete="ACT_USUSC_ELIMINAR"
+            permisoUpload="ACT_USUSC_CARGUE"
+          >
+          </app-table-data>
+        }
+
+        <ng-template #loading>
+          <app-data-loader [isLoading]="true" message="Cargando Usuarios ..."> </app-data-loader>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ========================================================================= -->
 <!-- MODAL DE CAMBIO DE CLAVE (Controlado por *ngIf) procesarArchivoExcel($event) -->
 <!-- ========================================================================= -->
-<div class="modal fade" [ngClass]="{'show d-block': mostrarModalPassword}" tabindex="-1" *ngIf="mostrarModalPassword"
-    style="background-color: rgba(0,0,0,0.6);">
+@if (mostrarModalPassword) {
+  <div class="modal fade" [ngClass]="{ 'show d-block': mostrarModalPassword }" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.6)">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title">{{ 'COMMON.PASSWORD_CHANGE' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-custom" [attr.aria-label]="'COMMON.CLOSE' | translate"
-                    (click)="cerrarModal()"></button>
-            </div>
-
-            <div class="modal-body p-4">
-                <form #validationForm="ngForm" class="editForm" novalidate>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.CURRENT_PASSWORD' | translate
-                                    }}</label>
-                                <input type="password" class="form-control form-input" name="claveUsuario"
-                                    placeholder="{{ 'COMMON.ENTER_CURRENT_PASSWORD' | translate }}"
-                                    #claveUsuario="ngModel" required [(ngModel)]="FormRegistro.claveUsuario" />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.NEW_PASSWORD' | translate }}</label>
-                                <input type="password" class="form-control form-input" name="claveNew"
-                                    placeholder="{{ 'COMMON.ENTER_NEW_PASSWORD' | translate }}"
-                                    #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'COMMON.CONFIRM_PASSWORD' | translate
-                                    }}</label>
-                                <input type="password" class="form-control form-input" name="claveConfirm"
-                                    placeholder="{{ 'COMMON.CONFIRM_PASSWORD_2' | translate }}"
-                                    #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModal()">
-                    {{ 'COMMON.CANCEL' | translate }}
-                </button>
-                <button type="button" class="btn btn-primary btn-NuevoRegistro"
-                    (click)="getCambiarClave(validationForm)">
-                    {{ 'COMMON.SAVE' | translate }}
-                </button>
-            </div>
-
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'COMMON.PASSWORD_CHANGE' | translate }}</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-custom"
+            [attr.aria-label]="'COMMON.CLOSE' | translate"
+            (click)="cerrarModal()"
+          ></button>
         </div>
+        <div class="modal-body p-4">
+          <form #validationForm="ngForm" class="editForm" novalidate>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">{{ 'COMMON.CURRENT_PASSWORD' | translate }}</label>
+                  <input
+                    type="password"
+                    class="form-control form-input"
+                    name="claveUsuario"
+                    placeholder="{{ 'COMMON.ENTER_CURRENT_PASSWORD' | translate }}"
+                    #claveUsuario="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.claveUsuario"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">{{ 'COMMON.NEW_PASSWORD' | translate }}</label>
+                  <input
+                    type="password"
+                    class="form-control form-input"
+                    name="claveNew"
+                    placeholder="{{ 'COMMON.ENTER_NEW_PASSWORD' | translate }}"
+                    #claveNew="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.claveNew"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">{{ 'COMMON.CONFIRM_PASSWORD' | translate }}</label>
+                  <input
+                    type="password"
+                    class="form-control form-input"
+                    name="claveConfirm"
+                    placeholder="{{ 'COMMON.CONFIRM_PASSWORD_2' | translate }}"
+                    #claveConfirm="ngModel"
+                    required
+                    [(ngModel)]="FormRegistro.claveConfirm"
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-NuevoRegistro" (click)="cerrarModal()">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="getCambiarClave(validationForm)">
+            {{ 'COMMON.SAVE' | translate }}
+          </button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+}

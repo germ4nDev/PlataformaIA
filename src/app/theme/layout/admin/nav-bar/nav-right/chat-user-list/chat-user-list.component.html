@@ -17,9 +17,9 @@
   <div class="main-friend-cont scroll-div">
     <div class="main-friend-list">
       <ng-scrollbar style="height: calc(100vh - 85px)" visibility="hover">
-        <ng-container *ngFor="let friends of friendsList; trackBy: trackByFn">
+        @for (friends of friendsList; track trackByFn($index, friends)) {
           <app-friend (ChatOn)="ChatOn()" [friends]="friends"></app-friend>
-        </ng-container>
+        }
       </ng-scrollbar>
     </div>
   </div>

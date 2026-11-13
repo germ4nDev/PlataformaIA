@@ -1,7 +1,7 @@
 import { traducir } from '../../../../../theme/shared/i18n/traducir';
 import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { DashboardPlataformaService } from 'src/app/theme/shared/service/dashboard-plataforma.service';
@@ -9,7 +9,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
 
 @Component({
   selector: 'app-wdg-facturacion-area',
-  imports: [TranslateModule, CommonModule, NgChartsModule, WidgetShellComponent],
+  imports: [TranslateModule, NgChartsModule, WidgetShellComponent],
   templateUrl: './wdg-facturacion-area.component.html',
   styleUrl: './wdg-facturacion-area.component.scss'
 })

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,7 +6,7 @@ import { LanguageSelectorComponent } from 'src/app/theme/shared/components/langu
 
 @Component({
   selector: 'app-lock-screen',
-  imports: [CommonModule, RouterModule, TranslateModule, FullScreenSliderComponent, LanguageSelectorComponent],
+  imports: [RouterModule, TranslateModule, FullScreenSliderComponent, LanguageSelectorComponent],
   templateUrl: './lock-screen.component.html',
   styleUrl: './lock-screen.component.scss'
 })

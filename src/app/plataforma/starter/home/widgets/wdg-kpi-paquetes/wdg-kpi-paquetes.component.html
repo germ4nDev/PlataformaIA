@@ -1,53 +1,57 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'TOTAL PAQUETES'"
-    [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.SYNCED_WITH_DB' | translate)"
-    [icono]="widgetConfig?.icono || 'feather icon-package'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell
+  [titulo]="widgetConfig?.titulo || 'TOTAL PAQUETES'"
+  [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.SYNCED_WITH_DB' | translate)"
+  [icono]="widgetConfig?.icono || 'feather icon-package'"
+  [isEnfoque]="isEnfoque"
+  (clickEnfoque)="maximizarDesdeShell()"
+>
+  <!-- PROYECCIÓN AL HEADER: Badge de En Vivo -->
+  <div acciones-extra class="d-flex align-items-center">
+    <span class="tc-badge badge-success text-uppercase d-flex align-items-center gap-1">
+      <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem"></span>
+      {{ 'COMMON.LIVE' | translate }}
+    </span>
+  </div>
 
-    <!-- PROYECCIÓN AL HEADER: Badge de En Vivo -->
-    <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge badge-success text-uppercase d-flex align-items-center gap-1">
-            <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem;"></span>
-            {{ 'COMMON.LIVE' | translate }}
-        </span>
+  <!-- ESTADO DE CARGA (Skeleton) -->
+  @if (isLoading) {
+    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+      <div class="skeleton-box skeleton-number mb-3" style="width: 80px; height: 60px; border-radius: 8px"></div>
+      <div class="skeleton-box" style="width: 120px; height: 12px; border-radius: 4px"></div>
     </div>
+  }
 
-    <!-- ESTADO DE CARGA (Skeleton) -->
-    <ng-container *ngIf="isLoading">
-        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-            <div class="skeleton-box skeleton-number mb-3" style="width: 80px; height: 60px; border-radius: 8px;"></div>
-            <div class="skeleton-box" style="width: 120px; height: 12px; border-radius: 4px;"></div>
+  <!-- CONTENIDO LISTO -->
+  @if (!isLoading) {
+    <!-- VISTA KPI NORMAL (Cuadrícula) -->
+    @if (!isEnfoque) {
+      <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100 text-center animate__animated animate__fadeIn">
+        <h1 class="valor-kpi text-white fw-bold mb-0" style="font-size: 3.5rem; letter-spacing: -2px">
+          {{ total | number }}
+        </h1>
+      </div>
+    }
+    <!-- VISTA DETALLADA MODO ENFOQUE (Distribución en modal) -->
+    @if (isEnfoque) {
+      <div class="w-100 h-100 p-2 animate__animated animate__fadeIn overflow-auto">
+        <p class="text-muted mb-4">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.DISTRIBUTION_ACTIVE_PACKAGES_ON_PLATFORM' | translate }}</p>
+        <div class="d-flex flex-column gap-3">
+          <div
+            class="d-flex justify-content-between p-3 rounded"
+            style="background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1)"
+          >
+            <span class="fw-medium text-white">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.BASIC_PACKAGE' | translate }}</span>
+            <span class="fw-bold text-success">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.0_ACTIVE' | translate }}</span>
+          </div>
+          <div
+            class="d-flex justify-content-between p-3 rounded"
+            style="background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1)"
+          >
+            <span class="fw-medium text-white">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.PREMIUM_PACKAGE' | translate }}</span>
+            <span class="fw-bold text-success">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.P0_ACTIVE' | translate: { p0: total } }}</span>
+          </div>
         </div>
-    </ng-container>
-
-    <!-- CONTENIDO LISTO -->
-    <ng-container *ngIf="!isLoading">
-
-        <!-- VISTA KPI NORMAL (Cuadrícula) -->
-        <div *ngIf="!isEnfoque"
-            class="d-flex flex-column align-items-center justify-content-center w-100 h-100 text-center animate__animated animate__fadeIn">
-            <h1 class="valor-kpi text-white fw-bold mb-0" style="font-size: 3.5rem; letter-spacing: -2px;">
-                {{ total | number }}
-            </h1>
-        </div>
-
-        <!-- VISTA DETALLADA MODO ENFOQUE (Distribución en modal) -->
-        <div *ngIf="isEnfoque" class="w-100 h-100 p-2 animate__animated animate__fadeIn overflow-auto">
-            <p class="text-muted mb-4">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.DISTRIBUTION_ACTIVE_PACKAGES_ON_PLATFORM' | translate }}</p>
-
-            <div class="d-flex flex-column gap-3">
-                <div class="d-flex justify-content-between p-3 rounded"
-                    style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                    <span class="fw-medium text-white">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.BASIC_PACKAGE' | translate }}</span>
-                    <span class="fw-bold text-success">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.0_ACTIVE' | translate }}</span>
-                </div>
-                <div class="d-flex justify-content-between p-3 rounded"
-                    style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                    <span class="fw-medium text-white">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.PREMIUM_PACKAGE' | translate }}</span>
-                    <span class="fw-bold text-success">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_PAQUETES.P0_ACTIVE' | translate: { p0: total } }}</span>
-                </div>
-            </div>
-        </div>
-
-    </ng-container>
-
+      </div>
+    }
+  }
 </app-widget-shell>

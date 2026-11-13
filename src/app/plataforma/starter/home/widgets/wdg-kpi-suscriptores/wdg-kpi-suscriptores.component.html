@@ -1,54 +1,62 @@
-<app-widget-shell [titulo]="widgetConfig?.titulo || 'TOTAL SUSCRIPTORES'"
-    [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.SYNCED_WITH_DB' | translate)"
-    [icono]="widgetConfig?.icono || 'feather icon-briefcase'" [isEnfoque]="isEnfoque"
-    (clickEnfoque)="maximizarDesdeShell()">
+<app-widget-shell
+  [titulo]="widgetConfig?.titulo || 'TOTAL SUSCRIPTORES'"
+  [subtitulo]="widgetConfig?.subtitulo || ('STARTER.HOME.WIDGETS.SYNCED_WITH_DB' | translate)"
+  [icono]="widgetConfig?.icono || 'feather icon-briefcase'"
+  [isEnfoque]="isEnfoque"
+  (clickEnfoque)="maximizarDesdeShell()"
+>
+  <!-- PROYECCIÓN AL HEADER: Badge de En Vivo (Tono Info/Cyan) -->
+  <div acciones-extra class="d-flex align-items-center">
+    <span class="tc-badge badge-info text-uppercase d-flex align-items-center gap-1">
+      <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem"></span>
+      {{ 'COMMON.LIVE' | translate }}
+    </span>
+  </div>
 
-    <!-- PROYECCIÓN AL HEADER: Badge de En Vivo (Tono Info/Cyan) -->
-    <div acciones-extra class="d-flex align-items-center">
-        <span class="tc-badge badge-info text-uppercase d-flex align-items-center gap-1">
-            <span class="spinner-grow spinner-grow-sm" role="status" style="width: 0.4rem; height: 0.4rem;"></span>
-            {{ 'COMMON.LIVE' | translate }}
-        </span>
+  <!-- ESTADO DE CARGA (Skeleton) -->
+  @if (isLoading) {
+    <div class="d-flex flex-column align-items-center justify-content-center h-100">
+      <div class="skeleton-box skeleton-number mb-3" style="width: 80px; height: 60px; border-radius: 8px"></div>
+      <div class="skeleton-box" style="width: 120px; height: 12px; border-radius: 4px"></div>
     </div>
+  }
 
-    <!-- ESTADO DE CARGA (Skeleton) -->
-    <ng-container *ngIf="isLoading">
-        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-            <div class="skeleton-box skeleton-number mb-3" style="width: 80px; height: 60px; border-radius: 8px;"></div>
-            <div class="skeleton-box" style="width: 120px; height: 12px; border-radius: 4px;"></div>
-        </div>
-    </ng-container>
-
-    <!-- CONTENIDO LISTO -->
-    <ng-container *ngIf="!isLoading">
-
-        <!-- VISTA KPI NORMAL (Cuadrícula) -->
-        <div *ngIf="!isEnfoque"
-            class="d-flex flex-column align-items-center justify-content-center w-100 h-100 text-center animate__animated animate__fadeIn">
-            <h1 class="valor-kpi text-white fw-bold mb-0" style="font-size: 3.5rem; letter-spacing: -2px;">
-                {{ total | number }}
-            </h1>
-        </div>
-
-        <!-- VISTA DETALLADA MODO ENFOQUE (Lista en modal) -->
-        <div *ngIf="isEnfoque" class="w-100 h-100 p-2 animate__animated animate__fadeIn overflow-auto">
-            <p class="text-muted mb-4">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_SUSCRIPTORES.NEW_SUBSCRIBERS_REGISTERED_IN_CURRENT_PERIOD' | translate }}</p>
-
-            <ul class="list-unstyled">
-                <li class="d-flex align-items-center p-3 mb-2 rounded"
-                    style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
-                    <div class="rounded-circle d-flex justify-content-center align-items-center me-3"
-                        style="width: 36px; height: 36px; background-color: rgba(13, 202, 240, 0.15); color: #0dcaf0; border: 1px solid #0dcaf0;">
-                        <i class="feather icon-user fs-6"></i>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="text-white fw-medium">Empresa QPLUS SAS</span>
-                        <span class="text-muted" style="font-size: 0.7rem;">{{ 'STARTER.HOME.WIDGETS.WDG_KPI_SUSCRIPTORES.PREMIUM_PLAN' | translate }}</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-    </ng-container>
-
+  <!-- CONTENIDO LISTO -->
+  @if (!isLoading) {
+    <!-- VISTA KPI NORMAL (Cuadrícula) -->
+    @if (!isEnfoque) {
+      <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100 text-center animate__animated animate__fadeIn">
+        <h1 class="valor-kpi text-white fw-bold mb-0" style="font-size: 3.5rem; letter-spacing: -2px">
+          {{ total | number }}
+        </h1>
+      </div>
+    }
+    <!-- VISTA DETALLADA MODO ENFOQUE (Lista en modal) -->
+    @if (isEnfoque) {
+      <div class="w-100 h-100 p-2 animate__animated animate__fadeIn overflow-auto">
+        <p class="text-muted mb-4">{{
+          'STARTER.HOME.WIDGETS.WDG_KPI_SUSCRIPTORES.NEW_SUBSCRIBERS_REGISTERED_IN_CURRENT_PERIOD' | translate
+        }}</p>
+        <ul class="list-unstyled">
+          <li
+            class="d-flex align-items-center p-3 mb-2 rounded"
+            style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05)"
+          >
+            <div
+              class="rounded-circle d-flex justify-content-center align-items-center me-3"
+              style="width: 36px; height: 36px; background-color: rgba(13, 202, 240, 0.15); color: #0dcaf0; border: 1px solid #0dcaf0"
+            >
+              <i class="feather icon-user fs-6"></i>
+            </div>
+            <div class="d-flex flex-column">
+              <span class="text-white fw-medium">Empresa QPLUS SAS</span>
+              <span class="text-muted" style="font-size: 0.7rem">{{
+                'STARTER.HOME.WIDGETS.WDG_KPI_SUSCRIPTORES.PREMIUM_PLAN' | translate
+              }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    }
+  }
 </app-widget-shell>

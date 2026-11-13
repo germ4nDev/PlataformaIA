@@ -1,52 +1,47 @@
 <div class="plataforma-list-screen">
+  <app-full-screen-slider [tipoSlider]="2" class="plataforma-list-bg"></app-full-screen-slider>
 
-    <app-full-screen-slider [tipoSlider]="2" class="plataforma-list-bg"></app-full-screen-slider>
-
-    <nav class="navbar fixed-top navbar-expand-lg">
-        <div class="container-fluid panel-overlay">
-            <a class="navbar-brand" href="#"></a>
-            <div class="nav-right">
-                <ul class="tc-toolbar-nav d-flex align-items-center mb-0 list-unstyled gap-2">
-                    <li class="nav-item">
-                        <button (click)="regresar()" class="tc-action-btn"
-                            title="{{ 'STARTER.BACK_SIGN_IN' | translate }}">
-                            <i class="feather icon-arrow-left"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <app-language-selector></app-language-selector>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="plataforma-apps-layout">
-
-        <div class="plataforma-apps-header text-center">
-            <h2 class="apps-main-title">{{ 'STARTER.INICIO_SUITES.SUITES' | translate }} {{ nomAplicacion }}</h2>
-            <p class="apps-subtitle">{{ 'STARTER.INICIO_SUITES.SELECT_SUITE_YOU_WISH_ACCESS_IN' | translate }} {{ nomAplicacion }}</p>
-        </div>
-
-        <div class="plataforma-apps-grid">
-            <div class="plataforma-app-item-card" *ngFor="let suite of suites"
-                [style.backgroundImage]="'url(' + suite.imagenInicio + ')'">
-
-                <div class="app-card-overlay">
-                    <div class="app-card-info">
-                        <h3 class="app-name">{{ suite.nombreSuite }}</h3>
-                        <p class="app-description" [innerHTML]="suite.descripcionSuite"></p>
-                    </div>
-
-                    <div class="app-card-actions"><br>
-                        <button (click)="ingresaSuiteaplicacion(suite)" class="plataforma-enter-btn">
-                            {{ 'STARTER.ACCESS' | translate }} <i class="feather icon-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
+  <nav class="navbar fixed-top navbar-expand-lg">
+    <div class="container-fluid panel-overlay">
+      <a class="navbar-brand" href="#"></a>
+      <div class="nav-right">
+        <ul class="tc-toolbar-nav d-flex align-items-center mb-0 list-unstyled gap-2">
+          <li class="nav-item">
+            <button (click)="regresar()" class="tc-action-btn" title="{{ 'STARTER.BACK_SIGN_IN' | translate }}">
+              <i class="feather icon-arrow-left"></i>
+            </button>
+          </li>
+          <li class="nav-item">
+            <app-language-selector></app-language-selector>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
+
+  <div class="plataforma-apps-layout">
+    <div class="plataforma-apps-header text-center">
+      <h2 class="apps-main-title">{{ 'STARTER.INICIO_SUITES.SUITES' | translate }} {{ nomAplicacion }}</h2>
+      <p class="apps-subtitle">{{ 'STARTER.INICIO_SUITES.SELECT_SUITE_YOU_WISH_ACCESS_IN' | translate }} {{ nomAplicacion }}</p>
+    </div>
+
+    <div class="plataforma-apps-grid">
+      @for (suite of suites; track suite) {
+        <div class="plataforma-app-item-card" [style.backgroundImage]="'url(' + suite.imagenInicio + ')'">
+          <div class="app-card-overlay">
+            <div class="app-card-info">
+              <h3 class="app-name">{{ suite.nombreSuite }}</h3>
+              <p class="app-description" [innerHTML]="suite.descripcionSuite"></p>
+            </div>
+            <div class="app-card-actions"
+              ><br />
+              <button (click)="ingresaSuiteaplicacion(suite)" class="plataforma-enter-btn">
+                {{ 'STARTER.ACCESS' | translate }} <i class="feather icon-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
 </div>
