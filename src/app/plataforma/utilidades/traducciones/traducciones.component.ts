@@ -106,14 +106,6 @@ export class TraduccionesComponent implements OnInit {
         });
     }
 
-    columnasDetailRegistros: ColumnMetadata[] = [
-        { name: 'codigoPaquete', header: 'COMMON.CODE', type: 'text' },
-        { name: 'precioPromocion', header: 'PAQUETES.PROMOTIONAL_PRICE', type: 'price' },
-        { name: 'descripcionPaquete', header: 'COMMON.DESCRIPTION', type: 'text' },
-        { name: 'acuerdoLicencia', header: 'PAQUETES.LICENSE_AGREEMENT', type: 'text' },
-        { name: 'iconoPaquete', header: 'COMMON.ICON', type: 'avatar' },
-        { name: 'imagenPaquete', header: 'COMMON.IMAGE', type: 'image' }
-    ];
 
     /** Idiomas que trae la web y el API todavía no tiene (producción recién desplegada). */
     revisarSembrado(): void {

@@ -1,4 +1,0 @@
-<div class="rango-tcl" role="group" [attr.aria-label]="'PORTTOS.WIDGETS.SHARED.RANGO_TCL.RANGE' | translate">
-    <button type="button" *ngFor="let o of opciones" [class.activo]="o.valor === valor" [disabled]="deshabilitado"
-        (click)="o.valor !== valor && cambio.emit(o.valor)">{{ (o.etiqueta | translate) }}</button>
-</div>

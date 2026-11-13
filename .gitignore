@@ -45,3 +45,6 @@ src/assets/data/
 # System files
 .DS_Store
 Thumbs.db
+
+# Aplicaciones del ecosistema: cada una es su propio repositorio (regla 26, OT-033)
+/src/app/apps/*/

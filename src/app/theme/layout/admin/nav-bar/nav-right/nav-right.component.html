@@ -3,14 +3,16 @@
         <li>
             <div class="dropdown icon-style" ngbDropdown placement="auto">
                 <a ngbDropdownToggle href="javascript:" class="icono-tema">
-                    <i class="icon feather icon-bell icon-lg icon-style" [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.NOTIFICATION' | translate"></i>
+                    <i class="icon feather icon-bell icon-lg icon-style"
+                        [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.NOTIFICATION' | translate"></i>
                     <span class="badge bg-danger"><span class="sr-only"></span></span>
                 </a>
                 <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
                     <div class="noti-head">
                         <h6 class="d-inline-block m-b-0">{{ 'COMMON.NOTIFICATIONS' | translate }}</h6>
                         <div class="float-end">
-                            <a href="javascript:" class="m-r-10">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MARK_AS_READ' | translate }}</a>
+                            <a href="javascript:" class="m-r-10">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MARK_AS_READ' |
+                                translate }}</a>
                             <a href="javascript:">{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CLEAR_LIST' | translate }}</a>
                         </div>
                     </div>
@@ -24,7 +26,8 @@
                                     [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate" />
                                 <div class="media-body">
                                     <p><strong>John Doe</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span></p>
+                                                class="icon feather icon-clock"></i>{{
+                                            'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span></p>
                                     <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.NEW_TICKET_ADDED' | translate }}</p>
                                 </div>
                             </div>
@@ -38,8 +41,10 @@
                                     [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate" />
                                 <div class="media-body">
                                     <p><strong>Joseph William</strong><span class="n-time text-muted"><i
-                                                data-feather="clock"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span></p>
-                                    <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PURCHASE_NEW_THEME_MAKE_PAYMENT' | translate }}</p>
+                                                data-feather="clock"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' |
+                                            translate }}</span></p>
+                                    <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PURCHASE_NEW_THEME_MAKE_PAYMENT' | translate
+                                        }}</p>
                                 </div>
                             </div>
                         </li>
@@ -49,7 +54,8 @@
                                     [alt]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.PLACEHOLDER_IMAGE' | translate" />
                                 <div class="media-body">
                                     <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock m-r-10"></i>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span></p>
+                                                class="icon feather icon-clock m-r-10"></i>{{
+                                            'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.30_MIN' | translate }}</span></p>
                                     <p>{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.CURRENTLY_ONLINE' | translate }}</p>
                                 </div>
                             </div>
@@ -64,14 +70,15 @@
         <li (click)="this.visibleUserList = !this.visibleUserList">
             <div class="dropdown">
                 <a href="javascript:void(0)" class="displayChatbox dropdown-toggle icono-tema">
-                    <i class="icon feather icon-mail icon-lg icon-style" [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MAIL_INBOX' | translate"></i>
+                    <i class="icon feather icon-mail icon-lg icon-style"
+                        [title]="'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.MAIL_INBOX' | translate"></i>
                     <span class="badge bg-success"><span class="sr-only"></span></span>
                 </a>
             </div>
         </li>
         <li>
             <i class="icon feather icon-monitor icon-lg icon-style"
-                title="{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.COMPANIES' | translate }}" (click)="empresasScreen()"
+                title="{{ 'COMMON.SUBSCRIBERS' | translate }}" (click)="suscriptorsScreen()"
                 style="cursor: pointer"></i>
         </li>
         <li>
@@ -80,12 +87,13 @@
                 style="cursor: pointer"></i>
         </li>
         <li>
-            <i class="icon feather icon-home icon-lg icon-style" title="{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.SUITES' | translate }}"
-                (click)="suitesScreen()" style="cursor: pointer"></i>
+            <i class="icon feather icon-home icon-lg icon-style"
+                title="{{ 'LAYOUT.ADMIN.NAV_BAR.NAV_RIGHT.SUITES' | translate }}" (click)="suitesScreen()"
+                style="cursor: pointer"></i>
         </li>
         <li>
-            <i class="icon feather icon-help-circle icon-lg icon-style"
-                title="{{ 'COMMON.HELP' | translate }}" (click)="helpsClick()" style="cursor: pointer"></i>
+            <i class="icon feather icon-help-circle icon-lg icon-style" title="{{ 'COMMON.HELP' | translate }}"
+                (click)="helpsClick()" style="cursor: pointer"></i>
         </li>
         <li>
             <app-language-selector></app-language-selector>

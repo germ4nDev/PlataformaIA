@@ -15,7 +15,7 @@ import { LocalStorageService } from 'src/app/theme/shared/service';
 import { PtlpestanasService } from 'src/app/theme/shared/service/ptlpestanas.service';
 import { PTLLayoutModel } from 'src/app/theme/shared/_helpers/models/PTLLayout.model';
 
-import { WIDGET_MAP } from 'src/app/porttos/torre-control/widget-registry';
+import { WIDGET_MAP } from 'src/app/apps/porttos/torre-control/widget-registry';
 import { CeldaLayout, MOLDE_TERMINAL, ajustarTerminales, layoutEfectivo } from './layout-efectivo';
 
 @Injectable({

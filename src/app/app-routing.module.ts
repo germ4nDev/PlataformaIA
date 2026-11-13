@@ -74,7 +74,7 @@ const routes: Routes = [
             },
             {
                 path: 'administracion',
-                loadChildren: () => import('./qplus/administracion/administracion.module').then((module) => module.AdministracionModule)
+                loadChildren: () => import('./apps/sistemas/administracion/administracion.module').then((module) => module.AdministracionModule)
             },
             {
                 path: 'autenticacion',
@@ -94,7 +94,7 @@ const routes: Routes = [
             },
             {
                 path: 'porttos',
-                loadChildren: () => import('./porttos/porttos.module').then((module) => module.PorttosModule)
+                loadChildren: () => import('./apps/porttos/porttos.module').then((module) => module.PorttosModule)
             }
         ]
     },

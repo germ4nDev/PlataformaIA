@@ -180,15 +180,34 @@ export class NavRightComponent implements DoCheck, OnInit {
         this.router.navigate(['/starter/lock-screen']);
     }
 
-    empresasScreen() {
-        this.router.navigate(['/starter/inicio-empresas']);
+    suscriptorsScreen() {
+        const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+        navSettings.aplicacion = {}
+        navSettings.suite = {}
+        navSettings.modulo = {}
+        this._localStorageService.setObject('aplicaciones', navSettings.aplicaciones)
+        this._localStorageService.setObject('suscriptor', navSettings.suscriptor)
+        this._localStorageService.setNavSettingsLocalStorage(navSettings);
+        this.router.navigate(['/starter/inicio-suscriptores']);
     }
 
     aplicacionesScreen() {
+        const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+        navSettings.aplicacion = {}
+        navSettings.suite = {}
+        navSettings.modulo = {}
+        this._localStorageService.setObject('aplicaciones', navSettings.aplicaciones)
+        this._localStorageService.setObject('suscriptor', navSettings.suscriptor)
+        this._localStorageService.setNavSettingsLocalStorage(navSettings);
         this.router.navigate(['/starter/inicio-aplicaciones']);
     }
 
     suitesScreen() {
+        const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+        navSettings.suite = {}
+        navSettings.modulo = {}
+        console.log('navSettings navBar', navSettings);
+        this._localStorageService.setNavSettingsLocalStorage(navSettings);
         this.router.navigate(['/starter/inicio-suites']);
     }
 

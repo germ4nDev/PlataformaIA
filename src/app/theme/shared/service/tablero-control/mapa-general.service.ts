@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscription, shareReplay, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { VISIBILIDAD_INICIAL } from 'src/app/porttos/widgets/panel-mapa/mapa-logistico/mapa-capas';
+import { VISIBILIDAD_INICIAL } from 'src/app/apps/porttos/widgets/panel-mapa/mapa-logistico/mapa-capas';
 import { SocketService } from '../sockets.service';
 import { SenalAis } from './senal-ais';
 

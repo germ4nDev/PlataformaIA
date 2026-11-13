@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 // Ambas listas importadas
 import { FEATHER_ICONS_LIST } from '../../constants/feather-icons.const';
 import { TABLER_ICONS_LIST } from '../../constants/tabler-icons.const';
+import { IconComponent } from '../icon/icon.component';
 
 const ICON_PICKER_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -17,7 +18,7 @@ const ICON_PICKER_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'app-icon-picker',
     standalone: true,
-    imports: [CommonModule, TranslateModule],
+    imports: [CommonModule, TranslateModule, IconComponent],
     templateUrl: './icon-picker.component.html',
     styleUrl: './icon-picker.component.scss',
     providers: [ICON_PICKER_VALUE_ACCESSOR]

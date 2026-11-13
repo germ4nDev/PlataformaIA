@@ -77,65 +77,77 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        let paqsSuscriptor: any[] = []
-        let modulosPaquete: any[] = []
-        this._localStorageService.removeObject('navsettings');
-        this.suscriptor = this._localStorageService.getObject<any>('suscriptor');
-        const susPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        paqsSuscriptor = this.suscriptor.paquetesActivos || []
+        const navSettings = this._localStorageService.getNavSettingsLocalStorage();
 
-        paqsSuscriptor.forEach(paq => {
-            const mods = paq.modulosPaquete || []
-            modulosPaquete.push(...mods)
-        });
+        if (!navSettings.suscriptor) {
+            let paqsSuscriptor: any[] = []
+            let modulosPaquete: any[] = []
+            this._localStorageService.removeObject('navsettings');
+            this.suscriptor = this._localStorageService.getObject<any>('suscriptor');
+            const susPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+            paqsSuscriptor = this.suscriptor.paquetesActivos || []
 
-        let aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
-        this.ModulosPQ = modulosPaquete
-        this.modulos = this._modulosService.getModulosActuales()
-        this.roles = this._rolesService.getRolesActuales()
-        this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales()
-        this.usuariosSC = this._usuariosSCRolesService.getUsuariosSCActuales()
-        let apps: any[] = [];
+            paqsSuscriptor.forEach(paq => {
+                const mods = paq.modulosPaquete || []
+                modulosPaquete.push(...mods)
+            });
 
-        modulosPaquete.forEach((item: any) => {
-            if (item.codigoAplicacion) {
-                const idx = apps.findIndex(x => x.codigoAplicacion == item.codigoAplicacion)
-                if (idx == -1) {
-                    const aplicacion = aplicaciones.find(x => x.codigoAplicacion == item.codigoAplicacion) || {}
-                    const imagen = aplicacion.imagenInicio || 'no-imagen.png';
-                    const imagenLogo = aplicacion.imagenLogoB || 'no-imagen.png';
-                    aplicacion.imagenLogo = this._uploadService.getFilePath(susPlataforma, 'aplicaciones', imagenLogo) || 'no-image.png';
-                    aplicacion.imagenInicio = this._uploadService.getFilePath(this.suscImagenes, 'aplicaciones', imagen)
-                    const modsApp = modulosPaquete.filter(x => x.codigoAplicacion == item.codigoAplicacion);
+            let aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
+            this.ModulosPQ = modulosPaquete
+            this.modulos = this._modulosService.getModulosActuales()
+            this.roles = this._rolesService.getRolesActuales()
+            this.usuariosRoles = this._usuariosRolesService.getUsuairosRolesActuales()
+            this.usuariosSC = this._usuariosSCRolesService.getUsuariosSCActuales()
+            let apps: any[] = [];
 
-                    modsApp.forEach(mod => {
-                        const modData = this.modulos.find(x => x.codigoModulo == mod.codigoModulo)
-                        const modSubs = this.modulos.filter(x => x.codigoPadre == mod.codigoModulo)
-                        mod.modulo = modData
-                        mod.submodulos = modSubs
-                    });
+            modulosPaquete.forEach((item: any) => {
+                if (item.codigoAplicacion) {
+                    const idx = apps.findIndex(x => x.codigoAplicacion == item.codigoAplicacion)
+                    if (idx == -1) {
+                        const aplicacion = aplicaciones.find(x => x.codigoAplicacion == item.codigoAplicacion) || {}
+                        const imagen = aplicacion.imagenInicio || 'no-imagen.png';
+                        const imagenLogo = aplicacion.imagenLogoB || 'no-imagen.png';
+                        aplicacion.imagenLogo = this._uploadService.getFilePath(susPlataforma, 'aplicaciones', imagenLogo) || 'no-image.png';
+                        aplicacion.imagenInicio = this._uploadService.getFilePath(this.suscImagenes, 'aplicaciones', imagen)
+                        const modsApp = modulosPaquete.filter(x => x.codigoAplicacion == item.codigoAplicacion);
 
-                    aplicacion.modulos = modsApp
-                    apps.push(aplicacion)
+                        modsApp.forEach(mod => {
+                            const modData = this.modulos.find(x => x.codigoModulo == mod.codigoModulo)
+                            const modSubs = this.modulos.filter(x => x.codigoPadre == mod.codigoModulo)
+                            mod.modulo = modData
+                            mod.submodulos = modSubs
+                        });
+
+                        aplicacion.modulos = modsApp
+                        apps.push(aplicacion)
+                    }
+                }
+            });
+
+            // Multidominio (OT-012): en el dominio de una aplicación solo se ofrece esa, y se entra directo
+            const ctx = this._contextoDominio.contexto;
+            apps = aplicacionesDelDominio(ctx, apps);
+
+            this._localStorageService.setObject('aplicaciones', apps);
+            this.aplicaciones = apps;
+
+            if (ctx.tipo === 'aplicacion') {
+                if (apps.length === 1) {
+                    this.ingresarPlataforma(apps[0]);
+                } else {
+                    this._swalService.getAlertError(`Este suscriptor no tiene ${ctx.marca.nombre || 'esta aplicación'} en sus paquetes.`);
+                    this.router.navigate(['/starter/inicio-suscriptores']);
                 }
             }
-        });
+        } else {
+            this._localStorageService.setNavSettingsLocalStorage(navSettings);
+            this.aplicaciones = navSettings.aplicaciones as PTLAplicacionModel[];
 
-        // Multidominio (OT-012): en el dominio de una aplicación solo se ofrece esa, y se entra directo
-        const ctx = this._contextoDominio.contexto;
-        apps = aplicacionesDelDominio(ctx, apps);
-
-        this._localStorageService.setObject('aplicaciones', apps);
-        this.aplicaciones = apps;
-
-        if (ctx.tipo === 'aplicacion') {
-            if (apps.length === 1) {
-                this.ingresarPlataforma(apps[0]);
-            } else {
-                this._swalService.getAlertError(`Este suscriptor no tiene ${ctx.marca.nombre || 'esta aplicación'} en sus paquetes.`);
-                this.router.navigate(['/starter/inicio-suscriptores']);
+            if (this.aplicaciones.length === 1) {
+                this.ingresarPlataforma(this.aplicaciones[0]);
             }
         }
+
     }
 
     ngOnDestroy(): void {
@@ -148,12 +160,10 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         const suscriptor = this._localStorageService.getObject<any>('suscriptor');
         const aplicaciones = this._localStorageService.getObject<any>('aplicaciones');
 
-        const appSeleccionada = apps.find((x: { codigoAplicacion: string | undefined }) => x.codigoAplicacion == app.codigoAplicacion);
-
         // Roles del usuario en la aplicación y sus widgets: pieza común (plataforma/sesion/nucleo, CC-109)
         const { roles, widgets } = rolesYWidgetsDeAplicacion({
             codigoUsuario: current.usuario.codigoUsuario,
-            codigoAplicacion: appSeleccionada.codigoAplicacion,
+            codigoAplicacion: app.codigoAplicacion,
             usuariosSC: this.usuariosSC,
             roles: this.roles,
             usuariosRoles: this.usuariosRoles,
@@ -174,11 +184,10 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         }
 
         this._localStorageService.setCurrentUserLocalStorage(current);
-
         const contexto = contextoDeUsuario(current);
 
         const navsettings = {
-            aplicacion: appSeleccionada,
+            aplicacion: app,
             suite: {},
             modulo: {},
             contexto: contexto,
