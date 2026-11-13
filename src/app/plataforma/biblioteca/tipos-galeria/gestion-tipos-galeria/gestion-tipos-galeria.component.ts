@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +24,7 @@ import Swal from 'sweetalert2';
   selector: 'app-gestion-tipos-galeria',
   imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-tipos-galeria.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-tipos-galeria.component.scss'
 })
 export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {

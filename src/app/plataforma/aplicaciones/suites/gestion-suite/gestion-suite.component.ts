@@ -1,7 +1,7 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,6 +28,7 @@ import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTL
   selector: 'app-gestion-suite',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-suite.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-suite.component.scss'
 })
 export class GestionSuiteComponent implements OnInit {

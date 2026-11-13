@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -30,6 +30,7 @@ import { PTLItemModel } from 'src/app/theme/shared/_helpers/models/PTLItem.model
   selector: 'app-gestion-item',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent, ReactiveFormsModule],
   templateUrl: './gestion-item.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-item.component.scss'
 })
 export class GestionItemComponent implements OnInit, OnDestroy {

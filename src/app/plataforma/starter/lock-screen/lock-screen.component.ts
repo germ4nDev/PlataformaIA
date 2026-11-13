@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
@@ -8,6 +8,7 @@ import { LanguageSelectorComponent } from 'src/app/theme/shared/components/langu
   selector: 'app-lock-screen',
   imports: [RouterModule, TranslateModule, FullScreenSliderComponent, LanguageSelectorComponent],
   templateUrl: './lock-screen.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './lock-screen.component.scss'
 })
 export class LockScreenComponent {

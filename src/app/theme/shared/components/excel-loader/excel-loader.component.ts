@@ -1,6 +1,6 @@
 import { traducir } from '../../i18n/traducir';
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import * as XLSX from 'xlsx';
@@ -10,6 +10,7 @@ import { SwalAlertService } from '../../service/swal-alert.service';
   selector: 'app-excel-uploader',
   imports: [TranslateModule],
   templateUrl: './excel-loader.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./excel-loader.component.scss']
 })
 export class ExcelUploaderComponent {

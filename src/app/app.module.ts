@@ -18,7 +18,7 @@ import { ChatMsgComponent } from './theme/layout/admin/nav-bar/nav-right/chat-ms
 import { ChatUserListComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/chat-user-list.component';
 import { FriendComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/friend/friend.component';
 import { SharedModule } from './theme/shared/shared.module';
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 // third party
 import { ToastrModule } from 'ngx-toastr';
@@ -133,7 +133,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       useClass: SessionInterceptor,
       multi: true
     },
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withXhr(), withInterceptorsFromDi())
   ]
 })
 export class AppModule {}

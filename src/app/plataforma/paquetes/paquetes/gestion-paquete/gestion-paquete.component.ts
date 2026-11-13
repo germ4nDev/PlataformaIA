@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -34,6 +34,7 @@ import { PTLListasPreciosService, ReferenciaPaquete } from 'src/app/theme/shared
   selector: 'app-gestion-paquete',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent, ReactiveFormsModule],
   templateUrl: './gestion-paquete.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-paquete.component.scss'
 })
 export class GestionPaqueteComponent implements OnInit, OnDestroy {

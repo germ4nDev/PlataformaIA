@@ -1,6 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 // Angular Import
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { NavigationEnd, Router, RouterModule, Event } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -20,6 +20,7 @@ interface titleType {
   selector: 'app-breadcrumb',
   imports: [TranslateModule, RouterModule],
   templateUrl: './breadcrumb.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./breadcrumb.component.scss']
 })
 export class BreadcrumbComponent {

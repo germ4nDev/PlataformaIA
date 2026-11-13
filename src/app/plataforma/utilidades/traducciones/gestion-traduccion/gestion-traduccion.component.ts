@@ -6,7 +6,7 @@
       llave; la llave queda MODULO[.SUBMODULO].LLAVE, en MAYÚSCULAS, y se escribe su texto en cada idioma (todos con las mismas llaves).
       Editar: la llave no cambia; se corrigen sus textos. El API revisa que no choque con el árbol (la llave ya existe, es un grupo, etc.).
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,6 +35,7 @@ const aSegmento = (s: string) =>
   selector: 'app-gestion-traduccion',
   imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-traduccion.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-traduccion.component.scss'
 })
 export class GestionTraduccionComponent implements OnInit {

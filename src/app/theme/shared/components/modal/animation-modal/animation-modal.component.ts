@@ -1,5 +1,5 @@
 // Angular Import
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // project import
@@ -11,6 +11,7 @@ import { GradientConfig } from 'src/app/app-config';
   imports: [CommonModule],
   templateUrl: './animation-modal.component.html',
   styleUrls: ['./animation-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class AnimationModalComponent implements OnInit {

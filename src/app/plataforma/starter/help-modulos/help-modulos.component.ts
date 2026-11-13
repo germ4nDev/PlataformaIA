@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { PTLBiblioteca } from 'src/app/theme/shared/_helpers/models/PTLBiblioteca.model';
 import { PTLFormatoGaleria } from 'src/app/theme/shared/_helpers/models/PTLFormatoGaleria.model';
@@ -18,6 +18,7 @@ import { LanguageSelectorComponent } from 'src/app/theme/shared/components/langu
   selector: 'app-help-modulos',
   imports: [NavBarComponent, LanguageSelectorComponent],
   templateUrl: './help-modulos.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './help-modulos.component.scss'
 })
 export class HelpModulosComponent implements OnInit {

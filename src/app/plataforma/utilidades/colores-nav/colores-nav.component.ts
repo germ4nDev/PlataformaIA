@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
@@ -37,6 +37,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TableDataComponent
   ],
   templateUrl: './colores-nav.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './colores-nav.component.scss'
 })
 export class ColoresNavComponent implements OnInit {

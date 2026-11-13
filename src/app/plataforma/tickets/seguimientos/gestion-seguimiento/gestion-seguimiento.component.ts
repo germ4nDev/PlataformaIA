@@ -2,7 +2,7 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
@@ -34,6 +34,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
   selector: 'app-gestion-seguimiento',
   imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-seguimiento.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-seguimiento.component.scss'
 })
 export class GestionSeguimientoComponent {

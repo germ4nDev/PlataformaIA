@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -25,6 +25,7 @@ import { PTLTipoGaleria } from 'src/app/theme/shared/_helpers/models/PTLTipoGale
   selector: 'app-gestion-formatos-galeria',
   imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-formatos-galeria.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-formatos-galeria.component.scss'
 })
 export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {

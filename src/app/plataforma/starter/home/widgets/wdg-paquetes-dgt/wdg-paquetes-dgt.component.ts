@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
@@ -12,6 +12,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
   selector: 'app-wdg-paquetes-dgt',
   imports: [TranslateModule, NgChartsModule, WidgetShellComponent],
   templateUrl: './wdg-paquetes-dgt.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./wdg-paquetes-dgt.component.scss'] // Corregido a styleUrls
 })
 export class WdgPaquetesDgtComponent implements OnInit {

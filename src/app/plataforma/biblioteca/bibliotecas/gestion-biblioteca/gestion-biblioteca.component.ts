@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -34,6 +34,7 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
   selector: 'app-gestion-biblioteca',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-biblioteca.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-biblioteca.component.scss'
 })
 export class GestionBibliotecaComponent implements OnInit {

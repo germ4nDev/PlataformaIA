@@ -378,7 +378,7 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 // }
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
@@ -412,6 +412,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
   selector: 'app-usuarios-role',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
   templateUrl: './usuarios-roles.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './usuarios-roles.component.scss'
 })
 export class UsuariosRolesComponent implements OnInit {

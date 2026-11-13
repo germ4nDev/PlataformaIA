@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -35,6 +35,7 @@ import { PTLTiposRoleModel } from 'src/app/theme/shared/_helpers/models/PTLTipos
   selector: 'app-gestion-roles',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-roles.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-roles.component.scss'
 })
 export class GestionRolesComponent implements OnInit {

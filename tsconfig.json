@@ -3,12 +3,13 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "ignoreDeprecations": "6.0", // TypeScript 6 marca baseUrl y downlevelIteration como obsoletos (OT-035): se reemplazan después
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     "noImplicitOverride": true,
-    "allowSyntheticDefaultImports": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
@@ -17,7 +18,6 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
     "skipLibCheck": true,

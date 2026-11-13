@@ -2,7 +2,7 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { Observable, Subscription } from 'rxjs';
@@ -42,6 +42,7 @@ import { PTLTipoPagoModel } from 'src/app/theme/shared/_helpers/models/PTLTiposP
   selector: 'app-gestion-suscriptor',
   imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-suscriptor.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-suscriptor.component.scss'
 })
 export class GestionSuscriptorComponent implements OnInit {

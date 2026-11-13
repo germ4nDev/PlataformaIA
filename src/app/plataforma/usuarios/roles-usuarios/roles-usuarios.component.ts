@@ -2,7 +2,7 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
 import { Router } from '@angular/router';
@@ -46,6 +46,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
   selector: 'app-roles',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
   templateUrl: './roles-usuarios.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './roles-usuarios.component.scss'
 })
 export class RolesUsuariosComponent implements OnInit {

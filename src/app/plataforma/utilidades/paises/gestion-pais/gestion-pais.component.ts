@@ -4,7 +4,7 @@
     Description: Código ISO 3166-1 (alfa-2, alfa-3 y numérico), nombre, moneda ISO 4217 con símbolo y decimales, indicativo telefónico, zona
     horaria IANA e idioma. Al escribir el código alfa-2 propone el nombre (Intl). El código no se cambia al editar. El API valida los formatos.
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,6 +34,7 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
     TextEditorComponent
   ],
   templateUrl: './gestion-pais.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-pais.component.scss'
 })
 export class GestionPaisComponent implements OnInit {

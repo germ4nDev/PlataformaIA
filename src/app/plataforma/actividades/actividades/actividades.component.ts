@@ -1,6 +1,6 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
@@ -51,6 +51,7 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
     DataLoaderComponent
   ],
   templateUrl: './actividades.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './actividades.component.scss'
 })
 export class ActividadesComponent implements OnInit, OnDestroy {

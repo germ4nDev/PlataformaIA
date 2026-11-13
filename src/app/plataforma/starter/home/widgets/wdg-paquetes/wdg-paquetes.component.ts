@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SocketManagerService } from 'src/app/theme/shared/service';
@@ -12,6 +12,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
   selector: 'app-wdg-paquetes',
   imports: [TranslateModule, CommonModule, WidgetShellComponent],
   templateUrl: './wdg-paquetes.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./wdg-paquetes.component.scss']
 })
 export class WdgPaquetesComponent implements OnInit, OnDestroy {

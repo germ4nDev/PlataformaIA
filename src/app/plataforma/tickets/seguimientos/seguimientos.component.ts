@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -45,6 +45,7 @@ const base_url = environment.apiUrl;
     TableDataComponent
   ],
   templateUrl: './seguimientos.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './seguimientos.component.scss'
 })
 export class SeguimientosComponent implements OnInit {

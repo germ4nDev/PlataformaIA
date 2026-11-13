@@ -1,6 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 // Angular Import
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { GradientConfig } from 'src/app/app-config';
 
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   imports: [TranslateModule, CommonModule, FormsModule],
   templateUrl: './configuration.component.html',
   styleUrls: ['./configuration.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class ConfigurationComponent implements OnInit {

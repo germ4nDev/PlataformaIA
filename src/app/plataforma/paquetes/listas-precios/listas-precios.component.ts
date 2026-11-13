@@ -4,7 +4,7 @@
     Description: La lista de precios es el único lugar del precio de venta de paquetes e items. Esta pantalla lista las listas con su
     vigencia y cuántos precios tienen; filtros por estado, moneda y texto; crear, editar (con su detalle y «Duplicar») e inactivar.
 */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -27,6 +27,7 @@ import { PtlPaisesService } from 'src/app/theme/shared/service/ptlpaises.service
   selector: 'app-listas-precios',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
   templateUrl: './listas-precios.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './listas-precios.component.scss'
 })
 export class ListasPreciosComponent implements OnInit, OnDestroy {
@@ -68,14 +69,12 @@ export class ListasPreciosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.navegacion.getNavigationItems();
     this.menuItems = this.navegacion.menuItems$;
-    this.paises
-      .listar()
-      .subscribe({
-        next: (l) =>
-          this.nombresPais$.next(
-            Object.fromEntries(l.map((p) => [p.codigoPais, this.paises.nombreEn(p, this.translate.currentLang || 'es')]))
-          )
-      });
+    this.paises.listar().subscribe({
+      next: (l) =>
+        this.nombresPais$.next(
+          Object.fromEntries(l.map((p) => [p.codigoPais, this.paises.nombreEn(p, this.translate.currentLang || 'es')]))
+        )
+    });
     this.filtradas$ = combineLatest([this.listas$, this.filtroEstado$, this.filtroMoneda$, this.filtroTexto$, this.nombresPais$]).pipe(
       map(([listas, estado, moneda, texto, nombres]) => {
         const t = texto.trim().toLowerCase();

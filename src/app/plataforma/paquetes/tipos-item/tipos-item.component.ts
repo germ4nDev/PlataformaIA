@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
@@ -33,6 +33,7 @@ import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoIt
     DataLoaderComponent
   ],
   templateUrl: './tipos-item.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tipos-item.component.scss'
 })
 export class TiposItemComponent implements OnInit, OnDestroy {

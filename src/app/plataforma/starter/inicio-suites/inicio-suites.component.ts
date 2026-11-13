@@ -1,9 +1,9 @@
 import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerDirective } from 'ngx-color-picker';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
@@ -23,12 +23,13 @@ import { suiteDelDominio } from 'src/app/plataforma/dominios/nucleo';
     TranslateModule,
     NgbDropdownModule,
     RouterModule,
-    ColorPickerModule,
+    ColorPickerDirective,
     SharedModule,
     LanguageSelectorComponent,
     FullScreenSliderComponent
   ],
   templateUrl: './inicio-suites.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './inicio-suites.component.scss'
 })
 export class InicioSuitesComponent implements OnInit {

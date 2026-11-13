@@ -1,7 +1,7 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -20,6 +20,7 @@ import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fulls
   selector: 'app-unlock-screen',
   imports: [CommonModule, RouterModule, SharedModule, TranslateModule, LanguageSelectorComponent, FullScreenSliderComponent],
   templateUrl: './unlock-screen.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './unlock-screen.component.scss'
 })
 export class UnlockScreenComponent implements OnInit {

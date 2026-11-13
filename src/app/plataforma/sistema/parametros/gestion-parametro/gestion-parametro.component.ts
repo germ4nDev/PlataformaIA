@@ -1,7 +1,7 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -21,6 +21,7 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
   selector: 'app-gestion-parametro',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, ReactiveFormsModule, TextEditorComponent],
   templateUrl: './gestion-parametro.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-parametro.component.scss'
 })
 export class GestionParametroComponent implements OnInit, OnDestroy {

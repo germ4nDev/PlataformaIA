@@ -5,7 +5,7 @@
     Paquetes › Listas de precios. PTLItemsPaquete.codigoItem es el código de la fila (uuid); nombre y descripción se copian del ítem.
     Antes: el ítem elegido se sobrescribía con un uuid, la cantidad quedaba en 0 y tipoValorId llegaba como NaN (nunca se guardó una fila).
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -29,6 +29,7 @@ import { traducir } from 'src/app/theme/shared/i18n/traducir';
   selector: 'app-gestion-itempq',
   imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, AppPermisoDirective],
   templateUrl: './gestion-itempq.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-itempq.component.scss'
 })
 export class GestionItempqComponent implements OnInit {

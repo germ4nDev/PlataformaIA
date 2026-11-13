@@ -1,6 +1,6 @@
 import { traducir } from '../../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -32,6 +32,7 @@ import { camposDelWidget, canalDelFormulario } from '../../nucleo';
   selector: 'app-gestion-widget',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-widget.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-widget.component.scss'
 })
 export class GestionWidgetComponent implements OnInit, OnDestroy {

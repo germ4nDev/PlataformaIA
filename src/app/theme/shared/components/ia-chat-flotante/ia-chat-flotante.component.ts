@@ -10,7 +10,7 @@
       - «Útil / No era» por respuesta
     Mismo lugar en el menú lateral (cortina) y misma consola modal que antes.
 */
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -44,6 +44,7 @@ const ETIQUETA_HERRAMIENTA: Record<string, string> = {
   selector: 'app-ia-chat-flotante',
   imports: [CommonModule, FormsModule, TranslateModule, MarkdownPipe],
   templateUrl: './ia-chat-flotante.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './ia-chat-flotante.component.scss'
 })
 export class IaChatFlotanteComponent implements OnInit, OnDestroy {

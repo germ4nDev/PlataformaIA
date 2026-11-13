@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
     Author: German Valencia
     Pattern: PORTTOS Core - Shell Específico para Widgets KPI (1x1 / 1x2)
 */
-import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
   imports: [TranslateModule, CommonModule],
   templateUrl: './kpi-shell.component.html',
   styleUrls: ['./kpi-shell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class KpiShellComponent {

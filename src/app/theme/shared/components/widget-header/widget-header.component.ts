@@ -1,6 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DashboardService } from '../../service/tablero-control/dashboard.service';
 // NOTA: Ajusta esta ruta a donde realmente viva tu DashboardService
@@ -9,6 +9,7 @@ import { DashboardService } from '../../service/tablero-control/dashboard.servic
   selector: 'app-widget-header',
   imports: [TranslateModule],
   templateUrl: './widget-header.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./widget-header.component.scss']
 })
 export class WidgetHeaderComponent implements OnInit, OnDestroy {

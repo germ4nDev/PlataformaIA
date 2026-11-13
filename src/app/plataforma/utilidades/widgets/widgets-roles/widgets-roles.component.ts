@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -42,6 +42,7 @@ import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidget
     DataLoaderComponent
   ],
   templateUrl: './widgets-roles.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './widgets-roles.component.scss'
 })
 export class WidgetsRolesComponent implements OnInit, OnDestroy {

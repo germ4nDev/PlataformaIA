@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationService } from '../../../shared/service/navigation.service';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
   selector: 'app-navigation',
   imports: [CommonModule, NavContentComponent],
   templateUrl: './navigation.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {

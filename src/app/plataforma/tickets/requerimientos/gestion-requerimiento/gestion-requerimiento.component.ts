@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { param } from 'jquery';
@@ -27,6 +27,7 @@ import { v4 as uuidv4 } from 'uuid';
   selector: 'app-gestion-requerimiento',
   imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-requerimiento.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-requerimiento.component.scss'
 })
 export class GestionRequerimientoComponent {

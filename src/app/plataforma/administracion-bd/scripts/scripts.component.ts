@@ -1,7 +1,7 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -38,6 +38,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TableDataComponent
   ],
   templateUrl: './scripts.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './scripts.component.scss'
 })
 export class ScriptsComponent implements OnInit {

@@ -1,6 +1,6 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -44,6 +44,7 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
     DataLoaderComponent
   ],
   templateUrl: './actividades-roles.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './actividades-roles.component.scss'
 })
 export class ActividadesRolesComponent implements OnInit, OnDestroy {

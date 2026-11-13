@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -9,6 +9,7 @@ import { FriendComponent } from '../chat-user-list/friend/friend.component';
   selector: 'app-chat-user-list',
   imports: [TranslateModule, FormsModule, NgScrollbarModule, FriendComponent],
   templateUrl: './chat-user-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./chat-user-list.component.scss']
 })
 export class ChatUserListComponent {

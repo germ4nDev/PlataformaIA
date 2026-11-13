@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -33,6 +33,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TableDataComponent
   ],
   templateUrl: './clases-ticket.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './clases-ticket.component.scss'
 })
 export class ClasesTicketComponent implements OnInit {

@@ -518,7 +518,7 @@ import { traducir } from '../../../../theme/shared/i18n/traducir';
 // }
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ActivatedRoute, Router, Event } from '@angular/router';
@@ -561,6 +561,7 @@ import { NgForm } from '@angular/forms';
   selector: 'app-gestion-usuario-suscrptor',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-usuario-suscrptor.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-usuario-suscrptor.component.scss'
 })
 export class GestionUsuarioSuscrptorComponent {

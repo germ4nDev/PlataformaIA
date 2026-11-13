@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -38,6 +38,7 @@ import Swal from 'sweetalert2';
   selector: 'app-gestion-paquete-suscriptor',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-paquete-suscriptor.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-paquete-suscriptor.component.scss'
 })
 export class GestionPaqueteSuscriptorComponent implements OnInit {

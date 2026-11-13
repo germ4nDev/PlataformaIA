@@ -1,7 +1,7 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,6 +28,7 @@ import { PTLBiblioteca } from 'src/app/theme/shared/_helpers/models/PTLBibliotec
   selector: 'app-gestion-modulo',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-modulo.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-modulo.component.scss'
 })
 export class GestionModuloComponent implements OnInit, OnDestroy {

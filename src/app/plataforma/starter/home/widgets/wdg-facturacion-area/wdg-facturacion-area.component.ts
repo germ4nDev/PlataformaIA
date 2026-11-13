@@ -1,6 +1,6 @@
 import { traducir } from '../../../../../theme/shared/i18n/traducir';
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
@@ -11,6 +11,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
   selector: 'app-wdg-facturacion-area',
   imports: [TranslateModule, NgChartsModule, WidgetShellComponent],
   templateUrl: './wdg-facturacion-area.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './wdg-facturacion-area.component.scss'
 })
 export class WdgFacturacionAreaComponent implements OnInit {

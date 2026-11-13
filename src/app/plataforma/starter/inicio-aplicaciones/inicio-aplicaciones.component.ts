@@ -1,12 +1,12 @@
 import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerDirective } from 'ngx-color-picker';
 import {
   AuthenticationService,
   PtlAplicacionesService,
@@ -43,12 +43,13 @@ import { contextoDeUsuario, rolesYWidgetsDeAplicacion } from 'src/app/plataforma
     TranslateModule,
     NgbDropdownModule,
     RouterModule,
-    ColorPickerModule,
+    ColorPickerDirective,
     SharedModule,
     LanguageSelectorComponent,
     FullScreenSliderComponent
   ],
   templateUrl: './inicio-aplicaciones.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './inicio-aplicaciones.component.scss'
 })
 export class InicioAplicacionesComponent implements OnInit, OnDestroy {

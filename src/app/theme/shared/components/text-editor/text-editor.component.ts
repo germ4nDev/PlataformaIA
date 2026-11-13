@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, forwardRef, Input, OnInit, Output, EventEmitter } from '@angular/core'; // Se añadieron Output y EventEmitter
+import { Component, forwardRef, Input, OnInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core'; // Se añadieron Output y EventEmitter
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
@@ -17,6 +17,7 @@ const CUSTOM_VALUE_ACCESSOR: any = {
   imports: [QuillModule, FormsModule, ReactiveFormsModule],
   templateUrl: './text-editor.component.html',
   styleUrl: './text-editor.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CUSTOM_VALUE_ACCESSOR]
 })
 export class TextEditorComponent implements ControlValueAccessor, OnInit {

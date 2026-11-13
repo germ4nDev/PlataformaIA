@@ -6,7 +6,7 @@
     sus precios con otra vigencia y un ajuste en % (la del año siguiente). El API no deja dos listas activas del mismo país y moneda con
     fechas que se crucen.
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,6 +46,7 @@ interface Referencia {
     SelectorFechaComponent
   ],
   templateUrl: './gestion-lista-precios.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-lista-precios.component.scss'
 })
 export class GestionListaPreciosComponent implements OnInit {

@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../service/tablero-control/dashboard.service';
 import { OrigenDato, OrigenDatoTclComponent } from '../origen-dato/origen-dato.component';
@@ -8,6 +8,7 @@ import { OrigenDato, OrigenDatoTclComponent } from '../origen-dato/origen-dato.c
   selector: 'app-widget-shell',
   imports: [TranslateModule, CommonModule, OrigenDatoTclComponent],
   templateUrl: './widget-shell.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./widget-shell.component.scss']
 })
 export class WidgetShellComponent {

@@ -1,6 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface Setting {
@@ -12,6 +12,7 @@ interface Setting {
   selector: 'app-color-selector',
   imports: [TranslateModule, FormsModule],
   templateUrl: './color-selector.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './color-selector.component.scss'
 })
 export class ColorSelectorComponent implements OnInit, OnChanges {

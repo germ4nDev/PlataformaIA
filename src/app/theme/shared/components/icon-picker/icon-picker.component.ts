@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,6 +20,7 @@ const ICON_PICKER_VALUE_ACCESSOR: any = {
   imports: [TranslateModule, IconComponent],
   templateUrl: './icon-picker.component.html',
   styleUrl: './icon-picker.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ICON_PICKER_VALUE_ACCESSOR]
 })
 export class IconPickerComponent implements ControlValueAccessor {

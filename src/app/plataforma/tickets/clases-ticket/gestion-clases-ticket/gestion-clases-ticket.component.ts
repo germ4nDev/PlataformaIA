@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -24,6 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
   selector: 'app-gestion-clases-ticket',
   imports: [TranslateModule, CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-clases-ticket.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-clases-ticket.component.scss'
 })
 export class GestionClasesTicketComponent {

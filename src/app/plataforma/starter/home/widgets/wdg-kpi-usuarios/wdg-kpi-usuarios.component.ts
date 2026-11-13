@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DashboardPlataformaService } from '../../../../../theme/shared/service/dashboard-plataforma.service';
@@ -10,6 +10,7 @@ import { WidgetShellComponent } from 'src/app/theme/shared/components/widget-she
   selector: 'app-wdg-kpi-usuarios',
   imports: [TranslateModule, CommonModule, WidgetShellComponent],
   templateUrl: './wdg-kpi-usuarios.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./wdg-kpi-usuarios.component.scss']
 })
 export class WdgKpiUsuariosComponent implements OnInit, OnDestroy {

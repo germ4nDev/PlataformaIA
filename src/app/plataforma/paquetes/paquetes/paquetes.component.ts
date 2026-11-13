@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
@@ -39,6 +39,7 @@ import Swal from 'sweetalert2';
     DataLoaderComponent
   ],
   templateUrl: './paquetes.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './paquetes.component.scss'
 })
 export class PaquetesComponent implements OnInit, OnDestroy {

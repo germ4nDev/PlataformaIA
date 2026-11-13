@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service';
 
@@ -7,6 +7,7 @@ import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/se
   selector: 'app-widget-lobby',
   imports: [TranslateModule],
   templateUrl: './widget-lobby.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./widget-lobby.component.scss']
 })
 export class WidgetLobbyComponent implements OnChanges {

@@ -219,15 +219,16 @@
                           'PAQUETES.GESTION.MONTHLY_ANNUAL_IN_LIST'
                             | translate
                               : {
-                                  mensual: (referenciaPrecio?.precio?.valorMensual | number: '1.0-2'),
-                                  anual: (referenciaPrecio?.precio?.valorAnual | number: '1.0-2'),
-                                  moneda: referenciaPrecio?.lista?.moneda,
-                                  lista: referenciaPrecio?.lista?.nombreLista
+                                  mensual: ($safeNavigationMigration(referenciaPrecio?.precio?.valorMensual) | number: '1.0-2'),
+                                  anual: ($safeNavigationMigration(referenciaPrecio?.precio?.valorAnual) | number: '1.0-2'),
+                                  moneda: $safeNavigationMigration(referenciaPrecio?.lista?.moneda),
+                                  lista: $safeNavigationMigration(referenciaPrecio?.lista?.nombreLista)
                                 }
                         }}
                       } @else {
                         <span class="text-warning">{{
-                          'PAQUETES.GESTION.PACKAGE_HAS_NO_PRICE_IN_LIST' | translate: { lista: referenciaPrecio?.lista?.nombreLista }
+                          'PAQUETES.GESTION.PACKAGE_HAS_NO_PRICE_IN_LIST'
+                            | translate: { lista: $safeNavigationMigration(referenciaPrecio?.lista?.nombreLista) }
                         }}</span>
                       }
                     </div>
@@ -235,8 +236,8 @@
                       'PAQUETES.GESTION.SUM_OF_ITS_ITEMS'
                         | translate
                           : {
-                              mensual: (referenciaPrecio?.sumaItems?.mensual | number: '1.0-2'),
-                              moneda: referenciaPrecio?.lista?.moneda
+                              mensual: ($safeNavigationMigration(referenciaPrecio?.sumaItems?.mensual) | number: '1.0-2'),
+                              moneda: $safeNavigationMigration(referenciaPrecio?.lista?.moneda)
                             }
                     }}</small>
                   } @else {

@@ -1,4 +1,15 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationService } from '../../../../shared/service/navigation.service';
@@ -14,6 +25,7 @@ import { IaChatFlotanteComponent } from 'src/app/theme/shared/components/ia-chat
   selector: 'app-nav-content',
   templateUrl: './nav-content.component.html',
   styleUrls: ['./nav-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, NavGroupComponent, NavCollapseComponent, NavItemComponent, NgScrollbarModule, IaChatFlotanteComponent]
 })
 export class NavContentComponent implements OnInit, AfterViewInit {

@@ -6,7 +6,7 @@
       → roles de esa aplicación. Guardar sincroniza solo los roles de esa aplicación en ese vínculo y esa empresa (los de otras aplicaciones
       o empresas no se tocan). Mismo API que Suscriptores › Usuarios › Roles (POST /api/usuarios-roles/sincronizar, ACT_USUSC_ROLES).
 */
-import { Component, Input, OnChanges, inject } from '@angular/core';
+import { Component, Input, OnChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -37,6 +37,7 @@ interface RolMarcable {
   selector: 'app-asignacion-roles-usuario',
   imports: [FormsModule, TranslateModule, AppPermisoDirective],
   templateUrl: './asignacion-roles-usuario.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './asignacion-roles-usuario.component.scss'
 })
 export class AsignacionRolesUsuarioComponent implements OnChanges {

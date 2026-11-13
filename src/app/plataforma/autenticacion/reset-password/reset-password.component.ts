@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
@@ -9,6 +9,7 @@ import { SocialNetworksComponent } from 'src/app/theme/shared/components/social-
   selector: 'app-reset-password',
   imports: [RouterModule, FullScreenSliderComponent, LanguageSelectorComponent, TranslateModule, SocialNetworksComponent],
   templateUrl: './reset-password.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './reset-password.component.scss'
 })
 export class ResetPasswordComponent implements OnInit {

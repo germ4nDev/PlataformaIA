@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
@@ -44,6 +44,7 @@ const base_url = environment.apiUrl;
     TableDataComponent
   ],
   templateUrl: './idiomas.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './idiomas.component.scss'
 })
 export class IdiomasComponent implements OnInit, OnDestroy {

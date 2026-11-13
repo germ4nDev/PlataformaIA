@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -8,6 +8,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
   selector: 'app-chat-msg',
   imports: [TranslateModule, CommonModule, FormsModule, NgScrollbarModule],
   templateUrl: './chat-msg.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./chat-msg.component.scss']
 })
 export class ChatMsgComponent {

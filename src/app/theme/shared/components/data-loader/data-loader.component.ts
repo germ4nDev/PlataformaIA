@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-data-loader',
   imports: [],
   templateUrl: './data-loader.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './data-loader.component.scss'
 })
 export class DataLoaderComponent {

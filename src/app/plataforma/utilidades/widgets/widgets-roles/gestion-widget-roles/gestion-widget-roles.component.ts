@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -23,6 +23,7 @@ import { rolesParaWidget } from '../../nucleo';
   selector: 'app-gestion-widget-roles',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-widget-roles.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-widget-roles.component.scss'
 })
 export class GestionWidgetRolesComponent implements OnInit, OnDestroy {

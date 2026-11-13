@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -51,6 +51,7 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
     DataLoaderComponent
   ],
   templateUrl: './suscriptores.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './suscriptores.component.scss'
 })
 export class SuscriptoresComponent implements OnInit, OnDestroy {

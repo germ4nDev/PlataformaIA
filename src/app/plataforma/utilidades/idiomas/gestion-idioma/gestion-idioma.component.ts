@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
   selector: 'app-gestion-idioma',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-idioma.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-idioma.component.scss'
 })
 export class GestionIdiomaComponent implements OnInit {

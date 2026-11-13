@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -29,6 +29,7 @@ import { v4 as uuidv4 } from 'uuid';
   selector: 'app-gestion-slider',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-slider.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-slider.component.scss'
 })
 export class GestionSliderComponent implements OnInit {

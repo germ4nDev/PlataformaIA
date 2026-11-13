@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -28,6 +28,7 @@ import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.m
   selector: 'app-gestiion-actividad-role',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-actividad-role.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-actividad-role.component.scss'
 })
 export class GestiionActividadRoleComponent implements OnInit, OnDestroy {

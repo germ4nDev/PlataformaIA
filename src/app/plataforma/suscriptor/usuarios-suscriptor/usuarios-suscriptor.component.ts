@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription, combineLatest, of } from 'rxjs';
@@ -45,6 +45,7 @@ import { EmailService } from 'src/app/theme/shared/service/email.service';
     TableDataComponent
   ],
   templateUrl: './usuarios-suscriptor.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './usuarios-suscriptor.component.scss'
 })
 export class UsuariosSuscriptorComponent implements OnInit {

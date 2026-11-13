@@ -1,5 +1,5 @@
 // Angular Import
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location, LocationStrategy } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
 import { RouterModule } from '@angular/router';
@@ -9,6 +9,7 @@ import { ContextoNavegacionService } from '../../shared/service/contexto-navegac
   selector: 'app-admin',
   imports: [RouterModule],
   templateUrl: './admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {

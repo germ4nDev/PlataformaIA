@@ -2,7 +2,7 @@ import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
@@ -28,6 +28,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
   selector: 'app-sites',
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './sites.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sites.component.scss'
 })
 export class SitesComponent implements OnInit {

@@ -470,7 +470,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import * as XLSX from 'xlsx';
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, AfterViewInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  AfterViewInit,
+  Renderer2,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { VideoPlayerComponent } from '../video-player/video-player.component';
@@ -483,6 +494,7 @@ import { PtlPermisosService } from '../../service/ptlpermisos.service';
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, TranslateModule, FormsModule, VideoPlayerComponent, AppPermisoDirective]
 })
 export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {

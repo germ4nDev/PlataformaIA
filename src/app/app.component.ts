@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { registrarTraductor } from './theme/shared/i18n/traducir';
 import { RouterOutlet } from '@angular/router';
@@ -68,6 +68,7 @@ import { esRutaEmbebida } from './plataforma/embebido/nucleo';
   selector: 'app-root', // OT-023 fase 5 (regla 21)
   imports: [RouterOutlet, SpinnerComponent],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {

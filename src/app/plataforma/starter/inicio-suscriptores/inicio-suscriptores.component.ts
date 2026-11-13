@@ -1,12 +1,12 @@
 import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerDirective } from 'ngx-color-picker';
 import { Subscription } from 'rxjs';
 import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
@@ -23,12 +23,13 @@ import { CurrentUserModel } from 'src/app/theme/shared/_helpers/models/CurrentUs
     TranslateModule,
     NgbDropdownModule,
     RouterModule,
-    ColorPickerModule,
+    ColorPickerDirective,
     SharedModule,
     LanguageSelectorComponent,
     FullScreenSliderComponent
   ],
   templateUrl: './inicio-suscriptores.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './inicio-suscriptores.component.scss'
 })
 export class InicioSuscriptoresComponent implements OnInit, OnDestroy {

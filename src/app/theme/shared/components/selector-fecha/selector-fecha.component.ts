@@ -8,7 +8,17 @@
       Salida:   fechaCambio  → la fecha elegida como toISOString() de la medianoche UTC ('2026-01-01T00:00:00.000Z'), o null al limpiar.
       También funciona con [(ngModel)] y formularios reactivos (ControlValueAccessor): el valor es el mismo texto ISO.
 */
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, forwardRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  Output,
+  forwardRef,
+  ChangeDetectionStrategy
+} from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -21,6 +31,7 @@ let siguiente = 0;
   imports: [TranslateModule],
   templateUrl: './selector-fecha.component.html',
   styleUrl: './selector-fecha.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectorFechaComponent), multi: true }]
 })
 export class SelectorFechaComponent implements ControlValueAccessor, OnDestroy {

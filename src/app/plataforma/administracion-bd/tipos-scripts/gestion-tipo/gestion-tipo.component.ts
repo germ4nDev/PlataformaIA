@@ -1,5 +1,5 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -29,6 +29,7 @@ import { LocalStorageService } from 'src/app/theme/shared/service';
     NavContentComponent // <- Importado para el HTML
   ],
   templateUrl: './gestion-tipo.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-tipo.component.scss'
 })
 export class GestionTipoComponent implements OnInit {

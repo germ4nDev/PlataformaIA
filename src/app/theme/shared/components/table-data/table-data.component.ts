@@ -5,7 +5,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import * as XLSX from 'xlsx';
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, AfterViewInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  AfterViewInit,
+  Renderer2,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { VideoPlayerComponent } from '../video-player/video-player.component';
@@ -18,6 +29,7 @@ import { PtlPermisosService } from '../../service/ptlpermisos.service';
   selector: 'app-table-data',
   imports: [CommonModule, TranslateModule, FormsModule, VideoPlayerComponent, AppPermisoDirective],
   templateUrl: './table-data.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './table-data.component.scss'
 })
 export class TableDataComponent implements OnInit, OnChanges, AfterViewInit {

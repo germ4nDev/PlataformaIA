@@ -1,5 +1,5 @@
 // Angular Import
-import { Component, Input, OnDestroy, Inject, ViewEncapsulation, DOCUMENT } from '@angular/core';
+import { Component, Input, OnDestroy, Inject, ViewEncapsulation, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
 
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 
@@ -11,6 +11,7 @@ import { Spinkit } from './spinkits';
   imports: [],
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.scss', './spinkit-css/sk-line-material.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class SpinnerComponent implements OnDestroy {

@@ -1,5 +1,15 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ElementRef,
+  ViewChild,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy
+} from '@angular/core';
 
 import videojs from 'video.js';
 
@@ -7,6 +17,7 @@ import videojs from 'video.js';
   selector: 'app-video-player',
   imports: [TranslateModule],
   templateUrl: './video-player.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./video-player.component.scss']
 })
 export class VideoPlayerComponent implements OnDestroy {

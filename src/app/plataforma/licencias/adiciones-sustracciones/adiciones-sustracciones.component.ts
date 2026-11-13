@@ -1,5 +1,5 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { DataTablesModule, DataTableDirective } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import type { Api } from 'datatables.net';
 
@@ -7,6 +7,7 @@ import type { Api } from 'datatables.net';
   selector: 'app-adiciones-sustracciones',
   imports: [DataTablesModule],
   templateUrl: './adiciones-sustracciones.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './adiciones-sustracciones.component.scss'
 })
 export class AdicionesSustraccionesComponent implements OnInit, AfterViewInit {

@@ -1,5 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -12,6 +12,7 @@ import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.mo
   selector: 'app-nav-bar',
   imports: [TranslateModule, CommonModule, RouterModule, NavRightComponent],
   templateUrl: './nav-bar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {

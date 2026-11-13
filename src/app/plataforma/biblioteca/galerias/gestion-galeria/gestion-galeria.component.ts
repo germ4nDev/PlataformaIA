@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -48,6 +48,7 @@ import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-play
     VideoPlayerComponent
   ],
   templateUrl: './gestion-galeria.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-galeria.component.scss'
 })
 export class GestionGaleriaComponent implements OnInit {

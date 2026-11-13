@@ -1,6 +1,6 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
@@ -28,6 +28,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
   selector: 'app-formatos-galeria',
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './formatos-galeria.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './formatos-galeria.component.scss'
 })
 export class FormatosGaleriaComponent implements OnInit, OnDestroy {

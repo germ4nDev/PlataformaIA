@@ -1,7 +1,7 @@
 import { traducir } from '../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import Swal from 'sweetalert2';
@@ -25,6 +25,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
   selector: 'app-enlaces',
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './enlaces.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./enlaces.component.scss']
 })
 export class EnlacesComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../service/lenguage.service';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -12,6 +12,7 @@ import { LocalStorageService, PtlidiomasService, UploadFilesService } from '../.
   selector: 'app-language-selector',
   imports: [NgSelectModule, FormsModule],
   templateUrl: './language-selector.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './language-selector.component.scss'
 })
 export class LanguageSelectorComponent implements OnInit, OnDestroy {

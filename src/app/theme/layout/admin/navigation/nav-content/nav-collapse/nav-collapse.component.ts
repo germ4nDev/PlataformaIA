@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationItem } from '../../../../../shared/_helpers/models/Navigation.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { GradientConfig } from 'src/app/app-config';
@@ -13,6 +13,7 @@ import { NavGroupComponent } from '../nav-group/nav-group.component';
   imports: [CommonModule, NavItemComponent, NavGroupComponent, TranslateModule, RouterModule],
   templateUrl: './nav-collapse.component.html',
   styleUrls: ['./nav-collapse.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('slideInOut', [
       transition(':enter', [style({ height: 0, overflow: 'hidden' }), animate('250ms ease-in', style({ height: '*', overflow: 'auto' }))]),

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -21,6 +21,7 @@ import { PTLColorSettingModel } from '../../_helpers/models/PTLColorSetting.mode
   selector: 'app-profile-drp',
   imports: [CommonModule, RouterModule, NgbDropdownModule, TranslateModule, FormsModule],
   templateUrl: './profile-drp.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile-drp.component.scss'
 })
 export class ProfileDrpComponent implements OnInit {

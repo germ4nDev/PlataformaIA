@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { Router } from '@angular/router';
@@ -43,6 +43,7 @@ const base_url = environment.apiUrl;
     TableDataComponent
   ],
   templateUrl: './slider-inicio.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './slider-inicio.component.scss'
 })
 export class SliderInicioComponent implements OnInit {

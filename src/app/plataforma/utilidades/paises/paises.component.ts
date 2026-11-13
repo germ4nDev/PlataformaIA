@@ -4,7 +4,7 @@
     Description: Países que usa la plataforma con su código ISO, moneda y datos regionales (indicativo, zona horaria, idioma). Listas de
     precios los usa. Un país con listas de precios no se elimina: se inactiva.
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ import { traducir } from 'src/app/theme/shared/i18n/traducir';
   selector: 'app-paises',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
   templateUrl: './paises.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './paises.component.scss'
 })
 export class PaisesComponent implements OnInit {

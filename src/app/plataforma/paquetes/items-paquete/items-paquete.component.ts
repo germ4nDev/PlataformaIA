@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -48,6 +48,7 @@ import { PtlPermisosService } from 'src/app/theme/shared/service/ptlpermisos.ser
     DataLoaderComponent
   ],
   templateUrl: './items-paquete.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './items-paquete.component.scss'
 })
 export class ItemsPaqueteComponent implements OnInit, OnDestroy {

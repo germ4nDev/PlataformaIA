@@ -1,11 +1,12 @@
 // Angular Import
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-card',
   imports: [CommonModule],
   templateUrl: './card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./card.component.scss']
 })
 export class CardComponent {

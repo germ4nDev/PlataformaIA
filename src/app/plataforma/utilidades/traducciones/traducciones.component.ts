@@ -6,7 +6,7 @@
       «sin traducción»; crear, modificar y eliminar (las que usa el sistema no se eliminan). Si el API no tiene un idioma que trae la web,
       ofrece sembrarlo con el JSON del build. «Descargar JSON» baja el árbol del API para llevarlo al repositorio.
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -40,6 +40,7 @@ const IDIOMAS_DEL_BUILD = ['es', 'en'];
     AppPermisoDirective
   ],
   templateUrl: './traducciones.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './traducciones.component.scss'
 })
 export class TraduccionesComponent implements OnInit {

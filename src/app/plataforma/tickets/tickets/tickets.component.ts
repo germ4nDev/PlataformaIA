@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -52,6 +52,7 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TableDataComponent
   ],
   templateUrl: './tickets.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tickets.component.scss'
 })
 export class TicketsComponent implements OnInit {

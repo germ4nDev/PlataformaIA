@@ -488,7 +488,7 @@
 // }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -543,6 +543,7 @@ import { AppPermisoDirective } from 'src/app/theme/shared/directive/app-permiso.
     AppPermisoDirective
   ],
   templateUrl: './paquetes-suscriptor.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './paquetes-suscriptor.component.scss'
 })
 export class PaquetesSuscriptorComponent implements OnInit, OnDestroy {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
@@ -45,6 +45,7 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
     DataLoaderComponent
   ],
   templateUrl: './empresas.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './empresas.component.scss'
 })
 export class EmpresasComponent implements OnInit {

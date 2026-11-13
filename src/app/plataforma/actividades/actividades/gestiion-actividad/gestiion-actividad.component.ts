@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -38,6 +38,7 @@ import { PTLTipoActividadModel } from 'src/app/theme/shared/_helpers/models/PTLT
   selector: 'app-gestiion-actividad',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestiion-actividad.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestiion-actividad.component.scss'
 })
 export class GestiionActividadComponent implements OnInit, OnDestroy {

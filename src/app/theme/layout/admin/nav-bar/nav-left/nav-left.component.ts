@@ -1,5 +1,5 @@
 // Angular Import
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { NavSearchComponent } from './nav-search/nav-search.component';
 
@@ -7,6 +7,7 @@ import { NavSearchComponent } from './nav-search/nav-search.component';
   selector: 'app-nav-left',
   imports: [],
   templateUrl: './nav-left.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./nav-left.component.scss']
 })
 export class NavLeftComponent {

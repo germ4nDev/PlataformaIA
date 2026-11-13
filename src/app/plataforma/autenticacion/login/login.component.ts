@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service';
 import { loginDeDominio } from 'src/app/plataforma/dominios/nucleo';
 import { CommonModule } from '@angular/common';
@@ -64,6 +64,7 @@ import { PtlSesionesService } from 'src/app/theme/shared/service/ptlsesiones.ser
     SocialNetworksComponent
   ],
   templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit, OnDestroy {

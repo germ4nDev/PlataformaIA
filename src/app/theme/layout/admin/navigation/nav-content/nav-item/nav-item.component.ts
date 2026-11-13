@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
@@ -12,6 +12,7 @@ import { NavigationService, PtlmodulosApService } from 'src/app/theme/shared/ser
   selector: 'app-nav-item',
   imports: [CommonModule, TranslateModule, RouterModule],
   templateUrl: './nav-item.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./nav-item.component.scss']
 })
 export class NavItemComponent {

@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,6 +41,7 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
     TextEditorComponent
   ],
   templateUrl: './gestion-tipo-item.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-tipo-item.component.scss'
 })
 export class GestionTipoItemComponent implements OnInit, OnDestroy {

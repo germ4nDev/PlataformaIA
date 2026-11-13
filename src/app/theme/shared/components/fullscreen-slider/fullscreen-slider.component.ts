@@ -1,7 +1,7 @@
 import { TranslateModule } from '@ngx-translate/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { PtlSlidersInicioService } from '../../service/ptlsliders-inicio.service';
 import { of, Subscription } from 'rxjs';
 import { PTLSliderInicioModel } from '../../_helpers/models/PTLSliderInicio.model';
@@ -17,6 +17,7 @@ const base_url = environment.apiUrl;
   selector: 'app-full-screen-slider',
   imports: [TranslateModule, CommonModule, NgOptimizedImage],
   templateUrl: './fullscreen-slider.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './fullscreen-slider.component.scss'
 })
 export class FullScreenSliderComponent implements OnInit, OnDestroy {

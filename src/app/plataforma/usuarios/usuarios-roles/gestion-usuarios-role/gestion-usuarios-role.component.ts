@@ -1,7 +1,7 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -39,6 +39,7 @@ import { NavSettings } from 'src/app/theme/shared/_helpers/models/navSettings.mo
   selector: 'app-gestion-usuarios-role',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-usuarios-role.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-usuarios-role.component.scss'
 })
 export class GestionUsuariosRoleComponent implements OnInit {

@@ -1,7 +1,7 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -42,6 +42,7 @@ import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpre
   selector: 'app-gestion-roles-usuario',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-usuario-roles.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-usuario-roles.component.scss'
 })
 export class GestionUsuarioRolesComponent implements OnInit {

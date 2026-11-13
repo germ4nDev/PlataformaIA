@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
       aplicación (plataforma/sesion/nucleo) y entra a la ruta de inicio de la aplicación (la Torre de Control).
       No registra otra sesión: es la misma de la app (sesión única). Fuera de la app muestra un aviso y no hace nada más.
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { firstValueFrom, forkJoin, take } from 'rxjs';
@@ -56,6 +56,7 @@ type Estado = 'fuera' | 'esperando' | 'entrando' | 'error';
   selector: 'app-embebido',
   imports: [TranslateModule],
   templateUrl: './embebido.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './embebido.component.scss'
 })
 export class EmbebidoComponent implements OnInit {

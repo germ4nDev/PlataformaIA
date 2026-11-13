@@ -1,6 +1,6 @@
 import { traducir } from '../../../../theme/shared/i18n/traducir';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -30,6 +30,7 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
   selector: 'app-gestion-script',
   imports: [CommonModule, FormsModule, RouterModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-script.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-script.component.scss'
 })
 export class GestionScriptComponent implements OnInit {

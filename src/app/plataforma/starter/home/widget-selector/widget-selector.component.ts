@@ -1,11 +1,12 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WIDGET_MAP } from 'src/app/plataforma/starter/home/widget-registry';
 
 @Component({
   selector: 'app-widget-selector',
   imports: [TranslateModule, CommonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './widget-selector.component.html'
 })
 export class WidgetSelectorComponent implements OnInit {

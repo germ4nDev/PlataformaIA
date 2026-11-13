@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
   selector: 'app-gestion-color',
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, ColorSelectorComponent],
   templateUrl: './gestion-color.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gestion-color.component.scss'
 })
 export class GestionColorComponent implements OnInit {
