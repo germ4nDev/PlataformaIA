@@ -34,7 +34,7 @@
     "@popperjs/core": "^2.11.7",
     "@turf/turf": "^7.3.5",
     "@types/geojson": "^7946.0.16",
-    "angular-gridster2": "~20.2.4",
+    "angular-gridster2": "^22.0.0",
     "bootstrap": "^5.2.3",
     "chart.js": "^4.5.1",
     "datatables.net": "^2.1.8",
@@ -102,10 +102,6 @@
     "typescript-eslint": "^8.0.0"
   },
   "overrides": {
-    "angular-gridster2": {
-      "@angular/core": "$@angular/core",
-      "@angular/common": "$@angular/common"
-    },
     "ngx-toastr": {
       "@angular/core": "$@angular/core",
       "@angular/common": "$@angular/common",

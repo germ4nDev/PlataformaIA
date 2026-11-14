@@ -7,10 +7,10 @@ const routes: Routes = [
         path: '',
         children: [
             {
-                // Portal público porttos.co (OT-010): contenedor con encabezado y pie propios y sus páginas hijas
+                // Portal público porttos.co (OT-010): vive en la carpeta de Porttos (regla 27, CC-177); la plataforma lo sirve en /websites/porttos.
+                // Cruce de la regla 26 pendiente hasta el cargador por manifiesto (OT-032 fase 3/4), como las demás apps en app-routing.
                 path: 'porttos',
-                loadComponent: () => import('./porttos/porttos.component').then(m => m.PorttosComponent),
-                loadChildren: () => import('./porttos/porttos.routes').then(m => m.PORTAL_RUTAS)
+                loadChildren: () => import('../../apps/porttos/websites/portal/porttos.routes').then(m => m.PORTAL_PORTTOS)
             }
         ]
     }

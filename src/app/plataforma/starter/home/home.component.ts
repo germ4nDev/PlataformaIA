@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
-import { GridsterConfig, GridsterItem, GridType, GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
+import { GridsterConfig, GridsterItemConfig, GridType, Gridster, GridsterItem } from 'angular-gridster2';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // Servicios y Modelos
@@ -41,8 +41,8 @@ import { PtlUsuariosWidgetsService } from 'src/app/theme/shared/service/ptlusuar
     NavBarComponent,
     NavContentComponent,
     WidgetSelectorComponent,
-    GridsterComponent,
-    GridsterItemComponent,
+    Gridster,
+    GridsterItem,
     WidgetLobbyComponent
   ],
   templateUrl: './home.component.html',
@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   public options!: GridsterConfig;
-  public dashboard: Array<GridsterItem & { type: string; data: any }> = [];
+  public dashboard: Array<GridsterItemConfig & { type: string; data: any }> = [];
   public isLoading: boolean = false;
   public mostrarLobby: boolean = false;
   public cargando: boolean = true;
@@ -103,6 +103,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {
     this.gradientConfig = GradientConfig;
     this.usuario = _localStoragoService.getCurrentUserLocalStorage().usuario;
+  }
+
+  /** Gridster 22 ya no tiene optionsChanged(): un objeto de opciones nuevo hace que vuelva a calcular la cuadrícula (OT-035). */
+  refrescarOpciones(): void {
+    if (this.options) this.options = { ...this.options };
   }
 
   async ngOnInit() {
@@ -188,9 +193,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           };
 
           // 3. Notificamos a la API de Gridster y a Angular que repinten este componente
-          if (this.options.api && this.options.api.optionsChanged) {
-            this.options.api.optionsChanged();
-          }
+          this.refrescarOpciones();
           this.cdr.detectChanges();
         }
       })
@@ -279,9 +282,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.lsLayout = this.lsLayout.filter((l) => l.type !== data.codigoWidget && l.codigoWidget !== data.codigoWidget);
         this.dashboard = this.dashboard.filter((w) => w.type !== data.codigoWidget && w['codigoWidget'] !== data.codigoWidget);
 
-        if (this.options.api && this.options.api.optionsChanged) {
-          this.options.api.optionsChanged();
-        }
+        this.refrescarOpciones();
         this.cdr.detectChanges();
 
         this.sincronizarLayoutEnSessionStorage();
@@ -450,9 +451,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dashboard = [];
     this.options.gridType = GridType.ScrollVertical;
 
-    if (this.options.api && this.options.api.optionsChanged) {
-      this.options.api.optionsChanged();
-    }
+    this.refrescarOpciones();
     this.cdr.detectChanges();
 
     // 🟢 FIX: Filtramos y ORDENAMOS matemáticamente de arriba hacia abajo y de izquierda a derecha
@@ -470,9 +469,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.cargando = false;
       this.isLoading = false;
 
-      if (this.options.api && this.options.api.optionsChanged) {
-        this.options.api.optionsChanged();
-      }
+      this.refrescarOpciones();
       this.cdr.detectChanges();
     }, 100);
   }
@@ -525,9 +522,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const layoutActualizado = this.armarDashboardPorPestana(this.pestanaActiva);
     this.dashboard = [...layoutActualizado].filter((w) => w.visible === true || w.visible === 'true' || w.visible === 1);
 
-    if (this.options.api && this.options.api.optionsChanged) {
-      this.options.api.optionsChanged();
-    }
+    this.refrescarOpciones();
     this.cdr.detectChanges();
 
     if (this.usuario) {
@@ -575,9 +570,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.options.draggable.enabled = !this.tableroBloqueado;
       this.options.resizable.enabled = !this.tableroBloqueado;
     }
-    if (this.options.api && this.options.api.optionsChanged) {
-      this.options.api.optionsChanged();
-    }
+    this.refrescarOpciones();
   }
 
   ingresarQplusWeb(): void {

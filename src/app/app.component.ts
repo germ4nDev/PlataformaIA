@@ -61,7 +61,7 @@ import { WidgetsService } from './theme/shared/service/tablero-control/widgets.s
 import { LayoutService } from './theme/shared/service/layout.service';
 import { PtlpestanasService } from './theme/shared/service/ptlpestanas.service';
 import { PtltiposWidgetService } from './theme/shared/service/ptltipos-widget.service';
-import { esRutaPublica } from './plataforma/websites/porttos/nucleo';
+import { esRutaPublica } from './plataforma/websites/nucleo';
 import { esRutaEmbebida } from './plataforma/embebido/nucleo';
 
 @Component({
