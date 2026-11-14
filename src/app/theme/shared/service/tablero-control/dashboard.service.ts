@@ -5,7 +5,7 @@ import { traducir } from '../../i18n/traducir';
     Refactored for: Separación de Layout (SessionStorage) y Datos Vivos (RxJS)
 */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy, OnInit, inject } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { BehaviorSubject, catchError, map, Observable, of, Subscription, tap } from 'rxjs';
 import { SocketService } from '../sockets.service';
@@ -13,6 +13,7 @@ import Swal from 'sweetalert2'
 import { ToastrService } from 'ngx-toastr';
 import { IngestaService } from './ingesta.service';
 import { LocalStorageService } from '../local-storage.service';
+import { EnfoqueWidgetService } from '../tableros/enfoque-widget.service';
 
 const base_url = environment.apiUrl;
 
@@ -36,8 +37,9 @@ export class DashboardService implements OnInit, OnDestroy {
     // ==========================================
     // VARIABLES EXISTENTES
     // ==========================================
-    private _widgetFocusSource = new BehaviorSubject<{ type: string, data: any } | null>(null);
-    public widgetFocus$ = this._widgetFocusSource.asObservable();
+    // Modo enfoque: del motor de tableros (núcleo, CC-178); aquí se delega para no cambiar a quien ya lo usa
+    private readonly _enfoque = inject(EnfoqueWidgetService);
+    public widgetFocus$ = this._enfoque.widgetFocus$;
 
     private _puertoSeleccionadoSource = new BehaviorSubject<string>('TODOS');
     public puertoSeleccionado$ = this._puertoSeleccionadoSource.asObservable();
@@ -113,11 +115,11 @@ export class DashboardService implements OnInit, OnDestroy {
     }
 
     abrirModoEnfoque(type: string, data?: any) {
-        this._widgetFocusSource.next({ type, data });
+        this._enfoque.abrirModoEnfoque(type, data);
     }
 
     cerrarModoEnfoque() {
-        this._widgetFocusSource.next(null);
+        this._enfoque.cerrarModoEnfoque();
     }
 
     mostrarAlerta(alerta: any) {

@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
+    "start:emulador": "ng serve --host 127.0.0.1",
     "build": "node --max-old-space-size=4096 node_modules/@angular/cli/bin/ng build",
     "build-stage": "ng build --configuration production --base-href /demos/admin-templates/gradient-able/angular/stage/",
     "build-prod": "ng build --configuration production --base-href /demos/admin-templates/gradient-able/angular/default/",

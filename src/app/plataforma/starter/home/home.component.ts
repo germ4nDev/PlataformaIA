@@ -21,7 +21,7 @@ import { GradientConfig } from 'src/app/app-config';
 // Servicios Core
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { LocalStorageService, SocketManagerService, SwalAlertService } from 'src/app/theme/shared/service';
-import { DashboardService } from 'src/app/theme/shared/service/tablero-control/dashboard.service';
+import { EnfoqueWidgetService } from 'src/app/theme/shared/service/tableros/enfoque-widget.service';
 import { PTLWidgetsMaestroService } from 'src/app/theme/shared/service/ptlwidgets-maestro.service';
 
 // Componentes
@@ -93,7 +93,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private translate: TranslateService,
     private _localStoragoService: LocalStorageService,
-    private _torreService: DashboardService,
+    private _enfoqueService: EnfoqueWidgetService,
     private _navigationService: NavigationService,
     private cdr: ChangeDetectorRef,
     private _widgetsMaestroService: PTLWidgetsMaestroService,
@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     //     this.cargando = false;
     // }
 
-    // this.subs.add(this._torreService.widgetFocus$.subscribe(widget => {
+    // this.subs.add(this._enfoqueService.widgetFocus$.subscribe(widget => {
     //     this.widgetEnfoque = widget;
     //     this.cdr.detectChanges();
     // }));
@@ -579,7 +579,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   cerrarModalEnfoque() {
     this.widgetEnfoque = null;
-    this._torreService.cerrarModoEnfoque();
+    this._enfoqueService.cerrarModoEnfoque();
   }
 
   toggleNav(): void {

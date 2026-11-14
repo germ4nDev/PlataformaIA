@@ -6,6 +6,8 @@
       - esperarSesion(): avisa 'listo' cada segundo hasta que la app entregue la sesión (o se agote el tiempo).
       - avisar(): mensaje a la app (solo a sus orígenes).
       - cerrarSesion(motivo): una sola vez; borra la sesión de la pestaña y la app hace su cierre de siempre.
+      - vigilarTema() (CC-184): manda a la app los colores del tema (navbar, tarjeta, texto, borde, oscuro) al entrar y cada vez que
+        cambian, para que su menú lateral use el mismo esquema que la web.
       - canal (OT-017): 'tableta' (la web tal cual) o 'telefono' (rejilla de 4 columnas y layout propio). Lo fija la sesión que
         entrega la app y se recuerda en la pestaña; fuera del marco siempre 'tableta'. esTelefono = embebida y canal 'telefono'.
     Contrato y validaciones en plataforma/embebido/nucleo.
@@ -14,7 +16,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import {
     CanalEmbebido, MotivoCierreEmbebido, SesionEntregada, canalEntregado, TipoMensajeWeb, esRutaEmbebida, leerSesionEntregada, mensajeParaApp,
-    origenAppPermitido, origenesDestino
+    origenAppPermitido, origenesDestino, temaWeb
 } from 'src/app/plataforma/embebido/nucleo';
 
 const LLAVE_MODO = 'modoEmbebido';
@@ -61,6 +63,34 @@ export class EmbebidoService {
             window.addEventListener('message', alRecibir);
             this.avisar('listo');
         });
+    }
+
+    private temaAvisado = '';
+    private vigilanteTema: MutationObserver | null = null;
+
+    /** Colores del tema de la web hacia la app: ahora y en cada cambio de clase o estilo del body (tema claro/oscuro, color del navbar). */
+    vigilarTema(): void {
+        if (!this.activo || this.vigilanteTema || typeof document === 'undefined') return;
+        const avisarSiCambio = () => {
+            const cs = getComputedStyle(document.body);
+            const tema = temaWeb({
+                navbar: cs.getPropertyValue('--app-navbar-color'),
+                tarjeta: cs.getPropertyValue('--card-background'),
+                texto: cs.getPropertyValue('--text-color'),
+                borde: cs.getPropertyValue('--border-color'),
+                oscuro: document.body.classList.contains('dark-theme'),
+            });
+            const clave = JSON.stringify(tema);
+            if (clave === this.temaAvisado) return;
+            this.temaAvisado = clave;
+            this.avisar('tema', { ...tema });
+        };
+        avisarSiCambio();
+        try {
+            this.vigilanteTema = new MutationObserver(() => avisarSiCambio());
+            this.vigilanteTema.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+            this.vigilanteTema.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
+        } catch (_) { /* sin MutationObserver: queda el primer aviso */ }
     }
 
     avisar(tipo: TipoMensajeWeb, datos: Record<string, unknown> = {}): void {

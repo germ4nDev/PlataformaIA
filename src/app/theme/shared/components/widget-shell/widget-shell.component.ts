@@ -1,7 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardService } from '../../service/tablero-control/dashboard.service';
 import { OrigenDato, OrigenDatoTclComponent } from '../origen-dato/origen-dato.component';
 
 @Component({
@@ -28,8 +27,6 @@ export class WidgetShellComponent {
 
   // Emisor para avisarle al padre que queremos maximizar
   @Output() clickEnfoque = new EventEmitter<void>();
-
-  constructor(private _dashboardService: DashboardService) {}
 
   maximizarWidget() {
     this.clickEnfoque.emit();

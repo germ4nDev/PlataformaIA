@@ -31,14 +31,6 @@ import {
 } from './theme/shared/service';
 import { PtlActividadesService } from './theme/shared/service/ptlactividades.service';
 import { PtlactividadesRolesService } from './theme/shared/service/ptlactividades-roles.service';
-// import { PuertosService } from './theme/shared/service/tablero-control/puertos.service'
-// import { TerminalesService } from './theme/shared/service/tablero-control/terminales.service'
-// import { MuellesService } from './theme/shared/service/tablero-control/muelles.service'
-// import { WidgetsService } from './theme/shared/service/tablero-control/widgets.service'
-// import { LayoutService } from './theme/shared/service/tablero-control/layout.service'
-// import { FarosService } from './theme/shared/service/tablero-control/faros.service'
-// import { TiposTipoInfraestructuraService } from './theme/shared/service/tablero-control/tipos-infraestructura.service'
-// import { CronMonitorService } from './theme/shared/service/tablero-control/cron-monitor.service'
 import { PTLHistorialFacturacionService } from './theme/shared/service/ptlhistorial-facturacion.service';
 import { PtlItemsPaqueteService } from './theme/shared/service/ptlitems-paquete.service';
 import { PTLTiposPagoService } from './theme/shared/service/ptltipos-pago.service';
@@ -51,13 +43,6 @@ import { PtlPermisosService } from './theme/shared/service/ptlpermisos.service';
 import { SocketManagerService } from './theme/shared/service/socket-manager.service';
 import { PTLWidgetsMaestroService } from './theme/shared/service/ptlwidgets-maestro.service';
 import { PtlWidgetsRolesService } from './theme/shared/service/ptlwidgets-roles.service';
-import { CronMonitorService } from './theme/shared/service/tablero-control/cron-monitor.service';
-import { FarosService } from './theme/shared/service/tablero-control/faros.service';
-import { MuellesService } from './theme/shared/service/tablero-control/muelles.service';
-import { PuertosService } from './theme/shared/service/tablero-control/puertos.service';
-import { TerminalesService } from './theme/shared/service/tablero-control/terminales.service';
-import { TiposTipoInfraestructuraService } from './theme/shared/service/tablero-control/tipos-infraestructura.service';
-import { WidgetsService } from './theme/shared/service/tablero-control/widgets.service';
 import { LayoutService } from './theme/shared/service/layout.service';
 import { PtlpestanasService } from './theme/shared/service/ptlpestanas.service';
 import { PtltiposWidgetService } from './theme/shared/service/ptltipos-widget.service';
@@ -119,14 +104,7 @@ export class AppComponent implements OnInit {
     private _modulosPaqueteService: PTLModulosPaqueteService,
     private _coloresSettingsService: PtlColoresSettingsService,
 
-    private _puertosService: PuertosService,
-    private _terminalesService: TerminalesService,
-    private _muellesService: MuellesService,
     //private _rolesAPService: PTLRolesAPService,
-    // private _widgetsService: WidgetsService,
-    private _farosService: FarosService,
-    private _tiposInfraestructuraService: TiposTipoInfraestructuraService,
-    private _cronMonitorService: CronMonitorService,
     private _layoutService: LayoutService
   ) {}
 
@@ -290,32 +268,6 @@ export class AppComponent implements OnInit {
       () => console.log('** coloresSettings cargados y guardados en el servicio'),
       (err) => console.error('Error al cargar coloresSettings', err)
     );
-    //================================
-    // PORTTOS
-    //================================
-    this._puertosService.cargarPuertos().subscribe(
-      () => console.log('** puertos cargados y guardados en el servicio'),
-      (err) => console.error('Error al cargar puertos:', err)
-    );
-    this._terminalesService.cargarTerminals().subscribe(
-      () => console.log('** terminales cargados y guardados en el servicio'),
-      (err) => console.error('Error al cargar terminales:', err)
-    );
-    this._muellesService.cargarMuelles().subscribe(
-      () => console.log('** muelles cargados y guardados en el servicio'),
-      (err) => console.error('Error al cargar muelles:', err)
-    );
-    this._farosService.getAllFaros().subscribe(
-      () => console.log('** faros cargados y guardados en el servicio'),
-      (err) => console.error('Error al cargar faros:', err)
-    );
-    this._tiposInfraestructuraService.cargarTipoInfraestructuras().subscribe(
-      () => console.log('** tipos infraestructura cargados y guardados en el servicio'),
-      (err) => console.error('Error al cargar tipos infraestructura:', err)
-    );
-    this._cronMonitorService.obtenerHistorial().subscribe(
-      () => console.log('** ETL Cron Manager cargados y guardados en el servicio'),
-      (err) => console.error('Error al cargar Cron Manager:', err)
-    );
+    // Los catálogos de Porttos los carga Porttos al entrar a sus rutas (precargaPorttosGuard, CC-180)
   }
 }

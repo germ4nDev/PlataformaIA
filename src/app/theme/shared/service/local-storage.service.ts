@@ -18,11 +18,9 @@ import { CurrentUserModel } from '../_helpers/models/CurrentUser.model';
 import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
 import { PTLEmpresaSCModel } from '../_helpers/models/PTLEmpresaSC.model';
 import { PTLActividadModel } from '../_helpers/models/PTLActividades.model';
-import { Puerto } from '../_helpers/models/tablero-control/puerto.model';
 import { CurrentTableroModel } from '../_helpers/models/CurrentTableroSettings.model';
 import { BehaviorSubject } from 'rxjs';
 import { LayoutService } from './layout.service';
-import { PuertosService } from './tablero-control/puertos.service';
 
 @Injectable({
     providedIn: 'root'
@@ -51,15 +49,13 @@ export class LocalStorageService {
     tableroSettings: CurrentTableroModel = new CurrentTableroModel();
     public tableroSubject = new BehaviorSubject<CurrentTableroModel>(this.getTableroLocalStorage());
     public currentTablero: any;
-    public puertos: Puerto[] = [];
     public puerto: any;
     public layout: any;
     public pestana: string = '';
 
 
     constructor(
-        private _layoutService: LayoutService,
-        private _puertosService: PuertosService
+        private _layoutService: LayoutService
     ) { }
 
     // ====================================================================
@@ -309,7 +305,6 @@ export class LocalStorageService {
                 pestana: 'TLC_MARITIMO_001',
                 layout: []
             };
-            this.setPuertoLocalStorage('BUENAVENTURA')
         }
         this.puerto = this.currentTablero.puerto;
         this.pestana = this.currentTablero.pestana || '';
@@ -340,19 +335,8 @@ export class LocalStorageService {
     //     });
     // }
 
-    setPuertoLocalStorage(idPuerto: string): void {
-        this.puertos = this._puertosService.getPuertosActuales()
-        const index = this.puertos.findIndex(x => x.id_puerto == idPuerto)
-        console.log('puerto seleccionado localstorage', idPuerto, this.puertos[index]);
-        const updated = { ...this.currentTablero, puerto: this.puertos[index] };
-    }
-
     setPestanaLocalStorage(nuevaPestana: string, usuario: string = 'SISTEMA_DEFAULT'): void {
         const updated = { ...this.currentTablero, pestana: nuevaPestana };
-    }
-
-    getPuertoLocalStorage(): Puerto {
-        return this.currentTablero?.puerto || { id_puerto: 'BUENAVENTURA', nombre_puerto: 'Buenaventura' } as Puerto;
     }
 
     getPestanaLocalStorage(): string {

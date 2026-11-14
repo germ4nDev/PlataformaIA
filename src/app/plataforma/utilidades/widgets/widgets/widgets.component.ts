@@ -18,8 +18,8 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 
-import { Widget } from 'src/app/theme/shared/_helpers/models/tablero-control/widget.model';
-import { WidgetsService } from 'src/app/theme/shared/service/tablero-control/widgets.service';
+import { Widget } from 'src/app/theme/shared/_helpers/models/tableros/widget.model';
+import { WidgetsService } from 'src/app/theme/shared/service/tableros/widgets.service';
 import { LocalStorageService, PtllogActividadesService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
 
 import Swal from 'sweetalert2';

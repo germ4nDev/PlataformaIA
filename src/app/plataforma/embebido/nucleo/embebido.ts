@@ -6,6 +6,8 @@
                  { ..., tipo: 'estado', puerto, pestana }                                  puerto y pestaña en pantalla
                  { ..., tipo: 'cerrar-sesion', motivo: usuario|expirada|reemplazada|sin-acceso }  la app hace su cierre
                  { ..., tipo: 'error', mensaje }                                           no se pudo entrar
+                 { ..., tipo: 'tema', navbar, tarjeta, texto, borde, oscuro }               colores de la web (CC-184): la app los
+                                                                                           usa en su menú lateral (mismo esquema)
       app → web  { fuente: 'porttos-app', v: 1, tipo: 'sesion', token, codigoSesion, codigoAplicacion?, codigoSuite?, puerto?, pestana? }
                  (codigoSuite: la suite a abrir, p. ej. la del tablero; sin ella, la del dominio o la primera con ruta de inicio)
                  v 2 (OT-017, compatible): + canal?: 'tableta' | 'telefono'. Sin canal (o v 1) = 'tableta': la web de siempre.
@@ -22,7 +24,7 @@ export const VERSION_MENSAJES = 1;
 export const VERSIONES_APP: readonly number[] = [1, 2];
 export const ORIGENES_APP: readonly string[] = ['https://localhost', 'capacitor://localhost'];
 
-export type TipoMensajeWeb = 'listo' | 'estado' | 'cerrar-sesion' | 'error';
+export type TipoMensajeWeb = 'listo' | 'estado' | 'cerrar-sesion' | 'error' | 'tema';
 export type MotivoCierreEmbebido = 'usuario' | 'expirada' | 'reemplazada' | 'sin-acceso';
 /** Equipo de la app que embebe la web: la tableta ve la web tal cual; el teléfono, su rejilla de 4 columnas (OT-017). */
 export type CanalEmbebido = 'tableta' | 'telefono';
@@ -127,4 +129,23 @@ export function suiteEmbebida(suites: any[], codigoAplicacion: string, codigoSui
 /** La aplicación a abrir: la que pide la app; si no, la del dominio. */
 export function aplicacionEmbebida(s: SesionEntregada, codigoDelDominio: string | null | undefined): string | null {
   return s.codigoAplicacion || (codigoDelDominio ? String(codigoDelDominio) : null);
+}
+
+/** Colores del tema que la web le pasa a la app (CC-184). Solo colores CSS simples (#hex, rgb/rgba, hsl/hsla); lo demás → null. */
+export interface TemaWeb {
+  navbar: string | null;
+  tarjeta: string | null;
+  texto: string | null;
+  borde: string | null;
+  oscuro: boolean;
+}
+
+export function colorCss(v: unknown): string | null {
+  const c = String(v ?? '').trim();
+  if (!c || c.length > 60) return null;
+  return /^#[0-9a-f]{3,8}$/i.test(c) || /^(rgb|rgba|hsl|hsla)\([0-9.,%\s/]+\)$/i.test(c) ? c : null;
+}
+
+export function temaWeb(v: { navbar?: unknown; tarjeta?: unknown; texto?: unknown; borde?: unknown; oscuro?: unknown }): TemaWeb {
+  return { navbar: colorCss(v.navbar), tarjeta: colorCss(v.tarjeta), texto: colorCss(v.texto), borde: colorCss(v.borde), oscuro: v.oscuro === true };
 }

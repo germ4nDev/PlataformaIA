@@ -32,7 +32,7 @@ import { PtlWidgetsRolesService } from 'src/app/theme/shared/service/ptlwidgets-
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service';
 import { EmbebidoService } from 'src/app/theme/shared/service/embebido.service';
-import { FiltroTableroService } from 'src/app/theme/shared/service/tablero-control/filtro-tablero.service';
+import { ContextoTableroService } from 'src/app/theme/shared/service/tableros/contexto-tablero.service';
 import {
   armarUsuariosSC,
   contextoDeUsuario,
@@ -71,7 +71,7 @@ export class EmbebidoComponent implements OnInit {
     private _contextoDominio: ContextoDominioService,
     private _socket: SocketService,
     private _permisos: PtlPermisosService,
-    private _filtro: FiltroTableroService,
+    private _contexto: ContextoTableroService,
     private _layout: LayoutService,
     private _usuariosSC: PtlusuariosScService,
     private _usuariosEmpresasSC: PtlusuariosEmpresasScService,
@@ -106,6 +106,8 @@ export class EmbebidoComponent implements OnInit {
   private async entrar(sesion: SesionEntregada): Promise<void> {
     // 0. Canal de la app (OT-017): 'telefono' arma la rejilla de 4 columnas; sin canal, la tableta = la web
     this._embebido.fijarCanal(sesion.canal);
+    // CC-184: los colores del tema de la web van a la app (su menú lateral usa el mismo esquema)
+    this._embebido.vigilarTema();
     // 1. La sesión de la app, provisional, para que el interceptor mande x-token y x-sesion-id
     this._localStorage.setCurrentUserLocalStorage(sesionProvisional(sesion));
     let current = currentUserEmbebido(await firstValueFrom(this._auth.renovarSesion()), sesion);
@@ -171,7 +173,8 @@ export class EmbebidoComponent implements OnInit {
     } as any);
     this._auth.iniciarSesionEmbebida(current as any);
     this._socket.conectarConUsuario(codigoUsuario, sesion.codigoSesion);
-    if (sesion.puerto) this._filtro.cambiarCiudad(sesion.puerto);
+    // El contexto lo lee la aplicación (Porttos: su filtro del tablero); el núcleo no la conoce (CC-180)
+    if (sesion.puerto) this._contexto.fijar('puerto', sesion.puerto);
     await firstValueFrom(this._permisos.inicializarPermisosPorDefecto());
     await this.router.navigateByUrl(destino, { replaceUrl: true });
   }
