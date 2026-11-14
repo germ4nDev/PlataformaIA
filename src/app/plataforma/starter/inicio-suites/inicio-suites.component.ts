@@ -3,7 +3,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ColorPickerDirective } from 'ngx-color-picker';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
@@ -23,7 +22,6 @@ import { suiteDelDominio } from 'src/app/plataforma/dominios/nucleo';
     TranslateModule,
     NgbDropdownModule,
     RouterModule,
-    ColorPickerDirective,
     SharedModule,
     LanguageSelectorComponent,
     FullScreenSliderComponent

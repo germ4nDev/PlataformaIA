@@ -8,7 +8,6 @@ import { Subscription, catchError, of, Observable, BehaviorSubject, switchMap, s
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
@@ -46,7 +45,6 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     TableDataComponent,
     DataLoaderComponent
   ],

@@ -19,14 +19,13 @@ import { NavItemComponent } from './nav-item/nav-item.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { Observable, Subscription } from 'rxjs';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { IaChatFlotanteComponent } from 'src/app/theme/shared/components/ia-chat-flotante/ia-chat-flotante.component';
 
 @Component({
   selector: 'app-nav-content',
   templateUrl: './nav-content.component.html',
   styleUrls: ['./nav-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, NavGroupComponent, NavCollapseComponent, NavItemComponent, NgScrollbarModule, IaChatFlotanteComponent]
+  imports: [CommonModule, NavGroupComponent, NavCollapseComponent, NavItemComponent, NgScrollbarModule]
 })
 export class NavContentComponent implements OnInit, AfterViewInit {
   @Input() navigationItems: NavigationItem[] | null = [];

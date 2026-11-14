@@ -17,7 +17,6 @@ import {
 } from 'src/app/theme/shared/service';
 import { PTLSeguimientosTKService } from 'src/app/theme/shared/service/ptlseguimientos-tk.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { GradientConfig } from 'src/app/app-config';
@@ -41,7 +40,6 @@ const base_url = environment.apiUrl;
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     TableDataComponent
   ],
   templateUrl: './seguimientos.component.html',

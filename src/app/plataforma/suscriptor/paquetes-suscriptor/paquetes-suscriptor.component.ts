@@ -537,7 +537,6 @@ import { AppPermisoDirective } from 'src/app/theme/shared/directive/app-permiso.
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     TableDataComponent,
     DataLoaderComponent,
     AppPermisoDirective

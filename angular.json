@@ -35,7 +35,10 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "stylePreprocessorOptions": {
-              "includePaths": ["src/app/theme/shared/styles", "node_modules/ngx-toastr/toastr.css", "."]
+              "includePaths": ["src/app/theme/shared/styles", "node_modules/ngx-toastr/toastr.css", "."],
+              "sass": {
+                "silenceDeprecations": ["import", "global-builtin", "color-functions", "slash-div", "if-function"]
+              }
             },
             "assets": ["src/favicon.ico", "src/assets", "src/fake-data"],
             "styles": [

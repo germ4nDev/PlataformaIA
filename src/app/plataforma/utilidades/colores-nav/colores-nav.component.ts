@@ -13,7 +13,6 @@ import { catchError, Observable, tap } from 'rxjs';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
@@ -33,7 +32,6 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     TableDataComponent
   ],
   templateUrl: './colores-nav.component.html',

@@ -15,7 +15,6 @@ import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActiv
 import { PTLActividadRoleModel } from 'src/app/theme/shared/_helpers/models/PTLActividadesRoles.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import {
   LocalStorageService,
   NavigationService,
@@ -39,7 +38,6 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     TableDataComponent,
     DataLoaderComponent
   ],

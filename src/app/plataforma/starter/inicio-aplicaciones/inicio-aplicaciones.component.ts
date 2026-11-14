@@ -6,7 +6,6 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ColorPickerDirective } from 'ngx-color-picker';
 import {
   AuthenticationService,
   PtlAplicacionesService,
@@ -43,7 +42,6 @@ import { contextoDeUsuario, rolesYWidgetsDeAplicacion } from 'src/app/plataforma
     TranslateModule,
     NgbDropdownModule,
     RouterModule,
-    ColorPickerDirective,
     SharedModule,
     LanguageSelectorComponent,
     FullScreenSliderComponent

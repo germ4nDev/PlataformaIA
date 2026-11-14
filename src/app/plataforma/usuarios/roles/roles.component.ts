@@ -11,7 +11,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
@@ -48,7 +47,6 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     DataLoaderComponent,
     TableDataComponent
   ],

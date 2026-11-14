@@ -25,7 +25,6 @@ import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSessi
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-player/video-player.component';
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component';
-import { ExcelUploaderComponent } from 'src/app/theme/shared/components/excel-loader/excel-loader.component';
 import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
 
 @Component({
@@ -37,7 +36,6 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    ExcelUploaderComponent,
     TableDataComponent
   ],
   templateUrl: './aplicaciones.component.html',

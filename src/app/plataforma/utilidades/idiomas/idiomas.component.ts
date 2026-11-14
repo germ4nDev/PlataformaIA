@@ -14,7 +14,6 @@ import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith,
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
@@ -39,7 +38,6 @@ const base_url = environment.apiUrl;
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     DataLoaderComponent,
     TableDataComponent
   ],

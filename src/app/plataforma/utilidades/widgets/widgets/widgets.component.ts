@@ -15,7 +15,6 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component';
-import { ExcelUploaderComponent } from 'src/app/theme/shared/components/excel-loader/excel-loader.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 
@@ -39,7 +38,6 @@ import { camposDelWidget, canalDelFormulario, canalDelWidget } from '../nucleo';
     TranslateModule,
     NavContentComponent,
     DataLoaderComponent,
-    ExcelUploaderComponent,
     NavBarComponent,
     TableDataComponent
   ],

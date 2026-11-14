@@ -12,11 +12,10 @@ import {
   PtlTiposGaleriaService,
   LocalStorageService
 } from 'src/app/theme/shared/service';
-import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-help-modulos',
-  imports: [NavBarComponent, LanguageSelectorComponent],
+  imports: [NavBarComponent],
   templateUrl: './help-modulos.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './help-modulos.component.scss'

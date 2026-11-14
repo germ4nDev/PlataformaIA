@@ -13,7 +13,6 @@ import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServid
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
@@ -29,7 +28,6 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     TableDataComponent
   ],
   templateUrl: './servidores.component.html',

@@ -4,7 +4,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavigationService, PtllogActividadesService, SwalAlertService, LocalStorageService } from 'src/app/theme/shared/service';
 import { environment } from 'src/environments/environment';
@@ -27,7 +26,6 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     DataTablesModule,
     SharedModule,
     TranslateModule,
-    DatatableComponent,
     NavContentComponent,
     NavBarComponent,
     TableDataComponent

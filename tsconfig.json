@@ -2,8 +2,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "ignoreDeprecations": "6.0", // TypeScript 6 marca baseUrl y downlevelIteration como obsoletos (OT-035): se reemplazan después
+    "paths": { "src/*": ["./src/*"] }, // en lugar de baseUrl (obsoleto en TypeScript 6; OT-035 limpieza)
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,

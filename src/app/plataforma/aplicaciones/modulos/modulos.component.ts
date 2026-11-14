@@ -12,7 +12,6 @@ import { GradientConfig } from 'src/app/app-config';
 
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
@@ -40,7 +39,6 @@ import { TableDataComponent } from 'src/app/theme/shared/components/table-data/t
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
     DataLoaderComponent,
     TableDataComponent
   ],
