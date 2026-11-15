@@ -274,7 +274,7 @@ export class PorttosChartHelper {
             }
         };
 
-        return new Chart(ctx, config);
+        return new Chart(ctx, config) as unknown as Chart; // Chart<'tipo'> no se asigna a Chart genérico con TypeScript 6 (OT-034)
     }
 
     /**
@@ -469,7 +469,7 @@ export class PorttosChartHelper {
             }
         };
 
-        return new Chart(ctx, config);
+        return new Chart(ctx, config) as unknown as Chart; // Chart<'tipo'> no se asigna a Chart genérico con TypeScript 6 (OT-034)
     }
 
     /**
@@ -577,7 +577,7 @@ export class PorttosChartHelper {
             }
         };
 
-        return new Chart(ctx, config);
+        return new Chart(ctx, config) as unknown as Chart; // Chart<'tipo'> no se asigna a Chart genérico con TypeScript 6 (OT-034)
     }
 
     /**
