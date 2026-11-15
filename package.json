@@ -16,6 +16,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-architects/native-federation": "^22.2.5",
     "@angular/animations": "^22.2.0",
     "@angular/cdk": "^22.2.7",
     "@angular/common": "^22.2.0",
@@ -68,7 +69,8 @@
     "video.js": "^8.23.7",
     "wellknown": "^0.5.0",
     "xlsx": "^0.18.5",
-    "zone.js": "~0.15.1"
+    "zone.js": "~0.15.1",
+    "es-module-shims": "^2.8.0"
   },
   "devDependencies": {
     "@angular/build": "^22.2.0",
@@ -100,7 +102,8 @@
     "prettier": "3.2.2",
     "to-string-loader": "^1.2.0",
     "typescript": "~6.0.0",
-    "typescript-eslint": "^8.0.0"
+    "typescript-eslint": "^8.0.0",
+    "@softarc/native-federation-orchestrator": "^4.10.0"
   },
   "overrides": {
     "ngx-toastr": {

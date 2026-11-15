@@ -1,6 +1,7 @@
 // Angular Import
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { loadRemoteModule } from '@angular-architects/native-federation';
 
 // project import
 import { AdminComponent } from './theme/layout/admin/admin.component';
@@ -24,6 +25,11 @@ const routes: Routes = [
                 pathMatch: 'full',
                 canActivate: [inicioPorDominioGuard],
                 children: []
+            },
+            {
+                // OT-034 (prueba de concepto): pantalla de Sistemas servida por el remoto sistemas-remoto (federation.manifest.json)
+                path: 'poc-sistemas-remoto',
+                loadComponent: () => loadRemoteModule('sistemas-remoto', './PocSistemas').then((m) => m.PocSistemasComponent)
             },
             {
                 // Modo embebido (OT-014): la web dentro de la app Porttos (tableta); la sesión la entrega la app

@@ -32,5 +32,10 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "references": [
+    {
+      "path": "./projects/sistemas-remoto/tsconfig.app.json"
+    }
+  ]
 }

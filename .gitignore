@@ -40,7 +40,11 @@ yarn.lock
 testem.log
 /typings
 /data
-src/assets/
+src/assets/*
+# OT-034: el manifiesto de Native Federation (qué remoto sirve cada aplicación) sí se versiona
+!src/assets/federation.manifest.json
+# Traducciones de la web (es.json, en.json): se versionan
+!src/assets/i18n/
 src/assets/data/
 
 # System files
