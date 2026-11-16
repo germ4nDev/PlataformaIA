@@ -37,6 +37,9 @@ import Swal from 'sweetalert2';
 export class GestionAplicacionComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
+  // CC-202 (usuario, 2026-11-15): dominios de la aplicación en PTL_DominiosAP, separados por coma
+  dominiosTexto = '';
+  private dominiosIniciales = '';
   logActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
   menuItems$!: Observable<NavigationItem[]>;
   gradientConfig: any;
@@ -128,6 +131,16 @@ export class GestionAplicacionComponent implements OnInit {
             this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenLogoB) || 'no-image.png';
           this.selectedFileUrlIcono =
             this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenIcono) || 'no-image.png';
+          this._aplicacionesService.getDominiosAplicacion(resp.aplicacion.codigoAplicacion).subscribe({
+            next: (dominios) => {
+              this.dominiosTexto = dominios.join(', ');
+              this.dominiosIniciales = this.dominiosTexto;
+            },
+            error: () => {
+              this.dominiosTexto = '';
+              this.dominiosIniciales = '';
+            }
+          });
         },
         error: () => {
           Swal.fire(traducir('COMMON.ERROR'), traducir('COMMON.COULD_NOT_GET_APPLICATION'), 'error');
@@ -353,10 +366,11 @@ export class GestionAplicacionComponent implements OnInit {
               descripcionLog: this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY'));
-            form.resetForm();
-            // this.isSubmit = false;
-            this.router.navigate(['/aplicaciones/aplicaciones']);
+            this.guardarDominiosYTerminar(registroData.codigoAplicacion || this.codeAplicacion, () => {
+              this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_CREATED_SUCCESSFULLY'));
+              form.resetForm();
+              this.router.navigate(['/aplicaciones/aplicaciones']);
+            });
           }
         },
         error: (err: any) => {
@@ -395,10 +409,11 @@ export class GestionAplicacionComponent implements OnInit {
               descripcionLog: this.translate.instant('COMMON.APPLICATION_WAS_DELETED_SUCCESSFULLY')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_UPDATED_SUCCESSFULLY'));
-            form.resetForm();
-            // this.isSubmit = false;
-            this.router.navigate(['/aplicaciones/aplicaciones']);
+            this.guardarDominiosYTerminar(registroData.codigoAplicacion, () => {
+              this._swalService.getAlertSuccess(this.translate.instant('COMMON.APPLICATION_UPDATED_SUCCESSFULLY'));
+              form.resetForm();
+              this.router.navigate(['/aplicaciones/aplicaciones']);
+            });
           }
         },
         error: (err: any) => {
@@ -413,6 +428,34 @@ export class GestionAplicacionComponent implements OnInit {
         }
       });
     }
+  }
+
+  /**
+   * CC-202: después de guardar la aplicación, sus dominios (solo si cambiaron). Si fallan (dominio inválido o de otra aplicación),
+   * la aplicación ya quedó guardada: se avisa y el formulario sigue abierto en modo edición para corregir y volver a guardar.
+   */
+  private guardarDominiosYTerminar(codigoAplicacion: string | undefined, alTerminar: () => void) {
+    const lista = this.dominiosTexto
+      .split(/[\s,;]+/)
+      .map((d) => d.trim())
+      .filter((d) => !!d);
+    if (!codigoAplicacion || lista.join(', ') === this.dominiosIniciales) {
+      alTerminar();
+      return;
+    }
+    this._aplicacionesService.guardarDominiosAplicacion(codigoAplicacion, lista).subscribe({
+      next: (dominios) => {
+        this.dominiosTexto = dominios.join(', ');
+        this.dominiosIniciales = this.dominiosTexto;
+        alTerminar();
+      },
+      error: (err: any) => {
+        this.modoEdicion = true;
+        this.codeAplicacion = codigoAplicacion;
+        this.FormRegistro.codigoAplicacion = codigoAplicacion;
+        this._swalService.getAlertError(`${traducir('APLICACIONES.GESTION.COULD_NOT_SAVE_DOMAINS')} ${err?.error?.msg || ''}`.trim());
+      }
+    });
   }
 
   btnRegresarClick() {

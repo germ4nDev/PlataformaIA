@@ -23,6 +23,7 @@
           (click)="fileInputExcel.click()"
           [disabled]="cargandoExcel"
         >
+          <i class="feather icon-upload me-2"></i>
           {{ cargandoExcel ? ('SHARED.PROCESSING' | translate) : ('SHARED.UPLOAD_EXCEL' | translate) }}
         </button>
       }

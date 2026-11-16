@@ -4,15 +4,19 @@
   "author": "CodedThemes",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -o",
-    "start:emulador": "ng serve --host 127.0.0.1",
-    "build": "node --max-old-space-size=4096 node_modules/@angular/cli/bin/ng build",
-    "build-stage": "ng build --configuration production --base-href /demos/admin-templates/gradient-able/angular/stage/",
-    "build-prod": "ng build --configuration production --base-href /demos/admin-templates/gradient-able/angular/default/",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "lint": "ng lint",
-    "lint-fix": "ng lint --fix"
+    "start": "ng serve full-version -o",
+    "start:emulador": "ng serve full-version --host 127.0.0.1",
+    "start:sistemas": "node scripts/i18n-compilacion.js sistemas && ng serve sistemas",
+    "build:sistemas": "node scripts/i18n-compilacion.js sistemas && node --max-old-space-size=4096 node_modules/@angular/cli/bin/ng build sistemas",
+    "start:porttos": "node scripts/i18n-compilacion.js porttos && ng serve porttos",
+    "build:porttos": "node scripts/i18n-compilacion.js porttos && node --max-old-space-size=4096 node_modules/@angular/cli/bin/ng build porttos",
+    "build": "node --max-old-space-size=4096 node_modules/@angular/cli/bin/ng build full-version",
+    "build-stage": "ng build full-version --configuration production --base-href /demos/admin-templates/gradient-able/angular/stage/",
+    "build-prod": "ng build full-version --configuration production --base-href /demos/admin-templates/gradient-able/angular/default/",
+    "watch": "ng build full-version --watch --configuration development",
+    "test": "ng test full-version",
+    "lint": "ng lint full-version",
+    "lint-fix": "ng lint full-version --fix"
   },
   "private": true,
   "dependencies": {

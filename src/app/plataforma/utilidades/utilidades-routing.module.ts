@@ -71,6 +71,49 @@ const routes: Routes = [
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
+                // CC-203: Utilidades › Pestañas y Tipos de pestaña (patrón de los módulos de administración)
+                path: 'pestanas',
+                loadComponent: () => import('./pestanas/pestanas/pestanas.component').then(m => m.PestanasComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-pestana',
+                loadComponent: () => import('./pestanas/pestanas/gestion-pestana/gestion-pestana.component').then(m => m.GestionPestanaComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'tipos-pestana',
+                loadComponent: () => import('./pestanas/tipos-pestana/tipos-pestana.component').then(m => m.TiposPestanaComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-tipo-pestana',
+                loadComponent: () => import('./pestanas/tipos-pestana/gestion-tipo-pestana/gestion-tipo-pestana.component').then(m => m.GestionTipoPestanaComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                // CC-204: Utilidades › Catálogos (tipos de rol, widget, pago, paquete, actividad, tipos de estado y estados)
+                path: 'catalogos',
+                pathMatch: 'full',
+                redirectTo: 'catalogos/tipos-rol'
+            },
+            {
+                path: 'catalogos/:catalogo',
+                loadComponent: () => import('./catalogos/catalogos/catalogos.component').then(m => m.CatalogosComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-catalogo/:catalogo',
+                loadComponent: () => import('./catalogos/catalogos/gestion-catalogo/gestion-catalogo.component').then(m => m.GestionCatalogoComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
                 path: 'widgets',
                 loadComponent: () => import('./widgets/widgets/widgets.component').then(m => m.WidgetsComponent),
                 canActivate: [RoleGuard],

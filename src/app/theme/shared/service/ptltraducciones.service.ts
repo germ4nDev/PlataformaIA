@@ -11,14 +11,14 @@ const base_url = environment.apiUrl;
 
 export interface FilaTraduccion { llave: string; modulo: string; textos: Record<string, string | null>; protegida: boolean }
 export interface RamaTraduccion { modulo: string; submodulos: string[] }
-export interface ListaTraducciones { idiomas: string[]; ramas: RamaTraduccion[]; filas: FilaTraduccion[] }
+export interface ListaTraducciones { idiomas: string[]; ramas: RamaTraduccion[]; filas: FilaTraduccion[]; faltan: string[] }
 
 @Injectable({ providedIn: 'root' })
 export class PtlTraduccionesService {
     constructor(private readonly http: HttpClient) {}
 
     listar(): Observable<ListaTraducciones> {
-        return this.http.get<any>(`${base_url}/traducciones`).pipe(map((r) => ({ idiomas: r?.idiomas || [], ramas: r?.ramas || [], filas: r?.filas || [] })));
+        return this.http.get<any>(`${base_url}/traducciones`).pipe(map((r) => ({ idiomas: r?.idiomas || [], ramas: r?.ramas || [], filas: r?.filas || [], faltan: r?.faltan || [] })));
     }
 
     arbol(idioma: string): Observable<any> {
@@ -40,6 +40,11 @@ export class PtlTraduccionesService {
     /** JSON que trae el build de la web (para sembrar en el API un idioma que todavía no tiene). */
     jsonDelBuild(idioma: string): Observable<any> {
         return this.http.get(`./assets/i18n/${idioma}.json`);
+    }
+
+    /** CC-208: crea los archivos de los idiomas activos del maestro que falten (a partir del español) */
+    sincronizarIdiomas(): Observable<{ creados: string[] }> {
+        return this.http.post<any>(`${base_url}/traducciones/idiomas/sincronizar`, {}).pipe(map((r) => ({ creados: r?.creados || [] })));
     }
 
     sembrar(idioma: string, arbol: any): Observable<any> {

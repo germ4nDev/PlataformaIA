@@ -299,6 +299,8 @@ export class SocketManagerService {
     public parametrosActualizados$ = new Subject<any>();
     public itemsActualizadas$ = new Subject<any>();
     public pestanasActualizadoa$ = new Subject<any>();
+    public tiposPestanasActualizados$ = new Subject<any>(); // CC-203: Utilidades › Tipos de pestaña
+    public catalogosActualizados$ = new Subject<any>(); // CC-204: Utilidades › Catálogos ({ catalogo, action, id })
     public tiposWidgetActualizadoa$ = new Subject<any>();
 
     // ==========================================
@@ -385,6 +387,8 @@ export class SocketManagerService {
         this.socketService.listen('parametros-actualizados').subscribe(data => this.parametrosActualizados$.next(data));
         this.socketService.listen('items-actualizados').subscribe(data => this.itemsActualizadas$.next(data));
         this.socketService.listen('pestanas-actualizados').subscribe(data => this.pestanasActualizadoa$.next(data));
+        this.socketService.listen('tipos-pestanas-actualizados').subscribe(data => this.tiposPestanasActualizados$.next(data));
+        this.socketService.listen('catalogos-actualizados').subscribe(data => this.catalogosActualizados$.next(data));
         this.socketService.listen('tipos-widget-actualizados').subscribe(data => this.tiposWidgetActualizadoa$.next(data));
         this.socketService.listen('actualizacion-datos-widget').subscribe(data => {
             this.datosTablero$.next(data);

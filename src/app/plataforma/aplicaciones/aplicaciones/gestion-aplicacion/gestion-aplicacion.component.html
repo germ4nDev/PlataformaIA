@@ -162,6 +162,22 @@
                 }
               </div>
             </div>
+            <!-- CC-202: dominios de la aplicación en PTL_DominiosAP (fuera del ngForm: se guardan aparte, después de la aplicación) -->
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-control-label" for="dominiosAplicacion">{{ 'APLICACIONES.GESTION.DOMAINS' | translate }}</label>
+                <input
+                  class="form-control form-input"
+                  id="dominiosAplicacion"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="{{ 'APLICACIONES.GESTION.DOMAINS_PLACEHOLDER' | translate }}"
+                  [(ngModel)]="dominiosTexto"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <small class="form-text text-muted">{{ 'APLICACIONES.GESTION.DOMAINS_HELP' | translate }}</small>
+              </div>
+            </div>
             <div class="col-md-12">
               <div class="form-group">
                 <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
@@ -193,17 +209,19 @@
                   <img [src]="selectedFileUrl" class="image-preview" />
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInput
                     (change)="onFileSelectedClick($event)"
                     accept="image/*"
                     id="fileUploadInput"
-                    class="form-control form-input d-none"
                     name="fondoAplicacion"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInput.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_IMAGE_2' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -214,17 +232,19 @@
                   <img [src]="selectedFileUrlUI" class="image-preview-ui" />
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInputUI" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInputUI
                     (change)="onFileSelectedUIClick($event)"
                     accept="image/*"
                     id="fileUploadInputUI"
-                    class="form-control form-input d-none"
                     name="logoAplicacionUI"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInputUI.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_IMAGE_2' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -235,17 +255,19 @@
                   <img [src]="selectedFileUrlUIB" class="image-preview-ui" />
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInputUIB" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInputUIB
                     (change)="onFileSelectedUIBClick($event)"
                     accept="image/*"
                     id="fileUploadInputUIB"
-                    class="form-control form-input d-none"
                     name="logoAplicacionUIB"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInputUIB.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_IMAGE_2' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -256,17 +278,19 @@
                   <img [src]="selectedFileUrlLogo" class="image-preview-ui" />
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInputLogo" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInputLogo
                     (change)="onFileSelectedLogoClick($event)"
                     accept="image/*"
                     id="fileUploadInputLogo"
-                    class="form-control form-input d-none"
                     name="logoAplicacion"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInputLogo.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_IMAGE_2' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -277,17 +301,19 @@
                   <img [src]="selectedFileUrlLogoB" class="image-preview-ui" />
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInputLogoB" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInputLogoB
                     (change)="onFileSelectedLogoBClick($event)"
                     accept="image/*"
                     id="fileUploadInputLogoB"
-                    class="form-control form-input d-none"
                     name="logoAplicacionB"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInputLogoB.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_IMAGE_2' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -298,17 +324,19 @@
                   <img [src]="selectedFileUrlIcono" class="image-preview-ui" />
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInputIcono" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInputIcono
                     (change)="onFileSelectedIconoClick($event)"
                     accept="image/*"
                     id="fileUploadInputIcono"
-                    class="form-control form-input d-none"
                     name="imagenAplicacionUI"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInputIcono.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_IMAGE_2' | translate }}
+                  </button>
                 </div>
               </div>
             </div>

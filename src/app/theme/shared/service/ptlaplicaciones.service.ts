@@ -123,6 +123,20 @@ export class PtlAplicacionesService {
         )
     }
 
+    /** CC-202: dominios activos de la aplicación (PTL_DominiosAP), p. ej. ['porttos.co', 'www.porttos.co']. */
+    getDominiosAplicacion(codigoAplicacion: string): Observable<string[]> {
+        return this.http
+            .get<any>(`${base_url}/dominios/aplicacion/${encodeURIComponent(codigoAplicacion)}`)
+            .pipe(map((resp: any) => (Array.isArray(resp?.dominios) ? resp.dominios : [])));
+    }
+
+    /** CC-202: deja los dominios de la aplicación como la lista (los que se quitan quedan inactivos; nunca se borran). */
+    guardarDominiosAplicacion(codigoAplicacion: string, dominios: string[]): Observable<string[]> {
+        return this.http
+            .put<any>(`${base_url}/dominios/aplicacion/${encodeURIComponent(codigoAplicacion)}`, { dominios })
+            .pipe(map((resp: any) => (Array.isArray(resp?.dominios) ? resp.dominios : [])));
+    }
+
     eliminarAplicacion(_id: any) {
         console.log('eliminar aplicacion', _id)
         const url = `${base_url}/aplicaciones/${_id.id}`

@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLSitiosAPModel } from '../_helpers/models/PTLSitioAP.model';
 import { LocalStorageService } from './local-storage.service';
+import { Sitio } from 'src/app/plataforma/sites/sites/sitios-nucleo';
 
 const base_url = environment.apiUrl;
 
@@ -75,5 +76,22 @@ export class PTLSitiosAPService {
         };
       })
     );
+  }
+
+  // CC-207 (OT-036 fase 2): Sitios por capas. La lista trae nombreAplicacion y rutaAdministracion; el id es el código del sitio.
+  listar() {
+    return this.http.get<any>(`${base_url}/sitios-ap`).pipe(map((r: any) => (r?.sitios || []) as Sitio[]));
+  }
+  obtener(codigo: string) {
+    return this.http.get<any>(`${base_url}/sitios-ap/${encodeURIComponent(codigo)}`).pipe(map((r: any) => r?.sitio as Sitio));
+  }
+  crear(s: Sitio) {
+    return this.http.post<any>(`${base_url}/sitios-ap`, s);
+  }
+  modificar(codigo: string, s: Sitio) {
+    return this.http.put<any>(`${base_url}/sitios-ap/${encodeURIComponent(codigo)}`, s);
+  }
+  inactivar(codigo: string) {
+    return this.http.delete<any>(`${base_url}/sitios-ap/${encodeURIComponent(codigo)}`);
   }
 }

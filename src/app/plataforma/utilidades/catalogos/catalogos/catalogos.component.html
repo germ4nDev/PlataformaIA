@@ -1,0 +1,59 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'COMMON.FILTERS' | translate }}</button>
+            </div>
+            @if (activeTab === 'menu') {
+            <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            } @else {
+            <div class="p-3 filtros-scroll-wrapper">
+                <div class="text-center"><h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6></div>
+                <div class="filtro">
+                    <small>{{ 'UTILIDADES.CATALOGOS.CATALOG' | translate }}</small>
+                    <select class="form-control form-select" [value]="def.clave" (change)="alCambiarCatalogo($event)">
+                        @for (c of catalogos; track c.clave) {
+                        <option [value]="c.clave" [selected]="c.clave === def.clave">{{ c.titulo | translate }}</option>
+                        }
+                    </select>
+                </div>
+                @if (def.estado) {
+                <div class="filtro">
+                    <small>{{ 'COMMON.STATUS' | translate }}</small>
+                    <select class="form-control form-select" [value]="filtroEstado$ | async" (change)="alFiltrarEstado($event)">
+                        <option value="todos">{{ 'COMMON.ALL' | translate }}</option>
+                        <option value="activos">{{ 'COMMON.ACTIVE' | translate }}</option>
+                        <option value="inactivos">{{ 'COMMON.INACTIVE' | translate }}</option>
+                    </select>
+                </div>
+                }
+                <div class="filtro">
+                    <small>{{ 'COMMON.SEARCH' | translate }}</small>
+                    <input type="text" class="form-control form-input" (keyup)="alFiltrarTexto($event)"
+                        [placeholder]="'UTILIDADES.CATALOGOS.CODE_OR_NAME' | translate" />
+                </div>
+            </div>
+            }
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                @if (!cargando) {
+                <app-table-data [data]="(filtrados$ | async) || []" [idField]="def.llave"
+                    [tableTitle]="def.titulo | translate" [tableSubtitle]="def.subtitulo | translate"
+                    [metadataColumns]="columnas" [metadataDetailColumns]="metadataDetalle" [showActions]="true" [showNewButton]="true"
+                    [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
+                    [newButtonLabel]="'UTILIDADES.CATALOGOS.NEW_RECORD' | translate"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nuevo()" (editRecord)="editar($event)"
+                    (deleteRecord)="retirar($event?.id ?? $event)" [permisoNew]="def.permisos.crear" [permisoEdit]="def.permisos.modificar" [permisoDelete]="def.permisos.eliminar">
+                </app-table-data>
+                } @else {
+                <app-data-loader [isLoading]="true" [message]="'UTILIDADES.CATALOGOS.LOADING_CATALOG' | translate"></app-data-loader>
+                }
+            </div>
+        </div>
+    </div>
+</div>

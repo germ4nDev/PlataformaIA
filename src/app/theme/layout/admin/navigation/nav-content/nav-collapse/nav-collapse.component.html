@@ -1,43 +1,40 @@
 @if (!item.hidden) {
-  <li class="nav-item pcoded-hasmenu" [routerLinkActive]="['active']">
+<li class="nav-item pcoded-hasmenu" [routerLinkActive]="['active']">
     <a href="javascript:" class="nav-link" (click)="navCollapse($event)">
-      @if (item.icon) {
+        @if (item.icon) {
         <span class="pcoded-micon">
-          <i class="{{ item.icon }}"></i>
+            <i class="{{ item.icon }}"></i>
         </span>
-      }
-      <span class="pcoded-mtext">
-        {{ item.title | translate }}
-        @if (item.badge) {
-          <span class="badge label" [ngClass]="item.badge.type">
-            {{ item.badge.title }}
-          </span>
         }
-      </span>
-      <span class="pcoded-micon float-right">
-        <i
-          class="feather"
-          [ngClass]="{
+        <span class="pcoded-mtext">
+            {{ item.title | translate }}
+            @if (item.badge) {
+            <span class="badge label" [ngClass]="item.badge.type">
+                {{ item.badge.title }}
+            </span>
+            }
+        </span>
+        <span class="pcoded-micon float-right">
+            <i class="feather" [ngClass]="{
             'icon-chevron-down': visible,
             'icon-chevron-right': !visible
-          }"
-        ></i>
-      </span>
+          }"></i>
+        </span>
     </a>
     @if (visible) {
-      <ul [@slideInOut] class="pcoded-submenu" [ngClass]="item.classes">
+    <ul [@slideInOut] class="pcoded-submenu" [ngClass]="item.classes">
         @for (child of item.children; track child) {
-          @if (child.type === 'group') {
-            <app-nav-group [item]="child"></app-nav-group>
-          }
-          @if (child.type === 'collapse') {
-            <app-nav-collapse [item]="child"></app-nav-collapse>
-          }
-          @if (child.type === 'item') {
-            <app-nav-item [item]="child"></app-nav-item>
-          }
+        @if (child.type === 'group') {
+        <app-nav-group [item]="child"></app-nav-group>
         }
-      </ul>
+        @if (child.type === 'collapse') {
+        <app-nav-collapse [item]="child"></app-nav-collapse>
+        }
+        @if (child.type === 'item') {
+        <app-nav-item [item]="child"></app-nav-item>
+        }
+        }
+    </ul>
     }
-  </li>
+</li>
 }

@@ -6,12 +6,17 @@
       - consola: todo, como hoy · aplicacion: solo esa aplicación (portal, login, menú) · neutro: igual que hoy.
       - En desarrollo se simula otro dominio con ?dominio=porttos.co (se recuerda en la pestaña; ?dominio=localhost lo quita).
       - Si el API no responde en 4 s: respaldo con environment.dominiosPortal (el portal sigue abriendo; nada más se restringe).
+      - Compilación aislada de una aplicación (OT-034, CC-194): si el build declara APLICACION_DE_COMPILACION, se entra como en el
+        dominio de esa aplicación (contextoDeCompilacion). La plataforma no la declara: todo igual.
 */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom, timeout } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ContextoDominio, contextoDeRespaldo, hostEfectivo, normalizarContexto } from 'src/app/plataforma/dominios/nucleo';
+import {
+    ContextoDominio, contextoDeCompilacion, contextoDeRespaldo, hostEfectivo, normalizarContexto
+} from 'src/app/plataforma/dominios/nucleo';
+import { APLICACION_DE_COMPILACION } from 'src/app/plataforma/dominios/aplicacion-compilacion.token';
 
 const LLAVE_SIMULADO = 'dominioSimulado';
 const RUTA_PORTAL_RESPALDO = '/websites/porttos';
@@ -19,6 +24,7 @@ const RUTA_PORTAL_RESPALDO = '/websites/porttos';
 @Injectable({ providedIn: 'root' })
 export class ContextoDominioService {
     contexto: ContextoDominio = contextoDeRespaldo('', [], RUTA_PORTAL_RESPALDO);
+    private readonly declaracion = inject(APLICACION_DE_COMPILACION, { optional: true });
 
     constructor(private http: HttpClient) {}
 
@@ -33,6 +39,7 @@ export class ContextoDominioService {
             const dominios = (environment as { dominiosPortal?: string[] }).dominiosPortal || [];
             this.contexto = contextoDeRespaldo(host, dominios, RUTA_PORTAL_RESPALDO);
         }
+        this.contexto = contextoDeCompilacion(this.contexto, this.declaracion);
         return this.contexto;
     }
 

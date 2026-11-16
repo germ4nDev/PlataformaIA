@@ -1,81 +1,57 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-  <aside class="aside-left">
-    <div class="card">
-      <div class="nav-tabs-custom">
-        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'COMMON.MENU' | translate }}
-        </button>
-        @if (hasFiltersSlot) {
-          <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-            {{ 'COMMON.FILTERS' | translate }}
-          </button>
-        }
-      </div>
-
-      @if (activeTab === 'menu') {
-        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-      }
-      @if (activeTab === 'filters') {
-        <div class="p-3 filtros-scroll-wrapper">
-          <h6 class="filtros-title">{{ 'SITES.SITE_FILTERS' | translate }}</h6>
-          <div class="filtro">
-            <small>{{ 'COMMON.NAME' | translate }}</small>
-            <input
-              type="text"
-              (keyup)="onFiltroNombreChangeClick($event)"
-              class="form-control form-input"
-              placeholder="{{ 'SITES.SITE_NAME' | translate }}"
-            />
-          </div>
-          <div class="filtro">
-            <small>{{ 'COMMON.DESCRIPTION' | translate }}</small>
-            <input
-              type="text"
-              (keyup)="onFiltroDescripcionChangeClick($event)"
-              class="form-control form-input"
-              placeholder="{{ 'SITES.SITE_DESCRIPTION' | translate }}"
-            />
-          </div>
-          <div class="filtro">
-            <small>{{ 'COMMON.STATUS' | translate }}</small>
-            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer">
-              <option value="todos">{{ 'COMMON.SHOW_ALL' | translate }}</option>
-              <option value="true">{{ 'COMMON.ACTIVE' | translate }}</option>
-              <option value="false">{{ 'COMMON.INACTIVE' | translate }}</option>
-            </select>
-          </div>
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'COMMON.FILTERS' | translate }}</button>
+            </div>
+            @if (activeTab === 'menu') {
+            <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            } @else {
+            <div class="p-3 filtros-scroll-wrapper">
+                <div class="text-center"><h6 class="filtros-title">{{ 'SITES.SITE_FILTERS' | translate }}</h6></div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.APPLICATION' | translate }}</small>
+                    <select class="form-control form-select" (change)="alFiltrar('aplicacion', $event)">
+                        <option value="">{{ 'COMMON.ALL' | translate }}</option>
+                        @for (a of aplicaciones; track a.codigoAplicacion) {
+                        <option [value]="a.codigoAplicacion">{{ a.nombreAplicacion }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.STATUS' | translate }}</small>
+                    <select class="form-control form-select" (change)="alFiltrar('estado', $event)">
+                        <option value="todos">{{ 'COMMON.ALL' | translate }}</option>
+                        <option value="activos">{{ 'COMMON.ACTIVE' | translate }}</option>
+                        <option value="inactivos">{{ 'COMMON.INACTIVE' | translate }}</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.SEARCH' | translate }}</small>
+                    <input type="text" class="form-control form-input" (keyup)="alFiltrar('texto', $event)" [placeholder]="'SITES.SITE_NAME' | translate" />
+                </div>
+            </div>
+            }
         </div>
-      }
+    </aside>
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                @if (!cargando) {
+                <app-table-data [data]="(filtrados$ | async) || []" [idField]="'codigoSitio'"
+                    [tableTitle]="'SITES.SITE_MANAGEMENT' | translate" [tableSubtitle]="'SITES.WEBSITES_OF_EACH_APPLICATION' | translate"
+                    [metadataColumns]="columnas" [metadataDetailColumns]="metadataDetalle" [showActions]="true" [showNewButton]="true"
+                    [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'SITES.NEW_SITE' | translate"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nuevo()" (editRecord)="editar($event)"
+                    (deleteRecord)="inactivar($event?.id ?? $event)" (accionPrincipalClick)="alAccion($event)"
+                    permisoNew="ACT_SITIOS_CREAR" permisoEdit="ACT_SITIOS_MODIFICAR" permisoDelete="ACT_SITIOS_ELIMINAR">
+                </app-table-data>
+                } @else {
+                <app-data-loader [isLoading]="true" [message]="'COMMON.LOADING_2' | translate"></app-data-loader>
+                }
+            </div>
+        </div>
     </div>
-  </aside>
-
-  <div class="content-area">
-    <div class="card card-table content-scroll-wrapper">
-      <div class="card-body">
-        <app-data-table
-          [data]="registrosFiltrado"
-          [idField]="'sitioId'"
-          [tableTitle]="'SITES.SITE_MANAGEMENT' | translate"
-          [metadataColumns]="columnasRegistros"
-          [metadataDetailColumns]="columnasDetailRegistros"
-          [showDetail]="true"
-          [showActions]="true"
-          [showNewButton]="true"
-          [showViewButton]="false"
-          [showEditButton]="true"
-          [showDeleteButton]="true"
-          [newButtonLabel]="'SITES.NEW_SITE' | translate"
-          [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate"
-          (newRecord)="OnNuevoRegistroClick()"
-          (editRecord)="OnEditarRegistroClick($event)"
-          (deleteRecord)="OnEliminarRegistroClick($event)"
-          permisoNew="ACT_SITIOS_CREAR"
-          permisoEdit="ACT_SITIOS_MODIFICAR"
-          permisoDelete="ACT_SITIOS_ELIMINAR"
-        >
-        </app-data-table>
-      </div>
-    </div>
-  </div>
 </div>

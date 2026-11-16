@@ -2,6 +2,7 @@
 
 # Compiled output
 /dist
+/.i18n-compilacion
 /tmp
 /out-tsc
 /bazel-out

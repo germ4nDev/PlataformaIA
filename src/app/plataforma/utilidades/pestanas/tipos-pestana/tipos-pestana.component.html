@@ -1,0 +1,50 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'COMMON.FILTERS' | translate }}</button>
+            </div>
+            @if (activeTab === 'menu') {
+            <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            } @else {
+            <div class="p-3 filtros-scroll-wrapper">
+                <div class="text-center"><h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6></div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.STATUS' | translate }}</small>
+                    <select class="form-control form-select" (change)="alFiltrarEstado($event)">
+                        <option value="todos">{{ 'COMMON.ALL' | translate }}</option>
+                        <option value="activos">{{ 'COMMON.ACTIVE' | translate }}</option>
+                        <option value="inactivos">{{ 'COMMON.INACTIVE' | translate }}</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.SEARCH' | translate }}</small>
+                    <input type="text" class="form-control form-input" (keyup)="alFiltrarTexto($event)"
+                        [placeholder]="'UTILIDADES.PESTANAS.TIPOS_PESTANA.CODE_OR_STRATEGY' | translate" />
+                </div>
+            </div>
+            }
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                @if (!cargando) {
+                <app-table-data [data]="(filtrados$ | async) || []" [idField]="'codigoTipo'"
+                    [tableTitle]="'UTILIDADES.PESTANAS.TIPOS_PESTANA.TAB_TYPES' | translate"
+                    [tableSubtitle]="'UTILIDADES.PESTANAS.TIPOS_PESTANA.DASHBOARD_ENGINE_STRATEGY' | translate"
+                    [metadataColumns]="columnas" [metadataDetailColumns]="metadataDetalle" [showActions]="true" [showNewButton]="true"
+                    [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
+                    [newButtonLabel]="'UTILIDADES.PESTANAS.TIPOS_PESTANA.NEW_TAB_TYPE' | translate"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nuevo()" (editRecord)="editar($event)"
+                    (deleteRecord)="inactivar($event?.id ?? $event)" permisoNew="ACT_TIPOSPEST_CREAR" permisoEdit="ACT_TIPOSPEST_MODIFICAR" permisoDelete="ACT_TIPOSPEST_ELIMINAR">
+                </app-table-data>
+                } @else {
+                <app-data-loader [isLoading]="true" [message]="'UTILIDADES.PESTANAS.TIPOS_PESTANA.LOADING_TAB_TYPES' | translate"></app-data-loader>
+                }
+            </div>
+        </div>
+    </div>
+</div>

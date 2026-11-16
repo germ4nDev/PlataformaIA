@@ -944,7 +944,7 @@ html {
    06. FORMULARIOS, RADIOS Y CHECKBOXES
    ========================================================================== */
 .form-select,
-.form-npx ng serve sistemas-remoto {
+.form-input {
     background-color: var(--app-form-object-bg) !important;
     color: var(--texto-color) !important;
     border-color: var(--border-color) !important;
@@ -956,6 +956,55 @@ html {
     background-repeat: no-repeat !important;
     background-position: right 0.75rem center !important;
     background-size: 16px 12px !important;
+}
+
+/* Autocompletado del navegador (CC-195): Chrome pinta su propio fondo claro en los campos que rellena (usuario, correo, clave);
+   se tapa con el fondo y el color del tema para que un campo precargado se vea igual que uno escrito. */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus,
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--texto-color);
+    -webkit-box-shadow: 0 0 0 1000px var(--app-form-object-bg) inset;
+    box-shadow: 0 0 0 1000px var(--app-form-object-bg) inset;
+    caret-color: var(--texto-color);
+    transition: background-color 9999s ease-out 0s;
+}
+
+/* Placeholders (usuario, 2026-11-15, CC-195): un solo estilo para el texto de ayuda de todos los campos y de los select que
+   están en su opción «Seleccione…» (value=""). Mezcla --texto-color con --card-background: se lee igual en tema claro y oscuro.
+   Uso explícito en cualquier elemento: class="app-placeholder" (o @extend %app-placeholder en un .scss). Sin !important en los
+   campos: respeta las etiquetas flotantes del tema (.form-label-group, color transparent) y los diseños propios de un componente. */
+%app-placeholder {
+    color: color-mix(in srgb, var(--texto-color) 50%, var(--card-background));
+    opacity: 1;
+    font-style: normal;
+}
+
+.app-placeholder,
+input::placeholder,
+textarea::placeholder,
+.form-input::placeholder,
+.form-control::placeholder {
+    @extend %app-placeholder;
+}
+
+/* Select con placeholder: mientras la opción elegida sea la de value="" se ve como placeholder; la lista abierta, normal */
+.form-select:has(> option[value='']:checked) {
+    @extend %app-placeholder;
+    /* .form-select fija su color con !important: aquí también */
+    color: color-mix(in srgb, var(--texto-color) 50%, var(--card-background)) !important;
+}
+
+.form-select>option {
+    color: var(--texto-color);
+    background-color: var(--app-form-object-bg);
+}
+
+.form-select>option[value=''] {
+    @extend %app-placeholder;
 }
 
 .form-label {
@@ -2580,6 +2629,100 @@ app-nav-bar:has(+ .layout-wrapper > .aside-left) .navbar {
     >.aside-left .nav-scroll-wrapper {
         height: auto;
         max-height: 100%;
+    }
+
+    >.aside-left .nav-scroll-group-wrapper {
+        height: auto;
+        max-height: 100px !important;
+    }
+}
+
+/* ==========================================================================
+   Menú lateral con scroll (CC-205, usuario 2026-11-15): si los submenús abiertos (Utilidades…) no caben en la pantalla, el menú se
+   desplaza en vertical. En las pantallas de administración la altura baja del card del menú hasta .nav-scroll-wrapper (y hasta los
+   filtros), que toma lo que sobra. La barra es de 3 px con las variables del tema y solo se ve al pasar el mouse; en táctil, sin barra.
+   ========================================================================== */
+.layout-wrapper:has(> .aside-left)>.aside-left>.card {
+    display: flex;
+    flex-direction: column;
+
+    >.nav-tabs-custom {
+        flex: 0 0 auto;
+    }
+
+    >app-nav-content,
+    app-nav-content>.sidebar-flex-container,
+    >.filtros-scroll-wrapper,
+    >div>.filtros-scroll-wrapper {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-scroll-wrapper,
+    .filtros-scroll-wrapper {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto;
+        max-height: none;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+}
+
+.nav-scroll-wrapper,
+.filtros-scroll-wrapper {
+    overscroll-behavior-y: contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        /* Chrome y Edge ignoran ::-webkit-scrollbar si scrollbar-width/scrollbar-color no son auto (body los hereda): ver CC-199. */
+        scrollbar-width: auto;
+        scrollbar-color: auto;
+
+        &::-webkit-scrollbar {
+            display: block;
+            width: 3px;
+        }
+
+        &::-webkit-scrollbar-button {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            border: 0;
+            border-radius: 3px;
+        }
+
+        &:hover::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thumb-color);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background-color: var(--scrollbar-thumb-hover);
+        }
+
+        /* Firefox no tiene ::-webkit-scrollbar: barra delgada que aparece al pasar el mouse */
+        @supports (-moz-appearance: none) {
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+
+            &:hover {
+                scrollbar-color: var(--scrollbar-thumb-color) transparent;
+            }
+        }
     }
 }
 

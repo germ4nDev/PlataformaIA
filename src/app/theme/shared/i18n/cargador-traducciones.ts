@@ -2,18 +2,16 @@
     Author: German Valencia
     Regla 22 · OT-027: cargador de traducciones de la web. Toma el JSON que trae el build (assets/i18n/<idioma>.json) y encima el que
     administra Utilidades › Traducciones en el API (GET /api/traducciones/<idioma>, público). Si el API no responde, queda el del build.
+    En la compilación de una app (OT-034, CC-200) el JSON del build ya viene sin los textos de las otras apps y lo del API se filtra igual.
 */
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader } from '@ngx-translate/core';
 import { Observable, catchError, forkJoin, map, of, timeout } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { textosDeLaCompilacion } from './textos-compilacion';
 
-export function mezclarArboles(base: any, encima: any): any {
-    if (!encima || typeof encima !== 'object' || Array.isArray(encima)) return encima ?? base;
-    const r: any = base && typeof base === 'object' && !Array.isArray(base) ? { ...base } : {};
-    for (const k of Object.keys(encima)) r[k] = mezclarArboles(r[k], encima[k]);
-    return r;
-}
+// CC-200 (OT-034): la mezcla y el filtro de la compilación de una app viven en textos-compilacion.ts (puro, con prueba)
+export { mezclarArboles } from './textos-compilacion';
 
 export class CargadorTraducciones implements TranslateLoader {
     constructor(private readonly http: HttpClient) {}
@@ -25,7 +23,8 @@ export class CargadorTraducciones implements TranslateLoader {
             timeout(4000),
             catchError(() => of({}))
         );
-        return forkJoin([build, api]).pipe(map(([b, a]) => mezclarArboles(b, a)));
+        // La compilación de una app trae _compilacion: se quita y se filtran los textos de las otras apps que lleguen del API (CC-200)
+        return forkJoin([build, api]).pipe(map(([b, a]) => textosDeLaCompilacion(b, a)));
     }
 }
 

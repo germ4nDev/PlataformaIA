@@ -1,191 +1,87 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
   <aside class="aside-left">
-    <div class="card">
-      <div class="nav-tabs-custom">
-        <button>
-          {{ 'COMMON.MENU' | translate }}
-        </button>
-      </div>
-
-      <ng-container>
-        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-      </ng-container>
-    </div>
+    <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
   </aside>
-
-  <div class="form-area">
+  <div class="content-area">
     <div class="card">
-      <div class="card-header card-header-sticky">
-        <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
-          <div class="d-flex align-items-center">
-            @if (!modoEdicion) {
-              <h4 class="datatable-title">{{ 'SITES.NEW_SITE' | translate }}</h4>
-            }
-            @if (modoEdicion) {
-              <h4 class="datatable-title">{{ 'SITES.GESTION.MODIFY_SITE' | translate }}</h4>
-            }
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario">
+              <span>{{ (modoEdicion ? 'SITES.GESTION.MODIFY_SITE' : 'SITES.GESTION.CREATE_SITE') | translate }}</span>
+              <span class="titulo-container"> - {{ 'SITES.SITE_MANAGEMENT' | translate }}</span>
+            </h4>
+            <h6 class="subtitulo-formulario mb-0">{{ 'SITES.WEBSITES_OF_EACH_APPLICATION' | translate }}</h6>
           </div>
-          <div class="d-flex">
-            @if (!modoEdicion) {
-              <button
-                type="button"
-                class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                (click)="btnGestionarRegistroClick(validationForm)"
-              >
-                {{ 'SITES.GESTION.CREATE_SITE' | translate }}
-                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-              </button>
-            }
-            @if (modoEdicion) {
-              <button
-                type="button"
-                class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                (click)="btnGestionarRegistroClick(validationForm)"
-              >
-                {{ 'SITES.GESTION.MODIFY_SITE' | translate }}
-                <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-              </button>
-            }
-            <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
-              {{ 'COMMON.BACK' | translate }}
-              <i class="feather icon-arrow-left ms-2"></i>
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
+              {{ 'COMMON.BACK' | translate }}<i class="feather icon-arrow-left ms-2"></i>
+            </button>
+            <button *appPermiso="modoEdicion ? 'ACT_SITIOS_MODIFICAR' : 'ACT_SITIOS_CREAR'" type="button" class="btn btn-primary btn-NuevoRegistro"
+              [disabled]="guardando" (click)="guardar()">
+              {{ (guardando ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+              <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
             </button>
           </div>
         </div>
+        <hr class="mb-0" /><br />
       </div>
       <div class="card-body form-scroll-wrapper">
-        <form #validationForm="ngForm" class="editForm" novalidate>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-control-label" for="aplicacionId"> {{ 'COMMON.APPLICATION' | translate }}</label>
-                <select
-                  class="form-control form-select"
-                  style="cursor: pointer"
-                  name="aplicacionId"
-                  id="aplicacionId"
-                  [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
-                  #aplicacionId="ngModel"
-                  required
-                  [(ngModel)]="FormRegistro.aplicacionId"
-                  (change)="onAplicacionchangeClick($event)"
-                >
-                  <option value="" disabled>{{ 'COMMON.SELECT_APPLICATION_2' | translate }} </option>
-                  @for (app of aplicaciones; track app) {
-                    <option [value]="app.aplicacionId"> {{ app.nombreAplicacion }}</option>
-                  }
-                </select>
-                @if (!aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit)) {
-                  <label class="error jquery-validation-error small form-text invalid-feedback">
-                    {{ 'COMMON.SELECT_APPLICATION_FIELD_REQUIRED_2' | translate }}
-                  </label>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-control-label" for="nombreSitio">{{ 'COMMON.NAME' | translate }}</label>
-                <input
-                  class="form-control form-input"
-                  id="nombreSitio"
-                  name="nombreSitio"
-                  type="text"
-                  placeholder="{{ 'SITES.GESTION.SITE_NAME' | translate }}"
-                  [ngClass]="{ 'is-invalid': !nombreSitio.valid && (nombreSitio.dirty || nombreSitio.touched || isSubmit) }"
-                  #nombreSitio="ngModel"
-                  required
-                  [(ngModel)]="FormRegistro.nombreSitio"
-                />
-                @if (!nombreSitio.valid && (nombreSitio.dirty || nombreSitio.touched || isSubmit)) {
-                  <label class="error jquery-validation-error small form-text invalid-feedback">
-                    {{ 'COMMON.ENTER_NAME_FIELD_REQUIRED' | translate }}
-                  </label>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label">{{ 'SITES.URL' | translate }}</label>
-                <input
-                  type="text"
-                  class="form-control form-input"
-                  name="urlSitio"
-                  placeholder="{{ 'SITES.GESTION.SITE_URL' | translate }}"
-                  [ngClass]="{ 'is-invalid': !urlSitio.valid && (urlSitio.dirty || urlSitio.touched || isSubmit) }"
-                  #urlSitio="ngModel"
-                  required
-                  [(ngModel)]="FormRegistro.urlSitio"
-                />
-                @if (!urlSitio.valid && (urlSitio.dirty || urlSitio.touched || isSubmit)) {
-                  <label class="error jquery-validation-error small form-text invalid-feedback">
-                    {{ 'SITES.GESTION.ENTER_URL_FIELD_REQUIRED' | translate }}
-                  </label>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-control-label" for="puertoSitio">{{ 'SITES.SITE_PORT' | translate }}</label>
-                <input
-                  class="form-control form-input"
-                  id="puertoSitio"
-                  name="puertoSitio"
-                  type="text"
-                  placeholder="{{ 'SITES.GESTION.SITE_PORT' | translate }}"
-                  [ngClass]="{ 'is-invalid': !puertoSitio.valid && (puertoSitio.dirty || puertoSitio.touched || isSubmit) }"
-                  #puertoSitio="ngModel"
-                  required
-                  [(ngModel)]="FormRegistro.puertoSitio"
-                />
-                @if (!puertoSitio.valid && (puertoSitio.dirty || puertoSitio.touched || isSubmit)) {
-                  <label class="error jquery-validation-error small form-text invalid-feedback">
-                    {{ 'SITES.GESTION.ENTER_SITE_PORT_FIELD_REQUIRED' | translate }}
-                  </label>
-                }
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
-                <app-text-editor
-                  [toolbarType]="tipoEditorTexto"
-                  [contentHtml]="FormRegistro.descripcionSitio ?? ''"
-                  (contentHtmlChange)="actualizarDescripcionSite($event)"
-                  name="descripcionSitio"
-                  [(ngModel)]="FormRegistro.descripcionSitio"
-                  [ngClass]="{ 'is-invalid': !descripcionSitio.valid && (descripcionSitio.dirty || descripcionSitio.touched || isSubmit) }"
-                  #descripcionSitio="ngModel"
-                  required
-                  rows="5"
-                >
-                </app-text-editor>
-                @if (!descripcionSitio.valid && (descripcionSitio.dirty || descripcionSitio.touched || isSubmit)) {
-                  <label class="error jquery-validation-error small form-text invalid-feedback">
-                    {{ 'COMMON.ENTER_DESCRIPTION_FIELD_REQUIRED' | translate }}
-                  </label>
-                }
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
-                <div class="radio-buttons">
-                  <label class="radio-button">
-                    <input name="option" type="radio" [value]="true" [(ngModel)]="FormRegistro.estadoSitio" />
-                    <div class="radio-circle"></div>
-                    <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
-                  </label>
-                  <label class="radio-button">
-                    <input name="option" type="radio" [value]="false" [(ngModel)]="FormRegistro.estadoSitio" />
-                    <div class="radio-circle"></div>
-                    <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
-                  </label>
-                </div>
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="sitioCodigo">{{ 'COMMON.CODE' | translate }}</label>
+            <input id="sitioCodigo" name="sitioCodigo" class="form-control form-input text-uppercase" maxlength="200" autocomplete="off"
+              [(ngModel)]="sitio.codigoSitio" (ngModelChange)="alEscribirCodigo()" [readonly]="modoEdicion" />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="sitioAplicacion">{{ 'COMMON.APPLICATION' | translate }}</label>
+            <select id="sitioAplicacion" name="sitioAplicacion" class="form-control form-select" [(ngModel)]="sitio.codigoAplicacion">
+              <option value="">{{ 'COMMON.SELECT_APPLICATION' | translate }}</option>
+              @for (a of aplicaciones; track a.codigoAplicacion) {
+              <option [value]="a.codigoAplicacion">{{ a.nombreAplicacion }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="sitioNombre">{{ 'SITES.GESTION.SITE_NAME' | translate }}</label>
+            <input id="sitioNombre" name="sitioNombre" class="form-control form-input" maxlength="100" [(ngModel)]="sitio.nombreSitio" />
+          </div>
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="sitioUrl">{{ 'SITES.GESTION.SITE_URL' | translate }}</label>
+            <input id="sitioUrl" name="sitioUrl" class="form-control form-input" maxlength="100" autocomplete="off" [(ngModel)]="sitio.urlSitio" />
+          </div>
+          <div class="col-md-2 form-group">
+            <label class="form-label" for="sitioPuerto">{{ 'SITES.GESTION.SITE_PORT' | translate }}</label>
+            <input id="sitioPuerto" name="sitioPuerto" type="number" min="1" max="65535" class="form-control form-input" [(ngModel)]="sitio.puertoSitio" />
+          </div>
+          <div class="col-md-12 form-group">
+            <label class="form-label" for="sitioRuta">{{ 'SITES.ADMINISTRATION_PATH' | translate }}</label>
+            <input id="sitioRuta" name="sitioRuta" class="form-control form-input" maxlength="200" autocomplete="off" [(ngModel)]="sitio.rutaAdministracion" />
+            <small class="form-text text-muted">{{ 'SITES.GESTION.PLATFORM_PATH_WHERE_APPLICATION_MANAGES' | translate }}</small>
+          </div>
+          <div class="col-md-12 form-group">
+            <label class="form-label" for="sitioDescripcion">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+            <textarea id="sitioDescripcion" name="sitioDescripcion" class="form-control form-input" rows="3" maxlength="4000" [(ngModel)]="sitio.descripcionSitio"></textarea>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
+              <div class="radio-buttons">
+                <label class="radio-button">
+                  <input name="estadoSitio" type="radio" [value]="true" [(ngModel)]="sitio.estadoSitio" />
+                  <div class="radio-circle"></div>
+                  <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                </label>
+                <label class="radio-button">
+                  <input name="estadoSitio" type="radio" [value]="false" [(ngModel)]="sitio.estadoSitio" />
+                  <div class="radio-circle"></div>
+                  <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                </label>
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>

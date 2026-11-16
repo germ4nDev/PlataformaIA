@@ -63,6 +63,14 @@
         </div>
     </aside>
     <div class="content-area">
+        @if (faltanDelMaestro.length) {
+        <div class="alert alert-info d-flex align-items-center gap-2 flex-wrap">
+            <span>{{ 'UTILIDADES.TRADUCCIONES.MASTER_LANGUAGES_WITHOUT_FILE' | translate: { idiomas: faltanDelMaestro.join(', ') } }}</span>
+            <button *appPermiso="'ACT_TRAD_MODIFICAR'" type="button" class="btn btn-sm btn-primary" (click)="crearIdiomasDelMaestro()">
+                {{ 'UTILIDADES.TRADUCCIONES.CREATE_FILES_FROM_SPANISH' | translate }}
+            </button>
+        </div>
+        }
         @if (sinSembrar.length) {
         <div class="alert alert-warning d-flex align-items-center gap-2 flex-wrap">
             <span>{{ 'UTILIDADES.TRADUCCIONES.API_DOES_NOT_HAVE_LANGUAGES_YET' | translate: { idiomas:

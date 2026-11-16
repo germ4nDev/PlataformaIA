@@ -38,7 +38,7 @@
                     [metadataColumns]="columnas" [showActions]="true" [showNewButton]="true" [showEditButton]="true"
                     [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'UTILIDADES.PAISES.NEW_COUNTRY' | translate"
                     [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nuevo()" (editRecord)="editar($event)"
-                    (deleteRecord)="eliminar($event)" permisoNew="ACT_PAIS_CREAR" permisoEdit="ACT_PAIS_MODIFICAR" permisoDelete="ACT_PAIS_ELIMINAR">
+                    (deleteRecord)="eliminar($event?.id ?? $event)" permisoNew="ACT_PAIS_CREAR" permisoEdit="ACT_PAIS_MODIFICAR" permisoDelete="ACT_PAIS_ELIMINAR">
                 </app-table-data>
                 } @else {
                 <app-data-loader [isLoading]="true" [message]="'UTILIDADES.PAISES.LOADING_COUNTRIES' | translate"></app-data-loader>

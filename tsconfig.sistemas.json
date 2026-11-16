@@ -1,0 +1,9 @@
+/* OT-034 (CC-191): compilación aislada de Sistemas. Solo su arranque; lo demás entra por lo que importa. */
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/sistemas"
+  },
+  "files": ["src/app/apps/sistemas/arranque/main.ts", "src/polyfills.ts"],
+  "include": ["src/**/*.d.ts"]
+}

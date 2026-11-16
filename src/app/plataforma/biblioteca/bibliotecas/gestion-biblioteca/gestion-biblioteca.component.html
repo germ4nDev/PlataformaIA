@@ -193,17 +193,19 @@
                   <img [src]="selectedFileUrl" class="image-preview" />
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInput
                     (change)="onFileSelectedClick($event)"
                     accept="image/*"
                     id="fileUploadInput"
-                    class="form-control form-input d-none"
                     name="fotoUsuario"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInput.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_IMAGE_2' | translate }}
+                  </button>
                   <span class="file-name" [ngClass]="{ 'has-file': fileName }">
                     <!-- {{ fileName || ('COMMON.SELECT_IMAGE' | translate) }} -->
                   </span>

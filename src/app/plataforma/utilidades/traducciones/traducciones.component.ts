@@ -49,6 +49,7 @@ export class TraduccionesComponent implements OnInit {
   menuItems!: Observable<NavigationItem[]>;
 
   idiomas: string[] = [];
+  faltanDelMaestro: string[] = []; // CC-208: idiomas activos del maestro sin archivo de traducción
   modulos: string[] = [];
   sinSembrar: string[] = [];
   filas: FilaTraduccion[] = [];
@@ -104,6 +105,7 @@ export class TraduccionesComponent implements OnInit {
     this.traducciones.listar().subscribe({
       next: (r) => {
         this.idiomas = r.idiomas;
+        this.faltanDelMaestro = r.faltan;
         this.modulos = r.ramas.map((x) => x.modulo).sort();
         this.filas = r.filas;
         this.columnas = [
@@ -138,6 +140,17 @@ export class TraduccionesComponent implements OnInit {
       )
     ).subscribe((r) => {
       this.sinSembrar = r.filter(Boolean);
+    });
+  }
+
+  /** CC-208: crea los archivos de los idiomas del maestro que falten; sus textos quedan en español para traducirlos aquí */
+  crearIdiomasDelMaestro(): void {
+    this.traducciones.sincronizarIdiomas().subscribe({
+      next: (r) => {
+        this.avisos.getAlertConfirmSuccess(traducir('UTILIDADES.TRADUCCIONES.LANGUAGE_FILES_CREATED', { idiomas: r.creados.join(', ') }));
+        this.cargar();
+      },
+      error: () => this.avisos.getAlertError(traducir('UTILIDADES.TRADUCCIONES.COULD_NOT_CREATE_LANGUAGE_FILES'))
     });
   }
 

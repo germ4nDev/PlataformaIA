@@ -1,211 +1,141 @@
-import { traducir } from '../../../theme/shared/i18n/traducir';
-/* eslint-disable @angular-eslint/use-lifecycle-interface */
-/* eslint-disable @typescript-eslint/no-this-alias */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
-import { DataTablesModule } from 'src/app/theme/shared/directive/datatable/datatable.module';
-import { Router } from '@angular/router';
-import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
-import { catchError, Observable, of, Subscription, tap } from 'rxjs';
+/*
+    Author: German Valencia
+    Pattern: PLATAFORMA Componente - Sitios (OT-036 fase 2, CC-207; patrón de los módulos de administración, regla 19)
+    Description: catálogo de los websites de cada aplicación (porttos.co de Porttos…). Por fila: «V» abre el sitio y «A» va a la pantalla
+    donde su aplicación administra el contenido (rutaAdministracion; el núcleo no conoce ese contenido, regla 26). Retirar = inactivar.
+*/
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
-
-// project import
-import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
-import { GradientConfig } from 'src/app/app-config';
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { BehaviorSubject, Observable, Subscription, combineLatest, map, of } from 'rxjs';
+import Swal from 'sweetalert2';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
-import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component';
+import { TableDataComponent } from 'src/app/theme/shared/components/table-data/table-data.component';
+import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
+import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { traducir } from 'src/app/theme/shared/i18n/traducir';
+import { Sitio, accionesDeSitio, filtrarSitios } from './sitios-nucleo';
 
 @Component({
   selector: 'app-sites',
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DataLoaderComponent, TableDataComponent],
   templateUrl: './sites.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sites.component.scss'
 })
-export class SitesComponent implements OnInit {
+export class SitesComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
-  //#region VARIABLES
-  registrosSub?: Subscription;
-  registros: PTLSitiosAPModel[] = [];
-  registrosFiltrado: PTLSitiosAPModel[] = [];
-  aplicaciones: PTLAplicacionModel[] = [];
-  aplicacionesSub?: Subscription;
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  gradientConfig;
-  hasFiltersSlot: boolean = false;
+  activeTab: 'menu' | 'filters' = 'menu';
   menuItems!: Observable<NavigationItem[]>;
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  //#endregion VARIABLES
+  cargando = true;
+  aplicaciones: { codigoAplicacion: string; nombreAplicacion: string }[] = [];
+
+  readonly columnas: ColumnMetadata[] = [
+    { name: 'nombreAplicacion', header: 'COMMON.APPLICATION', type: 'text' },
+    { name: 'nombreSitio', header: 'COMMON.NAME', type: 'text' },
+    { name: 'urlSitio', header: 'SITES.URL', type: 'text' },
+    { name: 'nomEstado', header: 'COMMON.STATUS', type: 'text' }
+  ];
+  readonly metadataDetalle: ColumnMetadata[] = [
+    { name: 'descripcionSitio', header: 'COMMON.DESCRIPTION', type: 'text' },
+    { name: 'rutaAdministracion', header: 'SITES.ADMINISTRATION_PATH', type: 'text' }
+  ];
+
+  private readonly sitios$ = new BehaviorSubject<Sitio[]>([]);
+  readonly filtro$ = new BehaviorSubject<{ aplicacion: string; estado: string; texto: string }>({ aplicacion: '', estado: 'todos', texto: '' });
+  filtrados$: Observable<any[]> = of([]);
+  private subs: Subscription[] = [];
 
   constructor(
-    private router: Router,
-    private translate: TranslateService,
-    private _sitiosService: PTLSitiosAPService,
-    private _navigationService: NavigationService,
-    private _aplicacionesService: PtlAplicacionesService
-  ) {
-    this.gradientConfig = GradientConfig;
-  }
+    private readonly router: Router,
+    private readonly translate: TranslateService,
+    private readonly navegacion: NavigationService,
+    private readonly avisos: SwalAlertService,
+    private readonly sitios: PTLSitiosAPService,
+    private readonly apps: PtlAplicacionesService
+  ) {}
 
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this.hasFiltersSlot = true;
-    this.consultarAplicaciones();
-    this.consultarSitios();
-    console.log('elementos menu componente', this.menuItems);
-  }
-
-  consultarSitios() {
-    this.registrosSub = this._sitiosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.sitios.forEach((app: any) => {
-              app.nomEstado = app.estadoSitio == true ? 'Activa' : 'Inactiva';
-              app.nomAplicacion = this.aplicaciones.filter((x) => x.aplicacionId == app.aplicacionId)[0].nombreAplicacion || '';
-            });
-            this.registros = resp.sitios;
-            this.registrosFiltrado = resp.sitios;
-            console.log('Todos los sitios', this.registrosFiltrado);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
+  ngOnInit(): void {
+    this.navegacion.getNavigationItems();
+    this.menuItems = this.navegacion.menuItems$;
+    this.filtrados$ = combineLatest([this.sitios$, this.filtro$]).pipe(
+      map(([lista, f]) =>
+        filtrarSitios(lista, f).map((s) => ({
+          ...s,
+          nomEstado: s.estadoSitio ? traducir('COMMON.ACTIVE') : traducir('COMMON.INACTIVE'),
+          _acciones: accionesDeSitio(s).map((a) => ({ ...a, tooltip: traducir(a.tooltip) }))
+        }))
       )
-      .subscribe();
+    );
+    this.subs.push(
+      this.apps.getAplicaciones().subscribe({
+        next: (r: any) => (this.aplicaciones = (r?.aplicaciones || []).map((a: any) => ({ codigoAplicacion: a.codigoAplicacion, nombreAplicacion: a.nombreAplicacion }))),
+        error: () => (this.aplicaciones = [])
+      })
+    );
+    this.cargar();
   }
 
-  columnasRegistros: ColumnMetadata[] = [
-    {
-      name: 'nomAplicacion',
-      header: 'COMMON.APPLICATION_NAME',
-      type: 'text'
-    },
-    {
-      name: 'nombreSitio',
-      header: 'COMMON.NAME',
-      type: 'text'
-    },
-    {
-      name: 'urlSitio',
-      header: 'SITES.URL',
-      type: 'text'
-    },
-    {
-      name: 'puertoSitio',
-      header: 'SITES.SITE_PORT',
-      type: 'text'
-    },
-    {
-      name: 'nomEstado',
-      header: 'COMMON.STATUS',
-      type: 'text'
-    }
-  ];
-
-  columnasDetailRegistros: ColumnMetadata[] = [
-    {
-      name: 'descripcionSitio',
-      header: 'COMMON.DESCRIPTION',
-      type: 'text'
-    }
-  ];
-
-  consultarAplicaciones() {
-    this.aplicacionesSub = this._aplicacionesService
-      .getAplicaciones()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones;
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
+  ngOnDestroy(): void {
+    this.subs.forEach((s) => s.unsubscribe());
   }
 
-  OnNuevoRegistroClick() {
-    this.router.navigate(['/sites/gestion-site']);
-  }
-
-  OnEditarRegistroClick(id: number) {
-    this.router.navigate(['/sites/gestion-site'], { queryParams: { regId: id } });
-  }
-
-  OnEliminarRegistroClick(id: any) {
-    Swal.fire({
-      title: this.translate.instant('COMMON.ARE_YOU_SURE_YOU_WANT_DELETE_2'),
-      text: this.translate.instant('SITES.YOU_ARE_ABOUT_DELETE_SITE'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('COMMON.DELETE'),
-      cancelButtonText: this.translate.instant('COMMON.CANCEL')
-    }).then((result) => {
-      console.log('Eliminado', id);
-      if (result.isConfirmed) {
-        this._sitiosService.deleteEliminarRegistro(id.id).subscribe({
-          next: (resp: any) => {
-            Swal.fire(this.translate.instant('COMMON.DELETED'), resp.mensaje, 'success');
-            this.consultarSitios();
-          },
-          error: (err: any) => {
-            Swal.fire(traducir('COMMON.ERROR'), this.translate.instant('SITES.COULD_NOT_DELETE_SITE'), 'error');
-            console.error('Error eliminando', err);
-          }
-        });
+  cargar(): void {
+    this.cargando = this.sitios$.value.length === 0;
+    this.sitios.listar().subscribe({
+      next: (l) => {
+        this.sitios$.next(l);
+        this.cargando = false;
+      },
+      error: () => {
+        this.cargando = false;
+        this.avisos.getAlertError(traducir('SITES.COULD_NOT_GET_SITE'));
       }
     });
   }
 
-  onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el NOMBRE ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((sitio) => (sitio.nombreSitio || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
-    }
+  alFiltrar(campo: 'aplicacion' | 'estado' | 'texto', e: any): void {
+    this.filtro$.next({ ...this.filtro$.value, [campo]: e?.target?.value || (campo === 'estado' ? 'todos' : '') });
   }
 
-  onFiltroDescripcionChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionSitio || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
-    }
+  nuevo(): void {
+    this.router.navigate(['/sites/gestion-site']);
+  }
+  editar(codigo: any): void {
+    this.router.navigate(['/sites/gestion-site'], { queryParams: { sitio: codigo } });
   }
 
-  onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      const estado = evento.target.value == 'true' ? true : false;
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoSitio == estado);
-    }
+  alAccion(e: { accion: string; row: any }): void {
+    if (e?.accion === 'VER' && /^https?:\/\//.test(e.row?.urlSitio || '')) window.open(e.row.urlSitio, '_blank', 'noopener');
+    if (e?.accion === 'ADMINISTRAR' && e.row?.rutaAdministracion) this.router.navigateByUrl(e.row.rutaAdministracion);
+  }
+
+  inactivar(codigo: any): void {
+    Swal.fire({
+      title: this.translate.instant('SITES.DEACTIVATE_SITE'),
+      text: this.translate.instant('SITES.SITE_WITH_ACTIVE_LINKS_CANNOT_BE'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translate.instant('COMMON.YES'),
+      cancelButtonText: this.translate.instant('COMMON.CANCEL')
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+      this.sitios.inactivar(String(codigo)).subscribe({
+        next: () => {
+          this.avisos.getAlertConfirmSuccess(traducir('SITES.SITE_DEACTIVATED'));
+          this.cargar();
+        },
+        error: (e) => this.avisos.getAlertError(e?.error?.msg || traducir('SITES.COULD_NOT_DELETE_SITE'))
+      });
+    });
   }
 
   toggleNav(): void {

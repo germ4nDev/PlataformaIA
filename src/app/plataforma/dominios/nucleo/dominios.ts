@@ -15,6 +15,8 @@
       suiteDelDominio(ctx, suites)               la suite a la que se entra directo (la del dominio, o la única), o null
       loginDeDominio(ctx)                        cómo se ve el login (CC-104): con el diseño del portal en un dominio de aplicación
                                                  con portal (porttos.co); en la consola y los dominios neutros, el de siempre
+      contextoDeCompilacion(ctx, decl)           compilación aislada de una app (OT-034, CC-194): la app que declara el build manda;
+                                                 se entra como en un dominio de esa aplicación aunque el dominio no tenga fila
 */
 export type TipoDominio = 'consola' | 'aplicacion' | 'neutro';
 
@@ -128,6 +130,43 @@ export interface LoginDominio {
   logo: string | null;
   rutaPortal: string | null;
   acceso: { ruta: string; query: Record<string, string> } | null;
+}
+
+/** Lo que declara la compilación aislada de una aplicación (OT-034): su código en PTL_Aplicaciones y su ruta de inicio. */
+export interface DeclaracionCompilacion {
+  aplicacion: string;
+  codigoAplicacion: string | null;
+  codigoSuite?: string | null;
+  rutaInicio?: string | null;
+  /** Sitio público de la app en la raíz sin sesión (Porttos: /websites/porttos); solo rutas internas de la web. */
+  rutaPortal?: string | null;
+  nombre?: string | null;
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Compilación aislada (OT-034, CC-194): el build de una aplicación solo trae sus rutas, así que se entra como en el dominio de
+ * esa aplicación (sin consola ni otras apps). Si el dominio ya es de esa aplicación, queda como lo dio el API (con su portal y
+ * marca). Sin declaración (la plataforma) o con un código que no es UUID (sin confirmar), no cambia nada.
+ */
+export function contextoDeCompilacion(ctx: ContextoDominio, decl: DeclaracionCompilacion | null | undefined): ContextoDominio {
+  const codigo = texto(decl?.codigoAplicacion);
+  if (!decl || !codigo || !UUID.test(codigo)) return ctx;
+  if (ctx.tipo === 'aplicacion' && String(ctx.codigoAplicacion).toLowerCase() === codigo.toLowerCase()) {
+    return { ...ctx, rutaInicio: ctx.rutaInicio || texto(decl.rutaInicio) };
+  }
+  const portal = texto(decl.rutaPortal);
+  return {
+    tipo: 'aplicacion',
+    dominio: ctx.dominio,
+    codigoAplicacion: codigo,
+    codigoSuite: texto(decl.codigoSuite),
+    rutaPortal: portal && portal.startsWith('/') && !portal.startsWith('//') ? portal : null,
+    rutaInicio: texto(decl.rutaInicio),
+    marca: { nombre: texto(decl.nombre), logo: null },
+    verificado: ctx.verificado,
+  };
 }
 
 export function loginDeDominio(ctx: ContextoDominio | null | undefined): LoginDominio {

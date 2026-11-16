@@ -1,0 +1,9 @@
+/* OT-034 (CC-197): compilación aislada de Porttos. Solo su arranque; lo demás entra por lo que importa. */
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/porttos"
+  },
+  "files": ["src/app/apps/porttos/arranque/main.ts", "src/polyfills.ts"],
+  "include": ["src/**/*.d.ts"]
+}

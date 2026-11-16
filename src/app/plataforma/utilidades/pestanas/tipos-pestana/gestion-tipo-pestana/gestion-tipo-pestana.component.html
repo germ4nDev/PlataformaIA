@@ -1,0 +1,91 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky pb-0 border-bottom-0">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                    <div class="d-flex flex-column pe-3">
+                        <h4 class="titulo-formulario">
+                            <span>{{ (modoEdicion ? 'UTILIDADES.PESTANAS.TIPOS_PESTANA.GESTION.EDIT_TAB_TYPE' :
+                                'UTILIDADES.PESTANAS.TIPOS_PESTANA.NEW_TAB_TYPE') | translate }}</span>
+                            <span class="titulo-container"> - {{ 'UTILIDADES.PESTANAS.TIPOS_PESTANA.TAB_TYPES' |
+                                translate }}</span>
+                        </h4>
+                        <h6 class="subtitulo-formulario mb-0">{{
+                            'UTILIDADES.PESTANAS.TIPOS_PESTANA.DASHBOARD_ENGINE_STRATEGY' | translate }}</h6>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
+                            {{ 'COMMON.BACK' | translate }}<i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button *appPermiso="modoEdicion ? 'ACT_TIPOSPEST_MODIFICAR' : 'ACT_TIPOSPEST_CREAR'"
+                            type="button" class="btn btn-primary btn-NuevoRegistro" [disabled]="guardando"
+                            (click)="guardar()">
+                            {{ (guardando ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                    </div>
+                </div>
+                <hr class="mb-0" /><br />
+            </div>
+            <div class="card-body form-scroll-wrapper">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="tipoCodigo">{{ 'COMMON.CODE' | translate }}</label>
+                        <input id="tipoCodigo" name="tipoCodigo" class="form-control form-input text-uppercase"
+                            maxlength="50" autocomplete="off" [(ngModel)]="tipo.codigoTipo"
+                            (ngModelChange)="alEscribirCodigo()" [readonly]="modoEdicion" [placeholder]="'ESTATICO'" />
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label" for="tipoEstrategia">{{ 'UTILIDADES.PESTANAS.STRATEGY' | translate
+                            }}</label>
+                        <select id="tipoEstrategia" name="tipoEstrategia" class="form-control form-select"
+                            [(ngModel)]="tipo.estrategia">
+                            <option value="">{{ 'UTILIDADES.PESTANAS.TIPOS_PESTANA.GESTION.SELECT_STRATEGY' | translate
+                                }}</option>
+                            @for (e of estrategias; track e) {
+                            <option [value]="e">{{ e }}</option>
+                            }
+                        </select>
+                        <small class="form-text text-muted">{{ 'UTILIDADES.PESTANAS.TIPOS_PESTANA.GESTION.STRATEGY_HELP'
+                            | translate }}</small>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label class="form-label" for="tipoDescripcion">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+                        <textarea id="tipoDescripcion" name="tipoDescripcion" class="form-control form-input" rows="3"
+                            maxlength="500" [(ngModel)]="tipo.descripcion"></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+                            <app-text-editor [toolbarType]="tipoEditorTexto" [contentHtml]="tipo.descripcion ?? ''"
+                                (contentHtmlChange)="actualizarDescripcion($event)" name="descripcion"
+                                [(ngModel)]="tipo.descripcion" rows="4">
+                            </app-text-editor>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
+                            <div class="radio-buttons">
+                                <label class="radio-button">
+                                    <input name="estadoTipo" type="radio" [value]="true" [(ngModel)]="tipo.estado" />
+                                    <div class="radio-circle"></div>
+                                    <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                                </label>
+                                <label class="radio-button">
+                                    <input name="estadoTipo" type="radio" [value]="false" [(ngModel)]="tipo.estado" />
+                                    <div class="radio-circle"></div>
+                                    <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

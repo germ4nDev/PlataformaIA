@@ -217,16 +217,18 @@
                   </div>
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadFotoInput" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadFotoInput
                     (change)="onFotoFileSelectedClick($event)"
                     id="fileUploadFotoInput"
-                    class="form-control form-input d-none"
                     name="archivoGaleria"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadFotoInput.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_FILE' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -253,16 +255,18 @@
                   </div>
                 }
                 <div class="file-input-wrapper">
-                  <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                    {{ 'Seleccionar archivo' | translate }}
-                  </label>
                   <input
                     type="file"
+                    #fileUploadInput
                     (change)="onFileSelectedClick($event)"
                     id="fileUploadInput"
-                    class="form-control form-input d-none"
                     name="archivoGaleria"
+                    style="display: none"
                   />
+                  <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="fileUploadInput.click()">
+                    <i class="feather icon-upload me-2"></i>
+                    {{ 'COMMON.SELECT_FILE' | translate }}
+                  </button>
                 </div>
               </div>
             </div>
