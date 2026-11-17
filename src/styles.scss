@@ -958,6 +958,17 @@ html {
     background-size: 16px 12px !important;
 }
 
+/* Caja del idioma delante de un campo que se escribe por idioma («ES», «EN»…; usuario, 2026-11-16, CC-219): con los colores del
+   tema, como las tarjetas. Uso: <span class="input-group-text etiqueta-idioma">{{ i }}</span> dentro de un .input-group. */
+.etiqueta-idioma {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+    min-width: 48px;
+    justify-content: center;
+    text-transform: uppercase;
+}
+
 /* Autocompletado del navegador (CC-195): Chrome pinta su propio fondo claro en los campos que rellena (usuario, correo, clave);
    se tapa con el fondo y el color del tema para que un campo precargado se vea igual que uno escrito. */
 .form-input:-webkit-autofill,
@@ -1328,6 +1339,79 @@ table.dataTable.row-border tbody tr td,
 #datatable-component td {
     white-space: normal;
     word-wrap: break-word;
+}
+
+.dt-option-btn {
+    --dt-dynamic-color: #6c757d;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    padding: 0;
+    margin: 0 3px;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: var(--dt-dynamic-color);
+    border: 1px solid var(--dt-dynamic-color);
+    background-color: transparent;
+
+    &:hover {
+        background-color: var(--dt-dynamic-color);
+        color: white;
+        border-color: var(--dt-dynamic-color);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.dt-option-btn {
+    &--view {
+        --dt-dynamic-color: #{$dt-btn-edit-color};
+    }
+
+    &--edit {
+        --dt-dynamic-color: #{$dt-btn-view-color};
+    }
+
+    &--delete {
+        --dt-dynamic-color: #{$dt-btn-delete-color};
+    }
+
+    &--option-1 {
+        --dt-dynamic-color: #{$dt-btn-option1-color};
+    }
+
+    &--option-2 {
+        --dt-dynamic-color: #{$dt-btn-option2-color};
+    }
+
+    &--option-3 {
+        --dt-dynamic-color: #{$dt-btn-option3-color};
+    }
+
+    &--option-4 {
+        --dt-dynamic-color: #{$dt-btn-option4-color};
+    }
+
+    &--option-5 {
+        --dt-dynamic-color: #{$dt-btn-option5-color};
+    }
+
+    &--archive {
+        --dt-dynamic-color: #6c757d;
+    }
+
+    &--up-color {
+        --dt-dynamic-color: #16a34a;
+    }
+
+    &--down-color {
+        --dt-dynamic-color: #ea580c;
+    }
 }
 
 hr.detail-separator {

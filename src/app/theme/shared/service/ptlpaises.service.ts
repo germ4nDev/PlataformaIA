@@ -15,12 +15,33 @@ export interface Pais {
     zonaHoraria?: string | null; idioma?: string | null; descripcion?: string | null; estadoPais: boolean;
 }
 
+/** CC-219: una moneda de los países activos del maestro, con su símbolo y los países que la usan (para listas desplegables) */
+export interface MonedaPais { moneda: string; simbolo: string | null; paises: string[] }
+
+/** CC-219: monedas de los países ACTIVOS, sin repetir, en orden alfabético (la que usan varios países sale una vez) */
+export function monedasDePaises(paises: readonly Pais[]): MonedaPais[] {
+    const por = new Map<string, MonedaPais>();
+    for (const p of paises || []) {
+        const m = String(p?.moneda || '').trim().toUpperCase();
+        if (!p?.estadoPais || !/^[A-Z]{3}$/.test(m)) continue;
+        const x = por.get(m) || { moneda: m, simbolo: p.simboloMoneda || null, paises: [] };
+        x.paises.push(String(p.nombrePais || p.codigoPais).trim());
+        por.set(m, x);
+    }
+    return [...por.values()].map((x) => ({ ...x, paises: x.paises.sort() })).sort((a, b) => a.moneda.localeCompare(b.moneda));
+}
+
 @Injectable({ providedIn: 'root' })
 export class PtlPaisesService {
     constructor(private readonly http: HttpClient) {}
 
     listar(): Observable<Pais[]> {
         return this.http.get<any>(base_url).pipe(map((r) => (r?.paises || []).map((p: Pais) => ({ ...p, codigoPais: String(p.codigoPais).trim(), estadoPais: !!p.estadoPais }))));
+    }
+
+    /** CC-219: monedas de los países activos (lista desplegable de moneda en las pantallas que piden una) */
+    monedas(): Observable<MonedaPais[]> {
+        return this.listar().pipe(map(monedasDePaises));
     }
 
     obtener(codigoPais: string): Observable<Pais> {

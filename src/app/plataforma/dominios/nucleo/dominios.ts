@@ -13,7 +13,8 @@
       rutaPermitida(ctx, url, appElegida, rutas) 'ok' | 'elegir' (falta elegir la app del dominio) | 'fuera' (ruta de otra app o de la consola)
       aplicacionesDelDominio(ctx, apps)          en un dominio de aplicación, solo la suya; en los demás, todas
       suiteDelDominio(ctx, suites)               la suite a la que se entra directo (la del dominio, o la única), o null
-      loginDeDominio(ctx)                        cómo se ve el login (CC-104): con el diseño del portal en un dominio de aplicación
+      loginDeDominio(ctx, apiUrl?)               cómo se ve el login (CC-104): con el diseño del portal en un dominio de aplicación
+      logoDeMarca(logo, apiUrl)                  CC-224: asset, https:// o imagen subida (upload/<susc>/dominios/<archivo>) → src; si no, null
                                                  con portal (porttos.co); en la consola y los dominios neutros, el de siempre
       contextoDeCompilacion(ctx, decl)           compilación aislada de una app (OT-034, CC-194): la app que declara el build manda;
                                                  se entra como en un dominio de esa aplicación aunque el dominio no tenga fila
@@ -169,7 +170,19 @@ export function contextoDeCompilacion(ctx: ContextoDominio, decl: DeclaracionCom
   };
 }
 
-export function loginDeDominio(ctx: ContextoDominio | null | undefined): LoginDominio {
+/**
+ * CC-224: el logo de la marca que la web puede pintar: un asset de la web (assets/…), una dirección https:// o una imagen subida en
+ * Utilidades › Dominios (upload/<suscriptor>/dominios/<archivo>, que el API sirve sin sesión en <apiUrl>/upload/…). Lo demás, null.
+ */
+export function logoDeMarca(logo: string | null | undefined, apiUrl = ''): string | null {
+  const l = texto(logo);
+  if (!l) return null;
+  if (/^assets\//.test(l) || /^https:\/\//i.test(l)) return l;
+  if (/^upload\/[\w-]+\/dominios\/[\w.-]+$/.test(l) && apiUrl) return `${String(apiUrl).replace(/\/+$/, '')}/${l}`;
+  return null;
+}
+
+export function loginDeDominio(ctx: ContextoDominio | null | undefined, apiUrl = ''): LoginDominio {
   const marca = texto(ctx?.marca?.nombre);
   const rutaPortal = ctx?.rutaPortal && ctx.rutaPortal.startsWith('/') && !ctx.rutaPortal.startsWith('//')
     ? ctx.rutaPortal.replace(/\/+$/, '') || null : null;
@@ -179,7 +192,7 @@ export function loginDeDominio(ctx: ContextoDominio | null | undefined): LoginDo
     portal,
     marca,
     // Logo: un asset de la web o una dirección https; lo demás no se usa (se muestra el nombre de la marca)
-    logo: logo && (/^assets\//.test(logo) || /^https:\/\//i.test(logo)) ? logo : null,
+    logo: logoDeMarca(logo, apiUrl),
     rutaPortal: portal ? rutaPortal : null,
     acceso: portal ? { ruta: `${rutaPortal}/contacto`, query: { motivo: 'ACCESO' } } : null,
   };

@@ -1,0 +1,29 @@
+@if (pendientes.length) {
+<div class="alert alert-info aviso-idiomas">
+  <span>{{ 'SHARED.AVISO_IDIOMAS.ACTIVE_LANGUAGES_WITHOUT_TEXTS' | translate: { idiomas: nombresPendientes } }}</span>
+  @for (x of pendientes; track x.sigla) {
+  @if (x.trabajo?.estado === 'traduciendo') {
+  <div class="avance">
+    <small>{{ 'SHARED.AVISO_IDIOMAS.TRANSLATING_PROGRESS' | translate: { idioma: x.nombre || x.sigla, hechas: x.trabajo.hechas, total: x.trabajo.total } }}</small>
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" [style.width.%]="porcentaje(x.trabajo.hechas || 0, x.trabajo.total || 0)"></div>
+    </div>
+  </div>
+  } @else if (x.trabajo?.estado === 'error') {
+  <small class="text-danger">{{ 'SHARED.AVISO_IDIOMAS.TRANSLATION_STOPPED' | translate: { idioma: x.nombre || x.sigla, motivo: x.trabajo.motivo } }}</small>
+  }
+  }
+  <div class="acciones">
+    @if (estado?.traductor?.ok) {
+    <button *appPermiso="'ACT_TRAD_MODIFICAR'" type="button" class="btn btn-primary btn-NuevoRegistro" [disabled]="enviando || enCurso" (click)="crear()">
+      {{ 'SHARED.AVISO_IDIOMAS.CREATE_AND_TRANSLATE_WITH_AI' | translate }}
+    </button>
+    } @else {
+    <small class="text-muted">{{ 'SHARED.AVISO_IDIOMAS.NO_AI_TRANSLATOR' | translate: { motivo: estado?.traductor?.motivo || '—' } }}</small>
+    <button *appPermiso="'ACT_TRAD_MODIFICAR'" type="button" class="btn btn-primary btn-NuevoRegistro" [disabled]="enviando" (click)="crear('espanol')">
+      {{ 'SHARED.AVISO_IDIOMAS.CREATE_BY_COPYING_SPANISH' | translate }}
+    </button>
+    }
+  </div>
+</div>
+}

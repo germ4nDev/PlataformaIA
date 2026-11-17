@@ -63,3 +63,41 @@ $dt-btn-option5-color: #b64189 !default;
         --dt-dynamic-color: #6c757d;
     }
 }
+
+/* CC-221 (usuario, 2026-11-16): «subir» (↑) en verde y «bajar» (↓) en naranja, los mismos en toda la solución: en la columna de opciones
+   de app-table-data (color de la acción: COLOR_SUBIR / COLOR_BAJAR de theme/shared/_helpers/acciones-orden.ts, o las clases
+   dt-option-btn--up / --down) y en los botones de fuera de la tabla (btn btn-primary btn-NuevoRegistro accion-subir | accion-bajar). */
+$dt-btn-up-color: #16a34a !default;
+$dt-btn-down-color: #ea580c !default;
+
+:root {
+    --accion-subir: #{$dt-btn-up-color};
+    --accion-bajar: #{$dt-btn-down-color};
+}
+
+.dt-option-btn {
+    &--up {
+        --dt-dynamic-color: var(--accion-subir);
+    }
+    &--down {
+        --dt-dynamic-color: var(--accion-bajar);
+    }
+}
+
+.btn.btn-NuevoRegistro {
+    &.accion-subir,
+    &.accion-bajar {
+        --accion-color: var(--accion-subir);
+        color: var(--accion-color) !important;
+        border-color: var(--accion-color) !important;
+
+        &:hover {
+            background-color: var(--accion-color) !important;
+            color: #ffffff !important;
+        }
+    }
+
+    &.accion-bajar {
+        --accion-color: var(--accion-bajar);
+    }
+}

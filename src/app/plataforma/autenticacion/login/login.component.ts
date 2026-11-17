@@ -3,6 +3,7 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ContextoDominioService } from 'src/app/theme/shared/service/contexto-dominio.service';
 import { loginDeDominio } from 'src/app/plataforma/dominios/nucleo';
+import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
@@ -104,7 +105,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   // Multidominio (OT-012): el login muestra la marca del dominio (porttos.co → Porttos); sin marca, el título de siempre
   readonly marcaDominio = inject(ContextoDominioService).contexto.marca.nombre;
   // CC-104: en un dominio de aplicación con portal, pantalla dividida con el diseño del portal; si no, el login de siempre
-  readonly loginDominio = loginDeDominio(inject(ContextoDominioService).contexto);
+  // CC-224: con la dirección del API, el logo subido en Utilidades › Dominios se pinta
+  readonly loginDominio = loginDeDominio(inject(ContextoDominioService).contexto, environment.apiUrl);
   //#endregion VARIABLES
 
   constructor(

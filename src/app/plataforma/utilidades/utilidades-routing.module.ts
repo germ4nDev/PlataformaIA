@@ -71,6 +71,19 @@ const routes: Routes = [
                 data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
             },
             {
+                // CC-224: qué abre cada dominio (consola o aplicación), su portal, su inicio y su marca
+                path: 'dominios',
+                loadComponent: () => import('./dominios/dominios.component').then(m => m.DominiosComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
+                path: 'gestion-dominio',
+                loadComponent: () => import('./dominios/gestion-dominio/gestion-dominio.component').then(m => m.GestionDominioComponent),
+                canActivate: [RoleGuard],
+                data: { rolesPermitidos: ['ROLE_ADMINISTRADOR', 'ROLE_USUARIO'] }
+            },
+            {
                 // CC-203: Utilidades › Pestañas y Tipos de pestaña (patrón de los módulos de administración)
                 path: 'pestanas',
                 loadComponent: () => import('./pestanas/pestanas/pestanas.component').then(m => m.PestanasComponent),

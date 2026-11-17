@@ -1,0 +1,14 @@
+// CC-224: vista del logo de la marca con los colores del tema
+.logo-vista {
+  display: inline-flex;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--card-background);
+
+  img {
+    max-height: 48px;
+    max-width: 220px;
+    object-fit: contain;
+  }
+}

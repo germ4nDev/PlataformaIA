@@ -1,0 +1,68 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'COMMON.MENU' | translate }}</button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">{{ 'COMMON.FILTERS' | translate }}</button>
+            </div>
+            @if (activeTab === 'menu') {
+            <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            } @else {
+            <div class="p-3 filtros-scroll-wrapper">
+                <div class="text-center"><h6 class="filtros-title">{{ 'COMMON.SEARCH_FILTERS' | translate }}</h6></div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.TYPE' | translate }}</small>
+                    <select class="form-control form-select" [value]="filtroTipo$.value" (change)="alFiltrar(filtroTipo$, $event)">
+                        <option value="">{{ 'COMMON.ALL' | translate }}</option>
+                        <option value="consola">{{ 'UTILIDADES.DOMINIOS.CONSOLE' | translate }}</option>
+                        <option value="aplicacion">{{ 'COMMON.APPLICATION' | translate }}</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.APPLICATION' | translate }}</small>
+                    <select class="form-control form-select" [value]="filtroApp$.value" (change)="alFiltrar(filtroApp$, $event)">
+                        <option value="">{{ 'COMMON.ALL' | translate }}</option>
+                        @for (a of aplicaciones; track a.codigo) {<option [value]="a.codigo">{{ a.nombre }}</option>}
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.STATUS' | translate }}</small>
+                    <select class="form-control form-select" [value]="filtroEstado$.value" (change)="alFiltrar(filtroEstado$, $event)">
+                        <option value="todos">{{ 'COMMON.ALL' | translate }}</option>
+                        <option value="activos">{{ 'COMMON.ACTIVE' | translate }}</option>
+                        <option value="inactivos">{{ 'COMMON.INACTIVE' | translate }}</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <small>{{ 'COMMON.SEARCH' | translate }}</small>
+                    <input type="text" class="form-control form-input" (keyup)="alFiltrar(filtroTexto$, $event)"
+                        [placeholder]="'UTILIDADES.DOMINIOS.DOMAIN_APP_BRAND_OR_ROUTE' | translate" />
+                </div>
+            </div>
+            }
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                @if (!cargando) {
+                <app-table-data [data]="(filtrados$ | async) || []" [idField]="'dominioId'"
+                    [tableTitle]="'COMMON.DOMAINS' | translate"
+                    [tableSubtitle]="'UTILIDADES.DOMINIOS.WHAT_EACH_DOMAIN_OPENS' | translate"
+                    [metadataColumns]="columnas" [showActions]="true" [showNewButton]="true" [showEditButton]="true"
+                    [showDeleteButton]="true" [showSearchBox]="false" [newButtonLabel]="'UTILIDADES.DOMINIOS.NEW_DOMAIN' | translate"
+                    [exportLabel]="'COMMON.DOWNLOAD_EXCEL' | translate" (newRecord)="nuevo()" (editRecord)="editar($event)"
+                    (deleteRecord)="eliminar($event?.id ?? $event)" permisoNew="ACT_DOM_CREAR" permisoEdit="ACT_DOM_MODIFICAR" permisoDelete="ACT_DOM_ELIMINAR">
+                    <!-- acciones propias en la barra de la tabla (regla 19) -->
+                    <button acciones-tabla type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="probar()">
+                        {{ 'UTILIDADES.DOMINIOS.TRY' | translate }}<i class="feather ms-2 icon-external-link"></i>
+                    </button>
+                </app-table-data>
+                } @else {
+                <app-data-loader [isLoading]="true" [message]="'UTILIDADES.DOMINIOS.LOADING_DOMAINS' | translate"></app-data-loader>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+  <aside class="aside-left">
+    <div class="card"><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></div>
+  </aside>
+  <div class="content-area">
+    <div class="card">
+      <div class="card-header card-header-sticky pb-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+          <div class="d-flex flex-column pe-3">
+            <h4 class="titulo-formulario">
+              <span>{{ (modoEdicion ? 'UTILIDADES.DOMINIOS.GESTION.EDIT_DOMAIN' : 'UTILIDADES.DOMINIOS.NEW_DOMAIN') | translate }}</span>
+              <span class="titulo-container"> - {{ 'COMMON.DOMAINS' | translate }}</span>
+            </h4>
+            <h6 class="subtitulo-formulario mb-0">{{ 'UTILIDADES.DOMINIOS.WHAT_EACH_DOMAIN_OPENS' | translate }}</h6>
+          </div>
+          <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="volver()">
+              {{ 'COMMON.BACK' | translate }}<i class="feather icon-arrow-left ms-2"></i>
+            </button>
+            <button *appPermiso="modoEdicion ? 'ACT_DOM_MODIFICAR' : 'ACT_DOM_CREAR'" type="button" class="btn btn-primary btn-NuevoRegistro"
+              [disabled]="guardando || subiendo" (click)="guardar()">
+              {{ (guardando ? 'COMMON.SAVING' : 'COMMON.SAVE') | translate }}
+              <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+            </button>
+          </div>
+        </div>
+        <hr class="mb-0" /><br />
+      </div>
+      <div class="card-body form-scroll-wrapper">
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="domDominio">{{ 'UTILIDADES.DOMINIOS.DOMAIN' | translate }}</label>
+            <input id="domDominio" name="domDominio" class="form-control form-input" maxlength="253" autocomplete="off"
+              [placeholder]="'UTILIDADES.DOMINIOS.GESTION.DOMAIN_WITHOUT_HTTPS_EG' | translate" [(ngModel)]="d.dominio" />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label">{{ 'COMMON.TYPE' | translate }}</label>
+            <div class="radio-buttons">
+              <label class="radio-button">
+                <input name="domTipo" type="radio" value="aplicacion" [(ngModel)]="d.tipo" />
+                <div class="radio-circle"></div>
+                <span class="radio-label">{{ 'COMMON.APPLICATION' | translate }}</span>
+              </label>
+              <label class="radio-button">
+                <input name="domTipo" type="radio" value="consola" [(ngModel)]="d.tipo" />
+                <div class="radio-circle"></div>
+                <span class="radio-label">{{ 'UTILIDADES.DOMINIOS.CONSOLE' | translate }}</span>
+              </label>
+            </div>
+          </div>
+          @if (esAplicacion) {
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="domApp">{{ 'COMMON.APPLICATION' | translate }}</label>
+            <select id="domApp" name="domApp" class="form-control form-select" [(ngModel)]="d.codigoAplicacion" (ngModelChange)="alCambiarAplicacion()">
+              <option [ngValue]="null">{{ 'COMMON.SELECT_APPLICATION' | translate }}</option>
+              @for (a of aplicaciones; track a.codigoAplicacion) {<option [ngValue]="a.codigoAplicacion">{{ a.nombreAplicacion }}</option>}
+            </select>
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="domSuite">{{ 'COMMON.SUITE' | translate }}</label>
+            <select id="domSuite" name="domSuite" class="form-control form-select" [(ngModel)]="d.codigoSuite" [disabled]="!d.codigoAplicacion">
+              <option [ngValue]="null">{{ 'UTILIDADES.DOMINIOS.GESTION.NO_SUITE_CHOOSES_USER' | translate }}</option>
+              @for (s of suitesDeApp; track s.codigoSuite) {<option [ngValue]="s.codigoSuite">{{ s.nombreSuite }}</option>}
+            </select>
+          </div>
+          }
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="domPortal">{{ 'UTILIDADES.DOMINIOS.PORTAL_ROUTE' | translate }}</label>
+            <input id="domPortal" name="domPortal" class="form-control form-input" maxlength="200" autocomplete="off"
+              [placeholder]="'UTILIDADES.DOMINIOS.GESTION.PUBLIC_ROOT_WITHOUT_SESSION_EG' | translate" [(ngModel)]="d.rutaPortal" />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="domInicio">{{ 'UTILIDADES.DOMINIOS.GESTION.HOME_ROUTE' | translate }}</label>
+            <input id="domInicio" name="domInicio" class="form-control form-input" maxlength="200" autocomplete="off"
+              [placeholder]="'UTILIDADES.DOMINIOS.GESTION.WHERE_IT_GOES_WITH_SESSION' | translate" [(ngModel)]="d.rutaInicio" />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label" for="domMarca">{{ 'UTILIDADES.DOMINIOS.GESTION.BRAND_NAME' | translate }}</label>
+            <input id="domMarca" name="domMarca" class="form-control form-input" maxlength="100" autocomplete="off"
+              [placeholder]="'UTILIDADES.DOMINIOS.GESTION.NAME_SHOWN_ON_LOGIN' | translate" [(ngModel)]="d.nombreMarca" />
+          </div>
+          <div class="col-md-6 form-group">
+            <label class="form-label">{{ 'COMMON.LOGO' | translate }}</label>
+            @if (logoVista) {
+            <div class="logo-vista mb-2"><img [src]="logoVista" [alt]="d.nombreMarca || ''" /></div>
+            } @else if (d.logoMarca) {
+            <small class="text-danger d-block mb-2">{{ 'UTILIDADES.DOMINIOS.GESTION.LOGO_CANNOT_BE_SHOWN' | translate }}</small>
+            }
+            <input type="file" #archivoLogo accept="image/*" style="display: none" (change)="alSubirLogo($event)" />
+            <div class="d-flex flex-wrap">
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" [disabled]="subiendo" (click)="archivoLogo.click()">
+                {{ 'COMMON.SELECT_IMAGE' | translate }}<i class="feather icon-upload ms-2"></i>
+              </button>
+              @if (d.logoMarca) {
+              <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="quitarLogo()">
+                {{ 'UTILIDADES.DOMINIOS.GESTION.REMOVE_LOGO' | translate }}<i class="feather icon-x ms-2"></i>
+              </button>
+              }
+            </div>
+            <small class="form-text text-muted">{{ 'UTILIDADES.DOMINIOS.GESTION.WITHOUT_LOGO_BRAND_NAME' | translate }}</small>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+              <app-text-editor toolbarType="basica" [contentHtml]="d.descripcion ?? ''" (contentHtmlChange)="alCambiarDescripcion($event)"
+                name="domDescripcion" [(ngModel)]="d.descripcion" rows="4"></app-text-editor>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label">{{ 'COMMON.STATUS' | translate }}</label>
+              <div class="radio-buttons">
+                <label class="radio-button">
+                  <input name="domEstado" type="radio" [value]="true" [(ngModel)]="d.estado" />
+                  <div class="radio-circle"></div>
+                  <span class="radio-label">{{ 'COMMON.ACTIVE' | translate }}</span>
+                </label>
+                <label class="radio-button">
+                  <input name="domEstado" type="radio" [value]="false" [(ngModel)]="d.estado" />
+                  <div class="radio-circle"></div>
+                  <span class="radio-label">{{ 'COMMON.INACTIVE' | translate }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
