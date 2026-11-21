@@ -372,6 +372,11 @@ html {
     height: calc(100vh - 77px);
 }
 
+.form-area-tabs {
+    padding: 0rem 0.5rem 0.5rem 0.5rem;
+    height: calc(100vh - 207px);
+}
+
 /* Áreas con scroll interno permitido */
 .content-g67 {
     position: relative;
@@ -394,6 +399,12 @@ html {
 
 .form-scroll-wrapper {
     height: calc(100vh - 200px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.form-scroll-tabs-wrapper {
+    height: calc(100vh - 273px);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -1341,6 +1352,12 @@ table.dataTable.row-border tbody tr td,
     word-wrap: break-word;
 }
 
+$dt-btn-view-color: #007bff !default;
+$dt-btn-edit-color: #ffc107 !default;
+$dt-btn-delete-color: #ff0000 !default;
+$dt-btn-up-color: #16a34a !default;
+$dt-btn-down-color: #ea580c !default;
+
 .dt-option-btn {
     --dt-dynamic-color: #6c757d;
 
@@ -1359,16 +1376,6 @@ table.dataTable.row-border tbody tr td,
     border: 1px solid var(--dt-dynamic-color);
     background-color: transparent;
 
-    &:hover {
-        background-color: var(--dt-dynamic-color);
-        color: white;
-        border-color: var(--dt-dynamic-color);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-}
-
-.dt-option-btn {
     &--view {
         --dt-dynamic-color: #{$dt-btn-edit-color};
     }
@@ -1381,36 +1388,20 @@ table.dataTable.row-border tbody tr td,
         --dt-dynamic-color: #{$dt-btn-delete-color};
     }
 
-    &--option-1 {
-        --dt-dynamic-color: #{$dt-btn-option1-color};
+    &--up {
+        --dt-dynamic-color: #{$dt-btn-up-color};
     }
 
-    &--option-2 {
-        --dt-dynamic-color: #{$dt-btn-option2-color};
+    &--down {
+        --dt-dynamic-color: #{$dt-btn-down-color};
     }
 
-    &--option-3 {
-        --dt-dynamic-color: #{$dt-btn-option3-color};
-    }
-
-    &--option-4 {
-        --dt-dynamic-color: #{$dt-btn-option4-color};
-    }
-
-    &--option-5 {
-        --dt-dynamic-color: #{$dt-btn-option5-color};
-    }
-
-    &--archive {
-        --dt-dynamic-color: #6c757d;
-    }
-
-    &--up-color {
-        --dt-dynamic-color: #16a34a;
-    }
-
-    &--down-color {
-        --dt-dynamic-color: #ea580c;
+    &:hover {
+        background-color: var(--dt-dynamic-color);
+        color: white;
+        border-color: var(--dt-dynamic-color);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 }
 
@@ -2042,6 +2033,14 @@ hr.detail-separator {
 
 .ql-editor::before {
     color: #999999 !important;
+}
+
+.ql-custom-container {
+    //border-radius: 8px !important;
+    background-color: var(--card-background) !important;
+    border-color: var(--border-color) !important;
+    height: '250px';
+    margin: 0px !important;
 }
 
 /* Tema Oscuro Específico */
@@ -2832,4 +2831,15 @@ body.dark-theme {
     --selector-fecha-sombra: 0 8px 24px rgba(0, 0, 0, 0.55);
     --selector-fecha-texto-acento: #ffffff;
     --selector-fecha-dias-fuera: 0.35;
+}
+
+/* ==========================================================================
+   CC-294 · Botón «Ahora / Pronóstico» del encabezado de los widgets con pronóstico (Estado de citas, Saturación de patios,
+   Saturación de bodegas). Variables del tema.
+   ========================================================================== */
+.btn-vista-pronostico {
+  border: 1px solid var(--border-color); background: transparent; color: var(--text-subtitle-color);
+  font-size: 10px; font-weight: 600; text-transform: uppercase; border-radius: 6px; padding: 2px 8px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px;
+  &:hover, &.activo { color: var(--text-color); border-color: var(--text-subtitle-color); }
 }

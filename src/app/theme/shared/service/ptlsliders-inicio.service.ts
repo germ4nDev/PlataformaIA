@@ -82,6 +82,8 @@ export class PtlSlidersInicioService {
      * o 'general'. No toca la lista compartida (slider$), que sigue siendo la de la gestión.
      */
     slidesPara(para: string | null): Observable<PTLSliderInicioModel[]> {
+        console.log('***** variable para servicio', para);
+
         const params = new HttpParams().set('para', para || 'general')
         return this.http.get(`${base_url}/sliders`, { params }).pipe(
             map((resp: any) => (resp?.sliders || []) as PTLSliderInicioModel[])

@@ -6,6 +6,8 @@ $dt-btn-option2-color: #6f42c1 !default;
 $dt-btn-option3-color: #2b23a3 !default;
 $dt-btn-option4-color: #39b87d !default;
 $dt-btn-option5-color: #b64189 !default;
+$dt-btn-up-color: #16a34a !default;
+$dt-btn-down-color: #ea580c !default;
 
 .dt-option-btn {
     --dt-dynamic-color: #6c757d;
@@ -25,6 +27,50 @@ $dt-btn-option5-color: #b64189 !default;
     border: 1px solid var(--dt-dynamic-color);
     background-color: transparent;
 
+    &--view {
+        --dt-dynamic-color: #{$dt-btn-edit-color};
+    }
+
+    &--edit {
+        --dt-dynamic-color: #{$dt-btn-view-color};
+    }
+
+    &--delete {
+        --dt-dynamic-color: #{$dt-btn-delete-color};
+    }
+
+    &--option-1 {
+        --dt-dynamic-color: #{$dt-btn-option1-color};
+    }
+
+    &--option-2 {
+        --dt-dynamic-color: #{$dt-btn-option2-color};
+    }
+
+    &--option-3 {
+        --dt-dynamic-color: #{$dt-btn-option3-color};
+    }
+
+    &--option-4 {
+        --dt-dynamic-color: #{$dt-btn-option4-color};
+    }
+
+    &--option-5 {
+        --dt-dynamic-color: #{$dt-btn-option5-color};
+    }
+
+    &--archive {
+        --dt-dynamic-color: #6c757d;
+    }
+
+    &--up {
+        --dt-dynamic-color: #{$dt-btn-up-color};
+    }
+
+    &--down {
+        --dt-dynamic-color: #{$dt-btn-down-color};
+    }
+
     &:hover {
         background-color: var(--dt-dynamic-color);
         color: white;
@@ -34,57 +80,9 @@ $dt-btn-option5-color: #b64189 !default;
     }
 }
 
-.dt-option-btn {
-    &--view {
-        --dt-dynamic-color: #{$dt-btn-edit-color};
-    }
-    &--edit {
-        --dt-dynamic-color: #{$dt-btn-view-color};
-    }
-    &--delete {
-        --dt-dynamic-color: #{$dt-btn-delete-color};
-    }
-    &--option-1 {
-        --dt-dynamic-color: #{$dt-btn-option1-color};
-    }
-    &--option-2 {
-        --dt-dynamic-color: #{$dt-btn-option2-color};
-    }
-    &--option-3 {
-        --dt-dynamic-color: #{$dt-btn-option3-color};
-    }
-    &--option-4 {
-        --dt-dynamic-color: #{$dt-btn-option4-color};
-    }
-    &--option-5 {
-        --dt-dynamic-color: #{$dt-btn-option5-color};
-    }
-    &--archive {
-        --dt-dynamic-color: #6c757d;
-    }
-}
-
-/* CC-221 (usuario, 2026-11-16): «subir» (↑) en verde y «bajar» (↓) en naranja, los mismos en toda la solución: en la columna de opciones
-   de app-table-data (color de la acción: COLOR_SUBIR / COLOR_BAJAR de theme/shared/_helpers/acciones-orden.ts, o las clases
-   dt-option-btn--up / --down) y en los botones de fuera de la tabla (btn btn-primary btn-NuevoRegistro accion-subir | accion-bajar). */
-$dt-btn-up-color: #16a34a !default;
-$dt-btn-down-color: #ea580c !default;
-
-:root {
-    --accion-subir: #{$dt-btn-up-color};
-    --accion-bajar: #{$dt-btn-down-color};
-}
-
-.dt-option-btn {
-    &--up {
-        --dt-dynamic-color: var(--accion-subir);
-    }
-    &--down {
-        --dt-dynamic-color: var(--accion-bajar);
-    }
-}
 
 .btn.btn-NuevoRegistro {
+
     &.accion-subir,
     &.accion-bajar {
         --accion-color: var(--accion-subir);

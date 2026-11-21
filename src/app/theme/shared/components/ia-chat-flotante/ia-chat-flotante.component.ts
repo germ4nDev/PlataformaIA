@@ -8,6 +8,8 @@
       - avisa las cifras que no pudo respaldar con los datos consultados
       - usa el puerto del filtro del tablero (DashboardService.puertoSeleccionado$) y los últimos 4 turnos como contexto
       - «Útil / No era» por respuesta
+      - CC-281: manda la pestaña activa (currentUser.pestanaActiva) para que el asistente empiece por sus datos, y muestra las
+        preguntas sugeridas de esa pestaña (GET /asistente/sugerencias)
     Mismo lugar en el menú lateral (cortina) y misma consola modal que antes.
 */
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
@@ -18,6 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MarkdownPipe } from '../../pipes/markdown.pipe';
 import { DashboardService } from '../../service/tablero-control/dashboard.service';
 import { AnalisisIAService, RespuestaAsistenteIA } from '../../service/tablero-control/analisis-ia.service';
+import { LocalStorageService } from '../../service/local-storage.service';
 
 interface InteraccionAsistente {
   pregunta: string;
@@ -37,7 +40,9 @@ const ETIQUETA_HERRAMIENTA: Record<string, string> = {
   alertas_tempranas: 'Alertas tempranas',
   resumenes_turno: 'Cierres de turno',
   estado_maritimo: 'Operación marítima (AIS)',
-  llegadas_buques: 'Llegadas DIMAR'
+  llegadas_buques: 'Llegadas DIMAR',
+  detalle_modulo: 'Detalle del tablero',
+  noticias_puerto: 'Noticias y TRM'
 };
 
 @Component({
@@ -56,7 +61,7 @@ export class IaChatFlotanteComponent implements OnInit, OnDestroy {
   public sidebarAbierto = false;
   public puerto: string | null = null;
   public historialInteracciones: InteraccionAsistente[] = [];
-  public readonly ejemplos = [
+  public ejemplos: string[] = [
     '¿Cuántas naves hay en fondeo y cuánto llevan esperando?',
     '¿Qué indicadores empeoraron esta semana?',
     '¿Cómo cerró el último turno?',
@@ -67,8 +72,28 @@ export class IaChatFlotanteComponent implements OnInit, OnDestroy {
 
   constructor(
     private ia: AnalisisIAService,
-    private dashboard: DashboardService
+    private dashboard: DashboardService,
+    private almacen: LocalStorageService
   ) {}
+
+  /** CC-281: pestaña activa del tablero (la guarda torre-control en currentUser). */
+  private pestanaActual(): string | null {
+    const p = this.almacen.getCurrentUserLocalStorage()?.pestanaActiva;
+    return typeof p === 'string' && p.trim() ? p.trim() : null;
+  }
+
+  private pestanaSugerencias: string | null | undefined = undefined;
+
+  /** CC-281: preguntas sugeridas de la pestaña (una vez por pestaña; si falla, quedan las de siempre). */
+  private cargarSugerencias(): void {
+    const pestana = this.pestanaActual();
+    if (pestana === this.pestanaSugerencias) return;
+    this.pestanaSugerencias = pestana;
+    this.subs.add(this.ia.sugerencias(pestana).subscribe({
+      next: (r) => { if (r?.preguntas?.length) this.ejemplos = r.preguntas; },
+      error: () => { /* quedan las preguntas de siempre */ }
+    }));
+  }
 
   ngOnInit(): void {
     this.subs.add(
@@ -85,10 +110,12 @@ export class IaChatFlotanteComponent implements OnInit, OnDestroy {
 
   public alternarSidebar(): void {
     this.sidebarAbierto = !this.sidebarAbierto;
+    if (this.sidebarAbierto) this.cargarSugerencias();
   }
 
   public abrirModal(): void {
     this.modalAbierto = true;
+    this.cargarSugerencias();
   }
 
   public cerrarModal(): void {
@@ -157,7 +184,7 @@ export class IaChatFlotanteComponent implements OnInit, OnDestroy {
     this.bajar();
 
     this.subs.add(
-      this.ia.preguntar(texto, { puerto: this.puerto, historial }).subscribe({
+      this.ia.preguntar(texto, { puerto: this.puerto, pestana: this.pestanaActual(), historial }).subscribe({
         next: (r) => {
           turno.resultado = r;
           turno.cargando = false;

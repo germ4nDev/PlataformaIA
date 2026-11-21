@@ -203,6 +203,19 @@ export class AnalisisIAService {
         return this.http.post<RespuestaApi<RespuestaAsistenteIA>>(`${this.base}/asistente/preguntar`, body).pipe(map((r) => r.data));
     }
 
+    /** CC-282: «¿Por qué?» de un indicador (código del catálogo o del widget de la tarjeta). */
+    porQue(puerto: string, kpi: string): Observable<any> {
+        const params = new HttpParams().set('kpi', kpi);
+        return this.http.get<RespuestaApi<any>>(`${this.base}/${encodeURIComponent(puerto)}/por-que`, { params }).pipe(map((r) => r.data));
+    }
+
+    /** CC-281: preguntas sugeridas de la pestaña donde está el usuario (las generales si no hay pestaña). */
+    sugerencias(pestana: string | null): Observable<{ pestana: string | null; nombre: string | null; preguntas: string[] }> {
+        let params = new HttpParams();
+        if (pestana) params = params.set('pestana', pestana);
+        return this.http.get<RespuestaApi<any>>(`${this.base}/asistente/sugerencias`, { params }).pipe(map((r) => r.data));
+    }
+
     calificarRespuesta(id: number, util: boolean, comentario?: string): Observable<{ id: number; util: boolean }> {
         return this.http.post<RespuestaApi<{ id: number; util: boolean }>>(`${this.base}/asistente/preguntas/${id}/feedback`, { util, comentario: comentario || null })
             .pipe(map((r) => r.data));

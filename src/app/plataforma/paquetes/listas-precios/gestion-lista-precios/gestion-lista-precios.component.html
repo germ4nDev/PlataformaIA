@@ -107,9 +107,10 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <!-- título de la sección con las clases de título de los formularios (el h5 suelto toma un color fijo que no se ve en tema oscuro) -->
                     <div class="d-flex flex-column pe-3">
-                        <h5 class="titulo-formulario mb-0">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.LIST_PRICES' | translate }}<span
-                                class="titulo-container"> - {{ lista.nombreLista }}</span></h5>
-                        <small class="subtitulo-formulario">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.VALUES_IN_CURRENCY_ONE_PER_PACKAGE_OR_ITEM' |
+                        <h5 class="titulo-formulario mb-0">{{ 'PAQUETES.LISTAS_PRECIOS.GESTION.LIST_PRICES' | translate
+                            }}<span class="titulo-container"> - {{ lista.nombreLista }}</span></h5>
+                        <small class="subtitulo-formulario">{{
+                            'PAQUETES.LISTAS_PRECIOS.GESTION.VALUES_IN_CURRENCY_ONE_PER_PACKAGE_OR_ITEM' |
                             translate: { moneda: lista.moneda } }}</small>
                     </div>
                     <button *appPermiso="'ACT_PRECIO_CREAR'" type="button" class="btn btn-primary btn-NuevoRegistro"
