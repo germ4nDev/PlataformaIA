@@ -138,30 +138,8 @@ export class NavigationService implements OnInit, OnDestroy {
         return [nodoSuite];
     }
 
-    // getNavigationItems(): void {
-    //     const navSettings = this._localStorageService.getObject<any>('navsettings') || {};
-    //     if (navSettings) {
-    //         this.aplicacion = navSettings.aplicacion || '';
-    //         this.suite = navSettings.suite || '';
-
-    //         const mods: any[] = []
-    //         console.log('************** modulos aplicacion', this.aplicacion.modulos);
-
-    //         this.aplicacion.modulos.forEach((mod: any) => {
-    //             const idx = mods.findIndex(x => x.codigoModulo == mod.codigoModulo);
-    //             if (idx == -1) {
-    //                 if (mod.codigoSuite == this.suite.codigoSuite) {
-    //                     mods.push(mod);
-    //                 }
-    //             }
-    //         });
-
-    //         const menu = this.getAplicacionSuiteItems(mods);
-    //         this.menuSubject.next(menu);
-    //     }
-
-    // }
     getNavigationItems(): void {
+        console.log('************** inicia construccion del menu');
         const navSettings = this._localStorageService.getObject<any>('navsettings');
 
         // 1. Validamos que navSettings, aplicacion y el arreglo de modulos existan realmente
@@ -170,7 +148,6 @@ export class NavigationService implements OnInit, OnDestroy {
             this.suite = navSettings.suite || {};
 
             const mods: any[] = [];
-            console.log('************** modulos aplicacion', this.aplicacion.modulos);
 
             this.aplicacion.modulos.forEach((mod: any) => {
                 const idx = mods.findIndex(x => x.codigoModulo == mod.codigoModulo);
@@ -181,6 +158,7 @@ export class NavigationService implements OnInit, OnDestroy {
                 }
             });
 
+            console.log('************** modulos aplicacion', mods);
             const menu = this.getAplicacionSuiteItems(mods);
             this.menuSubject.next(menu);
         } else {

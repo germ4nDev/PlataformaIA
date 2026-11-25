@@ -7,5 +7,5 @@ export const environment = {
     apiUrl: 'https://api.dymsites.co/api',
     sctUrl: 'https://api.dymsites.co',
     // Respaldo del multidominio (OT-012): la tabla PTLDominiosAP manda; esta lista solo se usa si el API no responde al arrancar
-    dominiosPortal: ['porttos.co', 'www.porttos.co', 'dymsites.co', 'www.symsites.co']
+    dominiosPortal: ['porttos.co', 'www.porttos.co', 'dymsites.co', 'www.symsites.co', 'platafora.dymsites.co']
 };

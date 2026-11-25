@@ -6,7 +6,7 @@ import packageInfo from '../../package.json';
 //     production: true,
 //     apiUrl: 'https://api.dymsites.co/api',
 //     sctUrl: 'https://api.dymsites.co',
-//     dominiosPortal: ['porttos.co', 'www.porttos.co']
+//     dominiosPortal: ['porttos.co', 'www.porttos.co', 'dymsites.co', 'www.symsites.co', 'platafora.dymsites.co']
 // };
 
 export const environment = {
@@ -17,4 +17,3 @@ export const environment = {
     // Respaldo del multidominio (OT-012; manda PTLDominiosAP). En local se simula un dominio con ?dominio=porttos.co
     dominiosPortal: [] as string[]
 };
-

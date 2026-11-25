@@ -70,7 +70,10 @@ export interface RespuestaAsistenteIA {
     id: number | null; estado: EstadoPreguntaIA; puerto: string | null; decision: 'dentro' | 'frontera' | 'fuera' | null; tema: string | null;
     motivo?: string; respuesta: string; fuentes: Array<{ herramienta: string; detalle: string }>; sugerencias: string[];
     verificacion: { ok: boolean; sinRespaldo: number[]; revisadas: number } | null; herramientas: string[];
+    /** CC-306: a dónde llevar al usuario (lo calcula el API con los datos de las herramientas); la app que lo pinta decide si navega. */
+    irA?: DestinoAsistenteIA[];
 }
+export interface DestinoAsistenteIA { pestana: string; widget: string; vista: string; etiqueta: string | null; frente?: string; nivel?: string | null; modulo?: string }
 export interface TurnoAsistenteIA { pregunta: string; respuesta: string }
 
 // ── Fase 4 ───────────────────────────────────────────────────────────────────────────────────────────
