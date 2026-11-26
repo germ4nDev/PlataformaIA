@@ -203,7 +203,7 @@ export class SelectorFechaComponent implements ControlValueAccessor, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   alClicFuera(e: MouseEvent): void {
-    if (this.abierto && !this.host.nativeElement.contains(e.target as Node)) {
+    if (this.abierto && !e.composedPath().includes(this.host.nativeElement)) {   // CC-309: el clic que cambia de mes o año quita el botón pulsado
       this.abierto = false;
       this.marcarTocado();
     }
