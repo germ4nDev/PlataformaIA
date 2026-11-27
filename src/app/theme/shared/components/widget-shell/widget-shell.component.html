@@ -56,6 +56,7 @@
     class="shell-body d-flex flex-column flex-grow-1 position-relative w-100"
     [ngClass]="isEnfoque ? 'overflow-auto p-2 modo-enfoque-body' : 'overflow-hidden'"
     [class.lienzo]="isEnfoque && lienzo"
+    [class.lienzo-auto]="isEnfoque && lienzo && lienzoAuto"
     style="min-height: 0"
   >
     <!-- Contenido 1: El por defecto (Gráficas, etc.) -->

@@ -21,6 +21,23 @@ import { SocketService } from '../sockets.service';
 export type SeveridadIA = 'info' | 'atencion' | 'critica';
 export type EstadoHallazgoIA = 'PROPUESTO' | 'PUBLICADO' | 'CONFIRMADO' | 'DESCARTADO' | 'FALSO';
 
+/** CC-313 (regla 30): vista ampliada de la tarjeta KPI (utils/ia/kpi-ampliado del API). */
+export interface SerieKpiIA { labels: string[]; valores: Array<number | null> }
+/** Sin textos: códigos y cifras; la tarjeta arma las frases con sus llaves (regla 22). */
+export interface ProyeccionKpiIA {
+    ventana: string; metodo: string; disponible: boolean; motivo?: 'HISTORIA_INSUFICIENTE' | 'SIN_DATOS'; puntos: number; minimo: number;
+    final?: number | null; minFinal?: number | null; maxFinal?: number | null;
+    cruce?: { nivel: string; cuando: string; porHora: boolean } | null; nivelFinal?: string | null;
+    labels?: string[]; valores?: Array<number | null>; min?: Array<number | null>; max?: Array<number | null>;
+}
+export interface KpiAmpliadoIA {
+    widget: string; codigo: string | null; disponible: boolean; conPorQue: boolean; conHistoria?: boolean;
+    motivo?: 'SIN_CATALOGO' | 'MIGRACION_PENDIENTE'; unidad?: string; simulado?: boolean;
+    series?: Record<string, SerieKpiIA>;
+    tendencias?: Array<{ ventana: string; direccion: string; efecto: string; cambioPct: number | null; actual: number | null; referencia: number | null }>;
+    proyecciones?: Record<string, ProyeccionKpiIA>;
+}
+
 export interface HallazgoIA {
     id: number;
     puerto: string;
@@ -210,6 +227,12 @@ export class AnalisisIAService {
     porQue(puerto: string, kpi: string): Observable<any> {
         const params = new HttpParams().set('kpi', kpi);
         return this.http.get<RespuestaApi<any>>(`${this.base}/${encodeURIComponent(puerto)}/por-que`, { params }).pipe(map((r) => r.data));
+    }
+
+    /** CC-313 (regla 30): historia, tendencias y proyección de la tarjeta KPI ampliada (código del widget). */
+    kpiAmpliado(puerto: string, widget: string): Observable<KpiAmpliadoIA> {
+        const params = new HttpParams().set('widget', widget);
+        return this.http.get<RespuestaApi<KpiAmpliadoIA>>(`${this.base}/${encodeURIComponent(puerto)}/kpi-ampliado`, { params }).pipe(map((r) => r.data));
     }
 
     /** CC-281: preguntas sugeridas de la pestaña donde está el usuario (las generales si no hay pestaña). */

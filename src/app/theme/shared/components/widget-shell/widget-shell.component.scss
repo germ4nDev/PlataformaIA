@@ -116,6 +116,12 @@
         .detail-content {
             flex: 1 0 auto;
         }
+
+        /* CC-318: la vista del tablero con su alto natural (sin scroll propio) */
+        &.lienzo-auto .default-content {
+            height: auto;
+            min-height: 0;
+        }
     }
 
     .detail-content {

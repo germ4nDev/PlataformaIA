@@ -22,6 +22,8 @@ export class WidgetShellComponent {
    * como estaba), el detalle reemplaza la vista. Si el widget no proyecta detalle, se ve lo mismo que en el tablero.
    */
   @Input() lienzo: boolean = false;
+  /** CC-318 · En el lienzo, la vista del tablero crece con su contenido (una lista que debe salir completa: un solo scroll, el del cuerpo). */
+  @Input() lienzoAuto: boolean = false;
   /** Origen del dato (contrato `origen` del API): se muestra al pie de la vista ampliada. */
   @Input() origen: OrigenDato | null | undefined = null;
 

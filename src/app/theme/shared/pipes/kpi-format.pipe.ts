@@ -1,5 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * CC-316 · Número de un texto de tablero en español o inglés: «19.440,5» → 19440.5 · «1.234» y «1,234» → 1234 ·
+ * «0.4295» → 0.4295 · «1234.567» → 1234.567. Un separador es de miles solo si arma grupos completos de 3 cifras.
+ */
+export function aNumeroKpi(texto: string): number {
+    const t = String(texto ?? '').trim();
+    if (/,\d{1,2}$/.test(t) || /\.\d{3}.*,\d+$/.test(t)) return parseFloat(t.replace(/\./g, '').replace(',', '.'));
+    if (/^[+-]?\d{1,3}([.,]\d{3})+$/.test(t)) return parseFloat(t.replace(/[.,]/g, ''));
+    if (/,\d{3}.*\.\d+$/.test(t)) return parseFloat(t.replace(/,/g, ''));
+    return parseFloat(t.replace(',', '.'));
+}
+
 @Pipe({
     name: 'kpiFormat',
     standalone: true
@@ -31,8 +43,8 @@ export class KpiFormatPipe implements PipeTransform {
             const numStr = match[1];
             const unidad = match[2] || '';
 
-            // Limpiamos puntos de miles y pasamos coma decimal a punto
-            const num = parseFloat(numStr.replace(/\./g, '').replace(',', '.'));
+            // CC-316: el punto solo es de miles en grupos completos («19.440,5», «1.234»); «0.4295» es decimal (antes salía 4.3K)
+            const num = aNumeroKpi(numStr);
             if (isNaN(num)) return value;
 
             const sufijoUnidad = mostrarUnidad && unidad ? ` ${unidad}` : '';
@@ -52,6 +64,7 @@ export class KpiFormatPipe implements PipeTransform {
         if (Math.abs(num) >= 1000) {
             return (num / 1000).toFixed(decimales).replace(/\.0$/, '') + 'K';
         }
-        return num.toString();
+        // CC-311: sin el ruido del punto flotante (14.360000000000001 → 14.36); no cambia ningún otro valor
+        return String(parseFloat(num.toPrecision(12)));
     }
 }
